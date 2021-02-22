@@ -1,0 +1,391 @@
+import React, { useCallback, useEffect, useState } from 'react';
+import { Keyboard, StyleSheet, Switch, TextInput, Platform, ScrollView, Alert } from 'react-native';
+import { Text, View, TouchableOpacity } from './Themed';
+import { Ionicons } from '@expo/vector-icons';
+import * as ImagePicker from 'expo-image-picker';
+import { fetchAPI } from '../graphql/FetchAPI';
+import { getThreadCategories, createMessage } from '../graphql/QueriesAndMutations';
+import MiniEditorScreen from './MiniTextEditor';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
+
+    const [message, setMessage] = useState('')
+    const [isPrivate, setIsPrivate] = useState(false)
+    const [anonymous, setAnonymous] = useState(false)
+    const [customCategory, setCustomCategory] = useState('')
+    const [categories, setCategories] = useState([])
+    const [addCustomCategory, setAddCustomCategory] = useState(false)
+    const [channelId] = useState<any>(props.channelId)
+    const [cueId] = useState<any>(props.cueId)          // Null if Channel Thread. Not null if Cue Thread.
+    const [parentId] = useState<any>(props.parentId)    //  Null if new Thread. Not null if reply.
+    const now = new Date()
+
+    const loadCategories = useCallback(async () => {
+        if (channelId === undefined || channelId === null || channelId === '') {
+            return;
+        }
+        const server = fetchAPI('')
+        server.query({
+            query: getThreadCategories,
+            variables: {
+                channelId
+            }
+        })
+            .then(res => {
+                if (res.data.thread && res.data.thread.getChannelThreadCategories) {
+                    setCategories(res.data.thread.getChannelThreadCategories)
+                }
+            })
+            .catch(err => {
+            })
+    }, [channelId])
+
+    const handleCreate = useCallback(async () => {
+        const uString: any = await AsyncStorage.getItem('user')
+        const user = JSON.parse(uString)
+        const server = fetchAPI('')
+        server.mutate({
+            mutation: createMessage,
+            variables: {
+                message,
+                userId: user._id,
+                channelId,
+                isPrivate,
+                anonymous,
+                cueId: cueId === null ? 'NULL' : cueId,
+                parentId: parentId === null ? 'INIT' : parentId,
+                category: customCategory
+            }
+        }).then(res => {
+            if (res.data.thread.writeMessage) {
+                props.back()
+            } else {
+                Alert.alert("Unable to post.", "Check connection.")
+            }
+        }).catch(err => {
+            Alert.alert("Something went wrong.", "Check connection.")
+        })
+
+    }, [message, customCategory, isPrivate, anonymous, cueId, channelId, parentId, props.back])
+
+    useEffect(() => {
+        (async () => {
+            if (Platform.OS !== 'web') {
+                await ImagePicker.requestMediaLibraryPermissionsAsync();
+                await ImagePicker.requestCameraPermissionsAsync();
+            }
+        })();
+        loadCategories()
+    }, []);
+
+    return (
+        <View style={{
+            width: '100%',
+            backgroundColor: 'white',
+        }}>
+            {
+                parentId ? null :
+                    <View style={{ width: '100%', backgroundColor: 'white', display: 'flex', flexDirection: 'row', paddingBottom: 15 }}>
+                        <TouchableOpacity
+                            key={Math.random()}
+                            style={{
+                                backgroundColor: 'white'
+                            }}
+                            onPress={() => props.back()}>
+                            <Text style={{
+                                width: '100%',
+                                lineHeight: 23
+                            }}>
+                                <Ionicons name='chevron-back-outline' size={23} color={'#101010'} />
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+            }
+            <View style={styles.date} onTouchStart={() => Keyboard.dismiss()}>
+                <Text style={{
+                    width: '50%',
+                    color: '#a6a2a2',
+                    fontSize: 11,
+                    lineHeight: 30,
+                    paddingBottom: 6,
+                    paddingTop: 5
+                }}>
+                    {
+                        now.toString().split(' ')[1] +
+                        ' ' +
+                        now.toString().split(' ')[2] +
+                        ', ' +
+                        now.toString().split(' ')[3]
+                    }
+                </Text>
+            </View>
+            <MiniEditorScreen
+                placeholder={props.placeholder}
+                message={message}
+                setMessage={(m: any) => setMessage(m)}
+            />
+            {
+                !cueId && !parentId ?
+                    <View style={{ width: '100%', backgroundColor: 'white' }}>
+                        <View style={{ width: '100%', paddingTop: 10, paddingBottom: 10, backgroundColor: 'white' }}>
+                            <Text style={{ fontSize: 16, color: '#101010' }}>
+                                Category
+                                </Text>
+                        </View>
+                        <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white' }}>
+                            <View style={{ width: '85%', backgroundColor: 'white' }}>
+                                {
+                                    addCustomCategory ?
+                                        <View style={styles.colorBar}>
+                                            <TextInput
+                                                value={customCategory}
+                                                style={{ ...styles.all, ...styles.outline }}
+                                                placeholder={'New Category'}
+                                                onChangeText={val => {
+                                                    setCustomCategory(val)
+                                                }}
+                                                placeholderTextColor={'#a6a2a2'}
+                                            />
+                                        </View> :
+                                        <ScrollView style={styles.colorBar} horizontal={true} showsHorizontalScrollIndicator={false}>
+                                            <TouchableOpacity
+                                                style={customCategory === '' ? { ...styles.all, ...styles.outline } : styles.all}
+                                                onPress={() => {
+                                                    setCustomCategory('')
+                                                }}>
+                                                <Text style={{ color: '#a6a2a2' }}>
+                                                    None
+                                                    </Text>
+                                            </TouchableOpacity>
+                                            {
+                                                categories.map((category) => {
+                                                    return <TouchableOpacity
+                                                        key={Math.random()}
+                                                        style={category === customCategory ? { ...styles.all, ...styles.outline } : styles.all}
+                                                        onPress={() => {
+                                                            setCustomCategory(category)
+                                                        }}>
+                                                        <Text style={{ color: '#a6a2a2' }}>
+                                                            {category}
+                                                        </Text>
+                                                    </TouchableOpacity>
+                                                })
+                                            }
+                                        </ScrollView>}
+                            </View>
+                            <View style={{ width: '15%', backgroundColor: 'white' }}>
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        if (addCustomCategory) {
+                                            setCustomCategory('')
+                                            setAddCustomCategory(false)
+                                        } else {
+                                            setCustomCategory('')
+                                            setAddCustomCategory(true)
+                                        }
+                                    }}
+                                    style={{ backgroundColor: 'white' }}>
+                                    <Text style={{ textAlign: 'right', lineHeight: 40, width: '100%' }}>
+                                        <Ionicons name={addCustomCategory ? 'close' : 'add'} size={30} color={'#a6a2a2'} />
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </View>
+                    : null
+            }
+            {
+                parentId ? null :
+                    (
+                        parentId ? null :
+                            <View style={{ ...styles.shuffleContainer, paddingTop: 10 }}>
+                                <View style={{ width: '50%', backgroundColor: 'white' }}>
+                                    <Text style={{ fontSize: 16, color: '#a6a2a2', lineHeight: 40 }}>
+                                        Private
+                                        </Text>
+                                </View>
+                                <View style={{
+                                    backgroundColor: 'white',
+                                    width: '50%',
+                                    display: 'flex', flexDirection: 'row',
+                                    justifyContent: 'flex-end'
+                                }}>
+                                    <Switch
+                                        value={isPrivate}
+                                        onValueChange={() => setIsPrivate(!isPrivate)}
+                                        trackColor={{
+                                            false: '#f4f4f4',
+                                            true: '#a6a2a2'
+                                        }}
+
+                                    />
+                                </View>
+                            </View>
+                    )
+            }
+            <View style={{ ...styles.shuffleContainer, paddingTop: 10 }}>
+                <View style={{ width: '50%', backgroundColor: 'white' }}>
+                    <Text style={{ fontSize: 16, color: '#a6a2a2', lineHeight: 40 }}>
+                        Anonymous
+                        </Text>
+                </View>
+                <View style={{
+                    backgroundColor: 'white',
+                    width: '50%',
+                    display: 'flex', flexDirection: 'row',
+                    justifyContent: 'flex-end'
+                }}>
+                    <Switch
+                        value={anonymous}
+                        onValueChange={() => setAnonymous(!anonymous)}
+                        trackColor={{
+                            false: '#f4f4f4',
+                            true: '#a6a2a2'
+                        }}
+
+                    />
+                </View>
+            </View>
+            <View style={styles.footer}>
+                <View
+                    style={{
+                        flex: 1,
+                        backgroundColor: 'white',
+                        justifyContent: 'center',
+                        display: 'flex',
+                        flexDirection: 'row',
+                        height: 50,
+                        paddingTop: 10,
+                    }}>
+                    <TouchableOpacity
+                        onPress={() => handleCreate()}
+                        style={{
+                            borderRadius: 15,
+                            backgroundColor: 'white'
+                        }}>
+                        <Text style={{
+                            textAlign: 'center',
+                            lineHeight: 35,
+                            color: 'white',
+                            fontSize: 14,
+                            fontWeight: 'bold',
+                            backgroundColor: '#0079FE',
+                            borderRadius: 15,
+                            paddingHorizontal: 25,
+                            overflow: 'hidden',
+                            fontFamily: 'inter',
+                            height: 35
+                        }}>
+                            {parentId ? 'REPLY' : 'POST'}
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+        </View>
+    );
+}
+
+export default NewMessage
+
+const styles: any = StyleSheet.create({
+    container: {
+        width: '100%',
+        backgroundColor: 'white'
+    },
+    footer: {
+        width: '100%',
+        backgroundColor: 'white',
+        display: 'flex',
+        flexDirection: 'row',
+        paddingBottom: 20,
+        marginBottom: 75,
+        marginTop: 50,
+        lineHeight: 18
+    },
+    date: {
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'row',
+        paddingBottom: 3,
+        backgroundColor: 'white',
+        lineHeight: 18,
+        paddingTop: 5
+    },
+    colorBar: {
+        width: '100%',
+        flexDirection: 'row',
+        backgroundColor: 'white',
+        marginBottom: '5%',
+        marginTop: '5%',
+        lineHeight: 18
+    },
+    shuffleContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        width: '100%',
+        alignItems: 'flex-end',
+        backgroundColor: 'white',
+        paddingTop: 25
+    },
+    col1: {
+        width: '50%',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        backgroundColor: 'white',
+        paddingRight: 7.5
+    },
+    col2: {
+        width: '50%',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        backgroundColor: 'white',
+        paddingLeft: 7.5
+    },
+    picker: {
+        width: 150,
+        height: 275,
+        display: 'flex',
+        justifyContent: 'center',
+        backgroundColor: 'white',
+        overflow: 'hidden',
+        fontSize: 14,
+        textAlign: 'center'
+    },
+    text: {
+        fontSize: 18,
+        color: '#a6a2a2',
+        textAlign: 'right'
+    },
+    all: {
+        fontSize: 15,
+        color: '#a6a2a2',
+        height: 20,
+        paddingHorizontal: 10,
+        backgroundColor: 'white'
+    },
+    color1: {
+        backgroundColor: '#f94144'
+    },
+    color2: {
+        backgroundColor: '#f3722c',
+    },
+    color3: {
+        backgroundColor: '#f8961e',
+    },
+    color4: {
+        backgroundColor: '#f9c74f',
+    },
+    color5: {
+        backgroundColor: '#90be6d',
+    },
+    outline: {
+        borderRadius: 10,
+        borderWidth: 1,
+        borderColor: '#a6a2a2'
+    }
+})
