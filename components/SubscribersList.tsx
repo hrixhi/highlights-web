@@ -53,12 +53,12 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
         <View style={{
             backgroundColor: 'white',
             width: '100%',
-            height: '99%',
+            height: '100%',
             paddingTop: 5,
-            padding: 15,
+            padding: 20,
         }}>
             <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 30 }}>
-                <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} />
+                {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
             </Text>
             <View style={{ backgroundColor: 'white', flexDirection: 'row', paddingBottom: 15 }}>
                 {

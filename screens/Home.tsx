@@ -21,6 +21,7 @@ import { createUser, getSubscriptions, getCues, unsubscribe } from '../graphql/Q
 import { htmlStringParser } from '../helpers/HTMLParser';
 import Discussion from '../components/Discussion';
 import Subscribers from '../components/Subscribers';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -732,7 +733,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
   const openModal = useCallback((type) => {
     setModalType(type)
-    sheetRef.current.snapTo(0)
+    // sheetRef.current.snapTo(0)
     setShowShadow(true)
   }, [sheetRef, cues])
 
@@ -748,7 +749,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
   const closeModal = useCallback(() => {
     setCueId('')
-    sheetRef.current.snapTo(2)
+    // sheetRef.current.snapTo(2)
     setModalType('')
     setCreatedBy('')
     setChannelFilterChoice('All')
@@ -871,83 +872,74 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
   return (
     <View style={styles.container}>
-      {
-        showShadow ?
-          <View
-            onTouchStart={() => {
-              Keyboard.dismiss()
-            }}
-            style={{
-              position: 'absolute',
-              opacity: 0.75,
-              width: '100%',
-              height: '100%',
-              backgroundColor: '#101010',
-              zIndex: 50
-            }}
-          /> : null
-      }
-      <TopBar
-        key={JSON.stringify(channelFilterChoice) + JSON.stringify(filteredCues)}
-        openChannels={() => openModal('Channels')}
-        cues={filteredCues}
-        filterChoice={filterChoice}
-        channelId={channelId}
-        channelFilterChoice={channelFilterChoice}
-        setChannelFilterChoice={(choice: any) => setChannelFilterChoice(choice)}
-        openDiscussion={() => openModal('Discussion')}
-        openSubscribers={() => openModal('Subscribers')}
-        unsubscribe={() => unsubscribeChannel()}
-      />
-      <BottomSheet
-        ref={sheetRef}
-        snapPoints={snapPoints}
-        borderRadius={18}
-        renderContent={() => modalContent}
-        onCloseEnd={() => {
-          if (modalType === 'Menu') {
-            storeMenu()
-          }
-          closeModal()
-        }
-        }
-        enabledBottomInitialAnimation={true}
-        enabledInnerScrolling={true}
-        overdragResistanceFactor={0}
-      />
-      {
-        reLoading ? <View style={[styles.activityContainer, styles.horizontal]}>
-          <ActivityIndicator color={'#a6a2a2'} />
-        </View>
-          : <View style={[styles.activityContainer, styles.horizontal]}>
-            <CardsList
-              pageNumber={pageNumber}
-              fadeAnimation={fadeAnimation}
-              key={JSON.stringify(filterChoice) + JSON.stringify(channelId) + JSON.stringify(filteredCues) + JSON.stringify(channelFilterChoice)}
-              cues={filteredCues}
-              channelId={channelId}
-              createdBy={channelCreatedBy}
-              filterChoice={filterChoice}
-              openUpdate={(index: any, key: any, pageNumber: any, _id: any, by: any, cId: any) => openUpdate(index, key, pageNumber, _id, by, cId)}
-              channelFilterChoice={channelFilterChoice}
-            />
+      <View style={{
+        width: Dimensions.get('window').width * 0.27,
+        height: Dimensions.get('window').height,
+        flexDirection: 'column',
+        backgroundColor: '#f4f4f4',
+        paddingTop: 25,
+        paddingLeft: 25
+      }}>
+        <TopBar
+          key={JSON.stringify(channelFilterChoice) + JSON.stringify(filteredCues)}
+          openChannels={() => openModal('Channels')}
+          cues={filteredCues}
+          filterChoice={filterChoice}
+          channelId={channelId}
+          channelFilterChoice={channelFilterChoice}
+          setChannelFilterChoice={(choice: any) => setChannelFilterChoice(choice)}
+          openDiscussion={() => openModal('Discussion')}
+          openSubscribers={() => openModal('Subscribers')}
+          unsubscribe={() => unsubscribeChannel()}
+        />
+        {
+          reLoading ? <View style={[styles.activityContainer, styles.horizontal]}>
+            <ActivityIndicator color={'#a6a2a2'} />
           </View>
-      }
-      <BottomBar
-        openMenu={() => openModal('Menu')}
-        openCreate={() => openModal('Create')}
-        openWalkthrough={() => openModal('Walkthrough')}
-        filterChoice={filterChoice}
-        handleFilterChange={(choice: any) => handleFilterChange(choice)}
-        key={Math.random()}
-        customCategories={customCategories}
-        subscriptions={subscriptions}
-        setChannelId={(id: string) => setChannelId(id)}
-        setChannelCreatedBy={(id: any) => setChannelCreatedBy(id)}
-        setChannelFilterChoice={(choice: string) => setChannelFilterChoice(choice)}
-        openChannels={() => openModal('Channels')}
-      />
-    </View >
+            : <View style={[styles.activityContainer, styles.horizontal]}>
+              <CardsList
+                pageNumber={pageNumber}
+                fadeAnimation={fadeAnimation}
+                key={JSON.stringify(filterChoice) + JSON.stringify(channelId) + JSON.stringify(filteredCues) + JSON.stringify(channelFilterChoice)}
+                cues={filteredCues}
+                channelId={channelId}
+                createdBy={channelCreatedBy}
+                filterChoice={filterChoice}
+                openUpdate={(index: any, key: any, pageNumber: any, _id: any, by: any, cId: any) => openUpdate(index, key, pageNumber, _id, by, cId)}
+                channelFilterChoice={channelFilterChoice}
+              />
+            </View>
+        }
+        <BottomBar
+          openMenu={() => openModal('Menu')}
+          openCreate={() => openModal('Create')}
+          openWalkthrough={() => openModal('Walkthrough')}
+          filterChoice={filterChoice}
+          handleFilterChange={(choice: any) => handleFilterChange(choice)}
+          key={Math.random()}
+          customCategories={customCategories}
+          subscriptions={subscriptions}
+          setChannelId={(id: string) => setChannelId(id)}
+          setChannelCreatedBy={(id: any) => setChannelCreatedBy(id)}
+          setChannelFilterChoice={(choice: string) => setChannelFilterChoice(choice)}
+          openChannels={() => openModal('Channels')}
+        />
+      </View >
+      <View style={{
+        width: Dimensions.get('window').width * 0.73,
+        height: Dimensions.get('window').height,
+        paddingHorizontal: 25,
+        paddingTop: 25,
+        borderLeftWidth: 1,
+        borderColor: '#f4f4f4',
+        backgroundColor: '#f4f4f4',
+        overflow: 'scroll'
+      }}>
+        {
+          modalType === '' ? null : modalContent
+        }
+      </View>
+    </View>
   );
 }
 
@@ -956,18 +948,18 @@ export default Home
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'column',
-    maxWidth: 600,
-    height: Dimensions.get('window').height
+    flexDirection: 'row'
   },
   activityContainer: {
     height: '70%',
-    maxWidth: 600,
-    justifyContent: "center"
+    width: Dimensions.get('window').width * 0.27,
+    justifyContent: "center",
+    // borderRightWidth: 1,
+    // borderLeftWidth: 1,
+    // borderColor: '#eaeaea'
   },
   horizontal: {
     flexDirection: "row",
-    justifyContent: "space-around",
-    padding: 10
+    justifyContent: "space-around"
   }
 });

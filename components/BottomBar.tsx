@@ -17,7 +17,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 {
                     props.customCategories.length === 0 ? null :
                         <TouchableOpacity
-                            style={choice === 'All' ? { ...styles.sub, ...styles.subOutline } : styles.sub}
+                            style={choice === 'All' ? styles.subOutline : styles.sub}
                             onPress={() => {
                                 props.handleFilterChange('All')
                                 props.setChannelFilterChoice('All')
@@ -30,10 +30,15 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     ) : (
                                             choice === 'All' ? '#101010' : 'white'
                                         ),
-                                    lineHeight: 20
+                                    lineHeight: 20,
+                                    fontSize: 14
                                 }}
                             >
-                                <Ionicons name='home-outline' size={15} />
+                                <Ionicons name='home-outline' size={15} color={colorScheme === 'light' ? (
+                                    choice === 'All' ? 'white' : '#101010'
+                                ) : (
+                                        choice === 'All' ? '#101010' : 'white'
+                                    )} />
                             </Text>
                         </TouchableOpacity>
                 }
@@ -41,7 +46,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     props.subscriptions.map((subscription: any) => {
                         return <TouchableOpacity
                             key={Math.random()}
-                            style={choice === subscription.channelName ? { ...styles.sub, ...styles.subOutline } : styles.sub}
+                            style={choice === subscription.channelName ? styles.subOutline : styles.sub}
                             onPress={() => {
                                 props.setChannelFilterChoice('All')
                                 props.handleFilterChange(subscription.channelName)
@@ -71,7 +76,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     <Text
                         style={{
                             color: '#0079FE',
-                            lineHeight: 18,
+                            lineHeight: 20,
                             fontFamily: 'inter'
                         }}
                     >
@@ -119,11 +124,14 @@ export default BottomBar
 
 const styleObject: any = (colorScheme: any) => StyleSheet.create({
     bottombar: {
-        height: '14%',
-        width: '98.5%',
+        height: '15%',
+        width: '100%',
         display: 'flex',
         paddingHorizontal: 15,
-        paddingBottom: 20
+        paddingBottom: 15,
+        // borderColor: '#eaeaea',
+        // borderLeftWidth: 1,
+        // borderRightWidth: 1
     },
     icons: {
         width: '33.33333%',
@@ -144,7 +152,7 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
         width: '98.5%',
         height: '50%',
         flexDirection: 'row',
-        paddingTop: 8
+        paddingTop: 20
     },
     iconContainer: {
         width: '20%',
@@ -154,10 +162,6 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
         borderRadius: 10,
         backgroundColor: colorScheme === 'light' ? '#101010' : 'white',
         color: colorScheme === 'light' ? 'white' : '#101010'
-    },
-    subOutline: {
-        borderRadius: 10,
-        backgroundColor: colorScheme === 'light' ? '#101010' : 'white',
     },
     cusCategory: {
         fontSize: 15,
@@ -170,6 +174,14 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
         color: colorScheme === 'light' ? '#101010' : 'white',
         height: 22,
         paddingHorizontal: 10
+    },
+    subOutline: {
+        fontSize: 15,
+        color: colorScheme === 'light' ? '#101010' : 'white',
+        height: 22,
+        paddingHorizontal: 10,
+        borderRadius: 10,
+        backgroundColor: colorScheme === 'light' ? '#101010' : 'white',
     },
     color1: {
         backgroundColor: '#f94144',

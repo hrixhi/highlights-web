@@ -21,13 +21,25 @@ const Channels: React.FunctionComponent<{ [label: string]: any }> = (props: any)
             width: '100%',
             backgroundColor: 'white',
             paddingBottom: 330,
-            minHeight: '100%'
+            minHeight: '100%',
+            // borderWidth: 1,
+            // borderBottomWidth: 0,
+            // borderColor: '#eaeaea',
+            borderTopRightRadius: 25,
+            borderTopLeftRadius: 25,
         }}
             onTouchMove={() => Keyboard.dismiss()}
         >
-            <Animated.View style={{ ...styles.container, opacity: modalAnimation }}>
+            <Animated.View style={{
+                width: '60%',
+                minHeight: '100%',
+                backgroundColor: 'white',
+                paddingTop: 5,
+                opacity: modalAnimation,
+                alignSelf: 'center'
+            }}>
                 <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 20 }}>
-                    <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} />
+                    {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
                 </Text>
                 <ChannelControls
                     closeModal={() => props.closeModal()}
@@ -38,51 +50,3 @@ const Channels: React.FunctionComponent<{ [label: string]: any }> = (props: any)
 }
 
 export default Channels;
-
-const styles = StyleSheet.create({
-    container: {
-        width: '100%',
-        minHeight: '100%',
-        backgroundColor: 'white',
-        // padding: 22.5,
-        paddingTop: 5
-    },
-    screen: {
-        padding: 15,
-        width: '100%',
-        height: '80%',
-        backgroundColor: 'white',
-    },
-    outline: {
-        borderRadius: 10,
-        borderWidth: 1,
-        borderColor: '#a6a2a2'
-    },
-    all: {
-        fontSize: 15,
-        color: '#a6a2a2',
-        height: 20,
-        paddingHorizontal: 10,
-        backgroundColor: 'white'
-    },
-    colorBar: {
-        width: '100%',
-        flexDirection: 'row',
-        backgroundColor: 'white',
-        marginBottom: '3%',
-        // marginTop: '4%',
-        lineHeight: 18
-    },
-    cuesInput: {
-        width: '100%',
-        backgroundColor: '#f4f4f4',
-        borderRadius: 15,
-        fontSize: 18,
-        fontWeight: 'bold',
-        padding: 20,
-        paddingTop: 20,
-        paddingBottom: 20,
-        marginBottom: '4%',
-        marginTop: 15
-    },
-});

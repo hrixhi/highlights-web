@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { StyleSheet, Animated, ScrollView, Alert } from 'react-native';
+import { StyleSheet, Animated, Alert, Dimensions } from 'react-native';
 import Swiper from 'react-native-swiper'
 import { Text, View, TouchableOpacity } from '../components/Themed';
 import Card from './Card'
@@ -48,44 +48,20 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     return (
         <Animated.View style={{
-            ...styles.container,
+            height: '100%',
             opacity: props.fadeAnimation,
-            maxWidth: 600
+            width: Dimensions.get('window').width * 0.27,
+            paddingRight: 20,
+            // borderColor: '#eaeaea',
+            // borderLeftWidth: 1,
+            // borderRightWidth: 1,
         }}>
-            {/* {
-                props.channelId !== '' ?
-                    <>
-                        <View style={{ height: '1.25%' }} />
-                        <View style={{
-                            width: '98.5%',
-                            height: '17.5%',
-                            paddingHorizontal: 15,
-                            paddingTop: 10
-                        }}>
-                            <View style={{ flexDirection: 'row', height: '55%' }}>
-                                <Text
-                                    ellipsizeMode="tail"
-                                    style={{
-                                        color: '#0079FE',
-                                        fontWeight: 'bold',
-                                        fontSize: 18,
-                                        lineHeight: 33,
-                                        flex: 1,
-                                        fontFamily: 'inter'
-                                    }}>
-                                    {props.filterChoice}
-                                </Text>
-                                <View style={{ flexDirection: 'row' }}>
-                                    
-                                </View>
-                            </View>
-                        </View>
-                        <View style={{ height: '1.25%' }} />
-                    </> : null
-            } */}
             {
                 filteredCues.length > 0 ?
                     <Swiper
+                        containerStyle={{
+                            width: Dimensions.get('window').width * 0.27 - 40
+                        }}
                         index={props.pageNumber}
                         activeDotColor={'#0079FE'}
                         horizontal={false}
@@ -212,15 +188,10 @@ export default React.memo(CardsList, (prev, next) => {
 
 const styleObject = (channelId: any) => {
     return StyleSheet.create({
-        container: {
-            maxWidth: 600,
-            height: '100%',
-            paddingVertical: 7,
-        },
         screen: {
             flex: 1,
             paddingHorizontal: 15,
-            width: '100%',
+            width: Dimensions.get('window').width * 0.25,
         },
         margin: {
             height: '2.5%'
@@ -232,12 +203,9 @@ const styleObject = (channelId: any) => {
             flex: 1,
             flexDirection: 'row',
             display: 'flex',
-            width: '100%',
         },
         col: {
-            width: '100%',
             height: '100%',
-            paddingRight: 7.5,
             flex: 1,
         }
     })

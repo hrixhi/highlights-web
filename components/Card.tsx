@@ -8,12 +8,11 @@ import { htmlStringParser } from '../helpers/HTMLParser';
 
 const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
-    const colorChoices: any[] = ['color1', 'color2', 'color3', 'color4', 'color5'].reverse()
+    const colorChoices: any[] = ['#f94144', '#f3722c', '#f8961e', '#f9c74f', '#90be6d'].reverse()
     const colorScheme = useColorScheme();
     const styleObject = styles(colorScheme, props.channelId)
     const starred = props.cue.starred;
     const { title, subtitle } = htmlStringParser(props.cue.cue)
-    console.log(colorScheme)
 
     return (
         <View
@@ -22,13 +21,16 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             <TouchableOpacity
                 key={'textPage'}
                 onPress={() => props.updateModal()}
-                style={starred ? {
-                    ...styleObject.card,
-                    ...styleObject.flip,
-                } : styleObject.card}>
-                <View style={starred ? { ...styleObject.text, ...styleObject.flip } : styleObject.text}>
-                    <View style={starred ? { ...styleObject.dateContainer, ...styleObject.flip } : styleObject.dateContainer}>
-                        <View style={{ ...styleObject.color, ...styleObject[colorChoices[props.cue.color]] }} />
+                style={starred ? styleObject.flipCard : styleObject.card}>
+                <View style={starred ? styleObject.flipText : styleObject.text}>
+                    <View style={starred ? styleObject.flipDateContainer : styleObject.dateContainer}>
+                        <View style={{
+                            width: 8,
+                            height: 8,
+                            borderRadius: 10,
+                            marginTop: 1,
+                            backgroundColor: colorChoices[props.cue.color]
+                        }} />
                         <Text style={styleObject.date}>
                             {
                                 (new Date(props.cue.date)).toString().split(' ')[1] +
@@ -38,11 +40,11 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         </Text>
                         {
                             props.cue.channelName ?
-                                <Text style={{ ...styleObject.date }}>
+                                <Text style={styleObject.date}>
                                     {props.cue.channelName}
                                 </Text> : null
                         }
-                        <Text style={{ ...styleObject.date }}>
+                        <Text style={styleObject.date}>
                             {props.cue.customCategory}
                         </Text>
                         {
@@ -145,13 +147,13 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     <Text
                         ellipsizeMode={'tail'}
                         numberOfLines={1}
-                        style={starred ? { ...styleObject.title, ...styleObject.titleFlip } : styleObject.title}>
+                        style={starred ? styleObject.titleFlip : styleObject.title}>
                         {title}
                     </Text>
                     <Text
                         ellipsizeMode={'tail'}
                         numberOfLines={1}
-                        style={starred ? { ...styleObject.description, ...styleObject.descriptionFlip, } : { ...styleObject.description }}>
+                        style={starred ? styleObject.descriptionFlip : styleObject.description}>
                         {subtitle}
                     </Text>
                 </View>
@@ -167,33 +169,34 @@ export default React.memo(Card, (prev, next) => {
 const styles: any = (colorScheme: any, channelId: any) => StyleSheet.create({
     swiper: {
         height: '17.5%',
-        width: '98.5%',
         borderRadius: 20,
         overflow: 'hidden'
     },
     card: {
         height: '100%',
-        width: '100%',
         borderRadius: 20,
         padding: 13,
         backgroundColor: colorScheme === 'light' ? '#F4F4F4' : '#a6a2a2',
     },
-    flip: {
+    flipCard: {
+        height: '100%',
+        width: '100%',
+        borderRadius: 20,
+        padding: 13,
         color: '#F4F4F4',
         backgroundColor: colorScheme === 'light' ? '#101010' : 'white'
     },
-    titleFlip: {
-        color: colorScheme === 'light' ? '#fff' : '#101010',
-        backgroundColor: colorScheme === 'light' ? '#101010' : '#fff'
-    },
     descriptionFlip: {
-        color: '#a6a2a2'
+        color: '#a6a2a2',
+        fontSize: 13,
+        height: '30%'
     },
     text: {
-        display: 'flex',
-        flexDirection: 'column',
-        flex: 1,
         backgroundColor: colorScheme === 'light' ? '#F4F4F4' : '#a6a2a2'
+    },
+    flipText: {
+        color: '#F4F4F4',
+        backgroundColor: colorScheme === 'light' ? '#101010' : 'white'
     },
     dateContainer: {
         fontSize: 10,
@@ -202,6 +205,14 @@ const styles: any = (colorScheme: any, channelId: any) => StyleSheet.create({
         backgroundColor: colorScheme === 'light' ? '#F4F4F4' : '#a6a2a2',
         display: 'flex',
         flexDirection: 'row'
+    },
+    flipDateContainer: {
+        fontSize: 10,
+        height: '22%',
+        display: 'flex',
+        flexDirection: 'row',
+        color: '#F4F4F4',
+        backgroundColor: colorScheme === 'light' ? '#101010' : 'white'
     },
     date: {
         fontSize: 9,
@@ -219,30 +230,21 @@ const styles: any = (colorScheme: any, channelId: any) => StyleSheet.create({
         paddingTop: 5,
         color: colorScheme === 'light' ? '#101010' : 'white'
     },
+    titleFlip: {
+        color: colorScheme === 'light' ? '#fff' : '#101010',
+        backgroundColor: colorScheme === 'light' ? '#101010' : '#fff',
+        fontFamily: 'inter',
+        fontSize: 14,
+        fontWeight: 'bold',
+        height: '44%',
+        width: '100%',
+        flexWrap: 'wrap',
+        display: 'flex',
+        paddingTop: 5,
+    },
     description: {
         fontSize: 13,
         color: colorScheme === 'light' ? '#a6a2a2' : '#333333',
         height: '30%'
-    },
-    color: {
-        width: 8,
-        height: 8,
-        borderRadius: 10,
-        marginTop: 1
-    },
-    color1: {
-        backgroundColor: '#f94144'
-    },
-    color2: {
-        backgroundColor: '#f3722c',
-    },
-    color3: {
-        backgroundColor: '#f8961e',
-    },
-    color4: {
-        backgroundColor: '#f9c74f',
-    },
-    color5: {
-        backgroundColor: '#90be6d',
     }
 });

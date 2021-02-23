@@ -81,8 +81,11 @@ const Discussion: React.FunctionComponent<{ [label: string]: any }> = (props: an
             width: '100%',
             height: '100%',
             backgroundColor: 'white',
-            borderTopRightRadius: 20,
-            borderTopLeftRadius: 20
+            borderTopRightRadius: 25,
+            borderTopLeftRadius: 25,
+            // borderColor: '#eaeaea',
+            // borderWidth: 1,
+            // borderBottomWidth: 0
         }}
             showsVerticalScrollIndicator={false}
             onScroll={e => {
@@ -106,7 +109,7 @@ const Discussion: React.FunctionComponent<{ [label: string]: any }> = (props: an
             <Animated.View style={{
                 opacity: modalAnimation,
                 width: '100%',
-                height: windowHeight * 0.9,
+                height: windowHeight,
                 backgroundColor: 'white'
             }}>
                 {

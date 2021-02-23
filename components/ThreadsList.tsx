@@ -78,7 +78,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
             paddingTop: 5,
         }}>
             <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 35 }}>
-                <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} />
+                {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
             </Text>
             <NewMessage
                 cueId={props.cueId}
@@ -98,12 +98,12 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
         <View style={{
             backgroundColor: 'white',
             width: '100%',
-            height: '99%',
+            height: '100%',
             paddingTop: 5,
-            padding: 15,
+            padding: 20,
         }}>
             <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 30 }}>
-                <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} />
+                {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
             </Text>
             {
                 showThreadCues ?
@@ -312,7 +312,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                         {
                                                             categories.length === 0 ? null :
                                                                 <TouchableOpacity
-                                                                    style={filterChoice === 'All' ? { ...styles.cusCategory, ...styles.outline } : styles.cusCategory}
+                                                                    style={filterChoice === 'All' ? styles.cusCategoryOutline : styles.cusCategory}
                                                                     onPress={() => setFilterChoice('All')}>
                                                                     <Text
                                                                         style={{
@@ -328,7 +328,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                             categories.map((category: string) => {
                                                                 return <TouchableOpacity
                                                                     key={Math.random()}
-                                                                    style={filterChoice === category ? { ...styles.cusCategory, ...styles.outline } : styles.cusCategory}
+                                                                    style={filterChoice === category ? styles.cusCategoryOutline : styles.cusCategory}
                                                                     onPress={() => setFilterChoice(category)}>
                                                                     <Text
                                                                         style={{
@@ -392,17 +392,21 @@ const styleObject = () => {
             textAlign: 'center',
             overflow: 'hidden'
         },
-        outline: {
-            borderRadius: 10,
-            borderWidth: 1,
-            borderColor: '#a6a2a2',
-            color: 'white'
-        },
         cusCategory: {
             fontSize: 15,
             backgroundColor: 'white',
             paddingHorizontal: 10,
             height: 22
+        },
+        cusCategoryOutline: {
+            fontSize: 15,
+            backgroundColor: 'white',
+            paddingHorizontal: 10,
+            height: 22,
+            borderRadius: 10,
+            borderWidth: 1,
+            borderColor: '#a6a2a2',
+            color: 'white'
         }
     })
 }

@@ -242,17 +242,8 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
         <View style={styles.screen} key={1}>
             <View style={{ width: '100%', backgroundColor: 'white' }}>
                 <View style={styles.colorBar}>
-                    {/* <TouchableOpacity
-                        style={option === 'About' ? { ...styles.all, ...styles.outline } : styles.all}
-                        onPress={() => {
-                            setOption('About')
-                        }}>
-                        <Text style={{ color: '#a6a2a2' }}>
-                            About
-                        </Text>
-                    </TouchableOpacity> */}
                     <TouchableOpacity
-                        style={option === 'Create' ? { ...styles.all, ...styles.outline } : styles.all}
+                        style={option === 'Create' ? styles.allOutline : styles.all}
                         onPress={() => {
                             setOption('Create')
                         }}>
@@ -261,7 +252,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     </Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                        style={option === 'Subscribe' ? { ...styles.all, ...styles.outline } : styles.all}
+                        style={option === 'Subscribe' ? styles.allOutline : styles.all}
                         onPress={() => {
                             setOption('Subscribe')
                         }}>
@@ -269,50 +260,17 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             Subscribe
                                     </Text>
                     </TouchableOpacity>
-                    <View style={{
-                        flex: 1,
-                        justifyContent: 'flex-end',
-                        display: 'flex',
-                        flexDirection: 'row',
-                        backgroundColor: 'white'
-                    }}>
-                        <TouchableOpacity
-                            style={option === 'Profile' ?
-                                {
-                                    ...styles.all,
-                                    ...styles.outline
-                                } : styles.all}
-                            onPress={() => {
-                                setOption('Profile')
-                            }}>
-                            <Text style={{ color: '#a6a2a2' }}>
-                                Profile
+                    <TouchableOpacity
+                        style={option === 'Profile' ? styles.allOutline : styles.all}
+                        onPress={() => {
+                            setOption('Profile')
+                        }}>
+                        <Text style={{ color: '#a6a2a2' }}>
+                            Profile
                         </Text>
-                        </TouchableOpacity>
-                    </View>
+                    </TouchableOpacity>
                 </View>
                 {
-                    // option === 'About'
-                    //     ? <View style={{ backgroundColor: 'white' }}>
-                    //         <Text style={{
-                    //             color: '#101010',
-                    //             textAlign: 'left',
-                    //             fontSize: 35,
-                    //             fontWeight: 'bold',
-                    //             fontFamily: 'inter',
-                    //         }}>
-                    //             Channels{'\n'}
-                    //         </Text>
-                    //         <Text style={{
-                    //             color: '#a6a2a2',
-                    //             textAlign: 'left',
-                    //             fontSize: 25,
-                    //             fontWeight: 'bold'
-                    //         }}>
-                    //             Broadcast and discuss notes over a channel.
-                    //         </Text>
-                    //     </View>
-                    //     : 
                     option === 'Profile' ?
                         <View style={{ width: '100%', backgroundColor: 'white' }}>
                             <Text style={{ color: '#101010', fontSize: 16, paddingBottom: 10 }}>
@@ -420,12 +378,6 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
 export default ChannelControls;
 
 const styles = StyleSheet.create({
-    container: {
-        width: '100%',
-        minHeight: '100%',
-        backgroundColor: 'white',
-        paddingTop: 5
-    },
     screen: {
         padding: 15,
         paddingHorizontal: 30,
@@ -441,9 +393,19 @@ const styles = StyleSheet.create({
     all: {
         fontSize: 15,
         color: '#a6a2a2',
-        height: 20,
+        height: 22,
         paddingHorizontal: 10,
         backgroundColor: 'white'
+    },
+    allOutline: {
+        fontSize: 15,
+        color: '#a6a2a2',
+        height: 22,
+        paddingHorizontal: 10,
+        backgroundColor: 'white',
+        borderRadius: 10,
+        borderWidth: 1,
+        borderColor: '#a6a2a2'
     },
     colorBar: {
         width: '100%',

@@ -70,12 +70,12 @@ const ThreadCard: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     <View style={{ backgroundColor: '#f4f4f4', width: '100%', flexDirection: 'row', display: 'flex', height: '44%' }}>
                         <Text ellipsizeMode={'tail'}
                             numberOfLines={1}
-                            style={{ ...styleObject.title, flex: 1 }}>
+                            style={styleObject.title}>
                             {title}
                         </Text>
                         <Text ellipsizeMode={'tail'}
                             numberOfLines={1}
-                            style={{ ...styleObject.title, marginLeft: 10 }}>
+                            style={styleObject.titleArrow}>
                             <Ionicons name="chevron-forward-outline" color="#a6a2a2" size={16} />
                         </Text>
                     </View>
@@ -132,7 +132,16 @@ const styles: any = () => StyleSheet.create({
         fontSize: 14,
         fontWeight: 'bold',
         paddingTop: 5,
-        color: '#101010'
+        color: '#101010',
+        flex: 1
+    },
+    titleArrow: {
+        fontFamily: 'inter',
+        fontSize: 14,
+        fontWeight: 'bold',
+        paddingTop: 5,
+        color: '#101010',
+        marginLeft: 10
     },
     description: {
         fontSize: 13,

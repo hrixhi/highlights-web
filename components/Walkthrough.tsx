@@ -21,7 +21,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
         <View style={{ width: '100%', height: '100%', backgroundColor: 'white' }}>
             <Animated.View style={{ ...styles.container, opacity: modalAnimation }}>
                 <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 20 }}>
-                    <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} />
+                    {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
                 </Text>
                 <Swiper
                     horizontal={true}
