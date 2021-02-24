@@ -66,12 +66,12 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                     props.cueId ?
                         <Text
                             ellipsizeMode="tail"
-                            style={{ color: '#a6a2a2', fontWeight: 'bold', fontSize: 18, flex: 1, lineHeight: 25 }}>
+                            style={{ color: '#a6a2a2', fontSize: 18, flex: 1, lineHeight: 25 }}>
                             Status
                         </Text> :
                         <Text
                             ellipsizeMode="tail"
-                            style={{ color: '#a6a2a2', fontWeight: 'bold', fontSize: 18, flex: 1, lineHeight: 25 }}>
+                            style={{ color: '#a6a2a2', fontSize: 18, flex: 1, lineHeight: 25 }}>
                             Subscribers
                         </Text>
                 }

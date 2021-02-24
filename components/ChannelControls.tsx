@@ -273,7 +273,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                 {
                     option === 'Profile' ?
                         <View style={{ width: '100%', backgroundColor: 'white' }}>
-                            <Text style={{ color: '#101010', fontSize: 16, paddingBottom: 10 }}>
+                            <Text style={{ color: '#101010', fontSize: 14, paddingBottom: 10 }}>
                                 Display Name
                             </Text>
                             <TextInput
@@ -283,7 +283,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 onChangeText={val => setDisplayName(val)}
                                 placeholderTextColor={'#a6a2a2'}
                             />
-                            <Text style={{ color: '#101010', fontSize: 16, paddingBottom: 10 }}>
+                            <Text style={{ color: '#101010', fontSize: 14, paddingBottom: 10 }}>
                                 Full Name
                             </Text>
                             <TextInput
@@ -296,7 +296,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         </View>
                         :
                         <View style={{ backgroundColor: 'white' }}>
-                            <Text style={{ color: '#101010', fontWeight: 'bold', fontSize: 16, paddingBottom: 10 }}>
+                            <Text style={{ color: '#101010', fontSize: 14, paddingBottom: 10 }}>
                                 Channel
                             </Text>
                             <TextInput
@@ -314,7 +314,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                 {
                     (option === 'Subscribe' && passwordRequired) || option === 'Create' ?
                         <View style={{ backgroundColor: 'white' }}>
-                            <Text style={{ color: '#101010', fontSize: 16, paddingBottom: 10 }}>
+                            <Text style={{ color: '#101010', fontSize: 14, paddingBottom: 10 }}>
                                 Password
                             </Text>
                             <TextInput

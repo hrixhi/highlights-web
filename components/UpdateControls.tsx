@@ -501,125 +501,128 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     </View>
                 </View>
                 <View style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-                    <View style={{ width: '40%', borderRightWidth: 0, borderColor: '#f4f4f4' }}>
-                        <View style={{ width: '100%', paddingTop: 25, paddingBottom: 15, backgroundColor: 'white' }}>
-                            <Text style={{ fontSize: 16, color: '#101010' }}>
-                                Priority
+                    <View style={{ display: 'flex', flexDirection: 'row' }}>
+                        <View style={{ width: '33.33%', borderRightWidth: 0, borderColor: '#f4f4f4' }}>
+                            <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
+                                <Text style={{ fontSize: 14, color: '#101010' }}>
+                                    Priority
                         </Text>
-                        </View>
-                        <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white' }}>
-                            <View style={{ width: '100%', backgroundColor: 'white' }}>
-                                <ScrollView style={{ ...styles.colorBar, height: 20 }} horizontal={true} showsHorizontalScrollIndicator={false}>
-                                    {
-                                        colorChoices.map((c: string, i: number) => {
-                                            return <View style={color === i ? styles.colorContainerOutline : styles.colorContainer} key={Math.random()}>
-                                                <TouchableOpacity
-                                                    style={{
-                                                        width: 12,
-                                                        height: 12,
-                                                        borderRadius: 6,
-                                                        backgroundColor: colorChoices[i]
-                                                    }}
-                                                    onPress={() => {
-                                                        setColor(i)
-                                                    }}
-                                                />
-                                            </View>
-                                        })
-                                    }
-                                </ScrollView>
                             </View>
-                        </View>
-                    </View>
-                    <View style={{ width: '40%', borderRightWidth: 0, borderColor: '#f4f4f4' }}></View>
-                    <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                        <Text style={{ fontSize: 16, color: '#101010' }}>
-                            {
-                                props.cue.channelId ? 'Channel' : 'Category'
-                            }
-                        </Text>
-                    </View>
-                    {
-                        props.cue.channelId ?
                             <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white' }}>
-                                <View style={{ width: '85%', backgroundColor: 'white' }}>
-                                    <View style={styles.colorBar}>
-                                        <TouchableOpacity
-                                            style={styles.allOutlineBlue}
-                                            onPress={() => { }}>
-                                            <Text style={{ color: '#0079FE' }}>
-                                                {props.cue.channelName}
-                                            </Text>
-                                        </TouchableOpacity>
-                                    </View>
+                                <View style={{ width: '100%', backgroundColor: 'white' }}>
+                                    <ScrollView style={{ ...styles.colorBar, height: 20 }} horizontal={true} showsHorizontalScrollIndicator={false}>
+                                        {
+                                            colorChoices.map((c: string, i: number) => {
+                                                return <View style={color === i ? styles.colorContainerOutline : styles.colorContainer} key={Math.random()}>
+                                                    <TouchableOpacity
+                                                        style={{
+                                                            width: 12,
+                                                            height: 12,
+                                                            borderRadius: 6,
+                                                            backgroundColor: colorChoices[i]
+                                                        }}
+                                                        onPress={() => {
+                                                            setColor(i)
+                                                        }}
+                                                    />
+                                                </View>
+                                            })
+                                        }
+                                    </ScrollView>
                                 </View>
                             </View>
-                            : <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white' }}>
-                                <View style={{ width: '85%', backgroundColor: 'white' }}>
+                        </View>
+                        <View style={{ width: '33.33%', borderRightWidth: 0, borderColor: '#f4f4f4' }}>
+                            <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
+                                <Text style={{ fontSize: 14, color: '#101010' }}>
                                     {
-                                        addCustomCategory ?
-                                            <View style={styles.colorBar}>
-                                                <TextInput
-                                                    value={customCategory}
-                                                    style={styles.allOutline}
-                                                    placeholder={'New Category'}
-                                                    onChangeText={val => {
-                                                        setCustomCategory(val)
-                                                    }}
-                                                    placeholderTextColor={'#a6a2a2'}
-                                                />
-                                            </View> :
-                                            <ScrollView style={styles.colorBar} horizontal={true} showsHorizontalScrollIndicator={false}>
-                                                <TouchableOpacity
-                                                    style={customCategory === '' ? styles.allOutline : styles.all}
-                                                    onPress={() => {
-                                                        setCustomCategory('')
-                                                    }}>
-                                                    <Text style={{ color: '#a6a2a2' }}>
-                                                        None
-                                                </Text>
-                                                </TouchableOpacity>
-                                                {
-                                                    customCategories.map((category: string) => {
-                                                        return <TouchableOpacity
-                                                            key={Math.random()}
-                                                            style={customCategory === category ? styles.allOutline : styles.all}
-                                                            onPress={() => {
-                                                                setCustomCategory(category)
-                                                            }}>
-                                                            <Text style={{ color: '#a6a2a2' }}>
-                                                                {category}
-                                                            </Text>
-                                                        </TouchableOpacity>
-                                                    })
-                                                }
-                                            </ScrollView>
+                                        props.cue.channelId ? 'Channel' : 'Category'
                                     }
-                                </View>
-                                <View style={{ width: '15%', backgroundColor: 'white' }}>
-                                    <TouchableOpacity
-                                        onPress={() => {
-                                            if (addCustomCategory) {
-                                                setCustomCategory('')
-                                                setAddCustomCategory(false)
-                                            } else {
-                                                setCustomCategory('')
-                                                setAddCustomCategory(true)
-                                            }
-                                        }}
-                                        style={{ backgroundColor: 'white' }}>
-                                        <Text style={{ textAlign: 'right', lineHeight: 45, width: '100%' }}>
-                                            <Ionicons name={addCustomCategory ? 'close' : 'add'} size={30} color={'#a6a2a2'} />
-                                        </Text>
-                                    </TouchableOpacity>
-                                </View>
+                                </Text>
                             </View>
-                    }
+                            {
+                                props.cue.channelId ?
+                                    <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white' }}>
+                                        <View style={{ width: '85%', backgroundColor: 'white' }}>
+                                            <View style={styles.colorBar}>
+                                                <TouchableOpacity
+                                                    style={styles.allOutlineBlue}
+                                                    onPress={() => { }}>
+                                                    <Text style={{ color: '#0079FE' }}>
+                                                        {props.cue.channelName}
+                                                    </Text>
+                                                </TouchableOpacity>
+                                            </View>
+                                        </View>
+                                    </View>
+                                    : <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white' }}>
+                                        <View style={{ width: '85%', backgroundColor: 'white' }}>
+                                            {
+                                                addCustomCategory ?
+                                                    <View style={styles.colorBar}>
+                                                        <TextInput
+                                                            value={customCategory}
+                                                            style={styles.allOutline}
+                                                            placeholder={'New Category'}
+                                                            onChangeText={val => {
+                                                                setCustomCategory(val)
+                                                            }}
+                                                            placeholderTextColor={'#a6a2a2'}
+                                                        />
+                                                    </View> :
+                                                    <ScrollView style={styles.colorBar} horizontal={true} showsHorizontalScrollIndicator={false}>
+                                                        <TouchableOpacity
+                                                            style={customCategory === '' ? styles.allOutline : styles.all}
+                                                            onPress={() => {
+                                                                setCustomCategory('')
+                                                            }}>
+                                                            <Text style={{ color: '#a6a2a2', lineHeight: 20 }}>
+                                                                None
+                                                </Text>
+                                                        </TouchableOpacity>
+                                                        {
+                                                            customCategories.map((category: string) => {
+                                                                return <TouchableOpacity
+                                                                    key={Math.random()}
+                                                                    style={customCategory === category ? styles.allOutline : styles.all}
+                                                                    onPress={() => {
+                                                                        setCustomCategory(category)
+                                                                    }}>
+                                                                    <Text style={{ color: '#a6a2a2', lineHeight: 20 }}>
+                                                                        {category}
+                                                                    </Text>
+                                                                </TouchableOpacity>
+                                                            })
+                                                        }
+                                                    </ScrollView>
+                                            }
+                                        </View>
+                                        <View style={{ width: '15%', backgroundColor: 'white' }}>
+                                            <TouchableOpacity
+                                                onPress={() => {
+                                                    if (addCustomCategory) {
+                                                        setCustomCategory('')
+                                                        setAddCustomCategory(false)
+                                                    } else {
+                                                        setCustomCategory('')
+                                                        setAddCustomCategory(true)
+                                                    }
+                                                }}
+                                                style={{ backgroundColor: 'white' }}>
+                                                <Text style={{ textAlign: 'right', lineHeight: 20, width: '100%' }}>
+                                                    <Ionicons name={addCustomCategory ? 'close' : 'add'} size={20} color={'#a6a2a2'} />
+                                                </Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                    </View>
+                            }
+                        </View>
+                    </View>
                 </View>
                 <View style={{ width: '100%', paddingTop: 15, flexDirection: 'row' }}>
                     <View style={{ width: '33.33%' }}>
                         <View style={{ width: '100%', paddingTop: 25, paddingBottom: 15, backgroundColor: 'white' }}>
-                            <Text style={{ fontSize: 16, color: '#101010' }}>
+                            <Text style={{ fontSize: 14, color: '#101010' }}>
                                 <Ionicons
                                     name='notifications-outline' size={20} color={'#101010'} />
                             </Text>
@@ -655,7 +658,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         notify ?
                             <View style={{ width: '33.33%' }}>
                                 <View style={{ width: '100%', paddingTop: 25, paddingBottom: 15, backgroundColor: 'white' }}>
-                                    <Text style={{ fontSize: 16, color: '#101010' }}>
+                                    <Text style={{ fontSize: 14, color: '#101010' }}>
                                         <Ionicons
                                             name='shuffle-outline' size={25} color={'#a6a2a2'} />
                                     </Text>
@@ -724,7 +727,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         notify ?
                             <View style={{ width: '33.33%' }}>
                                 <View style={{ width: '100%', paddingTop: 25, paddingBottom: 15, backgroundColor: 'white' }}>
-                                    <Text style={{ fontSize: 16, color: '#101010' }}>
+                                    <Text style={{ fontSize: 14, color: '#101010' }}>
                                         <Ionicons
                                             name='infinite-outline' size={25} color={'#a6a2a2'} />
                                     </Text>
@@ -851,25 +854,12 @@ const styles: any = StyleSheet.create({
         paddingBottom: 20,
         marginBottom: '4%'
     },
-    descriptionInput: {
-        width: '100%',
-        backgroundColor: '#f4f4f4',
-        borderRadius: 15,
-        fontSize: 16,
-        padding: 20,
-        paddingTop: 20,
-        paddingBottom: 20,
-        marginBottom: '8%',
-        color: '#a6a2a2',
-    },
     footer: {
         width: '100%',
         backgroundColor: 'white',
         display: 'flex',
         flexDirection: 'row',
-        paddingBottom: 20,
-        marginBottom: 25,
-        marginTop: 40,
+        marginTop: 80,
         lineHeight: 18
     },
     colorContainer: {

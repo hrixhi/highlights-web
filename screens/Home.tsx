@@ -47,6 +47,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   const [channelCreatedBy, setChannelCreatedBy] = useState('')
   const [channelFilterChoice, setChannelFilterChoice] = useState('All')
   const responseListener: any = useRef();
+  const [init, setInit] = useState(false)
 
   const storeMenu = useCallback(async () => {
     try {
@@ -546,7 +547,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   }, [channelId, filterChoice])
 
   const loadData = useCallback(async () => {
-
     setReLoading(true)
     try {
 
@@ -700,9 +700,10 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         }).start();
       }
       // OPEN WALKTHROUGH IF FIRST TIME LOAD
-      if (!fO) {
+      if (!init) {
         openModal('Walkthrough')
       }
+      setInit(true)
     } catch (e) {
       console.log(e)
     }

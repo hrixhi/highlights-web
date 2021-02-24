@@ -5,6 +5,7 @@ import { Text, View, TouchableOpacity } from '../components/Themed';
 import Card from './Card'
 import _ from 'lodash'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -49,10 +50,39 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
             height: '100%',
             opacity: props.fadeAnimation,
             width: Dimensions.get('window').width * 0.3,
-            paddingLeft: 20,
-            paddingRight: 15
+            paddingHorizontal: 20
         }}>
-            {
+            <ScrollView
+                horizontal={false}
+                contentContainerStyle={{
+                    width: Dimensions.get('window').width * 0.3 - 70,
+                    height: (Dimensions.get('window').height - 30) * 0.7,
+                }}
+            >
+                <View style={styles.marginSmall} />
+                {
+                    filteredCues.map((cue: any, index: number) => {
+                        return <View style={{ height: '20%' }}>
+                            <Card
+                                fadeAnimation={props.fadeAnimation}
+                                updateModal={() => props.openUpdate(
+                                    filteredCues[index].key,
+                                    filteredCues[index].index,
+                                    0,
+                                    filteredCues[index]._id,
+                                    (filteredCues[index].createdBy ? filteredCues[index].createdBy : ''),
+                                    (filteredCues[index].channelId ? filteredCues[index].channelId : '')
+                                )}
+                                cue={filteredCues[index]}
+                                channelId={props.channelId}
+                            />
+                            <View style={styles.margin} />
+                        </View>
+                    })
+                }
+                <View style={styles.marginSmall} />
+            </ScrollView>
+            {/* {
                 filteredCues.length > 0 ?
                     <Swiper
                         vertical={true}
@@ -168,7 +198,7 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             No cues found.
                         </Text>
                     </View>
-            }
+            } */}
         </Animated.View >
     );
 }
@@ -182,10 +212,10 @@ const styleObject = (channelId: any) => {
     return StyleSheet.create({
         screen: {
             height: '100%',
-            width: Dimensions.get('window').width * 0.3 - 75
+            width: Dimensions.get('window').width * 0.3 - 40
         },
         margin: {
-            height: '2.5%'
+            flex: 1
         },
         marginSmall: {
             height: '1.25%'

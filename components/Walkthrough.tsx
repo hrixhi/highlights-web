@@ -44,12 +44,12 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     minDistanceForAction={0.1}
                     controlsProps={{
                         dotsTouchable: true,
-                        prevPos: 'bottom-left',
-                        nextPos: 'bottom-right',
+                        prevPos: 'left',
+                        nextPos: 'right',
                         nextTitle: '›',
-                        nextTitleStyle: { color: '#0079fe', fontSize: 30, fontFamily: 'overpass' },
+                        nextTitleStyle: { color: '#a6a2a2', fontSize: 50, fontFamily: 'overpass' },
                         prevTitle: '‹',
-                        prevTitleStyle: { color: '#0079fe', fontSize: 30, fontFamily: 'overpass' },
+                        prevTitleStyle: { color: '#a6a2a2', fontSize: 50, fontFamily: 'overpass' },
                         dotActiveStyle: { backgroundColor: '#0079fe' }
                     }}
                 >
@@ -57,12 +57,12 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         <Text style={{
                             color: '#101010',
                             textAlign: 'left',
-                            fontSize: 25,
+                            fontSize: 30,
                             fontWeight: 'bold',
                             fontFamily: 'inter',
                             paddingTop: 50
                         }}>
-                            Enhance note-taking. Simplify note-sharing.
+                            Enhance note-taking. {'\n'}Simplify note-sharing.
                         </Text>
                         <Text style={{
                             color: '#a6a2a2',
@@ -72,19 +72,19 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         }}>
                             {'\n'}Remember useful content by playing it as recurring reminders.
                         </Text>
-                        <TouchableOpacity
+                        {/* <TouchableOpacity
                             onPress={() => Linking.openURL('http://www.cuesapp.co')}
                             style={{ backgroundColor: 'white' }}>
                             <Text style={{ color: '#0079fe', fontSize: 20, textAlign: 'left' }}>
                                 {'\n'} www.cuesapp.co
                             </Text>
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                     </View>
                     <View style={styles.screen} key={Math.random()}>
                         <Text style={{
                             color: '#101010',
                             textAlign: 'left',
-                            fontSize: 25,
+                            fontSize: 30,
                             fontFamily: 'inter',
                             fontWeight: 'bold',
                             paddingTop: 50
@@ -104,7 +104,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         <Text style={{
                             color: '#101010',
                             textAlign: 'left',
-                            fontSize: 25,
+                            fontSize: 30,
                             fontWeight: 'bold',
                             fontFamily: 'inter',
                             paddingTop: 50
@@ -124,7 +124,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         <Text style={{
                             color: '#101010',
                             textAlign: 'left',
-                            fontSize: 25,
+                            fontSize: 30,
                             fontFamily: 'inter',
                             fontWeight: 'bold',
                             paddingTop: 50
@@ -144,7 +144,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         <Text style={{
                             color: '#101010',
                             textAlign: 'left',
-                            fontSize: 25,
+                            fontSize: 30,
                             fontFamily: 'inter',
                             fontWeight: 'bold',
                             paddingTop: 50
@@ -164,7 +164,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         <Text style={{
                             color: '#101010',
                             textAlign: 'left',
-                            fontSize: 25,
+                            fontSize: 30,
                             fontWeight: 'bold',
                             fontFamily: 'inter',
                             paddingTop: 50

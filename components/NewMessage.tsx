@@ -107,9 +107,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     width: '50%',
                     color: '#a6a2a2',
                     fontSize: 11,
-                    lineHeight: 30,
-                    paddingBottom: 6,
-                    paddingTop: 5
+                    lineHeight: 30
                 }}>
                     {
                         now.toString().split(' ')[1] +
@@ -125,92 +123,87 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 message={message}
                 setMessage={(m: any) => setMessage(m)}
             />
-            {
-                !cueId && !parentId ?
-                    <View style={{ width: '100%', backgroundColor: 'white' }}>
-                        <View style={{ width: '100%', paddingTop: 10, paddingBottom: 10, backgroundColor: 'white' }}>
-                            <Text style={{ fontSize: 16, color: '#101010' }}>
-                                Category
+            <View style={{ display: 'flex', flexDirection: 'row' }}>
+                {
+                    !cueId && !parentId ?
+                        <View style={{ width: '33.33%', backgroundColor: 'white' }}>
+                            <View style={{ width: '100%', paddingTop: 40, paddingBottom: 10, backgroundColor: 'white' }}>
+                                <Text style={{ fontSize: 14, color: '#101010' }}>
+                                    Category
                                 </Text>
-                        </View>
-                        <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white' }}>
-                            <View style={{ width: '85%', backgroundColor: 'white' }}>
-                                {
-                                    addCustomCategory ?
-                                        <View style={styles.colorBar}>
-                                            <TextInput
-                                                value={customCategory}
-                                                style={{ ...styles.all, ...styles.outline }}
-                                                placeholder={'New Category'}
-                                                onChangeText={val => {
-                                                    setCustomCategory(val)
-                                                }}
-                                                placeholderTextColor={'#a6a2a2'}
-                                            />
-                                        </View> :
-                                        <ScrollView style={styles.colorBar} horizontal={true} showsHorizontalScrollIndicator={false}>
-                                            <TouchableOpacity
-                                                style={customCategory === '' ? { ...styles.all, ...styles.outline } : styles.all}
-                                                onPress={() => {
-                                                    setCustomCategory('')
-                                                }}>
-                                                <Text style={{ color: '#a6a2a2' }}>
-                                                    None
+                            </View>
+                            <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white' }}>
+                                <View style={{ width: '85%', backgroundColor: 'white' }}>
+                                    {
+                                        addCustomCategory ?
+                                            <View style={styles.colorBar}>
+                                                <TextInput
+                                                    value={customCategory}
+                                                    style={styles.allOutline}
+                                                    placeholder={'New Category'}
+                                                    onChangeText={val => {
+                                                        setCustomCategory(val)
+                                                    }}
+                                                    placeholderTextColor={'#a6a2a2'}
+                                                />
+                                            </View> :
+                                            <ScrollView style={styles.colorBar} horizontal={true} showsHorizontalScrollIndicator={false}>
+                                                <TouchableOpacity
+                                                    style={customCategory === '' ? styles.allOutline : styles.all}
+                                                    onPress={() => {
+                                                        setCustomCategory('')
+                                                    }}>
+                                                    <Text style={{ color: '#a6a2a2', lineHeight: 20 }}>
+                                                        None
                                                     </Text>
-                                            </TouchableOpacity>
-                                            {
-                                                categories.map((category) => {
-                                                    return <TouchableOpacity
-                                                        key={Math.random()}
-                                                        style={category === customCategory ? { ...styles.all, ...styles.outline } : styles.all}
-                                                        onPress={() => {
-                                                            setCustomCategory(category)
-                                                        }}>
-                                                        <Text style={{ color: '#a6a2a2' }}>
-                                                            {category}
-                                                        </Text>
-                                                    </TouchableOpacity>
-                                                })
+                                                </TouchableOpacity>
+                                                {
+                                                    categories.map((category) => {
+                                                        return <TouchableOpacity
+                                                            key={Math.random()}
+                                                            style={category === customCategory ? styles.allOutline : styles.all}
+                                                            onPress={() => {
+                                                                setCustomCategory(category)
+                                                            }}>
+                                                            <Text style={{ color: '#a6a2a2', lineHeight: 20 }}>
+                                                                {category}
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    })
+                                                }
+                                            </ScrollView>}
+                                </View>
+                                <View style={{ width: '15%', backgroundColor: 'white' }}>
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            if (addCustomCategory) {
+                                                setCustomCategory('')
+                                                setAddCustomCategory(false)
+                                            } else {
+                                                setCustomCategory('')
+                                                setAddCustomCategory(true)
                                             }
-                                        </ScrollView>}
-                            </View>
-                            <View style={{ width: '15%', backgroundColor: 'white' }}>
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        if (addCustomCategory) {
-                                            setCustomCategory('')
-                                            setAddCustomCategory(false)
-                                        } else {
-                                            setCustomCategory('')
-                                            setAddCustomCategory(true)
-                                        }
-                                    }}
-                                    style={{ backgroundColor: 'white' }}>
-                                    <Text style={{ textAlign: 'right', lineHeight: 40, width: '100%' }}>
-                                        <Ionicons name={addCustomCategory ? 'close' : 'add'} size={30} color={'#a6a2a2'} />
-                                    </Text>
-                                </TouchableOpacity>
+                                        }}
+                                        style={{ backgroundColor: 'white' }}>
+                                        <Text style={{ textAlign: 'right', lineHeight: 20, width: '100%' }}>
+                                            <Ionicons name={addCustomCategory ? 'close' : 'add'} size={20} color={'#a6a2a2'} />
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View>
                             </View>
                         </View>
-                    </View>
-                    : null
-            }
-            {
-                parentId ? null :
-                    (
-                        parentId ? null :
-                            <View style={{ ...styles.shuffleContainer, paddingTop: 10 }}>
-                                <View style={{ width: '50%', backgroundColor: 'white' }}>
-                                    <Text style={{ fontSize: 16, color: '#a6a2a2', lineHeight: 40 }}>
-                                        Private
+                        : null
+                }
+                {
+                    parentId ? null :
+                        (
+                            parentId ? null :
+                                <View style={{ width: '33.33%', backgroundColor: 'white' }}>
+                                    <View style={{ width: '100%', paddingTop: 40, paddingBottom: 10, backgroundColor: 'white' }}>
+                                        <Text style={{ fontSize: 14, color: '#101010' }}>
+                                            Private
                                         </Text>
-                                </View>
-                                <View style={{
-                                    backgroundColor: 'white',
-                                    width: '50%',
-                                    display: 'flex', flexDirection: 'row',
-                                    justifyContent: 'flex-end'
-                                }}>
+                                    </View>
                                     <Switch
                                         value={isPrivate}
                                         onValueChange={() => setIsPrivate(!isPrivate)}
@@ -218,24 +211,18 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                             false: '#f4f4f4',
                                             true: '#a6a2a2'
                                         }}
-
+                                        activeThumbColor='white'
+                                        style={{ height: 20 }}
                                     />
                                 </View>
-                            </View>
-                    )
-            }
-            <View style={{ ...styles.shuffleContainer, paddingTop: 10 }}>
-                <View style={{ width: '50%', backgroundColor: 'white' }}>
-                    <Text style={{ fontSize: 16, color: '#a6a2a2', lineHeight: 40 }}>
-                        Anonymous
-                        </Text>
-                </View>
-                <View style={{
-                    backgroundColor: 'white',
-                    width: '50%',
-                    display: 'flex', flexDirection: 'row',
-                    justifyContent: 'flex-end'
-                }}>
+                        )
+                }
+                <View style={{ width: '33.33%', backgroundColor: 'white' }}>
+                    <View style={{ width: '100%', paddingTop: 40, paddingBottom: 10, backgroundColor: 'white' }}>
+                        <Text style={{ fontSize: 14, color: '#101010' }}>
+                            Anonymous
+                    </Text>
+                    </View>
                     <Switch
                         value={anonymous}
                         onValueChange={() => setAnonymous(!anonymous)}
@@ -243,7 +230,8 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             false: '#f4f4f4',
                             true: '#a6a2a2'
                         }}
-
+                        activeThumbColor='white'
+                        style={{ height: 20 }}
                     />
                 </View>
             </View>
@@ -282,7 +270,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     </TouchableOpacity>
                 </View>
             </View>
-        </View>
+        </View >
     );
 }
 
@@ -298,35 +286,21 @@ const styles: any = StyleSheet.create({
         backgroundColor: 'white',
         display: 'flex',
         flexDirection: 'row',
-        paddingBottom: 20,
-        marginBottom: 75,
-        marginTop: 50,
+        marginTop: 80,
         lineHeight: 18
     },
     date: {
         width: '100%',
         display: 'flex',
         flexDirection: 'row',
-        paddingBottom: 3,
-        backgroundColor: 'white',
-        lineHeight: 18,
-        paddingTop: 5
+        paddingBottom: 4,
+        backgroundColor: 'white'
     },
     colorBar: {
         width: '100%',
         flexDirection: 'row',
         backgroundColor: 'white',
-        marginBottom: '5%',
-        marginTop: '5%',
-        lineHeight: 18
-    },
-    shuffleContainer: {
-        display: 'flex',
-        flexDirection: 'row',
-        width: '100%',
-        alignItems: 'flex-end',
-        backgroundColor: 'white',
-        paddingTop: 25
+        lineHeight: 20
     },
     col1: {
         width: '50%',
@@ -357,9 +331,9 @@ const styles: any = StyleSheet.create({
         textAlign: 'center'
     },
     text: {
-        fontSize: 18,
+        fontSize: 12,
         color: '#a6a2a2',
-        textAlign: 'right'
+        textAlign: 'left'
     },
     all: {
         fontSize: 15,
@@ -368,20 +342,15 @@ const styles: any = StyleSheet.create({
         paddingHorizontal: 10,
         backgroundColor: 'white'
     },
-    color1: {
-        backgroundColor: '#f94144'
-    },
-    color2: {
-        backgroundColor: '#f3722c',
-    },
-    color3: {
-        backgroundColor: '#f8961e',
-    },
-    color4: {
-        backgroundColor: '#f9c74f',
-    },
-    color5: {
-        backgroundColor: '#90be6d',
+    allOutline: {
+        fontSize: 15,
+        color: '#a6a2a2',
+        height: 22,
+        paddingHorizontal: 10,
+        backgroundColor: 'white',
+        borderRadius: 10,
+        borderWidth: 1,
+        borderColor: '#a6a2a2'
     },
     outline: {
         borderRadius: 10,

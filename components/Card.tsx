@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { Dimensions, StyleSheet } from 'react-native';
 import { Text, View, TouchableOpacity } from '../components/Themed';
 import useColorScheme from '../hooks/useColorScheme';
 import { Ionicons } from '@expo/vector-icons';
@@ -171,12 +171,14 @@ export default React.memo(Card, (prev, next) => {
 
 const styles: any = (colorScheme: any, channelId: any) => StyleSheet.create({
     swiper: {
-        height: '17.5%',
+        height: '87.5%',
         borderRadius: 20,
-        overflow: 'hidden'
+        overflow: 'hidden',
+        // /width: Dimensions.get('window').width * 0.3 - 70
     },
     card: {
         height: '100%',
+        // width: Dimensions.get('window').width * 0.3 - 70,
         borderRadius: 20,
         padding: 13,
         backgroundColor: colorScheme === 'light' ? '#F4F4F4' : '#a6a2a2',

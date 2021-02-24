@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Image, ScrollView, Dimensions } from 'react-native';
+import { StyleSheet, Image, ScrollView, Dimensions, Linking } from 'react-native';
 import { View, Text, TouchableOpacity } from '../components/Themed';
 import useColorScheme from '../hooks/useColorScheme';
 import { Ionicons } from '@expo/vector-icons';
@@ -46,14 +46,18 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     flexDirection: 'row',
                     display: 'flex'
                 }}>
-                    <Image
-                        source={require('./default-images/cues-logo-black-exclamation-hidden.jpg')}
-                        style={{
-                            width: Dimensions.get('window').height * 0.16 * 0.53456,
-                            height: Dimensions.get('window').height * 0.16 * 0.2
-                        }}
-                        resizeMode={'contain'}
-                    />
+                    <TouchableOpacity
+                        onPress={() => Linking.openURL('http://www.cuesapp.co')}
+                        style={{ backgroundColor: 'white' }}>
+                        <Image
+                            source={require('./default-images/cues-logo-black-exclamation-hidden.jpg')}
+                            style={{
+                                width: Dimensions.get('window').height * 0.16 * 0.53456,
+                                height: Dimensions.get('window').height * 0.16 * 0.2
+                            }}
+                            resizeMode={'contain'}
+                        />
+                    </TouchableOpacity>
                     <View
                         key={JSON.stringify(cues)}
                         style={{

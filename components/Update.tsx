@@ -179,12 +179,12 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             minDistanceForAction={0.1}
                             controlsProps={{
                                 dotsTouchable: true,
-                                prevPos: 'bottom-left',
-                                nextPos: 'bottom-right',
+                                prevPos: 'left',
+                                nextPos: 'right',
                                 nextTitle: '›',
-                                nextTitleStyle: { color: '#0079fe', fontSize: 30, fontFamily: 'overpass' },
+                                nextTitleStyle: { color: '#a6a2a2', fontSize: 50, fontFamily: 'overpass' },
                                 prevTitle: '‹',
-                                prevTitleStyle: { color: '#0079fe', fontSize: 30, fontFamily: 'overpass' },
+                                prevTitleStyle: { color: '#a6a2a2', fontSize: 50, fontFamily: 'overpass' },
                                 dotActiveStyle: { backgroundColor: !Number.isNaN(Number(cueId)) ? '#fff' : '#0079fe' }
                             }}
                         >
