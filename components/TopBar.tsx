@@ -29,20 +29,28 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         setChannelCategories(cat)
     }, [cues])
 
+    // useEffect(() => {
+    //     const interval = setInterval(() => {
+    //         setHideExclaimation(exclaim => !exclaim);
+    //     }, 750);
+    //     return () => {
+    //         clearInterval(interval);
+    //     };
+    // }, []);
+
     return (
         <View style={styles.topbar} key={Math.random()}>
             <View style={{ width: '80%', height: Dimensions.get('window').height * 0.15 * 0.22, alignSelf: 'center' }} />
             <View style={{ width: '100%', height: Dimensions.get('window').height * 0.15 * 0.78 }}>
                 <View style={{
                     flexDirection: 'row',
-                    display: 'flex',
-                    paddingTop: 6
+                    display: 'flex'
                 }}>
                     <Image
                         source={require('./default-images/cues-logo-black-exclamation-hidden.jpg')}
                         style={{
-                            width: Dimensions.get('window').height * 0.15 * 0.53456,
-                            height: Dimensions.get('window').height * 0.15 * 0.2,
+                            width: Dimensions.get('window').height * 0.16 * 0.53456,
+                            height: Dimensions.get('window').height * 0.16 * 0.2
                         }}
                         resizeMode={'contain'}
                     />
@@ -58,21 +66,21 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         style={{ marginRight: 20 }}
                                         onPress={() => props.openDiscussion()}>
                                         <Text style={styles.channelText}>
-                                            <Ionicons name='chatbubble-ellipses-outline' size={22} color={'#a6a2a2'} />
+                                            <Ionicons name='chatbubble-ellipses-outline' size={20} color={'#a6a2a2'} />
                                         </Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity
                                         style={{ marginRight: 20 }}
                                         onPress={() => props.openSubscribers()}>
                                         <Text style={styles.channelText}>
-                                            <Ionicons name='people-outline' size={22} color={'#a6a2a2'} />
+                                            <Ionicons name='people-outline' size={20} color={'#a6a2a2'} />
                                         </Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity
                                         style={{ marginRight: 5 }}
                                         onPress={() => props.unsubscribe()}>
                                         <Text style={styles.channelText}>
-                                            <Ionicons name='exit-outline' size={22} color={'#a6a2a2'} />
+                                            <Ionicons name='exit-outline' size={20} color={'#a6a2a2'} />
                                         </Text>
                                     </TouchableOpacity>
                                 </View> :
@@ -89,18 +97,15 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     }} horizontal={true}
                         showsHorizontalScrollIndicator={false}
                     >
-                        {
-                            channelCategories.length === 0 ? null :
-                                <TouchableOpacity
-                                    style={filterChoice === 'All' ? styles.subOutline : styles.sub}
-                                    onPress={() => props.setChannelFilterChoice('All')}>
-                                    <Text
-                                        style={{ color: '#a6a2a2', lineHeight: 20 }}
-                                    >
-                                        All
+                        <TouchableOpacity
+                            style={filterChoice === 'All' ? styles.subOutline : styles.sub}
+                            onPress={() => props.setChannelFilterChoice('All')}>
+                            <Text
+                                style={{ color: '#a6a2a2', lineHeight: 20 }}
+                            >
+                                All
                                             </Text>
-                                </TouchableOpacity>
-                        }
+                        </TouchableOpacity>
                         {
                             channelCategories.map((category: string) => {
                                 return <TouchableOpacity
@@ -132,12 +137,9 @@ const styleObject: any = (channelId: any) => StyleSheet.create({
         width: '100%',
         flexDirection: 'column',
         display: 'flex',
-        paddingHorizontal: 15,
-        borderTopRightRadius: 25,
-        borderTopLeftRadius: 25,
-        // borderWidth: 1,
-        // borderBottomWidth: 0,
-        // borderColor: '#eaeaea'
+        paddingHorizontal: 20,
+        borderTopRightRadius: 30,
+        borderTopLeftRadius: 30,
     },
     text: {
         textAlign: 'right',
@@ -163,4 +165,7 @@ const styleObject: any = (channelId: any) => StyleSheet.create({
         paddingHorizontal: 10,
         lineHeight: 20
     },
+    channelText: {
+        // paddingTop: 1
+    }
 });

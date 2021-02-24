@@ -873,12 +873,12 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   return (
     <View style={styles.container}>
       <View style={{
-        width: Dimensions.get('window').width * 0.27,
+        width: Dimensions.get('window').width * 0.3,
         height: Dimensions.get('window').height,
         flexDirection: 'column',
         backgroundColor: '#f4f4f4',
-        paddingTop: 25,
-        paddingLeft: 25
+        paddingTop: 30,
+        paddingLeft: 30
       }}>
         <TopBar
           key={JSON.stringify(channelFilterChoice) + JSON.stringify(filteredCues)}
@@ -926,14 +926,13 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         />
       </View >
       <View style={{
-        width: Dimensions.get('window').width * 0.73,
+        width: Dimensions.get('window').width * 0.7,
         height: Dimensions.get('window').height,
-        paddingHorizontal: 25,
-        paddingTop: 25,
+        paddingHorizontal: 30,
+        paddingTop: 30,
         borderLeftWidth: 1,
         borderColor: '#f4f4f4',
-        backgroundColor: '#f4f4f4',
-        overflow: 'scroll'
+        backgroundColor: '#f4f4f4'
       }}>
         {
           modalType === '' ? null : modalContent
@@ -952,7 +951,7 @@ const styles = StyleSheet.create({
   },
   activityContainer: {
     height: '70%',
-    width: Dimensions.get('window').width * 0.27,
+    width: Dimensions.get('window').width * 0.3,
     justifyContent: "center",
     // borderRightWidth: 1,
     // borderLeftWidth: 1,

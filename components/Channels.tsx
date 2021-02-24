@@ -22,11 +22,8 @@ const Channels: React.FunctionComponent<{ [label: string]: any }> = (props: any)
             backgroundColor: 'white',
             paddingBottom: 330,
             minHeight: '100%',
-            // borderWidth: 1,
-            // borderBottomWidth: 0,
-            // borderColor: '#eaeaea',
-            borderTopRightRadius: 25,
-            borderTopLeftRadius: 25,
+            borderTopRightRadius: 30,
+            borderTopLeftRadius: 30,
         }}
             onTouchMove={() => Keyboard.dismiss()}
         >

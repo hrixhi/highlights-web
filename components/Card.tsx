@@ -150,12 +150,15 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         style={starred ? styleObject.titleFlip : styleObject.title}>
                         {title}
                     </Text>
-                    <Text
-                        ellipsizeMode={'tail'}
-                        numberOfLines={1}
-                        style={starred ? styleObject.descriptionFlip : styleObject.description}>
-                        {subtitle}
-                    </Text>
+                    {
+                        subtitle === '' ? null :
+                            <Text
+                                ellipsizeMode={'tail'}
+                                numberOfLines={1}
+                                style={starred ? styleObject.descriptionFlip : styleObject.description}>
+                                {subtitle !== '' ? subtitle : ' '}
+                            </Text>
+                    }
                 </View>
             </TouchableOpacity>
         </View>
@@ -225,8 +228,6 @@ const styles: any = (colorScheme: any, channelId: any) => StyleSheet.create({
         fontWeight: 'bold',
         height: '44%',
         width: '100%',
-        flexWrap: 'wrap',
-        display: 'flex',
         paddingTop: 5,
         color: colorScheme === 'light' ? '#101010' : 'white'
     },
@@ -238,8 +239,6 @@ const styles: any = (colorScheme: any, channelId: any) => StyleSheet.create({
         fontWeight: 'bold',
         height: '44%',
         width: '100%',
-        flexWrap: 'wrap',
-        display: 'flex',
         paddingTop: 5,
     },
     description: {

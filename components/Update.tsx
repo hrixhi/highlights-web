@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Animated, ActivityIndicator, Dimensions, Alert } from 'react-native';
 import { View } from '../components/Themed';
-import Swiper from 'react-native-swiper'
+import Swiper from 'react-native-web-swiper'
 import UpdateControls from './UpdateControls';
 import { ScrollView } from 'react-native-gesture-handler'
 import { fetchAPI } from '../graphql/FetchAPI';
@@ -143,8 +143,10 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     return (
         <View style={{
             width: '100%',
-            height: windowHeight * 0.9,
-            backgroundColor: 'white'
+            height: windowHeight - 30,
+            backgroundColor: '#f4f4f4',
+            borderTopLeftRadius: 30,
+            borderTopRightRadius: 30,
         }}>
             {
                 loading
@@ -155,61 +157,40 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         display: 'flex',
                         flexDirection: 'column',
                         backgroundColor: 'white',
+                        borderTopLeftRadius: 30,
+                        borderTopRightRadius: 30,
                     }}>
                         <ActivityIndicator color={'#a6a2a2'} />
                     </View>
                     :
                     <Animated.View style={{
-                        backgroundColor: 'white',
                         width: '100%',
-                        height: windowHeight * 0.9,
-                        opacity: modalAnimation
+                        height: windowHeight - 30,
+                        opacity: modalAnimation,
+                        borderTopLeftRadius: 30,
+                        borderTopRightRadius: 30,
                     }}
                         key={JSON.stringify(threads)}
                     >
                         <Swiper
-                            key={JSON.stringify(threads)}
-                            horizontal={true}
-                            activeDotColor={'#0079FE'}
-                            containerStyle={{
-                                marginTop: 0,
-                                flex: 1
+                            key={JSON.stringify(threads) + JSON.stringify(threads.length)}
+                            vertical={false}
+                            from={0}
+                            minDistanceForAction={0.1}
+                            controlsProps={{
+                                dotsTouchable: true,
+                                prevPos: 'bottom-left',
+                                nextPos: 'bottom-right',
+                                nextTitle: '›',
+                                nextTitleStyle: { color: '#0079fe', fontSize: 30, fontFamily: 'overpass' },
+                                prevTitle: '‹',
+                                prevTitleStyle: { color: '#0079fe', fontSize: 30, fontFamily: 'overpass' },
+                                dotActiveStyle: { backgroundColor: !Number.isNaN(Number(cueId)) ? '#fff' : '#0079fe' }
                             }}
-                            dotStyle={{
-                                opacity: 1
-                            }}
-                            activeDotStyle={{
-                                opacity: 1
-                            }}
-                            dotColor={'#e0e0e0'}
-                            loop={false}
-                            nestedScrollEnabled={true}
-                            keyboardDismissMode={'on-drag'}
-                            overScrollMode={'always'}
-                            alwaysBounceVertical={true}
-                            scrollEnabled={true}
-                            loadMinimal={true}
-                            loadMinimalSize={3}
                         >
                             <ScrollView
                                 ref={scroll1}
                                 key={1}
-                                contentOffset={
-                                    { x: 0, y: 1 }
-                                }
-                                onScroll={e => {
-                                    if (e.nativeEvent.contentOffset.y < -85) {
-                                        Animated.timing(modalAnimation, {
-                                            toValue: 0,
-                                            duration: 150,
-                                            useNativeDriver: true
-                                        })
-                                            .start(() => {
-                                                props.closeModal()
-                                            })
-                                    }
-                                    setScrollOffset(e.nativeEvent.contentOffset.y)
-                                }}
                                 showsVerticalScrollIndicator={false}
                                 overScrollMode={'always'}
                                 alwaysBounceVertical={true}
@@ -220,6 +201,10 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     if (e.nativeEvent.contentOffset.y === 0 && e.nativeEvent.contentOffset.x === 0) {
                                         scroll1.current.scrollTo({ x: 0, y: 1, animated: false })
                                     }
+                                }}
+                                style={{
+                                    borderTopLeftRadius: 30,
+                                    borderTopRightRadius: 30,
                                 }}
                             >
                                 <UpdateControls
@@ -246,21 +231,9 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         ref={scroll2}
                                         contentContainerStyle={{
                                             width: '100%',
-                                            height: '101%'
+                                            height: '100%'
                                         }}
                                         contentOffset={{ x: 0, y: 1 }}
-                                        onScroll={e => {
-                                            if (e.nativeEvent.contentOffset.y < -85) {
-                                                Animated.timing(modalAnimation, {
-                                                    toValue: 0,
-                                                    duration: 150,
-                                                    useNativeDriver: true
-                                                })
-                                                    .start(() => {
-                                                        props.closeModal()
-                                                    })
-                                            }
-                                        }}
                                         showsVerticalScrollIndicator={false}
                                         overScrollMode={'always'}
                                         alwaysBounceVertical={true}
@@ -291,23 +264,11 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         ref={scroll3}
                                         contentContainerStyle={{
                                             width: '100%',
-                                            height: '101%'
+                                            height: '100%'
                                         }}
                                         showsVerticalScrollIndicator={false}
                                         contentOffset={{ x: 0, y: 1 }}
                                         key={channelOwner.toString()}
-                                        onScroll={e => {
-                                            if (e.nativeEvent.contentOffset.y < -85) {
-                                                Animated.timing(modalAnimation, {
-                                                    toValue: 0,
-                                                    duration: 150,
-                                                    useNativeDriver: true
-                                                })
-                                                    .start(() => {
-                                                        props.closeModal()
-                                                    })
-                                            }
-                                        }}
                                         overScrollMode={'always'}
                                         alwaysBounceVertical={true}
                                         scrollEnabled={true}

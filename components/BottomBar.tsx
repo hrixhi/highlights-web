@@ -14,34 +14,31 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
     return (
         <View style={styles.bottombar}>
             <ScrollView style={styles.colorBar} horizontal={true} showsHorizontalScrollIndicator={false}>
-                {
-                    props.customCategories.length === 0 ? null :
-                        <TouchableOpacity
-                            style={choice === 'All' ? styles.subOutline : styles.sub}
-                            onPress={() => {
-                                props.handleFilterChange('All')
-                                props.setChannelFilterChoice('All')
-                                props.setChannelId('')
-                            }}>
-                            <Text
-                                style={{
-                                    color: colorScheme === 'light' ? (
-                                        choice === 'All' ? 'white' : '#101010'
-                                    ) : (
-                                            choice === 'All' ? '#101010' : 'white'
-                                        ),
-                                    lineHeight: 20,
-                                    fontSize: 14
-                                }}
-                            >
-                                <Ionicons name='home-outline' size={15} color={colorScheme === 'light' ? (
-                                    choice === 'All' ? 'white' : '#101010'
-                                ) : (
-                                        choice === 'All' ? '#101010' : 'white'
-                                    )} />
-                            </Text>
-                        </TouchableOpacity>
-                }
+                <TouchableOpacity
+                    style={choice === 'All' ? styles.subOutline : styles.sub}
+                    onPress={() => {
+                        props.handleFilterChange('All')
+                        props.setChannelFilterChoice('All')
+                        props.setChannelId('')
+                    }}>
+                    <Text
+                        style={{
+                            color: colorScheme === 'light' ? (
+                                choice === 'All' ? 'white' : '#101010'
+                            ) : (
+                                    choice === 'All' ? '#101010' : 'white'
+                                ),
+                            lineHeight: 22,
+                            fontSize: 14
+                        }}
+                    >
+                        <Ionicons name='home-outline' size={15} color={colorScheme === 'light' ? (
+                            choice === 'All' ? 'white' : '#101010'
+                        ) : (
+                                choice === 'All' ? '#101010' : 'white'
+                            )} />
+                    </Text>
+                </TouchableOpacity>
                 {
                     props.subscriptions.map((subscription: any) => {
                         return <TouchableOpacity
@@ -59,7 +56,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 ) : (
                                         choice === subscription.channelName ? '#101010' : 'white'
                                     ),
-                                lineHeight: 20,
+                                lineHeight: 22,
                                 fontFamily: 'overpass',
                                 fontSize: 13
                             }}>
@@ -90,8 +87,8 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         onPress={() => props.openWalkthrough()}
                         style={{}}
                     >
-                        <Text style={{ lineHeight: 40, paddingLeft: 45 }}>
-                            <Ionicons name='help-circle-outline' size={24} color={colorScheme === 'light' ? '#101010' : 'white'} />
+                        <Text style={{ lineHeight: 30, paddingLeft: 45 }}>
+                            <Ionicons name='help-circle-outline' size={23} color={colorScheme === 'light' ? '#101010' : 'white'} />
                         </Text>
                     </TouchableOpacity>
                 </View>
@@ -100,7 +97,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         onPress={() => props.openCreate()}
                         style={styles.center}
                     >
-                        <Text style={{ textAlign: 'center', lineHeight: 40 }}>
+                        <Text style={{ textAlign: 'center', lineHeight: 30 }}>
                             <Ionicons name='add-circle' size={28} color={colorScheme === 'light' ? '#101010' : 'white'} />
                         </Text>
                     </TouchableOpacity>
@@ -110,8 +107,8 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         onPress={() => props.openMenu()}
                         style={{}}
                     >
-                        <Text style={{ lineHeight: 40, textAlign: 'right', paddingRight: 45 }}>
-                            <Ionicons name='settings-outline' size={19} color={colorScheme === 'light' ? '#101010' : 'white'} />
+                        <Text style={{ lineHeight: 30, textAlign: 'right', paddingRight: 45 }}>
+                            <Ionicons name='settings-outline' size={18} color={colorScheme === 'light' ? '#101010' : 'white'} />
                         </Text>
                     </TouchableOpacity>
                 </View>
@@ -127,11 +124,8 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
         height: '15%',
         width: '100%',
         display: 'flex',
-        paddingHorizontal: 15,
-        paddingBottom: 15,
-        // borderColor: '#eaeaea',
-        // borderLeftWidth: 1,
-        // borderRightWidth: 1
+        paddingHorizontal: 20,
+        paddingBottom: 10
     },
     icons: {
         width: '33.33333%',
@@ -182,33 +176,5 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
         paddingHorizontal: 10,
         borderRadius: 10,
         backgroundColor: colorScheme === 'light' ? '#101010' : 'white',
-    },
-    color1: {
-        backgroundColor: '#f94144',
-    },
-    color2: {
-        backgroundColor: '#f3722c',
-    },
-    color3: {
-        backgroundColor: '#f8961e',
-    },
-    color4: {
-        backgroundColor: '#f9c74f',
-    },
-    color5: {
-        backgroundColor: '#90be6d',
-    },
-    colorContainer: {
-        height: 20,
-        justifyContent: 'center',
-        display: 'flex',
-        flexDirection: 'column',
-        marginLeft: 7,
-        paddingHorizontal: 4
-    },
-    color: {
-        width: 12,
-        height: 12,
-        borderRadius: 6
-    },
+    }
 });

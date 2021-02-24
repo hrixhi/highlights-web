@@ -54,10 +54,11 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
             backgroundColor: 'white',
             width: '100%',
             height: '100%',
-            paddingTop: 5,
-            padding: 20,
+            paddingHorizontal: 20,
+            borderTopRightRadius: 30,
+            borderTopLeftRadius: 30
         }}>
-            <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 30 }}>
+            <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 25 }}>
                 {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
             </Text>
             <View style={{ backgroundColor: 'white', flexDirection: 'row', paddingBottom: 15 }}>
@@ -65,12 +66,12 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                     props.cueId ?
                         <Text
                             ellipsizeMode="tail"
-                            style={{ color: '#a6a2a2', fontWeight: 'bold', fontSize: 20, flex: 1, lineHeight: 25 }}>
+                            style={{ color: '#a6a2a2', fontWeight: 'bold', fontSize: 18, flex: 1, lineHeight: 25 }}>
                             Status
                         </Text> :
                         <Text
                             ellipsizeMode="tail"
-                            style={{ color: '#a6a2a2', fontWeight: 'bold', fontSize: 20, flex: 1, lineHeight: 25 }}>
+                            style={{ color: '#a6a2a2', fontWeight: 'bold', fontSize: 18, flex: 1, lineHeight: 25 }}>
                             Subscribers
                         </Text>
                 }
@@ -216,7 +217,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                     unparsedSubs.length === 0 ? null : categories.map((category: string) => {
                                                         return <TouchableOpacity
                                                             key={Math.random()}
-                                                            style={filterChoice === category ? { ...styles.cusCategory, ...styles.outline } : styles.cusCategory}
+                                                            style={filterChoice === category ? styles.cusCategoryOutline : styles.cusCategory}
                                                             onPress={() => setFilterChoice(category)}>
                                                             <Text
                                                                 style={{
@@ -284,5 +285,15 @@ const styleObject = () => {
             paddingHorizontal: 10,
             height: 22
         },
+        cusCategoryOutline: {
+            fontSize: 15,
+            backgroundColor: 'white',
+            paddingHorizontal: 10,
+            height: 22,
+            borderRadius: 10,
+            borderWidth: 1,
+            borderColor: '#a6a2a2',
+            color: 'white'
+        }
     })
 }

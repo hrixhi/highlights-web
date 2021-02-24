@@ -18,15 +18,18 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
       <Stack.Navigator screenOptions={{ headerShown: false }}>
 
         {/* Main app is in here */}
-        <Stack.Screen name="Root" component={() => <View style={{
-          height: '100%',
-          width: '100%',
-          justifyContent: 'center',
-          flexDirection: 'row',
-          backgroundColor: 'white'
-        }}>
-          <Home />
-        </View>} />
+        <Stack.Screen
+          name="Root"
+          options={{ title: 'Cues!' }}
+          component={() => <View style={{
+            height: '100%',
+            width: '100%',
+            justifyContent: 'center',
+            flexDirection: 'row',
+            backgroundColor: 'white'
+          }}>
+            <Home />
+          </View>} />
 
         {/* In case navigation ends up at a wrong location */}
         <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />

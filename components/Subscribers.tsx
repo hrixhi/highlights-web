@@ -64,27 +64,12 @@ const Subscribers: React.FunctionComponent<{ [label: string]: any }> = (props: a
     return (
         <ScrollView style={{
             width: '100%',
-            height: '100%',
+            height: windowHeight - 30,
             backgroundColor: 'white',
-            borderTopRightRadius: 25,
-            borderTopLeftRadius: 25,
-            // borderColor: '#eaeaea',
-            // borderWidth: 1,
-            // borderBottomWidth: 0
+            borderTopRightRadius: 30,
+            borderTopLeftRadius: 30
         }}
             showsVerticalScrollIndicator={false}
-            onScroll={e => {
-                if (e.nativeEvent.contentOffset.y < -85) {
-                    Animated.timing(modalAnimation, {
-                        toValue: 0,
-                        duration: 150,
-                        useNativeDriver: true
-                    })
-                        .start(() => {
-                            props.closeModal()
-                        })
-                }
-            }}
             scrollEnabled={true}
             scrollEventThrottle={1}
             keyboardDismissMode={'on-drag'}
@@ -95,7 +80,9 @@ const Subscribers: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 opacity: modalAnimation,
                 width: '100%',
                 height: windowHeight,
-                backgroundColor: 'white'
+                backgroundColor: 'white',
+                borderTopRightRadius: 30,
+                borderTopLeftRadius: 30
             }}>
                 {
                     loading
@@ -106,6 +93,8 @@ const Subscribers: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             display: 'flex',
                             flexDirection: 'column',
                             backgroundColor: 'white',
+                            borderTopRightRadius: 30,
+                            borderTopLeftRadius: 30
                         }}>
                             <ActivityIndicator color={'#a6a2a2'} />
                         </View>

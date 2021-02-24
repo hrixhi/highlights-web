@@ -26,7 +26,7 @@ const MiniEditorScreen: React.FC<{ [label: string]: any }> = (props: any) => {
                 containerStyle={{
                     height,
                     backgroundColor: '#f4f4f4',
-                    borderRadius: 15,
+                    borderRadius: 10,
                     padding: 3,
                     paddingTop: 5,
                     paddingBottom: 10
@@ -35,13 +35,14 @@ const MiniEditorScreen: React.FC<{ [label: string]: any }> = (props: any) => {
                 style={{
                     width: '100%',
                     backgroundColor: '#f4f4f4',
-                    borderRadius: 15,
+                    borderRadius: 10,
                     minHeight: 100
                 }}
                 editorStyle={{
                     backgroundColor: '#f4f4f4',
                     placeholderColor: '#a6a2a2',
-                    color: '#101010'
+                    color: '#101010',
+                    contentCSSText: 'font-size: 12px;'
                 }}
                 initialContentHTML={props.message}
                 onScroll={() => Keyboard.dismiss()}

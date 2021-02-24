@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState, useRef } from 'react';
+import React, { useCallback, useEffect, useState, useRef, createRef } from 'react';
 import { Keyboard, StyleSheet, Switch, TextInput, ScrollView, Animated, Dimensions, Alert } from 'react-native';
 import { Text, View, TouchableOpacity } from '../components/Themed';
 import { Ionicons } from '@expo/vector-icons';
@@ -41,7 +41,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const [toolbarModalAnimation] = useState(new Animated.Value(0))
     const now = new Date()
     const [reloadEditorKey, setReloadEditorKey] = useState(Math.random())
-    const RichText: any = useRef();
+    let RichText: any = useRef()
     const [keyboardVisible, setKeyboardVisible] = useState(false)
     const [scrollOffset, setScrollOffset] = useState(0)
     const [keyboardOffset, setKeyboardOffset] = useState(0)
@@ -399,12 +399,9 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             width: '100%',
             height: '100%',
             backgroundColor: 'white',
-            borderTopLeftRadius: 25,
-            borderTopRightRadius: 25,
+            borderTopLeftRadius: 30,
+            borderTopRightRadius: 30,
             paddingHorizontal: 20,
-            // borderColor: '#eaeaea',
-            // borderWidth: 1,
-            // borderBottomWidth: 0
         }}
             showsVerticalScrollIndicator={false}
             onScroll={e => {
@@ -423,9 +420,10 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             scrollEventThrottle={1}
             keyboardDismissMode={'on-drag'}
             overScrollMode={'always'}
+            nestedScrollEnabled={true}
         >
             {
-                keyboardVisible && RichText ?
+                keyboardVisible && RichText.current !== null ?
                     <Animated.View style={{
                         height: 40,
                         width: '100%',
@@ -474,9 +472,14 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         />
                     </Animated.View> : null
             }
-            <Animated.View style={{ ...styles.container, opacity: modalAnimation, paddingBottom: 100 }}>
+            <Animated.View style={{
+                width: '100%',
+                backgroundColor: 'white',
+                opacity: modalAnimation,
+                paddingBottom: 100
+            }}>
                 <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 30 }}>
-
+                    {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
                 </Text>
                 <View style={styles.date} onTouchStart={() => Keyboard.dismiss()}>
                     <Text style={{
@@ -523,19 +526,20 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             padding: 3,
                             paddingTop: 5,
                             paddingBottom: 10,
-                            borderRadius: 15
+                            borderRadius: 10
                         }}
                         ref={RichText}
                         style={{
                             width: '100%',
                             backgroundColor: '#f4f4f4',
-                            borderRadius: 15,
+                            borderRadius: 10,
                             minHeight: 450
                         }}
                         editorStyle={{
                             backgroundColor: '#f4f4f4',
                             placeholderColor: '#a6a2a2',
-                            color: '#101010'
+                            color: '#101010',
+                            contentCSSText: 'font-size: 12px;'
                         }}
                         initialContentHTML={cue}
                         onScroll={() => Keyboard.dismiss()}
@@ -615,14 +619,14 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         <View style={{ width: '85%', backgroundColor: 'white' }}>
                                             <ScrollView style={styles.colorBar} horizontal={true} showsHorizontalScrollIndicator={false}>
                                                 <TouchableOpacity
-                                                    style={channelId === '' ? { ...styles.all, ...styles.outline, borderColor: '#0079fe' } : styles.all}
+                                                    style={channelId === '' ? styles.allOutlineBlue : styles.all}
                                                     onPress={() => {
                                                         setChannelId('')
                                                         setCustomCategories(localCustomCategories)
                                                         setCustomCategory('')
                                                         setAddCustomCategory(false)
                                                     }}>
-                                                    <Text style={{ color: '#0079fe' }}>
+                                                    <Text style={{ color: '#0079fe', lineHeight: 20 }}>
                                                         None
                                             </Text>
                                                 </TouchableOpacity>
@@ -630,13 +634,13 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     channels.map((channel) => {
                                                         return <TouchableOpacity
                                                             key={Math.random()}
-                                                            style={channelId === channel._id ? { ...styles.all, ...styles.outline, borderColor: '#0079FE' } : styles.all}
+                                                            style={channelId === channel._id ? styles.allOutlineBlue : styles.all}
                                                             onPress={() => {
                                                                 setChannelId(channel._id)
                                                                 setAddCustomCategory(false)
                                                                 setCustomCategory('')
                                                             }}>
-                                                            <Text style={{ color: '#0079FE' }}>
+                                                            <Text style={{ color: '#0079FE', lineHeight: 20 }}>
                                                                 {channel.name}
                                                             </Text>
                                                         </TouchableOpacity>
@@ -661,7 +665,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             <View style={styles.colorBar}>
                                                 <TextInput
                                                     value={customCategory}
-                                                    style={{ ...styles.all, ...styles.outline }}
+                                                    style={styles.allOutline}
                                                     placeholder={'New Category'}
                                                     onChangeText={val => {
                                                         setCustomCategory(val)
@@ -716,43 +720,45 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             </View>
                         </View>
                     </View>
-                    <View style={{ width: '40%', paddingTop: 15 }}>
-                        <View style={{ width: '100%', paddingTop: 25, paddingBottom: 15, backgroundColor: 'white' }}>
-                            <Text style={{ fontSize: 16, color: '#101010' }}>
-                                <Ionicons
-                                    name='notifications-outline' size={20} color={'#101010'} />
-                            </Text>
-                        </View>
-                        <View style={{
-                            backgroundColor: 'white',
-                            width: '100%',
-                            height: 40
-                        }}>
-                            <Switch
-                                value={notify}
-                                onValueChange={() => {
-                                    if (notify) {
-                                        setShuffle(false)
-                                        setFrequency("0")
-                                    } else {
-                                        setShuffle(true)
-                                        setFrequency("1-D")
-                                    }
-                                    setPlayChannelCueIndef(true)
-                                    setNotify(!notify)
-                                }}
-                                style={{ height: 20 }}
-                                trackColor={{
-                                    false: '#f4f4f4',
-                                    true: '#0079FE'
-                                }}
-                                activeThumbColor='white'
-                            />
+                    <View style={{ width: '100%', paddingTop: 15, flexDirection: 'row' }}>
+                        <View style={{ width: '33.33%' }}>
+                            <View style={{ width: '100%', paddingTop: 25, paddingBottom: 15, backgroundColor: 'white' }}>
+                                <Text style={{ fontSize: 16, color: '#101010' }}>
+                                    <Ionicons
+                                        name='notifications-outline' size={20} color={'#101010'} />
+                                </Text>
+                            </View>
+                            <View style={{
+                                backgroundColor: 'white',
+                                width: '100%',
+                                height: 40
+                            }}>
+                                <Switch
+                                    value={notify}
+                                    onValueChange={() => {
+                                        if (notify) {
+                                            setShuffle(false)
+                                            setFrequency("0")
+                                        } else {
+                                            setShuffle(true)
+                                            setFrequency("1-D")
+                                        }
+                                        setPlayChannelCueIndef(true)
+                                        setNotify(!notify)
+                                    }}
+                                    style={{ height: 20 }}
+                                    trackColor={{
+                                        false: '#f4f4f4',
+                                        true: '#0079FE'
+                                    }}
+                                    activeThumbColor='white'
+                                />
+                            </View>
                         </View>
                         {
                             notify ?
-                                <View style={{}}>
-                                    <View style={{ width: '100%', paddingTop: 5, paddingBottom: 15, backgroundColor: 'white' }}>
+                                <View style={{ width: '33.33%' }}>
+                                    <View style={{ width: '100%', paddingTop: 25, paddingBottom: 15, backgroundColor: 'white' }}>
                                         <Text style={{ fontSize: 16, color: '#101010' }}>
                                             <Ionicons
                                                 name='shuffle-outline' size={25} color={'#a6a2a2'} />
@@ -820,8 +826,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         }
                         {
                             notify ?
-                                <View style={{}}>
-                                    <View style={{ width: '100%', paddingTop: 5, paddingBottom: 15, backgroundColor: 'white' }}>
+                                <View style={{ width: '33.33%' }}>
+                                    <View style={{ width: '100%', paddingTop: 25, paddingBottom: 15, backgroundColor: 'white' }}>
                                         <Text style={{ fontSize: 16, color: '#101010' }}>
                                             <Ionicons
                                                 name='infinite-outline' size={25} color={'#a6a2a2'} />
@@ -943,13 +949,6 @@ const styles: any = StyleSheet.create({
         borderRadius: 10,
         marginLeft: 10
     },
-    container: {
-        width: '100%',
-        backgroundColor: 'white',
-        padding: 15,
-        paddingTop: 5,
-        borderTopLeftRadius: 30,
-    },
     cuesInput: {
         width: '100%',
         backgroundColor: '#f4f4f4',
@@ -1006,7 +1005,7 @@ const styles: any = StyleSheet.create({
         width: '100%',
         display: 'flex',
         flexDirection: 'row',
-        paddingBottom: 2,
+        paddingBottom: 4,
         backgroundColor: 'white'
     },
     colorBar: {
@@ -1052,7 +1051,7 @@ const styles: any = StyleSheet.create({
     text: {
         fontSize: 12,
         color: '#a6a2a2',
-        textAlign: 'right',
+        textAlign: 'left',
     },
     all: {
         fontSize: 15,
@@ -1070,6 +1069,16 @@ const styles: any = StyleSheet.create({
         borderRadius: 10,
         borderWidth: 1,
         borderColor: '#a6a2a2'
+    },
+    allOutlineBlue: {
+        fontSize: 15,
+        color: '#0079fe',
+        height: 22,
+        paddingHorizontal: 10,
+        backgroundColor: 'white',
+        borderRadius: 10,
+        borderWidth: 1,
+        borderColor: '#0079fe'
     },
     color1: {
         backgroundColor: '#f94144'

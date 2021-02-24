@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Animated } from 'react-native';
+import { StyleSheet, Animated, Dimensions } from 'react-native';
 import { Text, TouchableOpacity, View } from './Themed';
-import Swiper from 'react-native-swiper'
+import Swiper from 'react-native-web-swiper'
 import { Ionicons } from '@expo/vector-icons';
 import * as Linking from 'expo-linking';
 
 const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
     const [modalAnimation] = useState(new Animated.Value(0))
-
     useEffect(() => {
         Animated.timing(modalAnimation, {
             toValue: 1,
@@ -17,35 +16,51 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
         }).start();
     }, [])
 
+    const windowHeight = Dimensions.get('window').height;
     return (
-        <View style={{ width: '100%', height: '100%', backgroundColor: 'white' }}>
-            <Animated.View style={{ ...styles.container, opacity: modalAnimation }}>
+        <View style={{
+            width: '100%',
+            height: windowHeight - 30,
+            backgroundColor: '#fff',
+            borderTopLeftRadius: 30,
+            borderTopRightRadius: 30,
+        }}>
+            <Animated.View style={{
+                width: '100%',
+                height: '100%',
+                backgroundColor: 'white',
+                padding: 15,
+                opacity: modalAnimation,
+                borderTopLeftRadius: 30,
+                borderTopRightRadius: 30,
+                alignSelf: 'center'
+            }}>
                 <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 20 }}>
                     {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
                 </Text>
                 <Swiper
-                    horizontal={true}
-                    activeDotColor={'#0079FE'}
-                    style={{
-                        marginBottom: 50
+                    vertical={false}
+                    from={0}
+                    minDistanceForAction={0.1}
+                    controlsProps={{
+                        dotsTouchable: true,
+                        prevPos: 'bottom-left',
+                        nextPos: 'bottom-right',
+                        nextTitle: '›',
+                        nextTitleStyle: { color: '#0079fe', fontSize: 30, fontFamily: 'overpass' },
+                        prevTitle: '‹',
+                        prevTitleStyle: { color: '#0079fe', fontSize: 30, fontFamily: 'overpass' },
+                        dotActiveStyle: { backgroundColor: '#0079fe' }
                     }}
-                    dotStyle={{
-                        opacity: 1
-                    }}
-                    activeDotStyle={{
-                        opacity: 1
-                    }}
-                    dotColor={'#e0e0e0'}
-                    loop={false}
                 >
-                    <View style={{ ...styles.screen, height: '90%' }} key={Math.random()}>
+                    <View style={styles.screen} key={Math.random()}>
                         <Text style={{
                             color: '#101010',
                             textAlign: 'left',
                             fontSize: 25,
                             fontWeight: 'bold',
                             fontFamily: 'inter',
-                            paddingTop: 30
+                            paddingTop: 50
                         }}>
                             Enhance note-taking. Simplify note-sharing.
                         </Text>
@@ -72,7 +87,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             fontSize: 25,
                             fontFamily: 'inter',
                             fontWeight: 'bold',
-                            paddingTop: 30
+                            paddingTop: 50
                         }}>
                             Click <Ionicons name='add-circle' size={23} /> to create a new cue.
                         </Text>
@@ -92,7 +107,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             fontSize: 25,
                             fontWeight: 'bold',
                             fontFamily: 'inter',
-                            paddingTop: 30
+                            paddingTop: 50
                         }}>
                             Click <Ionicons name='notifications-outline' size={23} color={'#101010'} /> to play a cue as a recurring reminder.
                         </Text>
@@ -112,7 +127,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             fontSize: 25,
                             fontFamily: 'inter',
                             fontWeight: 'bold',
-                            paddingTop: 30
+                            paddingTop: 50
                         }}>
                             Click <Ionicons name='settings-outline' size={23} /> to choose how often a shuffled cue is played.
                         </Text>
@@ -132,7 +147,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             fontSize: 25,
                             fontFamily: 'inter',
                             fontWeight: 'bold',
-                            paddingTop: 30
+                            paddingTop: 50
                         }}>
                             Click <Ionicons name='add-outline' size={23} color='#0079fe' /> to create or subscribe to a channel.
                         </Text>
@@ -152,7 +167,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             fontSize: 25,
                             fontWeight: 'bold',
                             fontFamily: 'inter',
-                            paddingTop: 30
+                            paddingTop: 50
                         }}>
                             Stay connected to what matters to you.
                         </Text>
@@ -174,17 +189,12 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
 export default Walkthrough;
 
 const styles = StyleSheet.create({
-    container: {
-        width: '100%',
-        height: '100%',
-        backgroundColor: 'white',
-        padding: 15,
-        paddingTop: 5
-    },
     screen: {
-        padding: 15,
-        width: '100%',
-        height: '80%',
-        backgroundColor: 'white'
+        backgroundColor: 'white',
+        height: '100%',
+        width: '60%',
+        alignSelf: 'center',
+        borderTopRightRadius: 30,
+        borderTopLeftRadius: 30,
     },
 });

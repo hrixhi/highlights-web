@@ -76,6 +76,8 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
             backgroundColor: 'white',
             padding: 15,
             paddingTop: 5,
+            borderTopRightRadius: 30,
+            borderTopLeftRadius: 30
         }}>
             <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 35 }}>
                 {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
@@ -99,10 +101,11 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
             backgroundColor: 'white',
             width: '100%',
             height: '100%',
-            paddingTop: 5,
-            padding: 20,
+            paddingHorizontal: 20,
+            borderTopRightRadius: 30,
+            borderTopLeftRadius: 30
         }}>
-            <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 30 }}>
+            <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 25 }}>
                 {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
             </Text>
             {
@@ -133,12 +136,12 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             !props.cueId
                                 ? <Text
                                     ellipsizeMode="tail"
-                                    style={{ color: '#a6a2a2', fontWeight: 'bold', fontSize: 20, flex: 1, lineHeight: 25 }}>
+                                    style={{ color: '#a6a2a2', fontWeight: 'bold', fontSize: 18, flex: 1, lineHeight: 25 }}>
                                     Discussion
                                 </Text>
                                 : <Text
                                     ellipsizeMode="tail"
-                                    style={{ color: '#a6a2a2', fontWeight: 'bold', fontSize: 20, flex: 1, lineHeight: 25 }}>
+                                    style={{ color: '#a6a2a2', fontWeight: 'bold', fontSize: 18, flex: 1, lineHeight: 25 }}>
                                     Comments
                                 </Text>
                         }
