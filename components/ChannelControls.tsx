@@ -260,7 +260,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             Create
                         </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity
+                    {/* <TouchableOpacity
                         style={option === 'Profile' ? styles.allOutline : styles.all}
                         onPress={() => {
                             setOption('Profile')
@@ -268,7 +268,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         <Text style={{ color: '#a6a2a2', lineHeight: 20 }}>
                             Profile
                         </Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                 </View>
                 {
                     option === 'Profile' ?

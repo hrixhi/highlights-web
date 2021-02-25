@@ -368,8 +368,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             selectedIconTint={"#101010"}
                             disabledIconTint={"gray"}
                             actions={[
-                                // actions.undo,
-                                // actions.redo,
                                 actions.setBold,
                                 actions.setItalic,
                                 actions.setUnderline,
@@ -379,6 +377,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 actions.insertLink,
                                 actions.insertImage,
                                 "insertCamera",
+                                actions.undo,
+                                actions.redo,
                                 "close"
                                 // "insertVideo"
                             ]}

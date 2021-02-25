@@ -65,30 +65,25 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         </TouchableOpacity>
                     })
                 }
-                <TouchableOpacity
-                    style={styles.sub}
-                    onPress={() => {
-                        props.openChannels()
-                    }}>
-                    <Text
-                        style={{
-                            color: '#0079FE',
-                            lineHeight: 20,
-                            fontFamily: 'inter'
-                        }}
-                    >
-                        <Ionicons name='add-outline' size={17} />
-                    </Text>
-                </TouchableOpacity>
             </ScrollView>
             <View style={{ display: 'flex', flexDirection: 'row', height: '50%' }}>
+                <View style={styles.icons}>
+                    <TouchableOpacity
+                        onPress={() => props.openMenu()}
+                        style={{}}
+                    >
+                        <Text style={{ lineHeight: 30, textAlign: 'center' }}>
+                            <Ionicons name='settings-outline' size={18} color={colorScheme === 'light' ? '#101010' : 'white'} />
+                        </Text>
+                    </TouchableOpacity>
+                </View>
                 <View style={styles.icons}>
                     <TouchableOpacity
                         onPress={() => props.openWalkthrough()}
                         style={{}}
                     >
-                        <Text style={{ lineHeight: 30, paddingLeft: 45 }}>
-                            <Ionicons name='help-circle-outline' size={23} color={colorScheme === 'light' ? '#101010' : 'white'} />
+                        <Text style={{ lineHeight: 30, textAlign: 'center' }}>
+                            <Ionicons name='help-circle-outline' size={22} color={colorScheme === 'light' ? '#101010' : 'white'} />
                         </Text>
                     </TouchableOpacity>
                 </View>
@@ -98,17 +93,27 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         style={styles.center}
                     >
                         <Text style={{ textAlign: 'center', lineHeight: 30 }}>
-                            <Ionicons name='add-circle' size={28} color={colorScheme === 'light' ? '#101010' : 'white'} />
+                            <Ionicons name='add-circle' size={30} color={colorScheme === 'light' ? '#101010' : 'white'} />
                         </Text>
                     </TouchableOpacity>
                 </View>
                 <View style={styles.icons}>
                     <TouchableOpacity
-                        onPress={() => props.openMenu()}
-                        style={{}}
+                        onPress={() => props.openChannels()}
+                        style={styles.center}
                     >
-                        <Text style={{ lineHeight: 30, textAlign: 'right', paddingRight: 45 }}>
-                            <Ionicons name='settings-outline' size={18} color={colorScheme === 'light' ? '#101010' : 'white'} />
+                        <Text style={{ textAlign: 'center', lineHeight: 30 }}>
+                            <Ionicons name='radio-outline' size={20} color={colorScheme === 'light' ? '#101010' : 'white'} />
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.icons}>
+                    <TouchableOpacity
+                        onPress={() => props.openChannels()}
+                        style={styles.center}
+                    >
+                        <Text style={{ textAlign: 'center', lineHeight: 30 }}>
+                            <Ionicons name='cloud-upload-outline' size={20} color={colorScheme === 'light' ? '#101010' : 'white'} />
                         </Text>
                     </TouchableOpacity>
                 </View>
@@ -128,7 +133,7 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
         paddingBottom: 10
     },
     icons: {
-        width: '33.33333%',
+        width: '20%',
         display: 'flex',
         justifyContent: 'center',
         flexDirection: 'column',

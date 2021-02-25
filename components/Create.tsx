@@ -448,8 +448,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             selectedIconTint={"#101010"}
                             disabledIconTint={"gray"}
                             actions={[
-                                // actions.undo,
-                                // actions.redo,
                                 actions.setBold,
                                 actions.setItalic,
                                 actions.setUnderline,
@@ -459,6 +457,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 actions.insertLink,
                                 actions.insertImage,
                                 "insertCamera",
+                                actions.undo,
+                                actions.redo,
                                 "close"
                                 // "insertVideo"
                             ]}

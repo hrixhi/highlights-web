@@ -1,5 +1,5 @@
-import React, { useState, useCallback, useRef, ReactText, useEffect } from 'react';
-import { StyleSheet, Animated, ActivityIndicator, Alert, Platform, Dimensions } from 'react-native';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
+import { StyleSheet, Animated, ActivityIndicator, Alert, Dimensions } from 'react-native';
 import BottomBar from '../components/BottomBar';
 import CardsList from '../components/CardsList';
 import { Text, TouchableOpacity, View } from '../components/Themed';
@@ -9,16 +9,12 @@ import Menu from '../components/Menu'
 import Create from '../components/Create';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Update from '../components/Update';
-import Constants from 'expo-constants';
 import { uniqueNamesGenerator, adjectives, colors, animals } from 'unique-names-generator'
 import { defaultCues, defaultRandomShuffleFrequency, defaultSleepInfo } from '../helpers/DefaultData'
 import Walkthrough from '../components/Walkthrough';
-import * as Notifications from 'expo-notifications';
-import { getNextDate, duringSleep } from '../helpers/DateParser';
 import Channels from '../components/Channels';
 import { fetchAPI } from '../graphql/FetchAPI';
 import { createUser, getSubscriptions, getCues, unsubscribe } from '../graphql/QueriesAndMutations';
-import { htmlStringParser } from '../helpers/HTMLParser';
 import Discussion from '../components/Discussion';
 import Subscribers from '../components/Subscribers';
 
@@ -30,10 +26,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   const [cues, setCues] = useState<any>({})
   const [sleepFrom, setSleepFrom] = useState(new Date())
   const [sleepTo, setSleepTo] = useState(new Date())
-  const [firstOpened, setFirstOpened] = useState(new Date())
   const [randomShuffleFrequency, setRandomShuffleFrequency] = useState('1-D')
   const [reLoading, setReLoading] = useState(true)
-  const [showShadow, setShowShadow] = useState(false)
   const [fadeAnimation] = useState(new Animated.Value(0))
   const sheetRef: any = useRef(null);
   const [updateModalIndex, setUpdateModalIndex] = useState(0)
@@ -45,7 +39,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   const [createdBy, setCreatedBy] = useState('')
   const [channelCreatedBy, setChannelCreatedBy] = useState('')
   const [channelFilterChoice, setChannelFilterChoice] = useState('All')
-  const responseListener: any = useRef();
   const [init, setInit] = useState(false)
 
   const storeMenu = useCallback(async () => {
@@ -58,9 +51,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
       console.log(e)
     }
   }, [randomShuffleFrequency, sleepTo, sleepFrom])
-
-  const notificationScheduler = useCallback(() => {
-  }, [randomShuffleFrequency, sleepFrom, sleepTo, firstOpened, cues, responseListener])
 
   const loadCues = useCallback(async () => {
     let user = await AsyncStorage.getItem('user')
@@ -300,12 +290,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           await AsyncStorage.clear()
         } catch (e) {
         }
-        const now = new Date()
-        const fOString = now.toString()
-        await AsyncStorage.setItem(version, fOString)
-        setFirstOpened(new Date(now))
-      } else {
-        setFirstOpened(new Date(fO))
       }
 
       let u = await AsyncStorage.getItem('user')
@@ -323,14 +307,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         const displayName = uniqueNamesGenerator({
           dictionaries: [adjectives, colors, animals]
         });
-        let experienceId = undefined;
-        if (!Constants.manifest) {
-          // Absence of the manifest means we're in bare workflow
-          experienceId = '@username/example';
-        }
-        // const expoToken = await Notifications.getExpoPushTokenAsync({
-        //   experienceId,
-        // });
         const notificationId = 'NOT_SET';
         server.mutate({
           mutation: createUser,
@@ -351,6 +327,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           .catch(err => {
             // no message needed here
           })
+        // OPEN LOGIN WINDOW
       }
       // LOAD RANDOM SHUFFLE FREQUENCY
       if (f) {
@@ -441,29 +418,53 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         }).start();
       }
       // OPEN WALKTHROUGH IF FIRST TIME LOAD
-      setInit(true)
-      if (!init) {
+      if (!init && Dimensions.get('window').width >= 1024) {
         openModal('Walkthrough')
       }
+      // HANDLE PROFILE
+      if (u) {
+        // Check if user has email & password
+        //  if they exist
+        //       if !init
+        //          loadDataFromCloud()
+        //       if init
+        //          saveDataInCloud()
+        //  else
+        //       if !init
+        //          openLoginWindow()
+      }
+      // INITIALISED FIRST TIME
+      setInit(true)
+      // LOADED
       if (!sC) {
         setReLoading(false)
       }
     } catch (e) {
       console.log(e)
     }
-
   }, [fadeAnimation, init])
+
+  const openLoginWindow = useCallback(() => {
+    // TO DO
+  }, [])
+
+  // Move to profile page
+  const handleLogin = useCallback(() => {
+    // TO DO
+  }, [])
+
+  const loadDataFromCloud = useCallback(() => { }, [
+    // TO DO
+  ])
+
+  const saveDataInCloud = useCallback(() => {
+    // TO DO
+  }, [])
 
   useEffect(() => {
     // Called when component is loaded
     loadData()
   }, [])
-
-  useEffect(() => {
-    if (!reLoading) {
-      notificationScheduler()
-    }
-  }, [reLoading])
 
   const handleFilterChange = useCallback((choice) => {
     setPageNumber(0)
@@ -478,8 +479,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
   const openModal = useCallback((type) => {
     setModalType(type)
-    // sheetRef.current.snapTo(0)
-    setShowShadow(true)
   }, [sheetRef, cues])
 
   const openUpdate = useCallback((key, index, pageNumber, _id, by, channId) => {
@@ -526,7 +525,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     setModalType('')
     setCreatedBy('')
     setChannelFilterChoice('All')
-    setShowShadow(false)
     if (modalType === 'Create' || modalType === 'Update') {
       fadeAnimation.setValue(0)
       if (modalType === 'Update' && filterChoice === 'All-Channels') {
