@@ -1,10 +1,10 @@
 import React, { useState, useCallback, useRef, ReactText, useEffect } from 'react';
-import { StyleSheet, Keyboard, Animated, ActivityIndicator, Alert, Platform, Dimensions } from 'react-native';
+import { StyleSheet, Animated, ActivityIndicator, Alert, Platform, Dimensions } from 'react-native';
 import BottomBar from '../components/BottomBar';
 import CardsList from '../components/CardsList';
-import { View } from '../components/Themed';
+import { Text, TouchableOpacity, View } from '../components/Themed';
 import TopBar from '../components/TopBar';
-import BottomSheet from 'reanimated-bottom-sheet';
+import { Ionicons } from '@expo/vector-icons';
 import Menu from '../components/Menu'
 import Create from '../components/Create';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -21,7 +21,6 @@ import { createUser, getSubscriptions, getCues, unsubscribe } from '../graphql/Q
 import { htmlStringParser } from '../helpers/HTMLParser';
 import Discussion from '../components/Discussion';
 import Subscribers from '../components/Subscribers';
-import { ScrollView } from 'react-native-gesture-handler';
 
 const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -60,291 +59,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     }
   }, [randomShuffleFrequency, sleepTo, sleepFrom])
 
-  const notificationScheduler = useCallback(async () => {
-
-    if (Platform.OS === 'web') {
-      return
-    }
-
-    try {
-
-      // Clean out all already scheduled notifications
-      await Notifications.cancelAllScheduledNotificationsAsync()
-
-      // This is the object where we are going to collect all notifications that can be scheduled
-      // between two time points A and B 
-      const notificationRequests: any[] = []
-
-      // Get notification permission
-      const settings = await Notifications.getPermissionsAsync();
-      if (settings.granted || settings.ios?.status === Notifications.IosAuthorizationStatus.PROVISIONAL) {
-        // permission granted
-      } else {
-        await Notifications.requestPermissionsAsync({
-          ios: {
-            allowAlert: true,
-            allowBadge: true,
-            allowSound: true,
-            allowAnnouncements: true
-          },
-        });
-        const settings = await Notifications.getPermissionsAsync();
-        if (settings.granted || settings.ios?.status === Notifications.IosAuthorizationStatus.PROVISIONAL) {
-          // permission granted
-        } else {
-          // leave scheduler
-          return;
-        }
-      }
-
-      // Setting notification handler
-      Notifications.setNotificationHandler({
-        handleNotification: async (n) => {
-          return {
-            shouldShowAlert: true,
-            shouldPlaySound: true,
-            shouldSetBadge: true
-          }
-        },
-        handleError: (err) => console.log(err),
-        handleSuccess: (res) => loadData()
-      })
-
-      // for when user taps on a notification   
-      responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-        loadData()
-      });
-
-      // for the ones that are on shuffle
-      const shuffledCues: any[] = []
-      const unShuffledCues: any[] = []
-
-      // choose two dates - now (A) & now + 1 month (B) for timed cues
-      const A = new Date()
-      const B = new Date()
-      B.setMonth(B.getMonth() + 1)
-
-      // For sleep calculations
-      let from = new Date(sleepFrom)
-      let to = new Date(sleepTo)
-      let a = from.getHours()
-      let b = to.getHours()
-      a += (from.getMinutes() / 60)
-      b += (to.getMinutes() / 60)
-
-      const cuesArray: any[] = []
-      if (cues !== {}) {
-        Object.keys(cues).map((key) => {
-          cues[key].map((cue: any, index: number) => {
-            cuesArray.push({
-              ...cue,
-              key,
-              index
-            })
-          })
-        })
-      }
-
-      // First filter shuffled and unshuffled cues
-      cuesArray.map((item: any) => {
-        if (item.shuffle) {
-          switch (item.color) {
-            case 0:
-              // ratio 3/25
-              shuffledCues.push(item)
-              shuffledCues.push(item)
-              shuffledCues.push(item)
-              break;
-            case 1:
-              // ratio 4/25
-              shuffledCues.push(item)
-              shuffledCues.push(item)
-              shuffledCues.push(item)
-              shuffledCues.push(item)
-              break;
-            case 2:
-              // ratio 5/25
-              shuffledCues.push(item)
-              shuffledCues.push(item)
-              shuffledCues.push(item)
-              shuffledCues.push(item)
-              shuffledCues.push(item)
-              break;
-            case 3:
-              // ratio 6/25
-              shuffledCues.push(item)
-              shuffledCues.push(item)
-              shuffledCues.push(item)
-              shuffledCues.push(item)
-              shuffledCues.push(item)
-              shuffledCues.push(item)
-              break;
-            case 4:
-              // ratio  7/25
-              shuffledCues.push(item)
-              shuffledCues.push(item)
-              shuffledCues.push(item)
-              shuffledCues.push(item)
-              shuffledCues.push(item)
-              shuffledCues.push(item)
-              shuffledCues.push(item)
-              break;
-            default:
-              shuffledCues.push(item)
-              break;
-          }
-        } else {
-          unShuffledCues.push(item)
-        }
-      })
-
-      // TIMED CUES
-      for (let u = 0; u < unShuffledCues.length; u++) {
-        let notifDate = new Date(unShuffledCues[u].date)
-        if (unShuffledCues[u].frequency === "0") {
-          // "Never" show highlight
-          continue;
-        }
-        // Never need to consider more than 64 notification per cue
-        let loopCheck = 0;
-        while (notifDate < B) {
-
-          if (unShuffledCues[u].endPlayAt && unShuffledCues[u].endPlayAt !== '') {
-            const C = new Date(unShuffledCues[u].endPlayAt)
-            if (notifDate > C) {
-              break;
-            }
-          }
-
-          if (notifDate < A) {
-            notifDate = getNextDate(unShuffledCues[u].frequency, notifDate)
-            continue
-          }
-
-          let n = notifDate.getHours()
-          n += (notifDate.getMinutes() / 60)
-
-          if (duringSleep(a, b, n)) {
-            notifDate = getNextDate(unShuffledCues[u].frequency, notifDate)
-            continue
-          }
-
-          loopCheck++
-          if (loopCheck > 64) {
-            // upto 50 valid notifications can be considered
-            break;
-          }
-
-          const { title, subtitle } = htmlStringParser(unShuffledCues[u].cue)
-          notificationRequests.push({
-            content: {
-              title,
-              subtitle,
-              sound: true
-            },
-            trigger: new Date(notifDate),
-          })
-          notifDate = getNextDate(unShuffledCues[u].frequency, notifDate)
-        }
-      }
-
-      if (randomShuffleFrequency !== "0") {
-        // SHUFFLE CUES
-        let min = 0
-        let max = shuffledCues.length
-        let notifDate = new Date(firstOpened)
-        // Set shuffle period to consider
-        // B.setMonth(B.getMonth() - 2)
-        let loopCheck = 0;
-        let infiniteLoopCheck = 0;
-        while (notifDate < B && infiniteLoopCheck < 10000) {
-
-          infiniteLoopCheck++;
-          let randomIndex = Math.floor(Math.random() * (max - min) + min)
-
-          if (shuffledCues[randomIndex].endPlayAt && shuffledCues[randomIndex].endPlayAt !== '') {
-            const C = new Date(shuffledCues[randomIndex].endPlayAt)
-            if (notifDate > C) {
-              // We want the same time, but different index
-              // so no break here
-              if (shuffledCues.length === 0) {
-                break;
-              } else {
-                continue;
-              }
-            }
-          }
-
-          if (notifDate < A) {
-            notifDate = getNextDate(randomShuffleFrequency, notifDate)
-            continue
-          }
-
-          // If the time is between sleep hours, don't show it
-          let n = notifDate.getHours()
-          n += (notifDate.getMinutes() / 60)
-
-          if (duringSleep(a, b, n)) {
-            notifDate = getNextDate(randomShuffleFrequency, notifDate)
-            continue
-          }
-
-          loopCheck++
-          if (loopCheck > 64) {
-            // upto 50 valid notifications can be considered
-            break;
-          }
-
-          const { title, subtitle } = htmlStringParser(shuffledCues[randomIndex].cue)
-          notificationRequests.push({
-            content: {
-              title,
-              subtitle,
-              sound: true
-            },
-            trigger: new Date(notifDate),
-          })
-          notifDate = getNextDate(randomShuffleFrequency, notifDate)
-        }
-
-      }
-
-      const sortedRequests: any[] = notificationRequests.sort((a: any, b: any) => {
-        return a.trigger - b.trigger
-      })
-      if (sortedRequests.length === 0) {
-        // no requests to process
-        return
-      }
-
-      let lastTriggerDate = new Date()
-      lastTriggerDate.setMinutes(lastTriggerDate.getMinutes() + 5)
-      const iterateUpTo = sortedRequests.length >= 64 ? 63 : sortedRequests.length
-      // iOS has a limit on scheduled notifications - 64 which is why we have to 
-      // choose the first 64 notifications
-      // After that make the user revisit the app again
-      for (let i = 0; i < iterateUpTo; i++) {
-        // Schedule notification
-        await Notifications.scheduleNotificationAsync(sortedRequests[i])
-        // The last notification in the scheduling queue has to be the one
-        if (i === (iterateUpTo - 1)) {
-          lastTriggerDate = new Date(sortedRequests[i].trigger)
-          lastTriggerDate.setMinutes(lastTriggerDate.getMinutes() + 1)
-          await Notifications.scheduleNotificationAsync({
-            content: {
-              title: 'Continue receiving notifications?',
-              subtitle: 'Open Cues! It\'s been a while...',
-              sound: true,
-            },
-            trigger: lastTriggerDate
-          })
-        }
-      }
-
-    } catch (e) {
-      console.log(e)
-    }
-
+  const notificationScheduler = useCallback(() => {
   }, [randomShuffleFrequency, sleepFrom, sleepTo, firstOpened, cues, responseListener])
 
   const loadCues = useCallback(async () => {
@@ -461,6 +176,31 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           }).start();
           setReLoading(false)
         })
+    } else if (unparsedCues) {
+      const custom: any = {}
+      const allCues = JSON.parse(unparsedCues)
+      setCues(allCues)
+      if (allCues['local']) {
+        allCues['local'].map((item: any) => {
+          if (item.customCategory !== "") {
+            if (!custom[item.customCategory]) {
+              custom[item.customCategory] = 0
+            }
+          }
+        })
+        const customC: any[] = []
+        Object.keys(custom).map((item) => {
+          customC.push(item)
+        })
+        customC.sort()
+        setCustomCategories(customC)
+      }
+      Animated.timing(fadeAnimation, {
+        toValue: 1,
+        duration: 150,
+        useNativeDriver: true
+      }).start();
+      setReLoading(false)
     }
   }, [])
 
@@ -691,6 +431,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           customC.push(item)
         })
         customC.sort()
+        setCues(allCues)
         setCustomCategories(customC)
         // START ANIMATION
         Animated.timing(fadeAnimation, {
@@ -700,15 +441,18 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         }).start();
       }
       // OPEN WALKTHROUGH IF FIRST TIME LOAD
+      setInit(true)
       if (!init) {
         openModal('Walkthrough')
       }
-      setInit(true)
+      if (!sC) {
+        setReLoading(false)
+      }
     } catch (e) {
       console.log(e)
     }
 
-  }, [fadeAnimation])
+  }, [fadeAnimation, init])
 
   useEffect(() => {
     // Called when component is loaded
@@ -742,15 +486,43 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     setUpdateModalKey(key)
     setUpdateModalIndex(index)
     setPageNumber(pageNumber)
-    setCueId(_id)
     setChannelId(channId)
     setCreatedBy(by)
+    setCueId(_id)
     openModal('Update')
-  }, [filterChoice])
+  }, [])
+
+  const reloadCueListAfterUpdate = useCallback(async () => {
+    const unparsedCues = await AsyncStorage.getItem('cues')
+    if (unparsedCues) {
+      const allCues = JSON.parse(unparsedCues)
+      const custom: any = {}
+      setCues(allCues)
+      if (allCues['local']) {
+        allCues['local'].map((item: any) => {
+          if (item.customCategory !== "") {
+            if (!custom[item.customCategory]) {
+              custom[item.customCategory] = 0
+            }
+          }
+        })
+        const customC: any[] = []
+        Object.keys(custom).map((item) => {
+          customC.push(item)
+        })
+        customC.sort()
+        setCustomCategories(customC)
+      }
+      Animated.timing(fadeAnimation, {
+        toValue: 1,
+        duration: 150,
+        useNativeDriver: true
+      }).start();
+    }
+  }, [])
 
   const closeModal = useCallback(() => {
     setCueId('')
-    // sheetRef.current.snapTo(2)
     setModalType('')
     setCreatedBy('')
     setChannelFilterChoice('All')
@@ -768,9 +540,18 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     sleepFrom={sleepFrom}
     sleepTo={sleepTo}
     randomShuffleFrequency={randomShuffleFrequency}
-    setRandomShuffleFrequency={(option: any) => setRandomShuffleFrequency(option)}
-    setSleepFrom={(date: any) => setSleepFrom(date)}
-    setSleepTo={(date: any) => setSleepTo(date)}
+    setRandomShuffleFrequency={(option: any) => {
+      setRandomShuffleFrequency(option)
+      storeMenu()
+    }}
+    setSleepFrom={(date: any) => {
+      setSleepFrom(date)
+      storeMenu()
+    }}
+    setSleepTo={(date: any) => {
+      setSleepTo(date)
+      storeMenu()
+    }}
   /> :
     (modalType === 'Create' ? <Create
       customCategories={customCategories}
@@ -780,6 +561,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
       }} />
       :
       (modalType === 'Update' ? <Update
+        key={cueId.toString()}
         customCategories={customCategories}
         cue={cues[updateModalKey][updateModalIndex]}
         cueIndex={updateModalIndex}
@@ -790,6 +572,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         channelId={channelId}
         filterChoice={filterChoice}
         channelCreatedBy={channelCreatedBy}
+        reloadCueListAfterUpdate={() => reloadCueListAfterUpdate()}
       />
         :
         (modalType === 'Walkthrough' ? <Walkthrough
@@ -813,19 +596,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                       null
                   )
               )
-          )
-        )
-      )
-    )
-
-  const snapPoints: ReactText[] = modalType === 'Menu' ? ['55%', 0, 0] :
-    (modalType === 'Create' ? ['90%', 0, 0] :
-      (modalType === 'Update' ? ['90%', 0, 0] :
-        (modalType === 'Walkthrough' ? ['85%', 0, 0] :
-          (modalType === 'Channels' ? ['85%', 0, 0] :
-            (modalType === 'Discussion' ? ['90%', 0, 0] :
-              (modalType === 'Subscribers' ? ['90%', 0, 0] : [0, 0, 0])
-            )
           )
         )
       )
@@ -874,12 +644,12 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   return (
     <View style={styles.container}>
       <View style={{
-        width: Dimensions.get('window').width * 0.3,
+        width: Dimensions.get('window').width < 1024 ? Dimensions.get('window').width : Dimensions.get('window').width * 0.3,
         height: Dimensions.get('window').height,
         flexDirection: 'column',
         backgroundColor: '#f4f4f4',
         paddingTop: 30,
-        paddingLeft: 30
+        paddingLeft: Dimensions.get('window').width < 1024 ? 0 : 30
       }}>
         <TopBar
           key={JSON.stringify(channelFilterChoice) + JSON.stringify(filteredCues)}
@@ -926,19 +696,32 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           openChannels={() => openModal('Channels')}
         />
       </View >
-      <View style={{
-        width: Dimensions.get('window').width * 0.7,
-        height: Dimensions.get('window').height,
-        paddingHorizontal: 30,
-        paddingTop: 30,
-        borderLeftWidth: 1,
-        borderColor: '#f4f4f4',
-        backgroundColor: '#f4f4f4'
-      }}>
-        {
-          modalType === '' ? null : modalContent
-        }
-      </View>
+      {
+        modalType === '' ? null :
+          <View style={{
+            width: Dimensions.get('window').width < 1024 ? '100%' : Dimensions.get('window').width * 0.7,
+            height: Dimensions.get('window').height,
+            paddingHorizontal: Dimensions.get('window').width < 1024 ? 0 : 30,
+            paddingTop: 0,
+            borderLeftWidth: 1,
+            borderColor: '#f4f4f4',
+            backgroundColor: '#f4f4f4',
+            position: Dimensions.get('window').width < 1024 ? 'absolute' : 'relative'
+          }}>
+            {
+              Dimensions.get('window').width < 1024 ?
+                <TouchableOpacity
+                  onPress={() => closeModal()}
+                  style={{ height: 30, backgroundColor: '#f4f4f4' }}>
+                  <Text style={{ flex: 1, textAlign: 'center' }}>
+                    <Ionicons name='chevron-down-outline' size={25} color={'#101010'} />
+                  </Text>
+                </TouchableOpacity> :
+                <View style={{ backgroundColor: '#f4f4f4', height: 30 }} />
+            }
+            {modalContent}
+          </View>
+      }
     </View>
   );
 }
@@ -952,11 +735,8 @@ const styles = StyleSheet.create({
   },
   activityContainer: {
     height: '70%',
-    width: Dimensions.get('window').width * 0.3,
+    width: Dimensions.get('window').width < 1024 ? Dimensions.get('window').width : Dimensions.get('window').width * 0.3,
     justifyContent: "center",
-    // borderRightWidth: 1,
-    // borderLeftWidth: 1,
-    // borderColor: '#eaeaea'
   },
   horizontal: {
     flexDirection: "row",

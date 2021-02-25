@@ -42,12 +42,15 @@ const MiniEditorScreen: React.FC<{ [label: string]: any }> = (props: any) => {
                     backgroundColor: '#f4f4f4',
                     placeholderColor: '#a6a2a2',
                     color: '#101010',
-                    contentCSSText: 'font-size: 12px;'
+                    contentCSSText: 'font-size: 13px;'
                 }}
                 initialContentHTML={props.message}
                 onScroll={() => Keyboard.dismiss()}
                 placeholder={props.placeholder}
-                onChange={(text) => props.setMessage(text)}
+                onChange={(text) => {
+                    const modifedText = text.split('&amp;').join('&')
+                    props.setMessage(modifedText)
+                }}
                 onHeightChange={handleHeightChange}
                 onBlur={() => Keyboard.dismiss()}
                 allowFileAccess={true}

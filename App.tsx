@@ -2,12 +2,11 @@ import { StatusBar } from 'expo-status-bar';
 import React, { useCallback, useEffect } from 'react';
 import { StyleSheet } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-
 import useCachedResources from './hooks/useCachedResources';
 import useColorScheme from './hooks/useColorScheme';
 import Navigation from './navigation/Navigator';
-
 import * as SplashScreen from 'expo-splash-screen';
+import "react-datetime/css/react-datetime.css"
 
 export default function App() {
 

@@ -49,14 +49,15 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
         <Animated.View style={{
             height: '100%',
             opacity: props.fadeAnimation,
-            width: Dimensions.get('window').width * 0.3,
+            width: Dimensions.get('window').width < 1024 ? Dimensions.get('window').width : Dimensions.get('window').width * 0.3,
             paddingHorizontal: 20
         }}>
             <ScrollView
+                showsVerticalScrollIndicator={false}
                 horizontal={false}
                 contentContainerStyle={{
-                    width: Dimensions.get('window').width * 0.3 - 70,
-                    height: (Dimensions.get('window').height - 30) * 0.7,
+                    width: Dimensions.get('window').width < 1024 ? Dimensions.get('window').width - 40 : (Dimensions.get('window').width * 0.3 - 70),
+                    height: Dimensions.get('window').width < 1024 ? '100%' : ((Dimensions.get('window').height - 30) * 0.7),
                 }}
             >
                 <View style={styles.marginSmall} />
@@ -82,123 +83,6 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 }
                 <View style={styles.marginSmall} />
             </ScrollView>
-            {/* {
-                filteredCues.length > 0 ?
-                    <Swiper
-                        vertical={true}
-                        controlsEnabled={true}
-                        controlsProps={{
-                            dotsTouchable: true,
-                            prevPos: 'top-right',
-                            nextPos: 'bottom-right',
-                            nextTitle: '',
-                            nextTitleStyle: { color: '#0079fe', fontSize: 20, fontFamily: 'overpass' },
-                            prevTitle: '',
-                            prevTitleStyle: { color: '#0079fe', fontSize: 20, fontFamily: 'overpass' },
-                            dotActiveStyle: { backgroundColor: pages.length === 1 ? '#fff' : '#0079fe' }
-                        }}
-                    >
-                        {
-                            pages.map((pageUndef, pageNumber) => {
-                                const index = (pageNumber * numCards);
-                                return <View style={styles.screen} key={Math.random()}>
-                                    <View style={styles.marginSmall} />
-                                    {
-                                        (index + 0 > filteredCues.length - 1) ? null :
-                                            <Card
-                                                fadeAnimation={props.fadeAnimation}
-                                                updateModal={() => props.openUpdate(
-                                                    filteredCues[index + 0].key,
-                                                    filteredCues[index + 0].index,
-                                                    pageNumber,
-                                                    filteredCues[index + 0]._id,
-                                                    (filteredCues[index + 0].createdBy ? filteredCues[index + 0].createdBy : ''),
-                                                    (filteredCues[index + 0].channelId ? filteredCues[index + 0].channelId : '')
-                                                )}
-                                                cue={filteredCues[index + 0]}
-                                                channelId={props.channelId}
-                                            />
-                                    }
-                                    <View style={styles.margin} />
-                                    {
-                                        (index + 1 > filteredCues.length - 1) ? null :
-                                            <Card
-                                                fadeAnimation={props.fadeAnimation}
-                                                updateModal={() => props.openUpdate(
-                                                    filteredCues[index + 1].key,
-                                                    filteredCues[index + 1].index,
-                                                    pageNumber,
-                                                    filteredCues[index + 1]._id,
-                                                    (filteredCues[index + 1].createdBy ? filteredCues[index + 1].createdBy : ''),
-                                                    (filteredCues[index + 1].channelId ? filteredCues[index + 1].channelId : '')
-                                                )}
-                                                cue={filteredCues[index + 1]}
-                                                channelId={props.channelId}
-                                            />
-                                    }
-                                    <View style={styles.margin} />
-                                    {
-                                        (index + 2 > filteredCues.length - 1) ? null :
-                                            <Card
-                                                fadeAnimation={props.fadeAnimation}
-                                                updateModal={() => props.openUpdate(
-                                                    filteredCues[index + 2].key,
-                                                    filteredCues[index + 2].index,
-                                                    pageNumber,
-                                                    filteredCues[index + 2]._id,
-                                                    (filteredCues[index + 2].createdBy ? filteredCues[index + 2].createdBy : ''),
-                                                    (filteredCues[index + 2].channelId ? filteredCues[index + 2].channelId : '')
-                                                )}
-                                                cue={filteredCues[index + 2]}
-                                                channelId={props.channelId}
-                                            />
-                                    }
-                                    <View style={styles.margin} />
-                                    {
-                                        (index + 3 > filteredCues.length - 1) ? null :
-                                            <Card
-                                                fadeAnimation={props.fadeAnimation}
-                                                updateModal={() => props.openUpdate(
-                                                    filteredCues[index + 3].key,
-                                                    filteredCues[index + 3].index,
-                                                    pageNumber,
-                                                    filteredCues[index + 3]._id,
-                                                    (filteredCues[index + 3].createdBy ? filteredCues[index + 3].createdBy : ''),
-                                                    (filteredCues[index + 3].channelId ? filteredCues[index + 3].channelId : '')
-                                                )}
-                                                cue={filteredCues[index + 3]}
-                                                channelId={props.channelId}
-                                            />
-                                    }
-                                    <View style={styles.margin} />
-                                    {
-                                        (index + 4 > filteredCues.length - 1) ? null :
-                                            <Card
-                                                fadeAnimation={props.fadeAnimation}
-                                                updateModal={() => props.openUpdate(
-                                                    filteredCues[index + 4].key,
-                                                    filteredCues[index + 4].index,
-                                                    pageNumber,
-                                                    filteredCues[index + 4]._id,
-                                                    (filteredCues[index + 4].createdBy ? filteredCues[index + 4].createdBy : ''),
-                                                    (filteredCues[index + 4].channelId ? filteredCues[index + 4].channelId : '')
-                                                )}
-                                                cue={filteredCues[index + 4]}
-                                                channelId={props.channelId}
-
-                                            />
-                                    }
-                                    <View style={styles.marginSmall} />
-                                </View>
-                            })
-                        }
-                    </Swiper> :
-                    <View style={{ padding: 15, paddingTop: 75, width: '100%' }}>
-                        <Text style={{ fontSize: 25, color: '#a6a2a2', fontWeight: 'bold', fontFamily: 'inter' }}>
-                            No cues found.
-                        </Text>
-                    </View>
-            } */}
         </Animated.View >
     );
 }
@@ -212,7 +96,7 @@ const styleObject = (channelId: any) => {
     return StyleSheet.create({
         screen: {
             height: '100%',
-            width: Dimensions.get('window').width * 0.3 - 40
+            width: Dimensions.get('window').width < 1024 ? Dimensions.get('window').width : Dimensions.get('window').width * 0.3 - 40
         },
         margin: {
             flex: 1

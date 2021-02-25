@@ -3,7 +3,7 @@ import { StyleSheet, Animated } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { Text, View } from '../components/Themed';
 import { Ionicons } from '@expo/vector-icons';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import Datetime from 'react-datetime';
 import { shuffleFrequencyOptions } from '../helpers/FrequencyOptions';
 
 const Menu: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
@@ -20,13 +20,24 @@ const Menu: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
     return (
         <View style={{
-            width: '100%', height: '100%', backgroundColor: 'white'
+            width: '100%', height: '100%', backgroundColor: 'white',
+            borderTopLeftRadius: 30,
+            borderTopRightRadius: 30,
+            paddingTop: 200
         }}>
-            <Animated.View style={{ ...styles.container, opacity: modalAnimation }}>
-                <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 10 }}>
-                    <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} />
-                </Text>
-                <View style={{ ...styles.row, height: '70%' }}>
+            <Animated.View style={{
+                width: '100%',
+                height: '100%',
+                backgroundColor: 'white',
+                display: 'flex',
+                flexDirection: 'column',
+                opacity: modalAnimation,
+            }}>
+                <View style={{
+                    width: '100%',
+                    display: 'flex',
+                    flexDirection: 'row',
+                }}>
                     <View style={{
                         backgroundColor: 'white',
                         width: '100%',
@@ -40,12 +51,10 @@ const Menu: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         </View>
                         <View style={{ height: '100%', justifyContent: 'center', backgroundColor: 'white', width: '50%', paddingLeft: 7.5 }}>
                             <Picker
-                                style={{
-                                    ...styles.picker
-                                }}
+                                style={styles.picker}
                                 itemStyle={{
                                     width: 110,
-                                    fontSize: 18
+                                    fontSize: 15
                                 }}
                                 selectedValue={props.randomShuffleFrequency}
                                 onValueChange={(itemValue: any) =>
@@ -66,64 +75,63 @@ const Menu: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         </View>
                     </View>
                 </View>
-                <View style={{ ...styles.row, height: '40%' }}>
+                <View style={{
+                    width: '100%',
+                    display: 'flex',
+                    flexDirection: 'row',
+                    paddingTop: 50
+                }}>
                     <View style={{
                         backgroundColor: 'white',
                         width: '100%',
                         flexDirection: 'row',
                         justifyContent: 'center'
                     }}>
-                        <Text style={{ ...styles.text, padding: 12, paddingLeft: 0 }}>
+                        <Text style={{
+                            fontSize: 15,
+                            color: '#a6a2a2',
+                            textAlign: 'right',
+                            paddingHorizontal: 10,
+                            paddingLeft: 0
+                        }}>
                             <Ionicons name='bed-outline' size={15} />  from
                     </Text>
-                        <DateTimePicker
-                            style={styles.timePicker}
+                        <Datetime
                             value={props.sleepFrom}
-                            mode={'time'}
-                            is24Hour={true}
-                            textColor={'#101010'}
-                            onChange={(event, selectedDate) => {
-                                const currentDate = selectedDate;
-                                props.setSleepFrom(currentDate)
+                            initialViewMode={'time'}
+                            dateFormat={false}
+                            onChange={(event: any) => {
+                                const date = new Date(event)
+                                props.setSleepFrom(date)
                             }}
                         />
                         <Text style={{
-                            ...styles.text,
+                            fontSize: 15,
+                            color: '#a6a2a2',
                             textAlign: 'center',
-                            padding: 10
+                            paddingHorizontal: 10
                         }}>
                             to
                     </Text>
-                        <DateTimePicker
-                            style={styles.timePicker}
+                        <Datetime
+                            dateFormat={false}
                             value={props.sleepTo}
-                            mode={'time'}
-                            is24Hour={true}
-                            textColor={'#101010'}
-                            onChange={(event, selectedDate) => {
-                                const currentDate = selectedDate;
-                                props.setSleepTo(currentDate)
+                            initialViewMode={'time'}
+                            onChange={(event: any) => {
+                                const date = new Date(event)
+                                props.setSleepTo(event)
                             }}
                         />
                     </View>
                 </View>
             </Animated.View>
-        </View>
+        </View >
     );
 }
 
 export default Menu
 
 const styles = StyleSheet.create({
-    container: {
-        width: '100%',
-        height: '100%',
-        backgroundColor: 'white',
-        display: 'flex',
-        flexDirection: 'column',
-        padding: 15,
-        paddingTop: 5,
-    },
     row: {
         width: '100%',
         height: '50%',
@@ -149,23 +157,23 @@ const styles = StyleSheet.create({
         paddingLeft: 7.5
     },
     picker: {
-        width: 150,
-        height: 200,
         display: 'flex',
         justifyContent: 'center',
         backgroundColor: 'white',
         overflow: 'hidden',
-        fontSize: 14,
-        textAlign: 'center'
+        fontSize: 12,
+        textAlign: 'center',
+        border: 'none',
+        width: 100
     },
     timePicker: {
-        width: 95,
-        fontSize: 18,
-        height: 45,
-        color: '#101010'
+        width: 200,
+        fontSize: 15,
+        // height: 45,
+        // color: '#101010'
     },
     text: {
-        fontSize: 18,
+        fontSize: 15,
         color: '#a6a2a2',
         textAlign: 'right',
     }

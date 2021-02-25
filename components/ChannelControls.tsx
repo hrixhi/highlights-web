@@ -10,7 +10,7 @@ import { uniqueNamesGenerator, adjectives, colors, animals } from 'unique-names-
 
 const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
-    const [option, setOption] = useState('Create')
+    const [option, setOption] = useState('Subscribe')
     const [name, setName] = useState('')
     const [password, setPassword] = useState('')
     const [passwordRequired, setPasswordRequired] = useState(false)
@@ -243,29 +243,29 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
             <View style={{ width: '100%', backgroundColor: 'white' }}>
                 <View style={styles.colorBar}>
                     <TouchableOpacity
-                        style={option === 'Create' ? styles.allOutline : styles.all}
-                        onPress={() => {
-                            setOption('Create')
-                        }}>
-                        <Text style={{ color: '#a6a2a2' }}>
-                            Create
-                                    </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
                         style={option === 'Subscribe' ? styles.allOutline : styles.all}
                         onPress={() => {
                             setOption('Subscribe')
                         }}>
-                        <Text style={{ color: '#a6a2a2' }}>
+                        <Text style={{ color: '#a6a2a2', lineHeight: 20 }}>
                             Subscribe
-                                    </Text>
+                        </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={option === 'Create' ? styles.allOutline : styles.all}
+                        onPress={() => {
+                            setOption('Create')
+                        }}>
+                        <Text style={{ color: '#a6a2a2', lineHeight: 20 }}>
+                            Create
+                        </Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={option === 'Profile' ? styles.allOutline : styles.all}
                         onPress={() => {
                             setOption('Profile')
                         }}>
-                        <Text style={{ color: '#a6a2a2' }}>
+                        <Text style={{ color: '#a6a2a2', lineHeight: 20 }}>
                             Profile
                         </Text>
                     </TouchableOpacity>
@@ -329,7 +329,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         : (
                             option === 'Subscribe' && !passwordRequired ?
                                 <View
-                                    style={{ height: 113, width: '100%', backgroundColor: 'white' }}
+                                    style={{ height: 115, width: '100%', backgroundColor: 'white' }}
                                 /> : null
                         )
                 }

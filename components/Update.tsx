@@ -188,42 +188,23 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 dotActiveStyle: { backgroundColor: !Number.isNaN(Number(cueId)) ? '#fff' : '#0079fe' }
                             }}
                         >
-                            <ScrollView
-                                ref={scroll1}
-                                key={1}
-                                showsVerticalScrollIndicator={false}
-                                overScrollMode={'always'}
-                                alwaysBounceVertical={true}
-                                scrollEnabled={true}
-                                scrollEventThrottle={1}
-                                keyboardDismissMode={'on-drag'}
-                                onMomentumScrollEnd={e => {
-                                    if (e.nativeEvent.contentOffset.y === 0 && e.nativeEvent.contentOffset.x === 0) {
-                                        scroll1.current.scrollTo({ x: 0, y: 1, animated: false })
-                                    }
+                            <UpdateControls
+                                scrollOffset={scrollOffset}
+                                channelId={props.channelId}
+                                customCategories={props.customCategories}
+                                cue={props.cue}
+                                cueIndex={props.cueIndex}
+                                cueKey={props.cueKey}
+                                createdBy={createdBy}
+                                closeModal={() => {
+                                    Animated.timing(modalAnimation, {
+                                        toValue: 0,
+                                        duration: 150,
+                                        useNativeDriver: true
+                                    }).start(() => props.closeModal())
                                 }}
-                                style={{
-                                    borderTopLeftRadius: 30,
-                                    borderTopRightRadius: 30,
-                                }}
-                            >
-                                <UpdateControls
-                                    scrollOffset={scrollOffset}
-                                    channelId={props.channelId}
-                                    customCategories={props.customCategories}
-                                    cue={props.cue}
-                                    cueIndex={props.cueIndex}
-                                    cueKey={props.cueKey}
-                                    createdBy={createdBy}
-                                    closeModal={() => {
-                                        Animated.timing(modalAnimation, {
-                                            toValue: 0,
-                                            duration: 150,
-                                            useNativeDriver: true
-                                        }).start(() => props.closeModal())
-                                    }}
-                                />
-                            </ScrollView>
+                                reloadCueListAfterUpdate={() => props.reloadCueListAfterUpdate()}
+                            />
                             {
                                 !Number.isNaN(Number(cueId)) ? null :
                                     <ScrollView
@@ -240,11 +221,6 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         scrollEnabled={true}
                                         scrollEventThrottle={1}
                                         keyboardDismissMode={'on-drag'}
-                                        onMomentumScrollEnd={e => {
-                                            if (e.nativeEvent.contentOffset.y === 0 && e.nativeEvent.contentOffset.x === 0) {
-                                                scroll2.current.scrollTo({ x: 0, y: 1, animated: false })
-                                            }
-                                        }}
                                     >
                                         <ThreadsList
                                             channelCreatedBy={props.channelCreatedBy}
@@ -274,11 +250,6 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         scrollEnabled={true}
                                         scrollEventThrottle={1}
                                         keyboardDismissMode={'on-drag'}
-                                        onMomentumScrollEnd={e => {
-                                            if (e.nativeEvent.contentOffset.y === 0 && e.nativeEvent.contentOffset.x === 0) {
-                                                scroll3.current.scrollTo({ x: 0, y: 1, animated: false })
-                                            }
-                                        }}
                                     >
                                         <SubscribersList
                                             key={JSON.stringify(subscribers)}

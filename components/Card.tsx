@@ -174,11 +174,9 @@ const styles: any = (colorScheme: any, channelId: any) => StyleSheet.create({
         height: '87.5%',
         borderRadius: 20,
         overflow: 'hidden',
-        // /width: Dimensions.get('window').width * 0.3 - 70
     },
     card: {
         height: '100%',
-        // width: Dimensions.get('window').width * 0.3 - 70,
         borderRadius: 20,
         padding: 13,
         backgroundColor: colorScheme === 'light' ? '#F4F4F4' : '#a6a2a2',
