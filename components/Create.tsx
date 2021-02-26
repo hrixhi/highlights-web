@@ -956,22 +956,6 @@ const styles: any = StyleSheet.create({
         backgroundColor: 'white',
         lineHeight: 20
     },
-    col1: {
-        width: '40%',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        backgroundColor: 'white',
-        paddingRight: 7.5
-    },
-    col2: {
-        width: '60%',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        backgroundColor: 'white',
-        paddingLeft: 7.5
-    },
     picker: {
         display: 'flex',
         justifyContent: 'center',

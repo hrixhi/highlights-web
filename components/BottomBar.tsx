@@ -1,15 +1,31 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { StyleSheet, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import useColorScheme from '../hooks/useColorScheme';
 import { Text, View, TouchableOpacity } from '../components/Themed';
 import { fontSize } from '../assets/fonts/fontSize';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
     const [choice] = useState(props.filterChoice)
     const colorScheme = useColorScheme();
     const styles: any = styleObject(colorScheme)
+    const [loggedIn, setLoggedIn] = useState(false)
+
+    const getUser = useCallback(async () => {
+        const u = await AsyncStorage.getItem('user')
+        if (u) {
+            const parsedUser = JSON.parse(u)
+            if (parsedUser.email) {
+                setLoggedIn(true)
+            }
+        }
+    }, [])
+
+    useEffect(() => {
+        getUser()
+    }, [])
 
     return (
         <View style={styles.bottombar}>
@@ -109,11 +125,11 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 </View>
                 <View style={styles.icons}>
                     <TouchableOpacity
-                        onPress={() => props.openChannels()}
+                        onPress={() => props.openProfile()}
                         style={styles.center}
                     >
                         <Text style={{ textAlign: 'center', lineHeight: 30 }}>
-                            <Ionicons name='cloud-upload-outline' size={20} color={colorScheme === 'light' ? '#101010' : 'white'} />
+                            <Ionicons name={loggedIn ? 'person-circle-outline' : 'cloud-upload-outline'} size={19} color={colorScheme === 'light' ? '#101010' : 'white'} />
                         </Text>
                     </TouchableOpacity>
                 </View>

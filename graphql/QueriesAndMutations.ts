@@ -71,11 +71,51 @@ mutation($docx: String!) {
     }
 }
 `
+export const signup = gql`
+mutation($email: String!, $userId: String!, $password: String!, $fullName: String!, $displayName: String!) {
+    user {
+        signup(email: $email, userId: $userId, password: $password, fullName: $fullName, displayName: $displayName) 
+    }
+}
+`
+export const saveCuesToCloud = gql`
+mutation($userId: String!, $cues: [CueInputObject!]!) {
+    cue {
+        saveCuesToCloud(userId: $userId, cues: $cues) {
+            newId
+            oldId
+        }
+    }
+}
+`
+export const saveConfigToCloud = gql`
+mutation($userId: String!, $randomShuffleFrequency: String!, $sleepFrom: String!, $sleepTo: String!, $currentDraft: String) {
+    user {
+        saveConfigToCloud(userId: $userId, randomShuffleFrequency: $randomShuffleFrequency, sleepTo: $sleepTo, sleepFrom: $sleepFrom, currentDraft: $currentDraft)
+    }
+}
+`
 /**
  * ALL
  * QUERIES
  */
-
+export const findUserById = gql`
+query($id: String!) {
+    user {
+        findById(id: $id) {
+            _id
+            fullName
+            displayName
+            notificationId
+            randomShuffleFrequency
+            sleepFrom
+            sleepTo
+            email
+            currentDraft
+        }
+    }
+}
+`
 export const getChannels = gql`
 query($userId: String!) {
     channel {
@@ -103,6 +143,7 @@ query($userId: String!) {
             createdBy
             shuffle
             status
+            original
         }
     }
 }
@@ -215,6 +256,37 @@ query($cueId: String!) {
             displayName
             userId
             status
+        }
+    }
+}
+`
+export const login = gql`
+query($email: String!, $password: String!) {
+    user {
+        login(email: $email, password: $password) {
+            _id
+        } 
+    }
+}
+`
+export const getCuesFromCloud = gql`
+query($userId: String!) {
+    cue {
+        getCuesFromCloud(userId: $userId) {
+            _id
+            cue
+            color
+            channelId
+            customCategory
+            frequency
+            date
+            endPlayAt
+            channelName
+            starred
+            createdBy
+            shuffle
+            status
+            original
         }
     }
 }

@@ -192,7 +192,8 @@ const styles = StyleSheet.create({
     screen: {
         backgroundColor: 'white',
         height: '100%',
-        width: '60%',
+        width: Dimensions.get('window').width < 1024 ? '100%' : '60%',
+        paddingHorizontal: Dimensions.get('window').width < 1024 ? 20 : 0,
         alignSelf: 'center',
         borderTopRightRadius: 30,
         borderTopLeftRadius: 30,

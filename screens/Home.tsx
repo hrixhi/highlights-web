@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
-import { StyleSheet, Animated, ActivityIndicator, Alert, Dimensions } from 'react-native';
+import { StyleSheet, Animated, ActivityIndicator, Alert, Dimensions, TextInput } from 'react-native';
 import BottomBar from '../components/BottomBar';
 import CardsList from '../components/CardsList';
 import { Text, TouchableOpacity, View } from '../components/Themed';
@@ -14,9 +14,11 @@ import { defaultCues, defaultRandomShuffleFrequency, defaultSleepInfo } from '..
 import Walkthrough from '../components/Walkthrough';
 import Channels from '../components/Channels';
 import { fetchAPI } from '../graphql/FetchAPI';
-import { createUser, getSubscriptions, getCues, unsubscribe } from '../graphql/QueriesAndMutations';
+import { createUser, getSubscriptions, getCues, unsubscribe, saveConfigToCloud, saveCuesToCloud, login, getCuesFromCloud, findUserById } from '../graphql/QueriesAndMutations';
 import Discussion from '../components/Discussion';
 import Subscribers from '../components/Subscribers';
+import Profile from '../components/Profile';
+import { validateEmail } from '../helpers/emailCheck';
 
 const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -40,6 +42,9 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   const [channelCreatedBy, setChannelCreatedBy] = useState('')
   const [channelFilterChoice, setChannelFilterChoice] = useState('All')
   const [init, setInit] = useState(false)
+  const [showLoginWindow, setShowLoginWindow] = useState(false)
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
 
   const storeMenu = useCallback(async () => {
     try {
@@ -52,7 +57,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     }
   }, [randomShuffleFrequency, sleepTo, sleepFrom])
 
-  const loadCues = useCallback(async () => {
+  const loadNewChannelCues = useCallback(async () => {
     let user = await AsyncStorage.getItem('user')
     const unparsedCues = await AsyncStorage.getItem('cues')
     if (user && unparsedCues) {
@@ -288,6 +293,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
       if (fO === undefined || fO === null) {
         try {
           await AsyncStorage.clear()
+          await AsyncStorage.setItem(version, 'SET')
         } catch (e) {
         }
       }
@@ -389,7 +395,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
       }
       // LOAD CUES
       if (sC) {
-        loadCues()
+        loadNewChannelCues()
       } else {
         const custom: any = {}
         let allCues: any = {}
@@ -423,18 +429,27 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
       }
       // HANDLE PROFILE
       if (u) {
-        // Check if user has email & password
-        //  if they exist
-        //       if !init
-        //          loadDataFromCloud()
-        //       if init
-        //          saveDataInCloud()
-        //  else
-        //       if !init
-        //          openLoginWindow()
+        const parsedUser = JSON.parse(u)
+        if (parsedUser.email) {
+          if (!init) {
+            loadDataFromCloud()
+          } else {
+            saveDataInCloud()
+          }
+        } else {
+          if (!init) {
+            setShowLoginWindow(true)
+          }
+        }
+      } else {
+        if (!init) {
+          setShowLoginWindow(true)
+        }
       }
       // INITIALISED FIRST TIME
-      setInit(true)
+      if (!init) {
+        setInit(true)
+      }
       // LOADED
       if (!sC) {
         setReLoading(false)
@@ -444,21 +459,164 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     }
   }, [fadeAnimation, init])
 
-  const openLoginWindow = useCallback(() => {
-    // TO DO
-  }, [])
-
   // Move to profile page
   const handleLogin = useCallback(() => {
-    // TO DO
+    if (email.toString().trim() === '' || password.toString().trim() === '') {
+      return
+    }
+    if (!validateEmail(email.toString().trim())) {
+      return
+    }
+    const server = fetchAPI('')
+    server.query({
+      query: login,
+      variables: {
+        email: email.toLowerCase(),
+        password
+      }
+    }).then(async (r: any) => {
+      if (r.data.user.login) {
+        const u = r.data.user.login
+        if (u.__typename) {
+          delete u.__typename
+        }
+        const sU = JSON.stringify(u)
+        await AsyncStorage.setItem('user', sU)
+        setShowLoginWindow(false)
+        loadDataFromCloud()
+      }
+    }).catch(e => console.log(e))
+  }, [email, password])
+
+  const loadDataFromCloud = useCallback(async () => {
+    const u = await AsyncStorage.getItem('user')
+    if (u) {
+      const server = fetchAPI('')
+      const user = JSON.parse(u)
+      // Get User info
+      server.query({
+        query: findUserById,
+        variables: {
+          id: user._id
+        }
+      }).then(async (res) => {
+        const u = res.data.user.findById;
+        if (u) {
+          setRandomShuffleFrequency(u.randomShuffleFrequency)
+          setSleepFrom(new Date(u.sleepFrom))
+          setSleepTo(new Date(u.sleepTo))
+          await AsyncStorage.setItem('cueDraft', u.currentDraft)
+          delete u.currentDraft;
+          delete u.__typename
+          const sU = JSON.stringify(u)
+          await AsyncStorage.setItem('user', sU)
+        }
+      }).catch(err => console.log(err))
+      // Get user cues
+      server.query({
+        query: getCuesFromCloud,
+        variables: {
+          userId: user._id
+        }
+      }).then(async (res) => {
+        if (res.data.cue.getCuesFromCloud) {
+          const allCues: any = {}
+          res.data.cue.getCuesFromCloud.map((cue: any) => {
+            const channelId = cue.channelId && cue.channelId !== '' ? cue.channelId : "local"
+            delete cue.__typename
+            if (allCues[channelId]) {
+              allCues[channelId].push({ ...cue })
+            } else {
+              allCues[channelId] = [{ ...cue }]
+            }
+          })
+          setCues(allCues)
+          const stringCues = JSON.stringify(allCues)
+          await AsyncStorage.setItem('cues', stringCues)
+        }
+      }).catch(err => console.log(err))
+      // Get subscription information
+      server.query({
+        query: getSubscriptions,
+        variables: {
+          userId: user._id
+        }
+      })
+        .then(async res => {
+          if (res.data.subscription.findByUserId) {
+            setSubscriptions(res.data.subscription.findByUserId)
+            const stringSub = JSON.stringify(res.data.subscription.findByUserId)
+            await AsyncStorage.setItem('subscriptions', stringSub)
+          }
+        })
+        .catch(err => console.log(err))
+    }
   }, [])
 
-  const loadDataFromCloud = useCallback(() => { }, [
-    // TO DO
-  ])
+  const saveDataInCloud = useCallback(async () => {
 
-  const saveDataInCloud = useCallback(() => {
-    // TO DO
+    const draft = await AsyncStorage.getItem('cueDraft')
+    const f: any = await AsyncStorage.getItem('randomShuffleFrequency')
+    const sF: any = await AsyncStorage.getItem('sleepFrom')
+    const sT: any = await AsyncStorage.getItem('sleepTo')
+    const u: any = await AsyncStorage.getItem('user')
+    const parsedUser = JSON.parse(u)
+    const sC: any = await AsyncStorage.getItem('cues')
+    const parsedCues = JSON.parse(sC)
+    const sub: any = await AsyncStorage.getItem('subscriptions')
+    const parsedSubscriptions = JSON.parse(sub)
+
+    const allCues: any[] = []
+    if (parsedCues !== {}) {
+      Object.keys(parsedCues).map((key) => {
+        parsedCues[key].map((cue: any) => {
+          const cueInput = {
+            ...cue,
+            _id: cue._id.toString(),
+            color: cue.color.toString(),
+            date: (new Date(cue.date)).toISOString(),
+            endPlayAt: cue.endPlayAt && cue.endPlayAt !== '' ? (new Date(cue.endPlayAt)).toISOString() : ''
+          }
+          delete cueInput.original;
+          delete cueInput.status;
+          delete cueInput.channelName
+          delete cueInput.__typename
+          allCues.push(cueInput)
+        })
+      })
+    }
+
+    const server = fetchAPI('')
+    // UPDATE CUE CONFIG
+    server.mutate({
+      mutation: saveConfigToCloud,
+      variables: {
+        randomShuffleFrequency: f,
+        sleepFrom: sF,
+        sleepTo: sT,
+        currentDraft: draft ? draft : '',
+        subscriptions: parsedSubscriptions,
+        userId: parsedUser._id
+      }
+    }).then(res => {
+    }).catch(err => console.log(err))
+
+    // UPDATE CUES
+    server.mutate({
+      mutation: saveCuesToCloud,
+      variables: {
+        userId: parsedUser._id,
+        cues: allCues
+      }
+    }).then(async res => {
+      if (res.data.cue.saveCuesToCloud) {
+        res.data.cue.saveCuesToCloud.map((item: any) => {
+          parsedCues["local"][Number(item.oldId)]._id = item.newId
+        })
+        const updatedCues = JSON.stringify(parsedCues)
+        await AsyncStorage.setItem('cues', updatedCues)
+      }
+    }).catch(err => console.log(err))
   }, [])
 
   useEffect(() => {
@@ -591,7 +749,20 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                       channelId={channelId}
                       filterChoice={filterChoice}
                     /> :
-                      null
+                      (
+                        modalType === 'Profile' ? <Profile
+                          closeModal={() => closeModal()}
+                          saveDataInCloud={() => saveDataInCloud()}
+                          reOpenProfile={() => {
+                            setModalType('')
+                            openModal('Profile')
+                          }}
+                          reloadData={() => {
+                            loadData()
+                            openModal('Walkthrough')
+                          }}
+                        /> : null
+                      )
                   )
               )
           )
@@ -639,8 +810,129 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     })
   }
 
+  if (!init) {
+    return null;
+  }
+
   return (
     <View style={styles.container}>
+      {
+        showLoginWindow ? <View style={{
+          width: '100%',
+          height: '100%',
+          position: 'absolute',
+          zIndex: 50,
+          backgroundColor: 'rgba(16,16,16, 0.7)'
+        }}
+        >
+          <View style={{
+            position: 'absolute',
+            zIndex: 525,
+            display: 'flex',
+            alignSelf: 'center',
+            justifyContent: 'center',
+            backgroundColor: 'white',
+            borderRadius: 20,
+            marginTop: 100,
+            padding: 40,
+            marginHorizontal: 20
+          }}>
+            <Text style={{ fontSize: 30, color: '#101010', fontFamily: 'inter', paddingBottom: 15, maxWidth: 400, textAlign: 'center' }}>
+              Login
+              </Text>
+            <Text style={{ fontSize: 20, color: '#a6a2a2', fontFamily: 'overpass', paddingBottom: 25, maxWidth: 400, textAlign: 'center' }}>
+              Continue where you left off and save changes to the cloud.
+              </Text>
+            <View style={{
+              maxWidth: 400,
+              backgroundColor: 'white',
+              justifyContent: 'center'
+            }}>
+              <Text style={{ color: '#101010', fontSize: 14, paddingBottom: 5, paddingTop: 10 }}>
+                Email
+                </Text>
+              <TextInput
+                value={email}
+                style={styles.input}
+                placeholder={''}
+                onChangeText={(val: any) => setEmail(val)}
+                placeholderTextColor={'#a6a2a2'}
+              />
+              <Text style={{ color: '#101010', fontSize: 14, paddingBottom: 5 }}>
+                Password
+              </Text>
+              <TextInput
+                secureTextEntry={true}
+                value={password}
+                style={styles.input}
+                placeholder={''}
+                onChangeText={(val: any) => setPassword(val)}
+                placeholderTextColor={'#a6a2a2'}
+              />
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: 'center',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  paddingBottom: 10,
+                  paddingTop: 20
+                }}>
+                <TouchableOpacity
+                  onPress={() => handleLogin()}
+                  style={{
+                    backgroundColor: 'white',
+                    overflow: 'hidden',
+                    height: 35,
+                    marginTop: 15,
+                    width: '100%', justifyContent: 'center', flexDirection: 'row'
+                  }}>
+                  <Text style={{
+                    textAlign: 'center',
+                    lineHeight: 35,
+                    color: 'white',
+                    fontSize: 14,
+                    fontWeight: 'bold',
+                    backgroundColor: '#0079FE',
+                    paddingHorizontal: 25,
+                    fontFamily: 'inter',
+                    height: 35,
+                    width: 150,
+                    borderRadius: 15,
+                  }}>
+                    LOGIN
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => setShowLoginWindow(false)}
+                  style={{
+                    backgroundColor: 'white',
+                    overflow: 'hidden',
+                    height: 35,
+                    marginTop: 15,
+                    width: '100%', justifyContent: 'center', flexDirection: 'row'
+                  }}>
+                  <Text style={{
+                    textAlign: 'center',
+                    lineHeight: 35,
+                    color: '#101010s',
+                    fontSize: 14,
+                    fontWeight: 'bold',
+                    backgroundColor: '#f4f4f4',
+                    paddingHorizontal: 25,
+                    fontFamily: 'inter',
+                    height: 35,
+                    width: 150,
+                    borderRadius: 15,
+                  }}>
+                    SKIP
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </View> : null
+      }
       <View style={{
         width: Dimensions.get('window').width < 1024 ? Dimensions.get('window').width : Dimensions.get('window').width * 0.3,
         height: Dimensions.get('window').height,
@@ -683,6 +975,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           openMenu={() => openModal('Menu')}
           openCreate={() => openModal('Create')}
           openWalkthrough={() => openModal('Walkthrough')}
+          openChannels={() => openModal('Channels')}
+          openProfile={() => openModal('Profile')}
           filterChoice={filterChoice}
           handleFilterChange={(choice: any) => handleFilterChange(choice)}
           key={Math.random()}
@@ -691,18 +985,24 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           setChannelId={(id: string) => setChannelId(id)}
           setChannelCreatedBy={(id: any) => setChannelCreatedBy(id)}
           setChannelFilterChoice={(choice: string) => setChannelFilterChoice(choice)}
-          openChannels={() => openModal('Channels')}
         />
       </View >
       {
-        modalType === '' ? null :
+        modalType === '' ? <View
+          style={{
+            width: Dimensions.get('window').width < 1024 ? 0 : Dimensions.get('window').width * 0.7,
+            height: Dimensions.get('window').height,
+            paddingHorizontal: Dimensions.get('window').width < 1024 ? 0 : 30,
+            paddingTop: 0,
+            backgroundColor: '#f4f4f4',
+            position: Dimensions.get('window').width < 1024 ? 'absolute' : 'relative'
+          }}
+        /> :
           <View style={{
             width: Dimensions.get('window').width < 1024 ? '100%' : Dimensions.get('window').width * 0.7,
             height: Dimensions.get('window').height,
             paddingHorizontal: Dimensions.get('window').width < 1024 ? 0 : 30,
             paddingTop: 0,
-            borderLeftWidth: 1,
-            borderColor: '#f4f4f4',
             backgroundColor: '#f4f4f4',
             position: Dimensions.get('window').width < 1024 ? 'absolute' : 'relative'
           }}>
@@ -739,5 +1039,16 @@ const styles = StyleSheet.create({
   horizontal: {
     flexDirection: "row",
     justifyContent: "space-around"
+  },
+  input: {
+    width: '100%',
+    backgroundColor: '#f4f4f4',
+    borderRadius: 10,
+    fontSize: 15,
+    padding: 15,
+    paddingTop: 13,
+    paddingBottom: 13,
+    marginTop: 5,
+    marginBottom: 20
   }
 });

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Alert, StyleSheet, TextInput } from 'react-native';
+import { Alert, Dimensions, StyleSheet, TextInput } from 'react-native';
 import { Text, View, TouchableOpacity } from './Themed';
 import { fetchAPI } from '../graphql/FetchAPI';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -188,14 +188,6 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
             const displayName = uniqueNamesGenerator({
                 dictionaries: [adjectives, colors, animals]
             });
-            let experienceId = undefined;
-            if (!Constants.manifest) {
-                // Absence of the manifest means we're in bare workflow
-                experienceId = '@username/example';
-            }
-            // const expoToken = await Notifications.getExpoPushTokenAsync({
-            //     experienceId,
-            // });
             const notificationId = 'NOT_SET';
             server.mutate({
                 mutation: createUser,
@@ -349,7 +341,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 onPress={() => handleSubmit()}
                                 style={{
                                     backgroundColor: 'white',
-                                    borderRadius: 20,
+                                    borderRadius: 15,
                                     overflow: 'hidden',
                                     height: 35,
                                     marginTop: 15
@@ -382,7 +374,7 @@ const styles = StyleSheet.create({
         padding: 15,
         paddingHorizontal: 30,
         width: '100%',
-        height: '80%',
+        height: Dimensions.get('window').height - 50,
         backgroundColor: 'white',
     },
     outline: {
@@ -421,9 +413,9 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         fontSize: 15,
         padding: 15,
-        paddingTop: 15,
-        paddingBottom: 15,
-        marginTop: 10,
-        marginBottom: 25
-    },
+        paddingTop: 13,
+        paddingBottom: 13,
+        marginTop: 5,
+        marginBottom: 20
+    }
 });
