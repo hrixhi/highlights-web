@@ -491,8 +491,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   const loadDataFromCloud = useCallback(async () => {
     const u = await AsyncStorage.getItem('user')
     if (u) {
-      const server = fetchAPI('')
       const user = JSON.parse(u)
+      const server = fetchAPI(user._id)
       // Get User info
       server.query({
         query: findUserById,
