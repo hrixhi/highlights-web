@@ -70,25 +70,41 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         style={{ marginRight: 20 }}
                                         onPress={() => props.openDiscussion()}>
                                         <Text style={styles.channelText}>
-                                            <Ionicons name='chatbubble-ellipses-outline' size={20} color={'#a6a2a2'} />
+                                            <Ionicons name='chatbubble-ellipses-outline' size={19} color={'#a6a2a2'} />
                                         </Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity
                                         style={{ marginRight: 20 }}
                                         onPress={() => props.openSubscribers()}>
                                         <Text style={styles.channelText}>
-                                            <Ionicons name='people-outline' size={20} color={'#a6a2a2'} />
+                                            <Ionicons name='people-outline' size={21} color={'#a6a2a2'} />
+                                        </Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        style={{ marginRight: 20 }}
+                                        onPress={() => props.openSubscribers()}>
+                                        <Text style={styles.channelText}>
+                                            <Ionicons name='newspaper-outline' size={19} color={'#a6a2a2'} />
                                         </Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity
                                         style={{ marginRight: 5 }}
                                         onPress={() => props.unsubscribe()}>
                                         <Text style={styles.channelText}>
-                                            <Ionicons name='exit-outline' size={20} color={'#a6a2a2'} />
+                                            <Ionicons name='exit-outline' size={21} color={'#a6a2a2'} />
                                         </Text>
                                     </TouchableOpacity>
                                 </View> :
-                                null
+                                <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
+                                    <TouchableOpacity
+                                        onPress={() => props.openWalkthrough()}
+                                        style={{ marginRight: 5 }}
+                                    >
+                                        <Text style={styles.channelText}>
+                                            <Ionicons name='help-circle-outline' size={21} color={'#a6a2a2'} />
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View>
                         }
                     </View>
                 </View>
@@ -171,5 +187,6 @@ const styleObject: any = (channelId: any) => StyleSheet.create({
     },
     channelText: {
         // paddingTop: 1
+        lineHeight: 21
     }
 });

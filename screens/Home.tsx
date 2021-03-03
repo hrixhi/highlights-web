@@ -62,7 +62,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     const unparsedCues = await AsyncStorage.getItem('cues')
     if (user && unparsedCues) {
       const allCues = JSON.parse(unparsedCues)
-      const originalAllCues = JSON.parse(unparsedCues)
       const parsedUser = JSON.parse(user)
       const server = fetchAPI(parsedUser._id)
       server.query({
@@ -86,32 +85,17 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 })
               }
               if (index === -1) {
-                // Cue not in storage
-                if (item.status === 'read' && originalAllCues[item.channelId]) {
-                  // That means the channel is in storage, cue is not in storage
-                  // which means it was deleted by the user.
-                  // NOTE -- If originalAllCues[item.channelId] does not exist 
-                  // but the status is read and cue exists,
-                  // that means the channel was unsubscribed to
-                  // and we want to bring back those cues
-                  // so we get into the else statement below
+                let cue: any = {}
+                cue = {
+                  ...item
+                }
+                delete cue.__typename
+                if (allCues[cue.channelId]) {
+                  allCues[cue.channelId].push(cue)
                 } else {
-                  // New Cue
-                  let cue: any = {}
-                  cue = {
-                    ...item,
-                    original: item.cue
-                  }
-                  delete cue.__typename
-                  if (allCues[cue.channelId]) {
-                    allCues[cue.channelId].push(cue)
-                  } else {
-                    allCues[cue.channelId] = [cue]
-                  }
+                  allCues[cue.channelId] = [cue]
                 }
               } else {
-                // Cue was found in storage
-                // update its status
                 allCues[item.channelId][index].status = item.status;
                 if (!allCues[item.channelId][index].original) {
                   allCues[item.channelId][index].original = item.cue;
@@ -425,7 +409,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
       }
       // OPEN WALKTHROUGH IF FIRST TIME LOAD
       if (!init && Dimensions.get('window').width >= 1024) {
-        openModal('Walkthrough')
+        openModal('Create')
       }
       // HANDLE PROFILE
       if (u) {
@@ -579,7 +563,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           }
           delete cueInput.original;
           delete cueInput.status;
-          delete cueInput.channelName
+          delete cueInput.channelName;
           delete cueInput.__typename
           allCues.push(cueInput)
         })
@@ -651,6 +635,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
   const reloadCueListAfterUpdate = useCallback(async () => {
     const unparsedCues = await AsyncStorage.getItem('cues')
+    const u = await AsyncStorage.getItem('user')
     if (unparsedCues) {
       const allCues = JSON.parse(unparsedCues)
       const custom: any = {}
@@ -675,6 +660,12 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         duration: 150,
         useNativeDriver: true
       }).start();
+    }
+    if (u) {
+      const user = JSON.parse(u)
+      if (user.email) {
+        saveDataInCloud()
+      }
     }
   }, [])
 
@@ -952,6 +943,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           openDiscussion={() => openModal('Discussion')}
           openSubscribers={() => openModal('Subscribers')}
           unsubscribe={() => unsubscribeChannel()}
+          openWalkthrough={() => openModal('Walkthrough')}
         />
         {
           reLoading ? <View style={[styles.activityContainer, styles.horizontal]}>
@@ -972,9 +964,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             </View>
         }
         <BottomBar
-          openMenu={() => openModal('Menu')}
           openCreate={() => openModal('Create')}
-          openWalkthrough={() => openModal('Walkthrough')}
           openChannels={() => openModal('Channels')}
           openProfile={() => openModal('Profile')}
           filterChoice={filterChoice}

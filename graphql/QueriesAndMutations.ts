@@ -23,9 +23,9 @@ mutation($name: String!, $password: String, $createdBy: String!) {
 }
 `
 export const createCue = gql`
-mutation($cue: String!, $color: String!, $createdBy: String!, $shuffle: Boolean!, $starred: Boolean!, $channelId: String!, $frequency: String!, $endPlayAt: String, $customCategory: String) {
+mutation($cue: String!, $color: String!, $createdBy: String!, $shuffle: Boolean!, $starred: Boolean!, $channelId: String!, $frequency: String!, $submission: Boolean!, $gradeWeight: String!, $endPlayAt: String, $customCategory: String, $deadline: String) {
     cue {
-        create(cue: $cue, color: $color, createdBy: $createdBy, shuffle: $shuffle, starred: $starred, channelId: $channelId, frequency: $frequency, endPlayAt: $endPlayAt, customCategory: $customCategory)
+        create(cue: $cue, color: $color, createdBy: $createdBy, shuffle: $shuffle, starred: $starred, channelId: $channelId, frequency: $frequency, submission: $submission, gradeWeight: $gradeWeight, endPlayAt: $endPlayAt, customCategory: $customCategory, deadline: $deadline)
     }
 }
 `
@@ -144,6 +144,11 @@ query($userId: String!) {
             shuffle
             status
             original
+            submission
+            deadline
+            gradeWeight
+            score
+            graded
         }
     }
 }

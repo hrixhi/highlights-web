@@ -320,16 +320,6 @@ const styles: any = StyleSheet.create({
         backgroundColor: 'white',
         paddingLeft: 7.5
     },
-    picker: {
-        width: 150,
-        height: 275,
-        display: 'flex',
-        justifyContent: 'center',
-        backgroundColor: 'white',
-        overflow: 'hidden',
-        fontSize: 14,
-        textAlign: 'center'
-    },
     text: {
         fontSize: 12,
         color: '#a6a2a2',

@@ -62,7 +62,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 : null
                         }
                         {
-                            props.cue.shuffle ?
+                            props.cue.frequency === "0" ?
                                 <View style={{
                                     ...styleObject.date,
                                     display: 'flex',
@@ -70,78 +70,47 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     justifyContent: 'flex-end',
                                     flex: 1,
                                     marginRight: 5,
-                                    marginTop: -2,
+                                    marginTop: -5,
                                     backgroundColor: colorScheme === 'light'
                                         ? (starred ? '#101010' : '#F4F4F4')
                                         : (starred ? 'white' : '#a6a2a2'),
                                 }}>
-                                    <Text style={{ paddingRight: 4 }}>
+                                    <Text>
                                         {
                                             props.cue.status && props.cue.status !== 'read'
                                                 ? <Ionicons name='alert-outline'
-                                                    style={{ paddingRight: 15 }}
+                                                    style={{ marginRight: 26 }}
+                                                    size={12} color={'#0079FE'} />
+                                                : null
+                                        }
+                                    </Text>
+                                </View>
+                                :
+                                <View style={{
+                                    ...styleObject.date,
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    justifyContent: 'flex-end',
+                                    flex: 1,
+                                    marginRight: 5,
+                                    marginTop: -5,
+                                    backgroundColor: colorScheme === 'light'
+                                        ? (starred ? '#101010' : '#F4F4F4')
+                                        : (starred ? 'white' : '#a6a2a2'),
+                                }}>
+                                    <Text>
+                                        {
+                                            props.cue.status && props.cue.status !== 'read'
+                                                ? <Ionicons name='alert-outline'
+                                                    style={{ marginRight: 15 }}
                                                     size={11} color={'#0079FE'} />
                                                 : null
                                         }
                                     </Text>
                                     <Text>
-                                        <Ionicons name='shuffle-outline' size={11} color={colorScheme === 'light' ? '#a6a2a2' : '#333333'} />
+                                        <Ionicons name='notifications-outline' size={11} color={colorScheme === 'light' ? '#a6a2a2' : '#333333'} />
                                     </Text>
-                                </View> :
-                                (
-                                    props.cue.frequency === "0" ?
-                                        <View style={{
-                                            ...styleObject.date,
-                                            display: 'flex',
-                                            flexDirection: 'row',
-                                            justifyContent: 'flex-end',
-                                            flex: 1,
-                                            marginRight: 5,
-                                            marginTop: -2,
-                                            backgroundColor: colorScheme === 'light'
-                                                ? (starred ? '#101010' : '#F4F4F4')
-                                                : (starred ? 'white' : '#a6a2a2'),
-                                        }}>
-                                            <Text style={{ paddingRight: 4 }}>
-                                                {
-                                                    props.cue.status && props.cue.status !== 'read'
-                                                        ? <Ionicons name='alert-outline'
-                                                            style={{ marginRight: 15 }}
-                                                            size={11} color={'#0079FE'} />
-                                                        : null
-                                                }
-                                            </Text>
-                                            <Text>
-                                                <Ionicons name='notifications-off-outline' size={11} color={colorScheme === 'light' ? '#a6a2a2' : '#333333'} />
-                                            </Text>
-                                        </View>
-                                        :
-                                        <View style={{
-                                            ...styleObject.date,
-                                            display: 'flex',
-                                            flexDirection: 'row',
-                                            justifyContent: 'flex-end',
-                                            flex: 1,
-                                            marginRight: 5,
-                                            marginTop: -2,
-                                            backgroundColor: colorScheme === 'light'
-                                                ? (starred ? '#101010' : '#F4F4F4')
-                                                : (starred ? 'white' : '#a6a2a2'),
-                                        }}>
-                                            <Text style={{ paddingRight: 4 }}>
-                                                {
-                                                    props.cue.status && props.cue.status !== 'read'
-                                                        ? <Ionicons name='alert-outline'
-                                                            style={{ marginRight: 15 }}
-                                                            size={11} color={'#0079FE'} />
-                                                        : null
-                                                }
-                                            </Text>
-                                            <Text>
-                                                <Ionicons name='timer-outline' size={11} color={colorScheme === 'light' ? '#a6a2a2' : '#333333'} />
-                                            </Text>
-                                        </View>
-                                )
+                                </View>
                         }
                     </View>
                     <Text

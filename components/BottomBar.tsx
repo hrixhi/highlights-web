@@ -85,21 +85,11 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
             <View style={{ display: 'flex', flexDirection: 'row', height: '50%' }}>
                 <View style={styles.icons}>
                     <TouchableOpacity
-                        onPress={() => props.openMenu()}
-                        style={{}}
+                        onPress={() => props.openChannels()}
+                        style={styles.center}
                     >
-                        <Text style={{ lineHeight: 30, textAlign: 'center' }}>
-                            <Ionicons name='settings-outline' size={18} color={colorScheme === 'light' ? '#101010' : 'white'} />
-                        </Text>
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.icons}>
-                    <TouchableOpacity
-                        onPress={() => props.openWalkthrough()}
-                        style={{}}
-                    >
-                        <Text style={{ lineHeight: 30, textAlign: 'center' }}>
-                            <Ionicons name='help-circle-outline' size={22} color={colorScheme === 'light' ? '#101010' : 'white'} />
+                        <Text style={{ textAlign: 'center', lineHeight: 30 }}>
+                            <Ionicons name='school-outline' size={21} color={'#a6a2a2'} />
                         </Text>
                     </TouchableOpacity>
                 </View>
@@ -109,17 +99,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         style={styles.center}
                     >
                         <Text style={{ textAlign: 'center', lineHeight: 30 }}>
-                            <Ionicons name='add-circle' size={30} color={colorScheme === 'light' ? '#101010' : 'white'} />
-                        </Text>
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.icons}>
-                    <TouchableOpacity
-                        onPress={() => props.openChannels()}
-                        style={styles.center}
-                    >
-                        <Text style={{ textAlign: 'center', lineHeight: 30 }}>
-                            <Ionicons name='radio-outline' size={20} color={colorScheme === 'light' ? '#101010' : 'white'} />
+                            <Ionicons name='add-circle' size={30} color={'#101010'} />
                         </Text>
                     </TouchableOpacity>
                 </View>
@@ -129,7 +109,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         style={styles.center}
                     >
                         <Text style={{ textAlign: 'center', lineHeight: 30 }}>
-                            <Ionicons name={loggedIn ? 'person-circle-outline' : 'cloud-upload-outline'} size={19} color={colorScheme === 'light' ? '#101010' : 'white'} />
+                            <Ionicons name={loggedIn ? 'person-circle-outline' : 'cloud-upload-outline'} size={21} color={'#a6a2a2'} />
                         </Text>
                     </TouchableOpacity>
                 </View>
@@ -149,7 +129,7 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
         paddingBottom: 10
     },
     icons: {
-        width: '20%',
+        width: '33.33%',
         display: 'flex',
         justifyContent: 'center',
         flexDirection: 'column',

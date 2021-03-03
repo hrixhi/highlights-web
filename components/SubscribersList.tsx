@@ -72,7 +72,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                         <Text
                             ellipsizeMode="tail"
                             style={{ color: '#a6a2a2', fontSize: 18, flex: 1, lineHeight: 25 }}>
-                            Subscribers
+                            Team
                         </Text>
                 }
             </View>

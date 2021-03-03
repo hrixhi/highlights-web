@@ -289,7 +289,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         :
                         <View style={{ backgroundColor: 'white' }}>
                             <Text style={{ color: '#101010', fontSize: 14, paddingBottom: 10 }}>
-                                Channel
+                                Course
                             </Text>
                             <TextInput
                                 value={name}
@@ -307,7 +307,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                     (option === 'Subscribe' && passwordRequired) || option === 'Create' ?
                         <View style={{ backgroundColor: 'white' }}>
                             <Text style={{ color: '#101010', fontSize: 14, paddingBottom: 10 }}>
-                                Password
+                                Enrolment Password
                             </Text>
                             <TextInput
                                 value={password}

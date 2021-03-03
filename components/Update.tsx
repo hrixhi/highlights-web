@@ -19,11 +19,9 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const [threads, setThreads] = useState<any[]>([])
     const [subscribers, setSubscribers] = useState<any[]>([])
     const [loading, setLoading] = useState(true)
-    const scroll1: any = useRef()
     const scroll2: any = useRef()
     const scroll3: any = useRef()
     const [channelOwner, setChannelOwner] = useState(false)
-    const [scrollOffset, setScrollOffset] = useState(0)
 
     const loadThreadsAndStatuses = useCallback(() => {
         if (Number.isNaN(Number(cueId))) {
@@ -189,7 +187,6 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             }}
                         >
                             <UpdateControls
-                                scrollOffset={scrollOffset}
                                 channelId={props.channelId}
                                 customCategories={props.customCategories}
                                 cue={props.cue}
