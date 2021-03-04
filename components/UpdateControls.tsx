@@ -7,7 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Datetime from 'react-datetime';
 import { timedFrequencyOptions } from '../helpers/FrequencyOptions';
 import { fetchAPI } from '../graphql/FetchAPI';
-import { markAsRead } from '../graphql/QueriesAndMutations';
+import { markAsRead, submit } from '../graphql/QueriesAndMutations';
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
 import * as FileSystem from 'expo-file-system';
@@ -21,6 +21,8 @@ import { convertToHtml } from "../graphql/QueriesAndMutations";
 
 const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
+    props.cue
+
     const [cue, setCue] = useState(props.cue.cue)
     const [shuffle, setShuffle] = useState(props.cue.shuffle)
     const [starred, setStarred] = useState(props.cue.starred)
@@ -32,6 +34,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const [addCustomCategory, setAddCustomCategory] = useState(false)
     const [markedAsRead, setMarkedAsRead] = useState(false)
     const [reloadEditorKey, setReloadEditorKey] = useState(Math.random())
+    const [isOwner, setIsOwner] = useState(false)
     const stopPlay = props.cue.endPlayAt && props.cue.endPlayAt !== ''
         ? (
             props.cue.endPlayAt === 'Invalid Date' ? new Date() : new Date(props.cue.endPlayAt)
@@ -46,9 +49,21 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const now = new Date(props.cue.date)
     const RichText: any = useRef();
     const [height, setHeight] = useState(100)
-    const [showOriginal, setShowOriginal] = useState(false)
+    const [showOriginal, setShowOriginal] = useState(props.cue.submission ? true : false)
     const colorChoices: any[] = ['#f94144', '#f3722c', '#f8961e', '#f9c74f', '#90be6d'].reverse()
-
+    const [submission, setSubmission] = useState(props.cue.submission ? props.cue.submission : false)
+    const dead = props.cue.deadline && props.cue.deadline !== ''
+        ? (
+            props.cue.deadline === 'Invalid Date' ? new Date() : new Date(props.cue.deadline)
+        )
+        : new Date()
+    const [deadline, setDeadline] = useState<Date>(dead)
+    const [gradeWeight, setGradeWeight] = useState<any>(props.cue.gradeWeight ? props.cue.gradeWeight : 0)
+    const [score] = useState<any>(props.cue.score ? props.cue.score : 0)
+    const [graded, setGraded] = useState(props.cue.gradeWeight && props.cue.gradeWeight !== 0 ? true : false)
+    const currentDate = new Date()
+    const [submitted, setSubmitted] = useState(false)
+    const [userSetupComplete, setUserSetupComplete] = useState(false)
 
     const handleHeightChange = useCallback((h: any) => {
         setHeight(h)
@@ -191,6 +206,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         if (subCues[props.cueKey].length === 0) {
             return
         }
+        const submittedNow = new Date()
         subCues[props.cueKey][props.cueIndex] = {
             _id: props.cue._id,
             cue,
@@ -206,12 +222,20 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             endPlayAt: notify && (shuffle || !playChannelCueIndef) ? endPlayAt.toISOString() : '',
             channelName: props.cue.channelName,
             original: props.cue.original,
-            status: 'read'
+            status: 'read',
+            graded: props.cue.graded,
+            gradeWeight,
+            submission,
+            score,
+            submittedAt: submitted ? submittedNow.toISOString() : props.cue.submittedAt,
+            deadline: submission ? deadline.toISOString() : '',
         }
+        console.log(subCues[props.cueKey][props.cueIndex])
         const stringifiedCues = JSON.stringify(subCues)
         await AsyncStorage.setItem('cues', stringifiedCues)
         props.reloadCueListAfterUpdate()
     }, [cue, customCategory, shuffle, frequency, starred, color, playChannelCueIndef, notify,
+        submission, deadline, gradeWeight, props.cue.submittedAt, submitted,
         props.closeModal, props.cueIndex, props.cueKey, props.cue, endPlayAt, props])
 
     const handleDelete = useCallback(async () => {
@@ -238,9 +262,51 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         props.closeModal()
     }, [props.cueIndex, props.closeModal, props.cueKey])
 
+    const handleSubmit = useCallback(async () => {
+        const u: any = await AsyncStorage.getItem('user')
+        if (u) {
+            const parsedUser = JSON.parse(u)
+            if (!parsedUser.email || parsedUser.email === '') {
+                // cannot submit
+                return
+            }
+            const server = fetchAPI('')
+            server.mutate({
+                mutation: submit,
+                variables: {
+                    cueId: props.cue._id,
+                    userId: parsedUser._id
+                }
+            }).then(res => {
+                if (res.data.cue.submitModification) {
+                    setSubmitted(true)
+                }
+            }).catch(err => {
+
+            })
+        }
+    }, [props.cue])
+
+    useEffect(() => {
+        (
+            async () => {
+                const u = await AsyncStorage.getItem('user')
+                if (u && props.cue.createdBy) {
+                    const parsedUser = JSON.parse(u)
+                    if (parsedUser._id.toString().trim() === props.cue.createdBy.toString().trim()) {
+                        setIsOwner(true)
+                    }
+                    if (parsedUser.email && parsedUser.email !== '') {
+                        setUserSetupComplete(true)
+                    }
+                }
+            }
+        )()
+    }, [props.cue])
+
     useEffect(() => {
         handleUpdate()
-    }, [cue, shuffle, frequency, starred, color, props.cueIndex,
+    }, [cue, shuffle, frequency, starred, color, props.cueIndex, submitted,
         customCategory, props.cueKey, endPlayAt, playChannelCueIndef, notify])
 
     const updateStatusAsRead = useCallback(async () => {
@@ -310,6 +376,92 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 30 }}>
                     {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
                 </Text>
+                {
+                    (props.cue.channelId && props.cue.channelId !== '') ?
+                        <View style={{
+                            width: '100%', flexDirection: 'row', marginBottom: 25
+                        }}>
+                            <TouchableOpacity
+                                style={{
+                                    justifyContent: 'center',
+                                    flexDirection: 'column'
+                                }}
+                                onPress={() => {
+                                    setShowOriginal(true)
+                                }}>
+                                <Text style={showOriginal ? styles.allGrayOutline : styles.all}>
+                                    {
+                                        submission ? 'View Assignment' : 'View Original'
+                                    }
+                                </Text>
+                            </TouchableOpacity>
+                            {
+                                submission ?
+                                    (
+                                        !isOwner ?
+                                            <TouchableOpacity
+                                                style={{
+                                                    justifyContent: 'center',
+                                                    flexDirection: 'column'
+                                                }}
+                                                onPress={() => {
+                                                    setShowOriginal(!showOriginal)
+                                                }}>
+                                                <Text style={!showOriginal ? styles.allGrayOutline : styles.all}>
+                                                    {
+                                                        submission ? 'View Submission' : 'View Modifiable'
+                                                    }
+                                                </Text>
+                                            </TouchableOpacity> : null
+                                    ) :
+                                    <TouchableOpacity
+                                        style={{
+                                            justifyContent: 'center',
+                                            flexDirection: 'column'
+                                        }}
+                                        onPress={() => {
+                                            setShowOriginal(false)
+                                        }}>
+                                        <Text style={!showOriginal ? styles.allGrayOutline : styles.all}>
+                                            View Modifiable
+                                        </Text>
+                                    </TouchableOpacity>
+                            }
+                            {
+                                props.cue.graded && (props.cue.score !== undefined && props.cue.score !== null) ?
+                                    <Text style={{
+                                        fontSize: 15,
+                                        color: 'white',
+                                        height: 22,
+                                        paddingHorizontal: 10,
+                                        marginLeft: 10,
+                                        borderRadius: 10,
+                                        backgroundColor: '#0079fe',
+                                        lineHeight: 20,
+                                        paddingTop: 1
+                                    }}>
+                                        {props.cue.score}%
+                                    </Text> : null
+                            }
+                            <TouchableOpacity
+                                onPress={() => setStarred(!starred)}
+                                style={{
+                                    backgroundColor: 'white',
+                                    flex: 1
+                                }}>
+                                <Text style={{
+                                    textAlign: 'right',
+                                    lineHeight: 30,
+                                    marginTop: -35,
+                                    paddingRight: 25,
+                                    width: '100%'
+                                }}>
+                                    <Ionicons name='bookmark' size={25} color={starred ? '#f94144' : '#a6a2a2'} />
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                        : null
+                }
                 <View style={styles.date} onTouchStart={() => Keyboard.dismiss()}>
                     <Text style={{
                         // width: '10%',
@@ -327,62 +479,68 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         }
                     </Text>
                     <View>
-                        <RichToolbar
-                            style={{
-                                flexWrap: 'wrap',
-                                backgroundColor: 'white',
-                                height: 28,
-                                paddingLeft: 20
-                                // width: 'auto',
-                            }}
-                            iconSize={15}
-                            editor={RichText}
-                            disabled={false}
-                            iconTint={"#a6a2a2"}
-                            selectedIconTint={"#101010"}
-                            disabledIconTint={"#a6a2a2"}
-                            actions={[
-                                actions.setBold,
-                                actions.setItalic,
-                                actions.setUnderline,
-                                actions.insertBulletsList,
-                                actions.insertOrderedList,
-                                actions.checkboxList,
-                                actions.insertLink,
-                                actions.insertImage,
-                                "insertCamera",
-                                actions.undo,
-                                actions.redo,
-                                "close"
-                                // "insertVideo"
-                            ]}
-                            iconMap={{
-                                // ["insertVideo"]: ({ tintColor }) => <Ionicons name='videocam-outline' size={25} color={tintColor} />,
-                                ["insertCamera"]: ({ tintColor }) => <Ionicons name='camera-outline' size={18} color={tintColor} />,
-                                ["close"]: ({ tintColor }) => <Ionicons name='close-outline' size={18} color={tintColor} />,
-                            }}
-                            onPressAddImage={galleryCallback}
-                            // insertVideo={videoCallback}
-                            insertCamera={cameraCallback}
-                            close={clearAll}
-                        />
+                        {
+                            showOriginal ? null :
+                                <RichToolbar
+                                    style={{
+                                        flexWrap: 'wrap',
+                                        backgroundColor: 'white',
+                                        height: 28,
+                                        paddingLeft: 20
+                                        // width: 'auto',
+                                    }}
+                                    iconSize={15}
+                                    editor={RichText}
+                                    disabled={false}
+                                    iconTint={"#a6a2a2"}
+                                    selectedIconTint={"#101010"}
+                                    disabledIconTint={"#a6a2a2"}
+                                    actions={[
+                                        actions.setBold,
+                                        actions.setItalic,
+                                        actions.setUnderline,
+                                        actions.insertBulletsList,
+                                        actions.insertOrderedList,
+                                        actions.checkboxList,
+                                        actions.insertLink,
+                                        actions.insertImage,
+                                        "insertCamera",
+                                        actions.undo,
+                                        actions.redo,
+                                        "close"
+                                        // "insertVideo"
+                                    ]}
+                                    iconMap={{
+                                        // ["insertVideo"]: ({ tintColor }) => <Ionicons name='videocam-outline' size={25} color={tintColor} />,
+                                        ["insertCamera"]: ({ tintColor }) => <Ionicons name='camera-outline' size={18} color={tintColor} />,
+                                        ["close"]: ({ tintColor }) => <Ionicons name='close-outline' size={18} color={tintColor} />,
+                                    }}
+                                    onPressAddImage={galleryCallback}
+                                    // insertVideo={videoCallback}
+                                    insertCamera={cameraCallback}
+                                    close={clearAll}
+                                />
+                        }
                     </View>
-                    <TouchableOpacity
-                        onPress={() => setStarred(!starred)}
-                        style={{
-                            backgroundColor: 'white',
-                            flex: 1
-                        }}>
-                        <Text style={{
-                            textAlign: 'right',
-                            lineHeight: 30,
-                            marginTop: -35,
-                            paddingRight: 25,
-                            width: '100%'
-                        }}>
-                            <Ionicons name='bookmark' size={25} color={starred ? '#f94144' : '#a6a2a2'} />
-                        </Text>
-                    </TouchableOpacity>
+                    {
+                        props.cue.channelId && props.cue.channelId !== '' ? null :
+                            <TouchableOpacity
+                                onPress={() => setStarred(!starred)}
+                                style={{
+                                    backgroundColor: 'white',
+                                    flex: 1
+                                }}>
+                                <Text style={{
+                                    textAlign: 'right',
+                                    lineHeight: 30,
+                                    marginTop: -35,
+                                    paddingRight: 25,
+                                    width: '100%'
+                                }}>
+                                    <Ionicons name='bookmark' size={25} color={starred ? '#f94144' : '#a6a2a2'} />
+                                </Text>
+                            </TouchableOpacity>
+                    }
                 </View>
                 <ScrollView
                     style={{ paddingBottom: 100, height: '100%' }}
@@ -458,35 +616,167 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     Import (.docx)
                     </Text>
                             </TouchableOpacity>
-                            {
-                                (props.cue.channelId && props.cue.channelId !== '') ? <TouchableOpacity
-                                    style={{
-                                        height: 20,
-                                        backgroundColor: 'white',
-                                        width: '50%'
-                                    }}
-                                    onPress={() => setShowOriginal(!showOriginal)}
-                                >
-                                    {showOriginal ?
-                                        <Text style={{ fontSize: 12, color: '#a6a2a2', textAlign: 'right' }}>
-                                            View Modifed
-                                        </Text>
-                                        :
-                                        <Text style={{ fontSize: 12, color: '#a6a2a2', textAlign: 'right' }}>
-                                            View Original
-                                        </Text>
-                                    }
-                                </TouchableOpacity> : null
-                            }
                         </View>
                     </View>
                     <View style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+                        {
+                            props.cue.channelId ?
+                                <View style={{ display: 'flex', flexDirection: 'row' }}>
+                                    <View style={{ width: '33.33%', borderRightWidth: 0, borderColor: '#f4f4f4' }}>
+                                        <View style={{ width: '100%', paddingTop: 50, paddingBottom: 15, backgroundColor: 'white' }}>
+                                            <Text style={{ fontSize: 14, color: '#a6a2a2' }}>
+                                                <Ionicons
+                                                    name='school-outline' size={24} color={'#a6a2a2'} />
+                                            </Text>
+                                        </View>
+                                        <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white' }}>
+                                            <View style={{ width: '85%', backgroundColor: 'white' }}>
+                                                <View style={styles.colorBar}>
+                                                    <TouchableOpacity
+                                                        style={styles.allOutlineBlue}
+                                                        onPress={() => { }}>
+                                                        <Text style={{ color: '#0079FE' }}>
+                                                            {props.cue.channelName}
+                                                        </Text>
+                                                    </TouchableOpacity>
+                                                </View>
+                                            </View>
+                                        </View>
+                                    </View>
+                                    {
+                                        props.cue.channelId !== '' ?
+                                            <View style={{ width: '33.33%' }}>
+                                                <View style={{ width: '100%', paddingTop: 50, paddingBottom: 15, backgroundColor: 'white' }}>
+                                                    <Text style={{ fontSize: 14, color: '#a6a2a2' }}>
+                                                        {
+                                                            isOwner ? 'Accept Submission' : 'Submission'
+                                                        }
+                                                    </Text>
+                                                </View>
+                                                <View style={{ flexDirection: 'row' }}>
+                                                    <View style={{
+                                                        backgroundColor: 'white',
+                                                        height: 40,
+                                                        marginRight: 10
+                                                    }}>
+                                                        {
+                                                            isOwner ?
+                                                                <Switch
+                                                                    value={submission}
+                                                                    onValueChange={() => {
+                                                                        if (!submission) {
+                                                                            setCustomCategory('Assignment')
+                                                                            setAddCustomCategory(true)
+                                                                        }
+                                                                        setSubmission(!submission)
+                                                                    }}
+                                                                    style={{ height: 20 }}
+                                                                    trackColor={{
+                                                                        false: '#f4f4f4',
+                                                                        true: '#a6a2a2'
+                                                                    }}
+                                                                    activeThumbColor='white'
+                                                                />
+                                                                : null
+                                                        }
+                                                    </View>
+                                                    {
+                                                        submission ?
+                                                            <View style={{
+                                                                width: '100%',
+                                                                display: 'flex',
+                                                                flexDirection: 'row',
+                                                                backgroundColor: 'white'
+                                                            }}>
+                                                                <Text style={styles.text}>
+                                                                    Due
+                                                        </Text>
+                                                                {
+                                                                    isOwner ? <Datetime
+                                                                        value={deadline}
+                                                                        onChange={(event: any) => {
+                                                                            const date = new Date(event)
+                                                                            setDeadline(date)
+                                                                        }}
+                                                                    /> : <Text>
+                                                                            {deadline.toLocaleString()}
+                                                                        </Text>
+                                                                }
+                                                            </View>
+                                                            : null
+                                                    }
+                                                </View>
+                                            </View> : null
+                                    }
+                                    {
+                                        submission ?
+                                            <View style={{ width: '33.33%' }}>
+                                                <View style={{ width: '100%', paddingTop: 50, paddingBottom: 15, backgroundColor: 'white' }}>
+                                                    <Text style={{ fontSize: 14, color: '#a6a2a2' }}>
+                                                        Graded
+                                                </Text>
+                                                </View>
+                                                <View style={{ flexDirection: 'row' }}>
+                                                    <View style={{
+                                                        backgroundColor: 'white',
+                                                        height: 40,
+                                                        marginRight: 10
+                                                    }}>
+                                                        {
+                                                            isOwner ?
+                                                                <Switch
+                                                                    value={graded}
+                                                                    onValueChange={() => setGraded(!graded)}
+                                                                    style={{ height: 20 }}
+                                                                    trackColor={{
+                                                                        false: '#f4f4f4',
+                                                                        true: '#a6a2a2'
+                                                                    }}
+                                                                    activeThumbColor='white'
+                                                                />
+                                                                : null
+                                                        }
+
+                                                    </View>
+                                                    {
+                                                        graded ?
+                                                            <View style={{
+                                                                width: '100%',
+                                                                display: 'flex',
+                                                                flexDirection: 'row',
+                                                                backgroundColor: 'white'
+                                                            }}>
+                                                                <Text style={styles.text}>
+                                                                    Grade Weight {'\n'}(% of overall grade)
+                                                        </Text>
+                                                                {
+                                                                    isOwner ?
+                                                                        <TextInput
+                                                                            value={gradeWeight}
+                                                                            style={styles.picker}
+                                                                            placeholder={'0-100'}
+                                                                            onChangeText={val => setGradeWeight(val)}
+                                                                            placeholderTextColor={'#a6a2a2'}
+                                                                        /> :
+                                                                        <Text>
+                                                                            {gradeWeight}
+                                                                        </Text>
+                                                                }
+                                                            </View>
+                                                            : null
+                                                    }
+                                                </View>
+                                            </View> : null
+                                    }
+                                </View>
+                                : null
+                        }
                         <View style={{ display: 'flex', flexDirection: 'row' }}>
                             <View style={{ width: '33.33%', borderRightWidth: 0, borderColor: '#f4f4f4' }}>
-                                <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
+                                <View style={{ width: '100%', paddingTop: 50, paddingBottom: 15, backgroundColor: 'white' }}>
                                     <Text style={{ fontSize: 14, color: '#a6a2a2' }}>
                                         Priority
-                        </Text>
+                                </Text>
                                 </View>
                                 <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white' }}>
                                     <View style={{ width: '100%', backgroundColor: 'white' }}>
@@ -513,11 +803,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 </View>
                             </View>
                             <View style={{ width: '33.33%', borderRightWidth: 0, borderColor: '#f4f4f4' }}>
-                                <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
+                                <View style={{ width: '100%', paddingTop: 50, paddingBottom: 15, backgroundColor: 'white' }}>
                                     <Text style={{ fontSize: 14, color: '#a6a2a2' }}>
-                                        {
-                                            props.cue.channelId ? 'Channel' : 'Category'
-                                        }
+                                        Category
                                     </Text>
                                 </View>
                                 {
@@ -526,10 +814,10 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             <View style={{ width: '85%', backgroundColor: 'white' }}>
                                                 <View style={styles.colorBar}>
                                                     <TouchableOpacity
-                                                        style={styles.allOutlineBlue}
+                                                        style={styles.allOutline}
                                                         onPress={() => { }}>
-                                                        <Text style={{ color: '#0079FE' }}>
-                                                            {props.cue.channelName}
+                                                        <Text style={{ color: '#101010' }}>
+                                                            {props.cue.customCategory}
                                                         </Text>
                                                     </TouchableOpacity>
                                                 </View>
@@ -558,7 +846,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                                 }}>
                                                                 <Text style={{ color: '#101010', lineHeight: 20 }}>
                                                                     None
-                                                </Text>
+                                                                </Text>
                                                             </TouchableOpacity>
                                                             {
                                                                 customCategories.map((category: string) => {
@@ -601,7 +889,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     </View>
                     <View style={{ width: '100%', paddingTop: 15, flexDirection: 'row' }}>
                         <View style={{ width: '33.33%' }}>
-                            <View style={{ width: '100%', paddingTop: 25, paddingBottom: 15, backgroundColor: 'white' }}>
+                            <View style={{ width: '100%', paddingTop: 50, paddingBottom: 15, backgroundColor: 'white' }}>
                                 <Text style={{ fontSize: 15, color: '#a6a2a2' }}>
                                     <Ionicons name='notifications-outline' size={20} color={'#a6a2a2'} />
                                 </Text>
@@ -637,7 +925,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         {
                             notify ?
                                 <View style={{ width: '33.33%' }}>
-                                    <View style={{ width: '100%', paddingTop: 25, paddingBottom: 15, backgroundColor: 'white' }}>
+                                    <View style={{ width: '100%', paddingTop: 50, paddingBottom: 15, backgroundColor: 'white' }}>
                                         <Text style={{ fontSize: 14, color: '#a6a2a2' }}>
                                             <Ionicons
                                                 name='repeat-outline' size={25} color={'#a6a2a2'} />
@@ -715,7 +1003,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         {
                             notify && !shuffle ?
                                 <View style={{ width: '33.33%' }}>
-                                    <View style={{ width: '100%', paddingTop: 25, paddingBottom: 15, backgroundColor: 'white' }}>
+                                    <View style={{ width: '100%', paddingTop: 50, paddingBottom: 15, backgroundColor: 'white' }}>
                                         <Text style={{ fontSize: 14, color: '#a6a2a2' }}>
                                             <Ionicons
                                                 name='infinite-outline' size={25} color={'#a6a2a2'} />
@@ -773,25 +1061,58 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 height: 50,
                                 paddingTop: 10
                             }}>
-                            <TouchableOpacity
-                                onPress={() => handleDelete()}
-                                style={{ backgroundColor: 'white', borderRadius: 15, }}>
-                                <Text style={{
-                                    textAlign: 'center',
-                                    lineHeight: 35,
-                                    color: 'white',
-                                    fontSize: 14,
-                                    fontWeight: 'bold',
-                                    backgroundColor: '#0079FE',
-                                    borderRadius: 15,
-                                    paddingHorizontal: 25,
-                                    fontFamily: 'inter',
-                                    overflow: 'hidden',
-                                    height: 35
-                                }}>
-                                    DELETE
-                            </Text>
-                            </TouchableOpacity>
+                            {
+                                isOwner || (!props.cue.channelId || props.cue.channelId === '') ?
+                                    <TouchableOpacity
+                                        onPress={() => handleDelete()}
+                                        style={{ backgroundColor: 'white', borderRadius: 15, }}>
+                                        <Text style={{
+                                            textAlign: 'center',
+                                            lineHeight: 35,
+                                            color: 'white',
+                                            fontSize: 14,
+                                            fontWeight: 'bold',
+                                            backgroundColor: '#0079FE',
+                                            borderRadius: 15,
+                                            paddingHorizontal: 25,
+                                            fontFamily: 'inter',
+                                            overflow: 'hidden',
+                                            height: 35
+                                        }}>
+                                            {
+                                                isOwner ? 'DELETE FOR EVERYONE' : 'DELETE'
+                                            }
+                                        </Text>
+                                    </TouchableOpacity> : null
+                            }
+                            {
+                                !isOwner && (props.cue.channelId && props.cue.channelId !== '') && submission && (currentDate < deadline) ?
+                                    <TouchableOpacity
+                                        disabled={(props.cue.submittedAt && props.cue.submittedAt !== '') || !userSetupComplete}
+                                        onPress={() => handleSubmit()}
+                                        style={{ backgroundColor: 'white', borderRadius: 15, }}>
+                                        <Text style={{
+                                            textAlign: 'center',
+                                            lineHeight: 35,
+                                            color: 'white',
+                                            fontSize: 14,
+                                            fontWeight: 'bold',
+                                            backgroundColor: '#0079FE',
+                                            borderRadius: 15,
+                                            paddingHorizontal: 25,
+                                            fontFamily: 'inter',
+                                            overflow: 'hidden',
+                                            height: 35
+                                        }}>
+                                            {
+                                                (
+                                                    props.cue.submittedAt && props.cue.submittedAt !== '') || submitted ? 'SUBMITTED' : (
+                                                        userSetupComplete ? 'SUBMIT' : 'SIGN UP TO SUBMIT'
+                                                    )
+                                            }
+                                        </Text>
+                                    </TouchableOpacity> : null
+                            }
                         </View>
                     </View>
                 </ScrollView>
@@ -869,7 +1190,7 @@ const styles: any = StyleSheet.create({
         width: '100%',
         alignItems: 'flex-end',
         backgroundColor: 'white',
-        paddingTop: 25
+        paddingTop: 50
     },
     col1: {
         width: '50%',
@@ -912,7 +1233,8 @@ const styles: any = StyleSheet.create({
         color: '#a6a2a2',
         height: 22,
         paddingHorizontal: 10,
-        backgroundColor: 'white'
+        backgroundColor: 'white',
+        lineHeight: 20
     },
     allOutline: {
         fontSize: 15,
@@ -923,6 +1245,17 @@ const styles: any = StyleSheet.create({
         borderRadius: 10,
         borderWidth: 1,
         borderColor: '#101010'
+    },
+    allGrayOutline: {
+        fontSize: 15,
+        color: '#a6a2a2',
+        height: 22,
+        paddingHorizontal: 10,
+        backgroundColor: 'white',
+        borderRadius: 10,
+        borderWidth: 1,
+        borderColor: '#a6a2a2',
+        lineHeight: 20
     },
     allOutlineBlue: {
         fontSize: 15,

@@ -76,7 +76,7 @@ const ThreadCard: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         <Text ellipsizeMode={'tail'}
                             numberOfLines={1}
                             style={styleObject.titleArrow}>
-                            <Ionicons name="chevron-forward-outline" color="#a6a2a2" size={16} />
+                            <Ionicons name="chevron-forward-outline" color="#a6a2a2" size={20} style={{ marginTop: 4 }} />
                         </Text>
                     </View>
                     <Text ellipsizeMode={'tail'}

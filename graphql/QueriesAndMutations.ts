@@ -95,6 +95,20 @@ mutation($userId: String!, $randomShuffleFrequency: String!, $sleepFrom: String!
     }
 }
 `
+export const submit = gql`
+mutation($cueId: String!, $userId: String!) {
+    cue {
+        submitModification(cueId: $cueId, userId: $userId)
+    }
+}
+`
+export const submitGrade = gql`
+mutation ($cueId: String!, $userId: String!, $score: String!) {
+    cue {
+        submitGrade(cueId: $cueId, userId: $userId, score: $score)
+    }
+}
+`
 /**
  * ALL
  * QUERIES
@@ -142,13 +156,14 @@ query($userId: String!) {
             starred
             createdBy
             shuffle
-            status
             original
             submission
             deadline
             gradeWeight
-            score
             graded
+            score
+            status
+            submittedAt
         }
     }
 }
@@ -261,6 +276,11 @@ query($cueId: String!) {
             displayName
             userId
             status
+            fullName
+            email
+            submission
+            score
+            graded
         }
     }
 }
@@ -290,8 +310,14 @@ query($userId: String!) {
             starred
             createdBy
             shuffle
-            status
             original
+            submission
+            deadline
+            gradeWeight
+            score
+            graded
+            status
+            submittedAt
         }
     }
 }

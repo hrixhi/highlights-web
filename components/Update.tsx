@@ -60,7 +60,11 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     subs.push({
                                         displayName: status.displayName,
                                         _id: status.userId,
-                                        fullName: status.status
+                                        fullName: status.status,
+                                        submission: status.submission,
+                                        score: status.score,
+                                        graded: status.graded,
+                                        userId: status.userId
                                     })
                                 })
                                 setSubscribers(subs)
@@ -262,6 +266,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 }).start(() => props.closeModal())
                                             }}
                                             reload={() => loadThreadsAndStatuses()}
+                                            cue={props.cue}
                                         />
                                     </ScrollView> : null
                             }

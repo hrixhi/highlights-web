@@ -514,7 +514,21 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               allCues[channelId] = [{ ...cue }]
             }
           })
+          const custom: any = {}
+          allCues['local'].map((item: any) => {
+            if (item.customCategory !== "") {
+              if (!custom[item.customCategory]) {
+                custom[item.customCategory] = 0
+              }
+            }
+          })
+          const customC: any[] = []
+          Object.keys(custom).map((item) => {
+            customC.push(item)
+          })
+          customC.sort()
           setCues(allCues)
+          setCustomCategories(customC)
           const stringCues = JSON.stringify(allCues)
           await AsyncStorage.setItem('cues', stringCues)
         }
@@ -559,8 +573,16 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             _id: cue._id.toString(),
             color: cue.color.toString(),
             date: (new Date(cue.date)).toISOString(),
-            endPlayAt: cue.endPlayAt && cue.endPlayAt !== '' ? (new Date(cue.endPlayAt)).toISOString() : ''
+            endPlayAt: cue.endPlayAt && cue.endPlayAt !== '' ? (new Date(cue.endPlayAt)).toISOString() : '',
           }
+          // Deleting these because they should not be changed ...
+          delete cueInput.score;
+          delete cueInput.deadline;
+          delete cueInput.graded;
+          delete cueInput.submittedAt;
+          delete cueInput.gradeWeight;
+          delete cueInput.submission;
+          delete cueInput.createdBy;
           delete cueInput.original;
           delete cueInput.status;
           delete cueInput.channelName;

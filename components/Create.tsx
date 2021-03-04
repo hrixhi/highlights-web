@@ -19,7 +19,6 @@ import {
 import * as DocumentPicker from 'expo-document-picker';
 import { convertToHtml } from "../graphql/QueriesAndMutations";
 
-
 const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
     const [cue, setCue] = useState('')
@@ -366,7 +365,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         const getData = async () => {
             try {
                 const h = await AsyncStorage.getItem('cueDraft')
-                console.log(h)
                 if (h !== null) {
                     setCue(h)
                 }

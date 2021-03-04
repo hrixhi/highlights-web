@@ -12,7 +12,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     const colorScheme = useColorScheme();
     const styleObject = styles(colorScheme, props.channelId)
     const starred = props.cue.starred;
-    const { title, subtitle } = htmlStringParser(props.cue.cue)
+    const { title, subtitle } = htmlStringParser(props.cue.channelId && props.cue.channelId !== '' ? props.cue.original : props.cue.cue)
 
     return (
         <View
@@ -48,6 +48,15 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             {props.cue.customCategory}
                         </Text>
                         {
+                            props.cue.graded ? <Text style={{
+                                fontSize: 9,
+                                color: '#0079fe',
+                                marginLeft: 10
+                            }}>
+                                {props.cue.score}%
+                            </Text> : null
+                        }
+                        {
                             props.cue.starred ?
                                 <Text style={{
                                     textAlign: 'right',
@@ -55,63 +64,43 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     marginTop: -25,
                                     paddingRight: 25,
                                     position: 'absolute',
-                                    width: '97%'
+                                    width: '97%',
+                                    zIndex: 20
                                 }}>
-                                    <Ionicons name='bookmark' size={20} color={starred ? '#f94144' : '#a6a2a2'} />
+                                    <Ionicons name='bookmark' size={18} color={starred ? '#f94144' : '#a6a2a2'} />
                                 </Text>
                                 : null
                         }
-                        {
-                            props.cue.frequency === "0" ?
-                                <View style={{
-                                    ...styleObject.date,
-                                    display: 'flex',
-                                    flexDirection: 'row',
-                                    justifyContent: 'flex-end',
-                                    flex: 1,
-                                    marginRight: 5,
-                                    marginTop: -5,
-                                    backgroundColor: colorScheme === 'light'
-                                        ? (starred ? '#101010' : '#F4F4F4')
-                                        : (starred ? 'white' : '#a6a2a2'),
-                                }}>
-                                    <Text>
-                                        {
-                                            props.cue.status && props.cue.status !== 'read'
-                                                ? <Ionicons name='alert-outline'
-                                                    style={{ marginRight: 26 }}
-                                                    size={12} color={'#0079FE'} />
-                                                : null
-                                        }
-                                    </Text>
-                                </View>
-                                :
-                                <View style={{
-                                    ...styleObject.date,
-                                    display: 'flex',
-                                    flexDirection: 'row',
-                                    justifyContent: 'flex-end',
-                                    flex: 1,
-                                    marginRight: 5,
-                                    marginTop: -5,
-                                    backgroundColor: colorScheme === 'light'
-                                        ? (starred ? '#101010' : '#F4F4F4')
-                                        : (starred ? 'white' : '#a6a2a2'),
-                                }}>
-                                    <Text>
-                                        {
-                                            props.cue.status && props.cue.status !== 'read'
-                                                ? <Ionicons name='alert-outline'
-                                                    style={{ marginRight: 15 }}
-                                                    size={11} color={'#0079FE'} />
-                                                : null
-                                        }
-                                    </Text>
-                                    <Text>
-                                        <Ionicons name='notifications-outline' size={11} color={colorScheme === 'light' ? '#a6a2a2' : '#333333'} />
-                                    </Text>
-                                </View>
-                        }
+                        <View style={{
+                            ...styleObject.date,
+                            display: 'flex',
+                            flexDirection: 'row',
+                            justifyContent: 'flex-end',
+                            flex: 1,
+                            marginRight: 5,
+                            marginTop: -5,
+                            backgroundColor: colorScheme === 'light'
+                                ? (starred ? '#101010' : '#F4F4F4')
+                                : (starred ? 'white' : '#a6a2a2'),
+                        }}>
+                            <Text>
+                                {
+                                    props.cue.status && (props.cue.status !== 'read' && props.cue.status !== 'submitted')
+                                        ? <Ionicons name='alert-outline'
+                                            style={{ marginRight: 10 }}
+                                            size={11} color={'#0079FE'} />
+                                        : null
+                                }
+                            </Text>
+                            {
+                                props.cue.submission ? <Text>
+                                    <Ionicons name='share-outline' size={11} color={props.cue.submittedAt && props.cue.submittedAt !== '' ? ('#0079fe') : (colorScheme === 'light' ? '#a6a2a2' : '#333333')} style={{ marginRight: 10 }} />
+                                </Text> : null
+                            }
+                            <Text>
+                                <Ionicons name='notifications-outline' size={11} color={colorScheme === 'light' ? '#a6a2a2' : '#333333'} />
+                            </Text>
+                        </View>
                     </View>
                     <Text
                         ellipsizeMode={'tail'}
