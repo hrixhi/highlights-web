@@ -40,13 +40,6 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
             return item.category === filterChoice
         })
     }
-    const length = showThreadCues ? threadWithReplies.length : filteredThreads.length
-    const pages = showThreadCues
-        ? new Array(Math.ceil(threadWithReplies.length / numCards))
-        : new Array(Math.ceil(filteredThreads.length / numCards))
-    for (let i = 0; i < pages.length; i++) {
-        pages[i] = 0
-    }
 
     const loadCueDiscussions = useCallback((tId) => {
         setThreadId(tId)
@@ -187,82 +180,33 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 width: '100%',
                                 backgroundColor: 'white',
                                 flex: 1
-                            }}>
+                            }}
+                                key={JSON.stringify(filteredThreads)}
+                            >
                                 {
                                     !showThreadCues ?
-                                        <Swiper
-                                            containerStyle={{}}
-                                            index={0}
-                                            activeDotColor={'#0079FE'}
+                                        <ScrollView
+                                            showsVerticalScrollIndicator={false}
                                             horizontal={false}
-                                            dotColor={'#e0e0e0'}
-                                            dotStyle={{ marginRight: -30, marginBottom: 11, opacity: 1 }}
-                                            activeDotStyle={{ marginRight: -30, marginBottom: 11, opacity: 1 }}
-                                            loadMinimal={true}
-                                            loadMinimalSize={1}
-                                            loop={false}
-                                            key={JSON.stringify(filterChoice)}
+                                            contentContainerStyle={{
+                                                width: '100%',
+                                                height: '100%',
+                                            }}
                                         >
                                             {
-                                                pages.map((pageUndef, pageNumber) => {
-                                                    const index = (pageNumber * numCards);
-                                                    return <View style={styles.screen} key={Math.random()}>
-                                                        <View style={styles.col}>
-                                                            {
-                                                                (index + 0 > length - 1) ? null :
-                                                                    <ThreadCard
-                                                                        fadeAnimation={props.fadeAnimation}
-                                                                        thread={filteredThreads[index + 0]}
-                                                                        onPress={() => loadCueDiscussions(filteredThreads[index + 0]._id)}
-                                                                        channelCreatedBy={props.channelCreatedBy}
-                                                                    />
-                                                            }
-                                                            <View style={styles.margin} />
-                                                            {
-                                                                (index + 1 > length - 1) ? null :
-                                                                    <ThreadCard
-                                                                        fadeAnimation={props.fadeAnimation}
-                                                                        thread={filteredThreads[index + 1]}
-                                                                        onPress={() => loadCueDiscussions(filteredThreads[index + 1]._id)}
-                                                                        channelCreatedBy={props.channelCreatedBy}
-                                                                    />
-                                                            }
-                                                            <View style={styles.margin} />
-                                                            {
-                                                                (index + 2 > length - 1) ? null :
-                                                                    <ThreadCard
-                                                                        fadeAnimation={props.fadeAnimation}
-                                                                        thread={filteredThreads[index + 2]}
-                                                                        onPress={() => loadCueDiscussions(filteredThreads[index + 2]._id)}
-                                                                        channelCreatedBy={props.channelCreatedBy}
-                                                                    />
-                                                            }
-                                                            <View style={styles.margin} />
-                                                            {
-                                                                (index + 3 > length - 1) ? null :
-                                                                    <ThreadCard
-                                                                        fadeAnimation={props.fadeAnimation}
-                                                                        thread={filteredThreads[index + 3]}
-                                                                        onPress={() => loadCueDiscussions(filteredThreads[index + 3]._id)}
-                                                                        channelCreatedBy={props.channelCreatedBy}
-                                                                    />
-                                                            }
-                                                            <View style={styles.margin} />
-                                                            {
-                                                                (index + 4 > length - 1) ? null :
-                                                                    <ThreadCard
-                                                                        fadeAnimation={props.fadeAnimation}
-                                                                        thread={filteredThreads[index + 4]}
-                                                                        onPress={() => loadCueDiscussions(filteredThreads[index + 4]._id)}
-                                                                        channelCreatedBy={props.channelCreatedBy}
-                                                                    />
-                                                            }
-                                                            <View style={styles.margin} />
-                                                        </View>
+                                                filteredThreads.map((thread: any, index) => {
+                                                    return <View style={styles.col} key={index}>
+                                                        <ThreadCard
+                                                            fadeAnimation={props.fadeAnimation}
+                                                            thread={thread}
+                                                            onPress={() => loadCueDiscussions(thread._id)}
+                                                            channelCreatedBy={props.channelCreatedBy}
+                                                        />
                                                     </View>
                                                 })
                                             }
-                                        </Swiper> :
+                                        </ScrollView>
+                                        :
                                         <ScrollView
                                             showsVerticalScrollIndicator={false}
                                             keyboardDismissMode={'on-drag'}
@@ -362,13 +306,8 @@ const styleObject = () => {
         screen: {
             flex: 1
         },
-        margin: {
-            height: '2.5%',
-            backgroundColor: 'white'
-        },
         marginSmall: {
-            height: '2.5%',
-            backgroundColor: 'white'
+            height: 10
         },
         row: {
             flexDirection: 'row',
@@ -378,8 +317,8 @@ const styleObject = () => {
         },
         col: {
             width: '100%',
-            paddingRight: 7.5,
-            flex: 1,
+            height: 80,
+            marginBottom: 20,
             backgroundColor: 'white'
         },
         colorBar: {

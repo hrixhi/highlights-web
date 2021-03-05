@@ -119,7 +119,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                         </TouchableOpacity>
                     </View>
                     :
-                    <View style={{ backgroundColor: 'white', flexDirection: 'row', paddingBottom: 15 }}>
+                    <View style={{ backgroundColor: 'white', flexDirection: 'row', paddingBottom: 25 }}>
                         {
                             props.cueId ?
                                 <Text
@@ -130,20 +130,20 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 <Text
                                     ellipsizeMode="tail"
                                     style={{ color: '#a6a2a2', fontSize: 18, flex: 1, lineHeight: 25 }}>
-                                    Team
+                                    Students
                         </Text>
                         }
-                    </View>}
+                    </View>
+            }
             {
                 subscribers.length === 0 ?
                     <View style={{ backgroundColor: 'white' }}>
                         <Text style={{ width: '100%', color: '#a6a2a2', fontWeight: 'bold', fontSize: 25, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter' }}>
                             {
-                                props.cueId ? 'No statuses.' : 'No subscribers.'
+                                props.cueId ? 'No statuses.' : 'No students.'
                             }
                         </Text>
-                    </View>
-                    :
+                    </View> :
                     <View style={{
                         width: '100%',
                         backgroundColor: 'white',
@@ -159,11 +159,8 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     contentContainerStyle={{
                                         width: '100%',
                                         height: '100%'
-                                        // width: Dimensions.get('window').width < 1024 ? Dimensions.get('window').width - 40 : (Dimensions.get('window').width * 0.3 - 70),
-                                        // height: Dimensions.get('window').width < 1024 ? '100%' : ((Dimensions.get('window').height - 30) * 0.7),
                                     }}
                                 >
-                                    <View style={styles.marginSmall} />
                                     {
                                         subscribers.map((subscriber, index) => {
                                             return <View style={styles.col} key={index}>
@@ -184,7 +181,6 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             </View>
                                         })
                                     }
-                                    <View style={styles.marginSmall} />
                                 </ScrollView> :
                                 <View>
                                     <ScrollView
@@ -265,7 +261,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 contentCSSText: 'font-size: 13px;'
                                             }}
                                             initialContentHTML={submission}
-                                            placeholder="Note..."
+                                            placeholder={"Title"}
                                             onChange={(text) => { }}
                                             allowFileAccess={true}
                                             allowFileAccessFromFileURLs={true}
@@ -332,7 +328,7 @@ const styleObject = () => {
             flex: 1
         },
         margin: {
-            height: 25,
+            height: 20,
             backgroundColor: 'white'
         },
         marginSmall: {
@@ -347,9 +343,9 @@ const styleObject = () => {
         },
         col: {
             width: '100%',
-            maxHeight: 80,
+            height: 80,
             marginBottom: 20,
-            flex: 1,
+            // flex: 1,
             backgroundColor: 'white'
         },
         channelText: {

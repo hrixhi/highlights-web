@@ -322,3 +322,32 @@ query($userId: String!) {
     }
 }
 `
+export const getGrades = gql`
+query($channelId: String!) {
+    channel {
+        getSubmissionCues(channelId: $channelId) {
+            _id
+            cue
+            gradeWeight
+        }
+    }
+}
+`
+export const getGradesList = gql`
+query($channelId: String!) {
+    channel {
+        getGrades(channelId: $channelId) {
+            userId
+            displayName
+            fullName
+            email
+            scores {
+                cueId
+                score
+                gradeWeight
+                graded
+            }
+        }
+    }
+}
+`

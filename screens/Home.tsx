@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
-import { StyleSheet, Animated, ActivityIndicator, Alert, Dimensions, TextInput } from 'react-native';
+import { StyleSheet, Animated, ActivityIndicator, Dimensions, TextInput } from 'react-native';
+import Alert from '../components/Alert'
 import BottomBar from '../components/BottomBar';
 import CardsList from '../components/CardsList';
 import { Text, TouchableOpacity, View } from '../components/Themed';
@@ -19,6 +20,7 @@ import Discussion from '../components/Discussion';
 import Subscribers from '../components/Subscribers';
 import Profile from '../components/Profile';
 import { validateEmail } from '../helpers/emailCheck';
+import Grades from '../components/Grades';
 
 const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -130,7 +132,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           }
         })
         .catch(err => {
-          Alert.alert("Unable to refresh channel cues.", "Check connection.")
+          Alert("Unable to refresh channel cues.", "Check connection.")
           const custom: any = {}
           setCues(allCues)
           if (allCues['local']) {
@@ -184,7 +186,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   }, [])
 
   const unsubscribeChannel = useCallback(() => {
-    Alert.alert(
+    Alert(
       "Leave Channel",
       "Are you sure you want to unsubscribe from " + filterChoice + "?",
       [
@@ -211,10 +213,10 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                   closeModal()
                   loadData()
                 } else {
-                  Alert.alert("Already unsubscribed.")
+                  Alert("Already unsubscribed.")
                 }
               }).catch(err => {
-                Alert.alert("Something went wrong.", "Check connection.")
+                Alert("Something went wrong.", "Check connection.")
               })
             }
           }
@@ -253,10 +255,10 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                   closeModal()
                   loadData()
                 } else {
-                  Alert.alert("Already unsubscribed.")
+                  Alert("Already unsubscribed.")
                 }
               }).catch(err => {
-                Alert.alert("Something went wrong.", "Check connection.")
+                Alert("Something went wrong.", "Check connection.")
               })
             }
           }
@@ -576,12 +578,15 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             endPlayAt: cue.endPlayAt && cue.endPlayAt !== '' ? (new Date(cue.endPlayAt)).toISOString() : '',
           }
           // Deleting these because they should not be changed ...
+          // but dont delete if it is the person who has made the cue 
+          // -> because those channel Cue changes are going to be propagated
           delete cueInput.score;
           delete cueInput.deadline;
           delete cueInput.graded;
           delete cueInput.submittedAt;
           delete cueInput.gradeWeight;
           delete cueInput.submission;
+
           delete cueInput.createdBy;
           delete cueInput.original;
           delete cueInput.status;
@@ -774,7 +779,15 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             loadData()
                             openModal('Walkthrough')
                           }}
-                        /> : null
+                        /> :
+                          (
+                            modalType === 'Grades' ? <Grades
+                              closeModal={() => closeModal()}
+                              channelId={channelId}
+                              filterChoice={filterChoice}
+                            />
+                              : null
+                          )
                       )
                   )
               )
@@ -964,6 +977,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           setChannelFilterChoice={(choice: any) => setChannelFilterChoice(choice)}
           openDiscussion={() => openModal('Discussion')}
           openSubscribers={() => openModal('Subscribers')}
+          openGrades={() => openModal('Grades')}
           unsubscribe={() => unsubscribeChannel()}
           openWalkthrough={() => openModal('Walkthrough')}
         />

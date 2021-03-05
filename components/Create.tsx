@@ -48,6 +48,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const [deadline, setDeadline] = useState(new Date())
     const [gradeWeight, setGradeWeight] = useState<any>(0)
     const [graded, setGraded] = useState(false)
+    const [imported, setImported] = useState(false)
 
     const loadChannelCategories = useCallback(async () => {
 
@@ -421,28 +422,12 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
                 </Text>
                 <View style={styles.date} onTouchStart={() => Keyboard.dismiss()}>
-                    <Text style={{
-                        // width: '10%',
-                        paddingRight: 15,
-                        color: '#a6a2a2',
-                        fontSize: 11,
-                        lineHeight: 30
-                    }}>
-                        {
-                            now.toString().split(' ')[1] +
-                            ' ' +
-                            now.toString().split(' ')[2] +
-                            ', ' +
-                            now.toString().split(' ')[3]
-                        }
-                    </Text>
                     <View>
                         <RichToolbar
                             style={{
                                 flexWrap: 'wrap',
                                 backgroundColor: 'white',
-                                height: 28,
-                                paddingLeft: 20
+                                height: 28
                             }}
                             iconSize={15}
                             editor={RichText}
@@ -491,6 +476,22 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         }}>
                             <Ionicons name='bookmark' size={25} color={starred ? '#f94144' : '#a6a2a2'} />
                         </Text>
+                        <Text style={{
+                            flex: 1,
+                            color: '#a6a2a2',
+                            fontSize: 11,
+                            lineHeight: 30,
+                            textAlign: 'right',
+                            paddingRight: 10
+                        }}>
+                            {
+                                now.toString().split(' ')[1] +
+                                ' ' +
+                                now.toString().split(' ')[2] +
+                                ', ' +
+                                now.toString().split(' ')[3]
+                            }
+                        </Text>
                     </TouchableOpacity>
                 </View>
                 <ScrollView
@@ -532,7 +533,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             }}
                             initialContentHTML={cue}
                             onScroll={() => Keyboard.dismiss()}
-                            placeholder="Note..."
+                            placeholder={"Title"}
                             onChange={(text) => {
                                 const modifedText = text.split('&amp;').join('&')
                                 setCue(modifedText)
@@ -547,41 +548,91 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             allowsLinkPreview={true}
                             allowsBackForwardNavigationGestures={true}
                         />
-                        <View style={{
-                            backgroundColor: 'white',
-                            flexDirection: 'row',
-                            width: '100%',
-                            paddingTop: 10
-                        }}>
-                            <TouchableOpacity
-                                style={{
-                                    height: 20,
+                        {
+                            imported ? null :
+                                <View style={{
                                     backgroundColor: 'white',
-                                    width: '50%'
-                                }}
-                                onPress={() => uploadDocument()}
-                            >
-                                <Text style={{ fontSize: 12, color: '#a6a2a2' }}>
-                                    Import (.docx)
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
+                                    flexDirection: 'row',
+                                    width: '100%',
+                                    paddingTop: 10
+                                }}>
+                                    <Text style={{
+                                        height: 20,
+                                        backgroundColor: 'white',
+                                        marginRight: 20,
+                                        fontSize: 12,
+                                        color: '#a6a2a2',
+                                        marginTop: 1
+                                    }}>
+                                        <Ionicons
+                                            name='cloud-upload-outline' size={12} color={'#a6a2a2'} />
+                                    </Text>
+                                    <TouchableOpacity
+                                        style={{
+                                            height: 20,
+                                            backgroundColor: 'white',
+                                            marginRight: 20
+                                        }}
+                                        onPress={() => uploadDocument()}
+                                    >
+                                        <Text style={{ fontSize: 12, color: '#a6a2a2' }}>
+                                            docx
+                                    </Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        style={{
+                                            height: 20,
+                                            backgroundColor: 'white',
+                                            marginRight: 20
+                                        }}
+                                        onPress={() => uploadDocument()}
+                                    >
+                                        <Text style={{ fontSize: 12, color: '#a6a2a2' }}>
+                                            ppt
+                                    </Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        style={{
+                                            height: 20,
+                                            backgroundColor: 'white',
+                                            marginRight: 20
+                                        }}
+                                        onPress={() => uploadDocument()}
+                                    >
+                                        <Text style={{ fontSize: 12, color: '#a6a2a2' }}>
+                                            xls
+                                    </Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        style={{
+                                            height: 20,
+                                            backgroundColor: 'white',
+                                            marginRight: 20
+                                        }}
+                                        onPress={() => uploadDocument()}
+                                    >
+                                        <Text style={{ fontSize: 12, color: '#a6a2a2' }}>
+                                            pdf
+                                    </Text>
+                                    </TouchableOpacity>
+                                </View>
+                        }
                     </View>
                     <View style={{ flex: 1, display: 'flex', flexDirection: 'column', marginHorizontal: 10 }}>
                         {channels.length !== 0 ?
                             <View style={{ display: 'flex', flexDirection: 'row' }}>
                                 <View style={{ width: '33.33%', borderRightWidth: 0, borderColor: '#f4f4f4' }}>
-                                    <View style={{ width: '100%', paddingTop: 50, paddingBottom: 15, backgroundColor: 'white' }}>
+                                    <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
                                         <Text style={{ fontSize: 14, color: '#a6a2a2' }}>
                                             <Ionicons
-                                                name='school-outline' size={24} color={'#a6a2a2'} />
+                                                name='school-outline' size={23} color={'#a6a2a2'} />
                                         </Text>
                                     </View>
                                     <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white' }}>
                                         <View style={{ width: '85%', backgroundColor: 'white' }}>
                                             <ScrollView style={styles.colorBar} horizontal={true} showsHorizontalScrollIndicator={false}>
                                                 <TouchableOpacity
-                                                    style={channelId === '' ? styles.allOutlineBlue : styles.all}
+                                                    style={channelId === '' ? styles.allOutline : styles.all}
                                                     onPress={() => {
                                                         setChannelId('')
                                                         setCustomCategories(localCustomCategories)
@@ -591,7 +642,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         setGradeWeight(0)
                                                         setGraded(false)
                                                     }}>
-                                                    <Text style={{ color: '#0079fe', lineHeight: 20 }}>
+                                                    <Text style={{ color: '#101010', lineHeight: 20 }}>
                                                         None
                                         </Text>
                                                 </TouchableOpacity>
@@ -599,7 +650,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     channels.map((channel) => {
                                                         return <TouchableOpacity
                                                             key={Math.random()}
-                                                            style={channelId === channel._id ? styles.allOutlineBlue : styles.all}
+                                                            style={channelId === channel._id ? styles.allOutline : styles.all}
                                                             onPress={() => {
                                                                 setChannelId(channel._id)
                                                                 setAddCustomCategory(false)
@@ -608,7 +659,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                 setGradeWeight(0)
                                                                 setGraded(false)
                                                             }}>
-                                                            <Text style={{ color: '#0079FE', lineHeight: 20 }}>
+                                                            <Text style={{ color: '#101010', lineHeight: 20 }}>
                                                                 {channel.name}
                                                             </Text>
                                                         </TouchableOpacity>
@@ -621,7 +672,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 {
                                     channelId !== '' ?
                                         <View style={{ width: '33.33%' }}>
-                                            <View style={{ width: '100%', paddingTop: 50, paddingBottom: 15, backgroundColor: 'white' }}>
+                                            <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
                                                 <Text style={{ fontSize: 14, color: '#a6a2a2' }}>
                                                     Accept Submission
                                                 </Text>
@@ -676,7 +727,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 {
                                     submission ?
                                         <View style={{ width: '33.33%' }}>
-                                            <View style={{ width: '100%', paddingTop: 50, paddingBottom: 15, backgroundColor: 'white' }}>
+                                            <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
                                                 <Text style={{ fontSize: 14, color: '#a6a2a2' }}>
                                                     Graded
                                                 </Text>
@@ -727,7 +778,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         <View style={{ display: 'flex', flexDirection: 'row' }}>
                             <View style={{ width: '33.33%', borderRightWidth: 0, borderColor: '#f4f4f4' }}>
                                 <View style={{ width: '100%', backgroundColor: 'white' }}>
-                                    <View style={{ width: '100%', paddingTop: 50, paddingBottom: 15, backgroundColor: 'white' }}>
+                                    <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
                                         <Text style={{ fontSize: 14, color: '#a6a2a2' }}>
                                             Category
                                         </Text>
@@ -749,11 +800,11 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     </View> :
                                                     <ScrollView style={styles.colorBar} horizontal={true} showsHorizontalScrollIndicator={false}>
                                                         <TouchableOpacity
-                                                            style={customCategory === '' ? styles.allOutline : styles.all}
+                                                            style={customCategory === '' ? styles.allGrayOutline : styles.all}
                                                             onPress={() => {
                                                                 setCustomCategory('')
                                                             }}>
-                                                            <Text style={{ color: '#101010', lineHeight: 20 }}>
+                                                            <Text style={{ color: '#a6a2a2', lineHeight: 20 }}>
                                                                 None
                                                     </Text>
                                                         </TouchableOpacity>
@@ -761,11 +812,11 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             customCategories.map((category: string) => {
                                                                 return <TouchableOpacity
                                                                     key={Math.random()}
-                                                                    style={customCategory === category ? styles.allOutline : styles.all}
+                                                                    style={customCategory === category ? styles.allGrayOutline : styles.all}
                                                                     onPress={() => {
                                                                         setCustomCategory(category)
                                                                     }}>
-                                                                    <Text style={{ color: '#101010', lineHeight: 20 }}>
+                                                                    <Text style={{ color: '#a6a2a2', lineHeight: 20 }}>
                                                                         {category}
                                                                     </Text>
                                                                 </TouchableOpacity>
@@ -787,7 +838,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 }}
                                                 style={{ backgroundColor: 'white' }}>
                                                 <Text style={{ textAlign: 'center', lineHeight: 20, width: '100%' }}>
-                                                    <Ionicons name={addCustomCategory ? 'close' : 'add'} size={20} color={'#101010'} />
+                                                    <Ionicons name={addCustomCategory ? 'close' : 'add'} size={20} color={'#a6a2a2'} />
                                                 </Text>
                                             </TouchableOpacity>
                                         </View>
@@ -795,7 +846,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 </View>
                             </View>
                             <View style={{ width: '33.33%', borderRightWidth: 0, borderColor: '#f4f4f4' }}>
-                                <View style={{ width: '100%', paddingTop: 50, paddingBottom: 15, backgroundColor: 'white' }}>
+                                <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
                                     <Text style={{ fontSize: 14, color: '#a6a2a2' }}>
                                         Priority
                                 </Text>
@@ -827,7 +878,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         </View>
                         <View style={{ width: '100%', paddingTop: 15, flexDirection: 'row' }}>
                             <View style={{ width: '33.33%' }}>
-                                <View style={{ width: '100%', paddingTop: 50, paddingBottom: 15, backgroundColor: 'white' }}>
+                                <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
                                     <Text style={{ fontSize: 15, color: '#a6a2a2' }}>
                                         <Ionicons name='notifications-outline' size={20} color={'#a6a2a2'} />
                                     </Text>
@@ -863,7 +914,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             {
                                 notify ?
                                     <View style={{ width: '33.33%' }}>
-                                        <View style={{ width: '100%', paddingTop: 50, paddingBottom: 15, backgroundColor: 'white' }}>
+                                        <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
                                             <Text style={{ fontSize: 14, color: '#a6a2a2' }}>
                                                 <Ionicons
                                                     name='repeat-outline' size={25} color={'#a6a2a2'} />
@@ -941,7 +992,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             {
                                 notify && !shuffle ?
                                     <View style={{ width: '33.33%' }}>
-                                        <View style={{ width: '100%', paddingTop: 50, paddingBottom: 15, backgroundColor: 'white' }}>
+                                        <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
                                             <Text style={{ fontSize: 14, color: '#a6a2a2' }}>
                                                 <Ionicons
                                                     name='infinite-outline' size={25} color={'#a6a2a2'} />
@@ -1104,7 +1155,6 @@ const styles: any = StyleSheet.create({
         flexDirection: 'row',
         paddingBottom: 4,
         backgroundColor: 'white',
-        marginHorizontal: 10
     },
     colorBar: {
         width: '100%',
@@ -1149,15 +1199,15 @@ const styles: any = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#101010'
     },
-    allOutlineBlue: {
+    allGrayOutline: {
         fontSize: 15,
-        color: '#0079fe',
+        color: '#a6a2a2',
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: 'white',
         borderRadius: 10,
         borderWidth: 1,
-        borderColor: '#0079fe'
+        borderColor: '#a6a2a2'
     },
     color1: {
         backgroundColor: '#f94144'

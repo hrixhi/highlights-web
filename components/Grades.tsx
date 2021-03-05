@@ -3,36 +3,64 @@ import { ActivityIndicator, Animated, Dimensions, Alert } from 'react-native';
 import { View } from './Themed';
 import { ScrollView } from 'react-native-gesture-handler'
 import { fetchAPI } from '../graphql/FetchAPI';
-import { getSubscribers } from '../graphql/QueriesAndMutations';
-import SubscribersList from './SubscribersList';
+import { getGrades, getGradesList } from '../graphql/QueriesAndMutations';
+import GradesList from './GradesList';
 
-const Subscribers: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
+const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
     const [modalAnimation] = useState(new Animated.Value(1))
     const [loading, setLoading] = useState(true)
-    const [subscribers, setSubscribers] = useState<any[]>([])
+    const [cues, setCues] = useState<any[]>([])
+    const [scores, setScores] = useState<any[]>([])
 
-    const loadSubscribers = useCallback(() => {
+    const loadCuesAndScores = useCallback(() => {
         setLoading(true)
         if (props.channelId && props.channelId !== '') {
             const server = fetchAPI('')
             server.query({
-                query: getSubscribers,
+                query: getGrades,
                 variables: {
                     channelId: props.channelId
                 }
             })
                 .then(res => {
-                    if (res.data.user && res.data.user.findByChannelId) {
-                        setSubscribers(res.data.user.findByChannelId)
+                    if (res.data.channel && res.data.channel.getSubmissionCues) {
+                        setCues(res.data.channel.getSubmissionCues)
+                        server.query({
+                            query: getGradesList,
+                            variables: {
+                                channelId: props.channelId
+                            }
+                        }).then(res2 => {
+                            if (res2.data.channel.getGrades) {
+                                setScores(res2.data.channel.getGrades)
+                                setLoading(false)
+                                modalAnimation.setValue(0)
+                                Animated.timing(modalAnimation, {
+                                    toValue: 1,
+                                    duration: 150,
+                                    useNativeDriver: true
+                                }).start();
+                            }
+                        }).catch(err => {
+                            Alert.alert("Unable to load subscribers.", "Check connection.")
+                            setLoading(false)
+                            modalAnimation.setValue(0)
+                            Animated.timing(modalAnimation, {
+                                toValue: 1,
+                                duration: 150,
+                                useNativeDriver: true
+                            }).start();
+                        })
+                    } else {
+                        setLoading(false)
+                        modalAnimation.setValue(0)
+                        Animated.timing(modalAnimation, {
+                            toValue: 1,
+                            duration: 150,
+                            useNativeDriver: true
+                        }).start();
                     }
-                    setLoading(false)
-                    modalAnimation.setValue(0)
-                    Animated.timing(modalAnimation, {
-                        toValue: 1,
-                        duration: 150,
-                        useNativeDriver: true
-                    }).start();
                 })
                 .catch((err) => {
                     Alert.alert("Unable to load subscribers.", "Check connection.")
@@ -56,7 +84,7 @@ const Subscribers: React.FunctionComponent<{ [label: string]: any }> = (props: a
     }, [props.channelId, modalAnimation])
 
     useEffect(() => {
-        loadSubscribers()
+        loadCuesAndScores()
     }, [props.channelId])
 
     const windowHeight = Dimensions.get('window').height - 30;
@@ -92,15 +120,17 @@ const Subscribers: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             justifyContent: 'center',
                             display: 'flex',
                             flexDirection: 'column',
-                            backgroundColor: 'white'
+                            backgroundColor: 'white',
+                            borderTopRightRadius: 30,
+                            borderTopLeftRadius: 30
                         }}>
                             <ActivityIndicator color={'#a6a2a2'} />
                         </View>
                         :
-                        <SubscribersList
-                            key={JSON.stringify(subscribers)}
-                            subscribers={subscribers}
-                            cueId={null}
+                        <GradesList
+                            key={JSON.stringify(scores)}
+                            scores={scores}
+                            cues={cues}
                             channelName={props.filterChoice}
                             channelId={props.channelId}
                             closeModal={() => {
@@ -110,7 +140,7 @@ const Subscribers: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                     useNativeDriver: true
                                 }).start(() => props.closeModal())
                             }}
-                            reload={() => loadSubscribers()}
+                            reload={() => loadCuesAndScores()}
                         />
                 }
             </Animated.View>
@@ -118,4 +148,4 @@ const Subscribers: React.FunctionComponent<{ [label: string]: any }> = (props: a
     );
 }
 
-export default Subscribers
+export default Grades

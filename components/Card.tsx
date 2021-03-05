@@ -97,9 +97,12 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     <Ionicons name='share-outline' size={11} color={props.cue.submittedAt && props.cue.submittedAt !== '' ? ('#0079fe') : (colorScheme === 'light' ? '#a6a2a2' : '#333333')} style={{ marginRight: 10 }} />
                                 </Text> : null
                             }
-                            <Text>
-                                <Ionicons name='notifications-outline' size={11} color={colorScheme === 'light' ? '#a6a2a2' : '#333333'} />
-                            </Text>
+                            {
+                                props.cue.frequency !== '0' ?
+                                    <Text>
+                                        <Ionicons name='notifications-outline' size={11} color={colorScheme === 'light' ? '#a6a2a2' : '#333333'} />
+                                    </Text> : null
+                            }
                         </View>
                     </View>
                     <Text
@@ -108,15 +111,12 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         style={starred ? styleObject.titleFlip : styleObject.title}>
                         {title}
                     </Text>
-                    {
-                        subtitle === '' ? null :
-                            <Text
-                                ellipsizeMode={'tail'}
-                                numberOfLines={1}
-                                style={starred ? styleObject.descriptionFlip : styleObject.description}>
-                                {subtitle !== '' ? subtitle : ' '}
-                            </Text>
-                    }
+                    <Text
+                        ellipsizeMode={'tail'}
+                        numberOfLines={1}
+                        style={starred ? styleObject.descriptionFlip : styleObject.description}>
+                        {subtitle && subtitle !== '' ? subtitle : '-'}
+                    </Text>
                 </View>
             </TouchableOpacity>
         </View>

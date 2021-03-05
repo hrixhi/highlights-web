@@ -96,8 +96,8 @@ export default React.memo(ThreadCard, (prev, next) => {
 
 const styles: any = () => StyleSheet.create({
     swiper: {
-        height: '17.5%',
-        width: '98.5%',
+        height: '100%',
+        width: '100%',
         borderRadius: 20,
         overflow: 'hidden',
         backgroundColor: 'white'

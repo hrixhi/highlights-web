@@ -82,7 +82,7 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     </TouchableOpacity>
                                     <TouchableOpacity
                                         style={{ marginRight: 20 }}
-                                        onPress={() => props.openSubscribers()}>
+                                        onPress={() => props.openGrades()}>
                                         <Text style={styles.channelText}>
                                             <Ionicons name='newspaper-outline' size={19} color={'#a6a2a2'} />
                                         </Text>

@@ -30,7 +30,7 @@ const ThreadReplyCard: React.FunctionComponent<{ [label: string]: any }> = (prop
                         {props.thread.anonymous ? 'Anonymous' : props.thread.displayName}
                     </Text>
                 </View>
-                {/* <HTMLView value={props.thread.message}/> */}
+                <div dangerouslySetInnerHTML={{ __html: props.thread.message }} style={{ fontFamily: 'overpass', color: '#101010', fontSize: 14 }} />
             </View>
         </View>
     );

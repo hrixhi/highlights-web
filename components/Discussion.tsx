@@ -75,11 +75,11 @@ const Discussion: React.FunctionComponent<{ [label: string]: any }> = (props: an
         loadThreads()
     }, [props.channelId])
 
-    const windowHeight = Dimensions.get('window').height;
+    const windowHeight = Dimensions.get('window').height - 30;
     return (
         <ScrollView style={{
             width: '100%',
-            height: '100%',
+            height: windowHeight - 30,
             backgroundColor: 'white',
             borderTopRightRadius: 30,
             borderTopLeftRadius: 30
@@ -94,8 +94,10 @@ const Discussion: React.FunctionComponent<{ [label: string]: any }> = (props: an
             <Animated.View style={{
                 opacity: modalAnimation,
                 width: '100%',
-                height: windowHeight - 30,
-                backgroundColor: 'white'
+                height: windowHeight,
+                backgroundColor: 'white',
+                borderTopRightRadius: 30,
+                borderTopLeftRadius: 30
             }}>
                 {
                     loading
@@ -105,7 +107,7 @@ const Discussion: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             justifyContent: 'center',
                             display: 'flex',
                             flexDirection: 'column',
-                            backgroundColor: 'white',
+                            backgroundColor: 'white'
                         }}>
                             <ActivityIndicator color={'#a6a2a2'} />
                         </View>
