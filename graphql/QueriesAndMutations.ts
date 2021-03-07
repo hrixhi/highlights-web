@@ -109,6 +109,13 @@ mutation ($cueId: String!, $userId: String!, $score: String!) {
     }
 }
 `
+export const sendDirectMessage = gql`
+mutation($users: [String!]!, $message: String!) {
+    message {
+        create(users: $users, message: $message)
+    }
+}
+`
 /**
  * ALL
  * QUERIES
@@ -347,6 +354,19 @@ query($channelId: String!) {
                 gradeWeight
                 graded
             }
+        }
+    }
+}
+`
+export const getMessages = gql`
+query($users: [String!]!) {
+    message {
+        getMessagesThread(users: $users) {
+            groupId
+            sentBy
+            message
+            displayName
+            sentAt
         }
     }
 }

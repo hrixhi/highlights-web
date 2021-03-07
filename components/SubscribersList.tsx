@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useState } from 'react';
-import { StyleSheet, ActivityIndicator, ScrollView, TextInput, Dimensions } from 'react-native';
+import { StyleSheet, ScrollView, TextInput, Dimensions } from 'react-native';
 import { View, Text, TouchableOpacity } from './Themed';
 import _ from 'lodash'
 import { Ionicons } from '@expo/vector-icons';
@@ -8,7 +8,11 @@ import {
     RichEditor
 } from "react-native-pell-rich-editor";
 import { fetchAPI } from '../graphql/FetchAPI';
-import { submitGrade } from '../graphql/QueriesAndMutations';
+import { getMessages, submitGrade } from '../graphql/QueriesAndMutations';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Alert from './Alert';
+import NewMessage from './NewMessage';
+import MessageCard from './MessageCard';
 
 const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -21,6 +25,9 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
     const [score, setScore] = useState("0")
     const [status, setStatus] = useState("")
     const [userId, setUserId] = useState("")
+    const [messages, setMessages] = useState<any[]>([])
+    const [showChat, setShowChat] = useState(false)
+    const [users, setUsers] = useState<any>([])
     const RichText: any = useRef()
     if (props.cue && props.cue.submission) {
         categories.push('Submitted')
@@ -83,6 +90,28 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
         })
     }, [score, userId, props.cueId])
 
+    const loadChat = useCallback(async (userId) => {
+        const u = await AsyncStorage.getItem('user')
+        if (u) {
+            const parsedUser = JSON.parse(u)
+            setUsers([parsedUser._id, userId])
+            const server = fetchAPI('')
+            server.query({
+                query: getMessages,
+                variables: {
+                    users: [parsedUser._id, userId]
+                }
+            })
+                .then(res => {
+                    setMessages(res.data.message.getMessagesThread)
+                    setShowChat(true)
+                })
+                .catch(err => {
+                    Alert("Unable to load messages.", "Check connection.")
+                })
+        }
+    }, [])
+
     return (
         <View style={{
             backgroundColor: 'white',
@@ -96,7 +125,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                 {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
             </Text>
             {
-                showSubmission ?
+                showSubmission || showChat ?
                     <View style={{ backgroundColor: 'white', flexDirection: 'row', paddingBottom: 15 }}>
                         <TouchableOpacity
                             key={Math.random()}
@@ -105,10 +134,16 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 backgroundColor: 'white'
                             }}
                             onPress={() => {
-                                setShowSubmission(false)
-                                setStatus("")
-                                setScore("0")
-                                setUserId("")
+                                if (showChat) {
+                                    setShowChat(false)
+                                    setUsers([])
+                                } else {
+                                    setShowSubmission(false)
+                                    setStatus("")
+                                    setScore("0")
+                                    setUserId("")
+                                }
+
                             }}>
                             <Text style={{
                                 width: '100%',
@@ -130,7 +165,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 <Text
                                     ellipsizeMode="tail"
                                     style={{ color: '#a6a2a2', fontSize: 18, flex: 1, lineHeight: 25 }}>
-                                    Students
+                                    Direct Messaging
                         </Text>
                         }
                     </View>
@@ -153,35 +188,71 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                     >
                         {
                             !showSubmission ?
-                                <ScrollView
-                                    showsVerticalScrollIndicator={false}
-                                    horizontal={false}
-                                    contentContainerStyle={{
-                                        width: '100%',
-                                        height: '100%'
-                                    }}
-                                >
-                                    {
-                                        subscribers.map((subscriber, index) => {
-                                            return <View style={styles.col} key={index}>
-                                                <SubscriberCard
-                                                    fadeAnimation={props.fadeAnimation}
-                                                    subscriber={subscriber}
-                                                    onPress={() => {
-                                                        if (subscriber.fullName === 'submitted' || subscriber.fullName === 'graded') {
-                                                            setSubmission(subscriber.submission)
-                                                            setShowSubmission(true)
-                                                            setStatus(subscriber.fullName)
-                                                            setScore(subscriber.score)
-                                                            setUserId(subscriber.userId)
-                                                        }
+                                (
+                                    showChat ?
+                                        <ScrollView
+                                            showsVerticalScrollIndicator={false}
+                                            keyboardDismissMode={'on-drag'}
+                                            style={{ flex: 1, paddingTop: 12 }}>
+                                            {
+                                                messages.map((message) => {
+                                                    return <View style={{ width: '100%', paddingBottom: 15, backgroundColor: 'white' }} key={Math.random()}>
+                                                        <MessageCard
+                                                            message={message} />
+                                                    </View>
+                                                })
+                                            }
+                                            <View style={{ backgroundColor: 'white' }}>
+                                                <NewMessage
+                                                    cueId={props.cueId}
+                                                    channelId={props.channelId}
+                                                    parentId={null}
+                                                    users={users}
+                                                    back={() => {
+                                                        props.reload()
+                                                        setShowChat(false)
                                                     }}
-                                                    status={!props.cueId ? false : true}
+                                                    placeholder='Message...'
                                                 />
                                             </View>
-                                        })
-                                    }
-                                </ScrollView> :
+                                        </ScrollView>
+                                        :
+                                        <ScrollView
+                                            showsVerticalScrollIndicator={false}
+                                            horizontal={false}
+                                            contentContainerStyle={{
+                                                width: '100%',
+                                                height: '100%'
+                                            }}
+                                        >
+                                            {
+                                                subscribers.map((subscriber, index) => {
+                                                    return <View style={styles.col} key={index}>
+                                                        <SubscriberCard
+                                                            chat={!props.cueId || props.cueId === '' ? true : false}
+                                                            fadeAnimation={props.fadeAnimation}
+                                                            subscriber={subscriber}
+                                                            onPress={() => {
+                                                                if (props.cueId && props.cueId !== null) {
+                                                                    if (subscriber.fullName === 'submitted' || subscriber.fullName === 'graded') {
+                                                                        setSubmission(subscriber.submission)
+                                                                        setShowSubmission(true)
+                                                                        setStatus(subscriber.fullName)
+                                                                        setScore(subscriber.score)
+                                                                        setUserId(subscriber.userId)
+                                                                    }
+                                                                } else {
+                                                                    console.log(subscriber)
+                                                                    loadChat(subscriber._id)
+                                                                }
+                                                            }}
+                                                            status={!props.cueId ? false : true}
+                                                        />
+                                                    </View>
+                                                })
+                                            }
+                                        </ScrollView>
+                                ) :
                                 <View>
                                     <ScrollView
                                         showsVerticalScrollIndicator={false}

@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { StyleSheet, Animated, Alert, Dimensions } from 'react-native';
-import Swiper from 'react-native-web-swiper'
-import { Text, View, TouchableOpacity } from '../components/Themed';
+import { StyleSheet, Animated, Dimensions } from 'react-native';
+import Alert from '../components/Alert'
+import { View } from '../components/Themed';
 import Card from './Card'
 import _ from 'lodash'
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -34,7 +34,7 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 const user = JSON.parse(u)
                 if (user._id.toString().trim() === props.createdBy.toString().trim()) {
                     if (cues.length === 0) {
-                        Alert.alert("Click + and select this channel to broadcast a cue.")
+                        Alert("Click + and select this channel to broadcast a cue.")
                     }
                 }
             }

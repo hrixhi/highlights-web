@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useState, useRef, createRef } from 'react';
-import { Keyboard, StyleSheet, Switch, TextInput, ScrollView, Animated, Dimensions, Alert } from 'react-native';
+import React, { useCallback, useEffect, useState, useRef } from 'react';
+import { Keyboard, StyleSheet, Switch, TextInput, ScrollView, Animated, Dimensions } from 'react-native';
 import { Text, View, TouchableOpacity } from '../components/Themed';
 import { Ionicons } from '@expo/vector-icons';
 import { Picker } from '@react-native-picker/picker';
@@ -18,6 +18,9 @@ import {
 } from "react-native-pell-rich-editor";
 import * as DocumentPicker from 'expo-document-picker';
 import { convertToHtml } from "../graphql/QueriesAndMutations";
+import FileUpload from './UploadFiles';
+import FileViewer from 'react-file-viewer';
+import Alert from '../components/Alert'
 
 const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -37,18 +40,33 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const [playChannelCueIndef, setPlayChannelCueIndef] = useState(true)
     const colorChoices: any[] = ['#f94144', '#f3722c', '#f8961e', '#f9c74f', '#90be6d'].reverse()
     const [modalAnimation] = useState(new Animated.Value(0))
-    const [toolbarModalAnimation] = useState(new Animated.Value(0))
     const now = new Date()
     const [reloadEditorKey, setReloadEditorKey] = useState(Math.random())
     let RichText: any = useRef()
     const [height, setHeight] = useState(100)
     const [init, setInit] = useState(false)
-
     const [submission, setSubmission] = useState(false)
     const [deadline, setDeadline] = useState(new Date())
     const [gradeWeight, setGradeWeight] = useState<any>(0)
     const [graded, setGraded] = useState(false)
     const [imported, setImported] = useState(false)
+    const [url, setUrl] = useState('')
+    const [type, setType] = useState('')
+    const [title, setTitle] = useState('')
+
+    useEffect(() => {
+        if (cue[0] === '{' && cue[cue.length - 1] === '}') {
+            const obj = JSON.parse(cue)
+            setImported(true)
+            setUrl(obj.url)
+            setType(obj.type)
+        } else {
+            setImported(false)
+            setUrl('')
+            setType('')
+            setTitle('')
+        }
+    }, [cue])
 
     const loadChannelCategories = useCallback(async () => {
 
@@ -78,41 +96,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const handleHeightChange = useCallback((h: any) => {
         setHeight(h)
     }, [])
-
-    const uploadDocument = useCallback(() => {
-        DocumentPicker.getDocumentAsync({
-            type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-        }).then((doc: any) => {
-            if (doc.type && doc.type === "cancel") {
-                return
-            }
-            FileSystem
-                .readAsStringAsync(doc.uri, {
-                    encoding: FileSystem.EncodingType.Base64
-                })
-                .then(fileAsBase64 => {
-                    const server = fetchAPI('')
-                    server.mutate({
-                        mutation: convertToHtml,
-                        variables: {
-                            docx: fileAsBase64
-                        }
-                    }).then(r => {
-                        if (r.data.cue && r.data.cue.convertDocxToHtml && r.data.cue.convertDocxToHtml !== "error") {
-                            setCue(r.data.cue.convertDocxToHtml)
-                            setReloadEditorKey(Math.random())
-                        } else {
-                            Alert.alert("Conversion failed.")
-                        }
-                    }).catch(e => {
-                        Alert.alert("Something went wrong.", "Check connection.")
-                    })
-                })
-                .catch(err => {
-                    Alert.alert("Something went wrong.", "Check connection.")
-                })
-        })
-    }, [setCue, reloadEditorKey])
 
     const cameraCallback = useCallback(async () => {
 
@@ -151,10 +134,10 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     )
                     // setReloadEditorKey(Math.random())
                 }).catch(err => {
-                    Alert.alert("Unable to load image.")
+                    Alert("Unable to load image.")
                 });
             }).catch((err) => {
-                Alert.alert("Something went wrong.")
+                Alert("Something went wrong.")
             })
         }
     }, [RichText, RichText.current])
@@ -195,37 +178,13 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         'data:image/jpeg;base64,' + res.base64, 'border-radius: 10px'
                     )
                 }).catch(err => {
-                    Alert.alert("Unable to load image.")
+                    Alert("Unable to load image.")
                 });
             }).catch((err) => {
-                Alert.alert("Something went wrong.")
+                Alert("Something went wrong.")
             })
         }
     }, [RichText, RichText.current])
-
-    useEffect(() => {
-        const height = Dimensions.get("window").height
-        Keyboard.removeAllListeners("keyboardDidShow")
-        Keyboard.removeAllListeners("keyboardWillHide")
-        Keyboard.removeAllListeners("keyboardDidHide")
-        Keyboard.addListener("keyboardDidShow", e => {
-            setKeyboardVisible(true)
-            setKeyboardOffset(e.endCoordinates.screenY - (height * 0.1) - 40)
-            Animated.timing(toolbarModalAnimation, {
-                toValue: 1,
-                duration: 150,
-                useNativeDriver: true
-            }).start();
-        })
-        Keyboard.addListener("keyboardWillHide", e => {
-            setKeyboardVisible(false)
-            toolbarModalAnimation.setValue(0)
-        })
-        Keyboard.addListener("keyboardDidHide", e => {
-            setKeyboardVisible(false)
-            toolbarModalAnimation.setValue(0)
-        })
-    }, [])
 
     const loadChannels = useCallback(async () => {
         const uString: any = await AsyncStorage.getItem('user')
@@ -271,8 +230,25 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const handleCreate = useCallback(async () => {
 
         if (cue === null || cue.toString().trim() === '') {
-            Alert.alert("Enter content.")
+            Alert("Enter content.")
             return
+        }
+
+        if (imported && title === '') {
+            Alert("Enter title.")
+            return
+        }
+
+        let saveCue = ''
+        if (imported) {
+            const obj = {
+                type,
+                url,
+                title
+            }
+            saveCue = JSON.stringify(obj)
+        } else {
+            saveCue = cue
         }
 
         // LOCAL CUE
@@ -298,7 +274,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             }
             subCues['local'].push({
                 _id,
-                cue,
+                cue: saveCue,
                 date: new Date(),
                 color,
                 shuffle,
@@ -326,7 +302,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             server.mutate({
                 mutation: createCue,
                 variables: {
-                    cue,
+                    cue: saveCue,
                     starred,
                     color: color.toString(),
                     channelId,
@@ -353,13 +329,13 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     }
                 })
                 .catch(err => {
-                    Alert.alert("Something went wrong.", "Check connection.")
+                    Alert("Something went wrong.", "Check connection.")
                 })
         }
 
     }, [cue, modalAnimation, customCategory,
-        gradeWeight, deadline, submission,
-        shuffle, frequency, starred, color, notify,
+        gradeWeight, deadline, submission, imported,
+        shuffle, frequency, starred, color, notify, title, type, url,
         props.closeModal, channelId, endPlayAt, playChannelCueIndef])
 
     useEffect(() => {
@@ -377,7 +353,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     }, [])
 
     const clearAll = useCallback(() => {
-        Alert.alert(
+        Alert(
             "Clear all?",
             "This action cannot be undone.",
             [
@@ -387,7 +363,11 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 {
                     text: "Clear", onPress: () => {
                         setCue('')
+                        setImported(false)
+                        setUrl('')
+                        setType('')
                         setReloadEditorKey(Math.random())
+                        setTitle('')
                     }
                 }
             ]
@@ -435,21 +415,23 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             iconTint={"#a6a2a2"}
                             selectedIconTint={"#101010"}
                             disabledIconTint={"#a6a2a2"}
-                            actions={[
-                                actions.setBold,
-                                actions.setItalic,
-                                actions.setUnderline,
-                                actions.insertBulletsList,
-                                actions.insertOrderedList,
-                                actions.checkboxList,
-                                actions.insertLink,
-                                actions.insertImage,
-                                "insertCamera",
-                                actions.undo,
-                                actions.redo,
-                                "close"
-                                // "insertVideo"
-                            ]}
+                            actions={
+                                imported ? ["close"] :
+                                    [
+                                        actions.setBold,
+                                        actions.setItalic,
+                                        actions.setUnderline,
+                                        actions.insertBulletsList,
+                                        actions.insertOrderedList,
+                                        actions.checkboxList,
+                                        actions.insertLink,
+                                        actions.insertImage,
+                                        "insertCamera",
+                                        actions.undo,
+                                        actions.redo,
+                                        "close"
+                                        // "insertVideo"
+                                    ]}
                             iconMap={{
                                 // ["insertVideo"]: ({ tintColor }) => <Ionicons name='videocam-outline' size={25} color={tintColor} />,
                                 ["insertCamera"]: ({ tintColor }) => <Ionicons name='camera-outline' size={18} color={tintColor} />,
@@ -494,6 +476,21 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         </Text>
                     </TouchableOpacity>
                 </View>
+                {
+                    imported ?
+                        <View style={{ width: '100%' }}>
+                            <Text style={{ color: '#101010', fontSize: 14, paddingBottom: 10 }}>
+                                Title
+                                </Text>
+                            <TextInput
+                                value={title}
+                                style={styles.input}
+                                placeholder={''}
+                                onChangeText={val => setTitle(val)}
+                                placeholderTextColor={'#a6a2a2'}
+                            />
+                        </View> : null
+                }
                 <ScrollView
                     style={{ paddingBottom: 100 }}
                     showsVerticalScrollIndicator={false}
@@ -508,114 +505,71 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         minHeight: 500,
                         backgroundColor: 'white'
                     }}>
-                        <RichEditor
-                            key={reloadEditorKey.toString()}
-                            containerStyle={{
-                                height,
-                                backgroundColor: '#f4f4f4',
-                                padding: 3,
-                                paddingTop: 5,
-                                paddingBottom: 10,
-                                borderRadius: 10
-                            }}
-                            ref={RichText}
-                            style={{
-                                width: '100%',
-                                backgroundColor: '#f4f4f4',
-                                borderRadius: 10,
-                                minHeight: 450
-                            }}
-                            editorStyle={{
-                                backgroundColor: '#f4f4f4',
-                                placeholderColor: '#a6a2a2',
-                                color: '#101010',
-                                contentCSSText: 'font-size: 13px;'
-                            }}
-                            initialContentHTML={cue}
-                            onScroll={() => Keyboard.dismiss()}
-                            placeholder={"Title"}
-                            onChange={(text) => {
-                                const modifedText = text.split('&amp;').join('&')
-                                setCue(modifedText)
-                            }}
-                            onHeightChange={handleHeightChange}
-                            onBlur={() => Keyboard.dismiss()}
-                            allowFileAccess={true}
-                            allowFileAccessFromFileURLs={true}
-                            allowUniversalAccessFromFileURLs={true}
-                            allowsFullscreenVideo={true}
-                            allowsInlineMediaPlayback={true}
-                            allowsLinkPreview={true}
-                            allowsBackForwardNavigationGestures={true}
-                        />
+                        {
+                            imported ?
+                                (
+                                    type === 'pptx' ?
+                                        <iframe src={'https://view.officeapps.live.com/op/embed.aspx?src=' + url} width='100%' height='600px' frameBorder='0' />
+                                        : <FileViewer
+                                            fileType={type}
+                                            filePath={url}
+                                            errorComponent={<View>
+                                                <Text>
+                                                    ERROR!!
+                                                </Text>
+                                            </View>}
+                                            onError={(e: any) => console.log(e)} />
+                                )
+                                :
+                                <RichEditor
+                                    key={reloadEditorKey.toString()}
+                                    containerStyle={{
+                                        height,
+                                        backgroundColor: '#f4f4f4',
+                                        padding: 3,
+                                        paddingTop: 5,
+                                        paddingBottom: 10,
+                                        borderRadius: 10
+                                    }}
+                                    ref={RichText}
+                                    style={{
+                                        width: '100%',
+                                        backgroundColor: '#f4f4f4',
+                                        borderRadius: 10,
+                                        minHeight: 450
+                                    }}
+                                    editorStyle={{
+                                        backgroundColor: '#f4f4f4',
+                                        placeholderColor: '#a6a2a2',
+                                        color: '#101010',
+                                        contentCSSText: 'font-size: 13px;'
+                                    }}
+                                    initialContentHTML={cue}
+                                    onScroll={() => Keyboard.dismiss()}
+                                    placeholder={"Title"}
+                                    onChange={(text) => {
+                                        const modifedText = text.split('&amp;').join('&')
+                                        setCue(modifedText)
+                                    }}
+                                    onHeightChange={handleHeightChange}
+                                    onBlur={() => Keyboard.dismiss()}
+                                    allowFileAccess={true}
+                                    allowFileAccessFromFileURLs={true}
+                                    allowUniversalAccessFromFileURLs={true}
+                                    allowsFullscreenVideo={true}
+                                    allowsInlineMediaPlayback={true}
+                                    allowsLinkPreview={true}
+                                    allowsBackForwardNavigationGestures={true}
+                                />
+                        }
                         {
                             imported ? null :
-                                <View style={{
-                                    backgroundColor: 'white',
-                                    flexDirection: 'row',
-                                    width: '100%',
-                                    paddingTop: 10
-                                }}>
-                                    <Text style={{
-                                        height: 20,
-                                        backgroundColor: 'white',
-                                        marginRight: 20,
-                                        fontSize: 12,
-                                        color: '#a6a2a2',
-                                        marginTop: 1
-                                    }}>
-                                        <Ionicons
-                                            name='cloud-upload-outline' size={12} color={'#a6a2a2'} />
-                                    </Text>
-                                    <TouchableOpacity
-                                        style={{
-                                            height: 20,
-                                            backgroundColor: 'white',
-                                            marginRight: 20
-                                        }}
-                                        onPress={() => uploadDocument()}
-                                    >
-                                        <Text style={{ fontSize: 12, color: '#a6a2a2' }}>
-                                            docx
-                                    </Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity
-                                        style={{
-                                            height: 20,
-                                            backgroundColor: 'white',
-                                            marginRight: 20
-                                        }}
-                                        onPress={() => uploadDocument()}
-                                    >
-                                        <Text style={{ fontSize: 12, color: '#a6a2a2' }}>
-                                            ppt
-                                    </Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity
-                                        style={{
-                                            height: 20,
-                                            backgroundColor: 'white',
-                                            marginRight: 20
-                                        }}
-                                        onPress={() => uploadDocument()}
-                                    >
-                                        <Text style={{ fontSize: 12, color: '#a6a2a2' }}>
-                                            xls
-                                    </Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity
-                                        style={{
-                                            height: 20,
-                                            backgroundColor: 'white',
-                                            marginRight: 20
-                                        }}
-                                        onPress={() => uploadDocument()}
-                                    >
-                                        <Text style={{ fontSize: 12, color: '#a6a2a2' }}>
-                                            pdf
-                                    </Text>
-                                    </TouchableOpacity>
-                                </View>
+                                <FileUpload
+                                    onUpload={(u: any, t: any) => {
+                                        const obj = { url: u, type: t, title }
+                                        setCue(JSON.stringify(obj))
+                                    }}
+                                />
                         }
                     </View>
                     <View style={{ flex: 1, display: 'flex', flexDirection: 'column', marginHorizontal: 10 }}>
@@ -1148,6 +1102,17 @@ const styles: any = StyleSheet.create({
         borderRadius: 10,
         borderWidth: 1,
         borderColor: '#a6a2a2'
+    },
+    input: {
+        width: '100%',
+        backgroundColor: '#f4f4f4',
+        borderRadius: 10,
+        fontSize: 15,
+        padding: 15,
+        paddingTop: 13,
+        paddingBottom: 13,
+        marginTop: 5,
+        marginBottom: 20
     },
     date: {
         width: '100%',

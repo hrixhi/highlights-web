@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
-import { StyleSheet, ActivityIndicator, ScrollView, Alert } from 'react-native';
-import Swiper from 'react-native-swiper'
+import { StyleSheet, ActivityIndicator, ScrollView } from 'react-native';
+import Alert from '../components/Alert'
 import { View, Text, TouchableOpacity } from './Themed';
 import _ from 'lodash'
 import ThreadCard from './ThreadCard';
@@ -16,7 +16,6 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
     const unparsedThreads: any[] = JSON.parse(JSON.stringify(props.threads))
     const [threads] = useState<any[]>(unparsedThreads.reverse())
     const [threadWithReplies, setThreadWithReplies] = useState<any[]>([])
-    const [numCards] = useState(5)
     const styles = styleObject()
     const [showThreadCues, setShowThreadCues] = useState(false)
     const [filterChoice, setFilterChoice] = useState('All')
@@ -57,7 +56,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 setLoading(false)
             })
             .catch(err => {
-                Alert.alert("Unable to load thread.", "Check connection.")
+                Alert("Unable to load thread.", "Check connection.")
                 setLoading(false)
             })
     }, [])

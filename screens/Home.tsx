@@ -755,42 +755,42 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             modalType === 'Channels' ? <Channels
               closeModal={() => closeModal()}
             /> : (
-                modalType === 'Discussion' ? <Discussion
-                  closeModal={() => closeModal()}
-                  channelId={channelId}
-                  filterChoice={filterChoice}
-                  channelCreatedBy={channelCreatedBy}
-                />
-                  : (
-                    modalType === 'Subscribers' ? <Subscribers
-                      closeModal={() => closeModal()}
-                      channelId={channelId}
-                      filterChoice={filterChoice}
-                    /> :
-                      (
-                        modalType === 'Profile' ? <Profile
-                          closeModal={() => closeModal()}
-                          saveDataInCloud={() => saveDataInCloud()}
-                          reOpenProfile={() => {
-                            setModalType('')
-                            openModal('Profile')
-                          }}
-                          reloadData={() => {
-                            loadData()
-                            openModal('Walkthrough')
-                          }}
-                        /> :
-                          (
-                            modalType === 'Grades' ? <Grades
-                              closeModal={() => closeModal()}
-                              channelId={channelId}
-                              filterChoice={filterChoice}
-                            />
-                              : null
-                          )
-                      )
-                  )
-              )
+              modalType === 'Discussion' ? <Discussion
+                closeModal={() => closeModal()}
+                channelId={channelId}
+                filterChoice={filterChoice}
+                channelCreatedBy={channelCreatedBy}
+              />
+                : (
+                  modalType === 'Subscribers' ? <Subscribers
+                    closeModal={() => closeModal()}
+                    channelId={channelId}
+                    filterChoice={filterChoice}
+                  /> :
+                    (
+                      modalType === 'Profile' ? <Profile
+                        closeModal={() => closeModal()}
+                        saveDataInCloud={() => saveDataInCloud()}
+                        reOpenProfile={() => {
+                          setModalType('')
+                          openModal('Profile')
+                        }}
+                        reloadData={() => {
+                          loadData()
+                          openModal('Walkthrough')
+                        }}
+                      /> :
+                        (
+                          modalType === 'Grades' ? <Grades
+                            closeModal={() => closeModal()}
+                            channelId={channelId}
+                            filterChoice={filterChoice}
+                          />
+                            : null
+                        )
+                    )
+                )
+            )
           )
         )
       )

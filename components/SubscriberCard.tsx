@@ -25,7 +25,7 @@ const SubscriberCard: React.FunctionComponent<{ [label: string]: any }> = (props
                         {displayName}
                     </Text>
                     {
-                        fullName === 'submitted' || fullName === 'graded' ?
+                        fullName === 'submitted' || fullName === 'graded' || props.chat ?
                             <Ionicons name="chevron-forward-outline" color="#a6a2a2" size={20} style={{ marginTop: 3 }} /> : null
                     }
                 </View>

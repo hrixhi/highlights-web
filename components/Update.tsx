@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Animated, ActivityIndicator, Dimensions, Alert } from 'react-native';
+import { Animated, ActivityIndicator, Dimensions } from 'react-native';
+import Alert from '../components/Alert'
 import { View } from '../components/Themed';
 import Swiper from 'react-native-web-swiper'
 import UpdateControls from './UpdateControls';
@@ -85,7 +86,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 }).start();
                             }
                         }).catch(err => {
-                            Alert.alert("Unable to load statuses.", "Check connection.")
+                            Alert("Unable to load statuses.", "Check connection.")
                             setLoading(false)
                             modalAnimation.setValue(0)
                             Animated.timing(modalAnimation, {
@@ -114,7 +115,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     }).start();
                 }
             }).catch(err => {
-                Alert.alert("Unable to load comments.", "Check connection.")
+                Alert("Unable to load comments.", "Check connection.")
                 setLoading(false)
                 modalAnimation.setValue(0)
                 Animated.timing(modalAnimation, {
@@ -136,9 +137,6 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
     useEffect(() => {
         loadThreadsAndStatuses()
-        if (props.channelId && props.channelId !== '') {
-            Alert.alert("Swipe left for comments.")
-        }
     }, [props.cueId, props.channelId])
 
     const windowHeight = Dimensions.get('window').height;

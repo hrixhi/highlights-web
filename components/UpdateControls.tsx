@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState, useRef } from 'react';
-import { Keyboard, StyleSheet, Switch, TextInput, Dimensions, ScrollView, Animated, Alert } from 'react-native';
+import { Keyboard, StyleSheet, Switch, TextInput, Dimensions, ScrollView, Animated } from 'react-native';
+import Alert from '../components/Alert'
 import { Text, View, TouchableOpacity } from './Themed';
 import { Ionicons } from '@expo/vector-icons';
 import { Picker } from '@react-native-picker/picker';
@@ -18,6 +19,8 @@ import {
 } from "react-native-pell-rich-editor";
 import * as DocumentPicker from 'expo-document-picker';
 import { convertToHtml } from "../graphql/QueriesAndMutations";
+import FileViewer from 'react-file-viewer';
+import FileUpload from './UploadFiles';
 
 const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -63,42 +66,64 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const [submitted, setSubmitted] = useState(false)
     const [userSetupComplete, setUserSetupComplete] = useState(false)
 
+    const [imported, setImported] = useState(false)
+    const [url, setUrl] = useState('')
+    const [type, setType] = useState('')
+    const [title, setTitle] = useState('')
+
+    const [submissionImported, setSubmissionImported] = useState(false)
+    const [submissionUrl, setSubmissionUrl] = useState('')
+    const [submissionType, setSubmissionType] = useState('')
+    const [submissionTitle, setSubmissionTitle] = useState('')
+
+    useEffect(() => {
+        if (props.cue.channelId && props.cue.channelId !== '') {
+            const data1 = props.cue.original;
+            const data2 = cue;
+            if (data1 && data1[0] && data1[0] === '{' && data1[data1.length - 1] === '}') {
+                const obj = JSON.parse(data1)
+                setImported(true)
+                setUrl(obj.url)
+                setType(obj.type)
+                setTitle(obj.title)
+            } else {
+                setImported(false)
+                setUrl('')
+                setType('')
+                setTitle('')
+            }
+            if (data2 && data2[0] && data2[0] === '{' && data2[data2.length - 1] === '}') {
+                const obj = JSON.parse(data2)
+                setSubmissionImported(true)
+                setSubmissionUrl(obj.url)
+                setSubmissionType(obj.type)
+                setSubmissionTitle(obj.title)
+            } else {
+                setSubmissionImported(false)
+                setSubmissionUrl('')
+                setSubmissionType('')
+                setSubmissionTitle('')
+            }
+        } else {
+            const data = cue
+            if (data && data[0] && data[0] === '{' && data[data.length - 1] === '}') {
+                const obj = JSON.parse(data)
+                setSubmissionImported(true)
+                setSubmissionUrl(obj.url)
+                setSubmissionType(obj.type)
+                setSubmissionTitle(obj.title)
+            } else {
+                setSubmissionImported(false)
+                setSubmissionUrl('')
+                setSubmissionType('')
+                setSubmissionTitle('')
+            }
+        }
+    }, [props.cue, cue])
+
     const handleHeightChange = useCallback((h: any) => {
         setHeight(h)
     }, [])
-
-    const uploadDocument = useCallback(() => {
-        DocumentPicker.getDocumentAsync({
-            type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-        }).then((doc: any) => {
-            if (doc.type && doc.type === "cancel") {
-                return
-            }
-            FileSystem
-                .readAsStringAsync(doc.uri, {
-                    encoding: FileSystem.EncodingType.Base64
-                })
-                .then(fileAsBase64 => {
-                    const server = fetchAPI('')
-                    server.mutate({
-                        mutation: convertToHtml,
-                        variables: {
-                            docx: fileAsBase64
-                        }
-                    }).then(r => {
-                        if (r.data.cue && r.data.cue.convertDocxToHtml && r.data.cue.convertDocxToHtml !== "error") {
-                            setCue(r.data.cue.convertDocxToHtml)
-                            setReloadEditorKey(Math.random())
-                        }
-                    }).catch(e => {
-                        Alert.alert("Conversion failed.")
-                    })
-                })
-                .catch(err => {
-                    Alert.alert("Something went wrong.", "Check connection.")
-                })
-        })
-    }, [setCue, reloadEditorKey])
 
     const cameraCallback = useCallback(async () => {
 
@@ -136,10 +161,10 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         'data:image/jpeg;base64,' + res.base64, 'border-radius: 10px'
                     )
                 }).catch(err => {
-                    Alert.alert("Unable to load image.")
+                    Alert("Unable to load image.")
                 });
             }).catch((err) => {
-                Alert.alert("Something went wrong.")
+                Alert("Something went wrong.")
             })
         }
     }, [RichText, RichText.current])
@@ -180,18 +205,22 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         'data:image/jpeg;base64,' + res.base64, 'border-radius: 10px'
                     )
                 }).catch(err => {
-                    Alert.alert("Unable to load image.")
+                    Alert("Unable to load image.")
                 });
             }).catch((err) => {
-                Alert.alert("Something went wrong.")
+                Alert("Something went wrong.")
             })
         }
     }, [RichText, RichText.current])
 
     const handleUpdate = useCallback(async () => {
-        if (cue === null || cue.toString().trim() === '') {
-            Alert.alert("Enter content.")
-            return;
+        // if (cue === null || cue.toString().trim() === '') {
+        //     Alert("Enter content.")
+        //     return;
+        // }
+        if (submissionImported && submissionTitle === '') {
+            Alert("Enter title.")
+            return
         }
         let subCues: any = {}
         try {
@@ -204,10 +233,21 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         if (subCues[props.cueKey].length === 0) {
             return
         }
+        let saveCue = ''
+        if (submissionImported) {
+            const obj = {
+                type: submissionType,
+                url: submissionUrl,
+                title: submissionTitle
+            }
+            saveCue = JSON.stringify(obj)
+        } else {
+            saveCue = cue
+        }
         const submittedNow = new Date()
         subCues[props.cueKey][props.cueIndex] = {
             _id: props.cue._id,
-            cue,
+            cue: saveCue,
             date: props.cue.date,
             color,
             shuffle,
@@ -228,12 +268,11 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             submittedAt: submitted ? submittedNow.toISOString() : props.cue.submittedAt,
             deadline: submission ? deadline.toISOString() : '',
         }
-        console.log(subCues[props.cueKey][props.cueIndex])
         const stringifiedCues = JSON.stringify(subCues)
         await AsyncStorage.setItem('cues', stringifiedCues)
         props.reloadCueListAfterUpdate()
-    }, [cue, customCategory, shuffle, frequency, starred, color, playChannelCueIndef, notify,
-        submission, deadline, gradeWeight, props.cue.submittedAt, submitted,
+    }, [cue, customCategory, shuffle, frequency, starred, color, playChannelCueIndef, notify, submissionImported,
+        submission, deadline, gradeWeight, submitted, submissionTitle, submissionType, submissionUrl,
         props.closeModal, props.cueIndex, props.cueKey, props.cue, endPlayAt, props])
 
     const handleDelete = useCallback(async () => {
@@ -305,6 +344,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     useEffect(() => {
         handleUpdate()
     }, [cue, shuffle, frequency, starred, color, props.cueIndex, submitted, markedAsRead,
+        submissionTitle, submissionImported, submissionType,
         customCategory, props.cueKey, endPlayAt, playChannelCueIndef, notify])
 
     const updateStatusAsRead = useCallback(async () => {
@@ -332,7 +372,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     }, [props.cue, markedAsRead])
 
     const clearAll = useCallback(() => {
-        Alert.alert(
+        Alert(
             "Clear all?",
             "This action cannot be undone.",
             [
@@ -342,6 +382,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 {
                     text: "Clear", onPress: () => {
                         setCue('')
+                        setImported(false)
+                        setUrl('')
+                        setType('')
                         setReloadEditorKey(Math.random())
                     }
                 }
@@ -461,21 +504,23 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     iconTint={"#a6a2a2"}
                                     selectedIconTint={"#101010"}
                                     disabledIconTint={"#a6a2a2"}
-                                    actions={[
-                                        actions.setBold,
-                                        actions.setItalic,
-                                        actions.setUnderline,
-                                        actions.insertBulletsList,
-                                        actions.insertOrderedList,
-                                        actions.checkboxList,
-                                        actions.insertLink,
-                                        actions.insertImage,
-                                        "insertCamera",
-                                        actions.undo,
-                                        actions.redo,
-                                        "close"
-                                        // "insertVideo"
-                                    ]}
+                                    actions={
+                                        submissionImported && (props.channelId && props.channelId !== '') ? ["close"] :
+                                            [
+                                                actions.setBold,
+                                                actions.setItalic,
+                                                actions.setUnderline,
+                                                actions.insertBulletsList,
+                                                actions.insertOrderedList,
+                                                actions.checkboxList,
+                                                actions.insertLink,
+                                                actions.insertImage,
+                                                "insertCamera",
+                                                actions.undo,
+                                                actions.redo,
+                                                "close"
+                                                // "insertVideo"
+                                            ]}
                                     iconMap={{
                                         // ["insertVideo"]: ({ tintColor }) => <Ionicons name='videocam-outline' size={25} color={tintColor} />,
                                         ["insertCamera"]: ({ tintColor }) => <Ionicons name='camera-outline' size={18} color={tintColor} />,
@@ -505,6 +550,37 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         }
                     </Text>
                 </View>
+                {
+                    showOriginal && imported ?
+                        <View style={{ width: '100%' }}>
+                            <Text style={{ color: '#101010', fontSize: 14, paddingBottom: 10 }}>
+                                Title
+                                </Text>
+                            <TextInput
+                                editable={!(props.channelId && props.channelId !== '')}
+                                value={title}
+                                style={styles.input}
+                                placeholder={''}
+                                onChangeText={val => setTitle(val)}
+                                placeholderTextColor={'#a6a2a2'}
+                            />
+                        </View> : null
+                }
+                {
+                    !showOriginal && submissionImported ?
+                        <View style={{ width: '100%' }}>
+                            <Text style={{ color: '#101010', fontSize: 14, paddingBottom: 10 }}>
+                                Title
+                                </Text>
+                            <TextInput
+                                value={submissionTitle}
+                                style={styles.input}
+                                placeholder={''}
+                                onChangeText={val => setSubmissionTitle(val)}
+                                placeholderTextColor={'#a6a2a2'}
+                            />
+                        </View> : null
+                }
                 <ScrollView
                     style={{ paddingBottom: 100, height: '100%' }}
                     showsVerticalScrollIndicator={false}
@@ -519,47 +595,135 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         minHeight: 500,
                         backgroundColor: 'white'
                     }}>
-                        <RichEditor
-                            key={showOriginal.toString() + reloadEditorKey.toString()}
-                            disabled={showOriginal}
-                            containerStyle={{
-                                height: height,
-                                backgroundColor: '#f4f4f4',
-                                padding: 3,
-                                paddingTop: 5,
-                                paddingBottom: 10,
-                                borderRadius: 10,
-                            }}
-                            ref={RichText}
-                            style={{
-                                width: '100%',
-                                backgroundColor: '#f4f4f4',
-                                minHeight: 450,
-                                borderRadius: 10
-                            }}
-                            editorStyle={{
-                                backgroundColor: '#f4f4f4',
-                                placeholderColor: '#a6a2a2',
-                                color: '#101010',
-                                contentCSSText: 'font-size: 13px;'
-                            }}
-                            initialContentHTML={showOriginal ? props.cue.original : cue}
-                            onScroll={() => Keyboard.dismiss()}
-                            placeholder={"Title"}
-                            onChange={(text) => {
-                                const modifedText = text.split('&amp;').join('&')
-                                setCue(modifedText)
-                            }}
-                            onHeightChange={handleHeightChange}
-                            onBlur={() => Keyboard.dismiss()}
-                            allowFileAccess={true}
-                            allowFileAccessFromFileURLs={true}
-                            allowUniversalAccessFromFileURLs={true}
-                            allowsFullscreenVideo={true}
-                            allowsInlineMediaPlayback={true}
-                            allowsLinkPreview={true}
-                            allowsBackForwardNavigationGestures={true}
-                        />
+                        {!showOriginal ? null
+                            : (imported && (props.channelId && props.channelId !== '') ?
+                                (
+                                    type === 'pptx' ?
+                                        <iframe src={'https://view.officeapps.live.com/op/embed.aspx?src=' + url} width='100%' height='600px' frameBorder='0' />
+                                        : <FileViewer
+                                            fileType={type}
+                                            filePath={url}
+                                            errorComponent={<View>
+                                                <Text>
+                                                    ERROR!!
+                                        </Text>
+                                            </View>}
+                                            onError={(e: any) => console.log(e)} />
+                                )
+                                :
+                                <RichEditor
+                                    key={showOriginal.toString() + reloadEditorKey.toString()}
+                                    disabled={true}
+                                    containerStyle={{
+                                        height: height,
+                                        backgroundColor: '#f4f4f4',
+                                        padding: 3,
+                                        paddingTop: 5,
+                                        paddingBottom: 10,
+                                        borderRadius: 10,
+                                    }}
+                                    ref={RichText}
+                                    style={{
+                                        width: '100%',
+                                        backgroundColor: '#f4f4f4',
+                                        minHeight: 450,
+                                        borderRadius: 10
+                                    }}
+                                    editorStyle={{
+                                        backgroundColor: '#f4f4f4',
+                                        placeholderColor: '#a6a2a2',
+                                        color: '#101010',
+                                        contentCSSText: 'font-size: 13px;'
+                                    }}
+                                    initialContentHTML={props.cue.original}
+                                    onScroll={() => Keyboard.dismiss()}
+                                    placeholder={"Title"}
+                                    onChange={(text) => {
+                                        const modifedText = text.split('&amp;').join('&')
+                                        setCue(modifedText)
+                                    }}
+                                    onHeightChange={handleHeightChange}
+                                    onBlur={() => Keyboard.dismiss()}
+                                    allowFileAccess={true}
+                                    allowFileAccessFromFileURLs={true}
+                                    allowUniversalAccessFromFileURLs={true}
+                                    allowsFullscreenVideo={true}
+                                    allowsInlineMediaPlayback={true}
+                                    allowsLinkPreview={true}
+                                    allowsBackForwardNavigationGestures={true}
+                                />)
+                        }
+                        {showOriginal ? null
+                            : (submissionImported ?
+                                (
+                                    type === 'pptx' ?
+                                        <iframe src={'https://view.officeapps.live.com/op/embed.aspx?src=' + submissionUrl} width='100%' height='600px' frameBorder='0' />
+                                        : <FileViewer
+                                            fileType={submissionType}
+                                            filePath={submissionUrl}
+                                            errorComponent={<View>
+                                                <Text>
+                                                    ERROR!!
+                                        </Text>
+                                            </View>}
+                                            onError={(e: any) => console.log(e)} />
+                                )
+                                :
+                                <RichEditor
+                                    key={showOriginal.toString() + reloadEditorKey.toString()}
+                                    containerStyle={{
+                                        height: height,
+                                        backgroundColor: '#f4f4f4',
+                                        padding: 3,
+                                        paddingTop: 5,
+                                        paddingBottom: 10,
+                                        borderRadius: 10,
+                                    }}
+                                    ref={RichText}
+                                    style={{
+                                        width: '100%',
+                                        backgroundColor: '#f4f4f4',
+                                        minHeight: 450,
+                                        borderRadius: 10
+                                    }}
+                                    editorStyle={{
+                                        backgroundColor: '#f4f4f4',
+                                        placeholderColor: '#a6a2a2',
+                                        color: '#101010',
+                                        contentCSSText: 'font-size: 13px;'
+                                    }}
+                                    initialContentHTML={cue}
+                                    onScroll={() => Keyboard.dismiss()}
+                                    placeholder={"Title"}
+                                    onChange={(text) => {
+                                        const modifedText = text.split('&amp;').join('&')
+                                        setCue(modifedText)
+                                    }}
+                                    onHeightChange={handleHeightChange}
+                                    onBlur={() => Keyboard.dismiss()}
+                                    allowFileAccess={true}
+                                    allowFileAccessFromFileURLs={true}
+                                    allowUniversalAccessFromFileURLs={true}
+                                    allowsFullscreenVideo={true}
+                                    allowsInlineMediaPlayback={true}
+                                    allowsLinkPreview={true}
+                                    allowsBackForwardNavigationGestures={true}
+                                />)
+                        }
+                        {
+                            !showOriginal ?
+                                (
+                                    submissionImported ? null :
+                                        <FileUpload
+                                            onUpload={(u: any, t: any) => {
+                                                const obj = { url: u, type: t, title: submissionTitle }
+                                                setCue(JSON.stringify(obj))
+                                            }}
+                                        />
+                                )
+                                : null
+
+                        }
                     </View>
                     <View style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
                         {
@@ -642,8 +806,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                                             setDeadline(date)
                                                                         }}
                                                                     /> : <Text>
-                                                                            {deadline.toLocaleString()}
-                                                                        </Text>
+                                                                        {deadline.toLocaleString()}
+                                                                    </Text>
                                                                 }
                                                             </View>
                                                             : null
@@ -1050,8 +1214,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             {
                                                 (
                                                     props.cue.submittedAt && props.cue.submittedAt !== '') || submitted ? 'SUBMITTED' : (
-                                                        userSetupComplete ? 'SUBMIT' : 'SIGN UP TO SUBMIT'
-                                                    )
+                                                    userSetupComplete ? 'SUBMIT' : 'SIGN UP TO SUBMIT'
+                                                )
                                             }
                                         </Text>
                                     </TouchableOpacity> : null
@@ -1113,6 +1277,17 @@ const styles: any = StyleSheet.create({
         borderRadius: 10,
         borderWidth: 1,
         borderColor: '#a6a2a2'
+    },
+    input: {
+        width: '100%',
+        backgroundColor: '#f4f4f4',
+        borderRadius: 10,
+        fontSize: 15,
+        padding: 15,
+        paddingTop: 13,
+        paddingBottom: 13,
+        marginTop: 5,
+        marginBottom: 20
     },
     date: {
         width: '100%',

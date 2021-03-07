@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { ActivityIndicator, Animated, Dimensions, Alert } from 'react-native';
+import { ActivityIndicator, Animated, Dimensions } from 'react-native';
+import Alert from '../components/Alert'
 import { View } from './Themed';
 import { ScrollView } from 'react-native-gesture-handler'
 import { fetchAPI } from '../graphql/FetchAPI';
@@ -51,7 +52,7 @@ const Discussion: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     }).start();
                 })
                 .catch((err) => {
-                    Alert.alert("Unable to load discussion.", "Check connection.")
+                    Alert("Unable to load discussion.", "Check connection.")
                     setLoading(false)
                     modalAnimation.setValue(0)
                     Animated.timing(modalAnimation, {

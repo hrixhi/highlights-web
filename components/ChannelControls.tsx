@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Alert, Dimensions, StyleSheet, TextInput } from 'react-native';
+import { Dimensions, StyleSheet, TextInput } from 'react-native';
 import { Text, View, TouchableOpacity } from './Themed';
 import { fetchAPI } from '../graphql/FetchAPI';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { checkChannelStatus, createChannel, createUser, subscribe, updateUser } from '../graphql/QueriesAndMutations';
-import * as Notifications from 'expo-notifications';
-import Constants from 'expo-constants';
+import Alert from '../components/Alert'
 import { uniqueNamesGenerator, adjectives, colors, animals } from 'unique-names-generator'
 
 const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
@@ -40,22 +39,22 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             props.closeModal()
                             break;
                         case "incorrect-password":
-                            Alert.alert("Incorrect password.")
+                            Alert("Incorrect password.")
                             break;
                         case "already-subbed":
-                            Alert.alert("Already subscribed.")
+                            Alert("Already subscribed.")
                             break;
                         case "error":
-                            Alert.alert("Something went wrong.", "Check connection.")
+                            Alert("Something went wrong.", "Check connection.")
                             break;
                         default:
-                            Alert.alert("Something went wrong.", "Check connection.")
+                            Alert("Something went wrong.", "Check connection.")
                             break;
                     }
                 }
             })
             .catch(err => {
-                Alert.alert("Something went wrong.", "Check connection.")
+                Alert("Something went wrong.", "Check connection.")
             })
 
     }, [name, password, props.closeModal])
@@ -91,15 +90,15 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 setPasswordRequired(true)
                                 break;
                             case "non-existant":
-                                Alert.alert("Does not exist.")
+                                Alert("Does not exist.")
                                 break;
                             default:
-                                Alert.alert("Something went wrong.", "Check connection.")
+                                Alert("Something went wrong.", "Check connection.")
                                 break
                         }
                     }
                 }).catch(err => {
-                    Alert.alert("Something went wrong.", "Check connection.")
+                    Alert("Something went wrong.", "Check connection.")
                 })
             }
         } else if (option === 'Create') {
@@ -125,22 +124,22 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 props.closeModal()
                                 break;
                             case "invalid-name":
-                                Alert.alert("Invalid channel name.")
+                                Alert("Invalid channel name.")
                                 break;
                             case "exists":
-                                Alert.alert("Name already in use.")
+                                Alert("Name already in use.")
                                 break;
                             case "error":
-                                Alert.alert("Something went wrong.", "Check connection.")
+                                Alert("Something went wrong.", "Check connection.")
                                 break;
                             default:
-                                Alert.alert("Something went wrong.", "Check connection.")
+                                Alert("Something went wrong.", "Check connection.")
                                 break;
                         }
                     }
                 })
                 .catch(err => {
-                    Alert.alert("Something went wrong.", "Check connection.")
+                    Alert("Something went wrong.", "Check connection.")
                 })
         } else if (option === 'Profile') {
             if (displayName.toString().trim() === '' || fullName.toString().trim() === '') {
@@ -166,7 +165,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         props.closeModal()
                     }
                 }).catch(err => {
-                    Alert.alert("Changes not saved.", "Check connection.")
+                    Alert("Changes not saved.", "Check connection.")
                 })
             }
         }
@@ -209,7 +208,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                     setUserFound(true)
                 })
                 .catch(err => {
-                    Alert.alert("Unable to register user.", "Check connection.")
+                    Alert("Unable to register user.", "Check connection.")
                 })
         }
     }, [])
