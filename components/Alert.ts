@@ -14,4 +14,4 @@ const alertPolyfill = (title: any, description: any, options: any, extra: any) =
 }
 
 const alert = Platform.OS === 'web' ? alertPolyfill : Alert.alert
-export default Alert
+export default alert

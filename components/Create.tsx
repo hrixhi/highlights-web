@@ -286,11 +286,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             const stringifiedCues = JSON.stringify(subCues)
             await AsyncStorage.setItem('cues', stringifiedCues)
             storeDraft('cueDraft', '')
-            Animated.timing(modalAnimation, {
-                toValue: 0,
-                duration: 150,
-                useNativeDriver: true
-            }).start(() => props.closeModal())
+            props.closeModal()
         } else {
             // CHANNEL CUE
             const uString = await AsyncStorage.getItem('user')
@@ -333,7 +329,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 })
         }
 
-    }, [cue, modalAnimation, customCategory,
+    }, [cue, modalAnimation, customCategory, props.saveDataInCloud,
         gradeWeight, deadline, submission, imported,
         shuffle, frequency, starred, color, notify, title, type, url,
         props.closeModal, channelId, endPlayAt, playChannelCueIndef])
@@ -402,18 +398,18 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
                 </Text>
                 <View style={styles.date} onTouchStart={() => Keyboard.dismiss()}>
-                    <View>
+                    <View style={{ flexDirection: 'row' }}>
                         <RichToolbar
                             style={{
                                 flexWrap: 'wrap',
                                 backgroundColor: 'white',
                                 height: 28
                             }}
-                            iconSize={15}
+                            iconSize={13}
                             editor={RichText}
                             disabled={false}
                             iconTint={"#a6a2a2"}
-                            selectedIconTint={"#101010"}
+                            selectedIconTint={"#a6a2a2"}
                             disabledIconTint={"#a6a2a2"}
                             actions={
                                 imported ? ["close"] :
@@ -433,7 +429,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         // "insertVideo"
                                     ]}
                             iconMap={{
-                                // ["insertVideo"]: ({ tintColor }) => <Ionicons name='videocam-outline' size={25} color={tintColor} />,
+                                // ["insertVideo"]: ({ tintColor }) => <Ionicons name='videocam-outline' size={20} color={tintColor} />,
                                 ["insertCamera"]: ({ tintColor }) => <Ionicons name='camera-outline' size={18} color={tintColor} />,
                                 ["close"]: ({ tintColor }) => <Ionicons name='close-outline' size={18} color={tintColor} />,
                             }}
@@ -442,6 +438,15 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             insertCamera={cameraCallback}
                             close={clearAll}
                         />
+                        {
+                            imported ? null :
+                                <FileUpload
+                                    onUpload={(u: any, t: any) => {
+                                        const obj = { url: u, type: t, title }
+                                        setCue(JSON.stringify(obj))
+                                    }}
+                                />
+                        }
                     </View>
                     <TouchableOpacity
                         onPress={() => setStarred(!starred)}
@@ -452,11 +457,11 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         <Text style={{
                             textAlign: 'right',
                             lineHeight: 30,
-                            marginTop: -35,
+                            marginTop: -36,
                             paddingRight: 25,
                             width: '100%'
                         }}>
-                            <Ionicons name='bookmark' size={25} color={starred ? '#f94144' : '#a6a2a2'} />
+                            <Ionicons name='bookmark' size={20} color={starred ? '#f94144' : '#a6a2a2'} />
                         </Text>
                         <Text style={{
                             flex: 1,
@@ -476,21 +481,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         </Text>
                     </TouchableOpacity>
                 </View>
-                {
-                    imported ?
-                        <View style={{ width: '100%' }}>
-                            <Text style={{ color: '#101010', fontSize: 14, paddingBottom: 10 }}>
-                                Title
-                                </Text>
-                            <TextInput
-                                value={title}
-                                style={styles.input}
-                                placeholder={''}
-                                onChangeText={val => setTitle(val)}
-                                placeholderTextColor={'#a6a2a2'}
-                            />
-                        </View> : null
-                }
                 <ScrollView
                     style={{ paddingBottom: 100 }}
                     showsVerticalScrollIndicator={false}
@@ -500,6 +490,18 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     overScrollMode={'always'}
                     nestedScrollEnabled={true}
                 >
+                    {
+                        imported ?
+                            <View style={{ width: '40%', alignSelf: 'flex-start' }}>
+                                <TextInput
+                                    value={title}
+                                    style={styles.input}
+                                    placeholder={'Title'}
+                                    onChangeText={val => setTitle(val)}
+                                    placeholderTextColor={'#a6a2a2'}
+                                />
+                            </View> : null
+                    }
                     <View style={{
                         width: '100%',
                         minHeight: 500,
@@ -511,6 +513,9 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     type === 'pptx' ?
                                         <iframe src={'https://view.officeapps.live.com/op/embed.aspx?src=' + url} width='100%' height='600px' frameBorder='0' />
                                         : <FileViewer
+                                            style={{
+                                                fontFamily: 'roboto', outerWidth: '100%', innerWidth: '100%'
+                                            }}
                                             fileType={type}
                                             filePath={url}
                                             errorComponent={<View>
@@ -562,31 +567,22 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     allowsBackForwardNavigationGestures={true}
                                 />
                         }
-                        {
-                            imported ? null :
-                                <FileUpload
-                                    onUpload={(u: any, t: any) => {
-                                        const obj = { url: u, type: t, title }
-                                        setCue(JSON.stringify(obj))
-                                    }}
-                                />
-                        }
                     </View>
                     <View style={{ flex: 1, display: 'flex', flexDirection: 'column', marginHorizontal: 10 }}>
                         {channels.length !== 0 ?
                             <View style={{ display: 'flex', flexDirection: 'row' }}>
                                 <View style={{ width: '33.33%', borderRightWidth: 0, borderColor: '#f4f4f4' }}>
                                     <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                        <Text style={{ fontSize: 14, color: '#a6a2a2' }}>
+                                        <Text style={{ fontSize: 12, color: '#a6a2a2' }}>
                                             <Ionicons
-                                                name='school-outline' size={23} color={'#a6a2a2'} />
+                                                name='school-outline' size={20} color={'#a6a2a2'} />
                                         </Text>
                                     </View>
                                     <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white' }}>
                                         <View style={{ width: '85%', backgroundColor: 'white' }}>
                                             <ScrollView style={styles.colorBar} horizontal={true} showsHorizontalScrollIndicator={false}>
                                                 <TouchableOpacity
-                                                    style={channelId === '' ? styles.allOutline : styles.all}
+                                                    style={channelId === '' ? styles.allOutline : styles.allBlack}
                                                     onPress={() => {
                                                         setChannelId('')
                                                         setCustomCategories(localCustomCategories)
@@ -596,15 +592,15 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         setGradeWeight(0)
                                                         setGraded(false)
                                                     }}>
-                                                    <Text style={{ color: '#101010', lineHeight: 20 }}>
-                                                        None
-                                        </Text>
+                                                    <Text style={{ lineHeight: 20, fontSize: 12, color: channelId === '' ? '#fff' : '#101010' }}>
+                                                        <Ionicons name='home-outline' size={15} />
+                                                    </Text>
                                                 </TouchableOpacity>
                                                 {
                                                     channels.map((channel) => {
                                                         return <TouchableOpacity
                                                             key={Math.random()}
-                                                            style={channelId === channel._id ? styles.allOutline : styles.all}
+                                                            style={channelId === channel._id ? styles.allOutline : styles.allBlack}
                                                             onPress={() => {
                                                                 setChannelId(channel._id)
                                                                 setAddCustomCategory(false)
@@ -613,7 +609,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                 setGradeWeight(0)
                                                                 setGraded(false)
                                                             }}>
-                                                            <Text style={{ color: '#101010', lineHeight: 20 }}>
+                                                            <Text style={{ lineHeight: 20, fontSize: 12, color: channelId === channel._id ? '#fff' : '#101010' }}>
                                                                 {channel.name}
                                                             </Text>
                                                         </TouchableOpacity>
@@ -627,7 +623,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     channelId !== '' ?
                                         <View style={{ width: '33.33%' }}>
                                             <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                                <Text style={{ fontSize: 14, color: '#a6a2a2' }}>
+                                                <Text style={{ fontSize: 12, color: '#a6a2a2' }}>
                                                     Accept Submission
                                                 </Text>
                                             </View>
@@ -640,10 +636,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     <Switch
                                                         value={submission}
                                                         onValueChange={() => {
-                                                            if (!submission) {
-                                                                setCustomCategory('Assignment')
-                                                                setAddCustomCategory(true)
-                                                            }
                                                             setSubmission(!submission)
                                                         }}
                                                         style={{ height: 20 }}
@@ -682,7 +674,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     submission ?
                                         <View style={{ width: '33.33%' }}>
                                             <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                                <Text style={{ fontSize: 14, color: '#a6a2a2' }}>
+                                                <Text style={{ fontSize: 12, color: '#a6a2a2' }}>
                                                     Graded
                                                 </Text>
                                             </View>
@@ -733,7 +725,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             <View style={{ width: '33.33%', borderRightWidth: 0, borderColor: '#f4f4f4' }}>
                                 <View style={{ width: '100%', backgroundColor: 'white' }}>
                                     <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                        <Text style={{ fontSize: 14, color: '#a6a2a2' }}>
+                                        <Text style={{ fontSize: 12, color: '#a6a2a2' }}>
                                             Category
                                         </Text>
                                     </View>
@@ -744,7 +736,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     <View style={styles.colorBar}>
                                                         <TextInput
                                                             value={customCategory}
-                                                            style={styles.allOutline}
+                                                            style={styles.allGrayOutline}
                                                             placeholder={'New Category'}
                                                             onChangeText={val => {
                                                                 setCustomCategory(val)
@@ -758,7 +750,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             onPress={() => {
                                                                 setCustomCategory('')
                                                             }}>
-                                                            <Text style={{ color: '#a6a2a2', lineHeight: 20 }}>
+                                                            <Text style={{ color: '#a6a2a2', lineHeight: 20, fontSize: 12 }}>
                                                                 None
                                                     </Text>
                                                         </TouchableOpacity>
@@ -770,7 +762,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                     onPress={() => {
                                                                         setCustomCategory(category)
                                                                     }}>
-                                                                    <Text style={{ color: '#a6a2a2', lineHeight: 20 }}>
+                                                                    <Text style={{ color: '#a6a2a2', lineHeight: 20, fontSize: 12 }}>
                                                                         {category}
                                                                     </Text>
                                                                 </TouchableOpacity>
@@ -801,7 +793,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             </View>
                             <View style={{ width: '33.33%', borderRightWidth: 0, borderColor: '#f4f4f4' }}>
                                 <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                    <Text style={{ fontSize: 14, color: '#a6a2a2' }}>
+                                    <Text style={{ fontSize: 12, color: '#a6a2a2' }}>
                                         Priority
                                 </Text>
                                 </View>
@@ -869,9 +861,9 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 notify ?
                                     <View style={{ width: '33.33%' }}>
                                         <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                            <Text style={{ fontSize: 14, color: '#a6a2a2' }}>
+                                            <Text style={{ fontSize: 12, color: '#a6a2a2' }}>
                                                 <Ionicons
-                                                    name='repeat-outline' size={25} color={'#a6a2a2'} />
+                                                    name='repeat-outline' size={20} color={'#a6a2a2'} />
                                             </Text>
                                         </View>
                                         <View style={{ flexDirection: 'row', }}>
@@ -947,9 +939,9 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 notify && !shuffle ?
                                     <View style={{ width: '33.33%' }}>
                                         <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                            <Text style={{ fontSize: 14, color: '#a6a2a2' }}>
+                                            <Text style={{ fontSize: 12, color: '#a6a2a2' }}>
                                                 <Ionicons
-                                                    name='infinite-outline' size={25} color={'#a6a2a2'} />
+                                                    name='infinite-outline' size={20} color={'#a6a2a2'} />
                                             </Text>
                                         </View>
                                         <View style={{ flexDirection: 'row' }}>
@@ -1017,7 +1009,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             textAlign: 'center',
                                             lineHeight: 35,
                                             color: 'white',
-                                            fontSize: 14,
+                                            fontSize: 12,
                                             fontWeight: 'bold',
                                             backgroundColor: '#0079FE',
                                             borderRadius: 15,
@@ -1032,7 +1024,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             textAlign: 'center',
                                             lineHeight: 35,
                                             color: 'white',
-                                            fontSize: 14,
+                                            fontSize: 12,
                                             fontWeight: 'bold',
                                             backgroundColor: '#0079FE',
                                             borderRadius: 15,
@@ -1109,8 +1101,8 @@ const styles: any = StyleSheet.create({
         borderRadius: 10,
         fontSize: 15,
         padding: 15,
-        paddingTop: 13,
-        paddingBottom: 13,
+        paddingTop: 12,
+        paddingBottom: 12,
         marginTop: 5,
         marginBottom: 20
     },
@@ -1148,24 +1140,29 @@ const styles: any = StyleSheet.create({
         paddingHorizontal: 10
     },
     all: {
-        fontSize: 15,
+        fontSize: 12,
         color: '#a6a2a2',
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: 'white'
     },
-    allOutline: {
-        fontSize: 15,
+    allBlack: {
+        fontSize: 12,
         color: '#101010',
         height: 22,
         paddingHorizontal: 10,
-        backgroundColor: 'white',
+        backgroundColor: 'white'
+    },
+    allOutline: {
+        fontSize: 12,
+        color: '#FFF',
+        height: 22,
+        paddingHorizontal: 10,
         borderRadius: 10,
-        borderWidth: 1,
-        borderColor: '#101010'
+        backgroundColor: '#101010'
     },
     allGrayOutline: {
-        fontSize: 15,
+        fontSize: 12,
         color: '#a6a2a2',
         height: 22,
         paddingHorizontal: 10,

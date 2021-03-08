@@ -88,10 +88,17 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         </Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity
-                                        style={{ marginRight: 5 }}
+                                        style={{ marginRight: 20 }}
                                         onPress={() => props.unsubscribe()}>
                                         <Text style={styles.channelText}>
                                             <Ionicons name='exit-outline' size={21} color={'#a6a2a2'} />
+                                        </Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        style={{ marginRight: 5 }}
+                                        onPress={() => props.delete()}>
+                                        <Text style={styles.channelText}>
+                                            <Ionicons name='trash-outline' size={21} color={'#a6a2a2'} />
                                         </Text>
                                     </TouchableOpacity>
                                 </View> :

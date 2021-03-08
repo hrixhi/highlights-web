@@ -24,6 +24,7 @@ import Grades from '../components/Grades';
 
 const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
+  const [init, setInit] = useState(false)
   const [filterChoice, setFilterChoice] = useState('All')
   const [customCategories, setCustomCategories] = useState<any[]>([])
   const [subscriptions, setSubscriptions] = useState<any[]>([])
@@ -43,11 +44,28 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   const [createdBy, setCreatedBy] = useState('')
   const [channelCreatedBy, setChannelCreatedBy] = useState('')
   const [channelFilterChoice, setChannelFilterChoice] = useState('All')
-  const [init, setInit] = useState(false)
   const [showLoginWindow, setShowLoginWindow] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [reopenUpdateWindow, setReopenUpdateWindow] = useState(Math.random())
 
+  useEffect(() => {
+    (
+      async () => {
+        const u = await AsyncStorage.getItem('user')
+        if (u) {
+          const parsedUser: any = JSON.parse(u)
+          if (parsedUser.email && parsedUser.email !== '') {
+            // do nothing
+          } else {
+            setShowLoginWindow(true)
+          }
+        } else {
+          setShowLoginWindow(true)
+        }
+      }
+    )()
+  }, [])
   const storeMenu = useCallback(async () => {
     try {
       await AsyncStorage.setItem('sleepFrom', sleepFrom.toString())
@@ -220,6 +238,18 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               })
             }
           }
+        }
+      ]
+    );
+  }, [channelId, filterChoice])
+
+  const deleteChannel = useCallback(() => {
+    Alert(
+      "Leave Channel",
+      "Are you sure you want to delete " + filterChoice + "?",
+      [
+        {
+          text: "Cancel", style: "cancel"
         },
         {
           text: "Erase Content & Unsubscribe", onPress: async () => {
@@ -422,14 +452,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           } else {
             saveDataInCloud()
           }
-        } else {
-          if (!init) {
-            setShowLoginWindow(true)
-          }
-        }
-      } else {
-        if (!init) {
-          setShowLoginWindow(true)
         }
       }
       // INITIALISED FIRST TIME
@@ -626,6 +648,10 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         })
         const updatedCues = JSON.stringify(parsedCues)
         await AsyncStorage.setItem('cues', updatedCues)
+        if (res.data.cue.saveCuesToCloud.length !== 0) {
+          setCues(parsedCues)
+          setReopenUpdateWindow(Math.random())
+        }
       }
     }).catch(err => console.log(err))
   }, [])
@@ -697,6 +723,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   }, [])
 
   const closeModal = useCallback(() => {
+    setInit(true)
     setCueId('')
     setModalType('')
     setCreatedBy('')
@@ -728,11 +755,13 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     }}
   /> :
     (modalType === 'Create' ? <Create
+      key={JSON.stringify(customCategories)}
       customCategories={customCategories}
       closeModal={() => {
         closeModal()
         setPageNumber(0)
-      }} />
+      }}
+    />
       :
       (modalType === 'Update' ? <Update
         key={cueId.toString()}
@@ -747,6 +776,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         filterChoice={filterChoice}
         channelCreatedBy={channelCreatedBy}
         reloadCueListAfterUpdate={() => reloadCueListAfterUpdate()}
+        reopenUpdateWindow={reopenUpdateWindow}
       />
         :
         (modalType === 'Walkthrough' ? <Walkthrough
@@ -980,6 +1010,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           openGrades={() => openModal('Grades')}
           unsubscribe={() => unsubscribeChannel()}
           openWalkthrough={() => openModal('Walkthrough')}
+          delete={() => deleteChannel()}
         />
         {
           reLoading ? <View style={[styles.activityContainer, styles.horizontal]}>

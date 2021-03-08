@@ -44,84 +44,38 @@ const FileUpload: React.FC<any> = (props: any) => {
         return axios.post(url, formData, config);
     }, [])
 
-    return <View style={{ paddingTop: 10 }}>
+    return <View style={{ paddingLeft: 10, paddingTop: 3.5 }}>
         {
             uploading ? <Text style={{ fontSize: 12, color: '#a6a2a2' }}>
                 Importing...
             </Text> :
-                <div style={{ display: 'flex', flexDirection: 'row' }}>
-                    <Text style={{
-                        height: 20,
-                        backgroundColor: 'white',
-                        marginRight: 20,
-                        fontSize: 12,
-                        color: '#a6a2a2',
-                        marginTop: 1
-                    }}>
-                        <Ionicons
-                            name='cloud-upload-outline' size={12} color={'#a6a2a2'} />
-                    </Text>
-                    <Text style={{
-                        height: 20,
-                        backgroundColor: 'white',
-                        marginRight: 20,
-                        fontSize: 12,
-                        color: '#a6a2a2',
-                        marginTop: 1
-                    }}>
-                        PDF
-                        </Text>
-                    <Text style={{
-                        height: 20,
-                        backgroundColor: 'white',
-                        marginRight: 20,
-                        fontSize: 12,
-                        color: '#a6a2a2',
-                        marginTop: 1
-                    }}>
-                        DOCX
-                    </Text>
-                    <Text style={{
-                        height: 20,
-                        backgroundColor: 'white',
-                        marginRight: 20,
-                        fontSize: 12,
-                        color: '#a6a2a2',
-                        marginTop: 1
-                    }}>
-                        PPTX
-                    </Text>
-                    <Text style={{
-                        height: 20,
-                        backgroundColor: 'white',
-                        marginRight: 20,
-                        fontSize: 12,
-                        color: '#a6a2a2',
-                        marginTop: 1
-                    }}>
-                        XLSX/CSV
-                    </Text>
-                    <Text style={{
-                        height: 20,
-                        backgroundColor: 'white',
-                        marginRight: 20,
-                        fontSize: 12,
-                        color: '#a6a2a2',
-                        marginTop: 1
-                    }}>
-                        MP3/MP4
-                    </Text>
+                <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end' }}>
                     <input
                         type="file"
+                        name="import"
+                        title="Import"
                         onChange={onChange}
                         style={{
                             backgroundColor: '#fff',
                             fontFamily: 'overpass',
                             fontSize: 12,
-                            color: '#a6a2a2'
+                            color: '#a6a2a2',
+                            marginLeft: 20,
+                            marginRight: 10,
+                            width: 160
                         }}
                         accept=".pdf,.docx,.pptx,.xlsx,.csv,.mp3,.mp4"
                     />
+                    <Text style={{
+                        height: 20,
+                        backgroundColor: 'white',
+                        fontSize: 12,
+                        color: '#a6a2a2',
+                        marginTop: 1,
+                        textAlign: 'left'
+                    }}>
+                        (pdf docx pptx xlsx csv mp3 mp4)
+                        </Text>
                 </div>
         }
     </View>

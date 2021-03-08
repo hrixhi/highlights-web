@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { StyleSheet, ActivityIndicator, ScrollView } from 'react-native';
+import { StyleSheet, ActivityIndicator, ScrollView, Dimensions } from 'react-native';
 import Alert from '../components/Alert'
 import { View, Text, TouchableOpacity } from './Themed';
 import _ from 'lodash'
@@ -87,11 +87,12 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
         </View>
     }
 
+    const windowHeight = Dimensions.get('window').height - 30;
     return (
         <View style={{
             backgroundColor: 'white',
             width: '100%',
-            height: '100%',
+            height: windowHeight,
             paddingHorizontal: 20,
             borderTopRightRadius: 30,
             borderTopLeftRadius: 30
@@ -157,8 +158,8 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
             }
             {
                 threads.length === 0 ?
-                    <View style={{ backgroundColor: 'white' }}>
-                        <Text style={{ width: '100%', color: '#a6a2a2', fontWeight: 'bold', fontSize: 25, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter' }}>
+                    <View style={{ backgroundColor: 'white', flex: 1 }}>
+                        <Text style={{ width: '100%', color: '#a6a2a2', fontWeight: 'bold', fontSize: 25, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                             {
                                 !props.cueId ? 'No posts.' : 'No comments.'
                             }
@@ -245,7 +246,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                             flexDirection: 'column'
                                         }}>
                                             {
-                                                props.cueId === null && !showThreadCues ?
+                                                props.cueId === null ?
                                                     <ScrollView
                                                         contentContainerStyle={{
                                                             height: 20, width: '100%'

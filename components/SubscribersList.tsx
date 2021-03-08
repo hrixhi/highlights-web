@@ -112,11 +112,13 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
         }
     }, [])
 
+    const windowHeight = Dimensions.get('window').height - 30;
+
     return (
         <View style={{
             backgroundColor: 'white',
             width: '100%',
-            height: '100%',
+            height: windowHeight,
             paddingHorizontal: 20,
             borderTopRightRadius: 30,
             borderTopLeftRadius: 30
@@ -172,8 +174,8 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
             }
             {
                 subscribers.length === 0 ?
-                    <View style={{ backgroundColor: 'white' }}>
-                        <Text style={{ width: '100%', color: '#a6a2a2', fontWeight: 'bold', fontSize: 25, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter' }}>
+                    <View style={{ backgroundColor: 'white', flex: 1 }}>
+                        <Text style={{ width: '100%', color: '#a6a2a2', fontWeight: 'bold', fontSize: 25, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                             {
                                 props.cueId ? 'No statuses.' : 'No students.'
                             }
@@ -194,6 +196,13 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             showsVerticalScrollIndicator={false}
                                             keyboardDismissMode={'on-drag'}
                                             style={{ flex: 1, paddingTop: 12 }}>
+                                            {
+                                                messages.length === 0 ?
+                                                    <Text style={{ width: '100%', color: '#a6a2a2', fontWeight: 'bold', fontSize: 25, paddingBottom: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                                        No messages.
+                                                    </Text>
+                                                    : null
+                                            }
                                             {
                                                 messages.map((message) => {
                                                     return <View style={{ width: '100%', paddingBottom: 15, backgroundColor: 'white' }} key={Math.random()}>

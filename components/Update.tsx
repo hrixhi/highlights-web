@@ -173,7 +173,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         key={JSON.stringify(threads)}
                     >
                         <Swiper
-                            key={JSON.stringify(threads) + JSON.stringify(threads.length)}
+                            key={JSON.stringify(threads) + JSON.stringify(threads.length) + JSON.stringify(props.reopenUpdateWindow)}
                             vertical={false}
                             from={0}
                             minDistanceForAction={0.1}
@@ -189,6 +189,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             }}
                         >
                             <UpdateControls
+                                key={props.reopenUpdateWindow}
                                 channelId={props.channelId}
                                 customCategories={props.customCategories}
                                 cue={props.cue}
