@@ -62,7 +62,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             fontFamily: 'inter',
                             paddingTop: 50
                         }}>
-                            Enhance note-taking. {'\n'}Simplify note-sharing.
+                            Create, import and share classroom material.
                         </Text>
                         <Text style={{
                             color: '#a6a2a2',
@@ -70,7 +70,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             fontSize: 20,
                             fontWeight: 'bold'
                         }}>
-                            {'\n'}Remember useful content by playing it as recurring reminders.
+                            {'\n'}Organise coursework (pdf, docx, pptx, xlsx...) by category & priority, whether it be lecture slides, class notes, homeworks or announcements.
                         </Text>
                         {/* <TouchableOpacity
                             onPress={() => Linking.openURL('http://www.cuesapp.co')}
@@ -89,7 +89,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             fontWeight: 'bold',
                             paddingTop: 50
                         }}>
-                            Click <Ionicons name='add-circle' size={23} /> to create a new cue.
+                            Directly work with content.
                         </Text>
                         <Text style={{
                             color: '#a6a2a2',
@@ -97,7 +97,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             fontSize: 20,
                             fontWeight: 'bold'
                         }}>
-                            {'\n'}List by priority and organise by category.
+                            {'\n'}Let students view coursework, take notes on it and save changes to the cloud.
                         </Text>
                     </View>
                     <View style={styles.screen} key={Math.random()}>
@@ -109,7 +109,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             fontFamily: 'inter',
                             paddingTop: 50
                         }}>
-                            Click <Ionicons name='notifications-outline' size={23} color={'#101010'} /> to play a cue as a recurring reminder.
+                            Streamline classroom communication.
                         </Text>
                         <Text style={{
                             color: '#a6a2a2',
@@ -117,7 +117,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             fontSize: 20,
                             fontWeight: 'bold'
                         }}>
-                            {'\n'}Use <Ionicons name='shuffle-outline' size={20} color={'#a6a2a2'} /> and <Ionicons name='infinite-outline' size={20} color={'#a6a2a2'} /> for reminder settings.
+                            {'\n'}Discuss content individually as comments, host general Q&A in discussion and direct message students.
                         </Text>
                     </View>
                     <View style={styles.screen} key={Math.random()}>
@@ -129,7 +129,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             fontWeight: 'bold',
                             paddingTop: 50
                         }}>
-                            Click <Ionicons name='settings-outline' size={23} /> to choose how often a shuffled cue is played.
+                            Simplify testing & grading.
                         </Text>
                         <Text style={{
                             color: '#a6a2a2',
@@ -137,7 +137,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             fontSize: 20,
                             fontWeight: 'bold'
                         }}>
-                            {'\n'}View high priority cues more frequently when on shuffle.
+                            {'\n'}Accept submissions, check for plagiarism, grade assignments and easily monitor overall performance.
                         </Text>
                     </View>
                     <View style={styles.screen} key={Math.random()}>
@@ -149,7 +149,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             fontWeight: 'bold',
                             paddingTop: 50
                         }}>
-                            Click <Ionicons name='add-outline' size={23} color='#0079fe' /> to create or subscribe to a channel.
+                            Boost productivity.
                         </Text>
                         <Text style={{
                             color: '#a6a2a2',
@@ -157,28 +157,8 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             fontSize: 20,
                             fontWeight: 'bold'
                         }}>
-                            {'\n'}Share and discuss cues over a channel. Subscribers can access all shared content, comment on a cue and use the general discussion.
+                            {'\n'}Use in-built reminders to keep track of important tasks and deadlines.
                         </Text>
-                    </View>
-                    <View style={styles.screen} key={Math.random()}>
-                        <Text style={{
-                            color: '#101010',
-                            textAlign: 'left',
-                            fontSize: 30,
-                            fontWeight: 'bold',
-                            fontFamily: 'inter',
-                            paddingTop: 50
-                        }}>
-                            Stay connected to what matters to you.
-                        </Text>
-                        <Text style={{
-                            color: '#a6a2a2',
-                            textAlign: 'left',
-                            fontSize: 20,
-                            fontWeight: 'bold'
-                        }}>
-                            {'\n'}Keep track of the ideas & actions that can make a difference in your life.
-                    </Text>
                     </View>
                 </Swiper>
             </Animated.View>
