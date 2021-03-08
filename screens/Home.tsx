@@ -49,6 +49,17 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   const [password, setPassword] = useState('')
   const [reopenUpdateWindow, setReopenUpdateWindow] = useState(Math.random())
 
+  const onDimensionsChange = useCallback(({ w, s }: any) => {
+    window.location.reload()
+  }, []);
+
+  useEffect(() => {
+    Dimensions.addEventListener("change", onDimensionsChange);
+    return () => {
+      Dimensions.removeEventListener("change", onDimensionsChange);
+    };
+  }, [])
+
   useEffect(() => {
     (
       async () => {
