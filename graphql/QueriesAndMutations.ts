@@ -371,3 +371,14 @@ query($users: [String!]!) {
     }
 }
 `
+export const getEvents = gql`
+query($channelId: String!) {
+    channel {
+        getCalendar(channelId: $channelId) {
+            title
+            start
+            end
+        }
+    }
+}
+`

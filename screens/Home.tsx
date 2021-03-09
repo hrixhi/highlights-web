@@ -21,6 +21,7 @@ import Subscribers from '../components/Subscribers';
 import Profile from '../components/Profile';
 import { validateEmail } from '../helpers/emailCheck';
 import Grades from '../components/Grades';
+import Calendar from '../components/Calendar';
 
 const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -312,7 +313,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     setReLoading(true)
     try {
 
-      const version = 'v0.5.1'
+      const version = 'v0.9'
       const server = fetchAPI('')
       const fO = await AsyncStorage.getItem(version)
 
@@ -827,7 +828,12 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             channelId={channelId}
                             filterChoice={filterChoice}
                           />
-                            : null
+                            : (
+                              modalType === 'Calendar' ? <Calendar
+                                channelId={channelId}
+                              />
+                                : null
+                            )
                         )
                     )
                 )
@@ -1022,6 +1028,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           unsubscribe={() => unsubscribeChannel()}
           openWalkthrough={() => openModal('Walkthrough')}
           delete={() => deleteChannel()}
+          openCalendar={() => openModal('Calendar')}
         />
         {
           reLoading ? <View style={[styles.activityContainer, styles.horizontal]}>

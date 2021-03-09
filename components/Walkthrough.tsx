@@ -47,9 +47,9 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         prevPos: 'left',
                         nextPos: 'right',
                         nextTitle: '›',
-                        nextTitleStyle: { color: '#a6a2a2', fontSize: 50, fontFamily: 'overpass' },
+                        nextTitleStyle: { color: '#a6a2a2', fontSize: 60, fontFamily: 'overpass' },
                         prevTitle: '‹',
-                        prevTitleStyle: { color: '#a6a2a2', fontSize: 50, fontFamily: 'overpass' },
+                        prevTitleStyle: { color: '#a6a2a2', fontSize: 60, fontFamily: 'overpass' },
                         dotActiveStyle: { backgroundColor: '#0079fe' }
                     }}
                 >

@@ -492,7 +492,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 >
                     {
                         imported ?
-                            <View style={{ width: '40%', alignSelf: 'flex-start' }}>
+                            <View style={{ width: '50%', alignSelf: 'flex-start' }}>
                                 <TextInput
                                     value={title}
                                     style={styles.input}
@@ -514,9 +514,10 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         <iframe src={'https://view.officeapps.live.com/op/embed.aspx?src=' + url} width='100%' height='600px' frameBorder='0' />
                                         : <FileViewer
                                             style={{
-                                                fontFamily: 'roboto', outerWidth: '100%', innerWidth: '100%'
+                                                fontFamily: 'overpass'
                                             }}
                                             fileType={type}
+                                            key={Math.random()}
                                             filePath={url}
                                             errorComponent={<View>
                                                 <Text>

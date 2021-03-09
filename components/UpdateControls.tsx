@@ -65,16 +65,15 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const currentDate = new Date()
     const [submitted, setSubmitted] = useState(false)
     const [userSetupComplete, setUserSetupComplete] = useState(false)
-
     const [imported, setImported] = useState(false)
     const [url, setUrl] = useState('')
     const [type, setType] = useState('')
     const [title, setTitle] = useState('')
-
     const [submissionImported, setSubmissionImported] = useState(false)
     const [submissionUrl, setSubmissionUrl] = useState('')
     const [submissionType, setSubmissionType] = useState('')
     const [submissionTitle, setSubmissionTitle] = useState('')
+    const [key, setKey] = useState(Math.random())
 
     useEffect(() => {
         if (props.cue.channelId && props.cue.channelId !== '') {
@@ -119,6 +118,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 setSubmissionTitle('')
             }
         }
+        setKey(Math.random())
     }, [props.cue, cue])
 
     const handleHeightChange = useCallback((h: any) => {
@@ -393,6 +393,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         updateStatusAsRead()
     }, [props.cue.status])
 
+    console.log('THERE IS A BUG')
+
     return (
         <View style={{
             width: '100%',
@@ -592,7 +594,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
                     {
                         showOriginal && imported ?
-                            <View style={{ width: '40%', alignSelf: 'flex-start' }}>
+                            <View style={{ width: '50%', alignSelf: 'flex-start' }}>
                                 <TextInput
                                     editable={!(props.channelId && props.channelId !== '')}
                                     value={title}
@@ -605,7 +607,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     }
                     {
                         !showOriginal && submissionImported ?
-                            <View style={{ width: '40%', alignSelf: 'flex-start' }}>
+                            <View style={{ width: '50%', alignSelf: 'flex-start' }}>
                                 <TextInput
                                     value={submissionTitle}
                                     style={styles.input}
@@ -619,16 +621,18 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         width: '100%',
                         minHeight: 500,
                         backgroundColor: 'white'
-                    }}>
+                    }}
+                    >
                         {!showOriginal ? null
                             : (imported ?
                                 (
                                     type === 'pptx' ?
                                         <iframe src={'https://view.officeapps.live.com/op/embed.aspx?src=' + url} width='100%' height='600px' frameBorder='0' />
                                         : <FileViewer
-                                            style={{ fontFamily: 'roboto' }}
+                                            style={{ fontFamily: 'overpass' }}
                                             fileType={type}
                                             filePath={url}
+                                            key={Math.random()}
                                             errorComponent={<View>
                                                 <Text>
                                                     ERROR!!
@@ -685,7 +689,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     type === 'pptx' ?
                                         <iframe src={'https://view.officeapps.live.com/op/embed.aspx?src=' + submissionUrl} width='100%' height='600px' frameBorder='0' />
                                         : <FileViewer
-                                            style={{ fontFamily: 'roboto' }}
+                                            key={Math.random()}
+                                            style={{ fontFamily: 'overpass' }}
                                             fileType={submissionType}
                                             filePath={submissionUrl}
                                             errorComponent={<View>

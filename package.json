@@ -51,6 +51,7 @@
     "moment": "^2.29.1",
     "native-base": "^2.15.2",
     "react": "16.13.1",
+    "react-big-calendar": "^0.33.2",
     "react-datetime": "^3.0.4",
     "react-dom": "16.13.1",
     "react-file-viewer": "^1.2.1",
