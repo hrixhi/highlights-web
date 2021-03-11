@@ -130,7 +130,6 @@ const styles: any = () => StyleSheet.create({
     title: {
         fontFamily: 'inter',
         fontSize: 14,
-        fontWeight: 'bold',
         paddingTop: 5,
         color: '#101010',
         flex: 1
@@ -138,7 +137,6 @@ const styles: any = () => StyleSheet.create({
     titleArrow: {
         fontFamily: 'inter',
         fontSize: 14,
-        fontWeight: 'bold',
         paddingTop: 5,
         color: '#101010',
         marginLeft: 10

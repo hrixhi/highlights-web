@@ -892,7 +892,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
       {
         showLoginWindow ? <View style={{
           width: '100%',
-          height: '100%',
+          height: Dimensions.get('screen').height,
+          flex: 1,
           position: 'absolute',
           zIndex: 50,
           backgroundColor: 'rgba(16,16,16, 0.7)'
@@ -907,8 +908,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             backgroundColor: 'white',
             borderRadius: 20,
             marginTop: 100,
-            padding: 40,
-            marginHorizontal: 20
+            padding: 40
           }}>
             <Text style={{ fontSize: 30, color: '#101010', fontFamily: 'inter', paddingBottom: 15, maxWidth: 400, textAlign: 'center' }}>
               Login
@@ -965,7 +965,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     lineHeight: 35,
                     color: 'white',
                     fontSize: 14,
-                    fontWeight: 'bold',
                     backgroundColor: '#0079FE',
                     paddingHorizontal: 25,
                     fontFamily: 'inter',
@@ -990,7 +989,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     lineHeight: 35,
                     color: '#101010s',
                     fontSize: 14,
-                    fontWeight: 'bold',
                     backgroundColor: '#f4f4f4',
                     paddingHorizontal: 25,
                     fontFamily: 'inter',

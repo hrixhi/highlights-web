@@ -221,7 +221,10 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
         return <View style={styles.screen} key={1}>
             <View style={{ width: '100%', backgroundColor: 'white' }}>
                 <View style={styles.colorBar}>
-                    <Text style={{ fontSize: 25, color: '#a6a2a2', fontWeight: 'bold' }}>
+                    <Text style={{
+                        fontSize: 25, color: '#a6a2a2',
+                        // 
+                    }}>
                         Internet connection required to initialise.
                     </Text>
                 </View>
@@ -350,7 +353,6 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     lineHeight: 35,
                                     color: 'white',
                                     fontSize: 14,
-                                    fontWeight: 'bold',
                                     backgroundColor: '#0079FE',
                                     paddingHorizontal: 25,
                                     fontFamily: 'inter',

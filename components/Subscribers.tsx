@@ -80,7 +80,7 @@ const Subscribers: React.FunctionComponent<{ [label: string]: any }> = (props: a
             <Animated.View style={{
                 opacity: modalAnimation,
                 width: '100%',
-                height: windowHeight,
+                height: windowHeight - 30,
                 backgroundColor: 'white',
                 borderTopRightRadius: 30,
                 borderTopLeftRadius: 30

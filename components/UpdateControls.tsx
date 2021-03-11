@@ -393,7 +393,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         updateStatusAsRead()
     }, [props.cue.status])
 
-    console.log('THERE IS A BUG')
+    const width = Dimensions.get('window').width;
 
     return (
         <View style={{
@@ -502,8 +502,14 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             </TouchableOpacity>
                         </View>
                 }
-                <View style={styles.date} onTouchStart={() => Keyboard.dismiss()}>
-                    <View style={{ flexDirection: 'row' }}>
+                <View style={{
+                    width: '100%',
+                    display: 'flex',
+                    flexDirection: Dimensions.get('window').width < 768 ? 'column-reverse' : 'row',
+                    paddingBottom: 4,
+                    backgroundColor: 'white'
+                }} onTouchStart={() => Keyboard.dismiss()}>
+                    <View style={{ flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row' }}>
                         {
                             (showOriginal)
                                 ? <View style={{ height: 28 }} />
@@ -512,9 +518,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     style={{
                                         flexWrap: 'wrap',
                                         backgroundColor: 'white',
-                                        height: 28,
-                                        // paddingLeft: 20
-                                        // width: 'auto',
+                                        // height: Dimensions.get('window').width < 768 ? 60 : 28,
+                                        // width: Dimensions.get('window').width < 768 ? '50%' : '100%'
                                     }}
                                     iconSize={13}
                                     editor={RichText}
@@ -746,8 +751,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     <View style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
                         {
                             props.cue.channelId ?
-                                <View style={{ display: 'flex', flexDirection: 'row' }}>
-                                    <View style={{ width: '33.33%', borderRightWidth: 0, borderColor: '#f4f4f4' }}>
+                                <View style={{ display: 'flex', flexDirection: width < 768 ? 'column' : 'row' }}>
+                                    <View style={{ width: width < 768 ? '100%' : '33.33%', borderRightWidth: 0, borderColor: '#f4f4f4' }}>
                                         <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
                                             <Text style={{ fontSize: 12, color: '#a6a2a2' }}>
                                                 <Ionicons
@@ -770,7 +775,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     </View>
                                     {
                                         props.cue.channelId !== '' ?
-                                            <View style={{ width: '33.33%' }}>
+                                            <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
                                                 <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
                                                     <Text style={{ fontSize: 12, color: '#a6a2a2' }}>
                                                         {
@@ -840,7 +845,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     }
                                     {
                                         submission ?
-                                            <View style={{ width: '33.33%' }}>
+                                            <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
                                                 <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
                                                     <Text style={{ fontSize: 12, color: '#a6a2a2' }}>
                                                         Graded
@@ -909,38 +914,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 </View>
                                 : null
                         }
-                        <View style={{ display: 'flex', flexDirection: 'row' }}>
-                            <View style={{ width: '33.33%', borderRightWidth: 0, borderColor: '#f4f4f4' }}>
-                                <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                    <Text style={{ fontSize: 12, color: '#a6a2a2' }}>
-                                        Priority
-                                </Text>
-                                </View>
-                                <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white' }}>
-                                    <View style={{ width: '100%', backgroundColor: 'white' }}>
-                                        <ScrollView style={{ ...styles.colorBar, height: 20 }} horizontal={true} showsHorizontalScrollIndicator={false}>
-                                            {
-                                                colorChoices.map((c: string, i: number) => {
-                                                    return <View style={color === i ? styles.colorContainerOutline : styles.colorContainer} key={Math.random()}>
-                                                        <TouchableOpacity
-                                                            style={{
-                                                                width: 12,
-                                                                height: 12,
-                                                                borderRadius: 6,
-                                                                backgroundColor: colorChoices[i]
-                                                            }}
-                                                            onPress={() => {
-                                                                setColor(i)
-                                                            }}
-                                                        />
-                                                    </View>
-                                                })
-                                            }
-                                        </ScrollView>
-                                    </View>
-                                </View>
-                            </View>
-                            <View style={{ width: '33.33%', borderRightWidth: 0, borderColor: '#f4f4f4' }}>
+                        <View style={{ display: 'flex', flexDirection: width < 768 ? 'column' : 'row' }}>
+                            <View style={{ width: width < 768 ? '100%' : '33.33%', borderRightWidth: 0, borderColor: '#f4f4f4' }}>
                                 <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
                                     <Text style={{ fontSize: 12, color: '#a6a2a2' }}>
                                         Category
@@ -1023,10 +998,40 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         </View>
                                 }
                             </View>
+                            <View style={{ width: width < 768 ? '100%' : '33.33%', borderRightWidth: 0, borderColor: '#f4f4f4' }}>
+                                <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
+                                    <Text style={{ fontSize: 12, color: '#a6a2a2' }}>
+                                        Priority
+                                </Text>
+                                </View>
+                                <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white' }}>
+                                    <View style={{ width: '100%', backgroundColor: 'white' }}>
+                                        <ScrollView style={{ ...styles.colorBar, height: 20 }} horizontal={true} showsHorizontalScrollIndicator={false}>
+                                            {
+                                                colorChoices.map((c: string, i: number) => {
+                                                    return <View style={color === i ? styles.colorContainerOutline : styles.colorContainer} key={Math.random()}>
+                                                        <TouchableOpacity
+                                                            style={{
+                                                                width: 12,
+                                                                height: 12,
+                                                                borderRadius: 6,
+                                                                backgroundColor: colorChoices[i]
+                                                            }}
+                                                            onPress={() => {
+                                                                setColor(i)
+                                                            }}
+                                                        />
+                                                    </View>
+                                                })
+                                            }
+                                        </ScrollView>
+                                    </View>
+                                </View>
+                            </View>
                         </View>
                     </View>
-                    <View style={{ width: '100%', paddingTop: 15, flexDirection: 'row' }}>
-                        <View style={{ width: '33.33%' }}>
+                    <View style={{ width: '100%', paddingTop: 15, flexDirection: width < 768 ? 'column' : 'row' }}>
+                        <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
                             <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
                                 <Text style={{ fontSize: 12, color: '#a6a2a2' }}>
                                     <Ionicons name='notifications-outline' size={20} color={'#a6a2a2'} />
@@ -1062,7 +1067,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         </View>
                         {
                             notify ?
-                                <View style={{ width: '33.33%' }}>
+                                <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
                                     <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
                                         <Text style={{ fontSize: 12, color: '#a6a2a2' }}>
                                             <Ionicons
@@ -1140,7 +1145,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         }
                         {
                             notify && !shuffle ?
-                                <View style={{ width: '33.33%' }}>
+                                <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
                                     <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
                                         <Text style={{ fontSize: 12, color: '#a6a2a2' }}>
                                             <Ionicons
@@ -1209,7 +1214,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             lineHeight: 35,
                                             color: 'white',
                                             fontSize: 12,
-                                            fontWeight: 'bold',
                                             backgroundColor: '#0079FE',
                                             borderRadius: 15,
                                             paddingHorizontal: 25,
@@ -1236,7 +1240,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             lineHeight: 35,
                                             color: 'white',
                                             fontSize: 12,
-                                            fontWeight: 'bold',
                                             backgroundColor: '#0079FE',
                                             borderRadius: 15,
                                             paddingHorizontal: 25,

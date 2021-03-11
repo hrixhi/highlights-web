@@ -98,7 +98,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
         return <View style={styles.screen} key={1}>
             <View style={{ width: '100%', backgroundColor: 'white' }}>
                 <View style={styles.colorBar}>
-                    <Text style={{ fontSize: 25, color: '#a6a2a2', fontWeight: 'bold' }}>
+                    <Text style={{ fontSize: 25, color: '#a6a2a2',  }}>
                         Internet connection required to initialise.
                     </Text>
                 </View>
@@ -201,7 +201,6 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             lineHeight: 35,
                             color: 'white',
                             fontSize: 14,
-                            fontWeight: 'bold',
                             backgroundColor: '#0079FE',
                             paddingHorizontal: 25,
                             fontFamily: 'inter',
@@ -228,7 +227,6 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 lineHeight: 35,
                                 color: '#101010s',
                                 fontSize: 14,
-                                fontWeight: 'bold',
                                 backgroundColor: '#f4f4f4',
                                 paddingHorizontal: 25,
                                 fontFamily: 'inter',

@@ -127,7 +127,7 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     style={{ width: '100%', height: '55%', paddingTop: 10 }}>
                     <ScrollView style={{
                         width: '98.5%',
-                        paddingTop: 15
+                        paddingTop: 5
                     }} horizontal={true}
                         showsHorizontalScrollIndicator={false}
                     >
@@ -178,7 +178,6 @@ const styleObject: any = (channelId: any) => StyleSheet.create({
     text: {
         textAlign: 'right',
         color: '#101010',
-        fontWeight: 'bold',
         fontSize: 15,
         paddingRight: 15
     },

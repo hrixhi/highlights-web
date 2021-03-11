@@ -2,6 +2,7 @@ import React, { useCallback, useState } from 'react'
 import { Text, View } from './Themed'
 import axios from 'axios'
 import { Ionicons } from '@expo/vector-icons'
+import { Dimensions } from 'react-native'
 
 const mime = require('mime-types')
 
@@ -44,12 +45,16 @@ const FileUpload: React.FC<any> = (props: any) => {
         return axios.post(url, formData, config);
     }, [])
 
-    return <View style={{ paddingLeft: 10, paddingTop: 3.5 }}>
+    return <View style={{
+        paddingLeft: Dimensions.get('window').width < 768 ? 0 : 10,
+        paddingTop: 3.5,
+        paddingBottom: Dimensions.get('window').width < 768 ? 5 : 0
+    }}>
         {
             uploading ? <Text style={{ fontSize: 12, color: '#a6a2a2' }}>
                 Importing...
             </Text> :
-                <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end' }}>
+                <div style={{ display: 'flex', flexDirection: 'row', justifyContent: Dimensions.get('window').width < 768 ? 'center' : 'flex-end' }}>
                     <input
                         type="file"
                         name="import"
@@ -60,21 +65,22 @@ const FileUpload: React.FC<any> = (props: any) => {
                             fontFamily: 'overpass',
                             fontSize: 12,
                             color: '#a6a2a2',
-                            marginLeft: 20,
+                            marginLeft: Dimensions.get('window').width < 768 ? 0 : 20,
                             marginRight: 10,
-                            width: 160
+                            width: 170
                         }}
                         accept=".pdf,.docx,.pptx,.xlsx,.csv,.mp3,.mp4"
                     />
                     <Text style={{
                         height: 20,
                         backgroundColor: 'white',
-                        fontSize: 12,
+                        fontSize: 9,
                         color: '#a6a2a2',
                         marginTop: 1,
-                        textAlign: 'left'
+                        textAlign: 'left',
+                        lineHeight: 20
                     }}>
-                        (pdf docx pptx xlsx csv mp3 mp4)
+                        pdf docx pptx xlsx csv mp3 mp4 zip
                         </Text>
                 </div>
         }

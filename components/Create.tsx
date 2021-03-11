@@ -378,6 +378,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         }).start();
     }, [])
 
+    const width = Dimensions.get('window').width;
+
     return (
         <View style={{
             width: '100%',
@@ -397,8 +399,32 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 30 }}>
                     {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
                 </Text>
-                <View style={styles.date} onTouchStart={() => Keyboard.dismiss()}>
-                    <View style={{ flexDirection: 'row' }}>
+                <View>
+                    <TouchableOpacity
+                        onPress={() => setStarred(!starred)}
+                        style={{
+                            backgroundColor: 'white',
+                            flex: 1
+                        }}>
+                        <Text style={{
+                            textAlign: 'right',
+                            lineHeight: 30,
+                            marginTop: -36,
+                            paddingRight: 25,
+                            width: '100%'
+                        }}>
+                            <Ionicons name='bookmark' size={20} color={starred ? '#f94144' : '#a6a2a2'} />
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+                <View style={{
+                    width: '100%',
+                    display: 'flex',
+                    flexDirection: Dimensions.get('window').width < 768 ? 'column-reverse' : 'row',
+                    paddingBottom: 4,
+                    backgroundColor: 'white'
+                }} onTouchStart={() => Keyboard.dismiss()}>
+                    <View style={{ flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row' }}>
                         <RichToolbar
                             style={{
                                 flexWrap: 'wrap',
@@ -448,38 +474,22 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 />
                         }
                     </View>
-                    <TouchableOpacity
-                        onPress={() => setStarred(!starred)}
-                        style={{
-                            backgroundColor: 'white',
-                            flex: 1
-                        }}>
-                        <Text style={{
-                            textAlign: 'right',
-                            lineHeight: 30,
-                            marginTop: -36,
-                            paddingRight: 25,
-                            width: '100%'
-                        }}>
-                            <Ionicons name='bookmark' size={20} color={starred ? '#f94144' : '#a6a2a2'} />
-                        </Text>
-                        <Text style={{
-                            flex: 1,
-                            color: '#a6a2a2',
-                            fontSize: 11,
-                            lineHeight: 30,
-                            textAlign: 'right',
-                            paddingRight: 10
-                        }}>
-                            {
-                                now.toString().split(' ')[1] +
-                                ' ' +
-                                now.toString().split(' ')[2] +
-                                ', ' +
-                                now.toString().split(' ')[3]
-                            }
-                        </Text>
-                    </TouchableOpacity>
+                    <Text style={{
+                        flex: 1,
+                        color: '#a6a2a2',
+                        fontSize: 11,
+                        lineHeight: 30,
+                        textAlign: 'right',
+                        paddingRight: 10
+                    }}>
+                        {
+                            now.toString().split(' ')[1] +
+                            ' ' +
+                            now.toString().split(' ')[2] +
+                            ', ' +
+                            now.toString().split(' ')[3]
+                        }
+                    </Text>
                 </View>
                 <ScrollView
                     style={{ paddingBottom: 100 }}
@@ -571,8 +581,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     </View>
                     <View style={{ flex: 1, display: 'flex', flexDirection: 'column', marginHorizontal: 10 }}>
                         {channels.length !== 0 ?
-                            <View style={{ display: 'flex', flexDirection: 'row' }}>
-                                <View style={{ width: '33.33%', borderRightWidth: 0, borderColor: '#f4f4f4' }}>
+                            <View style={{ display: 'flex', flexDirection: width < 768 ? 'column' : 'row' }}>
+                                <View style={{ width: width < 768 ? '100%' : '33.33%', borderRightWidth: 0, borderColor: '#f4f4f4' }}>
                                     <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
                                         <Text style={{ fontSize: 12, color: '#a6a2a2' }}>
                                             <Ionicons
@@ -622,7 +632,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 </View>
                                 {
                                     channelId !== '' ?
-                                        <View style={{ width: '33.33%' }}>
+                                        <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
                                             <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
                                                 <Text style={{ fontSize: 12, color: '#a6a2a2' }}>
                                                     Accept Submission
@@ -673,7 +683,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 }
                                 {
                                     submission ?
-                                        <View style={{ width: '33.33%' }}>
+                                        <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
                                             <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
                                                 <Text style={{ fontSize: 12, color: '#a6a2a2' }}>
                                                     Graded
@@ -722,8 +732,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 }
                             </View>
                             : null}
-                        <View style={{ display: 'flex', flexDirection: 'row' }}>
-                            <View style={{ width: '33.33%', borderRightWidth: 0, borderColor: '#f4f4f4' }}>
+                        <View style={{ display: 'flex', flexDirection: width < 768 ? 'column' : 'row' }}>
+                            <View style={{ width: width < 768 ? '100%' : '33.33%', borderRightWidth: 0, borderColor: '#f4f4f4' }}>
                                 <View style={{ width: '100%', backgroundColor: 'white' }}>
                                     <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
                                         <Text style={{ fontSize: 12, color: '#a6a2a2' }}>
@@ -792,7 +802,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     </View>
                                 </View>
                             </View>
-                            <View style={{ width: '33.33%', borderRightWidth: 0, borderColor: '#f4f4f4' }}>
+                            <View style={{ width: width < 768 ? '100%' : '33.33%', borderRightWidth: 0, borderColor: '#f4f4f4' }}>
                                 <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
                                     <Text style={{ fontSize: 12, color: '#a6a2a2' }}>
                                         Priority
@@ -823,8 +833,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 </View>
                             </View>
                         </View>
-                        <View style={{ width: '100%', paddingTop: 15, flexDirection: 'row' }}>
-                            <View style={{ width: '33.33%' }}>
+                        <View style={{ width: '100%', paddingTop: 15, flexDirection: width < 768 ? 'column' : 'row' }}>
+                            <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
                                 <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
                                     <Text style={{ fontSize: 15, color: '#a6a2a2' }}>
                                         <Ionicons name='notifications-outline' size={20} color={'#a6a2a2'} />
@@ -860,7 +870,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             </View>
                             {
                                 notify ?
-                                    <View style={{ width: '33.33%' }}>
+                                    <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
                                         <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
                                             <Text style={{ fontSize: 12, color: '#a6a2a2' }}>
                                                 <Ionicons
@@ -938,7 +948,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             }
                             {
                                 notify && !shuffle ?
-                                    <View style={{ width: '33.33%' }}>
+                                    <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
                                         <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
                                             <Text style={{ fontSize: 12, color: '#a6a2a2' }}>
                                                 <Ionicons
@@ -1011,7 +1021,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             lineHeight: 35,
                                             color: 'white',
                                             fontSize: 12,
-                                            fontWeight: 'bold',
                                             backgroundColor: '#0079FE',
                                             borderRadius: 15,
                                             paddingHorizontal: 25,
@@ -1026,7 +1035,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             lineHeight: 35,
                                             color: 'white',
                                             fontSize: 12,
-                                            fontWeight: 'bold',
                                             backgroundColor: '#0079FE',
                                             borderRadius: 15,
                                             paddingHorizontal: 25,

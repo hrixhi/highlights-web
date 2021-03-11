@@ -183,7 +183,7 @@ const styles: any = (colorScheme: any, channelId: any) => StyleSheet.create({
     title: {
         fontFamily: 'inter',
         fontSize: 14,
-        fontWeight: 'bold',
+        // ,
         height: '44%',
         width: '100%',
         paddingTop: 5,
@@ -194,7 +194,7 @@ const styles: any = (colorScheme: any, channelId: any) => StyleSheet.create({
         backgroundColor: colorScheme === 'light' ? '#101010' : '#fff',
         fontFamily: 'inter',
         fontSize: 14,
-        fontWeight: 'bold',
+        // ,
         height: '44%',
         width: '100%',
         paddingTop: 5,

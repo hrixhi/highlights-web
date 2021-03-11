@@ -91,28 +91,38 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     const windowHeight = Dimensions.get('window').height - 30;
     return (
-        <ScrollView style={{
+        <Animated.View style={{
+            opacity: modalAnimation,
             width: '100%',
-            height: windowHeight - 30,
+            height: windowHeight,
             backgroundColor: 'white',
             borderTopRightRadius: 30,
             borderTopLeftRadius: 30
-        }}
-            showsVerticalScrollIndicator={false}
-            scrollEnabled={true}
-            scrollEventThrottle={1}
-            keyboardDismissMode={'on-drag'}
-            overScrollMode={'never'}
-            nestedScrollEnabled={true}
-        >
-            <Animated.View style={{
-                opacity: modalAnimation,
+        }}>
+            <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 25 }}>
+                {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
+            </Text>
+            <View style={{ backgroundColor: 'white', flexDirection: 'row', paddingBottom: 25 }}>
+                <Text
+                    ellipsizeMode="tail"
+                    style={{ color: '#a6a2a2', fontSize: 18, flex: 1, lineHeight: 25, paddingHorizontal: 20, }}>
+                    Calendar
+                                </Text>
+            </View>
+            <ScrollView style={{
                 width: '100%',
-                height: windowHeight,
+                height: windowHeight - 30,
                 backgroundColor: 'white',
                 borderTopRightRadius: 30,
                 borderTopLeftRadius: 30
-            }}>
+            }}
+                showsVerticalScrollIndicator={false}
+                scrollEnabled={true}
+                scrollEventThrottle={1}
+                keyboardDismissMode={'on-drag'}
+                overScrollMode={'never'}
+                nestedScrollEnabled={true}
+            >
                 {
                     loading
                         ? <View style={{
@@ -129,21 +139,11 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         <View style={{
                             backgroundColor: 'white',
                             width: '100%',
-                            height: windowHeight,
+                            height: '100%',
                             paddingHorizontal: 20,
                             borderTopRightRadius: 30,
                             borderTopLeftRadius: 30
                         }}>
-                            <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 25 }}>
-                                {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
-                            </Text>
-                            <View style={{ backgroundColor: 'white', flexDirection: 'row', paddingBottom: 25 }}>
-                                <Text
-                                    ellipsizeMode="tail"
-                                    style={{ color: '#a6a2a2', fontSize: 18, flex: 1, lineHeight: 25 }}>
-                                    Calendar
-                                </Text>
-                            </View>
                             <Calendar
                                 localizer={localizer}
                                 events={events}
@@ -153,8 +153,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             />
                         </View>
                 }
-            </Animated.View>
-        </ScrollView>
+            </ScrollView>
+        </Animated.View>
     );
 }
 

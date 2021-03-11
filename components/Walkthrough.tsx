@@ -58,7 +58,6 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             color: '#101010',
                             textAlign: 'left',
                             fontSize: 30,
-                            fontWeight: 'bold',
                             fontFamily: 'inter',
                             paddingTop: 50
                         }}>
@@ -68,7 +67,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             color: '#a6a2a2',
                             textAlign: 'left',
                             fontSize: 20,
-                            fontWeight: 'bold'
+                            
                         }}>
                             {'\n'}Organise coursework (pdf, docx, pptx, xlsx...) by category & priority, whether it be lecture slides, class notes, homeworks or announcements.
                         </Text>
@@ -86,7 +85,6 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             textAlign: 'left',
                             fontSize: 30,
                             fontFamily: 'inter',
-                            fontWeight: 'bold',
                             paddingTop: 50
                         }}>
                             Directly work with content.
@@ -95,7 +93,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             color: '#a6a2a2',
                             textAlign: 'left',
                             fontSize: 20,
-                            fontWeight: 'bold'
+                            
                         }}>
                             {'\n'}Let students view coursework, take notes on it and save changes to the cloud.
                         </Text>
@@ -105,7 +103,6 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             color: '#101010',
                             textAlign: 'left',
                             fontSize: 30,
-                            fontWeight: 'bold',
                             fontFamily: 'inter',
                             paddingTop: 50
                         }}>
@@ -115,7 +112,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             color: '#a6a2a2',
                             textAlign: 'left',
                             fontSize: 20,
-                            fontWeight: 'bold'
+                            
                         }}>
                             {'\n'}Discuss content individually as comments, host general Q&A in discussion and direct message students.
                         </Text>
@@ -124,9 +121,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         <Text style={{
                             color: '#101010',
                             textAlign: 'left',
-                            fontSize: 30,
                             fontFamily: 'inter',
-                            fontWeight: 'bold',
                             paddingTop: 50
                         }}>
                             Simplify testing & grading.
@@ -135,7 +130,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             color: '#a6a2a2',
                             textAlign: 'left',
                             fontSize: 20,
-                            fontWeight: 'bold'
+                            
                         }}>
                             {'\n'}Accept submissions, check for plagiarism, grade assignments and easily monitor overall performance.
                         </Text>
@@ -146,7 +141,6 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             textAlign: 'left',
                             fontSize: 30,
                             fontFamily: 'inter',
-                            fontWeight: 'bold',
                             paddingTop: 50
                         }}>
                             Boost productivity.
@@ -155,7 +149,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             color: '#a6a2a2',
                             textAlign: 'left',
                             fontSize: 20,
-                            fontWeight: 'bold'
+                            
                         }}>
                             {'\n'}Use in-built reminders to keep track of important tasks and deadlines.
                         </Text>

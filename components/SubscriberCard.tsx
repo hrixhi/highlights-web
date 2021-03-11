@@ -69,7 +69,6 @@ const styles: any = (status: any) => StyleSheet.create({
     titleArrow: {
         fontFamily: 'inter',
         fontSize: 14,
-        fontWeight: 'bold',
         paddingTop: 5,
         color: '#101010',
         marginLeft: 10
@@ -77,7 +76,6 @@ const styles: any = (status: any) => StyleSheet.create({
     title: {
         fontFamily: 'inter',
         fontSize: 14,
-        fontWeight: 'bold',
         width: '100%',
         paddingTop: 5,
         color: '#101010'

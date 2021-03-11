@@ -47,7 +47,7 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     return (
         <Animated.View style={{
-            height: '100%',
+            height: (Dimensions.get('window').height - 30) * 0.7,
             opacity: props.fadeAnimation,
             width: Dimensions.get('window').width < 1024 ? Dimensions.get('window').width : Dimensions.get('window').width * 0.3,
             paddingHorizontal: 20
@@ -63,7 +63,7 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 <View style={styles.marginSmall} />
                 {
                     filteredCues.map((cue: any, index: number) => {
-                        return <View style={{ height: '20%' }} key={index}>
+                        return <View style={{ height: '20%', marginBottom: '2.5%' }} key={index}>
                             <Card
                                 fadeAnimation={props.fadeAnimation}
                                 updateModal={() => props.openUpdate(
@@ -77,7 +77,6 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 cue={filteredCues[index]}
                                 channelId={props.channelId}
                             />
-                            <View style={styles.margin} />
                         </View>
                     })
                 }
@@ -99,7 +98,7 @@ const styleObject = (channelId: any) => {
             width: Dimensions.get('window').width < 1024 ? Dimensions.get('window').width : Dimensions.get('window').width * 0.3 - 40
         },
         margin: {
-            flex: 1
+            height: '2.5%'
         },
         marginSmall: {
             height: '1.25%'

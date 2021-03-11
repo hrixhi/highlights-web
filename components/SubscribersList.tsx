@@ -175,7 +175,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
             {
                 subscribers.length === 0 ?
                     <View style={{ backgroundColor: 'white', flex: 1 }}>
-                        <Text style={{ width: '100%', color: '#a6a2a2', fontWeight: 'bold', fontSize: 25, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                        <Text style={{ width: '100%', color: '#a6a2a2', fontSize: 25, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                             {
                                 props.cueId ? 'No statuses.' : 'No students.'
                             }
@@ -198,7 +198,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             style={{ flex: 1, paddingTop: 12 }}>
                                             {
                                                 messages.length === 0 ?
-                                                    <Text style={{ width: '100%', color: '#a6a2a2', fontWeight: 'bold', fontSize: 25, paddingBottom: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                                    <Text style={{ width: '100%', color: '#a6a2a2', fontSize: 25, paddingBottom: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                                                         No messages.
                                                     </Text>
                                                     : null
@@ -303,7 +303,6 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                         lineHeight: 35,
                                                         color: 'white',
                                                         fontSize: 14,
-                                                        fontWeight: 'bold',
                                                         backgroundColor: '#0079FE',
                                                         paddingHorizontal: 25,
                                                         fontFamily: 'inter',
