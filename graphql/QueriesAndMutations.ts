@@ -116,6 +116,13 @@ mutation($users: [String!]!, $message: String!) {
     }
 }
 `
+export const inviteByEmail = gql`
+mutation($emails: [String!]!, $channelId: String!) {
+    user {
+        inviteByEmail(emails: $emails, channelId: $channelId)
+    }
+}
+`
 /**
  * ALL
  * QUERIES

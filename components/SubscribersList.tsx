@@ -1,5 +1,5 @@
-import React, { useCallback, useRef, useState } from 'react';
-import { StyleSheet, ScrollView, TextInput, Dimensions } from 'react-native';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { StyleSheet, ScrollView, TextInput, Dimensions, Button } from 'react-native';
 import { View, Text, TouchableOpacity } from './Themed';
 import _ from 'lodash'
 import { Ionicons } from '@expo/vector-icons';
@@ -8,11 +8,12 @@ import {
     RichEditor
 } from "react-native-pell-rich-editor";
 import { fetchAPI } from '../graphql/FetchAPI';
-import { getMessages, submitGrade } from '../graphql/QueriesAndMutations';
+import { getMessages, inviteByEmail, submitGrade } from '../graphql/QueriesAndMutations';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Alert from './Alert';
 import NewMessage from './NewMessage';
 import MessageCard from './MessageCard';
+import { validateEmail } from '../helpers/emailCheck';
 
 const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -21,6 +22,8 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
     const [subscribers] = useState<any[]>(unparsedSubs.reverse())
     const categories = ['All', 'Read', 'Delivered', 'Not Delivered']
     const [showSubmission, setShowSubmission] = useState(false)
+    const [showAddUsers, setShowAddUsers] = useState(false)
+    const [isOwner, setIsOwner] = useState(false)
     const [submission, setSubmission] = useState<any>('')
     const [score, setScore] = useState("0")
     const [status, setStatus] = useState("")
@@ -28,6 +31,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
     const [messages, setMessages] = useState<any[]>([])
     const [showChat, setShowChat] = useState(false)
     const [users, setUsers] = useState<any>([])
+    const [emails, setEmails] = useState('')
     const RichText: any = useRef()
     if (props.cue && props.cue.submission) {
         categories.push('Submitted')
@@ -90,6 +94,45 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
         })
     }, [score, userId, props.cueId])
 
+    useEffect(() => {
+        (
+            async () => {
+                const u = await AsyncStorage.getItem('user')
+                if (u) {
+                    const user = JSON.parse(u)
+                    if (user._id.toString().trim() === props.channelCreatedBy.toString().trim()) {
+                        setIsOwner(true)
+                    }
+                }
+            }
+        )()
+    }, [props.channelCreatedBy])
+
+    const submitEmails = useCallback(async () => {
+        const lowerCaseEmails = emails.toLowerCase()
+        const parsedEmails: any[] = []
+        const unparsedEmails = lowerCaseEmails.split('\n')
+        unparsedEmails.map((email) => {
+            if (validateEmail(email)) {
+                parsedEmails.push(email)
+            }
+        })
+        const server = fetchAPI('')
+        server.mutate({
+            mutation: inviteByEmail,
+            variables: {
+                emails: parsedEmails,
+                channelId: props.channelId
+            }
+        }).then(res => {
+            if(res.data.user.inviteByEmail) {
+                Alert("Users Added!", "Email invite sent.")
+            }
+        }).catch(err => {
+            console.log(err)
+        })
+    }, [emails, props.channelId])
+
     const loadChat = useCallback(async (userId) => {
         const u = await AsyncStorage.getItem('user')
         if (u) {
@@ -127,7 +170,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                 {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
             </Text>
             {
-                showSubmission || showChat ?
+                showSubmission || showChat || showAddUsers ?
                     <View style={{ backgroundColor: 'white', flexDirection: 'row', paddingBottom: 15 }}>
                         <TouchableOpacity
                             key={Math.random()}
@@ -145,7 +188,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     setScore("0")
                                     setUserId("")
                                 }
-
+                                setShowAddUsers(false)
                             }}>
                             <Text style={{
                                 width: '100%',
@@ -170,10 +213,30 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     Direct Messaging
                         </Text>
                         }
+                        {
+                            isOwner ?
+                                <TouchableOpacity
+                                    key={Math.random()}
+                                    style={{
+                                        width: '10%',
+                                        backgroundColor: 'white'
+                                    }}
+                                    onPress={() => setShowAddUsers(true)}>
+                                    <Text style={{
+                                        width: '100%',
+                                        textAlign: 'right',
+                                        lineHeight: 23,
+                                        paddingRight: 10,
+                                        marginTop: -1
+                                    }}>
+                                        <Ionicons name='person-add-outline' size={20} color={'#101010'} />
+                                    </Text>
+                                </TouchableOpacity> : null
+                        }
                     </View>
             }
             {
-                subscribers.length === 0 ?
+                !showAddUsers ? (subscribers.length === 0 ?
                     <View style={{ backgroundColor: 'white', flex: 1 }}>
                         <Text style={{ width: '100%', color: '#a6a2a2', fontSize: 25, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                             {
@@ -390,6 +453,55 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     </ScrollView>
                                 </View>
                         }
+                    </View>) :
+                    <View style={{ alignSelf: 'center', width: 400 }}>
+                        <Text style={{ color: '#101010', fontSize: 14, paddingBottom: 10 }}>
+                            Invite By Email
+                            </Text>
+                        <TextInput
+                            value={emails}
+                            style={{
+                                height: 200,
+                                backgroundColor: '#f4f4f4',
+                                borderRadius: 10,
+                                fontSize: 15,
+                                padding: 15,
+                                paddingTop: 13,
+                                paddingBottom: 13,
+                                marginTop: 5,
+                                marginBottom: 20
+                            }}
+                            placeholder={'Enter one email per line.'}
+                            onChangeText={val => setEmails(val)}
+                            placeholderTextColor={'#a6a2a2'}
+                            multiline={true}
+                        />
+                        <TouchableOpacity
+                            onPress={() => submitEmails()}
+                            style={{
+                                backgroundColor: 'white',
+                                overflow: 'hidden',
+                                height: 35,
+                                marginTop: 15,
+                                width: '100%',
+                                justifyContent: 'center', flexDirection: 'row',
+                                marginBottom: 50
+                            }}>
+                            <Text style={{
+                                textAlign: 'center',
+                                lineHeight: 35,
+                                color: '#101010s',
+                                fontSize: 14,
+                                backgroundColor: '#f4f4f4',
+                                paddingHorizontal: 25,
+                                fontFamily: 'inter',
+                                height: 35,
+                                width: 150,
+                                borderRadius: 15,
+                            }}>
+                                ADD USERS
+                  </Text>
+                        </TouchableOpacity>
                     </View>
             }
         </View >

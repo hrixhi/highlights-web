@@ -257,8 +257,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
   const deleteChannel = useCallback(() => {
     Alert(
-      "Leave Channel",
-      "Are you sure you want to delete " + filterChoice + "?",
+      "Erase content and leave channel?",
+      "This action will irreversibly remove shared content, comunication and any notes directly taken inside " + filterChoice + ".",
       [
         {
           text: "Cancel", style: "cancel"
@@ -807,6 +807,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                   modalType === 'Subscribers' ? <Subscribers
                     closeModal={() => closeModal()}
                     channelId={channelId}
+                    channelCreatedBy={channelCreatedBy}
                     filterChoice={filterChoice}
                   /> :
                     (

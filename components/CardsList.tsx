@@ -63,7 +63,7 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 <View style={styles.marginSmall} />
                 {
                     filteredCues.map((cue: any, index: number) => {
-                        return <View style={{ height: '20%', marginBottom: '2.5%' }} key={index}>
+                        return <View style={{ height: '20%', marginBottom: '2%' }} key={index}>
                             <Card
                                 fadeAnimation={props.fadeAnimation}
                                 updateModal={() => props.openUpdate(

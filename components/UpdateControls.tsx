@@ -599,27 +599,80 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
                     {
                         showOriginal && imported ?
-                            <View style={{ width: '50%', alignSelf: 'flex-start' }}>
-                                <TextInput
-                                    editable={!(props.channelId && props.channelId !== '')}
-                                    value={title}
-                                    style={styles.input}
-                                    placeholder={'Title'}
-                                    onChangeText={val => setTitle(val)}
-                                    placeholderTextColor={'#a6a2a2'}
-                                />
+                            <View style={{ flexDirection: 'row' }}>
+                                <View style={{ width: '50%', alignSelf: 'flex-start' }}>
+                                    <TextInput
+                                        value={title}
+                                        style={styles.input}
+                                        placeholder={'Title'}
+                                        onChangeText={val => setTitle(val)}
+                                        placeholderTextColor={'#a6a2a2'}
+                                    />
+                                </View>
+                                <View style={{ width: 175, marginLeft: 25, marginTop: 5, alignSelf: 'flex-start' }}>
+                                    <a download={true} href={url} style={{ textDecoration: 'none' }}>
+                                        <TouchableOpacity
+                                            onPress={() => { }}
+                                            style={{
+                                                borderRadius: 15,
+                                                backgroundColor: 'white'
+                                            }}>
+                                            <Text style={{
+                                                textAlign: 'center',
+                                                lineHeight: 35,
+                                                color: '#101010',
+                                                fontSize: 12,
+                                                backgroundColor: '#f4f4f4',
+                                                borderRadius: 15,
+                                                paddingHorizontal: 25,
+                                                fontFamily: 'inter',
+                                                overflow: 'hidden',
+                                                height: 35
+                                            }}>
+                                                DOWNLOAD
+                                            </Text>
+                                        </TouchableOpacity>
+                                    </a>
+                                </View>
                             </View> : null
                     }
                     {
                         !showOriginal && submissionImported ?
-                            <View style={{ width: '50%', alignSelf: 'flex-start' }}>
-                                <TextInput
-                                    value={submissionTitle}
-                                    style={styles.input}
-                                    placeholder={'Title'}
-                                    onChangeText={val => setSubmissionTitle(val)}
-                                    placeholderTextColor={'#a6a2a2'}
-                                />
+                            <View style={{ flexDirection: 'row' }}>
+                                <View style={{ width: '50%', alignSelf: 'flex-start' }}>
+                                    <TextInput
+                                        value={submissionTitle}
+                                        style={styles.input}
+                                        placeholder={'Title'}
+                                        onChangeText={val => setSubmissionTitle(val)}
+                                        placeholderTextColor={'#a6a2a2'}
+                                    />
+                                </View>
+                                <View style={{ width: 175, marginLeft: 25, marginTop: 5, alignSelf: 'flex-start' }}>
+                                    <a download={true} href={submissionUrl} style={{ textDecoration: 'none' }}>
+                                        <TouchableOpacity
+                                            onPress={() => { }}
+                                            style={{
+                                                borderRadius: 15,
+                                                backgroundColor: 'white'
+                                            }}>
+                                            <Text style={{
+                                                textAlign: 'center',
+                                                lineHeight: 35,
+                                                color: '#101010',
+                                                fontSize: 12,
+                                                backgroundColor: '#f4f4f4',
+                                                borderRadius: 15,
+                                                paddingHorizontal: 25,
+                                                fontFamily: 'inter',
+                                                overflow: 'hidden',
+                                                height: 35
+                                            }}>
+                                                DOWNLOAD
+                                            </Text>
+                                        </TouchableOpacity>
+                                    </a>
+                                </View>
                             </View> : null
                     }
                     <View style={{

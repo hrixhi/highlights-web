@@ -99,6 +99,7 @@ const Subscribers: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         </View>
                         :
                         <SubscribersList
+                            channelCreatedBy={props.channelCreatedBy}
                             key={JSON.stringify(subscribers)}
                             subscribers={subscribers}
                             cueId={null}
