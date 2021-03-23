@@ -58,7 +58,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                     <Text
                         ellipsizeMode="tail"
                         style={{ color: '#a6a2a2', fontSize: 18, flex: 1, lineHeight: 25 }}>
-                        Virtual Classroom
+                        Classroom
                     </Text>
                 </View>
                 <Jutsu

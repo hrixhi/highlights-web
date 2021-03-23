@@ -33,7 +33,7 @@ const FileUpload: React.FC<any> = (props: any) => {
     }, [])
 
     const fileUpload = useCallback((file, type) => {
-        const url = "http://trackcovid-env.eba-9srgt228.us-east-1.elasticbeanstalk.com:8081/api/upload";
+        const url = "https://api.cuesapp.co/api/upload";
         const formData = new FormData();
         formData.append("attachment", file);
         formData.append("typeOfUpload", type);
