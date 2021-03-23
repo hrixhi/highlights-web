@@ -55,6 +55,7 @@
     "react-datetime": "^3.0.4",
     "react-dom": "16.13.1",
     "react-file-viewer": "^1.2.1",
+    "react-jutsu": "^3.0.2",
     "react-moment": "^1.1.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-40.0.1.tar.gz",
     "react-native-fade-in-out": "^1.0.3",

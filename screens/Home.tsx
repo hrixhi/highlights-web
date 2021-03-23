@@ -22,6 +22,7 @@ import Profile from '../components/Profile';
 import { validateEmail } from '../helpers/emailCheck';
 import Grades from '../components/Grades';
 import Calendar from '../components/Calendar';
+import Meeting from '../components/Meeting';
 
 const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -833,7 +834,13 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                               modalType === 'Calendar' ? <Calendar
                                 channelId={channelId}
                               />
-                                : null
+                                : (
+                                  modalType === 'Meeting' ? <Meeting
+                                    channelId={channelId}
+                                    channelCreatedBy={channelCreatedBy}
+                                  />
+                                    : null
+                                )
                             )
                         )
                     )
@@ -1028,6 +1035,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           openWalkthrough={() => openModal('Walkthrough')}
           delete={() => deleteChannel()}
           openCalendar={() => openModal('Calendar')}
+          openMeeting={() => openModal('Meeting')}
         />
         {
           reLoading ? <View style={[styles.activityContainer, styles.horizontal]}>
