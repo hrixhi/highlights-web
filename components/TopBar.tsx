@@ -4,6 +4,9 @@ import { View, Text, TouchableOpacity } from '../components/Themed';
 import useColorScheme from '../hooks/useColorScheme';
 import { Ionicons } from '@expo/vector-icons';
 import _ from 'lodash'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { fetchAPI } from '../graphql/FetchAPI';
+import { totalUnreadDiscussionThreads, totalUnreadMessages } from '../graphql/QueriesAndMutations';
 
 const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -14,8 +17,45 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const [cues] = useState<any[]>(unparsedCues.reverse())
     const [filterChoice] = useState(props.channelFilterChoice)
     const [channelCategories, setChannelCategories] = useState([])
+    const [unreadDiscussionThreads, setUnreadDiscussionThreads] = useState(0)
+    const [unreadMessages, setUnreadMessages] = useState(0)
 
     useEffect(() => {
+
+        if (props.channelId !== '') {
+            (
+                async () => {
+                    const u = await AsyncStorage.getItem('user')
+                    if (u) {
+                        const user = JSON.parse(u)
+                        const server = fetchAPI('')
+                        server.query({
+                            query: totalUnreadDiscussionThreads,
+                            variables: {
+                                userId: user._id,
+                                channelId: props.channelId
+                            }
+                        }).then(res => {
+                            if (res.data.threadStatus.totalUnreadDiscussionThreads) {
+                                setUnreadDiscussionThreads(res.data.threadStatus.totalUnreadDiscussionThreads)
+                            }
+                        })
+                        server.query({
+                            query: totalUnreadMessages,
+                            variables: {
+                                userId: user._id,
+                                channelId: props.channelId
+                            }
+                        }).then(res => {
+                            if (res.data.messageStatus.totalUnreadMessages) {
+                                setUnreadMessages(res.data.messageStatus.totalUnreadMessages)
+                            }
+                        })
+                    }
+                }
+            )()
+        }
+
         const custom: any = {}
         const cat: any = []
         cues.map((cue) => {
@@ -72,6 +112,10 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         <Text style={styles.channelText}>
                                             <Ionicons name='chatbubble-ellipses-outline' size={19} color={'#a6a2a2'} />
                                         </Text>
+                                        {
+                                            unreadDiscussionThreads !== 0 ?
+                                                <View style={styles.badge} /> : null
+                                        }
                                     </TouchableOpacity>
                                     <TouchableOpacity
                                         style={{ marginRight: 20 }}
@@ -86,6 +130,10 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         <Text style={styles.channelText}>
                                             <Ionicons name='people-outline' size={21} color={'#a6a2a2'} />
                                         </Text>
+                                        {
+                                            unreadMessages !== 0 ?
+                                                <View style={styles.badge} /> : null
+                                        }
                                     </TouchableOpacity>
                                     <TouchableOpacity
                                         style={{ marginRight: 20 }}
@@ -174,6 +222,18 @@ const styleObject: any = (channelId: any) => StyleSheet.create({
         paddingHorizontal: 20,
         borderTopRightRadius: 30,
         borderTopLeftRadius: 30,
+    },
+    badge: {
+        position: 'absolute',
+        alignSelf: 'flex-end',
+        width: 10,
+        height: 10,
+        marginRight: -3,
+        marginTop: -3,
+        borderRadius: 10,
+        backgroundColor: '#f94144',
+        textAlign: 'center',
+        zIndex: 50
     },
     text: {
         textAlign: 'right',

@@ -6,9 +6,10 @@ import _ from 'lodash'
 import ThreadCard from './ThreadCard';
 import { Ionicons } from '@expo/vector-icons';
 import { fetchAPI } from '../graphql/FetchAPI';
-import { getThreadWithReplies } from '../graphql/QueriesAndMutations';
+import { getThreadWithReplies, markThreadsAsRead } from '../graphql/QueriesAndMutations';
 import NewMessage from './NewMessage';
 import ThreadReplyCard from './ThreadReplyCard';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -40,25 +41,38 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
         })
     }
 
-    const loadCueDiscussions = useCallback((tId) => {
-        setThreadId(tId)
-        setLoading(true)
-        setShowThreadCues(true)
-        const server = fetchAPI('')
-        server.query({
-            query: getThreadWithReplies,
-            variables: {
-                threadId: tId
-            }
-        })
-            .then(res => {
-                setThreadWithReplies(res.data.thread.getThreadWithReplies)
-                setLoading(false)
+    const loadCueDiscussions = useCallback(async (tId) => {
+        const u = await AsyncStorage.getItem('user')
+        if (u) {
+            const user = JSON.parse(u)
+            setThreadId(tId)
+            setLoading(true)
+            setShowThreadCues(true)
+            const server = fetchAPI('')
+            server.query({
+                query: getThreadWithReplies,
+                variables: {
+                    threadId: tId
+                }
             })
-            .catch(err => {
-                Alert("Unable to load thread.", "Check connection.")
-                setLoading(false)
-            })
+                .then(res => {
+                    setThreadWithReplies(res.data.thread.getThreadWithReplies)
+                    setLoading(false)
+                })
+                .catch(err => {
+                    Alert("Unable to load thread.", "Check connection.")
+                    setLoading(false)
+                })
+            server.mutate({
+                mutation: markThreadsAsRead,
+                variables: {
+                    userId: user._id,
+                    threadId: tId
+                }
+            }).then(res => console.log(res))
+                .catch(e => console.log(e))
+        }
+
     }, [])
 
     if (showPost) {

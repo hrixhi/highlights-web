@@ -6,6 +6,7 @@ import { ScrollView } from 'react-native-gesture-handler'
 import { fetchAPI } from '../graphql/FetchAPI';
 import { getSubscribers } from '../graphql/QueriesAndMutations';
 import SubscribersList from './SubscribersList';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Subscribers: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -13,17 +14,24 @@ const Subscribers: React.FunctionComponent<{ [label: string]: any }> = (props: a
     const [loading, setLoading] = useState(true)
     const [subscribers, setSubscribers] = useState<any[]>([])
 
-    const loadSubscribers = useCallback(() => {
+    const loadSubscribers = useCallback(async () => {
+        const u = await AsyncStorage.getItem('user')
+        let server: any = null
+        if (u) {
+            const user = JSON.parse(u)
+            server = fetchAPI(user._id)
+        } else {
+            server = fetchAPI('')
+        }
         setLoading(true)
         if (props.channelId && props.channelId !== '') {
-            const server = fetchAPI('')
             server.query({
                 query: getSubscribers,
                 variables: {
                     channelId: props.channelId
                 }
             })
-                .then(res => {
+                .then((res: any) => {
                     if (res.data.user && res.data.user.findByChannelId) {
                         setSubscribers(res.data.user.findByChannelId)
                     }
@@ -35,7 +43,7 @@ const Subscribers: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         useNativeDriver: true
                     }).start();
                 })
-                .catch((err) => {
+                .catch((err: any) => {
                     Alert("Unable to load subscribers.", "Check connection.")
                     setLoading(false)
                     modalAnimation.setValue(0)

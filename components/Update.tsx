@@ -24,10 +24,15 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const scroll3: any = useRef()
     const [channelOwner, setChannelOwner] = useState(false)
 
-    const loadThreadsAndStatuses = useCallback(() => {
+    const loadThreadsAndStatuses = useCallback(async () => {
+        const u = await AsyncStorage.getItem('user')
+        let parsedUser: any = {}
+        if (u) {
+            parsedUser = JSON.parse(u)
+        }
         if (Number.isNaN(Number(cueId))) {
             setLoading(true)
-            const server = fetchAPI('')
+            const server = fetchAPI(parsedUser._id)
             server.query({
                 query: getCueThreads,
                 variables: {

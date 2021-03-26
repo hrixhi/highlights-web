@@ -73,6 +73,22 @@ const ThreadCard: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             style={styleObject.title}>
                             {title}
                         </Text>
+                        {
+                            props.thread.unreadThreads !== 0 ?
+                                <Text style={{
+                                    width: 20,
+                                    height: 20,
+                                    borderRadius: 10,
+                                    backgroundColor: '#f94144',
+                                    textAlign: 'center',
+                                    zIndex: 150,
+                                    marginLeft: 10,
+                                    marginTop: 7,
+                                    color: 'white', lineHeight: 20, fontSize: 10
+                                }}>
+                                    {props.thread.unreadThreads}
+                                </Text> : null
+                        }
                         <Text ellipsizeMode={'tail'}
                             numberOfLines={1}
                             style={styleObject.titleArrow}>
@@ -101,6 +117,15 @@ const styles: any = () => StyleSheet.create({
         borderRadius: 20,
         overflow: 'hidden',
         backgroundColor: 'white'
+    },
+    badge: {
+        width: 20,
+        height: 20,
+        borderRadius: 10,
+        backgroundColor: '#f94144',
+        textAlign: 'center',
+        zIndex: 150,
+        marginLeft: 10
     },
     card: {
         height: '100%',

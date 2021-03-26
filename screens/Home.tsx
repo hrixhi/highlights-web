@@ -129,6 +129,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                   allCues[cue.channelId] = [cue]
                 }
               } else {
+                allCues[item.channelId][index].unreadThreads = item.unreadThreads ? item.unreadThreads : 0;
                 allCues[item.channelId][index].status = item.status;
                 if (!allCues[item.channelId][index].original) {
                   allCues[item.channelId][index].original = item.cue;
@@ -622,6 +623,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           delete cueInput.gradeWeight;
           delete cueInput.submission;
 
+          delete cueInput.unreadThreads;
           delete cueInput.createdBy;
           delete cueInput.original;
           delete cueInput.status;
@@ -1021,7 +1023,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         paddingLeft: Dimensions.get('window').width < 1024 ? 0 : 30
       }}>
         <TopBar
-          key={JSON.stringify(channelFilterChoice) + JSON.stringify(filteredCues)}
+          key={JSON.stringify(channelFilterChoice) + JSON.stringify(filteredCues) + JSON.stringify(modalType)}
           openChannels={() => openModal('Channels')}
           cues={filteredCues}
           filterChoice={filterChoice}

@@ -110,9 +110,9 @@ mutation ($cueId: String!, $userId: String!, $score: String!) {
 }
 `
 export const sendDirectMessage = gql`
-mutation($users: [String!]!, $message: String!) {
+mutation($users: [String!]!, $message: String!, $channelId: String!) {
     message {
-        create(users: $users, message: $message)
+        create(users: $users, message: $message, channelId: $channelId)
     }
 }
 `
@@ -120,6 +120,20 @@ export const inviteByEmail = gql`
 mutation($emails: [String!]!, $channelId: String!) {
     user {
         inviteByEmail(emails: $emails, channelId: $channelId)
+    }
+}
+`
+export const markThreadsAsRead = gql`
+mutation($userId: String!, $threadId: String!) {
+    threadStatus {
+        markThreadsAsRead(userId: $userId, threadId: $threadId)
+    }
+}
+`
+export const markMessagesAsRead = gql`
+mutation($userId: String!, $groupId: String!) {
+    messageStatus {
+        markMessagesAsRead(userId: $userId, groupId: $groupId)
     }
 }
 `
@@ -165,6 +179,7 @@ query($userId: String!) {
             customCategory
             frequency
             date
+            unreadThreads
             endPlayAt
             channelName
             starred
@@ -209,6 +224,7 @@ query($channelId: String!) {
             message
             channelId
             cueId
+            unreadThreads
             parentId
             category
             time
@@ -230,6 +246,7 @@ query($cueId: String!) {
             cueId
             parentId
             category
+            unreadThreads
             time
             userId
             displayName
@@ -279,6 +296,8 @@ query($channelId: String!) {
             _id
             displayName
             fullName
+            unreadMessages
+            groupId
         }
     }
 }
@@ -317,6 +336,7 @@ query($userId: String!) {
             color
             channelId
             customCategory
+            unreadThreads
             frequency
             date
             endPlayAt
@@ -387,5 +407,19 @@ query($channelId: String!) {
             end
         }
     }
+}
+`
+export const totalUnreadDiscussionThreads = gql`
+query($userId: String!, $channelId: String!) {
+   threadStatus {
+        totalUnreadDiscussionThreads(userId: $userId, channelId: $channelId)
+   } 
+}
+`
+export const totalUnreadMessages = gql`
+query($userId: String!, $channelId: String!) {
+   messageStatus {
+        totalUnreadMessages(userId: $userId, channelId: $channelId)
+   } 
 }
 `

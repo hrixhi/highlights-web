@@ -260,6 +260,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             graded: props.cue.graded,
             gradeWeight,
             submission,
+            unreadThreads: props.cue.unreadThreads,
             score,
             submittedAt: submitted ? submittedNow.toISOString() : props.cue.submittedAt,
             deadline: submission ? deadline.toISOString() : '',

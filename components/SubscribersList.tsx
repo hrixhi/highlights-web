@@ -8,7 +8,7 @@ import {
     RichEditor
 } from "react-native-pell-rich-editor";
 import { fetchAPI } from '../graphql/FetchAPI';
-import { getMessages, inviteByEmail, submitGrade } from '../graphql/QueriesAndMutations';
+import { getMessages, inviteByEmail, markMessagesAsRead, submitGrade } from '../graphql/QueriesAndMutations';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Alert from './Alert';
 import NewMessage from './NewMessage';
@@ -100,7 +100,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                 const u = await AsyncStorage.getItem('user')
                 if (u) {
                     const user = JSON.parse(u)
-                    if (user._id.toString().trim() === props.channelCreatedBy.toString().trim()) {
+                    if (user._id && props.channelCreatedBy && user._id.toString().trim() === props.channelCreatedBy.toString().trim()) {
                         setIsOwner(true)
                     }
                 }
@@ -125,7 +125,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                 channelId: props.channelId
             }
         }).then(res => {
-            if(res.data.user.inviteByEmail) {
+            if (res.data.user.inviteByEmail) {
                 Alert("Users Added!", "Email invite sent.")
             }
         }).catch(err => {
@@ -133,7 +133,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
         })
     }, [emails, props.channelId])
 
-    const loadChat = useCallback(async (userId) => {
+    const loadChat = useCallback(async (userId, groupId) => {
         const u = await AsyncStorage.getItem('user')
         if (u) {
             const parsedUser = JSON.parse(u)
@@ -152,6 +152,15 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                 .catch(err => {
                     Alert("Unable to load messages.", "Check connection.")
                 })
+            // mark as read here
+            server.mutate({
+                mutation: markMessagesAsRead,
+                variables: {
+                    userId,
+                    groupId
+                }
+            }).then(res => console.log(res))
+                .catch(e => console.log(e))
         }
     }, [])
 
@@ -315,7 +324,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                     }
                                                                 } else {
                                                                     console.log(subscriber)
-                                                                    loadChat(subscriber._id)
+                                                                    loadChat(subscriber._id, subscriber.groupId)
                                                                 }
                                                             }}
                                                             status={!props.cueId ? false : true}

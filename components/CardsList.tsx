@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, Animated, Dimensions } from 'react-native';
 import Alert from '../components/Alert'
-import { View } from '../components/Themed';
+import { Text, View } from '../components/Themed';
 import Card from './Card'
 import _ from 'lodash'
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -63,7 +63,7 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 <View style={styles.marginSmall} />
                 {
                     filteredCues.map((cue: any, index: number) => {
-                        return <View style={{ height: '20%', marginBottom: '2%' }} key={index}>
+                        return <View style={{ height: '20%', marginBottom: 0}} key={index}>
                             <Card
                                 fadeAnimation={props.fadeAnimation}
                                 updateModal={() => props.openUpdate(
@@ -77,6 +77,14 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 cue={filteredCues[index]}
                                 channelId={props.channelId}
                             />
+                            {
+                                cue.channelId && cue.unreadThreads !== 0 ?
+                                    <View style={styles.badge}>
+                                        <Text style={{ color: 'white', lineHeight: 20, fontSize: 10 }}>
+                                            {cue.unreadThreads}
+                                        </Text>
+                                    </View> : null
+                            }
                         </View>
                     })
                 }
@@ -105,6 +113,17 @@ const styleObject = (channelId: any) => {
         },
         page: {
             flexDirection: 'column',
-        }
+        },
+        badge: {
+            position: 'absolute',
+            alignSelf: 'flex-end',
+            width: 20,
+            height: 20,
+            marginTop: -2,
+            borderRadius: 10,
+            backgroundColor: '#f94144',
+            textAlign: 'center',
+            zIndex: 50
+        },
     })
 }

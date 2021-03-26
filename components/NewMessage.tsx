@@ -50,7 +50,8 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
             mutation: sendDirectMessage,
             variables: {
                 users: props.users,
-                message: message
+                message: message,
+                channelId: props.channelId
             }
         }).then(res => {
             if (res.data.message.create) {
@@ -61,7 +62,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
         }).catch(err => {
             Alert("Something went wrong.", "Check connection.")
         })
-    }, [props.users, message])
+    }, [props.users, message, props.channelId])
 
     const createThreadMessage = useCallback(async () => {
         if (!message || message === '') {

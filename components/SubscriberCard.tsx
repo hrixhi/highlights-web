@@ -18,7 +18,7 @@ const SubscriberCard: React.FunctionComponent<{ [label: string]: any }> = (props
                 onPress={() => props.onPress()}
                 key={'textPage'}
                 style={styleObject.card}>
-                <View style={{ backgroundColor: '#f4f4f4', width: '100%', flexDirection: 'row', display: 'flex', height: '44%' }}>
+                <View style={{ backgroundColor: '#f4f4f4', width: '100%', flexDirection: 'row', display: 'flex', height: '44%', minHeight: 25 }}>
                     <Text ellipsizeMode={'tail'}
                         numberOfLines={1}
                         style={styleObject.title}>
@@ -26,7 +26,26 @@ const SubscriberCard: React.FunctionComponent<{ [label: string]: any }> = (props
                     </Text>
                     {
                         fullName === 'submitted' || fullName === 'graded' || props.chat ?
-                            <Ionicons name="chevron-forward-outline" color="#a6a2a2" size={20} style={{ marginTop: 3 }} /> : null
+                            <View style={{ flexDirection: 'row', backgroundColor: '#f4f4f4' }}>
+                                {
+                                    props.subscriber.unreadMessages !== 0 ?
+                                        <Text style={{
+                                            width: 20,
+                                            height: 20,
+                                            borderRadius: 10,
+                                            backgroundColor: '#f94144',
+                                            textAlign: 'center',
+                                            zIndex: 150,
+                                            marginLeft: 10,
+                                            marginTop: 5,
+                                            color: 'white', lineHeight: 20, fontSize: 10
+                                        }}>
+                                            {props.subscriber.unreadMessages}
+                                        </Text> : null
+                                }
+                                <Ionicons name="chevron-forward-outline" color="#a6a2a2" size={20} style={{ marginTop: 3, marginLeft: 10 }} />
+                            </View>
+                            : null
                     }
                 </View>
                 <View style={styleObject.text}>

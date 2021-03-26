@@ -24,7 +24,7 @@ const Discussion: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
         setLoading(true)
         if (props.channelId && props.channelId !== '') {
-            const server = fetchAPI('')
+            const server = fetchAPI(parsedUser._id)
             server.query({
                 query: getChannelThreads,
                 variables: {
