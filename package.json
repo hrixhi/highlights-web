@@ -58,6 +58,7 @@
     "react-jutsu": "^3.0.2",
     "react-moment": "^1.1.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-40.0.1.tar.gz",
+    "react-native-css-transformer": "^1.2.4",
     "react-native-fade-in-out": "^1.0.3",
     "react-native-gesture-handler": "~1.8.0",
     "react-native-htmlview": "^0.16.0",

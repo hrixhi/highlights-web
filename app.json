@@ -33,6 +33,15 @@
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
+    },
+    "packagerOpts": {
+      "config": "metro.config.js",
+      "sourceExts": [
+        "js",
+        "jsx",
+        "css"
+      ],
+      "transformer": "node_modules/react-native-css-transformer/index.js"
     }
   }
 }

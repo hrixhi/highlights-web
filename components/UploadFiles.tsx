@@ -46,7 +46,6 @@ const FileUpload: React.FC<any> = (props: any) => {
     }, [])
 
     return <View style={{
-        paddingLeft: Dimensions.get('window').width < 768 ? 0 : 10,
         paddingTop: 3.5,
         paddingBottom: Dimensions.get('window').width < 768 ? 5 : 0
     }}>
@@ -54,7 +53,10 @@ const FileUpload: React.FC<any> = (props: any) => {
             uploading ? <Text style={{ fontSize: 12, color: '#a6a2a2' }}>
                 Importing...
             </Text> :
-                <div style={{ display: 'flex', flexDirection: 'row', justifyContent: Dimensions.get('window').width < 768 ? 'center' : 'flex-end' }}>
+                <div style={{
+                    display: 'flex', flexDirection: 'row'
+                }}>
+                    <Ionicons name="arrow-back" color="#a6a2a2" size={18} style={{ marginRight: 10 }} onPress={() => props.back()} />
                     <input
                         type="file"
                         name="import"
@@ -65,26 +67,13 @@ const FileUpload: React.FC<any> = (props: any) => {
                             fontFamily: 'overpass',
                             fontSize: 12,
                             color: '#a6a2a2',
-                            marginLeft: Dimensions.get('window').width < 768 ? 0 : 20,
                             marginRight: 10,
                             width: 170
                         }}
-                        accept=".pdf,.docx,.pptx,.xlsx,.csv,.mp3,.mp4"
                     />
-                    <Text style={{
-                        height: 20,
-                        backgroundColor: 'white',
-                        fontSize: 9,
-                        color: '#a6a2a2',
-                        marginTop: 1,
-                        textAlign: 'left',
-                        lineHeight: 20
-                    }}>
-                        pdf docx pptx xlsx csv mp3 mp4 zip
-                        </Text>
                 </div>
         }
-    </View>
+    </View >
 }
 
 export default FileUpload

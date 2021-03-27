@@ -121,6 +121,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         <Text style={{
                             color: '#101010',
                             textAlign: 'left',
+                            fontSize: 30,
                             fontFamily: 'inter',
                             paddingTop: 50
                         }}>

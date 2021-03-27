@@ -16,8 +16,6 @@ import {
     RichEditor,
     RichToolbar,
 } from "react-native-pell-rich-editor";
-import * as DocumentPicker from 'expo-document-picker';
-import { convertToHtml } from "../graphql/QueriesAndMutations";
 import FileUpload from './UploadFiles';
 import FileViewer from 'react-file-viewer';
 import Alert from '../components/Alert'
@@ -53,6 +51,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const [url, setUrl] = useState('')
     const [type, setType] = useState('')
     const [title, setTitle] = useState('')
+    const [showImportOptions, setShowImportOptions] = useState(false)
 
     useEffect(() => {
         if (cue[0] === '{' && cue[cue.length - 1] === '}') {
@@ -422,60 +421,67 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     display: 'flex',
                     flexDirection: Dimensions.get('window').width < 768 ? 'column-reverse' : 'row',
                     paddingBottom: 4,
-                    backgroundColor: 'white'
+                    backgroundColor: 'white',
                 }} onTouchStart={() => Keyboard.dismiss()}>
-                    <View style={{ flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row' }}>
-                        <RichToolbar
-                            style={{
-                                flexWrap: 'wrap',
-                                backgroundColor: 'white',
-                                height: 28
-                            }}
-                            iconSize={13}
-                            editor={RichText}
-                            disabled={false}
-                            iconTint={"#a6a2a2"}
-                            selectedIconTint={"#a6a2a2"}
-                            disabledIconTint={"#a6a2a2"}
-                            actions={
-                                imported ? ["close"] :
-                                    [
-                                        actions.setBold,
-                                        actions.setItalic,
-                                        actions.setUnderline,
-                                        actions.insertBulletsList,
-                                        actions.insertOrderedList,
-                                        actions.checkboxList,
-                                        actions.insertLink,
-                                        actions.insertImage,
-                                        "insertCamera",
-                                        actions.undo,
-                                        actions.redo,
-                                        "close"
-                                        // "insertVideo"
-                                    ]}
-                            iconMap={{
-                                // ["insertVideo"]: ({ tintColor }) => <Ionicons name='videocam-outline' size={20} color={tintColor} />,
-                                ["insertCamera"]: ({ tintColor }) => <Ionicons name='camera-outline' size={18} color={tintColor} />,
-                                ["close"]: ({ tintColor }) => <Ionicons name='close-outline' size={18} color={tintColor} />,
-                            }}
-                            onPressAddImage={galleryCallback}
-                            // insertVideo={videoCallback}
-                            insertCamera={cameraCallback}
-                            close={clearAll}
-                        />
+                    <View style={{ flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row', flex: 1 }}>
                         {
-                            imported ? null :
+                            showImportOptions ? null :
+                                <RichToolbar
+                                    style={{
+                                        flexWrap: 'wrap',
+                                        backgroundColor: 'white',
+                                        height: 28,
+                                        overflow: 'visible'
+                                    }}
+                                    iconSize={12}
+                                    editor={RichText}
+                                    disabled={false}
+                                    iconTint={"#a6a2a2"}
+                                    selectedIconTint={"#a6a2a2"}
+                                    disabledIconTint={"#a6a2a2"}
+                                    actions={
+                                        imported ? ["close"] :
+                                            [
+                                                actions.setBold,
+                                                actions.setItalic,
+                                                actions.setUnderline,
+                                                actions.insertBulletsList,
+                                                actions.insertOrderedList,
+                                                actions.checkboxList,
+                                                actions.insertLink,
+                                                actions.insertImage,
+                                                "insertCamera",
+                                                actions.undo,
+                                                actions.redo,
+                                                "import",
+                                                "quiz",
+                                                "clear"
+                                            ]}
+                                    iconMap={{
+                                        ["insertCamera"]: ({ tintColor }) => <Ionicons name='camera-outline' size={15} color={tintColor} />,
+                                        ["clear"]: ({ tintColor }) => <Text style={{ fontSize: 8, color: tintColor, width: 40, marginLeft: 30 }} onPress={() => clearAll()}>Clear</Text>,
+                                        ["import"]: ({ tintColor }) => <Text style={{ fontSize: 8, color: tintColor, width: 40, marginLeft: 25 }} onPress={() => setShowImportOptions(true)}>Import</Text>,
+                                        ["quiz"]: ({ tintColor }) => <Text style={{ fontSize: 8, color: tintColor, width: 40, marginLeft: 35 }} >Quiz</Text>
+                                    }}
+                                    onPressAddImage={galleryCallback}
+                                    insertCamera={cameraCallback}
+                                />
+                        }
+                        {
+                            imported || !showImportOptions ? null :
                                 <FileUpload
+                                    back={() => setShowImportOptions(false)}
                                     onUpload={(u: any, t: any) => {
+                                        console.log(t)
                                         const obj = { url: u, type: t, title }
                                         setCue(JSON.stringify(obj))
+                                        setShowImportOptions(false)
                                     }}
                                 />
                         }
                     </View>
                     <Text style={{
-                        flex: 1,
+                        width: '20%',
                         color: '#a6a2a2',
                         fontSize: 11,
                         lineHeight: 30,
@@ -502,7 +508,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 >
                     {
                         imported ?
-                            <View style={{ width: '50%', alignSelf: 'flex-start' }}>
+                            <View style={{ width: '40%', alignSelf: 'flex-start', marginLeft: '10%' }}>
                                 <TextInput
                                     value={title}
                                     style={styles.input}
@@ -514,7 +520,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     }
                     <View style={{
                         width: '100%',
-                        minHeight: 500,
+                        minHeight: 475,
                         backgroundColor: 'white'
                     }}>
                         {
@@ -523,11 +529,18 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     type === 'pptx' ?
                                         <iframe src={'https://view.officeapps.live.com/op/embed.aspx?src=' + url} width='100%' height='600px' frameBorder='0' />
                                         : <FileViewer
+                                            unsupportedComponent={() =>
+                                                <View style={{ backgroundColor: 'white', flex: 1 }}>
+                                                    <Text style={{ width: '100%', color: '#a6a2a2', fontSize: 25, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                                        <Ionicons name='document-outline' size={50} color='#a6a2a2' />
+                                                    </Text>
+                                                </View>
+                                            }
                                             style={{
                                                 fontFamily: 'overpass'
                                             }}
                                             fileType={type}
-                                            key={Math.random()}
+                                            key={url + type}
                                             filePath={url}
                                             errorComponent={<View>
                                                 <Text>
@@ -552,7 +565,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         width: '100%',
                                         backgroundColor: '#f4f4f4',
                                         borderRadius: 10,
-                                        minHeight: 450
+                                        minHeight: 475
                                     }}
                                     editorStyle={{
                                         backgroundColor: '#f4f4f4',
@@ -581,7 +594,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     </View>
                     <View style={{ flex: 1, display: 'flex', flexDirection: 'column', marginHorizontal: 10 }}>
                         {channels.length !== 0 ?
-                            <View style={{ display: 'flex', flexDirection: width < 768 ? 'column' : 'row' }}>
+                            <View style={{ display: 'flex', flexDirection: width < 768 ? 'column' : 'row', overflow: 'visible' }}>
                                 <View style={{ width: width < 768 ? '100%' : '33.33%', borderRightWidth: 0, borderColor: '#f4f4f4' }}>
                                     <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
                                         <Text style={{ fontSize: 12, color: '#a6a2a2' }}>
@@ -663,7 +676,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             width: '100%',
                                                             display: 'flex',
                                                             flexDirection: 'row',
-                                                            backgroundColor: 'white'
+                                                            backgroundColor: 'white',
                                                         }}>
                                                             <Text style={styles.text}>
                                                                 Deadline
@@ -816,8 +829,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     return <View style={color === i ? styles.colorContainerOutline : styles.colorContainer} key={Math.random()}>
                                                         <TouchableOpacity
                                                             style={{
-                                                                width: 12,
-                                                                height: 12,
+                                                                width: 9,
+                                                                height: 9,
                                                                 borderRadius: 6,
                                                                 backgroundColor: colorChoices[i]
                                                             }}
@@ -1106,8 +1119,8 @@ const styles: any = StyleSheet.create({
     },
     input: {
         width: '100%',
-        backgroundColor: '#f4f4f4',
-        borderRadius: 10,
+        borderBottomColor: '#f4f4f4',
+        borderBottomWidth: 1,
         fontSize: 15,
         padding: 15,
         paddingTop: 12,

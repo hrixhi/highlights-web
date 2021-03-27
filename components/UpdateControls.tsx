@@ -17,8 +17,6 @@ import {
     RichEditor,
     RichToolbar,
 } from "react-native-pell-rich-editor";
-import * as DocumentPicker from 'expo-document-picker';
-import { convertToHtml } from "../graphql/QueriesAndMutations";
 import FileViewer from 'react-file-viewer';
 import FileUpload from './UploadFiles';
 
@@ -74,6 +72,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const [submissionType, setSubmissionType] = useState('')
     const [submissionTitle, setSubmissionTitle] = useState('')
     const [key, setKey] = useState(Math.random())
+    const [showImportOptions, setShowImportOptions] = useState(false)
 
     useEffect(() => {
         if (props.cue.channelId && props.cue.channelId !== '') {
@@ -420,7 +419,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 {
                     (props.cue.channelId && props.cue.channelId !== '') ?
                         <View style={{
-                            width: '100%', flexDirection: 'row', marginBottom: 25
+                            width: '100%', flexDirection: 'row', marginBottom: 15
                         }}>
                             <TouchableOpacity
                                 style={{
@@ -430,7 +429,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 onPress={() => {
                                     setShowOriginal(true)
                                 }}>
-                                <Text style={showOriginal ? styles.allGrayOutline : styles.all}>
+                                <Text style={showOriginal ? styles.allGrayFill : styles.all}>
                                     Shared Notes
                                 </Text>
                             </TouchableOpacity>
@@ -444,7 +443,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         onPress={() => {
                                             setShowOriginal(false)
                                         }}>
-                                        <Text style={!showOriginal ? styles.allGrayOutline : styles.all}>
+                                        <Text style={!showOriginal ? styles.allGrayFill : styles.all}>
                                             {
                                                 submission ? 'Your Submission' : 'Your Notes'
                                             }
@@ -510,62 +509,63 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     paddingBottom: 4,
                     backgroundColor: 'white'
                 }} onTouchStart={() => Keyboard.dismiss()}>
-                    <View style={{ flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row' }}>
+                    <View style={{ flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row', width: Dimensions.get('window').width < 768 ? '100%' : '60%' }}>
                         {
                             (showOriginal)
                                 ? <View style={{ height: 28 }} />
-                                : <RichToolbar
-                                    key={showOriginal.toString() + reloadEditorKey.toString()}
-                                    style={{
-                                        flexWrap: 'wrap',
-                                        backgroundColor: 'white',
-                                        // height: Dimensions.get('window').width < 768 ? 60 : 28,
-                                        // width: Dimensions.get('window').width < 768 ? '50%' : '100%'
-                                    }}
-                                    iconSize={13}
-                                    editor={RichText}
-                                    disabled={false}
-                                    iconTint={"#a6a2a2"}
-                                    selectedIconTint={"#a6a2a2"}
-                                    disabledIconTint={"#a6a2a2"}
-                                    actions={
-                                        submissionImported ? ["close"] :
-                                            [
-                                                actions.setBold,
-                                                actions.setItalic,
-                                                actions.setUnderline,
-                                                actions.insertBulletsList,
-                                                actions.insertOrderedList,
-                                                actions.checkboxList,
-                                                actions.insertLink,
-                                                actions.insertImage,
-                                                "insertCamera",
-                                                actions.undo,
-                                                actions.redo,
-                                                "close"
-                                                // "insertVideo"
-                                            ]}
-                                    iconMap={{
-                                        // ["insertVideo"]: ({ tintColor }) => <Ionicons name='videocam-outline' size={20} color={tintColor} />,
-                                        ["insertCamera"]: ({ tintColor }) => <Ionicons name='camera-outline' size={18} color={tintColor} />,
-                                        ["close"]: ({ tintColor }) => <Ionicons
-                                            name='close-outline'
-                                            size={18}
-                                            onPress={clearAll}
-                                            color={tintColor} />,
-                                    }}
-                                    onPressAddImage={galleryCallback}
-                                    // insertVideo={videoCallback}
-                                    insertCamera={cameraCallback}
-                                    close={clearAll}
-                                />
+                                : (
+                                    showImportOptions ? null :
+                                        <RichToolbar
+                                            key={reloadEditorKey.toString() + showOriginal.toString()}
+                                            style={{
+                                                flexWrap: 'wrap',
+                                                backgroundColor: 'white',
+                                                height: 28,
+                                                overflow: 'visible'
+                                            }}
+                                            iconSize={12}
+                                            editor={RichText}
+                                            disabled={false}
+                                            iconTint={"#a6a2a2"}
+                                            selectedIconTint={"#a6a2a2"}
+                                            disabledIconTint={"#a6a2a2"}
+                                            actions={
+                                                submissionImported ? ["close"] :
+                                                    [
+                                                        actions.setBold,
+                                                        actions.setItalic,
+                                                        actions.setUnderline,
+                                                        actions.insertBulletsList,
+                                                        actions.insertOrderedList,
+                                                        actions.checkboxList,
+                                                        actions.insertLink,
+                                                        actions.insertImage,
+                                                        "insertCamera",
+                                                        actions.undo,
+                                                        actions.redo,
+                                                        "import",
+                                                        "quiz",
+                                                        "clear"
+                                                    ]}
+                                            iconMap={{
+                                                ["insertCamera"]: ({ tintColor }) => <Ionicons name='camera-outline' size={15} color={tintColor} />,
+                                                ["clear"]: ({ tintColor }) => <Text style={{ fontSize: 8, color: tintColor, width: 40, marginLeft: 30 }} onPress={() => clearAll()}>Clear</Text>,
+                                                ["import"]: ({ tintColor }) => <Text style={{ fontSize: 8, color: tintColor, width: 40, marginLeft: 25 }} onPress={() => setShowImportOptions(true)}>Import</Text>,
+                                                ["quiz"]: ({ tintColor }) => <Text style={{ fontSize: 8, color: tintColor, width: 40, marginLeft: 35 }} >Quiz</Text>
+                                            }}
+                                            onPressAddImage={galleryCallback}
+                                            insertCamera={cameraCallback}
+                                        />
+                                )
                         }
                         {
-                            !showOriginal && props.cue.submission && !submissionImported ?
+                            !showOriginal && props.cue.submission && !submissionImported && showImportOptions ?
                                 <FileUpload
+                                    back={() => setShowImportOptions(false)}
                                     onUpload={(u: any, t: any) => {
                                         const obj = { url: u, type: t, title: submissionTitle }
                                         setCue(JSON.stringify(obj))
+                                        setShowImportOptions(false)
                                     }}
                                 />
                                 : null
@@ -597,11 +597,10 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     overScrollMode={'always'}
                     nestedScrollEnabled={true}
                 >
-
                     {
                         showOriginal && imported ?
                             <View style={{ flexDirection: 'row' }}>
-                                <View style={{ width: '50%', alignSelf: 'flex-start' }}>
+                                <View style={{ width: '40%', alignSelf: 'flex-start', marginLeft: '10%' }}>
                                     <TextInput
                                         value={title}
                                         style={styles.input}
@@ -610,29 +609,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         placeholderTextColor={'#a6a2a2'}
                                     />
                                 </View>
-                                <View style={{ width: 175, marginLeft: 25, marginTop: 5, alignSelf: 'flex-start' }}>
+                                <View style={{ marginLeft: 25, marginTop: 15, alignSelf: 'flex-start' }}>
                                     <a download={true} href={url} style={{ textDecoration: 'none' }}>
-                                        <TouchableOpacity
-                                            onPress={() => { }}
-                                            style={{
-                                                borderRadius: 15,
-                                                backgroundColor: 'white'
-                                            }}>
-                                            <Text style={{
-                                                textAlign: 'center',
-                                                lineHeight: 35,
-                                                color: '#101010',
-                                                fontSize: 12,
-                                                backgroundColor: '#f4f4f4',
-                                                borderRadius: 15,
-                                                paddingHorizontal: 25,
-                                                fontFamily: 'inter',
-                                                overflow: 'hidden',
-                                                height: 35
-                                            }}>
-                                                DOWNLOAD
-                                            </Text>
-                                        </TouchableOpacity>
+                                        <Ionicons name='cloud-download-outline' color='#a6a2a2' size={25} />
                                     </a>
                                 </View>
                             </View> : null
@@ -640,7 +619,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     {
                         !showOriginal && submissionImported ?
                             <View style={{ flexDirection: 'row' }}>
-                                <View style={{ width: '50%', alignSelf: 'flex-start' }}>
+                                <View style={{ width: '40%', alignSelf: 'flex-start', marginLeft: '10%' }}>
                                     <TextInput
                                         value={submissionTitle}
                                         style={styles.input}
@@ -678,7 +657,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     }
                     <View style={{
                         width: '100%',
-                        minHeight: 500,
+                        minHeight: 475,
                         backgroundColor: 'white'
                     }}
                     >
@@ -688,6 +667,13 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     type === 'pptx' ?
                                         <iframe src={'https://view.officeapps.live.com/op/embed.aspx?src=' + url} width='100%' height='600px' frameBorder='0' />
                                         : <FileViewer
+                                            unsupportedComponent={
+                                                <View style={{ backgroundColor: 'white', flex: 1 }}>
+                                                    <Text style={{ width: '100%', color: '#a6a2a2', fontSize: 25, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                                        <Ionicons name='document-outline' />
+                                                    </Text>
+                                                </View>
+                                            }
                                             style={{ fontFamily: 'overpass' }}
                                             fileType={type}
                                             filePath={url}
@@ -715,7 +701,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     style={{
                                         width: '100%',
                                         backgroundColor: '#f4f4f4',
-                                        minHeight: 450,
+                                        minHeight: 475,
                                         borderRadius: 10
                                     }}
                                     editorStyle={{
@@ -748,7 +734,14 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     type === 'pptx' ?
                                         <iframe src={'https://view.officeapps.live.com/op/embed.aspx?src=' + submissionUrl} width='100%' height='600px' frameBorder='0' />
                                         : <FileViewer
-                                            key={Math.random()}
+                                            unsupportedComponent={
+                                                <View style={{ backgroundColor: 'white', flex: 1 }}>
+                                                    <Text style={{ width: '100%', color: '#a6a2a2', fontSize: 25, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                                        <Ionicons name='document-outline' />
+                                                    </Text>
+                                                </View>
+                                            }
+                                            key={submissionUrl + submissionType}
                                             style={{ fontFamily: 'overpass' }}
                                             fileType={submissionType}
                                             filePath={submissionUrl}
@@ -774,7 +767,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     style={{
                                         width: '100%',
                                         backgroundColor: '#f4f4f4',
-                                        minHeight: 450,
+                                        minHeight: 475,
                                         borderRadius: 10
                                     }}
                                     editorStyle={{
@@ -984,7 +977,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                         style={styles.allGrayOutline}
                                                         onPress={() => { }}>
                                                         <Text style={{ color: '#a6a2a2' }}>
-                                                            {props.cue.customCategory}
+                                                            {props.cue.customCategory === '' ? 'None' : props.cue.customCategory}
                                                         </Text>
                                                     </TouchableOpacity>
                                                 </View>
@@ -1066,8 +1059,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                     return <View style={color === i ? styles.colorContainerOutline : styles.colorContainer} key={Math.random()}>
                                                         <TouchableOpacity
                                                             style={{
-                                                                width: 12,
-                                                                height: 12,
+                                                                width: 9,
+                                                                height: 9,
                                                                 borderRadius: 6,
                                                                 backgroundColor: colorChoices[i]
                                                             }}
@@ -1370,9 +1363,9 @@ const styles: any = StyleSheet.create({
     },
     input: {
         width: '100%',
-        backgroundColor: '#f4f4f4',
-        borderRadius: 10,
-        fontSize: 12,
+        borderBottomColor: '#f4f4f4',
+        borderBottomWidth: 1,
+        fontSize: 15,
         padding: 15,
         paddingTop: 12,
         paddingBottom: 12,
@@ -1450,6 +1443,14 @@ const styles: any = StyleSheet.create({
         height: 22,
         paddingHorizontal: 10,
         borderRadius: 10,
+    },
+    allGrayFill: {
+        fontSize: 12,
+        color: '#fff',
+        paddingHorizontal: 10,
+        borderRadius: 10,
+        backgroundColor: '#a6a2a2',
+        lineHeight: 20
     },
     allGrayOutline: {
         fontSize: 12,

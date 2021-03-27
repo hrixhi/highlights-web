@@ -74,6 +74,8 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
             break;
     }
 
+    console.log(filteredSubscribers)
+
     const handleGradeSubmit = useCallback(() => {
         if (Number.isNaN(Number(score))) {
             return
@@ -165,6 +167,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
     }, [])
 
     const windowHeight = Dimensions.get('window').height - 30;
+    const key = JSON.stringify(filteredSubscribers)
 
     return (
         <View style={{
@@ -258,7 +261,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                         backgroundColor: 'white',
                         flex: 1
                     }}
-                        key={JSON.stringify(filteredSubscribers)}
+                        key={key}
                     >
                         {
                             !showSubmission ?
@@ -301,14 +304,15 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         <ScrollView
                                             showsVerticalScrollIndicator={false}
                                             horizontal={false}
+                                            key={filterChoice + key}
                                             contentContainerStyle={{
                                                 width: '100%',
                                                 height: '100%'
                                             }}
                                         >
                                             {
-                                                subscribers.map((subscriber, index) => {
-                                                    return <View style={styles.col} key={index}>
+                                                filteredSubscribers.map((subscriber: any, index: any) => {
+                                                    return <View style={styles.col} key={filterChoice + key + index}>
                                                         <SubscriberCard
                                                             chat={!props.cueId || props.cueId === '' ? true : false}
                                                             fadeAnimation={props.fadeAnimation}
@@ -554,8 +558,8 @@ const styleObject = () => {
         },
         input: {
             width: '100%',
-            backgroundColor: '#f4f4f4',
-            borderRadius: 10,
+            borderBottomColor: '#f4f4f4',
+            borderBottomWidth: 1,
             fontSize: 15,
             padding: 15,
             paddingTop: 13,
