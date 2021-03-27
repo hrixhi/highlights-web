@@ -63,7 +63,7 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 <View style={styles.marginSmall} />
                 {
                     filteredCues.map((cue: any, index: number) => {
-                        return <View style={{ height: '20%', marginBottom: 0}} key={index}>
+                        return <View style={{ height: '20%', paddingBottom: 12 }} key={index}>
                             <Card
                                 fadeAnimation={props.fadeAnimation}
                                 updateModal={() => props.openUpdate(
@@ -77,6 +77,15 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 cue={filteredCues[index]}
                                 channelId={props.channelId}
                             />
+                            {
+                                cue.status && (cue.status !== 'read' && cue.status !== 'submitted')
+                                    ? <View style={styles.blueBadge}>
+                                        <Text style={{ color: 'white', lineHeight: 20, fontSize: 10 }}>
+                                            !
+                                        </Text>
+                                    </View>
+                                    : null
+                            }
                             {
                                 cue.channelId && cue.unreadThreads !== 0 ?
                                     <View style={styles.badge}>
@@ -122,6 +131,18 @@ const styleObject = (channelId: any) => {
             marginTop: -2,
             borderRadius: 10,
             backgroundColor: '#f94144',
+            textAlign: 'center',
+            zIndex: 50
+        },
+        blueBadge: {
+            position: 'absolute',
+            alignSelf: 'flex-end',
+            width: 20,
+            marginRight: 25,
+            height: 20,
+            marginTop: -2,
+            borderRadius: 10,
+            backgroundColor: '#0079fe',
             textAlign: 'center',
             zIndex: 50
         },

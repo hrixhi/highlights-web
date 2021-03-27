@@ -833,9 +833,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             filterChoice={filterChoice}
                           />
                             : (
-                              modalType === 'Calendar' ? <Calendar
-                                channelId={channelId}
-                              />
+                              modalType === 'Calendar' ? <Calendar />
                                 : (
                                   modalType === 'Meeting' ? <Meeting
                                     channelId={channelId}

@@ -61,8 +61,8 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 <Text style={{
                                     textAlign: 'right',
                                     lineHeight: 30,
-                                    marginTop: -25,
-                                    paddingRight: 25,
+                                    marginTop: -20,
+                                    paddingRight: 30,
                                     position: 'absolute',
                                     width: '97%',
                                     zIndex: 20
@@ -83,15 +83,6 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 ? (starred ? '#101010' : '#F4F4F4')
                                 : (starred ? 'white' : '#a6a2a2'),
                         }}>
-                            <Text>
-                                {
-                                    props.cue.status && (props.cue.status !== 'read' && props.cue.status !== 'submitted')
-                                        ? <Ionicons name='alert-outline'
-                                            style={{ marginRight: 10 }}
-                                            size={11} color={'#0079FE'} />
-                                        : null
-                                }
-                            </Text>
                             {
                                 props.cue.submission ? <Text>
                                     <Ionicons name='share-outline' size={11} color={props.cue.submittedAt && props.cue.submittedAt !== '' ? ('#0079fe') : (colorScheme === 'light' ? '#a6a2a2' : '#333333')} style={{ marginRight: 10 }} />
@@ -129,7 +120,7 @@ export default React.memo(Card, (prev, next) => {
 
 const styles: any = (colorScheme: any, channelId: any) => StyleSheet.create({
     swiper: {
-        height: '87.5%',
+        height: '100%',
         borderRadius: 20,
         overflow: 'hidden',
     },

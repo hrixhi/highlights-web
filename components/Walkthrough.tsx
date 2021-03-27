@@ -61,23 +61,35 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             fontFamily: 'inter',
                             paddingTop: 50
                         }}>
+                           Virtually host classroom sessions.
+                        </Text>
+                        <Text style={{
+                            color: '#a6a2a2',
+                            textAlign: 'left',
+                            fontSize: 20,
+
+                        }}>
+                            {'\n'}Video calls, audio calls, screen shares and screen recordings for unlimited sessions and minutes.
+                        </Text>
+                    </View>
+                    <View style={styles.screen} key={Math.random()}>
+                        <Text style={{
+                            color: '#101010',
+                            textAlign: 'left',
+                            fontSize: 30,
+                            fontFamily: 'inter',
+                            paddingTop: 50
+                        }}>
                             Create, import and share classroom material.
                         </Text>
                         <Text style={{
                             color: '#a6a2a2',
                             textAlign: 'left',
                             fontSize: 20,
-                            
+
                         }}>
                             {'\n'}Organise coursework (pdf, docx, pptx, xlsx...) by category & priority, whether it be lecture slides, class notes, homeworks or announcements.
                         </Text>
-                        {/* <TouchableOpacity
-                            onPress={() => Linking.openURL('http://www.cuesapp.co')}
-                            style={{ backgroundColor: 'white' }}>
-                            <Text style={{ color: '#0079fe', fontSize: 20, textAlign: 'left' }}>
-                                {'\n'} www.cuesapp.co
-                            </Text>
-                        </TouchableOpacity> */}
                     </View>
                     <View style={styles.screen} key={Math.random()}>
                         <Text style={{
@@ -93,7 +105,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             color: '#a6a2a2',
                             textAlign: 'left',
                             fontSize: 20,
-                            
+
                         }}>
                             {'\n'}Let students view coursework, take notes on it and save changes to the cloud.
                         </Text>
@@ -112,7 +124,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             color: '#a6a2a2',
                             textAlign: 'left',
                             fontSize: 20,
-                            
+
                         }}>
                             {'\n'}Discuss content individually as comments, host general Q&A in discussion and direct message students.
                         </Text>
@@ -131,7 +143,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             color: '#a6a2a2',
                             textAlign: 'left',
                             fontSize: 20,
-                            
+
                         }}>
                             {'\n'}Accept submissions, check for plagiarism, grade assignments and easily monitor overall performance.
                         </Text>
@@ -150,9 +162,28 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             color: '#a6a2a2',
                             textAlign: 'left',
                             fontSize: 20,
-                            
+
                         }}>
                             {'\n'}Use in-built reminders to keep track of important tasks and deadlines.
+                        </Text>
+                    </View>
+                    <View style={styles.screen} key={Math.random()}>
+                        <Text style={{
+                            color: '#101010',
+                            textAlign: 'left',
+                            fontSize: 30,
+                            fontFamily: 'inter',
+                            paddingTop: 50
+                        }}>
+                            Automate task management.
+                        </Text>
+                        <Text style={{
+                            color: '#a6a2a2',
+                            textAlign: 'left',
+                            fontSize: 20,
+
+                        }}>
+                            {'\n'}Use in-built calendar to automatically view upcoming events & pending submissions or mark other personal dates.
                         </Text>
                     </View>
                 </Swiper>

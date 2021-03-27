@@ -78,6 +78,7 @@
     "react-native-web-webview": "^1.0.2",
     "react-native-webview": "11.0.0",
     "react-native-wheel-picker": "^1.2.0",
+    "react-select": "^4.3.0",
     "reanimated-bottom-sheet": "^1.0.0-alpha.22",
     "rmc-date-picker": "^6.0.10",
     "unique-names-generator": "^4.3.1"

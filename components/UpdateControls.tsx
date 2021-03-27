@@ -8,7 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Datetime from 'react-datetime';
 import { timedFrequencyOptions } from '../helpers/FrequencyOptions';
 import { fetchAPI } from '../graphql/FetchAPI';
-import { markAsRead, submit } from '../graphql/QueriesAndMutations';
+import { createCue, getChannels, markAsRead, submit } from '../graphql/QueriesAndMutations';
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
 import * as FileSystem from 'expo-file-system';
@@ -73,6 +73,33 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const [submissionTitle, setSubmissionTitle] = useState('')
     const [key, setKey] = useState(Math.random())
     const [showImportOptions, setShowImportOptions] = useState(false)
+    const [channels, setChannels] = useState<any[]>([])
+    const [shareWithChannelId, setShareWithChannelId] = useState('')
+
+    const loadChannels = useCallback(async () => {
+        const uString: any = await AsyncStorage.getItem('user')
+        if (uString) {
+            const user = JSON.parse(uString)
+            const server = fetchAPI('')
+            server.query({
+                query: getChannels,
+                variables: {
+                    userId: user._id
+                }
+            })
+                .then(res => {
+                    if (res.data.channel.findByUserId) {
+                        setChannels(res.data.channel.findByUserId)
+                    }
+                })
+                .catch(err => {
+                })
+        }
+    }, [])
+
+    useEffect(() => {
+        loadChannels()
+    }, [])
 
     useEffect(() => {
         if (props.cue.channelId && props.cue.channelId !== '') {
@@ -389,6 +416,50 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         )
     }, [])
 
+    const shareCue = useCallback(async () => {
+        let saveCue = ''
+        if (submissionImported) {
+            const obj = {
+                type: submissionType,
+                url: submissionUrl,
+                title: submissionTitle
+            }
+            saveCue = JSON.stringify(obj)
+        } else {
+            saveCue = cue
+        }
+        const server = fetchAPI('')
+        server.mutate({
+            mutation: createCue,
+            variables: {
+                cue: saveCue,
+                starred,
+                color: color.toString(),
+                channelId: shareWithChannelId,
+                frequency,
+                customCategory,
+                shuffle,
+                createdBy: props.cue.createdBy,
+                gradeWeight: gradeWeight.toString(),
+                submission,
+                deadline: submission ? deadline.toISOString() : '',
+                endPlayAt: notify && (shuffle || !playChannelCueIndef) ? endPlayAt.toISOString() : ''
+            }
+        })
+            .then(res => {
+                if (res.data.cue.create) {
+                    Alert('Shared!', 'Cue has been successfully shared.')
+                }
+            })
+            .catch(err => {
+                Alert("Something went wrong.", "Check connection.")
+            })
+    }, [
+        submissionImported, submissionTitle, submissionType, submissionUrl,
+        cue, starred, color, frequency, customCategory, shuffle, gradeWeight,
+        submission, deadline, notify, playChannelCueIndef, endPlayAt,
+        shareWithChannelId, props.cue])
+
     useEffect(() => {
         updateStatusAsRead()
     }, [props.cue.status])
@@ -430,7 +501,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     setShowOriginal(true)
                                 }}>
                                 <Text style={showOriginal ? styles.allGrayFill : styles.all}>
-                                    Shared Notes
+                                    View Shared
                                 </Text>
                             </TouchableOpacity>
                             {
@@ -445,7 +516,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         }}>
                                         <Text style={!showOriginal ? styles.allGrayFill : styles.all}>
                                             {
-                                                submission ? 'Your Submission' : 'Your Notes'
+                                                submission ? 'Add Submission' : 'Add Notes'
                                             }
                                         </Text>
                                     </TouchableOpacity>
@@ -509,7 +580,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     paddingBottom: 4,
                     backgroundColor: 'white'
                 }} onTouchStart={() => Keyboard.dismiss()}>
-                    <View style={{ flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row', width: Dimensions.get('window').width < 768 ? '100%' : '60%' }}>
+                    <View style={{ flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row', flex: 1 }}>
                         {
                             (showOriginal)
                                 ? <View style={{ height: 28 }} />
@@ -543,15 +614,11 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                         "insertCamera",
                                                         actions.undo,
                                                         actions.redo,
-                                                        "import",
-                                                        "quiz",
                                                         "clear"
                                                     ]}
                                             iconMap={{
                                                 ["insertCamera"]: ({ tintColor }) => <Ionicons name='camera-outline' size={15} color={tintColor} />,
-                                                ["clear"]: ({ tintColor }) => <Text style={{ fontSize: 8, color: tintColor, width: 40, marginLeft: 30 }} onPress={() => clearAll()}>Clear</Text>,
-                                                ["import"]: ({ tintColor }) => <Text style={{ fontSize: 8, color: tintColor, width: 40, marginLeft: 25 }} onPress={() => setShowImportOptions(true)}>Import</Text>,
-                                                ["quiz"]: ({ tintColor }) => <Text style={{ fontSize: 8, color: tintColor, width: 40, marginLeft: 35 }} >Quiz</Text>
+                                                ["clear"]: ({ tintColor }) => <Ionicons name='trash-outline' size={13} color={tintColor} onPress={() => clearAll()} />
                                             }}
                                             onPressAddImage={galleryCallback}
                                             insertCamera={cameraCallback}
@@ -571,8 +638,31 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 : null
                         }
                     </View>
+                    {
+                        !showOriginal && props.cue.submission && !submissionImported ?
+                            <Text style={{
+                                color: '#a6a2a2',
+                                fontSize: 11,
+                                lineHeight: 30,
+                                textAlign: 'right',
+                                paddingRight: 10,
+                            }}
+                                onPress={() => setShowImportOptions(true)}
+                            >
+                                IMPORT     {Dimensions.get('window').width < 768 ? '' : '|  '}
+                            </Text> :
+                            <Text style={{
+                                color: '#a6a2a2',
+                                fontSize: 11,
+                                lineHeight: 30,
+                                textAlign: 'right',
+                                paddingRight: 10,
+                            }}
+                            >
+                                {props.cue.channelId && showOriginal ? 'VIEW' : 'EDIT'}{'     |  '}
+                            </Text>
+                    }
                     <Text style={{
-                        flex: 1,
                         color: '#a6a2a2',
                         fontSize: 11,
                         lineHeight: 30,
@@ -609,9 +699,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         placeholderTextColor={'#a6a2a2'}
                                     />
                                 </View>
-                                <View style={{ marginLeft: 25, marginTop: 15, alignSelf: 'flex-start' }}>
+                                <View style={{ marginLeft: 25, marginTop: 20, alignSelf: 'flex-start' }}>
                                     <a download={true} href={url} style={{ textDecoration: 'none' }}>
-                                        <Ionicons name='cloud-download-outline' color='#a6a2a2' size={25} />
+                                        <Ionicons name='cloud-download-outline' color='#a6a2a2' size={20} />
                                     </a>
                                 </View>
                             </View> : null
@@ -695,14 +785,14 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         padding: 3,
                                         paddingTop: 5,
                                         paddingBottom: 10,
-                                        borderRadius: 10,
+                                        borderRadius: 2,
                                     }}
                                     ref={RichText}
                                     style={{
                                         width: '100%',
                                         backgroundColor: '#f4f4f4',
                                         minHeight: 475,
-                                        borderRadius: 10
+                                        borderRadius: 2
                                     }}
                                     editorStyle={{
                                         backgroundColor: '#f4f4f4',
@@ -761,14 +851,14 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         padding: 3,
                                         paddingTop: 5,
                                         paddingBottom: 10,
-                                        borderRadius: 10,
+                                        borderRadius: 2,
                                     }}
                                     ref={RichText}
                                     style={{
                                         width: '100%',
                                         backgroundColor: '#f4f4f4',
                                         minHeight: 475,
-                                        borderRadius: 10
+                                        borderRadius: 2
                                     }}
                                     editorStyle={{
                                         backgroundColor: '#f4f4f4',
@@ -1075,6 +1165,50 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     </View>
                                 </View>
                             </View>
+                            {
+                                channels.length === 0 ? null :
+                                    <View style={{ width: width < 768 ? '100%' : '33.33%', borderRightWidth: 0, borderColor: '#f4f4f4' }}>
+                                        <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
+                                            <Text style={{ fontSize: 12, color: '#a6a2a2' }}>
+                                                Share
+                                            </Text>
+                                        </View>
+                                        <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white' }}>
+                                            <View style={{ width: '85%', backgroundColor: 'white' }}>
+                                                <ScrollView style={styles.colorBar} horizontal={true} showsHorizontalScrollIndicator={false}>
+                                                    {
+                                                        channels.map((channel) => {
+                                                            return <TouchableOpacity
+                                                                key={Math.random()}
+                                                                style={shareWithChannelId === channel._id ? styles.allOutline : styles.allBlack}
+                                                                onPress={() => {
+                                                                    if (shareWithChannelId === '') {
+                                                                        setShareWithChannelId(channel._id)
+                                                                    } else {
+                                                                        setShareWithChannelId('')
+                                                                    }
+                                                                }}>
+                                                                <Text style={{ lineHeight: 20, fontSize: 12, color: shareWithChannelId === channel._id ? '#fff' : '#101010' }}>
+                                                                    {channel.name}
+                                                                </Text>
+                                                            </TouchableOpacity>
+                                                        })
+                                                    }
+                                                </ScrollView>
+                                            </View>
+                                            <View style={{ width: '15%', backgroundColor: 'white' }}>
+                                                <TouchableOpacity
+                                                    disabled={shareWithChannelId === ''}
+                                                    onPress={() => shareCue()}
+                                                    style={{ backgroundColor: 'white' }}>
+                                                    <Text style={{ textAlign: 'center', lineHeight: 20, width: '100%' }}>
+                                                        <Ionicons name={'arrow-redo-outline'} size={20} color={'#101010'} />
+                                                    </Text>
+                                                </TouchableOpacity>
+                                            </View>
+                                        </View>
+                                    </View>
+                            }
                         </View>
                     </View>
                     <View style={{ width: '100%', paddingTop: 15, flexDirection: width < 768 ? 'column' : 'row' }}>
@@ -1443,6 +1577,13 @@ const styles: any = StyleSheet.create({
         height: 22,
         paddingHorizontal: 10,
         borderRadius: 10,
+    },
+    allBlack: {
+        fontSize: 12,
+        color: '#101010',
+        height: 22,
+        paddingHorizontal: 10,
+        backgroundColor: 'white'
     },
     allGrayFill: {
         fontSize: 12,

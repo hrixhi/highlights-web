@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, Animated, Dimensions } from 'react-native';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Animated, Dimensions, Switch, StyleSheet } from 'react-native';
 import { Text, View } from './Themed';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Jutsu } from 'react-jutsu'
+import { fetchAPI } from '../graphql/FetchAPI';
+import { editMeeting, getMeetingStatus } from '../graphql/QueriesAndMutations';
 
 const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -10,6 +12,24 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
     const [room] = useState(props.channelId)
     const [name, setName] = useState('')
     const [password] = useState(props.channelCreatedBy)
+    const [isOwner, setIsOwner] = useState(false)
+    const [meetingOn, setMeetingOn] = useState(false)
+
+    const loadMeetingStatus = useCallback(() => {
+        const server = fetchAPI('')
+        server.query({
+            query: getMeetingStatus,
+            variables: {
+                channelId: props.channelId
+            }
+        }).then(res => {
+            if (res.data && res.data.channel && res.data.channel.getMeetingStatus) {
+                setMeetingOn(true)
+            } else {
+                setMeetingOn(false)
+            }
+        }).catch(err => console.log(err))
+    }, [props.channelId])
 
     useEffect(() => {
         (
@@ -18,16 +38,35 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                 if (u) {
                     const user = JSON.parse(u)
                     setName(user.displayName)
+                    if (user._id.toString().trim() === props.channelCreatedBy) {
+                        setIsOwner(true)
+                    }
                 }
             }
         )()
+        loadMeetingStatus()
         Animated.timing(modalAnimation, {
             toValue: 1,
             duration: 150,
             useNativeDriver: true
         }).start();
-    }, [])
+    }, [props.channelCreatedBy, props.channelId])
     const windowHeight = Dimensions.get('window').height;
+
+    const updateMeetingStatus = useCallback(() => {
+        const server = fetchAPI('')
+        server.mutate({
+            mutation: editMeeting,
+            variables: {
+                channelId: props.channelId,
+                meetingOn: !meetingOn
+            }
+        }).then(res => {
+            if (res.data && res.data.channel && res.data.channel.editMeeting) {
+                loadMeetingStatus()
+            }
+        }).catch(e => console.log(e))
+    }, [meetingOn, props.channelId])
 
     if (name === '') {
         return null
@@ -61,20 +100,56 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                         Classroom
                     </Text>
                 </View>
-                <Jutsu
-                    containerStyles={{
-                        width: '100%',
-                        height: '62.5%',
-                        marginTop: 75,
-                        borderRadius: 20
-                    }}
-                    // domain='cuesapp.co'
-                    roomName={room}
-                    displayName={name}
-                    password={password}
-                    onMeetingEnd={() => console.log('Meeting has ended')}
-                    loadingComponent={<p>loading ...</p>}
-                    errorComponent={<p>Oops, something went wrong</p>} />
+                <View style={{ backgroundColor: 'white', flex: 1 }}>
+                    {
+                        isOwner ?
+                            <View>
+                                <View style={{ width: '100%', paddingTop: 20, backgroundColor: 'white' }}>
+                                    <Text style={{ fontSize: 12, color: '#a6a2a2' }}>
+                                        Allow Participants
+                                    </Text>
+                                </View>
+                                <View style={{
+                                    backgroundColor: 'white',
+                                    height: 40,
+                                    marginRight: 10
+                                }}>
+                                    <Switch
+                                        value={meetingOn}
+                                        onValueChange={() => updateMeetingStatus()}
+                                        style={{ height: 20 }}
+                                        trackColor={{
+                                            false: '#f4f4f4',
+                                            true: '#0079fe'
+                                        }}
+                                        activeThumbColor='white'
+                                    />
+                                </View>
+                            </View> : null
+                    }
+                    {
+                        meetingOn ?
+                            <Jutsu
+                                containerStyles={{
+                                    width: '100%',
+                                    height: '80%',
+                                    marginTop: isOwner ? 20 : 70,
+                                    borderRadius: 20
+                                }}
+                                // domain='cuesapp.co'
+                                roomName={room}
+                                displayName={name}
+                                password={password}
+                                onMeetingEnd={() => console.log('Meeting has ended')}
+                                loadingComponent={<p>loading ...</p>}
+                                errorComponent={<p>Oops, something went wrong</p>} />
+                            : <View style={{ backgroundColor: 'white', flex: 1 }}>
+                                <Text style={{ width: '100%', color: '#a6a2a2', fontSize: 25, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                    Classroom not in session.
+                                </Text>
+                            </View>
+                    }
+                </View>
             </Animated.View>
         </View >
     );

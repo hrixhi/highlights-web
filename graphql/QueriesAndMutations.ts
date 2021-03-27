@@ -137,6 +137,20 @@ mutation($userId: String!, $groupId: String!) {
     }
 }
 `
+export const createDate = gql`
+mutation($title: String!, $userId: String!, $start: String!, $end: String!) {
+    date {
+        create(title: $title, start: $start, end: $end, userId: $userId)
+    }
+}
+`
+export const editMeeting = gql`
+mutation($channelId: String!, $meetingOn: Boolean!) {
+    channel {
+        editMeeting(channelId: $channelId, meetingOn: $meetingOn)
+    }
+}
+`
 /**
  * ALL
  * QUERIES
@@ -399,12 +413,13 @@ query($users: [String!]!) {
 }
 `
 export const getEvents = gql`
-query($channelId: String!) {
-    channel {
-        getCalendar(channelId: $channelId) {
+query($userId: String!) {
+    date {
+        getCalendar(userId: $userId) {
             title
             start
             end
+            channelName
         }
     }
 }
@@ -421,5 +436,12 @@ query($userId: String!, $channelId: String!) {
    messageStatus {
         totalUnreadMessages(userId: $userId, channelId: $channelId)
    } 
+}
+`
+export const getMeetingStatus = gql`
+query($channelId: String!) {
+    channel { 
+        getMeetingStatus(channelId: $channelId)
+    }
 }
 `

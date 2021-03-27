@@ -6,7 +6,7 @@ import { Picker } from '@react-native-picker/picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { timedFrequencyOptions } from '../helpers/FrequencyOptions';
 import { fetchAPI } from '../graphql/FetchAPI';
-import { createCue, getChannelCategories, getChannels } from '../graphql/QueriesAndMutations';
+import { createCue, getChannelCategories, getChannels, getSubscribers } from '../graphql/QueriesAndMutations';
 import Datetime from 'react-datetime';
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
@@ -52,6 +52,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const [type, setType] = useState('')
     const [title, setTitle] = useState('')
     const [showImportOptions, setShowImportOptions] = useState(false)
+    const [selected, setSelected] = useState<any[]>([])
+    const [subscribers, setSubscribers] = useState<any[]>([])
 
     useEffect(() => {
         if (cue[0] === '{' && cue[cue.length - 1] === '}') {
@@ -67,14 +69,14 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         }
     }, [cue])
 
-    const loadChannelCategories = useCallback(async () => {
+    const loadChannelCategoriesAndSubscribers = useCallback(async () => {
 
         if (channelId === '') {
             setCustomCategories(localCustomCategories)
             return
         }
-
         const server = fetchAPI('')
+        // get categories
         server.query({
             query: getChannelCategories,
             variables: {
@@ -86,10 +88,26 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             }
         }).catch(err => {
         })
+        // get subscribers
+        server.query({
+            query: getSubscribers,
+            variables: {
+                channelId
+            }
+        })
+            .then((res: any) => {
+                if (res.data.user && res.data.user.findByChannelId) {
+                    setSubscribers(res.data.user.findByChannelId)
+                    // clear selected
+                    setSelected([])
+                }
+            })
+            .catch((err: any) => console.log(err))
+
     }, [channelId, localCustomCategories])
 
     useEffect(() => {
-        loadChannelCategories()
+        loadChannelCategoriesAndSubscribers()
     }, [channelId])
 
     const handleHeightChange = useCallback((h: any) => {
@@ -329,7 +347,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         }
 
     }, [cue, modalAnimation, customCategory, props.saveDataInCloud,
-        gradeWeight, deadline, submission, imported,
+        gradeWeight, deadline, submission, imported, selected,
         shuffle, frequency, starred, color, notify, title, type, url,
         props.closeModal, channelId, endPlayAt, playChannelCueIndef])
 
@@ -453,15 +471,11 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 "insertCamera",
                                                 actions.undo,
                                                 actions.redo,
-                                                "import",
-                                                "quiz",
                                                 "clear"
                                             ]}
                                     iconMap={{
                                         ["insertCamera"]: ({ tintColor }) => <Ionicons name='camera-outline' size={15} color={tintColor} />,
-                                        ["clear"]: ({ tintColor }) => <Text style={{ fontSize: 8, color: tintColor, width: 40, marginLeft: 30 }} onPress={() => clearAll()}>Clear</Text>,
-                                        ["import"]: ({ tintColor }) => <Text style={{ fontSize: 8, color: tintColor, width: 40, marginLeft: 25 }} onPress={() => setShowImportOptions(true)}>Import</Text>,
-                                        ["quiz"]: ({ tintColor }) => <Text style={{ fontSize: 8, color: tintColor, width: 40, marginLeft: 35 }} >Quiz</Text>
+                                        ["clear"]: ({ tintColor }) => <Ionicons name='trash-outline' size={13} color={tintColor} onPress={() => clearAll()} />
                                     }}
                                     onPressAddImage={galleryCallback}
                                     insertCamera={cameraCallback}
@@ -480,8 +494,31 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 />
                         }
                     </View>
+                    <View style={{ flexDirection: 'row' }}>
+                        <Text style={{
+                            color: '#a6a2a2',
+                            fontSize: 11,
+                            lineHeight: 30,
+                            textAlign: 'right',
+                            paddingRight: 10,
+                        }}
+                            onPress={() => setShowImportOptions(true)}
+                        >
+                            IMPORT     |{'  '}
+                        </Text>
+                        <Text style={{
+                            color: '#a6a2a2',
+                            fontSize: 11,
+                            lineHeight: 30,
+                            textAlign: 'right',
+                            paddingRight: 10,
+                        }}
+                            onPress={() => { }}
+                        >
+                            QUIZ     {Dimensions.get('window').width < 768 ? '' : '|  '}
+                        </Text>
+                    </View>
                     <Text style={{
-                        width: '20%',
                         color: '#a6a2a2',
                         fontSize: 11,
                         lineHeight: 30,
@@ -558,13 +595,13 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         padding: 3,
                                         paddingTop: 5,
                                         paddingBottom: 10,
-                                        borderRadius: 10
+                                        borderRadius: 2
                                     }}
                                     ref={RichText}
                                     style={{
                                         width: '100%',
                                         backgroundColor: '#f4f4f4',
-                                        borderRadius: 10,
+                                        borderRadius: 2,
                                         minHeight: 475
                                     }}
                                     editorStyle={{
@@ -615,6 +652,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         setSubmission(false)
                                                         setGradeWeight(0)
                                                         setGraded(false)
+                                                        setSelected([])
+                                                        setSubscribers([])
                                                     }}>
                                                     <Text style={{ lineHeight: 20, fontSize: 12, color: channelId === '' ? '#fff' : '#101010' }}>
                                                         <Ionicons name='home-outline' size={15} />

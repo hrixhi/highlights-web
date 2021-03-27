@@ -26,7 +26,7 @@ const MiniEditorScreen: React.FC<{ [label: string]: any }> = (props: any) => {
                 containerStyle={{
                     height,
                     backgroundColor: '#f4f4f4',
-                    borderRadius: 10,
+                    borderRadius: 2,
                     padding: 3,
                     paddingTop: 5,
                     paddingBottom: 10
@@ -35,7 +35,7 @@ const MiniEditorScreen: React.FC<{ [label: string]: any }> = (props: any) => {
                 style={{
                     width: '100%',
                     backgroundColor: '#f4f4f4',
-                    borderRadius: 10,
+                    borderRadius: 2,
                     minHeight: 100
                 }}
                 editorStyle={{

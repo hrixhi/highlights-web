@@ -1,24 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Image, ScrollView, Dimensions, Linking } from 'react-native';
 import { View, Text, TouchableOpacity } from '../components/Themed';
-import useColorScheme from '../hooks/useColorScheme';
 import { Ionicons } from '@expo/vector-icons';
 import _ from 'lodash'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { fetchAPI } from '../graphql/FetchAPI';
-import { totalUnreadDiscussionThreads, totalUnreadMessages } from '../graphql/QueriesAndMutations';
+import { getMeetingStatus, totalUnreadDiscussionThreads, totalUnreadMessages } from '../graphql/QueriesAndMutations';
 
 const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
-    const colorScheme = useColorScheme();
     const styles: any = styleObject(props.channelId)
-    const [hideExclaimation, setHideExclaimation] = useState(false)
     const unparsedCues: any[] = JSON.parse(JSON.stringify(props.cues))
     const [cues] = useState<any[]>(unparsedCues.reverse())
     const [filterChoice] = useState(props.channelFilterChoice)
     const [channelCategories, setChannelCategories] = useState([])
     const [unreadDiscussionThreads, setUnreadDiscussionThreads] = useState(0)
     const [unreadMessages, setUnreadMessages] = useState(0)
+    const [meetingOn, setMeetingOn] = useState(false)
 
     useEffect(() => {
 
@@ -51,6 +49,18 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 setUnreadMessages(res.data.messageStatus.totalUnreadMessages)
                             }
                         })
+                        server.query({
+                            query: getMeetingStatus,
+                            variables: {
+                                channelId: props.channelId
+                            }
+                        }).then(res => {
+                            if (res.data && res.data.channel && res.data.channel.getMeetingStatus) {
+                                setMeetingOn(true)
+                            } else {
+                                setMeetingOn(false)
+                            }
+                        }).catch(err => console.log(err))
                     }
                 }
             )()
@@ -68,15 +78,6 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         })
         setChannelCategories(cat)
     }, [cues])
-
-    // useEffect(() => {
-    //     const interval = setInterval(() => {
-    //         setHideExclaimation(exclaim => !exclaim);
-    //     }, 750);
-    //     return () => {
-    //         clearInterval(interval);
-    //     };
-    // }, []);
 
     return (
         <View style={styles.topbar} key={Math.random()}>
@@ -123,6 +124,10 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         <Text style={styles.channelText}>
                                             <Ionicons name='videocam-outline' size={21} color={'#a6a2a2'} />
                                         </Text>
+                                        {
+                                            meetingOn ?
+                                                <View style={styles.badge} /> : null
+                                        }
                                     </TouchableOpacity>
                                     <TouchableOpacity
                                         style={{ marginRight: 20 }}
@@ -139,7 +144,7 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         style={{ marginRight: 20 }}
                                         onPress={() => props.openCalendar()}>
                                         <Text style={styles.channelText}>
-                                            <Ionicons name='calendar-outline' size={21} color={'#a6a2a2'} />
+                                            <Ionicons name='calendar-outline' size={20} color={'#a6a2a2'} />
                                         </Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity
@@ -158,6 +163,13 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     </TouchableOpacity>
                                 </View> :
                                 <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
+                                    <TouchableOpacity
+                                        style={{ marginRight: 20 }}
+                                        onPress={() => props.openCalendar()}>
+                                        <Text style={styles.channelText}>
+                                            <Ionicons name='calendar-outline' size={20} color={'#a6a2a2'} />
+                                        </Text>
+                                    </TouchableOpacity>
                                     <TouchableOpacity
                                         onPress={() => props.openWalkthrough()}
                                         style={{ marginRight: 5 }}

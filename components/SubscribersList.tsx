@@ -222,7 +222,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 <Text
                                     ellipsizeMode="tail"
                                     style={{ color: '#a6a2a2', fontSize: 18, flex: 1, lineHeight: 25 }}>
-                                    Direct Messaging
+                                    Messages & Team
                         </Text>
                         }
                         {
@@ -400,13 +400,13 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 padding: 3,
                                                 paddingTop: 5,
                                                 paddingBottom: 10,
-                                                borderRadius: 10
+                                                borderRadius: 2
                                             }}
                                             ref={RichText}
                                             style={{
                                                 width: '100%',
                                                 backgroundColor: '#f4f4f4',
-                                                borderRadius: 10,
+                                                borderRadius: 2,
                                                 minHeight: 450
                                             }}
                                             editorStyle={{

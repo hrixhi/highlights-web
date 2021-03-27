@@ -1,15 +1,16 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { ActivityIndicator, Animated, Dimensions } from 'react-native';
+import { ActivityIndicator, Animated, Dimensions, StyleSheet, TextInput, ScrollView } from 'react-native';
 import Alert from './Alert'
-import { Text, View } from './Themed';
-import { ScrollView } from 'react-native-gesture-handler'
+import { Text, View, TouchableOpacity } from './Themed';
 import { fetchAPI } from '../graphql/FetchAPI';
-import { getChannelThreads, getEvents } from '../graphql/QueriesAndMutations';
+import { createDate, getEvents } from '../graphql/QueriesAndMutations';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Calendar, momentLocalizer } from 'react-big-calendar'
+import Datetime from 'react-datetime';
 import moment from 'moment'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import { htmlStringParser } from '../helpers/HTMLParser';
+import { Ionicons } from '@expo/vector-icons';
 
 const localizer = momentLocalizer(moment)
 
@@ -25,69 +26,86 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
         }
     ])
 
+    const [title, setTitle] = useState('')
+    const [start, setStart] = useState(new Date())
+    const [end, setEnd] = useState(new Date())
+
+    const handleCreate = useCallback(async () => {
+        const u = await AsyncStorage.getItem('user')
+        if (u) {
+            const user = JSON.parse(u)
+            const server = fetchAPI('')
+            server.mutate({
+                mutation: createDate,
+                variables: {
+                    title,
+                    userId: user._id,
+                    start: start.toUTCString(),
+                    end: end.toUTCString()
+                }
+            }).then(res => {
+                loadEvents()
+                setTitle('')
+            }).catch(err => console.log(err))
+        }
+    }, [title, start, end])
+
     const loadEvents = useCallback(async () => {
 
         const u = await AsyncStorage.getItem('user')
         let parsedUser: any = {}
         if (u) {
             parsedUser = JSON.parse(u)
+        } else {
+            return;
         }
 
         setLoading(true)
-        if (props.channelId && props.channelId !== '') {
-            const server = fetchAPI('')
-            server.query({
-                query: getEvents,
-                variables: {
-                    channelId: props.channelId
-                }
-            })
-                .then(res => {
-                    if (res.data.channel && res.data.channel.getCalendar) {
-                        const parsedEvents: any[] = []
-                        res.data.channel.getCalendar.map((event: any) => {
-                            const { title } = htmlStringParser(event.title)
-                            parsedEvents.push({
-                                title,
-                                start: new Date(event.start),
-                                end: new Date(event.end)
-                            })
+        const server = fetchAPI('')
+        server.query({
+            query: getEvents,
+            variables: {
+                userId: parsedUser._id
+            }
+        })
+            .then(res => {
+                if (res.data.date && res.data.date.getCalendar) {
+                    const parsedEvents: any[] = []
+                    res.data.date.getCalendar.map((event: any) => {
+                        const { title } = htmlStringParser(event.title)
+                        parsedEvents.push({
+                            title: event.channelName ? (event.channelName + ' - ' + title) : title,
+                            start: new Date(event.start),
+                            end: new Date(event.end)
                         })
-                        setEvents(parsedEvents)
-                    }
-                    setLoading(false)
-                    modalAnimation.setValue(0)
-                    Animated.timing(modalAnimation, {
-                        toValue: 1,
-                        duration: 150,
-                        useNativeDriver: true
-                    }).start();
-                })
-                .catch((err) => {
-                    console.log(err)
-                    Alert("Unable to load calendar.", "Check connection.")
-                    setLoading(false)
-                    modalAnimation.setValue(0)
-                    Animated.timing(modalAnimation, {
-                        toValue: 1,
-                        duration: 150,
-                        useNativeDriver: true
-                    }).start();
-                })
-        } else {
-            setLoading(false)
-            modalAnimation.setValue(0)
-            Animated.timing(modalAnimation, {
-                toValue: 1,
-                duration: 150,
-                useNativeDriver: true
-            }).start();
-        }
-    }, [props.channelId, modalAnimation])
+                    })
+                    setEvents(parsedEvents)
+                }
+                setLoading(false)
+                modalAnimation.setValue(0)
+                Animated.timing(modalAnimation, {
+                    toValue: 1,
+                    duration: 150,
+                    useNativeDriver: true
+                }).start();
+            })
+            .catch((err) => {
+                console.log(err)
+                Alert("Unable to load calendar.", "Check connection.")
+                setLoading(false)
+                modalAnimation.setValue(0)
+                Animated.timing(modalAnimation, {
+                    toValue: 1,
+                    duration: 150,
+                    useNativeDriver: true
+                }).start();
+            })
+
+    }, [, modalAnimation])
 
     useEffect(() => {
         loadEvents()
-    }, [props.channelId])
+    }, [])
 
     const windowHeight = Dimensions.get('window').height - 30;
     return (
@@ -144,18 +162,103 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             borderTopRightRadius: 30,
                             borderTopLeftRadius: 30
                         }}>
+                            <View style={{
+                                flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row',
+                                marginBottom: 40
+                            }}>
+                                <View style={{ width: Dimensions.get('window').width < 768 ? '100%' : '30%' }}>
+                                    <TextInput
+                                        value={title}
+                                        style={styles.input}
+                                        placeholder={'Event'}
+                                        onChangeText={val => setTitle(val)}
+                                        placeholderTextColor={'#a6a2a2'}
+                                    />
+                                </View>
+                                <View style={{
+                                    width: Dimensions.get('window').width < 768 ? '100%' : '30%',
+                                    flexDirection: 'row',
+                                    marginTop: 12,
+                                    marginLeft: Dimensions.get('window').width < 768 ? 0 : 10
+                                }}>
+                                    <Text style={styles.text}>
+                                        Start
+                                    </Text>
+                                    <Datetime
+                                        value={start}
+                                        onChange={(event: any) => {
+                                            const date = new Date(event)
+                                            setStart(date)
+                                        }}
+                                    />
+                                </View>
+                                <View style={{
+                                    width: Dimensions.get('window').width < 768 ? '100%' : '30%',
+                                    flexDirection: 'row',
+                                    marginTop: 12,
+                                    marginLeft: Dimensions.get('window').width < 768 ? 0 : 10
+                                }}>
+                                    <Text style={styles.text}>
+                                        End
+                                    </Text>
+                                    <Datetime
+                                        value={end}
+                                        onChange={(event: any) => {
+                                            const date = new Date(event)
+                                            setEnd(date)
+                                        }}
+                                    />
+                                </View>
+                                <View style={{
+                                    width: Dimensions.get('window').width < 768 ? '100%' : '10%',
+                                    flexDirection: 'row',
+                                    display: 'flex',
+                                    justifyContent: 'center'
+                                }}>
+                                    <TouchableOpacity
+                                        style={{
+                                            marginTop: 9
+                                        }}
+                                        onPress={() => handleCreate()}
+                                    >
+                                        <Ionicons name='add-outline' size={21} color='#101010' />
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
                             <Calendar
+                                onSelectEvent={(e: any) => {
+                                    Alert(e.title, e.start.toString() + ' to ' + e.end.toString())
+                                }}
                                 localizer={localizer}
                                 events={events}
                                 startAccessor="start"
                                 endAccessor="end"
-                                style={{ height: 650, fontFamily: 'roboto', color: '#101010' }}
+                                style={{ height: 500, fontFamily: 'roboto', color: '#101010' }}
                             />
                         </View>
                 }
             </ScrollView>
-        </Animated.View>
+        </Animated.View >
     );
 }
 
 export default CalendarX
+
+const styles: any = StyleSheet.create({
+    input: {
+        width: '100%',
+        borderBottomColor: '#f4f4f4',
+        borderBottomWidth: 1,
+        fontSize: 15,
+        padding: 15,
+        paddingTop: 12,
+        paddingBottom: 12,
+        marginBottom: 20
+    },
+    text: {
+        fontSize: 12,
+        color: '#a6a2a2',
+        textAlign: 'left',
+        paddingHorizontal: 10
+    }
+})
