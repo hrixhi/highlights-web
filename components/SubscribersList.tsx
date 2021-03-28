@@ -74,8 +74,6 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
             break;
     }
 
-    console.log(filteredSubscribers)
-
     const handleGradeSubmit = useCallback(() => {
         if (Number.isNaN(Number(score))) {
             return

@@ -123,8 +123,10 @@ const styles: any = (colorScheme: any, channelId: any) => StyleSheet.create({
         height: '100%',
         borderRadius: 20,
         overflow: 'hidden',
+        maxWidth: 400
     },
     card: {
+        maxWidth: 400,
         height: '100%',
         borderRadius: 20,
         padding: 13,

@@ -23,9 +23,9 @@ mutation($name: String!, $password: String, $createdBy: String!) {
 }
 `
 export const createCue = gql`
-mutation($cue: String!, $color: String!, $createdBy: String!, $shuffle: Boolean!, $starred: Boolean!, $channelId: String!, $frequency: String!, $submission: Boolean!, $gradeWeight: String!, $endPlayAt: String, $customCategory: String, $deadline: String) {
+mutation($cue: String!, $color: String!, $createdBy: String!, $shuffle: Boolean!, $starred: Boolean!, $channelId: String!, $frequency: String!, $submission: Boolean!, $gradeWeight: String!, $endPlayAt: String, $customCategory: String, $deadline: String, $shareWithUserIds: [String!]) {
     cue {
-        create(cue: $cue, color: $color, createdBy: $createdBy, shuffle: $shuffle, starred: $starred, channelId: $channelId, frequency: $frequency, submission: $submission, gradeWeight: $gradeWeight, endPlayAt: $endPlayAt, customCategory: $customCategory, deadline: $deadline)
+        create(cue: $cue, color: $color, createdBy: $createdBy, shuffle: $shuffle, starred: $starred, channelId: $channelId, frequency: $frequency, submission: $submission, gradeWeight: $gradeWeight, endPlayAt: $endPlayAt, customCategory: $customCategory, deadline: $deadline, shareWithUserIds: $shareWithUserIds)
     }
 }
 `
@@ -148,6 +148,13 @@ export const editMeeting = gql`
 mutation($channelId: String!, $meetingOn: Boolean!) {
     channel {
         editMeeting(channelId: $channelId, meetingOn: $meetingOn)
+    }
+}
+`
+export const shareCueWithMoreIds = gql`
+mutation($userId: String!, $cueId: String!) {
+    cue {
+        shareCueWithMoreIds(userId: $userId, cueId: $cueId)
     }
 }
 `
@@ -442,6 +449,17 @@ export const getMeetingStatus = gql`
 query($channelId: String!) {
     channel { 
         getMeetingStatus(channelId: $channelId)
+    }
+}
+`
+export const getSharedWith = gql`
+query($cueId: String, $channelId: String!) {
+    cue {
+        getSharedWith(cueId: $cueId, channelId: $channelId) {
+            value
+            label
+            isFixed
+        }
     }
 }
 `

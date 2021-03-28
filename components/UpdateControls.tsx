@@ -8,7 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Datetime from 'react-datetime';
 import { timedFrequencyOptions } from '../helpers/FrequencyOptions';
 import { fetchAPI } from '../graphql/FetchAPI';
-import { createCue, getChannels, markAsRead, submit } from '../graphql/QueriesAndMutations';
+import { createCue, getChannels, getSharedWith, markAsRead, shareCueWithMoreIds, submit } from '../graphql/QueriesAndMutations';
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
 import * as FileSystem from 'expo-file-system';
@@ -19,6 +19,7 @@ import {
 } from "react-native-pell-rich-editor";
 import FileViewer from 'react-file-viewer';
 import FileUpload from './UploadFiles';
+import Select from 'react-select';
 
 const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -75,8 +76,11 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const [showImportOptions, setShowImportOptions] = useState(false)
     const [channels, setChannels] = useState<any[]>([])
     const [shareWithChannelId, setShareWithChannelId] = useState('')
+    const [selected, setSelected] = useState<any[]>([])
+    const [subscribers, setSubscribers] = useState<any[]>([])
+    const [expandMenu, setExpandMenu] = useState(false)
 
-    const loadChannels = useCallback(async () => {
+    const loadChannelsAndSharedWith = useCallback(async () => {
         const uString: any = await AsyncStorage.getItem('user')
         if (uString) {
             const user = JSON.parse(uString)
@@ -94,11 +98,32 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 })
                 .catch(err => {
                 })
+            if (user._id.toString().trim() === props.cue.createdBy) {
+                // owner
+                server.query({
+                    query: getSharedWith,
+                    variables: {
+                        channelId: props.cue.channelId,
+                        cueId: props.cue._id
+                    }
+                })
+                    .then((res: any) => {
+                        if (res.data && res.data.cue.getSharedWith) {
+                            setSubscribers(res.data.cue.getSharedWith)
+                            // clear selected
+                            const sel = res.data.cue.getSharedWith.filter((item: any) => {
+                                return item.isFixed
+                            })
+                            setSelected(sel)
+                        }
+                    })
+                    .catch((err: any) => console.log(err))
+            }
         }
-    }, [])
+    }, [props.cue,])
 
     useEffect(() => {
-        loadChannels()
+        loadChannelsAndSharedWith()
     }, [])
 
     useEffect(() => {
@@ -432,7 +457,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         server.mutate({
             mutation: createCue,
             variables: {
-                cue: saveCue,
+                cue: props.cue.channelId ? props.cue.original : saveCue,
                 starred,
                 color: color.toString(),
                 channelId: shareWithChannelId,
@@ -459,6 +484,35 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         cue, starred, color, frequency, customCategory, shuffle, gradeWeight,
         submission, deadline, notify, playChannelCueIndef, endPlayAt,
         shareWithChannelId, props.cue])
+
+    const onChange = useCallback((value, { action, option, removedValue }) => {
+        switch (action) {
+            case 'remove-value':
+            case 'select-option':
+                const server = fetchAPI('')
+                server.mutate({
+                    mutation: shareCueWithMoreIds,
+                    variables: {
+                        cueId: props.cue._id,
+                        userId: option.value
+                    }
+                }).then(res => {
+                    if (res.data && res.data.cue.shareCueWithMoreIds) {
+                        loadChannelsAndSharedWith()
+                    }
+                }).catch(err => console.log(err))
+                return;
+            case 'pop-value':
+                if (removedValue.isFixed) {
+                    return;
+                }
+                break;
+            case 'clear':
+                value = subscribers.filter(v => v.isFixed);
+                break;
+        }
+        setSelected(value)
+    }, [subscribers, props.cue])
 
     useEffect(() => {
         updateStatusAsRead()
@@ -889,7 +943,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         {
                             props.cue.channelId ?
                                 <View style={{ display: 'flex', flexDirection: width < 768 ? 'column' : 'row' }}>
-                                    <View style={{ width: width < 768 ? '100%' : '33.33%', borderRightWidth: 0, borderColor: '#f4f4f4' }}>
+                                    <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
                                         <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
                                             <Text style={{ fontSize: 12, color: '#a6a2a2' }}>
                                                 <Ionicons
@@ -909,6 +963,72 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                 </View>
                                             </View>
                                         </View>
+                                        {
+                                            props.cue.channelId !== '' && isOwner ?
+                                                <View style={{ maxHeight: 175, flexDirection: 'column', marginTop: 25, overflow: 'scroll' }}>
+                                                    <View style={{ width: '90%', padding: 5, height: expandMenu ? 175 : 'auto' }}>
+                                                        <Select
+                                                            isClearable={false}
+                                                            placeholder='Share with'
+                                                            styles={{
+                                                                menu: (provided: any, state: any) => ({
+                                                                    ...provided,
+                                                                    zIndex: 9999,
+                                                                    overflow: 'scroll',
+                                                                    height: 125,
+                                                                    display: 'flex',
+                                                                    margin: 5,
+                                                                    width: '97%',
+                                                                    boxShadow: 'none'
+                                                                }),
+                                                                option: (provided: any, state: any) => ({
+                                                                    ...provided,
+                                                                    fontFamily: 'overpass',
+                                                                    color: '#a6a2a2',
+                                                                    fontSize: 10,
+                                                                    height: 25,
+                                                                    width: '97%'
+                                                                }),
+                                                                input: (styles: any) => ({
+                                                                    // ...styles,
+                                                                    width: '100%',
+                                                                    border: 'none',
+                                                                    borderWidth: 0,
+                                                                    fontSize: 12
+                                                                }),
+                                                                placeholder: (styles: any) => ({
+                                                                    ...styles,
+                                                                    fontFamily: 'overpass',
+                                                                    color: '#a6a2a2',
+                                                                    fontSize: 12
+                                                                }),
+                                                                multiValueLabel: (styles: any, { data }: any) => ({
+                                                                    ...styles,
+                                                                    color: '#101010',
+                                                                    fontFamily: 'overpass'
+                                                                }),
+                                                                multiValue: (styles: any, { data }: any) => ({
+                                                                    ...styles,
+                                                                    backgroundColor: '#f4f4f4',
+                                                                    fontFamily: 'overpass'
+                                                                }),
+                                                                multiValueRemove: (base: any, state: any) => {
+                                                                    return state.data.isFixed ? { ...base, display: 'none' } : base;
+                                                                },
+                                                            }}
+                                                            value={selected}
+                                                            isMulti={true}
+                                                            onMenuOpen={() => setExpandMenu(true)}
+                                                            onMenuClose={() => setExpandMenu(false)}
+                                                            name="Share with"
+                                                            className="basic-multi-select"
+                                                            classNamePrefix="select"
+                                                            onChange={onChange}
+                                                            options={subscribers}
+                                                        />
+                                                    </View>
+                                                </View> : null
+                                        }
                                     </View>
                                     {
                                         props.cue.channelId !== '' ?
@@ -1202,7 +1322,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                     onPress={() => shareCue()}
                                                     style={{ backgroundColor: 'white' }}>
                                                     <Text style={{ textAlign: 'center', lineHeight: 20, width: '100%' }}>
-                                                        <Ionicons name={'arrow-redo-outline'} size={20} color={'#101010'} />
+                                                        <Ionicons name={'arrow-redo-outline'} size={20} color={shareWithChannelId === '' ? '#a6a2a2' : '#101010'} />
                                                     </Text>
                                                 </TouchableOpacity>
                                             </View>

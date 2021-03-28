@@ -108,7 +108,7 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             props.channelId !== '' ?
                                 <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
                                     <TouchableOpacity
-                                        style={{ marginRight: 20 }}
+                                        style={{ marginRight: 15 }}
                                         onPress={() => props.openDiscussion()}>
                                         <Text style={styles.channelText}>
                                             <Ionicons name='chatbubble-ellipses-outline' size={19} color={'#a6a2a2'} />
@@ -119,7 +119,7 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         }
                                     </TouchableOpacity>
                                     <TouchableOpacity
-                                        style={{ marginRight: 20 }}
+                                        style={{ marginRight: 15 }}
                                         onPress={() => props.openMeeting()}>
                                         <Text style={styles.channelText}>
                                             <Ionicons name='videocam-outline' size={21} color={'#a6a2a2'} />
@@ -130,7 +130,7 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         }
                                     </TouchableOpacity>
                                     <TouchableOpacity
-                                        style={{ marginRight: 20 }}
+                                        style={{ marginRight: 15 }}
                                         onPress={() => props.openSubscribers()}>
                                         <Text style={styles.channelText}>
                                             <Ionicons name='people-outline' size={21} color={'#a6a2a2'} />
@@ -141,14 +141,14 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         }
                                     </TouchableOpacity>
                                     <TouchableOpacity
-                                        style={{ marginRight: 20 }}
+                                        style={{ marginRight: 15 }}
                                         onPress={() => props.openCalendar()}>
                                         <Text style={styles.channelText}>
                                             <Ionicons name='calendar-outline' size={20} color={'#a6a2a2'} />
                                         </Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity
-                                        style={{ marginRight: 20 }}
+                                        style={{ marginRight: 15 }}
                                         onPress={() => props.openGrades()}>
                                         <Text style={styles.channelText}>
                                             <Ionicons name='newspaper-outline' size={19} color={'#a6a2a2'} />
@@ -164,7 +164,7 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 </View> :
                                 <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
                                     <TouchableOpacity
-                                        style={{ marginRight: 20 }}
+                                        style={{ marginRight: 15 }}
                                         onPress={() => props.openCalendar()}>
                                         <Text style={styles.channelText}>
                                             <Ionicons name='calendar-outline' size={20} color={'#a6a2a2'} />

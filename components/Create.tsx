@@ -6,7 +6,7 @@ import { Picker } from '@react-native-picker/picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { timedFrequencyOptions } from '../helpers/FrequencyOptions';
 import { fetchAPI } from '../graphql/FetchAPI';
-import { createCue, getChannelCategories, getChannels, getSubscribers } from '../graphql/QueriesAndMutations';
+import { createCue, getChannelCategories, getChannels, getSharedWith } from '../graphql/QueriesAndMutations';
 import Datetime from 'react-datetime';
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
@@ -19,6 +19,7 @@ import {
 import FileUpload from './UploadFiles';
 import FileViewer from 'react-file-viewer';
 import Alert from '../components/Alert'
+import Select from 'react-select';
 
 const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -54,6 +55,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const [showImportOptions, setShowImportOptions] = useState(false)
     const [selected, setSelected] = useState<any[]>([])
     const [subscribers, setSubscribers] = useState<any[]>([])
+    const [expandMenu, setExpandMenu] = useState(false)
 
     useEffect(() => {
         if (cue[0] === '{' && cue[cue.length - 1] === '}') {
@@ -90,16 +92,17 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         })
         // get subscribers
         server.query({
-            query: getSubscribers,
+            query: getSharedWith,
             variables: {
-                channelId
+                channelId,
+                cueId: null
             }
         })
             .then((res: any) => {
-                if (res.data.user && res.data.user.findByChannelId) {
-                    setSubscribers(res.data.user.findByChannelId)
+                if (res.data && res.data.cue.getSharedWith) {
+                    setSubscribers(res.data.cue.getSharedWith)
                     // clear selected
-                    setSelected([])
+                    setSelected(res.data.cue.getSharedWith)
                 }
             })
             .catch((err: any) => console.log(err))
@@ -310,8 +313,21 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             if (!uString) {
                 return
             }
+
+            if (selected.length === 0) {
+                Alert("No student selected!", "Select who to share with. Re-select channel to select all members.")
+                return;
+            }
+
             const user = JSON.parse(uString)
             const server = fetchAPI('')
+            const userIds: any[] = []
+            if (selected.length !== 0) {
+                selected.map((item) => {
+                    userIds.push(item.value)
+                })
+            }
+
             server.mutate({
                 mutation: createCue,
                 variables: {
@@ -326,7 +342,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     gradeWeight: gradeWeight.toString(),
                     submission,
                     deadline: submission ? deadline.toISOString() : '',
-                    endPlayAt: notify && (shuffle || !playChannelCueIndef) ? endPlayAt.toISOString() : ''
+                    endPlayAt: notify && (shuffle || !playChannelCueIndef) ? endPlayAt.toISOString() : '',
+                    shareWithUserIds: selected.length === subscribers.length ? null : userIds
                 }
             })
                 .then(res => {
@@ -347,7 +364,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         }
 
     }, [cue, modalAnimation, customCategory, props.saveDataInCloud,
-        gradeWeight, deadline, submission, imported, selected,
+        gradeWeight, deadline, submission, imported, selected, subscribers,
         shuffle, frequency, starred, color, notify, title, type, url,
         props.closeModal, channelId, endPlayAt, playChannelCueIndef])
 
@@ -394,6 +411,21 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             useNativeDriver: true
         }).start();
     }, [])
+
+    const onChange = useCallback((value, { action, removedValue }) => {
+        switch (action) {
+            case 'remove-value':
+            case 'pop-value':
+                if (removedValue.isFixed) {
+                    return;
+                }
+                break;
+            case 'clear':
+                value = subscribers.filter(v => v.isFixed);
+                break;
+        }
+        setSelected(value)
+    }, [subscribers])
 
     const width = Dimensions.get('window').width;
 
@@ -640,7 +672,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         </Text>
                                     </View>
                                     <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white' }}>
-                                        <View style={{ width: '85%', backgroundColor: 'white' }}>
+                                        <View style={{ width: '85%', backgroundColor: 'white', display: 'flex' }}>
                                             <ScrollView style={styles.colorBar} horizontal={true} showsHorizontalScrollIndicator={false}>
                                                 <TouchableOpacity
                                                     style={channelId === '' ? styles.allOutline : styles.allBlack}
@@ -681,6 +713,68 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             </ScrollView>
                                         </View>
                                     </View>
+                                    {
+                                        channelId !== '' ?
+                                            <View style={{ maxHeight: 175, flexDirection: 'column', marginTop: 25, overflow: 'scroll' }}>
+                                                <View style={{ width: '90%', padding: 5, height: expandMenu ? 175 : 'auto' }}>
+                                                    <Select
+                                                        placeholder='Share with'
+                                                        styles={{
+                                                            menu: (provided: any, state: any) => ({
+                                                                ...provided,
+                                                                zIndex: 9999,
+                                                                overflow: 'scroll',
+                                                                height: 125,
+                                                                display: 'flex',
+                                                                margin: 5,
+                                                                width: '97%',
+                                                                boxShadow: 'none'
+                                                            }),
+                                                            option: (provided: any, state: any) => ({
+                                                                ...provided,
+                                                                fontFamily: 'overpass',
+                                                                color: '#a6a2a2',
+                                                                fontSize: 10,
+                                                                height: 25,
+                                                                width: '97%'
+                                                            }),
+                                                            input: (styles: any) => ({
+                                                                // ...styles,
+                                                                width: '100%',
+                                                                border: 'none',
+                                                                borderWidth: 0,
+                                                                fontSize: 12
+                                                            }),
+                                                            placeholder: (styles: any) => ({
+                                                                ...styles,
+                                                                fontFamily: 'overpass',
+                                                                color: '#a6a2a2',
+                                                                fontSize: 12
+                                                            }),
+                                                            multiValueLabel: (styles: any, { data }: any) => ({
+                                                                ...styles,
+                                                                color: '#101010',
+                                                                fontFamily: 'overpass'
+                                                            }),
+                                                            multiValue: (styles: any, { data }: any) => ({
+                                                                ...styles,
+                                                                backgroundColor: '#f4f4f4',
+                                                                fontFamily: 'overpass'
+                                                            })
+                                                        }}
+                                                        value={selected}
+                                                        isMulti={true}
+                                                        onMenuOpen={() => setExpandMenu(true)}
+                                                        onMenuClose={() => setExpandMenu(false)}
+                                                        name="Share with"
+                                                        className="basic-multi-select"
+                                                        classNamePrefix="select"
+                                                        onChange={onChange}
+                                                        options={subscribers}
+                                                    />
+                                                </View>
+                                            </View> : null
+                                    }
                                 </View>
                                 {
                                     channelId !== '' ?
