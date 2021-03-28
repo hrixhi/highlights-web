@@ -41,15 +41,20 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
             })
     }, [channelId])
 
-    const createDirectMessage = useCallback(() => {
-        if (!message || message === '') {
+    const createDirectMessage = useCallback(async () => {
+        const u = await AsyncStorage.getItem('user')
+        if (!message || message === '' || !u) {
             return
         }
+        const user = JSON.parse(u)
+        const users: any[] = props.addUserId ? (
+            [user._id, ...props.users]
+        ) : props.users
         const server = fetchAPI('')
         server.mutate({
             mutation: sendDirectMessage,
             variables: {
-                users: props.users,
+                users,
                 message: message,
                 channelId: props.channelId
             }

@@ -133,7 +133,7 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         style={{ marginRight: 15 }}
                                         onPress={() => props.openSubscribers()}>
                                         <Text style={styles.channelText}>
-                                            <Ionicons name='people-outline' size={21} color={'#a6a2a2'} />
+                                            <Ionicons name='people-circle-outline' size={21} color={'#a6a2a2'} />
                                         </Text>
                                         {
                                             unreadMessages !== 0 ?

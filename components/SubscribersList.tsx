@@ -14,6 +14,7 @@ import Alert from './Alert';
 import NewMessage from './NewMessage';
 import MessageCard from './MessageCard';
 import { validateEmail } from '../helpers/emailCheck';
+import Select from 'react-select'
 
 const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -32,7 +33,11 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
     const [showChat, setShowChat] = useState(false)
     const [users, setUsers] = useState<any>([])
     const [emails, setEmails] = useState('')
+    const [showNewGroup, setShowNewGroup] = useState(false)
     const RichText: any = useRef()
+    const [selected, setSelected] = useState<any[]>([])
+    const [expandMenu, setExpandMenu] = useState(false)
+
     if (props.cue && props.cue.submission) {
         categories.push('Submitted')
         categories.push('Graded')
@@ -73,6 +78,10 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
             filteredSubscribers = subscribers
             break;
     }
+
+    const onChange = useCallback((value) => {
+        setSelected(value)
+    }, [subscribers])
 
     const handleGradeSubmit = useCallback(() => {
         if (Number.isNaN(Number(score))) {
@@ -156,7 +165,38 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
             server.mutate({
                 mutation: markMessagesAsRead,
                 variables: {
-                    userId,
+                    userId: parsedUser._id,
+                    groupId
+                }
+            }).then(res => console.log(res))
+                .catch(e => console.log(e))
+        }
+    }, [])
+
+    const loadGroupChat = useCallback(async (groupUsers, groupId) => {
+        const u = await AsyncStorage.getItem('user')
+        if (u) {
+            const parsedUser = JSON.parse(u)
+            setUsers(groupUsers)
+            const server = fetchAPI('')
+            server.query({
+                query: getMessages,
+                variables: {
+                    users: groupUsers
+                }
+            })
+                .then(res => {
+                    setMessages(res.data.message.getMessagesThread)
+                    setShowChat(true)
+                })
+                .catch(err => {
+                    Alert("Unable to load messages.", "Check connection.")
+                })
+            // mark as read here
+            server.mutate({
+                mutation: markMessagesAsRead,
+                variables: {
+                    userId: parsedUser._id,
                     groupId
                 }
             }).then(res => console.log(res))
@@ -166,6 +206,16 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
 
     const windowHeight = Dimensions.get('window').height - 30;
     const key = JSON.stringify(filteredSubscribers)
+
+    let options = filteredSubscribers.map((sub: any) => {
+        return {
+            value: sub._id, label: sub.displayName
+        }
+    })
+
+    const group = selected.map(s => {
+        return s.value
+    })
 
     return (
         <View style={{
@@ -180,7 +230,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                 {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
             </Text>
             {
-                showSubmission || showChat || showAddUsers ?
+                showSubmission || showChat || showAddUsers || showNewGroup ?
                     <View style={{ backgroundColor: 'white', flexDirection: 'row', paddingBottom: 15 }}>
                         <TouchableOpacity
                             key={Math.random()}
@@ -199,6 +249,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     setUserId("")
                                 }
                                 setShowAddUsers(false)
+                                setShowNewGroup(false)
                             }}>
                             <Text style={{
                                 width: '100%',
@@ -220,15 +271,33 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 <Text
                                     ellipsizeMode="tail"
                                     style={{ color: '#a6a2a2', fontSize: 18, flex: 1, lineHeight: 25 }}>
-                                    Messages & Team
+                                    Team
                         </Text>
                         }
                         {
-                            isOwner ?
+                            !props.cueId ?
                                 <TouchableOpacity
                                     key={Math.random()}
                                     style={{
-                                        width: '10%',
+                                        backgroundColor: 'white'
+                                    }}
+                                    onPress={() => setShowNewGroup(true)}>
+                                    <Text style={{
+                                        width: '100%',
+                                        textAlign: 'right',
+                                        lineHeight: 23,
+                                        marginRight: 20,
+                                        marginTop: -1
+                                    }}>
+                                        <Ionicons name='people-outline' size={23} color={'#101010'} />
+                                    </Text>
+                                </TouchableOpacity> : null
+                        }
+                        {
+                            isOwner && !props.cueId ?
+                                <TouchableOpacity
+                                    key={Math.random()}
+                                    style={{
                                         backgroundColor: 'white'
                                     }}
                                     onPress={() => setShowAddUsers(true)}>
@@ -236,10 +305,10 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         width: '100%',
                                         textAlign: 'right',
                                         lineHeight: 23,
-                                        paddingRight: 10,
+                                        marginRight: 20,
                                         marginTop: -1
                                     }}>
-                                        <Ionicons name='person-add-outline' size={20} color={'#101010'} />
+                                        <Ionicons name='person-add-outline' size={21} color={'#101010'} />
                                     </Text>
                                 </TouchableOpacity> : null
                         }
@@ -299,42 +368,161 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             </View>
                                         </ScrollView>
                                         :
-                                        <ScrollView
-                                            showsVerticalScrollIndicator={false}
-                                            horizontal={false}
-                                            key={filterChoice + key}
-                                            contentContainerStyle={{
-                                                width: '100%',
-                                                height: '100%'
-                                            }}
-                                        >
-                                            {
-                                                filteredSubscribers.map((subscriber: any, index: any) => {
-                                                    return <View style={styles.col} key={filterChoice + key + index}>
-                                                        <SubscriberCard
-                                                            chat={!props.cueId || props.cueId === '' ? true : false}
-                                                            fadeAnimation={props.fadeAnimation}
-                                                            subscriber={subscriber}
-                                                            onPress={() => {
-                                                                if (props.cueId && props.cueId !== null) {
-                                                                    if (subscriber.fullName === 'submitted' || subscriber.fullName === 'graded') {
-                                                                        setSubmission(subscriber.submission)
-                                                                        setShowSubmission(true)
-                                                                        setStatus(subscriber.fullName)
-                                                                        setScore(subscriber.score)
-                                                                        setUserId(subscriber.userId)
-                                                                    }
-                                                                } else {
-                                                                    console.log(subscriber)
-                                                                    loadChat(subscriber._id, subscriber.groupId)
-                                                                }
+                                        (
+                                            showNewGroup ?
+                                                <ScrollView
+                                                    showsVerticalScrollIndicator={false}
+                                                    keyboardDismissMode={'on-drag'}
+                                                    style={{ flex: 1, paddingTop: 12 }}>
+                                                    <Text
+                                                        ellipsizeMode="tail"
+                                                        style={{ color: '#a6a2a2', fontSize: 18, flex: 1, lineHeight: 25 }}>
+                                                        New Group
+                                                    </Text>
+                                                    <View style={{ maxHeight: 175, flexDirection: 'column', marginTop: 25, overflow: 'scroll', marginBottom: 25 }}>
+                                                        <View style={{ width: '90%', padding: 5, height: expandMenu ? 175 : 'auto' }}>
+                                                            <Select
+                                                                placeholder='Share with'
+                                                                styles={{
+                                                                    menu: (provided: any, state: any) => ({
+                                                                        ...provided,
+                                                                        zIndex: 9999,
+                                                                        overflow: 'scroll',
+                                                                        height: 125,
+                                                                        display: 'flex',
+                                                                        margin: 5,
+                                                                        width: '97%',
+                                                                        boxShadow: 'none'
+                                                                    }),
+                                                                    option: (provided: any, state: any) => ({
+                                                                        ...provided,
+                                                                        fontFamily: 'overpass',
+                                                                        color: '#a6a2a2',
+                                                                        fontSize: 10,
+                                                                        height: 25,
+                                                                        width: '97%'
+                                                                    }),
+                                                                    input: (styles: any) => ({
+                                                                        // ...styles,
+                                                                        width: '100%',
+                                                                        border: 'none',
+                                                                        borderWidth: 0,
+                                                                        fontSize: 12
+                                                                    }),
+                                                                    placeholder: (styles: any) => ({
+                                                                        ...styles,
+                                                                        fontFamily: 'overpass',
+                                                                        color: '#a6a2a2',
+                                                                        fontSize: 12
+                                                                    }),
+                                                                    multiValueLabel: (styles: any, { data }: any) => ({
+                                                                        ...styles,
+                                                                        color: '#101010',
+                                                                        fontFamily: 'overpass'
+                                                                    }),
+                                                                    multiValue: (styles: any, { data }: any) => ({
+                                                                        ...styles,
+                                                                        backgroundColor: '#f4f4f4',
+                                                                        fontFamily: 'overpass'
+                                                                    })
+                                                                }}
+                                                                value={selected}
+                                                                isMulti={true}
+                                                                onMenuOpen={() => setExpandMenu(true)}
+                                                                onMenuClose={() => setExpandMenu(false)}
+                                                                name="Share with"
+                                                                className="basic-multi-select"
+                                                                classNamePrefix="select"
+                                                                onChange={onChange}
+                                                                options={options}
+                                                            />
+                                                        </View>
+                                                    </View>
+                                                    <View style={{ backgroundColor: 'white' }}>
+                                                        <NewMessage
+                                                            cueId={props.cueId}
+                                                            channelId={props.channelId}
+                                                            parentId={null}
+                                                            users={group}
+                                                            addUserId={true}
+                                                            back={() => {
+                                                                props.reload()
+                                                                setShowChat(false)
+                                                                setShowNewGroup(false)
                                                             }}
-                                                            status={!props.cueId ? false : true}
+                                                            placeholder='Message...'
                                                         />
                                                     </View>
-                                                })
-                                            }
-                                        </ScrollView>
+                                                </ScrollView>
+                                                : <ScrollView
+                                                    showsVerticalScrollIndicator={false}
+                                                    horizontal={false}
+                                                    key={filterChoice + key}
+                                                    contentContainerStyle={{
+                                                        width: '100%',
+                                                        height: '100%',
+                                                        paddingBottom: 20
+                                                    }}
+                                                >
+                                                    {
+                                                        !props.cueId || props.cueId === '' ?
+                                                            <View style={{ backgroundColor: 'white', borderBottomWidth: 1, borderBottomColor: '#f4f4f4', marginBottom: 20 }}>
+                                                                {
+                                                                    props.groups.length > 0 ? (props.groups.map((group: any, index: any) => {
+                                                                        let displayName = ''
+                                                                        console.log(group)
+                                                                        group.userNames.map((u: any) => { displayName += (u.displayName + ', ') })
+                                                                        return <View style={styles.col} key={filterChoice + key + index}>
+                                                                            <SubscriberCard
+                                                                                chat={!props.cueId || props.cueId === '' ? true : false}
+                                                                                fadeAnimation={props.fadeAnimation}
+                                                                                subscriber={{
+                                                                                    displayName,
+                                                                                    fullName: 'Team',
+                                                                                    unreadMessages: group.unreadMessages
+                                                                                }}
+                                                                                onPress={() => {
+                                                                                    loadGroupChat(group.users, group._id)
+                                                                                }}
+                                                                                status={!props.cueId ? false : true}
+                                                                            />
+                                                                        </View>
+                                                                    })) : <View style={{ backgroundColor: 'white', flex: 1 }}>
+                                                                        <Text style={{ width: '100%', color: '#a6a2a2', fontSize: 25, paddingHorizontal: 50, fontFamily: 'inter', flex: 1 }}>
+                                                                            No groups.
+                                                                    </Text>
+                                                                    </View>
+                                                                }
+                                                            </View>
+                                                            : null
+                                                    }
+                                                    {
+                                                        filteredSubscribers.map((subscriber: any, index: any) => {
+                                                            return <View style={styles.col} key={filterChoice + key + index}>
+                                                                <SubscriberCard
+                                                                    chat={!props.cueId || props.cueId === '' ? true : false}
+                                                                    fadeAnimation={props.fadeAnimation}
+                                                                    subscriber={subscriber}
+                                                                    onPress={() => {
+                                                                        if (props.cueId && props.cueId !== null) {
+                                                                            if (subscriber.fullName === 'submitted' || subscriber.fullName === 'graded') {
+                                                                                setSubmission(subscriber.submission)
+                                                                                setShowSubmission(true)
+                                                                                setStatus(subscriber.fullName)
+                                                                                setScore(subscriber.score)
+                                                                                setUserId(subscriber.userId)
+                                                                            }
+                                                                        } else {
+                                                                            console.log(subscriber)
+                                                                            loadChat(subscriber._id, subscriber.groupId)
+                                                                        }
+                                                                    }}
+                                                                    status={!props.cueId ? false : true}
+                                                                />
+                                                            </View>
+                                                        })
+                                                    }
+                                                </ScrollView>)
                                 ) :
                                 <View>
                                     <ScrollView

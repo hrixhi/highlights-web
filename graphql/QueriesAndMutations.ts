@@ -463,3 +463,17 @@ query($cueId: String, $channelId: String!) {
     }
 }
 `
+export const getGroups = gql`
+query($userId: String!, $channelId: String!) {
+    group {
+        getGroups(userId: $userId, channelId: $channelId) {
+            _id
+            users
+            unreadMessages
+            userNames {
+                displayName
+            }
+        }
+    }
+}
+`
