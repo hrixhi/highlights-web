@@ -12,6 +12,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const colorScheme = useColorScheme();
     const styles: any = styleObject(colorScheme)
     const [loggedIn, setLoggedIn] = useState(false)
+    const [userLoaded, setUserLoaded] = useState(false)
 
     const getUser = useCallback(async () => {
         const u = await AsyncStorage.getItem('user')
@@ -21,6 +22,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 setLoggedIn(true)
             }
         }
+        setUserLoaded(true)
     }, [])
 
     useEffect(() => {
@@ -42,8 +44,8 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             color: colorScheme === 'light' ? (
                                 choice === 'All' ? 'white' : '#101010'
                             ) : (
-                                    choice === 'All' ? '#101010' : 'white'
-                                ),
+                                choice === 'All' ? '#101010' : 'white'
+                            ),
                             lineHeight: 22,
                             fontSize: 14
                         }}
@@ -51,8 +53,8 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         <Ionicons name='home-outline' size={15} color={colorScheme === 'light' ? (
                             choice === 'All' ? 'white' : '#101010'
                         ) : (
-                                choice === 'All' ? '#101010' : 'white'
-                            )} />
+                            choice === 'All' ? '#101010' : 'white'
+                        )} />
                     </Text>
                 </TouchableOpacity>
                 {
@@ -70,8 +72,8 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 color: colorScheme === 'light' ? (
                                     choice === subscription.channelName ? 'white' : '#101010'
                                 ) : (
-                                        choice === subscription.channelName ? '#101010' : 'white'
-                                    ),
+                                    choice === subscription.channelName ? '#101010' : 'white'
+                                ),
                                 lineHeight: 22,
                                 fontFamily: 'overpass',
                                 fontSize: 13
@@ -111,6 +113,10 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         <Text style={{ textAlign: 'center', lineHeight: 30 }}>
                             <Ionicons name={loggedIn ? 'person-circle-outline' : 'cloud-upload-outline'} size={21} color={'#a6a2a2'} />
                         </Text>
+                        {
+                            !loggedIn && userLoaded ?
+                                <View style={styles.badge} /> : null
+                        }
                     </TouchableOpacity>
                 </View>
             </View>
@@ -152,6 +158,19 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
     iconContainer: {
         width: '20%',
         textAlign: 'right',
+    },
+    badge: {
+        position: 'absolute',
+        alignSelf: 'center',
+        width: 10,
+        height: 10,
+        marginLeft: 8,
+        marginBottom: 10,
+        marginTop: -8,
+        borderRadius: 10,
+        backgroundColor: '#f94144',
+        textAlign: 'center',
+        zIndex: 50
     },
     outline: {
         borderRadius: 10,

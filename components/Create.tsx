@@ -384,7 +384,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
     const clearAll = useCallback(() => {
         Alert(
-            "Clear all?",
+            "Clear?",
             "This action cannot be undone.",
             [
                 {
@@ -490,7 +490,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     selectedIconTint={"#a6a2a2"}
                                     disabledIconTint={"#a6a2a2"}
                                     actions={
-                                        imported ? ["close"] :
+                                        imported ? ["clear"] :
                                             [
                                                 actions.setBold,
                                                 actions.setItalic,
@@ -661,140 +661,377 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 />
                         }
                     </View>
-                    <View style={{ flex: 1, display: 'flex', flexDirection: 'column', marginHorizontal: 10 }}>
-                        {channels.length !== 0 ?
-                            <View style={{ display: 'flex', flexDirection: width < 768 ? 'column' : 'row', overflow: 'visible' }}>
+                        <View style={{ flex: 1, display: 'flex', flexDirection: 'column', marginHorizontal: 10 }}>
+                            {channels.length !== 0 ?
+                                <View style={{ display: 'flex', flexDirection: width < 768 ? 'column' : 'row', overflow: 'visible' }}>
+                                    <View style={{ width: width < 768 ? '100%' : '33.33%', borderRightWidth: 0, borderColor: '#f4f4f4' }}>
+                                        <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
+                                            <Text style={{ fontSize: 12, color: '#a6a2a2' }}>
+                                                <Ionicons
+                                                    name='school-outline' size={20} color={'#a6a2a2'} />
+                                            </Text>
+                                        </View>
+                                        <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white' }}>
+                                            <View style={{ width: '85%', backgroundColor: 'white', display: 'flex' }}>
+                                                <ScrollView style={styles.colorBar} horizontal={true} showsHorizontalScrollIndicator={false}>
+                                                    <TouchableOpacity
+                                                        style={channelId === '' ? styles.allOutline : styles.allBlack}
+                                                        onPress={() => {
+                                                            setChannelId('')
+                                                            setCustomCategories(localCustomCategories)
+                                                            setCustomCategory('')
+                                                            setAddCustomCategory(false)
+                                                            setSubmission(false)
+                                                            setGradeWeight(0)
+                                                            setGraded(false)
+                                                            setSelected([])
+                                                            setSubscribers([])
+                                                        }}>
+                                                        <Text style={{ lineHeight: 20, fontSize: 12, color: channelId === '' ? '#fff' : '#101010' }}>
+                                                            <Ionicons name='home-outline' size={15} />
+                                                        </Text>
+                                                    </TouchableOpacity>
+                                                    {
+                                                        channels.map((channel) => {
+                                                            return <TouchableOpacity
+                                                                key={Math.random()}
+                                                                style={channelId === channel._id ? styles.allOutline : styles.allBlack}
+                                                                onPress={() => {
+                                                                    setChannelId(channel._id)
+                                                                    setAddCustomCategory(false)
+                                                                    setCustomCategory('')
+                                                                    setSubmission(false)
+                                                                    setGradeWeight(0)
+                                                                    setGraded(false)
+                                                                }}>
+                                                                <Text style={{ lineHeight: 20, fontSize: 12, color: channelId === channel._id ? '#fff' : '#101010' }}>
+                                                                    {channel.name}
+                                                                </Text>
+                                                            </TouchableOpacity>
+                                                        })
+                                                    }
+                                                </ScrollView>
+                                            </View>
+                                        </View>
+                                        {
+                                            channelId !== '' ?
+                                                <View style={{ maxHeight: 175, flexDirection: 'column', marginTop: 25, overflow: 'scroll' }}>
+                                                    <View style={{ width: '90%', padding: 5, height: expandMenu ? 175 : 'auto' }}>
+                                                        <Select
+                                                            placeholder='Share with'
+                                                            styles={{
+                                                                menu: (provided: any, state: any) => ({
+                                                                    ...provided,
+                                                                    zIndex: 9999,
+                                                                    overflow: 'scroll',
+                                                                    height: 125,
+                                                                    display: 'flex',
+                                                                    margin: 5,
+                                                                    width: '97%',
+                                                                    boxShadow: 'none'
+                                                                }),
+                                                                option: (provided: any, state: any) => ({
+                                                                    ...provided,
+                                                                    fontFamily: 'overpass',
+                                                                    color: '#a6a2a2',
+                                                                    fontSize: 10,
+                                                                    height: 25,
+                                                                    width: '97%'
+                                                                }),
+                                                                input: (styles: any) => ({
+                                                                    // ...styles,
+                                                                    width: '100%',
+                                                                    border: 'none',
+                                                                    borderWidth: 0,
+                                                                    fontSize: 12
+                                                                }),
+                                                                placeholder: (styles: any) => ({
+                                                                    ...styles,
+                                                                    fontFamily: 'overpass',
+                                                                    color: '#a6a2a2',
+                                                                    fontSize: 12
+                                                                }),
+                                                                multiValueLabel: (styles: any, { data }: any) => ({
+                                                                    ...styles,
+                                                                    color: '#101010',
+                                                                    fontFamily: 'overpass'
+                                                                }),
+                                                                multiValue: (styles: any, { data }: any) => ({
+                                                                    ...styles,
+                                                                    backgroundColor: '#f4f4f4',
+                                                                    fontFamily: 'overpass'
+                                                                })
+                                                            }}
+                                                            value={selected}
+                                                            isMulti={true}
+                                                            onMenuOpen={() => setExpandMenu(true)}
+                                                            onMenuClose={() => setExpandMenu(false)}
+                                                            name="Share with"
+                                                            className="basic-multi-select"
+                                                            classNamePrefix="select"
+                                                            onChange={onChange}
+                                                            options={subscribers}
+                                                        />
+                                                    </View>
+                                                </View> : null
+                                        }
+                                    </View>
+                                    {
+                                        channelId !== '' ?
+                                            <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
+                                                <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
+                                                    <Text style={{ fontSize: 12, color: '#a6a2a2' }}>
+                                                        Accept Submission
+                                                </Text>
+                                                </View>
+                                                <View style={{ flexDirection: 'row' }}>
+                                                    <View style={{
+                                                        backgroundColor: 'white',
+                                                        height: 40,
+                                                        marginRight: 10
+                                                    }}>
+                                                        <Switch
+                                                            value={submission}
+                                                            onValueChange={() => {
+                                                                setSubmission(!submission)
+                                                            }}
+                                                            style={{ height: 20 }}
+                                                            trackColor={{
+                                                                false: '#f4f4f4',
+                                                                true: '#a6a2a2'
+                                                            }}
+                                                            activeThumbColor='white'
+                                                        />
+                                                    </View>
+                                                    {
+                                                        submission ?
+                                                            <View style={{
+                                                                width: '100%',
+                                                                display: 'flex',
+                                                                flexDirection: 'row',
+                                                                backgroundColor: 'white',
+                                                            }}>
+                                                                <Text style={styles.text}>
+                                                                    Deadline
+                                                        </Text>
+                                                                <Datetime
+                                                                    value={deadline}
+                                                                    onChange={(event: any) => {
+                                                                        const date = new Date(event)
+                                                                        setDeadline(date)
+                                                                    }}
+                                                                />
+                                                            </View>
+                                                            : null
+                                                    }
+                                                </View>
+                                            </View> : null
+                                    }
+                                    {
+                                        submission ?
+                                            <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
+                                                <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
+                                                    <Text style={{ fontSize: 12, color: '#a6a2a2' }}>
+                                                        Graded
+                                                </Text>
+                                                </View>
+                                                <View style={{ flexDirection: 'row' }}>
+                                                    <View style={{
+                                                        backgroundColor: 'white',
+                                                        height: 40,
+                                                        marginRight: 10
+                                                    }}>
+                                                        <Switch
+                                                            value={graded}
+                                                            onValueChange={() => setGraded(!graded)}
+                                                            style={{ height: 20 }}
+                                                            trackColor={{
+                                                                false: '#f4f4f4',
+                                                                true: '#a6a2a2'
+                                                            }}
+                                                            activeThumbColor='white'
+                                                        />
+                                                    </View>
+                                                    {
+                                                        graded ?
+                                                            <View style={{
+                                                                width: '100%',
+                                                                display: 'flex',
+                                                                flexDirection: 'row',
+                                                                backgroundColor: 'white'
+                                                            }}>
+                                                                <Text style={styles.text}>
+                                                                    Grade Weight {'\n'}(% of overall grade)
+                                                        </Text>
+                                                                <TextInput
+                                                                    value={gradeWeight}
+                                                                    style={styles.picker}
+                                                                    placeholder={'0-100'}
+                                                                    onChangeText={val => setGradeWeight(val)}
+                                                                    placeholderTextColor={'#a6a2a2'}
+                                                                />
+                                                            </View>
+                                                            : null
+                                                    }
+                                                </View>
+                                            </View> : null
+                                    }
+                                </View>
+                                : null}
+                            <View style={{ display: 'flex', flexDirection: width < 768 ? 'column' : 'row' }}>
+                                <View style={{ width: width < 768 ? '100%' : '33.33%', borderRightWidth: 0, borderColor: '#f4f4f4' }}>
+                                    <View style={{ width: '100%', backgroundColor: 'white' }}>
+                                        <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
+                                            <Text style={{ fontSize: 12, color: '#a6a2a2' }}>
+                                                Category
+                                        </Text>
+                                        </View>
+                                        <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white' }}>
+                                            <View style={{ width: '85%', backgroundColor: 'white' }}>
+                                                {
+                                                    addCustomCategory ?
+                                                        <View style={styles.colorBar}>
+                                                            <TextInput
+                                                                value={customCategory}
+                                                                style={styles.allGrayOutline}
+                                                                placeholder={'New Category'}
+                                                                onChangeText={val => {
+                                                                    setCustomCategory(val)
+                                                                }}
+                                                                placeholderTextColor={'#a6a2a2'}
+                                                            />
+                                                        </View> :
+                                                        <ScrollView style={styles.colorBar} horizontal={true} showsHorizontalScrollIndicator={false}>
+                                                            <TouchableOpacity
+                                                                style={customCategory === '' ? styles.allGrayOutline : styles.all}
+                                                                onPress={() => {
+                                                                    setCustomCategory('')
+                                                                }}>
+                                                                <Text style={{ color: '#a6a2a2', lineHeight: 20, fontSize: 12 }}>
+                                                                    None
+                                                    </Text>
+                                                            </TouchableOpacity>
+                                                            {
+                                                                customCategories.map((category: string) => {
+                                                                    return <TouchableOpacity
+                                                                        key={Math.random()}
+                                                                        style={customCategory === category ? styles.allGrayOutline : styles.all}
+                                                                        onPress={() => {
+                                                                            setCustomCategory(category)
+                                                                        }}>
+                                                                        <Text style={{ color: '#a6a2a2', lineHeight: 20, fontSize: 12 }}>
+                                                                            {category}
+                                                                        </Text>
+                                                                    </TouchableOpacity>
+                                                                })
+                                                            }
+                                                        </ScrollView>
+                                                }
+                                            </View>
+                                            <View style={{ width: '15%', backgroundColor: 'white' }}>
+                                                <TouchableOpacity
+                                                    onPress={() => {
+                                                        if (addCustomCategory) {
+                                                            setCustomCategory('')
+                                                            setAddCustomCategory(false)
+                                                        } else {
+                                                            setCustomCategory('')
+                                                            setAddCustomCategory(true)
+                                                        }
+                                                    }}
+                                                    style={{ backgroundColor: 'white' }}>
+                                                    <Text style={{ textAlign: 'center', lineHeight: 20, width: '100%' }}>
+                                                        <Ionicons name={addCustomCategory ? 'close' : 'add'} size={20} color={'#a6a2a2'} />
+                                                    </Text>
+                                                </TouchableOpacity>
+                                            </View>
+                                        </View>
+                                    </View>
+                                </View>
                                 <View style={{ width: width < 768 ? '100%' : '33.33%', borderRightWidth: 0, borderColor: '#f4f4f4' }}>
                                     <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
                                         <Text style={{ fontSize: 12, color: '#a6a2a2' }}>
-                                            <Ionicons
-                                                name='school-outline' size={20} color={'#a6a2a2'} />
-                                        </Text>
+                                            Priority
+                                </Text>
                                     </View>
                                     <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white' }}>
-                                        <View style={{ width: '85%', backgroundColor: 'white', display: 'flex' }}>
-                                            <ScrollView style={styles.colorBar} horizontal={true} showsHorizontalScrollIndicator={false}>
-                                                <TouchableOpacity
-                                                    style={channelId === '' ? styles.allOutline : styles.allBlack}
-                                                    onPress={() => {
-                                                        setChannelId('')
-                                                        setCustomCategories(localCustomCategories)
-                                                        setCustomCategory('')
-                                                        setAddCustomCategory(false)
-                                                        setSubmission(false)
-                                                        setGradeWeight(0)
-                                                        setGraded(false)
-                                                        setSelected([])
-                                                        setSubscribers([])
-                                                    }}>
-                                                    <Text style={{ lineHeight: 20, fontSize: 12, color: channelId === '' ? '#fff' : '#101010' }}>
-                                                        <Ionicons name='home-outline' size={15} />
-                                                    </Text>
-                                                </TouchableOpacity>
+                                        <View style={{ width: '100%', backgroundColor: 'white' }}>
+                                            <ScrollView style={{ ...styles.colorBar, height: 20 }} horizontal={true} showsHorizontalScrollIndicator={false}>
                                                 {
-                                                    channels.map((channel) => {
-                                                        return <TouchableOpacity
-                                                            key={Math.random()}
-                                                            style={channelId === channel._id ? styles.allOutline : styles.allBlack}
-                                                            onPress={() => {
-                                                                setChannelId(channel._id)
-                                                                setAddCustomCategory(false)
-                                                                setCustomCategory('')
-                                                                setSubmission(false)
-                                                                setGradeWeight(0)
-                                                                setGraded(false)
-                                                            }}>
-                                                            <Text style={{ lineHeight: 20, fontSize: 12, color: channelId === channel._id ? '#fff' : '#101010' }}>
-                                                                {channel.name}
-                                                            </Text>
-                                                        </TouchableOpacity>
+                                                    colorChoices.map((c: string, i: number) => {
+                                                        return <View style={color === i ? styles.colorContainerOutline : styles.colorContainer} key={Math.random()}>
+                                                            <TouchableOpacity
+                                                                style={{
+                                                                    width: 9,
+                                                                    height: 9,
+                                                                    borderRadius: 6,
+                                                                    backgroundColor: colorChoices[i]
+                                                                }}
+                                                                onPress={() => {
+                                                                    setColor(i)
+                                                                }}
+                                                            />
+                                                        </View>
                                                     })
                                                 }
                                             </ScrollView>
                                         </View>
                                     </View>
-                                    {
-                                        channelId !== '' ?
-                                            <View style={{ maxHeight: 175, flexDirection: 'column', marginTop: 25, overflow: 'scroll' }}>
-                                                <View style={{ width: '90%', padding: 5, height: expandMenu ? 175 : 'auto' }}>
-                                                    <Select
-                                                        placeholder='Share with'
-                                                        styles={{
-                                                            menu: (provided: any, state: any) => ({
-                                                                ...provided,
-                                                                zIndex: 9999,
-                                                                overflow: 'scroll',
-                                                                height: 125,
-                                                                display: 'flex',
-                                                                margin: 5,
-                                                                width: '97%',
-                                                                boxShadow: 'none'
-                                                            }),
-                                                            option: (provided: any, state: any) => ({
-                                                                ...provided,
-                                                                fontFamily: 'overpass',
-                                                                color: '#a6a2a2',
-                                                                fontSize: 10,
-                                                                height: 25,
-                                                                width: '97%'
-                                                            }),
-                                                            input: (styles: any) => ({
-                                                                // ...styles,
-                                                                width: '100%',
-                                                                border: 'none',
-                                                                borderWidth: 0,
-                                                                fontSize: 12
-                                                            }),
-                                                            placeholder: (styles: any) => ({
-                                                                ...styles,
-                                                                fontFamily: 'overpass',
-                                                                color: '#a6a2a2',
-                                                                fontSize: 12
-                                                            }),
-                                                            multiValueLabel: (styles: any, { data }: any) => ({
-                                                                ...styles,
-                                                                color: '#101010',
-                                                                fontFamily: 'overpass'
-                                                            }),
-                                                            multiValue: (styles: any, { data }: any) => ({
-                                                                ...styles,
-                                                                backgroundColor: '#f4f4f4',
-                                                                fontFamily: 'overpass'
-                                                            })
-                                                        }}
-                                                        value={selected}
-                                                        isMulti={true}
-                                                        onMenuOpen={() => setExpandMenu(true)}
-                                                        onMenuClose={() => setExpandMenu(false)}
-                                                        name="Share with"
-                                                        className="basic-multi-select"
-                                                        classNamePrefix="select"
-                                                        onChange={onChange}
-                                                        options={subscribers}
-                                                    />
-                                                </View>
-                                            </View> : null
-                                    }
+                                </View>
+                            </View>
+                            <View style={{ width: '100%', paddingTop: 15, flexDirection: width < 768 ? 'column' : 'row' }}>
+                                <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
+                                    <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
+                                        <Text style={{ fontSize: 15, color: '#a6a2a2' }}>
+                                            <Ionicons name='notifications-outline' size={20} color={'#a6a2a2'} />
+                                        </Text>
+                                    </View>
+                                    <View style={{
+                                        backgroundColor: 'white',
+                                        width: '100%',
+                                        height: 40,
+                                        marginRight: 10
+                                    }}>
+                                        <Switch
+                                            value={notify}
+                                            onValueChange={() => {
+                                                if (notify) {
+                                                    // setShuffle(false)
+                                                    setFrequency("0")
+                                                } else {
+                                                    // setShuffle(true)
+                                                    setFrequency("1-D")
+                                                }
+                                                setPlayChannelCueIndef(true)
+                                                setNotify(!notify)
+                                            }}
+                                            style={{ height: 20 }}
+                                            trackColor={{
+                                                false: '#f4f4f4',
+                                                true: '#0079FE'
+                                            }}
+                                            activeThumbColor='white'
+                                        />
+                                    </View>
                                 </View>
                                 {
-                                    channelId !== '' ?
+                                    notify ?
                                         <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
                                             <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
                                                 <Text style={{ fontSize: 12, color: '#a6a2a2' }}>
-                                                    Accept Submission
+                                                    <Ionicons
+                                                        name='repeat-outline' size={20} color={'#a6a2a2'} />
                                                 </Text>
                                             </View>
-                                            <View style={{ flexDirection: 'row' }}>
+                                            <View style={{ flexDirection: 'row', }}>
                                                 <View style={{
                                                     backgroundColor: 'white',
                                                     height: 40,
                                                     marginRight: 10
                                                 }}>
                                                     <Switch
-                                                        value={submission}
-                                                        onValueChange={() => {
-                                                            setSubmission(!submission)
-                                                        }}
+                                                        value={!shuffle}
+                                                        onValueChange={() => setShuffle(!shuffle)}
                                                         style={{ height: 20 }}
                                                         trackColor={{
                                                             false: '#f4f4f4',
@@ -804,56 +1041,36 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     />
                                                 </View>
                                                 {
-                                                    submission ?
+                                                    !shuffle ?
                                                         <View style={{
-                                                            width: '100%',
                                                             display: 'flex',
                                                             flexDirection: 'row',
-                                                            backgroundColor: 'white',
+                                                            backgroundColor: 'white'
                                                         }}>
                                                             <Text style={styles.text}>
-                                                                Deadline
-                                                        </Text>
-                                                            <Datetime
-                                                                value={deadline}
-                                                                onChange={(event: any) => {
-                                                                    const date = new Date(event)
-                                                                    setDeadline(date)
+                                                                Remind every
+                                                    </Text>
+                                                            <Picker
+                                                                style={styles.picker}
+                                                                itemStyle={{
+                                                                    fontSize: 18
                                                                 }}
-                                                            />
-                                                        </View>
-                                                        : null
-                                                }
-                                            </View>
-                                        </View> : null
-                                }
-                                {
-                                    submission ?
-                                        <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
-                                            <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                                <Text style={{ fontSize: 12, color: '#a6a2a2' }}>
-                                                    Graded
-                                                </Text>
-                                            </View>
-                                            <View style={{ flexDirection: 'row' }}>
-                                                <View style={{
-                                                    backgroundColor: 'white',
-                                                    height: 40,
-                                                    marginRight: 10
-                                                }}>
-                                                    <Switch
-                                                        value={graded}
-                                                        onValueChange={() => setGraded(!graded)}
-                                                        style={{ height: 20 }}
-                                                        trackColor={{
-                                                            false: '#f4f4f4',
-                                                            true: '#a6a2a2'
-                                                        }}
-                                                        activeThumbColor='white'
-                                                    />
-                                                </View>
-                                                {
-                                                    graded ?
+                                                                selectedValue={frequency}
+                                                                onValueChange={(itemValue: any) =>
+                                                                    setFrequency(itemValue)
+                                                                }>
+                                                                {
+                                                                    timedFrequencyOptions.map((item: any, index: number) => {
+                                                                        return <Picker.Item
+                                                                            color={frequency === item.value ? '#0079FE' : "#101010"}
+                                                                            label={item.value === '0' && channelId !== '' ? 'Once' : item.label}
+                                                                            value={item.value}
+                                                                            key={index}
+                                                                        />
+                                                                    })
+                                                                }
+                                                            </Picker>
+                                                        </View> :
                                                         <View style={{
                                                             width: '100%',
                                                             display: 'flex',
@@ -861,339 +1078,123 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             backgroundColor: 'white'
                                                         }}>
                                                             <Text style={styles.text}>
-                                                                Grade Weight {'\n'}(% of overall grade)
-                                                        </Text>
-                                                            <TextInput
-                                                                value={gradeWeight}
-                                                                style={styles.picker}
-                                                                placeholder={'0-100'}
-                                                                onChangeText={val => setGradeWeight(val)}
-                                                                placeholderTextColor={'#a6a2a2'}
+                                                                Remind on
+                                                            </Text>
+                                                            <Datetime
+                                                                value={endPlayAt}
+                                                                onChange={(event: any) => {
+                                                                    const date = new Date(event)
+                                                                    setEndPlayAt(date)
+                                                                }}
                                                             />
                                                         </View>
-                                                        : null
+                                                }
+                                            </View>
+                                        </View> : null
+                                }
+                                {
+                                    notify && !shuffle ?
+                                        <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
+                                            <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
+                                                <Text style={{ fontSize: 12, color: '#a6a2a2' }}>
+                                                    <Ionicons
+                                                        name='infinite-outline' size={20} color={'#a6a2a2'} />
+                                                </Text>
+                                            </View>
+                                            <View style={{ flexDirection: 'row' }}>
+                                                <View style={{
+                                                    backgroundColor: 'white',
+                                                    height: 40,
+                                                    marginRight: 10
+                                                }}>
+                                                    <Switch
+                                                        value={playChannelCueIndef}
+                                                        onValueChange={() => setPlayChannelCueIndef(!playChannelCueIndef)}
+                                                        style={{ height: 20 }}
+                                                        trackColor={{
+                                                            false: '#f4f4f4',
+                                                            true: '#a6a2a2'
+                                                        }}
+                                                        activeThumbColor='white'
+                                                    />
+                                                </View>
+                                                {
+                                                    playChannelCueIndef ? null :
+                                                        <View style={{
+                                                            width: '100%',
+                                                            display: 'flex',
+                                                            flexDirection: 'row',
+                                                            backgroundColor: 'white'
+                                                        }}>
+                                                            <Text style={styles.text}>
+                                                                Remind till
+                                                            </Text>
+                                                            <Datetime
+                                                                value={endPlayAt}
+                                                                onChange={(event: any) => {
+                                                                    const date = new Date(event)
+                                                                    setEndPlayAt(date)
+                                                                }}
+                                                            />
+                                                        </View>
                                                 }
                                             </View>
                                         </View> : null
                                 }
                             </View>
-                            : null}
-                        <View style={{ display: 'flex', flexDirection: width < 768 ? 'column' : 'row' }}>
-                            <View style={{ width: width < 768 ? '100%' : '33.33%', borderRightWidth: 0, borderColor: '#f4f4f4' }}>
-                                <View style={{ width: '100%', backgroundColor: 'white' }}>
-                                    <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                        <Text style={{ fontSize: 12, color: '#a6a2a2' }}>
-                                            Category
-                                        </Text>
-                                    </View>
-                                    <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white' }}>
-                                        <View style={{ width: '85%', backgroundColor: 'white' }}>
-                                            {
-                                                addCustomCategory ?
-                                                    <View style={styles.colorBar}>
-                                                        <TextInput
-                                                            value={customCategory}
-                                                            style={styles.allGrayOutline}
-                                                            placeholder={'New Category'}
-                                                            onChangeText={val => {
-                                                                setCustomCategory(val)
-                                                            }}
-                                                            placeholderTextColor={'#a6a2a2'}
-                                                        />
-                                                    </View> :
-                                                    <ScrollView style={styles.colorBar} horizontal={true} showsHorizontalScrollIndicator={false}>
-                                                        <TouchableOpacity
-                                                            style={customCategory === '' ? styles.allGrayOutline : styles.all}
-                                                            onPress={() => {
-                                                                setCustomCategory('')
-                                                            }}>
-                                                            <Text style={{ color: '#a6a2a2', lineHeight: 20, fontSize: 12 }}>
-                                                                None
-                                                    </Text>
-                                                        </TouchableOpacity>
-                                                        {
-                                                            customCategories.map((category: string) => {
-                                                                return <TouchableOpacity
-                                                                    key={Math.random()}
-                                                                    style={customCategory === category ? styles.allGrayOutline : styles.all}
-                                                                    onPress={() => {
-                                                                        setCustomCategory(category)
-                                                                    }}>
-                                                                    <Text style={{ color: '#a6a2a2', lineHeight: 20, fontSize: 12 }}>
-                                                                        {category}
-                                                                    </Text>
-                                                                </TouchableOpacity>
-                                                            })
-                                                        }
-                                                    </ScrollView>
-                                            }
-                                        </View>
-                                        <View style={{ width: '15%', backgroundColor: 'white' }}>
-                                            <TouchableOpacity
-                                                onPress={() => {
-                                                    if (addCustomCategory) {
-                                                        setCustomCategory('')
-                                                        setAddCustomCategory(false)
-                                                    } else {
-                                                        setCustomCategory('')
-                                                        setAddCustomCategory(true)
-                                                    }
-                                                }}
-                                                style={{ backgroundColor: 'white' }}>
-                                                <Text style={{ textAlign: 'center', lineHeight: 20, width: '100%' }}>
-                                                    <Ionicons name={addCustomCategory ? 'close' : 'add'} size={20} color={'#a6a2a2'} />
-                                                </Text>
-                                            </TouchableOpacity>
-                                        </View>
-                                    </View>
-                                </View>
-                            </View>
-                            <View style={{ width: width < 768 ? '100%' : '33.33%', borderRightWidth: 0, borderColor: '#f4f4f4' }}>
-                                <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                    <Text style={{ fontSize: 12, color: '#a6a2a2' }}>
-                                        Priority
-                                </Text>
-                                </View>
-                                <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white' }}>
-                                    <View style={{ width: '100%', backgroundColor: 'white' }}>
-                                        <ScrollView style={{ ...styles.colorBar, height: 20 }} horizontal={true} showsHorizontalScrollIndicator={false}>
-                                            {
-                                                colorChoices.map((c: string, i: number) => {
-                                                    return <View style={color === i ? styles.colorContainerOutline : styles.colorContainer} key={Math.random()}>
-                                                        <TouchableOpacity
-                                                            style={{
-                                                                width: 9,
-                                                                height: 9,
-                                                                borderRadius: 6,
-                                                                backgroundColor: colorChoices[i]
-                                                            }}
-                                                            onPress={() => {
-                                                                setColor(i)
-                                                            }}
-                                                        />
-                                                    </View>
-                                                })
-                                            }
-                                        </ScrollView>
-                                    </View>
-                                </View>
-                            </View>
                         </View>
-                        <View style={{ width: '100%', paddingTop: 15, flexDirection: width < 768 ? 'column' : 'row' }}>
-                            <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
-                                <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                    <Text style={{ fontSize: 15, color: '#a6a2a2' }}>
-                                        <Ionicons name='notifications-outline' size={20} color={'#a6a2a2'} />
-                                    </Text>
-                                </View>
-                                <View style={{
-                                    backgroundColor: 'white',
-                                    width: '100%',
-                                    height: 40,
-                                    marginRight: 10
-                                }}>
-                                    <Switch
-                                        value={notify}
-                                        onValueChange={() => {
-                                            if (notify) {
-                                                // setShuffle(false)
-                                                setFrequency("0")
-                                            } else {
-                                                // setShuffle(true)
-                                                setFrequency("1-D")
-                                            }
-                                            setPlayChannelCueIndef(true)
-                                            setNotify(!notify)
-                                        }}
-                                        style={{ height: 20 }}
-                                        trackColor={{
-                                            false: '#f4f4f4',
-                                            true: '#0079FE'
-                                        }}
-                                        activeThumbColor='white'
-                                    />
-                                </View>
-                            </View>
-                            {
-                                notify ?
-                                    <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
-                                        <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                            <Text style={{ fontSize: 12, color: '#a6a2a2' }}>
-                                                <Ionicons
-                                                    name='repeat-outline' size={20} color={'#a6a2a2'} />
-                                            </Text>
-                                        </View>
-                                        <View style={{ flexDirection: 'row', }}>
-                                            <View style={{
-                                                backgroundColor: 'white',
-                                                height: 40,
-                                                marginRight: 10
-                                            }}>
-                                                <Switch
-                                                    value={!shuffle}
-                                                    onValueChange={() => setShuffle(!shuffle)}
-                                                    style={{ height: 20 }}
-                                                    trackColor={{
-                                                        false: '#f4f4f4',
-                                                        true: '#a6a2a2'
-                                                    }}
-                                                    activeThumbColor='white'
-                                                />
-                                            </View>
-                                            {
-                                                !shuffle ?
-                                                    <View style={{
-                                                        display: 'flex',
-                                                        flexDirection: 'row',
-                                                        backgroundColor: 'white'
-                                                    }}>
-                                                        <Text style={styles.text}>
-                                                            Remind every
-                                                    </Text>
-                                                        <Picker
-                                                            style={styles.picker}
-                                                            itemStyle={{
-                                                                fontSize: 18
-                                                            }}
-                                                            selectedValue={frequency}
-                                                            onValueChange={(itemValue: any) =>
-                                                                setFrequency(itemValue)
-                                                            }>
-                                                            {
-                                                                timedFrequencyOptions.map((item: any, index: number) => {
-                                                                    return <Picker.Item
-                                                                        color={frequency === item.value ? '#0079FE' : "#101010"}
-                                                                        label={item.value === '0' && channelId !== '' ? 'Once' : item.label}
-                                                                        value={item.value}
-                                                                        key={index}
-                                                                    />
-                                                                })
-                                                            }
-                                                        </Picker>
-                                                    </View> :
-                                                    <View style={{
-                                                        width: '100%',
-                                                        display: 'flex',
-                                                        flexDirection: 'row',
-                                                        backgroundColor: 'white'
-                                                    }}>
-                                                        <Text style={styles.text}>
-                                                            Remind on
-                                                            </Text>
-                                                        <Datetime
-                                                            value={endPlayAt}
-                                                            onChange={(event: any) => {
-                                                                const date = new Date(event)
-                                                                setEndPlayAt(date)
-                                                            }}
-                                                        />
-                                                    </View>
-                                            }
-                                        </View>
-                                    </View> : null
-                            }
-                            {
-                                notify && !shuffle ?
-                                    <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
-                                        <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                            <Text style={{ fontSize: 12, color: '#a6a2a2' }}>
-                                                <Ionicons
-                                                    name='infinite-outline' size={20} color={'#a6a2a2'} />
-                                            </Text>
-                                        </View>
-                                        <View style={{ flexDirection: 'row' }}>
-                                            <View style={{
-                                                backgroundColor: 'white',
-                                                height: 40,
-                                                marginRight: 10
-                                            }}>
-                                                <Switch
-                                                    value={playChannelCueIndef}
-                                                    onValueChange={() => setPlayChannelCueIndef(!playChannelCueIndef)}
-                                                    style={{ height: 20 }}
-                                                    trackColor={{
-                                                        false: '#f4f4f4',
-                                                        true: '#a6a2a2'
-                                                    }}
-                                                    activeThumbColor='white'
-                                                />
-                                            </View>
-                                            {
-                                                playChannelCueIndef ? null :
-                                                    <View style={{
-                                                        width: '100%',
-                                                        display: 'flex',
-                                                        flexDirection: 'row',
-                                                        backgroundColor: 'white'
-                                                    }}>
-                                                        <Text style={styles.text}>
-                                                            Remind till
-                                                            </Text>
-                                                        <Datetime
-                                                            value={endPlayAt}
-                                                            onChange={(event: any) => {
-                                                                const date = new Date(event)
-                                                                setEndPlayAt(date)
-                                                            }}
-                                                        />
-                                                    </View>
-                                            }
-                                        </View>
-                                    </View> : null
-                            }
-                        </View>
-                    </View>
-                    <View style={styles.footer}>
-                        <View
-                            style={{
-                                flex: 1,
-                                backgroundColor: 'white',
-                                justifyContent: 'center',
-                                display: 'flex',
-                                flexDirection: 'row',
-                                height: 50,
-                                paddingTop: 10
-                            }}>
-                            <TouchableOpacity
-                                onPress={() => handleCreate()}
+                        <View style={styles.footer}>
+                            <View
                                 style={{
-                                    borderRadius: 15,
-                                    backgroundColor: 'white'
+                                    flex: 1,
+                                    backgroundColor: 'white',
+                                    justifyContent: 'center',
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    height: 50,
+                                    paddingTop: 10
                                 }}>
-                                {
-                                    channelId === '' ?
-                                        <Text style={{
-                                            textAlign: 'center',
-                                            lineHeight: 35,
-                                            color: 'white',
-                                            fontSize: 12,
-                                            backgroundColor: '#0079FE',
-                                            borderRadius: 15,
-                                            paddingHorizontal: 25,
-                                            fontFamily: 'inter',
-                                            overflow: 'hidden',
-                                            height: 35
-                                        }}>
-                                            SAVE TO  <Ionicons name='home-outline' size={14} />
-                                        </Text> :
-                                        <Text style={{
-                                            textAlign: 'center',
-                                            lineHeight: 35,
-                                            color: 'white',
-                                            fontSize: 12,
-                                            backgroundColor: '#0079FE',
-                                            borderRadius: 15,
-                                            paddingHorizontal: 25,
-                                            fontFamily: 'inter',
-                                            overflow: 'hidden',
-                                            height: 35
-                                        }}>
-                                            SHARE
+                                <TouchableOpacity
+                                    onPress={() => handleCreate()}
+                                    style={{
+                                        borderRadius: 15,
+                                        backgroundColor: 'white'
+                                    }}>
+                                    {
+                                        channelId === '' ?
+                                            <Text style={{
+                                                textAlign: 'center',
+                                                lineHeight: 35,
+                                                color: 'white',
+                                                fontSize: 12,
+                                                backgroundColor: '#0079FE',
+                                                borderRadius: 15,
+                                                paddingHorizontal: 25,
+                                                fontFamily: 'inter',
+                                                overflow: 'hidden',
+                                                height: 35
+                                            }}>
+                                                SAVE TO  <Ionicons name='home-outline' size={14} />
+                                            </Text> :
+                                            <Text style={{
+                                                textAlign: 'center',
+                                                lineHeight: 35,
+                                                color: 'white',
+                                                fontSize: 12,
+                                                backgroundColor: '#0079FE',
+                                                borderRadius: 15,
+                                                paddingHorizontal: 25,
+                                                fontFamily: 'inter',
+                                                overflow: 'hidden',
+                                                height: 35
+                                            }}>
+                                                SHARE
                                         </Text>
-                                }
-                            </TouchableOpacity>
+                                    }
+                                </TouchableOpacity>
+                            </View>
                         </View>
-                    </View>
+                    {/* Collapsible ends here */}
                 </ScrollView>
             </Animated.View>
         </View >

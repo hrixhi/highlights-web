@@ -1,12 +1,33 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { Text, View } from './Themed';
 import _ from 'lodash'
-// import HTMLView from 'react-native-htmlview';
+import { Ionicons } from '@expo/vector-icons';
 
 const ThreadReplyCard: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
     const styleObject = styles()
+    const [imported, setImported] = useState(false)
+    const [url, setUrl] = useState('')
+    const [title, setTitle] = useState('')
+    const [type, setType] = useState('')
+
+
+    useEffect(() => {
+        if (props.thread.message[0] === '{' && props.thread.message[props.thread.message.length - 1] === '}') {
+            const obj = JSON.parse(props.thread.message)
+            setImported(true)
+            setUrl(obj.url)
+            setTitle(obj.title)
+            setType(obj.type)
+        } else {
+            setImported(false)
+            setUrl('')
+            setTitle('')
+            setType('')
+        }
+    }, [props.thread.message])
+
     return (
         <View
             key={'textPage'}
@@ -30,7 +51,18 @@ const ThreadReplyCard: React.FunctionComponent<{ [label: string]: any }> = (prop
                         {props.thread.anonymous ? 'Anonymous' : props.thread.displayName}
                     </Text>
                 </View>
-                <div dangerouslySetInnerHTML={{ __html: props.thread.message }} style={{ fontFamily: 'overpass', color: '#101010', fontSize: 14 }} />
+                {
+                    imported ?
+                        <a download={true} href={url} style={{ textDecoration: 'none' }}>
+                            <View style={{ backgroundColor: '#f4f4f4', flex: 1 }}>
+                                <Text style={{ width: '100%', color: '#a6a2a2', fontSize: 18, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                    <Ionicons name='document-outline' size={18} color='#a6a2a2' /> {title}.{type}
+                                </Text>
+                            </View>
+                        </a>
+                        : <div dangerouslySetInnerHTML={{ __html: props.thread.message }} style={{ fontFamily: 'overpass', color: '#101010', fontSize: 14 }} />
+
+                }
             </View>
         </View>
     );

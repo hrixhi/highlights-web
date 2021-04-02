@@ -10,7 +10,31 @@ const ThreadCard: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
     const [loading, setLoading] = useState(true)
     const [color, setColor] = useState('#a6a2a2');
-    const { title, subtitle } = htmlStringParser(props.thread.message)
+    const [subtitle, setSubtitle] = useState('')
+
+    const [imported, setImported] = useState(false)
+    const [url, setUrl] = useState('')
+    const [title, setTitle] = useState('')
+    const [type, setType] = useState('')
+
+
+    useEffect(() => {
+        if (props.thread.message[0] === '{' && props.thread.message[props.thread.message.length - 1] === '}') {
+            const obj = JSON.parse(props.thread.message)
+            setImported(true)
+            setUrl(obj.url)
+            setTitle(obj.title)
+            setType(obj.type)
+        } else {
+            const { title: t, subtitle: s } = htmlStringParser(props.thread.message)
+            setTitle(t)
+            setSubtitle(s)
+            setImported(false)
+            setUrl('')
+            setType('')
+        }
+    }, [props.thread.message])
+
     const loadColor = useCallback(async () => {
         const u = await AsyncStorage.getItem('user')
         if (u) {
@@ -67,34 +91,47 @@ const ThreadCard: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             {props.thread.anonymous ? 'Anonymous' : props.thread.displayName}
                         </Text>
                     </View>
-                    <View style={{ backgroundColor: '#f4f4f4', width: '100%', flexDirection: 'row', display: 'flex', height: '44%' }}>
-                        <Text ellipsizeMode={'tail'}
-                            numberOfLines={1}
-                            style={styleObject.title}>
-                            {title}
-                        </Text>
-                        {
-                            props.thread.unreadThreads !== 0 ?
-                                <Text style={{
-                                    width: 20,
-                                    height: 20,
-                                    borderRadius: 10,
-                                    backgroundColor: '#f94144',
-                                    textAlign: 'center',
-                                    zIndex: 150,
-                                    marginLeft: 10,
-                                    marginTop: 7,
-                                    color: 'white', lineHeight: 20, fontSize: 10
-                                }}>
-                                    {props.thread.unreadThreads}
-                                </Text> : null
-                        }
-                        <Text ellipsizeMode={'tail'}
-                            numberOfLines={1}
-                            style={styleObject.titleArrow}>
-                            <Ionicons name="chevron-forward-outline" color="#a6a2a2" size={20} style={{ marginTop: 4 }} />
-                        </Text>
-                    </View>
+                    {
+                        imported ?
+                            <View style={{ backgroundColor: '#f4f4f4', flex: 1, flexDirection: 'row' }}>
+                                <Text style={{ width: '100%', color: '#a6a2a2', fontSize: 18, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                    <Ionicons name='document-outline' size={18} color='#a6a2a2' /> {title}.{type}
+                                </Text>
+                                <Text ellipsizeMode={'tail'}
+                                    numberOfLines={1}
+                                    style={styleObject.titleArrow}>
+                                    <Ionicons name="chevron-forward-outline" color="#a6a2a2" size={20} style={{ marginTop: 4 }} />
+                                </Text>
+                            </View>
+                            : <View style={{ backgroundColor: '#f4f4f4', width: '100%', flexDirection: 'row', display: 'flex', height: '44%' }}>
+                                <Text ellipsizeMode={'tail'}
+                                    numberOfLines={1}
+                                    style={styleObject.title}>
+                                    {title}
+                                </Text>
+                                {
+                                    props.thread.unreadThreads !== 0 ?
+                                        <Text style={{
+                                            width: 20,
+                                            height: 20,
+                                            borderRadius: 10,
+                                            backgroundColor: '#f94144',
+                                            textAlign: 'center',
+                                            zIndex: 150,
+                                            marginLeft: 10,
+                                            marginTop: 7,
+                                            color: 'white', lineHeight: 20, fontSize: 10
+                                        }}>
+                                            {props.thread.unreadThreads}
+                                        </Text> : null
+                                }
+                                <Text ellipsizeMode={'tail'}
+                                    numberOfLines={1}
+                                    style={styleObject.titleArrow}>
+                                    <Ionicons name="chevron-forward-outline" color="#a6a2a2" size={20} style={{ marginTop: 4 }} />
+                                </Text>
+                            </View>
+                    }
                     <Text ellipsizeMode={'tail'}
                         numberOfLines={1}
                         style={styleObject.description}>

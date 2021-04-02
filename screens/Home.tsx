@@ -52,7 +52,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   const [reopenUpdateWindow, setReopenUpdateWindow] = useState(Math.random())
 
   const onDimensionsChange = useCallback(({ w, s }: any) => {
-    window.location.reload()
+    // window.location.reload()
   }, []);
 
   useEffect(() => {
@@ -611,20 +611,22 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             _id: cue._id.toString(),
             color: cue.color.toString(),
             date: (new Date(cue.date)).toISOString(),
+            gradeWeight: cue.submission ? cue.gradeWeight.toString() : undefined,
             endPlayAt: cue.endPlayAt && cue.endPlayAt !== '' ? (new Date(cue.endPlayAt)).toISOString() : '',
           }
           // Deleting these because they should not be changed ...
           // but dont delete if it is the person who has made the cue 
           // -> because those channel Cue changes are going to be propagated
           delete cueInput.score;
-          delete cueInput.deadline;
+          // delete cueInput.deadline;
           delete cueInput.graded;
           delete cueInput.submittedAt;
-          delete cueInput.gradeWeight;
-          delete cueInput.submission;
+          // delete cueInput.gradeWeight;
+          // delete cueInput.submission;
+          delete cueInput.comment;
 
           delete cueInput.unreadThreads;
-          delete cueInput.createdBy;
+          // delete cueInput.createdBy;
           delete cueInput.original;
           delete cueInput.status;
           delete cueInput.channelName;
@@ -830,6 +832,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                           modalType === 'Grades' ? <Grades
                             closeModal={() => closeModal()}
                             channelId={channelId}
+                            channelCreatedBy={channelCreatedBy}
                             filterChoice={filterChoice}
                           />
                             : (
@@ -1033,7 +1036,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           openGrades={() => openModal('Grades')}
           unsubscribe={() => unsubscribeChannel()}
           openWalkthrough={() => openModal('Walkthrough')}
-          delete={() => deleteChannel()}
+          deleteChannel={() => deleteChannel()}
           openCalendar={() => openModal('Calendar')}
           openMeeting={() => openModal('Meeting')}
         />
@@ -1093,8 +1096,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 <TouchableOpacity
                   onPress={() => closeModal()}
                   style={{ height: 30, backgroundColor: '#f4f4f4' }}>
-                  <Text style={{ flex: 1, textAlign: 'center' }}>
-                    <Ionicons name='chevron-down-outline' size={25} color={'#101010'} />
+                  <Text style={{ flex: 1, textAlign: 'center', fontSize: 15, lineHeight: 15, marginTop: 7, color: '#a6a2a2' }}>
+                    Hide <Ionicons name='chevron-down-outline' size={15} />
                   </Text>
                 </TouchableOpacity> :
                 <View style={{ backgroundColor: '#f4f4f4', height: 30 }} />

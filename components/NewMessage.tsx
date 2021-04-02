@@ -1,12 +1,14 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Keyboard, StyleSheet, Switch, TextInput, ScrollView } from 'react-native';
 import Alert from '../components/Alert'
 import { Text, View, TouchableOpacity } from './Themed';
 import { Ionicons } from '@expo/vector-icons';
 import { fetchAPI } from '../graphql/FetchAPI';
 import { getThreadCategories, createMessage, sendDirectMessage } from '../graphql/QueriesAndMutations';
-import MiniEditorScreen from './MiniTextEditor';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { RichEditor } from 'react-native-pell-rich-editor';
+import FileViewer from 'react-file-viewer';
+import FileUpload from './UploadFiles';
 
 const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -15,11 +17,33 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
     const [anonymous, setAnonymous] = useState(false)
     const [customCategory, setCustomCategory] = useState('')
     const [categories, setCategories] = useState([])
+    let RichText: any = useRef()
     const [addCustomCategory, setAddCustomCategory] = useState(false)
     const [channelId] = useState<any>(props.channelId)
     const [cueId] = useState<any>(props.cueId)          // Null if Channel Thread. Not null if Cue Thread.
     const [parentId] = useState<any>(props.parentId)    //  Null if new Thread. Not null if reply.
     const now = new Date()
+
+    const [imported, setImported] = useState(false)
+    const [url, setUrl] = useState('')
+    const [type, setType] = useState('')
+    const [title, setTitle] = useState('')
+
+    const [showImportOptions, setShowImportOptions] = useState(false)
+
+    useEffect(() => {
+        if (message[0] === '{' && message[message.length - 1] === '}') {
+            const obj = JSON.parse(message)
+            setImported(true)
+            setUrl(obj.url)
+            setType(obj.type)
+        } else {
+            setImported(false)
+            setUrl('')
+            setType('')
+            setTitle('')
+        }
+    }, [message])
 
     const loadCategories = useCallback(async () => {
         if (channelId === undefined || channelId === null || channelId === '') {
@@ -50,12 +74,23 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
         const users: any[] = props.addUserId ? (
             [user._id, ...props.users]
         ) : props.users
+        let saveCue = ''
+        if (imported) {
+            const obj = {
+                type,
+                url,
+                title
+            }
+            saveCue = JSON.stringify(obj)
+        } else {
+            saveCue = message
+        }
         const server = fetchAPI('')
         server.mutate({
             mutation: sendDirectMessage,
             variables: {
                 users,
-                message: message,
+                message: saveCue,
                 channelId: props.channelId
             }
         }).then(res => {
@@ -67,7 +102,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
         }).catch(err => {
             Alert("Something went wrong.", "Check connection.")
         })
-    }, [props.users, message, props.channelId])
+    }, [props.users, message, props.channelId, imported, type, title, url])
 
     const createThreadMessage = useCallback(async () => {
         if (!message || message === '') {
@@ -75,11 +110,22 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
         }
         const uString: any = await AsyncStorage.getItem('user')
         const user = JSON.parse(uString)
+        let saveCue = ''
+        if (imported) {
+            const obj = {
+                type,
+                url,
+                title
+            }
+            saveCue = JSON.stringify(obj)
+        } else {
+            saveCue = message
+        }
         const server = fetchAPI('')
         server.mutate({
             mutation: createMessage,
             variables: {
-                message,
+                message: saveCue,
                 userId: user._id,
                 channelId,
                 isPrivate,
@@ -98,7 +144,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
             Alert("Something went wrong.", "Check connection.")
         })
 
-    }, [message, customCategory, isPrivate, anonymous, cueId, channelId, parentId, props.back])
+    }, [message, customCategory, isPrivate, anonymous, cueId, channelId, parentId, props.back, imported, type, title, url])
 
     useEffect(() => {
         if (!props.users) {
@@ -131,10 +177,10 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
             }
             <View style={styles.date} onTouchStart={() => Keyboard.dismiss()}>
                 <Text style={{
-                    width: '50%',
                     color: '#a6a2a2',
                     fontSize: 11,
-                    lineHeight: 30
+                    lineHeight: 30,
+                    flex: 1
                 }}>
                     {
                         now.toString().split(' ')[1] +
@@ -144,12 +190,113 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         now.toString().split(' ')[3]
                     }
                 </Text>
+                {
+                    showImportOptions && !imported ? null :
+                        <TouchableOpacity
+                            onPress={() => {
+                                if (imported) {
+                                    setMessage('')
+                                    setTitle('')
+                                    setUrl('')
+                                    setType('')
+                                }
+                                setShowImportOptions(!showImportOptions)
+                            }}
+                            style={{ alignSelf: 'flex-end', flex: 1 }}
+                        >
+                            <Text style={{
+                                color: '#a6a2a2',
+                                fontSize: 11,
+                                lineHeight: 30,
+                                textAlign: 'right',
+                                paddingRight: 10,
+                            }}>
+                                {
+                                    imported ? 'CLEAR' : 'IMPORT'
+                                }
+                            </Text>
+                        </TouchableOpacity>
+                }
             </View>
-            <MiniEditorScreen
-                placeholder={props.placeholder}
-                message={message}
-                setMessage={(m: any) => setMessage(m)}
-            />
+            <View style={{ flexDirection: 'row', paddingVertical: 10 }}>
+                {
+                    showImportOptions && !imported ?
+                        <FileUpload
+                            back={() => setShowImportOptions(false)}
+                            onUpload={(u: any, t: any) => {
+                                console.log(t)
+                                const obj = { url: u, type: t, title }
+                                setMessage(JSON.stringify(obj))
+                                setShowImportOptions(false)
+                            }}
+                        /> : null
+                }
+            </View>
+            {
+                imported ?
+                    <View style={{ backgroundColor: 'white', flex: 1 }}>
+                        <View style={{ width: '40%', alignSelf: 'flex-start', marginLeft: '10%' }}>
+                            <TextInput
+                                value={title}
+                                style={styles.input}
+                                placeholder={'Title'}
+                                onChangeText={val => setTitle(val)}
+                                placeholderTextColor={'#a6a2a2'}
+                            />
+                        </View>
+                        <View>
+                            <Text style={{ width: '100%', color: '#a6a2a2', fontSize: 25, paddingVertical: 50, marginLeft: '10%', paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                <Ionicons name='document-outline' size={50} color='#a6a2a2' />
+                            </Text>
+                        </View>
+                    </View>
+                    : <View style={{
+                        width: '100%',
+                        minHeight: 100,
+                        backgroundColor: 'white',
+                        paddingBottom: 5
+                    }}>
+                        <RichEditor
+                            disabled={false}
+                            containerStyle={{
+                                backgroundColor: '#f4f4f4',
+                                borderRadius: 2,
+                                padding: 3,
+                                paddingTop: 5,
+                                paddingBottom: 10,
+                                minHeight: 100
+                            }}
+                            ref={RichText}
+                            style={{
+                                width: '100%',
+                                backgroundColor: '#f4f4f4',
+                                borderRadius: 2,
+                                minHeight: 100
+                            }}
+                            editorStyle={{
+                                backgroundColor: '#f4f4f4',
+                                placeholderColor: '#a6a2a2',
+                                color: '#101010',
+                                contentCSSText: 'font-size: 13px;'
+                            }}
+                            initialContentHTML={props.message}
+                            onScroll={() => Keyboard.dismiss()}
+                            placeholder={props.placeholder}
+                            onChange={(text) => {
+                                const modifedText = text.split('&amp;').join('&')
+                                props.setMessage(modifedText)
+                            }}
+                            onBlur={() => Keyboard.dismiss()}
+                            allowFileAccess={true}
+                            allowFileAccessFromFileURLs={true}
+                            allowUniversalAccessFromFileURLs={true}
+                            allowsFullscreenVideo={true}
+                            allowsInlineMediaPlayback={true}
+                            allowsLinkPreview={true}
+                            allowsBackForwardNavigationGestures={true}
+                        />
+                    </View>
+            }
             {
                 props.users ? null :
                     <View style={{ display: 'flex', flexDirection: 'row' }}>
@@ -359,6 +506,17 @@ const styles: any = StyleSheet.create({
         fontSize: 12,
         color: '#a6a2a2',
         textAlign: 'left'
+    },
+    input: {
+        width: '100%',
+        borderBottomColor: '#f4f4f4',
+        borderBottomWidth: 1,
+        fontSize: 15,
+        padding: 15,
+        paddingTop: 12,
+        paddingBottom: 12,
+        marginTop: 5,
+        marginBottom: 20
     },
     all: {
         fontSize: 15,

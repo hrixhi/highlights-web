@@ -28,7 +28,10 @@ const SubscriberCard: React.FunctionComponent<{ [label: string]: any }> = (props
                         fullName === 'submitted' || fullName === 'graded' || props.chat ?
                             <View style={{ flexDirection: 'row', backgroundColor: '#f4f4f4' }}>
                                 {
-                                    props.subscriber.unreadMessages !== 0 ?
+                                    props.subscriber.unreadMessages !== undefined
+                                        && props.subscriber !== null
+                                        && props.subscriber.unreadMessages !== 0
+                                        ?
                                         <Text style={{
                                             width: 20,
                                             height: 20,

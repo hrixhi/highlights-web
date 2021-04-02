@@ -15,6 +15,8 @@ import NewMessage from './NewMessage';
 import MessageCard from './MessageCard';
 import { validateEmail } from '../helpers/emailCheck';
 import Select from 'react-select'
+import FileViewer from 'react-file-viewer';
+
 
 const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -37,6 +39,27 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
     const RichText: any = useRef()
     const [selected, setSelected] = useState<any[]>([])
     const [expandMenu, setExpandMenu] = useState(false)
+    const [comment, setComment] = useState('')
+
+    const [imported, setImported] = useState(false)
+    const [url, setUrl] = useState('')
+    const [type, setType] = useState('')
+    const [title, setTitle] = useState('')
+
+    useEffect(() => {
+        if (submission[0] === '{' && submission[submission.length - 1] === '}') {
+            const obj = JSON.parse(submission)
+            setImported(true)
+            setUrl(obj.url)
+            setType(obj.type)
+            setTitle(obj.title)
+        } else {
+            setImported(false)
+            setUrl('')
+            setType('')
+            setTitle('')
+        }
+    }, [submission])
 
     if (props.cue && props.cue.submission) {
         categories.push('Submitted')
@@ -93,7 +116,8 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
             variables: {
                 cueId: props.cueId,
                 userId,
-                score
+                score,
+                comment
             }
         }).then(res => {
             if (res.data.cue.submitGrade) {
@@ -101,7 +125,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                 setShowSubmission(false)
             }
         })
-    }, [score, userId, props.cueId])
+    }, [score, userId, props.cueId, comment])
 
     useEffect(() => {
         (
@@ -221,7 +245,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
         <View style={{
             backgroundColor: 'white',
             width: '100%',
-            height: windowHeight,
+            minHeight: windowHeight,
             paddingHorizontal: 20,
             borderTopRightRadius: 30,
             borderTopLeftRadius: 30
@@ -340,7 +364,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             style={{ flex: 1, paddingTop: 12 }}>
                                             {
                                                 messages.length === 0 ?
-                                                    <Text style={{ width: '100%', color: '#a6a2a2', fontSize: 25, paddingBottom: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                                    <Text style={{ width: '100%', color: '#a6a2a2', fontSize: 25, paddingVertical: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                                                         No messages.
                                                     </Text>
                                                     : null
@@ -488,7 +512,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                             />
                                                                         </View>
                                                                     })) : <View style={{ backgroundColor: 'white', flex: 1 }}>
-                                                                        <Text style={{ width: '100%', color: '#a6a2a2', fontSize: 25, paddingHorizontal: 50, fontFamily: 'inter', flex: 1 }}>
+                                                                        <Text style={{ width: '100%', color: '#a6a2a2', fontSize: 25, paddingHorizontal: 50, paddingBottom: 100, paddingTop: 50, fontFamily: 'inter', flex: 1 }}>
                                                                             No groups.
                                                                     </Text>
                                                                     </View>
@@ -510,6 +534,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                                 setShowSubmission(true)
                                                                                 setStatus(subscriber.fullName)
                                                                                 setScore(subscriber.score)
+                                                                                setComment(subscriber.comment)
                                                                                 setUserId(subscriber.userId)
                                                                             }
                                                                         } else {
@@ -541,6 +566,27 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 placeholder={'0-100'}
                                                 onChangeText={val => setScore(val)}
                                                 placeholderTextColor={'#a6a2a2'}
+                                            />
+                                            <Text style={{ color: '#101010', fontSize: 14, paddingVertical: 10, }}>
+                                                Comment
+                                            </Text>
+                                            <TextInput
+                                                value={comment}
+                                                style={{
+                                                    height: 200,
+                                                    backgroundColor: '#f4f4f4',
+                                                    borderRadius: 10,
+                                                    fontSize: 15,
+                                                    padding: 15,
+                                                    paddingTop: 13,
+                                                    paddingBottom: 13,
+                                                    marginTop: 5,
+                                                    marginBottom: 20
+                                                }}
+                                                placeholder={'Optional'}
+                                                onChangeText={val => setComment(val)}
+                                                placeholderTextColor={'#a6a2a2'}
+                                                multiline={true}
                                             />
                                             <View
                                                 style={{
@@ -575,43 +621,82 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 </TouchableOpacity>
                                             </View>
                                         </View>
-                                        <Text style={{ color: '#101010', fontSize: 14, paddingBottom: 10 }}>
-                                            Submission
+                                        <Text style={{ color: '#101010', fontSize: 14, paddingBottom: 25, marginLeft: '5%' }}>
+                                            View Submission
                                         </Text>
-                                        <RichEditor
-                                            disabled={true}
-                                            key={Math.random()}
-                                            containerStyle={{
-                                                backgroundColor: '#f4f4f4',
-                                                padding: 3,
-                                                paddingTop: 5,
-                                                paddingBottom: 10,
-                                                borderRadius: 2
-                                            }}
-                                            ref={RichText}
-                                            style={{
-                                                width: '100%',
-                                                backgroundColor: '#f4f4f4',
-                                                borderRadius: 2,
-                                                minHeight: 450
-                                            }}
-                                            editorStyle={{
-                                                backgroundColor: '#f4f4f4',
-                                                placeholderColor: '#a6a2a2',
-                                                color: '#101010',
-                                                contentCSSText: 'font-size: 13px;'
-                                            }}
-                                            initialContentHTML={submission}
-                                            placeholder={"Title"}
-                                            onChange={(text) => { }}
-                                            allowFileAccess={true}
-                                            allowFileAccessFromFileURLs={true}
-                                            allowUniversalAccessFromFileURLs={true}
-                                            allowsFullscreenVideo={true}
-                                            allowsInlineMediaPlayback={true}
-                                            allowsLinkPreview={true}
-                                            allowsBackForwardNavigationGestures={true}
-                                        />
+                                        {
+                                            imported ?
+                                                <View style={{ width: '40%', alignSelf: 'flex-start', marginLeft: '10%' }}>
+                                                    <TextInput
+                                                        editable={false}
+                                                        value={title}
+                                                        style={styles.input}
+                                                        placeholder={'Title'}
+                                                        onChangeText={val => setTitle(val)}
+                                                        placeholderTextColor={'#a6a2a2'}
+                                                    />
+                                                </View> : null
+                                        }
+                                        {
+                                            !imported ?
+                                                <RichEditor
+                                                    disabled={true}
+                                                    key={Math.random()}
+                                                    containerStyle={{
+                                                        backgroundColor: '#f4f4f4',
+                                                        padding: 3,
+                                                        paddingTop: 5,
+                                                        paddingBottom: 10,
+                                                        borderRadius: 2
+                                                    }}
+                                                    ref={RichText}
+                                                    style={{
+                                                        width: '100%',
+                                                        backgroundColor: '#f4f4f4',
+                                                        borderRadius: 2,
+                                                        minHeight: 450
+                                                    }}
+                                                    editorStyle={{
+                                                        backgroundColor: '#f4f4f4',
+                                                        placeholderColor: '#a6a2a2',
+                                                        color: '#101010',
+                                                        contentCSSText: 'font-size: 13px;'
+                                                    }}
+                                                    initialContentHTML={submission}
+                                                    placeholder={"Title"}
+                                                    onChange={(text) => { }}
+                                                    allowFileAccess={true}
+                                                    allowFileAccessFromFileURLs={true}
+                                                    allowUniversalAccessFromFileURLs={true}
+                                                    allowsFullscreenVideo={true}
+                                                    allowsInlineMediaPlayback={true}
+                                                    allowsLinkPreview={true}
+                                                    allowsBackForwardNavigationGestures={true}
+                                                /> : (
+                                                    type === 'pptx' ?
+                                                        <iframe src={'https://view.officeapps.live.com/op/embed.aspx?src=' + url} width='100%' height='600px' frameBorder='0' />
+                                                        : <FileViewer
+                                                            unsupportedComponent={() =>
+                                                                <View style={{ backgroundColor: 'white', flex: 1 }}>
+                                                                    <Text style={{ width: '100%', color: '#a6a2a2', fontSize: 25, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                                                        <Ionicons name='document-outline' size={50} color='#a6a2a2' />
+                                                                    </Text>
+                                                                </View>
+                                                            }
+                                                            style={{
+                                                                fontFamily: 'overpass'
+                                                            }}
+                                                            fileType={type}
+                                                            key={url + type}
+                                                            filePath={url}
+                                                            errorComponent={<View>
+                                                                <Text>
+                                                                    ERROR!!
+                                                        </Text>
+                                                            </View>}
+                                                            onError={(e: any) => console.log(e)} />
+                                                )
+                                        }
                                     </ScrollView>
                                 </View>
                         }

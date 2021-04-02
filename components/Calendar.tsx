@@ -3,7 +3,7 @@ import { ActivityIndicator, Animated, Dimensions, StyleSheet, TextInput, ScrollV
 import Alert from './Alert'
 import { Text, View, TouchableOpacity } from './Themed';
 import { fetchAPI } from '../graphql/FetchAPI';
-import { createDate, getEvents } from '../graphql/QueriesAndMutations';
+import { createDate, deleteDate, getEvents } from '../graphql/QueriesAndMutations';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Calendar, momentLocalizer } from 'react-big-calendar'
 import Datetime from 'react-datetime';
@@ -29,6 +29,35 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const [title, setTitle] = useState('')
     const [start, setStart] = useState(new Date())
     const [end, setEnd] = useState(new Date())
+
+    const onDateClick = useCallback((title, date, dateId) => {
+        Alert(
+            'Delete ' + title + '?',
+            date,
+            [
+                {
+                    text: "Cancel", style: "cancel"
+                },
+                {
+                    text: "Delete", onPress: async () => {
+                        const server = fetchAPI('')
+                        server.mutate({
+                            mutation: deleteDate,
+                            variables: {
+                                dateId
+                            }
+                        }).then(res => {
+                            if (res.data && res.data.date.delete) {
+                                Alert("Event Deleted!")
+                                loadEvents()
+                            }
+                        })
+                    }
+                }
+            ]
+        );
+
+    }, [])
 
     const handleCreate = useCallback(async () => {
         const u = await AsyncStorage.getItem('user')
@@ -71,12 +100,13 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
             .then(res => {
                 if (res.data.date && res.data.date.getCalendar) {
                     const parsedEvents: any[] = []
-                    res.data.date.getCalendar.map((event: any) => {
-                        const { title } = htmlStringParser(event.title)
+                    res.data.date.getCalendar.map((e: any) => {
+                        const { title } = htmlStringParser(e.title)
                         parsedEvents.push({
-                            title: event.channelName ? (event.channelName + ' - ' + title) : title,
-                            start: new Date(event.start),
-                            end: new Date(event.end)
+                            title: e.channelName ? (e.channelName + ' - ' + title) : title,
+                            start: new Date(e.start),
+                            end: new Date(e.end),
+                            dateId: e.dateId
                         })
                     })
                     setEvents(parsedEvents)
@@ -227,7 +257,12 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             </View>
                             <Calendar
                                 onSelectEvent={(e: any) => {
-                                    Alert(e.title, e.start.toString() + ' to ' + e.end.toString())
+                                    console.log(e.dateId)
+                                    if (e.dateId !== 'channel') {
+                                        onDateClick(e.title, e.start.toString() + ' to ' + e.end.toString(), e.dateId)
+                                    } else {
+                                        Alert(e.title, e.start.toString() + ' to ' + e.end.toString())
+                                    }
                                 }}
                                 localizer={localizer}
                                 events={events}

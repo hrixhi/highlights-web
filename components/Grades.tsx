@@ -6,6 +6,7 @@ import { ScrollView } from 'react-native-gesture-handler'
 import { fetchAPI } from '../graphql/FetchAPI';
 import { getGrades, getGradesList } from '../graphql/QueriesAndMutations';
 import GradesList from './GradesList';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -32,9 +33,24 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             variables: {
                                 channelId: props.channelId
                             }
-                        }).then(res2 => {
+                        }).then(async (res2) => {
                             if (res2.data.channel.getGrades) {
-                                setScores(res2.data.channel.getGrades)
+                                const u = await AsyncStorage.getItem('user')
+                                if (u) {
+                                    const user = JSON.parse(u)
+                                    if (user._id.toString().trim() === props.channelCreatedBy.toString().trim()) {
+                                        // all scores
+                                        setScores(res2.data.channel.getGrades)
+                                    } else {
+                                        // only user's score
+                                        const score = res2.data.channel.getGrades.find((u: any) => {
+                                            return u.userId.toString().trim() === user._id.toString().trim()
+                                        })
+                                        const singleScoreArray = [{ ...score }]
+                                        setScores(singleScoreArray)
+                                    }
+
+                                }
                                 setLoading(false)
                                 modalAnimation.setValue(0)
                                 Animated.timing(modalAnimation, {
@@ -82,7 +98,7 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 useNativeDriver: true
             }).start();
         }
-    }, [props.channelId, modalAnimation])
+    }, [props.channelId, modalAnimation, props.channelCreatedBy])
 
     useEffect(() => {
         loadCuesAndScores()

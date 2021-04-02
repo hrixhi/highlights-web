@@ -96,16 +96,16 @@ mutation($userId: String!, $randomShuffleFrequency: String!, $sleepFrom: String!
 }
 `
 export const submit = gql`
-mutation($cueId: String!, $userId: String!) {
+mutation($cueId: String!, $userId: String!, $cue: String!) {
     cue {
-        submitModification(cueId: $cueId, userId: $userId)
+        submitModification(cueId: $cueId, userId: $userId, cue: $cue)
     }
 }
 `
 export const submitGrade = gql`
-mutation ($cueId: String!, $userId: String!, $score: String!) {
+mutation ($cueId: String!, $userId: String!, $score: String!, $comment: String) {
     cue {
-        submitGrade(cueId: $cueId, userId: $userId, score: $score)
+        submitGrade(cueId: $cueId, userId: $userId, score: $score, comment: $comment)
     }
 }
 `
@@ -155,6 +155,20 @@ export const shareCueWithMoreIds = gql`
 mutation($userId: String!, $cueId: String!) {
     cue {
         shareCueWithMoreIds(userId: $userId, cueId: $cueId)
+    }
+}
+`
+export const deleteDate = gql`
+mutation($dateId: String!) {
+    date {
+        delete(dateId: $dateId)
+    }
+}
+`
+export const deleteForEveryone = gql`
+mutation($cueId: String!) {
+    cue {
+        deleteForEveryone(cueId: $cueId)
     }
 }
 `
@@ -212,6 +226,7 @@ query($userId: String!) {
             gradeWeight
             graded
             score
+            comment
             status
             submittedAt
         }
@@ -335,6 +350,7 @@ query($cueId: String!) {
             submission
             score
             graded
+            comment
         }
     }
 }
@@ -371,6 +387,7 @@ query($userId: String!) {
             gradeWeight
             score
             graded
+            comment
             status
             submittedAt
         }
@@ -423,6 +440,7 @@ export const getEvents = gql`
 query($userId: String!) {
     date {
         getCalendar(userId: $userId) {
+            dateId
             title
             start
             end

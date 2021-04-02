@@ -10,6 +10,8 @@ import { getThreadWithReplies, markThreadsAsRead } from '../graphql/QueriesAndMu
 import NewMessage from './NewMessage';
 import ThreadReplyCard from './ThreadReplyCard';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Collapse } from 'react-collapse';
+
 
 const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -22,6 +24,8 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
     const [filterChoice, setFilterChoice] = useState('All')
     const [showPost, setShowPost] = useState(false)
     const [threadId, setThreadId] = useState('')
+    const [showComments, setShowComments] = useState(true)
+
     const categories: any[] = []
     const categoryObject: any = {}
     let filteredThreads: any[] = []
@@ -81,8 +85,8 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
             height: '100%',
             backgroundColor: 'white',
             paddingHorizontal: 20,
-            borderTopRightRadius: 30,
-            borderTopLeftRadius: 30
+            borderTopRightRadius: props.cueId ? 0 : 30,
+            borderTopLeftRadius: props.cueId ? 0 : 30
         }}>
             <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 25 }}>
                 {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
@@ -106,10 +110,13 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
         <View style={{
             backgroundColor: 'white',
             width: '100%',
-            height: windowHeight,
+            height: props.cueId ? 'auto' : windowHeight,
             paddingHorizontal: 20,
-            borderTopRightRadius: 30,
-            borderTopLeftRadius: 30
+            borderTopRightRadius: props.cueId ? 0 : 30,
+            borderTopLeftRadius: props.cueId ? 0 : 30,
+            // marginBottom: props.cueId ? 0 : 25,
+            borderBottomColor: '#f4f4f4',
+            borderBottomWidth: props.cueId ? 0 : 1
         }}>
             <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 25 }}>
                 {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
@@ -145,168 +152,183 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                     style={{ color: '#a6a2a2', fontSize: 18, flex: 1, lineHeight: 25 }}>
                                     Discussion
                                 </Text>
-                                : <Text
-                                    ellipsizeMode="tail"
-                                    style={{ color: '#a6a2a2', fontSize: 18, flex: 1, lineHeight: 25 }}>
-                                    Comments
+                                : <TouchableOpacity
+                                    onPress={() => setShowComments(!showComments)}
+                                    style={{
+                                        flex: 1,
+                                        flexDirection: 'row',
+                                        // paddingTop: 40,
+                                        paddingBottom: 40
+                                    }}>
+                                    <Text style={{
+                                        color: '#a6a2a2', fontSize: 18, paddingRight: 10
+                                    }}>
+                                        Comments
                                 </Text>
+                                    <Ionicons size={22} name={showComments ? 'caret-down-circle-outline' : 'caret-forward-circle-outline'} color='#a6a2a2' />
+                                </TouchableOpacity>
                         }
-                        <TouchableOpacity
-                            key={Math.random()}
-                            style={{
-                                width: '10%',
-                                backgroundColor: 'white'
-                            }}
-                            onPress={() => setShowPost(true)}>
-                            <Text style={{
-                                width: '100%',
-                                textAlign: 'right',
-                                lineHeight: 23,
-                                paddingRight: 10,
-                                marginTop: -1
-                            }}>
-                                <Ionicons name='create-outline' size={20} color={'#101010'} />
+                        {
+                            showComments ?
+                                <TouchableOpacity
+                                    key={Math.random()}
+                                    style={{
+                                        width: '10%',
+                                        backgroundColor: 'white'
+                                    }}
+                                    onPress={() => setShowPost(true)}>
+                                    <Text style={{
+                                        width: '100%',
+                                        textAlign: 'right',
+                                        lineHeight: 23,
+                                        paddingRight: 10,
+                                        marginTop: -1
+                                    }}>
+                                        <Ionicons name='create-outline' size={20} color={'#101010'} />
+                                    </Text>
+                                </TouchableOpacity> : null
+                        }
+                    </View>
+            }
+            <Collapse isOpened={showComments} style={{ flex: 1 }}>
+                {
+                    threads.length === 0 ?
+                        <View style={{ backgroundColor: 'white', flex: 1 }}>
+                            <Text style={{ width: '100%', color: '#a6a2a2', fontSize: 25, paddingTop: 100, paddingBottom: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                {
+                                    !props.cueId ? 'No posts.' : 'No comments.'
+                                }
                             </Text>
-                        </TouchableOpacity>
-                    </View>
-            }
-            {
-                threads.length === 0 ?
-                    <View style={{ backgroundColor: 'white', flex: 1 }}>
-                        <Text style={{ width: '100%', color: '#a6a2a2', fontSize: 25, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
-                            {
-                                !props.cueId ? 'No posts.' : 'No comments.'
-                            }
-                        </Text>
-                    </View>
-                    : (
-                        loading ?
-                            <View style={{
-                                width: '100%',
-                                justifyContent: 'center',
-                                flex: 1,
-                                flexDirection: 'column',
-                                backgroundColor: 'white'
-                            }}>
-                                <ActivityIndicator color={'#a6a2a2'} />
-                            </View> :
-                            <View style={{
-                                width: '100%',
-                                backgroundColor: 'white',
-                                flex: 1
-                            }}
-                                key={JSON.stringify(filteredThreads)}
-                            >
-                                {
-                                    !showThreadCues ?
-                                        <ScrollView
-                                            showsVerticalScrollIndicator={false}
-                                            horizontal={false}
-                                            contentContainerStyle={{
-                                                width: '100%',
-                                                height: '100%',
-                                            }}
-                                        >
-                                            {
-                                                filteredThreads.map((thread: any, index) => {
-                                                    return <View style={styles.col} key={index}>
-                                                        <ThreadCard
-                                                            fadeAnimation={props.fadeAnimation}
-                                                            thread={thread}
-                                                            onPress={() => loadCueDiscussions(thread._id)}
-                                                            channelCreatedBy={props.channelCreatedBy}
-                                                        />
-                                                    </View>
-                                                })
-                                            }
-                                        </ScrollView>
-                                        :
-                                        <ScrollView
-                                            showsVerticalScrollIndicator={false}
-                                            keyboardDismissMode={'on-drag'}
-                                            style={{ flex: 1, paddingTop: 12 }}>
-                                            {
-                                                threadWithReplies.map((thread) => {
-                                                    return <View style={{ width: '100%', paddingBottom: 15, backgroundColor: 'white' }} key={Math.random()}>
-                                                        <ThreadReplyCard
-                                                            channelCreatedBy={props.channelCreatedBy}
-                                                            thread={thread} />
-                                                    </View>
-                                                })
-                                            }
-                                            <View style={{ backgroundColor: 'white' }}>
-                                                <NewMessage
-                                                    cueId={props.cueId}
-                                                    channelId={props.channelId}
-                                                    parentId={threadId}
-                                                    back={() => {
-                                                        props.reload()
-                                                        setShowPost(false)
-                                                        setThreadId('')
-                                                    }}
-                                                    placeholder='Reply...'
-                                                />
-                                            </View>
-                                        </ScrollView>
-                                }
-                                {
-                                    showThreadCues ? null :
-                                        <View style={{
-                                            width: '100%',
-                                            height: 60,
-                                            backgroundColor: 'white',
-                                            display: 'flex',
-                                            justifyContent: 'center',
-                                            flexDirection: 'column'
-                                        }}>
-                                            {
-                                                props.cueId === null ?
-                                                    <ScrollView
-                                                        contentContainerStyle={{
-                                                            height: 20, width: '100%'
+                        </View>
+                        : (
+                            loading ?
+                                <View style={{
+                                    width: '100%',
+                                    justifyContent: 'center',
+                                    flex: 1,
+                                    flexDirection: 'column',
+                                    backgroundColor: 'white'
+                                }}>
+                                    <ActivityIndicator color={'#a6a2a2'} />
+                                </View> :
+                                <View style={{
+                                    width: '100%',
+                                    backgroundColor: 'white',
+                                    flex: 1
+                                }}
+                                    key={JSON.stringify(filteredThreads)}
+                                >
+                                    {
+                                        !showThreadCues ?
+                                            <ScrollView
+                                                showsVerticalScrollIndicator={false}
+                                                horizontal={false}
+                                                contentContainerStyle={{
+                                                    width: '100%',
+                                                    height: '100%',
+                                                }}
+                                            >
+                                                {
+                                                    filteredThreads.map((thread: any, index) => {
+                                                        return <View style={styles.col} key={index}>
+                                                            <ThreadCard
+                                                                fadeAnimation={props.fadeAnimation}
+                                                                thread={thread}
+                                                                onPress={() => loadCueDiscussions(thread._id)}
+                                                                channelCreatedBy={props.channelCreatedBy}
+                                                            />
+                                                        </View>
+                                                    })
+                                                }
+                                            </ScrollView>
+                                            :
+                                            <ScrollView
+                                                showsVerticalScrollIndicator={false}
+                                                keyboardDismissMode={'on-drag'}
+                                                style={{ flex: 1, paddingTop: 12 }}>
+                                                {
+                                                    threadWithReplies.map((thread) => {
+                                                        return <View style={{ width: '100%', paddingBottom: 15, backgroundColor: 'white' }} key={Math.random()}>
+                                                            <ThreadReplyCard
+                                                                channelCreatedBy={props.channelCreatedBy}
+                                                                thread={thread} />
+                                                        </View>
+                                                    })
+                                                }
+                                                <View style={{ backgroundColor: 'white' }}>
+                                                    <NewMessage
+                                                        cueId={props.cueId}
+                                                        channelId={props.channelId}
+                                                        parentId={threadId}
+                                                        back={() => {
+                                                            props.reload()
+                                                            setShowPost(false)
+                                                            setThreadId('')
                                                         }}
-                                                        style={{}}
-                                                        horizontal={true}
-                                                        showsHorizontalScrollIndicator={false}
-                                                    >
-                                                        {
-                                                            categories.length === 0 ? null :
-                                                                <TouchableOpacity
-                                                                    style={filterChoice === 'All' ? styles.cusCategoryOutline : styles.cusCategory}
-                                                                    onPress={() => setFilterChoice('All')}>
-                                                                    <Text
-                                                                        style={{
-                                                                            color: '#a6a2a2',
-                                                                            lineHeight: 20,
-                                                                        }}
-                                                                    >
-                                                                        All
+                                                        placeholder='Reply...'
+                                                    />
+                                                </View>
+                                            </ScrollView>
+                                    }
+                                    {
+                                        showThreadCues ? null :
+                                            <View style={{
+                                                width: '100%',
+                                                height: 60,
+                                                backgroundColor: 'white',
+                                                display: 'flex',
+                                                justifyContent: 'center',
+                                                flexDirection: 'column'
+                                            }}>
+                                                {
+                                                    props.cueId === null ?
+                                                        <ScrollView
+                                                            contentContainerStyle={{
+                                                                height: 20, width: '100%'
+                                                            }}
+                                                            style={{}}
+                                                            horizontal={true}
+                                                            showsHorizontalScrollIndicator={false}
+                                                        >
+                                                            {
+                                                                categories.length === 0 ? null :
+                                                                    <TouchableOpacity
+                                                                        style={filterChoice === 'All' ? styles.cusCategoryOutline : styles.cusCategory}
+                                                                        onPress={() => setFilterChoice('All')}>
+                                                                        <Text
+                                                                            style={{
+                                                                                color: '#a6a2a2',
+                                                                                lineHeight: 20,
+                                                                            }}
+                                                                        >
+                                                                            All
                                                                     </Text>
-                                                                </TouchableOpacity>
-                                                        }
-                                                        {
-                                                            categories.map((category: string) => {
-                                                                return <TouchableOpacity
-                                                                    key={Math.random()}
-                                                                    style={filterChoice === category ? styles.cusCategoryOutline : styles.cusCategory}
-                                                                    onPress={() => setFilterChoice(category)}>
-                                                                    <Text
-                                                                        style={{
-                                                                            color: '#a6a2a2',
-                                                                            lineHeight: 20
-                                                                        }}>
-                                                                        {category}
-                                                                    </Text>
-                                                                </TouchableOpacity>
-                                                            })
-                                                        }
-                                                    </ScrollView> : null
-                                            }
-                                        </View>
-                                }
-                            </View>
-                    )
-            }
+                                                                    </TouchableOpacity>
+                                                            }
+                                                            {
+                                                                categories.map((category: string) => {
+                                                                    return <TouchableOpacity
+                                                                        key={Math.random()}
+                                                                        style={filterChoice === category ? styles.cusCategoryOutline : styles.cusCategory}
+                                                                        onPress={() => setFilterChoice(category)}>
+                                                                        <Text
+                                                                            style={{
+                                                                                color: '#a6a2a2',
+                                                                                lineHeight: 20
+                                                                            }}>
+                                                                            {category}
+                                                                        </Text>
+                                                                    </TouchableOpacity>
+                                                                })
+                                                            }
+                                                        </ScrollView> : null
+                                                }
+                                            </View>
+                                    }
+                                </View>
+                        )
+                }
+            </Collapse>
         </View >
     );
 }

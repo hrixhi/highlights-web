@@ -68,6 +68,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         _id: status.userId,
                                         fullName: status.status,
                                         submission: status.submission,
+                                        comment: status.comment,
                                         score: status.score,
                                         graded: status.graded,
                                         userId: status.userId
@@ -178,6 +179,10 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         key={JSON.stringify(threads)}
                     >
                         <Swiper
+                            containerStyle={{
+                                borderTopRightRadius: 30,
+                                borderTopLeftRadius: 30
+                            }}
                             key={JSON.stringify(threads) + JSON.stringify(threads.length) + JSON.stringify(props.reopenUpdateWindow)}
                             vertical={false}
                             from={0}
@@ -190,55 +195,69 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 nextTitleStyle: { color: '#a6a2a2', fontSize: 60, fontFamily: 'overpass' },
                                 prevTitle: '‹',
                                 prevTitleStyle: { color: '#a6a2a2', fontSize: 60, fontFamily: 'overpass' },
-                                dotActiveStyle: { backgroundColor: !Number.isNaN(Number(cueId)) ? '#fff' : '#0079fe' }
+                                dotActiveStyle: { backgroundColor: !Number.isNaN(Number(cueId)) || (props.channelId && !channelOwner) ? '#fff' : '#0079fe' }
                             }}
                         >
-                            <UpdateControls
-                                key={props.reopenUpdateWindow}
-                                channelId={props.channelId}
-                                customCategories={props.customCategories}
-                                cue={props.cue}
-                                cueIndex={props.cueIndex}
-                                cueKey={props.cueKey}
-                                createdBy={createdBy}
-                                closeModal={() => {
-                                    Animated.timing(modalAnimation, {
-                                        toValue: 0,
-                                        duration: 150,
-                                        useNativeDriver: true
-                                    }).start(() => props.closeModal())
+                            <ScrollView
+                                nestedScrollEnabled={true}
+                                horizontal={false}
+                                style={{
+                                    borderTopRightRadius: 30,
+                                    borderTopLeftRadius: 30,
                                 }}
-                                reloadCueListAfterUpdate={() => props.reloadCueListAfterUpdate()}
-                            />
-                            {
-                                !Number.isNaN(Number(cueId)) ? null :
-                                    <ScrollView
-                                        key={Math.random()}
-                                        ref={scroll2}
-                                        contentContainerStyle={{
-                                            width: '100%',
-                                            height: '100%'
-                                        }}
-                                        contentOffset={{ x: 0, y: 1 }}
-                                        showsVerticalScrollIndicator={false}
-                                        overScrollMode={'always'}
-                                        alwaysBounceVertical={true}
-                                        scrollEnabled={true}
-                                        scrollEventThrottle={1}
-                                        keyboardDismissMode={'on-drag'}
-                                    >
-                                        <ThreadsList
-                                            channelCreatedBy={props.channelCreatedBy}
-                                            key={JSON.stringify(threads)}
-                                            threads={threads}
-                                            cueId={cueId}
-                                            channelId={props.channelId}
-                                            channelName={props.filterChoice}
-                                            closeModal={() => props.closeModal()}
-                                            reload={() => loadThreadsAndStatuses()}
-                                        />
-                                    </ScrollView>
-                            }
+                                contentContainerStyle={{
+                                    borderTopRightRadius: 30,
+                                    borderTopLeftRadius: 30,
+                                    minHeight: windowHeight - 30
+                                }}
+                            >
+                                <UpdateControls
+                                    key={props.reopenUpdateWindow}
+                                    channelId={props.channelId}
+                                    customCategories={props.customCategories}
+                                    cue={props.cue}
+                                    cueIndex={props.cueIndex}
+                                    cueKey={props.cueKey}
+                                    createdBy={createdBy}
+                                    closeModal={() => {
+                                        Animated.timing(modalAnimation, {
+                                            toValue: 0,
+                                            duration: 150,
+                                            useNativeDriver: true
+                                        }).start(() => props.closeModal())
+                                    }}
+                                    reloadCueListAfterUpdate={() => props.reloadCueListAfterUpdate()}
+                                />
+                                {
+                                    !Number.isNaN(Number(cueId)) ? null :
+                                        <ScrollView
+                                            key={Math.random()}
+                                            ref={scroll2}
+                                            contentContainerStyle={{
+                                                width: '100%',
+                                                height: '100%'
+                                            }}
+                                            contentOffset={{ x: 0, y: 1 }}
+                                            showsVerticalScrollIndicator={false}
+                                            overScrollMode={'always'}
+                                            alwaysBounceVertical={true}
+                                            scrollEnabled={true}
+                                            scrollEventThrottle={1}
+                                            keyboardDismissMode={'on-drag'}
+                                        >
+                                            <ThreadsList
+                                                channelCreatedBy={props.channelCreatedBy}
+                                                key={JSON.stringify(threads)}
+                                                threads={threads}
+                                                cueId={cueId}
+                                                channelId={props.channelId}
+                                                channelName={props.filterChoice}
+                                                closeModal={() => props.closeModal()}
+                                                reload={() => loadThreadsAndStatuses()}
+                                            />
+                                        </ScrollView>
+                                }
+                            </ScrollView>
                             {
                                 channelOwner ?
                                     <ScrollView
@@ -277,7 +296,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         </Swiper>
                     </Animated.View>
             }
-        </View>
+        </View >
     );
 }
 

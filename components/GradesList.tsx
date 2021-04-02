@@ -8,11 +8,11 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
     const unparsedScores: any[] = JSON.parse(JSON.stringify(props.scores))
     const unparsedCues: any[] = JSON.parse(JSON.stringify(props.cues))
-    const [scores] = useState<any[]>(unparsedScores.reverse())
-    const [cues] = useState<any[]>(unparsedCues.reverse())
+    const [scores] = useState<any[]>(unparsedScores)
+    const [cues] = useState<any[]>(unparsedCues)
 
-    console.log(scores)
     console.log(cues)
+    console.log(scores)
 
     return (
         <View style={{
@@ -68,8 +68,8 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 }}
                                 nestedScrollEnabled={true}
                             >
-                                <View >
-                                    <View style={styles.row} key={"-"}>
+                                <View>
+                                    <ScrollView style={styles.row} key={"-"} horizontal={true}>
                                         <View style={styles.col} key={'0,0'} />
                                         {
                                             cues.map((cue: any, col: number) => {
@@ -95,7 +95,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                     </Text>
                                                 </View>
                                         }
-                                    </View>
+                                    </ScrollView>
                                     {
                                         scores.map((score: any, row: number) => {
 
@@ -108,7 +108,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 }
                                             })
 
-                                            return <View style={styles.row} key={row}>
+                                            return <ScrollView style={styles.row} key={row} horizontal={true}>
                                                 <View style={styles.col} >
                                                     <Text style={{ textAlign: 'left', fontSize: 13, color: '#101010', fontFamily: 'inter' }}>
                                                         {score.fullName}
@@ -139,7 +139,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                         </Text>
                                                         </View>
                                                 }
-                                            </View>
+                                            </ScrollView>
                                         })
                                     }
                                 </View>
@@ -158,5 +158,5 @@ export default React.memo(GradesList, (prev, next) => {
 
 const styles = StyleSheet.create({
     row: { height: 80, borderRadius: 15, marginBottom: 20, flexDirection: 'row', overflow: 'hidden', backgroundColor: '#f4f4f4', },
-    col: { width: 100, justifyContent: 'center', display: 'flex', flexDirection: 'column', overflow: 'scroll', backgroundColor: '#f4f4f4', padding: 5 }
+    col: { width: 100, justifyContent: 'center', display: 'flex', flexDirection: 'column', backgroundColor: '#f4f4f4', padding: 5 }
 })
