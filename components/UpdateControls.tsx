@@ -87,6 +87,11 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const [problems, setProblems] = useState<any[]>([])
     const [solutions, setSolutions] = useState<any[]>([])
     const [quizId, setQuizId] = useState('')
+    const [loading, setLoading] = useState(true)
+    
+    useEffect(() => {
+        setLoading(true)
+    }, [props.cue])
 
     const loadChannelsAndSharedWith = useCallback(async () => {
         const uString: any = await AsyncStorage.getItem('user')
@@ -161,6 +166,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             setProblems(res.data.quiz.getQuiz.problems);
                             setTitle(obj.title)
                             setIsQuiz(true)
+                            setLoading(false)
                         }
                     })
                 } else {
@@ -202,22 +208,13 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 setSubmissionTitle('')
             }
         }
+        setLoading(false)
         setKey(Math.random())
     }, [props.cue, cue, isQuiz])
 
     const handleHeightChange = useCallback((h: any) => {
         setHeight(h)
     }, [])
-
-    // useEffect(() => {
-    //     // -> update cue
-    //     if (isQuiz && !props.cue.graded) {
-    //         const saveCue = JSON.stringify({
-    //             solutions
-    //         })
-    //         setCue(saveCue)
-    //     }
-    // }, [solutions, isQuiz, cue, props.cue])
 
     const cameraCallback = useCallback(async () => {
 
@@ -618,6 +615,10 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     }, [props.cue.status])
 
     const width = Dimensions.get('window').width;
+
+    if (loading) {
+        return null;
+    }
 
     return (
         <View style={{

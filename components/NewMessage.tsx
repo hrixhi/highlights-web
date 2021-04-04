@@ -105,6 +105,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
     }, [props.users, message, props.channelId, imported, type, title, url])
 
     const createThreadMessage = useCallback(async () => {
+        console.log(message)
         if (!message || message === '') {
             return
         }
@@ -284,7 +285,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             placeholder={props.placeholder}
                             onChange={(text) => {
                                 const modifedText = text.split('&amp;').join('&')
-                                props.setMessage(modifedText)
+                                setMessage(modifedText)
                             }}
                             onBlur={() => Keyboard.dismiss()}
                             allowFileAccess={true}
