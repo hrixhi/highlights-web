@@ -46,7 +46,9 @@ const SubscriberCard: React.FunctionComponent<{ [label: string]: any }> = (props
                                             {props.subscriber.unreadMessages}
                                         </Text> : null
                                 }
-                                <Ionicons name="chevron-forward-outline" color="#a6a2a2" size={20} style={{ marginTop: 3, marginLeft: 10 }} />
+                                {
+                                    props.hideChevron ? null : <Ionicons name="chevron-forward-outline" color="#a6a2a2" size={20} style={{ marginTop: 3, marginLeft: 10 }} />
+                                }
                             </View>
                             : null
                     }

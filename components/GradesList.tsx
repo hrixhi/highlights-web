@@ -11,9 +11,6 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
     const [scores] = useState<any[]>(unparsedScores)
     const [cues] = useState<any[]>(unparsedCues)
 
-    console.log(cues)
-    console.log(scores)
-
     return (
         <View style={{
             backgroundColor: 'white',

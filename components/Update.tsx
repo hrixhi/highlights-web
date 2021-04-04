@@ -229,7 +229,9 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     reloadCueListAfterUpdate={() => props.reloadCueListAfterUpdate()}
                                 />
                                 {
-                                    !Number.isNaN(Number(cueId)) ? null :
+                                    !Number.isNaN(Number(cueId)) || !props.channelId ? <View
+                                        style={{ flex: 1, backgroundColor: 'white' }}
+                                    /> :
                                         <ScrollView
                                             key={Math.random()}
                                             ref={scroll2}

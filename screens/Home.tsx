@@ -840,6 +840,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 : (
                                   modalType === 'Meeting' ? <Meeting
                                     channelId={channelId}
+                                    channelName={filterChoice}
                                     channelCreatedBy={channelCreatedBy}
                                   />
                                     : null

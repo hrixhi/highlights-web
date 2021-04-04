@@ -8,7 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Datetime from 'react-datetime';
 import { timedFrequencyOptions } from '../helpers/FrequencyOptions';
 import { fetchAPI } from '../graphql/FetchAPI';
-import { createCue, deleteForEveryone, getChannels, getSharedWith, markAsRead, shareCueWithMoreIds, submit } from '../graphql/QueriesAndMutations';
+import { createCue, deleteForEveryone, getChannels, getQuiz, getSharedWith, markAsRead, shareCueWithMoreIds, submit } from '../graphql/QueriesAndMutations';
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
 import * as FileSystem from 'expo-file-system';
@@ -21,6 +21,7 @@ import FileViewer from 'react-file-viewer';
 import FileUpload from './UploadFiles';
 import Select from 'react-select';
 import { Collapse } from 'react-collapse';
+import Quiz from './Quiz';
 
 const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -81,6 +82,11 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const [selected, setSelected] = useState<any[]>([])
     const [subscribers, setSubscribers] = useState<any[]>([])
     const [expandMenu, setExpandMenu] = useState(false)
+    // quiz options
+    const [isQuiz, setIsQuiz] = useState(false)
+    const [problems, setProblems] = useState<any[]>([])
+    const [solutions, setSolutions] = useState<any[]>([])
+    const [quizId, setQuizId] = useState('')
 
     const loadChannelsAndSharedWith = useCallback(async () => {
         const uString: any = await AsyncStorage.getItem('user')
@@ -134,10 +140,35 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             const data2 = cue;
             if (data1 && data1[0] && data1[0] === '{' && data1[data1.length - 1] === '}') {
                 const obj = JSON.parse(data1)
-                setImported(true)
-                setUrl(obj.url)
-                setType(obj.type)
-                setTitle(obj.title)
+                if (obj.quizId) {
+                    if (isQuiz) {
+                        return;
+                    }
+                    // load quiz here and set problems
+                    const server = fetchAPI('')
+                    server.query({
+                        query: getQuiz,
+                        variables: {
+                            quizId: obj.quizId
+                        }
+                    }).then(res => {
+                        if (res.data && res.data.quiz.getQuiz) {
+                            setQuizId(obj.quizId)
+                            const solutionsObject = cue ? JSON.parse(cue) : {}
+                            if (solutionsObject.solutions) {
+                                setSolutions(solutionsObject.solutions)
+                            }
+                            setProblems(res.data.quiz.getQuiz.problems);
+                            setTitle(obj.title)
+                            setIsQuiz(true)
+                        }
+                    })
+                } else {
+                    setImported(true)
+                    setUrl(obj.url)
+                    setType(obj.type)
+                    setTitle(obj.title)
+                }
             } else {
                 setImported(false)
                 setUrl('')
@@ -172,11 +203,21 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             }
         }
         setKey(Math.random())
-    }, [props.cue, cue])
+    }, [props.cue, cue, isQuiz])
 
     const handleHeightChange = useCallback((h: any) => {
         setHeight(h)
     }, [])
+
+    // useEffect(() => {
+    //     // -> update cue
+    //     if (isQuiz && !props.cue.graded) {
+    //         const saveCue = JSON.stringify({
+    //             solutions
+    //         })
+    //         setCue(saveCue)
+    //     }
+    // }, [solutions, isQuiz, cue, props.cue])
 
     const cameraCallback = useCallback(async () => {
 
@@ -283,7 +324,11 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             return
         }
         let saveCue = ''
-        if (submissionImported) {
+        if (isQuiz) {
+            saveCue = JSON.stringify({
+                solutions
+            })
+        } else if (submissionImported) {
             const obj = {
                 type: submissionType,
                 url: submissionUrl,
@@ -323,8 +368,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         await AsyncStorage.setItem('cues', stringifiedCues)
         props.reloadCueListAfterUpdate()
     }, [cue, customCategory, shuffle, frequency, starred, color, playChannelCueIndef, notify, submissionImported,
-        submission, deadline, gradeWeight, submitted, submissionTitle, submissionType, submissionUrl,
-        props.closeModal, props.cueIndex, props.cueKey, props.cue, endPlayAt, props])
+        submission, deadline, gradeWeight, submitted, submissionTitle, submissionType, submissionUrl, isQuiz,
+        props.closeModal, props.cueIndex, props.cueKey, props.cue, endPlayAt, props, solutions])
 
     const handleDelete = useCallback(async () => {
 
@@ -367,6 +412,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
     const handleSubmit = useCallback(async () => {
         const u: any = await AsyncStorage.getItem('user')
+        if (isQuiz) {
+            // over here check that all options have been selected
+        }
         if (u) {
             const parsedUser = JSON.parse(u)
             if (!parsedUser.email || parsedUser.email === '') {
@@ -374,7 +422,11 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 return
             }
             let saveCue = ''
-            if (submissionImported) {
+            if (isQuiz) {
+                saveCue = JSON.stringify({
+                    solutions
+                })
+            } else if (submissionImported) {
                 const obj = {
                     type: submissionType,
                     url: submissionUrl,
@@ -395,17 +447,29 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 variables: {
                     cue: saveCue,
                     cueId: props.cue._id,
-                    userId: parsedUser._id
+                    userId: parsedUser._id,
+                    quizId: isQuiz ? quizId : null
                 }
             }).then(res => {
                 if (res.data.cue.submitModification) {
-                    setSubmitted(true)
+                    Alert(
+                        "Submission Complete.",
+                        (new Date()).toString(),
+                        [
+                            {
+                                text: "Cancel", style: "cancel"
+                            },
+                            {
+                                text: "Okay", onPress: () => window.location.reload()
+                            }
+                        ]
+                    );
                 }
             }).catch(err => {
-
+                Alert("Something went wrong.", "Try again later.")
             })
         }
-    }, [props.cue, cue, submissionTitle, submissionType, submissionUrl, submissionImported])
+    }, [props.cue, cue, submissionTitle, submissionType, submissionUrl, submissionImported, isQuiz, quizId, solutions])
 
     useEffect(() => {
         (
@@ -427,7 +491,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     useEffect(() => {
         handleUpdate()
     }, [cue, shuffle, frequency, starred, color, props.cueIndex, submitted, markedAsRead,
-        submissionTitle, submissionImported, submissionType,
+        submissionTitle, submissionImported, submissionType, isQuiz, solutions,
         customCategory, props.cueKey, endPlayAt, playChannelCueIndef, notify])
 
     const updateStatusAsRead = useCallback(async () => {
@@ -581,34 +645,39 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         <View style={{
                             width: '100%', flexDirection: 'row', marginBottom: 5
                         }}>
-                            <TouchableOpacity
-                                style={{
-                                    justifyContent: 'center',
-                                    flexDirection: 'column'
-                                }}
-                                onPress={() => {
-                                    setShowOriginal(true)
-                                }}>
-                                <Text style={showOriginal ? styles.allGrayFill : styles.all}>
-                                    View Shared
-                                </Text>
-                            </TouchableOpacity>
                             {
-                                isOwner && submission ? null :
-                                    <TouchableOpacity
-                                        style={{
-                                            justifyContent: 'center',
-                                            flexDirection: 'column'
-                                        }}
-                                        onPress={() => {
-                                            setShowOriginal(false)
-                                        }}>
-                                        <Text style={!showOriginal ? styles.allGrayFill : styles.all}>
-                                            {
-                                                submission ? 'My Submission' : 'My Notes'
-                                            }
-                                        </Text>
-                                    </TouchableOpacity>
+                                isQuiz ? null :
+                                    <View style={{ flexDirection: 'row' }}>
+                                        <TouchableOpacity
+                                            style={{
+                                                justifyContent: 'center',
+                                                flexDirection: 'column'
+                                            }}
+                                            onPress={() => {
+                                                setShowOriginal(true)
+                                            }}>
+                                            <Text style={showOriginal ? styles.allGrayFill : styles.all}>
+                                                View Shared
+                                            </Text>
+                                        </TouchableOpacity>
+                                        {
+                                            isOwner && submission ? null :
+                                                <TouchableOpacity
+                                                    style={{
+                                                        justifyContent: 'center',
+                                                        flexDirection: 'column'
+                                                    }}
+                                                    onPress={() => {
+                                                        setShowOriginal(false)
+                                                    }}>
+                                                    <Text style={!showOriginal ? styles.allGrayFill : styles.all}>
+                                                        {
+                                                            submission ? 'My Submission' : 'My Notes'
+                                                        }
+                                                    </Text>
+                                                </TouchableOpacity>
+                                        }
+                                    </View>
                             }
                             {
                                 props.cue.graded && (props.cue.score !== undefined && props.cue.score !== null) ?
@@ -728,7 +797,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         }
                     </View>
                     {
-                        !showOriginal && props.cue.submission && !submissionImported ?
+                        !showOriginal && props.cue.submission && !submissionImported && !props.cue.graded ?
                             <Text style={{
                                 color: '#a6a2a2',
                                 fontSize: 11,
@@ -768,10 +837,11 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     nestedScrollEnabled={true}
                 >
                     {
-                        showOriginal && imported ?
+                        showOriginal && (imported || isQuiz) ?
                             <View style={{ flexDirection: 'row' }}>
                                 <View style={{ width: '40%', alignSelf: 'flex-start', marginLeft: '10%' }}>
                                     <TextInput
+                                        editable={false}
                                         value={title}
                                         style={styles.input}
                                         placeholder={'Title'}
@@ -779,11 +849,14 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         placeholderTextColor={'#a6a2a2'}
                                     />
                                 </View>
-                                <View style={{ marginLeft: 25, marginTop: 20, alignSelf: 'flex-start' }}>
-                                    <a download={true} href={url} style={{ textDecoration: 'none' }}>
-                                        <Ionicons name='cloud-download-outline' color='#a6a2a2' size={20} />
-                                    </a>
-                                </View>
+                                {
+                                    isQuiz ? null :
+                                        <View style={{ marginLeft: 25, marginTop: 20, alignSelf: 'flex-start' }}>
+                                            <a download={true} href={url} style={{ textDecoration: 'none' }}>
+                                                <Ionicons name='cloud-download-outline' color='#a6a2a2' size={20} />
+                                            </a>
+                                        </View>
+                                }
                             </View> : null
                     }
                     {
@@ -841,71 +914,79 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     }}
                     >
                         {!showOriginal ? null
-                            : (imported ?
-                                (
-                                    type === 'pptx' ?
-                                        <iframe src={'https://view.officeapps.live.com/op/embed.aspx?src=' + url} width='100%' height='600px' frameBorder='0' />
-                                        : <FileViewer
-                                            unsupportedComponent={() =>
-                                                <View style={{ backgroundColor: 'white', flex: 1 }}>
-                                                    <Text style={{ width: '100%', color: '#a6a2a2', fontSize: 25, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
-                                                        <Ionicons name='document-outline' size={50} color='#a6a2a2' />
-                                                    </Text>
-                                                </View>
-                                            }
-                                            style={{ fontFamily: 'overpass' }}
-                                            fileType={type}
-                                            filePath={url}
-                                            key={Math.random()}
-                                            errorComponent={<View>
-                                                <Text>
-                                                    ERROR!!
+                            : (
+                                isQuiz ?
+                                    <Quiz
+                                        graded={props.cue.graded}
+                                        solutions={solutions}
+                                        problems={problems}
+                                        setSolutions={(s: any) => setSolutions(s)}
+                                    />
+                                    : (imported ?
+                                        (
+                                            type === 'pptx' ?
+                                                <iframe src={'https://view.officeapps.live.com/op/embed.aspx?src=' + url} width='100%' height='600px' frameBorder='0' />
+                                                : <FileViewer
+                                                    unsupportedComponent={() =>
+                                                        <View style={{ backgroundColor: 'white', flex: 1 }}>
+                                                            <Text style={{ width: '100%', color: '#a6a2a2', fontSize: 25, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                                                <Ionicons name='document-outline' size={50} color='#a6a2a2' />
+                                                            </Text>
+                                                        </View>
+                                                    }
+                                                    style={{ fontFamily: 'overpass' }}
+                                                    fileType={type}
+                                                    filePath={url}
+                                                    key={Math.random()}
+                                                    errorComponent={<View>
+                                                        <Text>
+                                                            ERROR!!
                                         </Text>
-                                            </View>}
-                                            onError={(e: any) => console.log(e)} />
-                                )
-                                :
-                                <RichEditor
-                                    key={showOriginal.toString() + reloadEditorKey.toString()}
-                                    disabled={true}
-                                    containerStyle={{
-                                        height: height,
-                                        backgroundColor: '#f4f4f4',
-                                        padding: 3,
-                                        paddingTop: 5,
-                                        paddingBottom: 10,
-                                        borderRadius: 2,
-                                    }}
-                                    ref={RichText}
-                                    style={{
-                                        width: '100%',
-                                        backgroundColor: '#f4f4f4',
-                                        minHeight: 475,
-                                        borderRadius: 2
-                                    }}
-                                    editorStyle={{
-                                        backgroundColor: '#f4f4f4',
-                                        placeholderColor: '#a6a2a2',
-                                        color: '#101010',
-                                        contentCSSText: 'font-size: 13px;'
-                                    }}
-                                    initialContentHTML={props.cue.original}
-                                    onScroll={() => Keyboard.dismiss()}
-                                    placeholder={"Title"}
-                                    onChange={(text) => {
-                                        const modifedText = text.split('&amp;').join('&')
-                                        setCue(modifedText)
-                                    }}
-                                    onHeightChange={handleHeightChange}
-                                    onBlur={() => Keyboard.dismiss()}
-                                    allowFileAccess={true}
-                                    allowFileAccessFromFileURLs={true}
-                                    allowUniversalAccessFromFileURLs={true}
-                                    allowsFullscreenVideo={true}
-                                    allowsInlineMediaPlayback={true}
-                                    allowsLinkPreview={true}
-                                    allowsBackForwardNavigationGestures={true}
-                                />)
+                                                    </View>}
+                                                    onError={(e: any) => console.log(e)} />
+                                        )
+                                        :
+                                        <RichEditor
+                                            key={showOriginal.toString() + reloadEditorKey.toString()}
+                                            disabled={true}
+                                            containerStyle={{
+                                                height: height,
+                                                backgroundColor: '#f4f4f4',
+                                                padding: 3,
+                                                paddingTop: 5,
+                                                paddingBottom: 10,
+                                                borderRadius: 2,
+                                            }}
+                                            ref={RichText}
+                                            style={{
+                                                width: '100%',
+                                                backgroundColor: '#f4f4f4',
+                                                minHeight: 475,
+                                                borderRadius: 2
+                                            }}
+                                            editorStyle={{
+                                                backgroundColor: '#f4f4f4',
+                                                placeholderColor: '#a6a2a2',
+                                                color: '#101010',
+                                                contentCSSText: 'font-size: 13px;'
+                                            }}
+                                            initialContentHTML={props.cue.original}
+                                            onScroll={() => Keyboard.dismiss()}
+                                            placeholder={"Title"}
+                                            onChange={(text) => {
+                                                const modifedText = text.split('&amp;').join('&')
+                                                setCue(modifedText)
+                                            }}
+                                            onHeightChange={handleHeightChange}
+                                            onBlur={() => Keyboard.dismiss()}
+                                            allowFileAccess={true}
+                                            allowFileAccessFromFileURLs={true}
+                                            allowUniversalAccessFromFileURLs={true}
+                                            allowsFullscreenVideo={true}
+                                            allowsInlineMediaPlayback={true}
+                                            allowsLinkPreview={true}
+                                            allowsBackForwardNavigationGestures={true}
+                                        />))
                         }
                         {showOriginal ? null
                             : (submissionImported ?
@@ -1105,6 +1186,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                                 }}>
 
                                                                     <Switch
+                                                                        disabled={isQuiz}
                                                                         value={submission}
                                                                         onValueChange={() => {
                                                                             setSubmission(!submission)

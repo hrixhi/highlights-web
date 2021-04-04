@@ -225,7 +225,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             <Text style={{
                                 textAlign: 'center',
                                 lineHeight: 35,
-                                color: '#101010s',
+                                color: '#101010',
                                 fontSize: 14,
                                 backgroundColor: '#f4f4f4',
                                 paddingHorizontal: 25,

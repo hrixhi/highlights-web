@@ -96,9 +96,9 @@ mutation($userId: String!, $randomShuffleFrequency: String!, $sleepFrom: String!
 }
 `
 export const submit = gql`
-mutation($cueId: String!, $userId: String!, $cue: String!) {
+mutation($cueId: String!, $userId: String!, $cue: String!, $quizId: String) {
     cue {
-        submitModification(cueId: $cueId, userId: $userId, cue: $cue)
+        submitModification(cueId: $cueId, userId: $userId, cue: $cue, quizId: $quizId)
     }
 }
 `
@@ -169,6 +169,27 @@ export const deleteForEveryone = gql`
 mutation($cueId: String!) {
     cue {
         deleteForEveryone(cueId: $cueId)
+    }
+}
+`
+export const createScheduledMeeting = gql`
+mutation($channelId: String!, $start: String!, $end: String!) {
+    attendance {
+        create(channelId: $channelId, start: $start, end: $end)
+    }
+}
+`
+export const markAttendance = gql`
+mutation($channelId: String!, $userId: String!) {
+    attendance {
+        markAttendance(channelId: $channelId, userId: $userId)
+    }
+}
+`
+export const createQuiz = gql`
+mutation($quiz: QuizInputObject!) {
+    quiz {
+        createQuiz(quiz: $quiz)
     }
 }
 `
@@ -490,6 +511,52 @@ query($userId: String!, $channelId: String!) {
             unreadMessages
             userNames {
                 displayName
+            }
+        }
+    }
+}
+`
+export const getUpcomingDates = gql`
+query($channelId: String!) {
+    attendance {
+        getUpcomingDates(channelId: $channelId) {
+            start
+            end
+        }
+    }
+}
+`
+export const getPastDates = gql`
+query($channelId: String!) {
+    attendance {
+        getPastDates(channelId: $channelId) {
+            start
+            end
+            dateId
+        }
+    }
+}
+`
+export const getAttendances = gql`
+query($dateId: String!) {
+    attendance {
+        getAttendances(dateId: $dateId) {
+            displayName
+            joinedAt
+        }
+    }
+}
+`
+export const getQuiz = gql`
+query($quizId: String!) {
+    quiz {
+        getQuiz(quizId: $quizId) {
+            problems {
+                question
+                options {
+                    option
+                    isCorrect
+                }
             }
         }
     }
