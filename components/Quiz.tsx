@@ -34,8 +34,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         return null
     }
 
-    console.log(solutions)
-
     return (
         <View style={{
             width: '100%', height: '100%', backgroundColor: 'white',

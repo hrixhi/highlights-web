@@ -195,7 +195,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 nextTitleStyle: { color: '#a6a2a2', fontSize: 60, fontFamily: 'overpass' },
                                 prevTitle: '‹',
                                 prevTitleStyle: { color: '#a6a2a2', fontSize: 60, fontFamily: 'overpass' },
-                                dotActiveStyle: { backgroundColor: !Number.isNaN(Number(cueId)) || (props.channelId && !channelOwner) ? '#fff' : '#0079fe' }
+                                dotActiveStyle: { backgroundColor: !Number.isNaN(Number(cueId)) || (props.channelId && !channelOwner) || (!props.channelId || props.channelId === '') ? '#fff' : '#0079fe' }
                             }}
                         >
                             <ScrollView

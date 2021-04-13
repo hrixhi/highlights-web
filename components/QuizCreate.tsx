@@ -26,18 +26,33 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     {index + 1}.
                             </Text>
                             </View>
-                            <TextInput
-                                value={problem.question}
-                                style={styles.input}
-                                placeholder={'Problem ' + (index + 1).toString()}
-                                onChangeText={val => {
-                                    const newProbs = [...problems];
-                                    newProbs[index].question = val;
-                                    setProblems(newProbs)
-                                    props.setProblems(newProbs)
-                                }}
-                                placeholderTextColor={'#a6a2a2'}
-                            />
+                            <View style={{ flexDirection: 'row' }}>
+                                <TextInput
+                                    value={problem.question}
+                                    style={styles.input}
+                                    placeholder={'Problem ' + (index + 1).toString()}
+                                    onChangeText={val => {
+                                        const newProbs = [...problems];
+                                        newProbs[index].question = val;
+                                        setProblems(newProbs)
+                                        props.setProblems(newProbs)
+                                    }}
+                                    placeholderTextColor={'#a6a2a2'}
+                                />
+                                <View style={{ flex: 1 }} />
+                                <TextInput
+                                    value={problem.points}
+                                    style={styles.input}
+                                    placeholder={'Enter points'}
+                                    onChangeText={val => {
+                                        const newProbs = [...problems];
+                                        newProbs[index].points = val;
+                                        setProblems(newProbs)
+                                        props.setProblems(newProbs)
+                                    }}
+                                    placeholderTextColor={'#a6a2a2'}
+                                />
+                            </View>
                             <View style={{ paddingTop: 15, paddingLeft: 10 }}>
                                 <Ionicons
                                     name='close-outline'
@@ -133,7 +148,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
             <View>
                 <TouchableOpacity
                     onPress={() => {
-                        const updatedProblems = [...problems, { question: '', options: [] }]
+                        const updatedProblems = [...problems, { question: '', options: [], points: '' }]
                         setProblems(updatedProblems)
                         props.setProblems(updatedProblems)
                     }}

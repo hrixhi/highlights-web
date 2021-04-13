@@ -3,7 +3,7 @@ import { StyleSheet, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import useColorScheme from '../hooks/useColorScheme';
 import { Text, View, TouchableOpacity } from '../components/Themed';
-import { fontSize } from '../assets/fonts/fontSize';
+import Alert from './Alert';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
@@ -63,6 +63,10 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             key={Math.random()}
                             style={choice === subscription.channelName ? styles.subOutline : styles.sub}
                             onPress={() => {
+                                if (subscription.inactive) {
+                                    Alert("Subscription inactivated by channel creator!", "Contact channel creator to gain access.")
+                                    return;
+                                }
                                 props.setChannelFilterChoice('All')
                                 props.handleFilterChange(subscription.channelName)
                                 props.setChannelId(subscription.channelId)

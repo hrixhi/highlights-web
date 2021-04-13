@@ -193,6 +193,27 @@ mutation($quiz: QuizInputObject!) {
     }
 }
 `
+export const makeSubActive = gql`
+mutation($userId: String!, $channelId: String!) {
+    subscription {
+        makeActive(userId: $userId, channelId: $channelId)
+    }
+}
+`
+export const makeSubInactive = gql`
+mutation($userId: String!, $channelId: String!) {
+    subscription {
+        makeInactive(userId: $userId, channelId: $channelId)
+    }
+}
+`
+export const start = gql`
+mutation($userId: String!, $cueId: String!, $cue: String!) {
+    quiz {
+        start(userId: $userId, cueId: $cueId, cue: $cue)
+    }
+}
+`
 /**
  * ALL
  * QUERIES
@@ -262,6 +283,7 @@ query($userId: String!) {
             channelName
             channelId
             channelCreatedBy
+            inactive
         }
     }
 }
@@ -551,14 +573,23 @@ export const getQuiz = gql`
 query($quizId: String!) {
     quiz {
         getQuiz(quizId: $quizId) {
+            duration
             problems {
                 question
+                points
                 options {
                     option
                     isCorrect
                 }
             }
         }
+    }
+}
+`
+export const isSubInactive = gql`
+query($userId: String!, $channelId: String!) {
+    subscription {
+        isSubInactive(userId: $userId, channelId: $channelId)
     }
 }
 `

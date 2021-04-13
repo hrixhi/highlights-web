@@ -8,7 +8,7 @@ import {
     RichEditor
 } from "react-native-pell-rich-editor";
 import { fetchAPI } from '../graphql/FetchAPI';
-import { getMessages, inviteByEmail, markMessagesAsRead, submitGrade } from '../graphql/QueriesAndMutations';
+import { findUserById, getMessages, inviteByEmail, isSubInactive, makeSubActive, makeSubInactive, markMessagesAsRead, submitGrade, unsubscribe } from '../graphql/QueriesAndMutations';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Alert from './Alert';
 import NewMessage from './NewMessage';
@@ -40,26 +40,12 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
     const [selected, setSelected] = useState<any[]>([])
     const [expandMenu, setExpandMenu] = useState(false)
     const [comment, setComment] = useState('')
-
     const [imported, setImported] = useState(false)
     const [url, setUrl] = useState('')
     const [type, setType] = useState('')
     const [title, setTitle] = useState('')
-
-    useEffect(() => {
-        if (submission[0] === '{' && submission[submission.length - 1] === '}') {
-            const obj = JSON.parse(submission)
-            setImported(true)
-            setUrl(obj.url)
-            setType(obj.type)
-            setTitle(obj.title)
-        } else {
-            setImported(false)
-            setUrl('')
-            setType('')
-            setTitle('')
-        }
-    }, [submission])
+    const [loadedChatWithUser, setLoadedChatWithUser] = useState<any>({})
+    const [isLoadedUserInactive, setIsLoadedUserInactive] = useState(false)
 
     if (props.cue && props.cue.submission) {
         categories.push('Submitted')
@@ -67,7 +53,6 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
     }
     const styles = styleObject()
     let filteredSubscribers: any = []
-
     switch (filterChoice) {
         case 'All':
             filteredSubscribers = subscribers
@@ -101,6 +86,31 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
             filteredSubscribers = subscribers
             break;
     }
+    const windowHeight = Dimensions.get('window').height - 30;
+    const key = JSON.stringify(filteredSubscribers)
+    let options = filteredSubscribers.map((sub: any) => {
+        return {
+            value: sub._id, label: sub.displayName
+        }
+    })
+    const group = selected.map(s => {
+        return s.value
+    })
+
+    useEffect(() => {
+        if (submission[0] === '{' && submission[submission.length - 1] === '}') {
+            const obj = JSON.parse(submission)
+            setImported(true)
+            setUrl(obj.url)
+            setType(obj.type)
+            setTitle(obj.title)
+        } else {
+            setImported(false)
+            setUrl('')
+            setType('')
+            setTitle('')
+        }
+    }, [submission])
 
     const onChange = useCallback((value) => {
         setSelected(value)
@@ -185,7 +195,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                 .catch(err => {
                     Alert("Unable to load messages.", "Check connection.")
                 })
-            // mark as read here
+            // mark chat as read here
             server.mutate({
                 mutation: markMessagesAsRead,
                 variables: {
@@ -194,8 +204,30 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                 }
             }).then(res => console.log(res))
                 .catch(e => console.log(e))
+            // load the user
+            server.query({
+                query: findUserById,
+                variables: {
+                    id: userId
+                }
+            }).then(res => {
+                if (res.data && res.data.user.findById) {
+                    setLoadedChatWithUser(res.data.user.findById)
+                    server.query({
+                        query: isSubInactive,
+                        variables: {
+                            userId: res.data.user.findById._id,
+                            channelId: props.channelId
+                        }
+                    }).then((res2: any) => {
+                        if (res2.data && res2.data.subscription.isSubInactive) {
+                            setIsLoadedUserInactive(true)
+                        }
+                    }).catch((err) => console.log(err))
+                }
+            })
         }
-    }, [])
+    }, [props.channelId])
 
     const loadGroupChat = useCallback(async (groupUsers, groupId) => {
         const u = await AsyncStorage.getItem('user')
@@ -228,18 +260,60 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
         }
     }, [])
 
-    const windowHeight = Dimensions.get('window').height - 30;
-    const key = JSON.stringify(filteredSubscribers)
+    const handleDelete = useCallback(() => {
+        const server = fetchAPI('')
+        server.mutate({
+            mutation: unsubscribe,
+            variables: {
+                userId: loadedChatWithUser._id,
+                channelId: props.channelId,
+                keepContent: false
+            }
+        }).then(async res => {
+            if (res.data.subscription && res.data.subscription.unsubscribe) {
+                Alert("User Removed")
+                props.reload()
+                setShowChat(false)
+                setIsLoadedUserInactive(false)
+                setLoadedChatWithUser({})
+            } else {
+                Alert("Already unsubscribed.")
+            }
+        }).catch(err => {
+            Alert("Something went wrong.", "Check connection.")
+        })
+    }, [loadedChatWithUser, props.channelId, props.reload])
 
-    let options = filteredSubscribers.map((sub: any) => {
-        return {
-            value: sub._id, label: sub.displayName
-        }
-    })
-
-    const group = selected.map(s => {
-        return s.value
-    })
+    const handleSubStatusChange = useCallback(() => {
+        const server = fetchAPI('')
+        server.mutate({
+            mutation: isLoadedUserInactive ? makeSubActive : makeSubInactive,
+            variables: {
+                userId: loadedChatWithUser._id,
+                channelId: props.channelId
+            }
+        }).then(res => {
+            if (isLoadedUserInactive) {
+                // changed to active
+                if (res.data && res.data.subscription.makeActive) {
+                    Alert("User subscription activated!")
+                    props.reload()
+                    setShowChat(false)
+                    setIsLoadedUserInactive(false)
+                    setLoadedChatWithUser({})
+                }
+            } else {
+                // changed to inactive
+                if (res.data && res.data.subscription.makeInactive) {
+                    Alert("User subscription inactivated!")
+                    props.reload()
+                    setShowChat(false)
+                    setIsLoadedUserInactive(false)
+                    setLoadedChatWithUser({})
+                }
+            }
+        })
+    }, [isLoadedUserInactive, loadedChatWithUser, props.channelId])
 
     return (
         <View style={{
@@ -259,12 +333,13 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                         <TouchableOpacity
                             key={Math.random()}
                             style={{
-                                flex: 1,
                                 backgroundColor: 'white'
                             }}
                             onPress={() => {
                                 if (showChat) {
                                     setShowChat(false)
+                                    setIsLoadedUserInactive(false)
+                                    setLoadedChatWithUser({})
                                     setUsers([])
                                 } else {
                                     setShowSubmission(false)
@@ -282,6 +357,48 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 <Ionicons name='chevron-back-outline' size={23} color={'#101010'} />
                             </Text>
                         </TouchableOpacity>
+                        {
+                            loadedChatWithUser !== {} ?
+                                <View style={{ marginHorizontal: 20 }}>
+                                    <Text>
+                                        {loadedChatWithUser.displayName}, {loadedChatWithUser.fullName} {loadedChatWithUser.email ? ("(" + loadedChatWithUser.email + ")") : ''}
+                                    </Text>
+                                </View> : null
+                        }
+                        {
+                            isOwner && !props.cueId
+                                ? <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
+                                    <TouchableOpacity
+                                        onPress={() => handleSubStatusChange()}
+                                    >
+                                        <Text style={{
+                                            color: '#a6a2a2',
+                                            fontSize: 11,
+                                            lineHeight: 30,
+                                            textAlign: 'right',
+                                            paddingRight: 20
+                                        }}>
+                                            {
+                                                isLoadedUserInactive ? 'MAKE ACTIVE' : 'MAKE INACTIVE'
+                                            }
+                                        </Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        onPress={() => handleDelete()}
+                                    >
+                                        <Text style={{
+                                            color: '#a6a2a2',
+                                            fontSize: 11,
+                                            lineHeight: 30,
+                                            textAlign: 'right',
+                                            paddingRight: 10
+                                        }}>
+                                            REMOVE FROM CHANNEL
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View>
+                                : null
+                        }
                     </View>
                     :
                     <View style={{ backgroundColor: 'white', flexDirection: 'row', paddingBottom: 25 }}>
@@ -386,6 +503,8 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                     back={() => {
                                                         props.reload()
                                                         setShowChat(false)
+                                                        setIsLoadedUserInactive(false)
+                                                        setLoadedChatWithUser({})
                                                     }}
                                                     placeholder='Message...'
                                                 />
@@ -472,6 +591,8 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                             back={() => {
                                                                 props.reload()
                                                                 setShowChat(false)
+                                                                setIsLoadedUserInactive(false)
+                                                                setLoadedChatWithUser({})
                                                                 setShowNewGroup(false)
                                                             }}
                                                             placeholder='Message...'

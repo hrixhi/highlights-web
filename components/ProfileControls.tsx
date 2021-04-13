@@ -68,6 +68,9 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                     props.reOpenProfile()
                 }
             })
+        } else {
+            // save data
+
         }
     }, [loggedIn, email, password, displayName, fullName, confirmPassword])
 
@@ -98,7 +101,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
         return <View style={styles.screen} key={1}>
             <View style={{ width: '100%', backgroundColor: 'white' }}>
                 <View style={styles.colorBar}>
-                    <Text style={{ fontSize: 25, color: '#a6a2a2',  }}>
+                    <Text style={{ fontSize: 25, color: '#a6a2a2', }}>
                         Internet connection required to initialise.
                     </Text>
                 </View>

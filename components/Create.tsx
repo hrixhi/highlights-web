@@ -21,6 +21,7 @@ import FileViewer from 'react-file-viewer';
 import Alert from '../components/Alert'
 import Select from 'react-select';
 import QuizCreate from './QuizCreate';
+import DurationPicker from 'react-duration-picker'
 
 const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -60,6 +61,10 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     // options to create Quiz
     const [isQuiz, setIsQuiz] = useState(false)
     const [problems, setProblems] = useState<any[]>([])
+    const [timer, setTimer] = useState(false)
+    const [duration, setDuration] = useState({
+        hours: 1, minutes: 0, seconds: 0
+    })
 
     useEffect(() => {
         if (cue[0] === '{' && cue[cue.length - 1] === '}') {
@@ -79,10 +84,21 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         let error = false
         if (problems.length === 0) {
             Alert("Enter at least one problem.")
+            return;
+        }
+        if (timer) {
+            if (duration.hours === 0 && duration.minutes === 0 && duration.seconds === 0) {
+                Alert("Invalid duration.")
+                return;
+            }
         }
         problems.map((problem) => {
             if (problem.question === '') {
                 Alert("Fill out missing problems.")
+                error = true;
+            }
+            if (problem.points === '' || Number.isNaN(Number(problem.points))) {
+                Alert("Enter numeric points for all questions.")
                 error = true;
             }
             let optionFound = false
@@ -108,10 +124,14 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             return
         }
         const server = fetchAPI('')
+        const durationMinutes = (duration.hours * 60) + (duration.minutes) + (duration.seconds / 60);
         server.mutate({
             mutation: createQuiz,
             variables: {
-                quiz: { problems }
+                quiz: {
+                    problems,
+                    duration: timer ? durationMinutes.toString() : null
+                }
             }
         }).then(res => {
             if (res.data && res.data.quiz.createQuiz !== 'error') {
@@ -120,7 +140,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         })
     }, [problems, cue, modalAnimation, customCategory, props.saveDataInCloud, isQuiz,
         gradeWeight, deadline, submission, imported, selected, subscribers,
-        shuffle, frequency, starred, color, notify, title, type, url,
+        shuffle, frequency, starred, color, notify, title, type, url, timer, duration,
         props.closeModal, channelId, endPlayAt, playChannelCueIndef])
 
     const loadChannelCategoriesAndSubscribers = useCallback(async () => {
@@ -313,9 +333,12 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
         let saveCue = ''
         if (quizId) {
-            const obj = {
+            const obj: any = {
                 quizId,
                 title
+            }
+            if (timer) {
+                obj.initiatedAt = null
             }
             saveCue = JSON.stringify(obj)
         } else if (imported) {
@@ -402,8 +425,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 shareWithUserIds: selected.length === subscribers.length ? null : userIds
             }
 
-            console.log(variables)
-
             server.mutate({
                 mutation: createCue,
                 variables
@@ -425,7 +446,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 })
         }
 
-    }, [cue, modalAnimation, customCategory, props.saveDataInCloud, isQuiz,
+    }, [cue, modalAnimation, customCategory, props.saveDataInCloud, isQuiz, timer, duration,
         gradeWeight, deadline, submission, imported, selected, subscribers,
         shuffle, frequency, starred, color, notify, title, type, url,
         props.closeModal, channelId, endPlayAt, playChannelCueIndef])
@@ -462,6 +483,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         setTitle('')
                         setProblems([])
                         setIsQuiz(false)
+                        setTimer(false)
                     }
                 }
             ]
@@ -491,8 +513,12 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         setSelected(value)
     }, [subscribers])
 
-    const width = Dimensions.get('window').width;
+    const onChangeDuration = useCallback((duration: any) => {
+        const { hours, minutes, seconds } = duration;
+        setDuration({ hours, minutes, seconds });
+    }, [])
 
+    const width = Dimensions.get('window').width;
     return (
         <View style={{
             width: '100%',
@@ -605,23 +631,24 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     IMPORT     |{'  '}
                                 </Text>
                         }
-                        {
-                            channelId !== '' ?
-                                <Text style={{
-                                    color: '#a6a2a2',
-                                    fontSize: 11,
-                                    lineHeight: 30,
-                                    textAlign: 'right',
-                                    paddingRight: 10,
-                                }}
-                                    onPress={() => {
-                                        setIsQuiz(true)
-                                        setSubmission(true)
-                                    }}
-                                >
-                                    QUIZ     {Dimensions.get('window').width < 768 ? '' : '|  '}
-                                </Text> : null
-                        }
+                        <Text style={{
+                            color: '#a6a2a2',
+                            fontSize: 11,
+                            lineHeight: 30,
+                            textAlign: 'right',
+                            paddingRight: 10,
+                        }}
+                            onPress={() => {
+                                if (channelId !== '') {
+                                    setIsQuiz(true)
+                                    setSubmission(true)
+                                } else {
+                                    Alert("Quizzes can only be shared with channels created by you.", "Select a channel from the options below to share the quiz with and then try again.")
+                                }
+                            }}
+                        >
+                            QUIZ     {Dimensions.get('window').width < 768 ? '' : '|  '}
+                        </Text>
                     </View>
                     <Text style={{
                         color: '#a6a2a2',
@@ -650,14 +677,62 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 >
                     {
                         imported || isQuiz ?
-                            <View style={{ width: '40%', alignSelf: 'flex-start', marginLeft: '10%' }}>
-                                <TextInput
-                                    value={title}
-                                    style={styles.input}
-                                    placeholder={'Title'}
-                                    onChangeText={val => setTitle(val)}
-                                    placeholderTextColor={'#a6a2a2'}
-                                />
+                            <View style={{ display: 'flex', flexDirection: width < 768 ? 'column' : 'row', overflow: 'visible' }}>
+                                <View style={{ width: width < 768 ? '100%' : '33.33%', borderRightWidth: 0, borderColor: '#f4f4f4', paddingRight: 15, paddingTop: 20 }}>
+                                    <TextInput
+                                        value={title}
+                                        style={styles.input}
+                                        placeholder={'Title'}
+                                        onChangeText={val => setTitle(val)}
+                                        placeholderTextColor={'#a6a2a2'}
+                                    />
+                                </View>
+                                {
+                                    isQuiz ?
+                                        <View style={{ width: width < 768 ? '100%' : '31.67%', borderRightWidth: 0, borderColor: '#f4f4f4', paddingTop: 10 }}>
+                                            <View style={{ width: '100%', paddingBottom: 15, backgroundColor: 'white' }}>
+                                                <Text style={{ fontSize: 15, color: '#a6a2a2' }}>
+                                                    <Ionicons name='timer-outline' size={20} color={'#a6a2a2'} />
+                                                </Text>
+                                            </View>
+                                            <View style={{
+                                                backgroundColor: 'white',
+                                                width: '100%',
+                                                height: 40,
+                                                marginRight: 10
+                                            }}>
+                                                <Switch
+                                                    value={timer}
+                                                    onValueChange={() => {
+                                                        if (timer) {
+                                                            setDuration({
+                                                                hours: 1,
+                                                                minutes: 0,
+                                                                seconds: 0
+                                                            })
+                                                        }
+                                                        setTimer(!timer)
+                                                    }}
+                                                    style={{ height: 20 }}
+                                                    trackColor={{
+                                                        false: '#f4f4f4',
+                                                        true: '#0079FE'
+                                                    }}
+                                                    activeThumbColor='white'
+                                                />
+                                            </View>
+                                        </View> : null
+                                }
+                                {
+                                    isQuiz && timer ?
+                                        <View style={{ width: width < 768 ? '100%' : '35%', borderRightWidth: 0, borderColor: '#f4f4f4' }}>
+                                            <DurationPicker
+                                                onChange={onChangeDuration}
+                                                initialDuration={{ hours: 1, minutes: 0, seconds: 0 }}
+                                                maxHours={6}
+                                            />
+                                        </View> : null
+                                }
                             </View> : null
                     }
                     <View style={{
@@ -766,6 +841,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         setSubscribers([])
                                                         setProblems([])
                                                         setIsQuiz(false)
+                                                        setTimer(false)
                                                     }}>
                                                     <Text style={{ lineHeight: 20, fontSize: 12, color: channelId === '' ? '#fff' : '#101010' }}>
                                                         <Ionicons name='home-outline' size={15} />

@@ -8,7 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Datetime from 'react-datetime';
 import { timedFrequencyOptions } from '../helpers/FrequencyOptions';
 import { fetchAPI } from '../graphql/FetchAPI';
-import { createCue, deleteForEveryone, getChannels, getQuiz, getSharedWith, markAsRead, shareCueWithMoreIds, submit } from '../graphql/QueriesAndMutations';
+import { createCue, deleteForEveryone, getChannels, getQuiz, getSharedWith, markAsRead, shareCueWithMoreIds, start, submit } from '../graphql/QueriesAndMutations';
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
 import * as FileSystem from 'expo-file-system';
@@ -22,6 +22,7 @@ import FileUpload from './UploadFiles';
 import Select from 'react-select';
 import { Collapse } from 'react-collapse';
 import Quiz from './Quiz';
+import { CountdownCircleTimer } from 'react-countdown-circle-timer';
 
 const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -88,10 +89,45 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const [solutions, setSolutions] = useState<any[]>([])
     const [quizId, setQuizId] = useState('')
     const [loading, setLoading] = useState(true)
-    
+    const [initiatedAt, setInitiatedAt] = useState<any>(null)
+    const [isQuizTimed, setIsQuizTimed] = useState(false)
+    const [duration, setDuration] = useState(0)
+    const [initDuration, setInitDuration] = useState(0)
+
+    const diff_seconds = (dt2: any, dt1: any) => {
+        var diff = (dt2.getTime() - dt1.getTime()) / 1000;
+        return Math.abs(Math.round(diff));
+    }
+
     useEffect(() => {
         setLoading(true)
     }, [props.cue])
+
+    useEffect(() => {
+        if (!isQuizTimed || initiatedAt === null || initiatedAt === '' || isOwner) {
+            // not a timed quiz or its not been initiated
+            return;
+        }
+        let now = new Date()
+        now.setMinutes(now.getMinutes() - 1)
+        let current = new Date();
+        if (now >= deadline) {
+            // deadline crossed
+            return;
+        }
+        if (duration === 0) {
+            return;
+        }
+        const remainingTime = duration - diff_seconds(initiatedAt, current)
+        if (remainingTime <= 0) {
+            // duration has been set correctly yet no time remaining
+            if (!props.cue.submittedAt || props.cue.submittedAt === '') {
+                handleSubmit()
+            }
+        } else {
+            setInitDuration(remainingTime)  // set remaining duration in seconds
+        }
+    }, [initiatedAt, duration, deadline, isQuizTimed, props.cue.submittedAt, isOwner])
 
     const loadChannelsAndSharedWith = useCallback(async () => {
         const uString: any = await AsyncStorage.getItem('user')
@@ -164,6 +200,14 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 setSolutions(solutionsObject.solutions)
                             }
                             setProblems(res.data.quiz.getQuiz.problems);
+                            if (res.data.quiz.getQuiz.duration && res.data.quiz.getQuiz.duration !== 0) {
+                                setDuration(res.data.quiz.getQuiz.duration * 60);
+                                setIsQuizTimed(true)
+                            }
+                            if (solutionsObject.initiatedAt && solutionsObject.initiatedAt !== '') {
+                                const init = new Date(solutionsObject.initiatedAt)
+                                setInitiatedAt(init)
+                            }
                             setTitle(obj.title)
                             setIsQuiz(true)
                             setLoading(false)
@@ -304,6 +348,39 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         }
     }, [RichText, RichText.current])
 
+    const initQuiz = useCallback(async () => {
+        let now = new Date()
+        if (now >= deadline) {
+            Alert("Unable to start quiz!", "Deadline has passed.")
+            return;
+        }
+        const u = await AsyncStorage.getItem('user')
+        if (u) {
+            const user = JSON.parse(u)
+            const now = new Date()
+            const server = fetchAPI('')
+            const saveCue = JSON.stringify({
+                solutions,
+                initiatedAt: now
+            })
+            server.mutate({
+                mutation: start,
+                variables: {
+                    cueId: props.cue._id,
+                    userId: user._id,
+                    cue: saveCue
+                }
+            }).then((res) => {
+                if (res.data.quiz.start) {
+                    setInitiatedAt(now)
+                }
+            }).catch(err => console.log(err))
+            // save time to cloud first
+            // after saving time in cloud, save it locally, set initiatedAt
+            // quiz gets triggered
+        }
+    }, [props.cue._id, solutions, deadline])
+
     const handleUpdate = useCallback(async () => {
         if (submissionImported && submissionTitle === '') {
             Alert("Enter title.")
@@ -323,7 +400,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         let saveCue = ''
         if (isQuiz) {
             saveCue = JSON.stringify({
-                solutions
+                solutions,
+                initiatedAt
             })
         } else if (submissionImported) {
             const obj = {
@@ -366,7 +444,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         props.reloadCueListAfterUpdate()
     }, [cue, customCategory, shuffle, frequency, starred, color, playChannelCueIndef, notify, submissionImported,
         submission, deadline, gradeWeight, submitted, submissionTitle, submissionType, submissionUrl, isQuiz,
-        props.closeModal, props.cueIndex, props.cueKey, props.cue, endPlayAt, props, solutions])
+        props.closeModal, props.cueIndex, props.cueKey, props.cue, endPlayAt, props, solutions, initiatedAt])
 
     const handleDelete = useCallback(async () => {
 
@@ -409,8 +487,21 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
     const handleSubmit = useCallback(async () => {
         const u: any = await AsyncStorage.getItem('user')
+        let now = new Date()
+        // one minute of extra time to submit 
+        now.setMinutes(now.getMinutes() - 1)
         if (isQuiz) {
+            if (now >= deadline) {
+                Alert("Submission failed.", "If you started a timed quiz, your last recorded edit will be recorded.")
+                return;
+            }
             // over here check that all options have been selected
+            // TO DO
+        } else {
+            if (now >= deadline) {
+                Alert("Submission failed.", "Deadline has passed.")
+                return;
+            }
         }
         if (u) {
             const parsedUser = JSON.parse(u)
@@ -421,7 +512,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             let saveCue = ''
             if (isQuiz) {
                 saveCue = JSON.stringify({
-                    solutions
+                    solutions,
+                    initiatedAt
                 })
             } else if (submissionImported) {
                 const obj = {
@@ -466,7 +558,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 Alert("Something went wrong.", "Try again later.")
             })
         }
-    }, [props.cue, cue, submissionTitle, submissionType, submissionUrl, submissionImported, isQuiz, quizId, solutions])
+    }, [props.cue, cue, submissionTitle, submissionType, submissionUrl, submissionImported, isQuiz, quizId, initiatedAt, solutions, deadline])
 
     useEffect(() => {
         (
@@ -488,7 +580,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     useEffect(() => {
         handleUpdate()
     }, [cue, shuffle, frequency, starred, color, props.cueIndex, submitted, markedAsRead,
-        submissionTitle, submissionImported, submissionType, isQuiz, solutions,
+        submissionTitle, submissionImported, submissionType, isQuiz, solutions, initiatedAt,
         customCategory, props.cueKey, endPlayAt, playChannelCueIndef, notify])
 
     const updateStatusAsRead = useCallback(async () => {
@@ -839,8 +931,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 >
                     {
                         showOriginal && (imported || isQuiz) ?
-                            <View style={{ flexDirection: 'row' }}>
-                                <View style={{ width: '40%', alignSelf: 'flex-start', marginLeft: '10%' }}>
+                            <View style={{ flexDirection: 'row', marginRight: '10%', marginLeft: '10%' }}>
+                                <View style={{ width: '40%', alignSelf: 'flex-start' }}>
                                     <TextInput
                                         editable={false}
                                         value={title}
@@ -851,7 +943,33 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     />
                                 </View>
                                 {
-                                    isQuiz ? null :
+                                    isQuiz ?
+                                        (
+                                            isQuizTimed && (!props.cue.submittedAt || props.cue.submittedAt !== '') ? (
+                                                initiatedAt && initDuration !== 0 ?
+                                                    <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
+                                                        <CountdownCircleTimer
+                                                            size={120}
+                                                            key={initDuration}
+                                                            children={({ remainingTime }: any) => {
+                                                                if (!remainingTime || remainingTime === 0) {
+                                                                    handleSubmit()
+                                                                }
+                                                                const hours = Math.floor(remainingTime / 3600)
+                                                                const minutes = Math.floor((remainingTime % 3600) / 60)
+                                                                const seconds = remainingTime % 60
+                                                                return `${hours}:${minutes}:${seconds}`
+                                                            }}
+                                                            isPlaying={true}
+                                                            duration={duration}
+                                                            initialRemainingTime={initDuration}
+                                                            colors="#0079fe"
+                                                        />
+                                                    </View>
+                                                    : null
+                                            ) : null
+                                        )
+                                        :
                                         <View style={{ marginLeft: 25, marginTop: 20, alignSelf: 'flex-start' }}>
                                             <a download={true} href={url} style={{ textDecoration: 'none' }}>
                                                 <Ionicons name='cloud-download-outline' color='#a6a2a2' size={20} />
@@ -888,7 +1006,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             : null
                     }
                     {
-                        !showOriginal && submissionImported ?
+                        !showOriginal && submissionImported && !isQuiz ?
                             <View style={{ flexDirection: 'row' }}>
                                 <View style={{ width: '40%', alignSelf: 'flex-start', marginLeft: '10%' }}>
                                     <TextInput
@@ -917,12 +1035,53 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         {!showOriginal ? null
                             : (
                                 isQuiz ?
-                                    <Quiz
-                                        graded={props.cue.graded}
-                                        solutions={solutions}
-                                        problems={problems}
-                                        setSolutions={(s: any) => setSolutions(s)}
-                                    />
+                                    (
+                                        isQuizTimed && !isOwner ?
+                                            (
+                                                initiatedAt ?
+                                                    <Quiz
+                                                        graded={props.cue.graded}
+                                                        solutions={solutions}
+                                                        problems={problems}
+                                                        setSolutions={(s: any) => setSolutions(s)}
+                                                    /> : <View>
+                                                        <View>
+                                                            <TouchableOpacity
+                                                                onPress={() => initQuiz()}
+                                                                style={{
+                                                                    backgroundColor: 'white',
+                                                                    overflow: 'hidden',
+                                                                    height: 35,
+                                                                    marginTop: 15,
+                                                                    justifyContent: 'center', flexDirection: 'row',
+                                                                    marginBottom: 50
+                                                                }}>
+                                                                <Text style={{
+                                                                    textAlign: 'center',
+                                                                    lineHeight: 35,
+                                                                    color: '#101010',
+                                                                    fontSize: 14,
+                                                                    backgroundColor: '#f4f4f4',
+                                                                    paddingHorizontal: 25,
+                                                                    fontFamily: 'inter',
+                                                                    height: 35,
+                                                                    width: 200,
+                                                                    borderRadius: 15,
+                                                                }}>
+                                                                    START QUIZ
+                                                                </Text>
+                                                            </TouchableOpacity>
+                                                        </View>
+                                                    </View>
+                                            )
+                                            :
+                                            <Quiz
+                                                graded={props.cue.graded}
+                                                solutions={solutions}
+                                                problems={problems}
+                                                setSolutions={(s: any) => setSolutions(s)}
+                                            />
+                                    )
                                     : (imported ?
                                         (
                                             type === 'pptx' ?
@@ -1247,26 +1406,23 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                 </Text>
                                                     </View>
                                                     <View style={{ flexDirection: 'row' }}>
-                                                        {
-                                                            isOwner ? <View style={{
-                                                                backgroundColor: 'white',
-                                                                height: 40,
-                                                                marginRight: 10
-                                                            }}>
-
-                                                                <Switch
-                                                                    value={graded}
-                                                                    onValueChange={() => setGraded(!graded)}
-                                                                    style={{ height: 20 }}
-                                                                    trackColor={{
-                                                                        false: '#f4f4f4',
-                                                                        true: '#a6a2a2'
-                                                                    }}
-                                                                    activeThumbColor='white'
-                                                                />
-                                                            </View>
-                                                                : null
-                                                        }
+                                                        <View style={{
+                                                            backgroundColor: 'white',
+                                                            height: 40,
+                                                            marginRight: 10
+                                                        }}>
+                                                            <Switch
+                                                                disabled={!isOwner}
+                                                                value={graded}
+                                                                onValueChange={() => setGraded(!graded)}
+                                                                style={{ height: 20 }}
+                                                                trackColor={{
+                                                                    false: '#f4f4f4',
+                                                                    true: '#a6a2a2'
+                                                                }}
+                                                                activeThumbColor='white'
+                                                            />
+                                                        </View>
                                                         {
                                                             graded ?
                                                                 <View style={{
@@ -1671,7 +1827,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 {
                                     !isOwner && (props.cue.channelId && props.cue.channelId !== '') && submission ?
                                         <TouchableOpacity
-                                            disabled={!userSetupComplete || currentDate >= deadline || props.cue.graded}
+                                            disabled={!userSetupComplete || currentDate >= deadline || props.cue.graded || (isQuiz && isQuizTimed && !initiatedAt) || (isQuiz && (!props.cue.submittedAt || props.cue.submittedAt === ''))}
                                             onPress={() => handleSubmit()}
                                             style={{ backgroundColor: 'white', borderRadius: 15, }}>
                                             <Text style={{
@@ -1689,7 +1845,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                 {
                                                     userSetupComplete ? (
                                                         ((props.cue.submittedAt && props.cue.submittedAt !== '') || submitted
-                                                            ? (props.cue.graded ? 'GRADED' : 'RESUBMIT')
+                                                            ? (props.cue.graded ? 'GRADED' : (isQuiz ? 'SUBMITTED' : 'RESUBMIT'))
                                                             : (currentDate < deadline ? 'SUBMIT' : 'SUBMISSIONS ENDED'))
                                                     ) : 'SIGN UP TO SUBMIT'
                                                 }
