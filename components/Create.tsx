@@ -522,7 +522,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     return (
         <View style={{
             width: '100%',
-            height: Dimensions.get('window').height - 30,
+            height: Dimensions.get('window').width < 1024 ? Dimensions.get('window').height - 30 : Dimensions.get('window').height,
             backgroundColor: 'white',
             borderTopLeftRadius: 30,
             borderTopRightRadius: 30,
@@ -538,12 +538,28 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 30 }}>
                     {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
                 </Text>
-                <View>
+                <View style={{ flexDirection: 'row' }}>
+                    <View style={{ backgroundColor: 'white', flex: 1 }}>
+                        <Text
+                            style={{
+                                fontSize: 12,
+                                color: '#fff',
+                                paddingHorizontal: 10,
+                                borderRadius: 10,
+                                backgroundColor: '#a6a2a2',
+                                lineHeight: 20,
+                                width: 50,
+                                marginBottom: 20,
+                                textAlign: 'center'
+                            }}
+                        >
+                            New
+                    </Text>
+                    </View>
                     <TouchableOpacity
                         onPress={() => setStarred(!starred)}
                         style={{
                             backgroundColor: 'white',
-                            flex: 1
                         }}>
                         <Text style={{
                             textAlign: 'right',
@@ -624,11 +640,11 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     fontSize: 11,
                                     lineHeight: 30,
                                     textAlign: 'right',
-                                    paddingRight: 10,
+                                    paddingRight: 20
                                 }}
                                     onPress={() => setShowImportOptions(true)}
                                 >
-                                    IMPORT     |{'  '}
+                                    IMPORT
                                 </Text>
                         }
                         <Text style={{
@@ -636,7 +652,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             fontSize: 11,
                             lineHeight: 30,
                             textAlign: 'right',
-                            paddingRight: 10,
+                            paddingRight: 20
                         }}
                             onPress={() => {
                                 if (channelId !== '') {
@@ -647,7 +663,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 }
                             }}
                         >
-                            QUIZ     {Dimensions.get('window').width < 768 ? '' : '|  '}
+                            QUIZ
                         </Text>
                     </View>
                     <Text style={{
@@ -655,9 +671,9 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         fontSize: 11,
                         lineHeight: 30,
                         textAlign: 'right',
-                        paddingRight: 10
+                        paddingRight: 10,
                     }}>
-                        {
+                        {'|      ' +
                             now.toString().split(' ')[1] +
                             ' ' +
                             now.toString().split(' ')[2] +
@@ -780,13 +796,13 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             padding: 3,
                                             paddingTop: 5,
                                             paddingBottom: 10,
-                                            borderRadius: 2
+                                            borderRadius: 8
                                         }}
                                         ref={RichText}
                                         style={{
                                             width: '100%',
                                             backgroundColor: '#f4f4f4',
-                                            borderRadius: 2,
+                                            borderRadius: 8,
                                             minHeight: 475
                                         }}
                                         editorStyle={{
@@ -820,8 +836,9 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 <View style={{ width: width < 768 ? '100%' : '33.33%', borderRightWidth: 0, borderColor: '#f4f4f4' }}>
                                     <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
                                         <Text style={{ fontSize: 12, color: '#a6a2a2' }}>
-                                            <Ionicons
-                                                name='school-outline' size={20} color={'#a6a2a2'} />
+                                            Channel
+                                            {/* <Ionicons
+                                                name='school-outline' size={20} color={'#a6a2a2'} /> */}
                                         </Text>
                                     </View>
                                     <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white' }}>
@@ -844,7 +861,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         setTimer(false)
                                                     }}>
                                                     <Text style={{ lineHeight: 20, fontSize: 12, color: channelId === '' ? '#fff' : '#101010' }}>
-                                                        <Ionicons name='home-outline' size={15} />
+                                                        {/* <Ionicons name='home-outline' size={15} /> */}
+                                                        My Cues
                                                     </Text>
                                                 </TouchableOpacity>
                                                 {
@@ -937,7 +955,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
                                             <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
                                                 <Text style={{ fontSize: 12, color: '#a6a2a2' }}>
-                                                    Accept Submission
+                                                    Submission Required
                                                 </Text>
                                             </View>
                                             <View style={{ flexDirection: 'row' }}>
@@ -1337,7 +1355,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             overflow: 'hidden',
                                             height: 35
                                         }}>
-                                            SAVE TO  <Ionicons name='home-outline' size={14} />
+                                            SAVE
+                                            {/* TO  <Ionicons name='home-outline' size={14} /> */}
                                         </Text> :
                                         <Text style={{
                                             textAlign: 'center',

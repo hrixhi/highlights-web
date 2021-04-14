@@ -1020,9 +1020,13 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         width: Dimensions.get('window').width < 1024 ? Dimensions.get('window').width : Dimensions.get('window').width * 0.3,
         height: Dimensions.get('window').height,
         flexDirection: 'column',
-        backgroundColor: '#f4f4f4',
-        paddingTop: 30,
-        paddingLeft: Dimensions.get('window').width < 1024 ? 0 : 30
+        // change
+        // backgroundColor: '#f4f4f4',
+        backgroundColor: '#fff',
+        borderRightColor: '#f4f4f4',
+        borderRightWidth: 2,
+        // paddingTop: 30,
+        // paddingLeft: Dimensions.get('window').width < 1024 ? 0 : 30
       }}>
         <TopBar
           key={JSON.stringify(channelFilterChoice) + JSON.stringify(filteredCues) + JSON.stringify(modalType)}
@@ -1078,30 +1082,32 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           style={{
             width: Dimensions.get('window').width < 1024 ? 0 : Dimensions.get('window').width * 0.7,
             height: Dimensions.get('window').height,
-            paddingHorizontal: Dimensions.get('window').width < 1024 ? 0 : 30,
+            // paddingHorizontal: Dimensions.get('window').width < 1024 ? 0 : 30,
             paddingTop: 0,
-            backgroundColor: '#f4f4f4',
+            // backgroundColor: '#f4f4f4',
+            backgroundColor: '#fff',
             position: Dimensions.get('window').width < 1024 ? 'absolute' : 'relative'
           }}
         /> :
           <View style={{
             width: Dimensions.get('window').width < 1024 ? '100%' : Dimensions.get('window').width * 0.7,
             height: Dimensions.get('window').height,
-            paddingHorizontal: Dimensions.get('window').width < 1024 ? 0 : 30,
+            // paddingHorizontal: Dimensions.get('window').width < 1024 ? 0 : 30,
             paddingTop: 0,
-            backgroundColor: '#f4f4f4',
+            // backgroundColor: '#f4f4f4',
+            backgroundColor: '#fff',
             position: Dimensions.get('window').width < 1024 ? 'absolute' : 'relative'
           }}>
             {
               Dimensions.get('window').width < 1024 ?
                 <TouchableOpacity
                   onPress={() => closeModal()}
-                  style={{ height: 30, backgroundColor: '#f4f4f4' }}>
+                  style={{ height: 30, backgroundColor: '#fff', borderBottomWidth: 1, borderBottomColor: '#f4f4f4' }}>
                   <Text style={{ flex: 1, textAlign: 'center', fontSize: 15, lineHeight: 15, marginTop: 7, color: '#a6a2a2' }}>
                     Hide <Ionicons name='chevron-down-outline' size={15} />
                   </Text>
                 </TouchableOpacity> :
-                <View style={{ backgroundColor: '#f4f4f4', height: 30 }} />
+                <View style={{ backgroundColor: '#f4f4f4', height: 0 }} />
             }
             {modalContent}
           </View>
@@ -1118,8 +1124,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   activityContainer: {
+    borderTopWidth: 0,
+    borderBottomWidth: 0,
+    borderColor: '#f4f4f4',
     height: '70%',
-    width: Dimensions.get('window').width < 1024 ? Dimensions.get('window').width : Dimensions.get('window').width * 0.3,
+    width: Dimensions.get('window').width < 1024 ? Dimensions.get('window').width : (Dimensions.get('window').width * 0.3) - 5,
     justifyContent: "center",
   },
   horizontal: {

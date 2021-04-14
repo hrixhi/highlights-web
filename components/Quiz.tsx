@@ -61,17 +61,32 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 placeholder={'Problem ' + (index + 1).toString()}
                                 placeholderTextColor={'#a6a2a2'}
                             />
+                            <TextInput
+                                editable={false}
+                                value={problem.points + ' Points'}
+                                style={styles.input}
+                                placeholder={'Enter points'}
+                                placeholderTextColor={'#a6a2a2'}
+                            />
                         </View>
                         {
                             problem.options.map((option: any, i: any) => {
+
+                                let color = '#101010'
+                                if (props.isOwner && option.isCorrect) {
+                                    color = '#0079fe'
+                                } else if (props.graded && option.isCorrect && solutions[index].selected[i].isSelected) {
+                                    color = '#0079fe'
+                                }
+
                                 return <View style={{ flexDirection: 'row' }} key={solutions.toString() + i.toString()}>
                                     <View style={{ paddingTop: 15 }}>
                                         <input
-                                            disabled={props.graded}
+                                            disabled={props.graded || props.isOwner || props.hasEnded}
                                             style={{ paddingRight: 20 }}
                                             type='checkbox'
-                                            value={String(solutions[index].selected[i].isSelected)}
-                                            checked={solutions[index].selected[i].isSelected}
+                                            value={props.isOwner ? String(option.isCorrect) : String(solutions[index].selected[i].isSelected)}
+                                            checked={props.isOwner ? option.isCorrect : solutions[index].selected[i].isSelected}
                                             onChange={(e) => {
                                                 const updatedSolution = [...solutions]
                                                 updatedSolution[index].selected[i].isSelected = Boolean(!updatedSolution[index].selected[i].isSelected);
@@ -83,7 +98,16 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     <TextInput
                                         editable={false}
                                         value={option.option}
-                                        style={styles.inputNoBorder}
+                                        style={{
+                                            width: '50%',
+                                            fontSize: 15,
+                                            padding: 15,
+                                            paddingTop: 12,
+                                            paddingBottom: 12,
+                                            marginTop: 5,
+                                            marginBottom: 20,
+                                            color
+                                        }}
                                         placeholder={'Option ' + (i + 1).toString()}
                                         placeholderTextColor={'#a6a2a2'}
                                     />
@@ -104,15 +128,6 @@ const styles = StyleSheet.create({
         width: '50%',
         borderBottomColor: '#f4f4f4',
         borderBottomWidth: 1,
-        fontSize: 15,
-        padding: 15,
-        paddingTop: 12,
-        paddingBottom: 12,
-        marginTop: 5,
-        marginBottom: 20
-    },
-    inputNoBorder: {
-        width: '50%',
         fontSize: 15,
         padding: 15,
         paddingTop: 12,

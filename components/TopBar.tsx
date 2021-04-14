@@ -151,7 +151,7 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         style={{ marginRight: 15 }}
                                         onPress={() => props.openGrades()}>
                                         <Text style={styles.channelText}>
-                                            <Ionicons name='newspaper-outline' size={19} color={'#a6a2a2'} />
+                                            <Ionicons name='stats-chart-outline' size={19} color={'#a6a2a2'} />
                                         </Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity

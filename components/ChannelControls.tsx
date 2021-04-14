@@ -291,7 +291,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         :
                         <View style={{ backgroundColor: 'white' }}>
                             <Text style={{ color: '#101010', fontSize: 14, paddingBottom: 10 }}>
-                                Course
+                                Channel
                             </Text>
                             <TextInput
                                 value={name}

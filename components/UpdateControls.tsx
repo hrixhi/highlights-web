@@ -805,7 +805,24 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 </Text>
                             </TouchableOpacity>
                         </View>
-                        : <View>
+                        : <View style={{ flexDirection: 'row' }}>
+                            <View style={{ backgroundColor: 'white', flex: 1 }}>
+                                <Text
+                                    ellipsizeMode="tail"
+                                    style={{
+                                        fontSize: 12,
+                                        color: '#fff',
+                                        paddingHorizontal: 10,
+                                        borderRadius: 10,
+                                        backgroundColor: '#a6a2a2',
+                                        lineHeight: 20,
+                                        width: 70,
+                                        marginBottom: 20,
+                                        textAlign: 'center'
+                                    }}>
+                                    Update
+                                </Text>
+                            </View>
                             <TouchableOpacity
                                 onPress={() => setStarred(!starred)}
                                 style={{
@@ -958,7 +975,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                                 const hours = Math.floor(remainingTime / 3600)
                                                                 const minutes = Math.floor((remainingTime % 3600) / 60)
                                                                 const seconds = remainingTime % 60
-                                                                return `${hours}:${minutes}:${seconds}`
+                                                                return `${hours}h ${minutes}m ${seconds}s`
                                                             }}
                                                             isPlaying={true}
                                                             duration={duration}
@@ -1040,7 +1057,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             (
                                                 initiatedAt ?
                                                     <Quiz
+                                                        // disable quiz if graded or deadline has passed
                                                         graded={props.cue.graded}
+                                                        hasEnded={currentDate >= deadline}
                                                         solutions={solutions}
                                                         problems={problems}
                                                         setSolutions={(s: any) => setSolutions(s)}
@@ -1076,7 +1095,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             )
                                             :
                                             <Quiz
-                                                graded={props.cue.graded}
+                                                isOwner={isOwner}
+                                                // disable quiz if graded or deadline has passed
+                                                graded={props.cue.graded || (currentDate >= deadline)}
                                                 solutions={solutions}
                                                 problems={problems}
                                                 setSolutions={(s: any) => setSolutions(s)}
@@ -1115,14 +1136,14 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                 padding: 3,
                                                 paddingTop: 5,
                                                 paddingBottom: 10,
-                                                borderRadius: 2,
+                                                borderRadius: 8,
                                             }}
                                             ref={RichText}
                                             style={{
                                                 width: '100%',
                                                 backgroundColor: '#f4f4f4',
                                                 minHeight: 475,
-                                                borderRadius: 2
+                                                borderRadius: 8,
                                             }}
                                             editorStyle={{
                                                 backgroundColor: '#f4f4f4',
@@ -1181,7 +1202,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         padding: 3,
                                         paddingTop: 5,
                                         paddingBottom: 10,
-                                        borderRadius: 2,
+                                        borderRadius: 8,
                                     }}
                                     disabled={props.cue.submittedAt && props.cue.submittedAt !== ''}
                                     ref={RichText}
@@ -1189,7 +1210,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         width: '100%',
                                         backgroundColor: '#f4f4f4',
                                         minHeight: 475,
-                                        borderRadius: 2
+                                        borderRadius: 8,
                                     }}
                                     editorStyle={{
                                         backgroundColor: '#f4f4f4',
@@ -1242,8 +1263,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
                                             <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
                                                 <Text style={{ fontSize: 12, color: '#a6a2a2' }}>
-                                                    <Ionicons
-                                                        name='school-outline' size={20} color={'#a6a2a2'} />
+                                                    Channel
+                                                    {/* <Ionicons
+                                                        name='school-outline' size={20} color={'#a6a2a2'} /> */}
                                                 </Text>
                                             </View>
                                             <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white' }}>
@@ -1331,9 +1353,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                 <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
                                                     <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
                                                         <Text style={{ fontSize: 12, color: '#a6a2a2' }}>
-                                                            {
-                                                                isOwner ? 'Accept Submission' : 'Submission'
-                                                            }
+                                                            Submission Required
                                                         </Text>
                                                     </View>
                                                     <View style={{ flexDirection: 'row' }}>

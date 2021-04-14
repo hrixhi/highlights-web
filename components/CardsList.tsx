@@ -47,17 +47,18 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     return (
         <Animated.View style={{
-            height: (Dimensions.get('window').height - 30) * 0.7,
+            height: ((Dimensions.get('window').height) * 0.7) - 2,
             opacity: props.fadeAnimation,
             width: Dimensions.get('window').width < 1024 ? Dimensions.get('window').width : Dimensions.get('window').width * 0.3,
-            paddingHorizontal: 20
+            paddingHorizontal: 20,
+            // paddingTop: 15
         }}>
             <ScrollView
                 showsVerticalScrollIndicator={false}
                 horizontal={false}
                 contentContainerStyle={{
-                    width: Dimensions.get('window').width < 1024 ? Dimensions.get('window').width - 40 : (Dimensions.get('window').width * 0.3 - 70),
-                    height: Dimensions.get('window').width < 1024 ? '100%' : ((Dimensions.get('window').height - 30) * 0.7),
+                    width: Dimensions.get('window').width < 1024 ? Dimensions.get('window').width - 40 : (Dimensions.get('window').width * 0.3 - 40),
+                    height: Dimensions.get('window').width < 1024 ? '100%' : (((Dimensions.get('window').height) * 0.7) - 2),
                 }}
             >
                 <View style={styles.marginSmall} />

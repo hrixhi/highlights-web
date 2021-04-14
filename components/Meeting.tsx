@@ -228,6 +228,17 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                     }
                     {
                         meetingOn ?
+                            <View>
+                                <Text
+                                    style={{ color: '#a6a2a2', fontSize: 13, lineHeight: 20, marginVertical: 25 }}
+                                >
+                                    Switching from this window to any other window within Cues will revoke your participation from the classroom. {'\n'}
+                                        To continue using Cues without exiting the classroom, open it in a <a href='https://web.cuesapp.co' style={{ color: '#0079fe' }} target='_blank'>new tab</a> and continue working simultaneously.
+                                </Text>
+                            </View> : null
+                    }
+                    {
+                        meetingOn ?
                             <Jutsu
                                 containerStyles={{
                                     width: '100%',
@@ -268,7 +279,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                 }}
                                 loadingComponent={<p>loading ...</p>}
                                 errorComponent={<p>Oops, something went wrong</p>} />
-                            : <View style={{ backgroundColor: 'white', flex: 1, paddingBottom: 25 }}>
+                            : <View style={{ backgroundColor: 'white', flex: 1, paddingBottom: 25, borderBottomColor: '#f4f4f4', borderBottomWidth: 1 }}>
                                 <Text style={{ width: '100%', color: '#a6a2a2', fontSize: 25, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                                     {meetingEndText}
                                 </Text>
@@ -374,7 +385,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                     }
                     {
                         isOwner ?
-                            <View>
+                            <View style={{ borderTopColor: '#f4f4f4', borderTopWidth: 1, marginTop: 25 }}>
                                 <View style={{ paddingVertical: 15 }}>
                                     {
                                         showAttendances ?

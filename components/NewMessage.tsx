@@ -261,7 +261,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             disabled={false}
                             containerStyle={{
                                 backgroundColor: '#f4f4f4',
-                                borderRadius: 2,
+                                borderRadius: 8,
                                 padding: 3,
                                 paddingTop: 5,
                                 paddingBottom: 10,
@@ -271,7 +271,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             style={{
                                 width: '100%',
                                 backgroundColor: '#f4f4f4',
-                                borderRadius: 2,
+                                borderRadius: 8,
                                 minHeight: 100
                             }}
                             editorStyle={{

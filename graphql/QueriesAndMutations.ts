@@ -548,6 +548,16 @@ query($channelId: String!) {
     }
 }
 `
+export const getAllUpcomingMeetings = gql`
+query($userId: String!) {
+    attendance {
+        getAllUpcomingDates(userId: $userId) {
+            start
+            end
+        }
+    }
+}
+`
 export const getPastDates = gql`
 query($channelId: String!) {
     attendance {
