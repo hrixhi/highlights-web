@@ -64,7 +64,7 @@ const Menu: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 {
                                     shuffleFrequencyOptions.map((item: any, index: number) => {
                                         return <Picker.Item
-                                            color={props.randomShuffleFrequency === item.value ? '#3B64F8' : "#202020"}
+                                            color={props.randomShuffleFrequency === item.value ? '#3B64F8' : "#202025"}
                                             label={item.label}
                                             value={item.value}
                                             key={index}
@@ -89,7 +89,7 @@ const Menu: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     }}>
                         <Text style={{
                             fontSize: 15,
-                            color: '#a2a2a2',
+                            color: '#a2a2aa',
                             textAlign: 'right',
                             paddingHorizontal: 10,
                             paddingLeft: 0
@@ -107,7 +107,7 @@ const Menu: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         />
                         <Text style={{
                             fontSize: 15,
-                            color: '#a2a2a2',
+                            color: '#a2a2aa',
                             textAlign: 'center',
                             paddingHorizontal: 10
                         }}>
@@ -170,11 +170,11 @@ const styles = StyleSheet.create({
         width: 200,
         fontSize: 15,
         // height: 45,
-        // color: '#202020'
+        // color: '#202025'
     },
     text: {
         fontSize: 15,
-        color: '#a2a2a2',
+        color: '#a2a2aa',
         textAlign: 'right',
     }
 });

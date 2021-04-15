@@ -153,7 +153,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
             <View style={{ backgroundColor: 'white', flexDirection: 'row', paddingBottom: 25 }}>
                 <Text
                     ellipsizeMode="tail"
-                    style={{ color: '#a2a2a2', fontSize: 17, flex: 1, lineHeight: 25, paddingHorizontal: 20, }}>
+                    style={{ color: '#a2a2aa', fontSize: 17, flex: 1, lineHeight: 25, paddingHorizontal: 20, }}>
                     Calendar
                                 </Text>
             </View>
@@ -181,7 +181,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             flexDirection: 'column',
                             backgroundColor: 'white'
                         }}>
-                            <ActivityIndicator color={'#a2a2a2'} />
+                            <ActivityIndicator color={'#a2a2aa'} />
                         </View>
                         :
                         <View style={{
@@ -202,7 +202,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         style={styles.input}
                                         placeholder={'Event'}
                                         onChangeText={val => setTitle(val)}
-                                        placeholderTextColor={'#a2a2a2'}
+                                        placeholderTextColor={'#a2a2aa'}
                                     />
                                 </View>
                                 <View style={{
@@ -251,7 +251,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         }}
                                         onPress={() => handleCreate()}
                                     >
-                                        <Ionicons name='add-outline' size={21} color='#202020' />
+                                        <Ionicons name='add-outline' size={21} color='#202025' />
                                     </TouchableOpacity>
                                 </View>
                             </View>
@@ -268,7 +268,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 events={events}
                                 startAccessor="start"
                                 endAccessor="end"
-                                style={{ height: 500, fontFamily: 'roboto', color: '#202020' }}
+                                style={{ height: 500, fontFamily: 'roboto', color: '#202025' }}
                             />
                         </View>
                 }
@@ -282,7 +282,7 @@ export default CalendarX
 const styles: any = StyleSheet.create({
     input: {
         width: '100%',
-        borderBottomColor: '#f6f6f6',
+        borderBottomColor: '#f4f4f6',
         borderBottomWidth: 1,
         fontSize: 15,
         padding: 15,
@@ -292,7 +292,7 @@ const styles: any = StyleSheet.create({
     },
     text: {
         fontSize: 12,
-        color: '#a2a2a2',
+        color: '#a2a2aa',
         textAlign: 'left',
         paddingHorizontal: 10
     }

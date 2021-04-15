@@ -150,7 +150,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         <View style={{
             width: '100%',
             height: windowHeight,
-            backgroundColor: '#f6f6f6',
+            backgroundColor: '#f4f4f6',
             borderTopLeftRadius: 30,
             borderTopRightRadius: 30,
         }}>
@@ -166,7 +166,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         borderTopLeftRadius: 30,
                         borderTopRightRadius: 30,
                     }}>
-                        <ActivityIndicator color={'#a2a2a2'} />
+                        <ActivityIndicator color={'#a2a2aa'} />
                     </View>
                     :
                     <Animated.View style={{
@@ -192,9 +192,9 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 prevPos: 'left',
                                 nextPos: 'right',
                                 nextTitle: '›',
-                                nextTitleStyle: { color: '#a2a2a2', fontSize: 60, fontFamily: 'overpass' },
+                                nextTitleStyle: { color: '#a2a2aa', fontSize: 60, fontFamily: 'overpass' },
                                 prevTitle: '‹',
-                                prevTitleStyle: { color: '#a2a2a2', fontSize: 60, fontFamily: 'overpass' },
+                                prevTitleStyle: { color: '#a2a2aa', fontSize: 60, fontFamily: 'overpass' },
                                 dotActiveStyle: { backgroundColor: !Number.isNaN(Number(cueId)) || (props.channelId && !channelOwner) || (!props.channelId || props.channelId === '') ? '#fff' : '#3B64F8' }
                             }}
                         >

@@ -19,10 +19,10 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
         }}>
             {
                 problems.map((problem: any, index: any) => {
-                    return <View style={{ borderBottomColor: '#f6f6f6', borderBottomWidth: index === (problems.length - 1) ? 0 : 1, marginBottom: 25 }}>
+                    return <View style={{ borderBottomColor: '#f4f4f6', borderBottomWidth: index === (problems.length - 1) ? 0 : 1, marginBottom: 25 }}>
                         <View style={{ flexDirection: 'row' }}>
                             <View style={{ paddingTop: 15 }}>
-                                <Text style={{ color: '#a2a2a2', fontSize: 17, paddingBottom: 25, marginRight: 10 }}>
+                                <Text style={{ color: '#a2a2aa', fontSize: 17, paddingBottom: 25, marginRight: 10 }}>
                                     {index + 1}.
                             </Text>
                             </View>
@@ -37,7 +37,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                         setProblems(newProbs)
                                         props.setProblems(newProbs)
                                     }}
-                                    placeholderTextColor={'#a2a2a2'}
+                                    placeholderTextColor={'#a2a2aa'}
                                 />
                                 <View style={{ flex: 1 }} />
                                 <TextInput
@@ -50,7 +50,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                         setProblems(newProbs)
                                         props.setProblems(newProbs)
                                     }}
-                                    placeholderTextColor={'#a2a2a2'}
+                                    placeholderTextColor={'#a2a2aa'}
                                 />
                             </View>
                             <View style={{ paddingTop: 15, paddingLeft: 10 }}>
@@ -91,7 +91,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                             setProblems(newProbs)
                                             props.setProblems(newProbs)
                                         }}
-                                        placeholderTextColor={'#a2a2a2'}
+                                        placeholderTextColor={'#a2a2aa'}
                                     />
                                     <View style={{ paddingTop: 15, paddingLeft: 10 }}>
                                         <Ionicons
@@ -130,9 +130,9 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             <Text style={{
                                 textAlign: 'center',
                                 lineHeight: 35,
-                                color: '#202020',
+                                color: '#202025',
                                 fontSize: 14,
-                                backgroundColor: '#f6f6f6',
+                                backgroundColor: '#f4f4f6',
                                 paddingHorizontal: 25,
                                 fontFamily: 'inter',
                                 height: 35,
@@ -163,9 +163,9 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     <Text style={{
                         textAlign: 'center',
                         lineHeight: 35,
-                        color: '#202020',
+                        color: '#202025',
                         fontSize: 14,
-                        backgroundColor: '#f6f6f6',
+                        backgroundColor: '#f4f4f6',
                         paddingHorizontal: 25,
                         fontFamily: 'inter',
                         height: 35,
@@ -185,7 +185,7 @@ export default QuizCreate;
 const styles = StyleSheet.create({
     input: {
         width: '50%',
-        borderBottomColor: '#f6f6f6',
+        borderBottomColor: '#f4f4f6',
         borderBottomWidth: 1,
         fontSize: 15,
         padding: 15,

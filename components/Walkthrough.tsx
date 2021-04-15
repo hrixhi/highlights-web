@@ -47,15 +47,15 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         prevPos: 'left',
                         nextPos: 'right',
                         nextTitle: '›',
-                        nextTitleStyle: { color: '#a2a2a2', fontSize: 60, fontFamily: 'overpass' },
+                        nextTitleStyle: { color: '#a2a2aa', fontSize: 60, fontFamily: 'overpass' },
                         prevTitle: '‹',
-                        prevTitleStyle: { color: '#a2a2a2', fontSize: 60, fontFamily: 'overpass' },
+                        prevTitleStyle: { color: '#a2a2aa', fontSize: 60, fontFamily: 'overpass' },
                         dotActiveStyle: { backgroundColor: '#3B64F8' }
                     }}
                 >
                     <View style={styles.screen} key={Math.random()}>
                         <Text style={{
-                            color: '#202020',
+                            color: '#202025',
                             textAlign: 'left',
                             fontSize: 30,
                             fontFamily: 'inter',
@@ -64,7 +64,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                            Virtually host classroom sessions.
                         </Text>
                         <Text style={{
-                            color: '#a2a2a2',
+                            color: '#a2a2aa',
                             textAlign: 'left',
                             fontSize: 20,
 
@@ -74,7 +74,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     </View>
                     <View style={styles.screen} key={Math.random()}>
                         <Text style={{
-                            color: '#202020',
+                            color: '#202025',
                             textAlign: 'left',
                             fontSize: 30,
                             fontFamily: 'inter',
@@ -83,7 +83,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             Create, import and share classroom material.
                         </Text>
                         <Text style={{
-                            color: '#a2a2a2',
+                            color: '#a2a2aa',
                             textAlign: 'left',
                             fontSize: 20,
 
@@ -93,7 +93,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     </View>
                     <View style={styles.screen} key={Math.random()}>
                         <Text style={{
-                            color: '#202020',
+                            color: '#202025',
                             textAlign: 'left',
                             fontSize: 30,
                             fontFamily: 'inter',
@@ -102,7 +102,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             Directly work with content.
                         </Text>
                         <Text style={{
-                            color: '#a2a2a2',
+                            color: '#a2a2aa',
                             textAlign: 'left',
                             fontSize: 20,
 
@@ -112,7 +112,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     </View>
                     <View style={styles.screen} key={Math.random()}>
                         <Text style={{
-                            color: '#202020',
+                            color: '#202025',
                             textAlign: 'left',
                             fontSize: 30,
                             fontFamily: 'inter',
@@ -121,7 +121,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             Streamline classroom communication.
                         </Text>
                         <Text style={{
-                            color: '#a2a2a2',
+                            color: '#a2a2aa',
                             textAlign: 'left',
                             fontSize: 20,
 
@@ -131,7 +131,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     </View>
                     <View style={styles.screen} key={Math.random()}>
                         <Text style={{
-                            color: '#202020',
+                            color: '#202025',
                             textAlign: 'left',
                             fontSize: 30,
                             fontFamily: 'inter',
@@ -140,7 +140,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             Simplify testing & grading.
                         </Text>
                         <Text style={{
-                            color: '#a2a2a2',
+                            color: '#a2a2aa',
                             textAlign: 'left',
                             fontSize: 20,
 
@@ -150,7 +150,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     </View>
                     <View style={styles.screen} key={Math.random()}>
                         <Text style={{
-                            color: '#202020',
+                            color: '#202025',
                             textAlign: 'left',
                             fontSize: 30,
                             fontFamily: 'inter',
@@ -159,7 +159,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             Boost productivity.
                         </Text>
                         <Text style={{
-                            color: '#a2a2a2',
+                            color: '#a2a2aa',
                             textAlign: 'left',
                             fontSize: 20,
 
@@ -169,7 +169,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     </View>
                     <View style={styles.screen} key={Math.random()}>
                         <Text style={{
-                            color: '#202020',
+                            color: '#202025',
                             textAlign: 'left',
                             fontSize: 30,
                             fontFamily: 'inter',
@@ -178,7 +178,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             Automate task management.
                         </Text>
                         <Text style={{
-                            color: '#a2a2a2',
+                            color: '#a2a2aa',
                             textAlign: 'left',
                             fontSize: 20,
 

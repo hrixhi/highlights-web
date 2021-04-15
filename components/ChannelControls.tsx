@@ -222,7 +222,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
             <View style={{ width: '100%', backgroundColor: 'white' }}>
                 <View style={styles.colorBar}>
                     <Text style={{
-                        fontSize: 25, color: '#a2a2a2',
+                        fontSize: 25, color: '#a2a2aa',
                         // 
                     }}>
                         Internet connection required to initialise.
@@ -241,7 +241,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         onPress={() => {
                             setOption('Subscribe')
                         }}>
-                        <Text style={{ color: '#a2a2a2', lineHeight: 20 }}>
+                        <Text style={{ color: '#a2a2aa', lineHeight: 20 }}>
                             Subscribe
                         </Text>
                     </TouchableOpacity>
@@ -250,7 +250,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         onPress={() => {
                             setOption('Create')
                         }}>
-                        <Text style={{ color: '#a2a2a2', lineHeight: 20 }}>
+                        <Text style={{ color: '#a2a2aa', lineHeight: 20 }}>
                             Create
                         </Text>
                     </TouchableOpacity>
@@ -259,7 +259,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         onPress={() => {
                             setOption('Profile')
                         }}>
-                        <Text style={{ color: '#a2a2a2', lineHeight: 20 }}>
+                        <Text style={{ color: '#a2a2aa', lineHeight: 20 }}>
                             Profile
                         </Text>
                     </TouchableOpacity> */}
@@ -267,7 +267,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                 {
                     option === 'Profile' ?
                         <View style={{ width: '100%', backgroundColor: 'white' }}>
-                            <Text style={{ color: '#202020', fontSize: 14, paddingBottom: 10 }}>
+                            <Text style={{ color: '#202025', fontSize: 14, paddingBottom: 10 }}>
                                 Display Name
                             </Text>
                             <TextInput
@@ -275,9 +275,9 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 style={styles.input}
                                 placeholder={''}
                                 onChangeText={val => setDisplayName(val)}
-                                placeholderTextColor={'#a2a2a2'}
+                                placeholderTextColor={'#a2a2aa'}
                             />
-                            <Text style={{ color: '#202020', fontSize: 14, paddingBottom: 10 }}>
+                            <Text style={{ color: '#202025', fontSize: 14, paddingBottom: 10 }}>
                                 Full Name
                             </Text>
                             <TextInput
@@ -285,12 +285,12 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 style={styles.input}
                                 placeholder={''}
                                 onChangeText={val => setFullName(val)}
-                                placeholderTextColor={'#a2a2a2'}
+                                placeholderTextColor={'#a2a2aa'}
                             />
                         </View>
                         :
                         <View style={{ backgroundColor: 'white' }}>
-                            <Text style={{ color: '#202020', fontSize: 14, paddingBottom: 10 }}>
+                            <Text style={{ color: '#202025', fontSize: 14, paddingBottom: 10 }}>
                                 Channel
                             </Text>
                             <TextInput
@@ -301,14 +301,14 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     setName(val)
                                     setPasswordRequired(false)
                                 }}
-                                placeholderTextColor={'#a2a2a2'}
+                                placeholderTextColor={'#a2a2aa'}
                             />
                         </View>
                 }
                 {
                     (option === 'Subscribe' && passwordRequired) || option === 'Create' ?
                         <View style={{ backgroundColor: 'white' }}>
-                            <Text style={{ color: '#202020', fontSize: 14, paddingBottom: 10 }}>
+                            <Text style={{ color: '#202025', fontSize: 14, paddingBottom: 10 }}>
                                 Enrolment Password
                             </Text>
                             <TextInput
@@ -316,7 +316,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 style={styles.input}
                                 placeholder={option === 'Subscribe' ? '' : '(optional)'}
                                 onChangeText={val => setPassword(val)}
-                                placeholderTextColor={'#a2a2a2'}
+                                placeholderTextColor={'#a2a2aa'}
                                 secureTextEntry={true}
                             />
                         </View>
@@ -381,24 +381,24 @@ const styles = StyleSheet.create({
     outline: {
         borderRadius: 10,
         borderWidth: 1,
-        borderColor: '#a2a2a2'
+        borderColor: '#a2a2aa'
     },
     all: {
         fontSize: 15,
-        color: '#a2a2a2',
+        color: '#a2a2aa',
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: 'white'
     },
     allOutline: {
         fontSize: 15,
-        color: '#a2a2a2',
+        color: '#a2a2aa',
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: 'white',
         borderRadius: 10,
         borderWidth: 1,
-        borderColor: '#a2a2a2'
+        borderColor: '#a2a2aa'
     },
     colorBar: {
         width: '100%',
@@ -410,7 +410,7 @@ const styles = StyleSheet.create({
     },
     input: {
         width: '100%',
-        borderBottomColor: '#f6f6f6',
+        borderBottomColor: '#f4f4f6',
         borderBottomWidth: 1,
         fontSize: 15,
         padding: 15,

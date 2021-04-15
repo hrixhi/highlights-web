@@ -922,10 +922,10 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             marginTop: 100,
             padding: 40
           }}>
-            <Text style={{ fontSize: 30, color: '#202020', fontFamily: 'inter', paddingBottom: 15, maxWidth: 400, textAlign: 'center' }}>
+            <Text style={{ fontSize: 30, color: '#202025', fontFamily: 'inter', paddingBottom: 15, maxWidth: 400, textAlign: 'center' }}>
               Login
               </Text>
-            <Text style={{ fontSize: 20, color: '#a2a2a2', fontFamily: 'overpass', paddingBottom: 25, maxWidth: 400, textAlign: 'center' }}>
+            <Text style={{ fontSize: 20, color: '#a2a2aa', fontFamily: 'overpass', paddingBottom: 25, maxWidth: 400, textAlign: 'center' }}>
               Continue where you left off and save changes to the cloud.
               </Text>
             <View style={{
@@ -933,7 +933,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               backgroundColor: 'white',
               justifyContent: 'center'
             }}>
-              <Text style={{ color: '#202020', fontSize: 14, paddingBottom: 5, paddingTop: 10 }}>
+              <Text style={{ color: '#202025', fontSize: 14, paddingBottom: 5, paddingTop: 10 }}>
                 Email
                 </Text>
               <TextInput
@@ -941,9 +941,9 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 style={styles.input}
                 placeholder={''}
                 onChangeText={(val: any) => setEmail(val)}
-                placeholderTextColor={'#a2a2a2'}
+                placeholderTextColor={'#a2a2aa'}
               />
-              <Text style={{ color: '#202020', fontSize: 14, paddingBottom: 5 }}>
+              <Text style={{ color: '#202025', fontSize: 14, paddingBottom: 5 }}>
                 Password
               </Text>
               <TextInput
@@ -952,7 +952,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 style={styles.input}
                 placeholder={''}
                 onChangeText={(val: any) => setPassword(val)}
-                placeholderTextColor={'#a2a2a2'}
+                placeholderTextColor={'#a2a2aa'}
               />
               <View
                 style={{
@@ -999,9 +999,9 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                   <Text style={{
                     textAlign: 'center',
                     lineHeight: 35,
-                    color: '#202020s',
+                    color: '#202025s',
                     fontSize: 14,
-                    backgroundColor: '#f6f6f6',
+                    backgroundColor: '#f4f4f6',
                     paddingHorizontal: 25,
                     fontFamily: 'inter',
                     height: 35,
@@ -1021,9 +1021,9 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         height: Dimensions.get('window').height,
         flexDirection: 'column',
         // change
-        // backgroundColor: '#f6f6f6',
+        // backgroundColor: '#f4f4f6',
         backgroundColor: '#fff',
-        borderRightColor: '#f6f6f6',
+        borderRightColor: '#f4f4f6',
         borderRightWidth: 2,
         // paddingTop: 30,
         // paddingLeft: Dimensions.get('window').width < 1024 ? 0 : 30
@@ -1047,7 +1047,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         />
         {
           reLoading ? <View style={[styles.activityContainer, styles.horizontal]}>
-            <ActivityIndicator color={'#a2a2a2'} />
+            <ActivityIndicator color={'#a2a2aa'} />
           </View>
             : <View style={[styles.activityContainer, styles.horizontal]}>
               <CardsList
@@ -1084,7 +1084,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             height: Dimensions.get('window').height,
             // paddingHorizontal: Dimensions.get('window').width < 1024 ? 0 : 30,
             paddingTop: 0,
-            // backgroundColor: '#f6f6f6',
+            // backgroundColor: '#f4f4f6',
             backgroundColor: '#fff',
             position: Dimensions.get('window').width < 1024 ? 'absolute' : 'relative'
           }}
@@ -1094,7 +1094,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             height: Dimensions.get('window').height,
             // paddingHorizontal: Dimensions.get('window').width < 1024 ? 0 : 30,
             paddingTop: 0,
-            // backgroundColor: '#f6f6f6',
+            // backgroundColor: '#f4f4f6',
             backgroundColor: '#fff',
             position: Dimensions.get('window').width < 1024 ? 'absolute' : 'relative'
           }}>
@@ -1102,12 +1102,12 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               Dimensions.get('window').width < 1024 ?
                 <TouchableOpacity
                   onPress={() => closeModal()}
-                  style={{ height: 30, backgroundColor: '#fff', borderBottomWidth: 1, borderBottomColor: '#f6f6f6' }}>
-                  <Text style={{ flex: 1, textAlign: 'center', fontSize: 15, lineHeight: 15, marginTop: 7, color: '#202020' }}>
+                  style={{ height: 30, backgroundColor: '#fff', borderBottomWidth: 1, borderBottomColor: '#f4f4f6' }}>
+                  <Text style={{ flex: 1, textAlign: 'center', fontSize: 15, lineHeight: 15, marginTop: 7, color: '#202025' }}>
                     Close <Ionicons name='chevron-down-outline' size={15} />
                   </Text>
                 </TouchableOpacity> :
-                <View style={{ backgroundColor: '#f6f6f6', height: 0 }} />
+                <View style={{ backgroundColor: '#f4f4f6', height: 0 }} />
             }
             {modalContent}
           </View>
@@ -1126,7 +1126,7 @@ const styles = StyleSheet.create({
   activityContainer: {
     borderTopWidth: 0,
     borderBottomWidth: 0,
-    borderColor: '#f6f6f6',
+    borderColor: '#f4f4f6',
     height: '70%',
     width: Dimensions.get('window').width < 1024 ? Dimensions.get('window').width : (Dimensions.get('window').width * 0.3) - 5,
     justifyContent: "center",
@@ -1137,7 +1137,7 @@ const styles = StyleSheet.create({
   },
   input: {
     width: '100%',
-    borderBottomColor: '#f6f6f6',
+    borderBottomColor: '#f4f4f6',
     borderBottomWidth: 1,
     fontSize: 15,
     padding: 15,

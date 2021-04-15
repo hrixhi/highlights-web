@@ -8,7 +8,7 @@ import { htmlStringParser } from '../helpers/HTMLParser';
 
 const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
-    const colorChoices: any[] = ['#f94144', '#f3722c', '#f8961e', '#f9c74f', '#90be6d'].reverse()
+    const colorChoices: any[] = ['#CB213F', '#ED7D22', '#F8D41F', '#B8D41F', '#53BE6D'].reverse()
     const colorScheme = useColorScheme();
     const styleObject = styles(colorScheme, props.channelId)
     const starred = props.cue.starred;
@@ -67,7 +67,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     width: '97%',
                                     zIndex: 20
                                 }}>
-                                    <Ionicons name='bookmark' size={18} color={starred ? '#f94144' : '#a2a2a2'} />
+                                    <Ionicons name='bookmark' size={18} color={starred ? '#CB213F' : '#a2a2aa'} />
                                 </Text>
                                 : null
                         }
@@ -80,18 +80,18 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             marginRight: 5,
                             marginTop: -5,
                             backgroundColor: colorScheme === 'light'
-                                ? (starred ? '#202020' : '#f6f6f6')
-                                : (starred ? 'white' : '#a2a2a2'),
+                                ? (starred ? '#202025' : '#f4f4f6')
+                                : (starred ? 'white' : '#a2a2aa'),
                         }}>
                             {
                                 props.cue.submission ? <Text>
-                                    <Ionicons name='share-outline' size={11} color={props.cue.submittedAt && props.cue.submittedAt !== '' ? ('#3B64F8') : (colorScheme === 'light' ? '#a2a2a2' : '#333333')} style={{ marginRight: 10 }} />
+                                    <Ionicons name='share-outline' size={11} color={props.cue.submittedAt && props.cue.submittedAt !== '' ? ('#3B64F8') : (colorScheme === 'light' ? '#a2a2aa' : '#333333')} style={{ marginRight: 10 }} />
                                 </Text> : null
                             }
                             {
                                 props.cue.frequency !== '0' ?
                                     <Text>
-                                        <Ionicons name='notifications-outline' size={11} color={colorScheme === 'light' ? '#a2a2a2' : '#333333'} />
+                                        <Ionicons name='notifications-outline' size={11} color={colorScheme === 'light' ? '#a2a2aa' : '#333333'} />
                                     </Text> : null
                             }
                         </View>
@@ -130,33 +130,33 @@ const styles: any = (colorScheme: any, channelId: any) => StyleSheet.create({
         height: '100%',
         borderRadius: 20,
         padding: 13,
-        backgroundColor: colorScheme === 'light' ? '#F6F6F6' : '#a2a2a2',
+        backgroundColor: colorScheme === 'light' ? '#f4f4f6' : '#a2a2aa',
     },
     flipCard: {
         height: '100%',
         width: '100%',
         borderRadius: 20,
         padding: 13,
-        color: '#f6f6f6',
-        backgroundColor: colorScheme === 'light' ? '#202020' : 'white'
+        color: '#f4f4f6',
+        backgroundColor: colorScheme === 'light' ? '#202025' : 'white'
     },
     descriptionFlip: {
-        color: '#a2a2a2',
+        color: '#a2a2aa',
         fontSize: 13,
         height: '30%'
     },
     text: {
-        backgroundColor: colorScheme === 'light' ? '#f6f6f6' : '#a2a2a2'
+        backgroundColor: colorScheme === 'light' ? '#f4f4f6' : '#a2a2aa'
     },
     flipText: {
-        color: '#f6f6f6',
-        backgroundColor: colorScheme === 'light' ? '#202020' : 'white'
+        color: '#f4f4f6',
+        backgroundColor: colorScheme === 'light' ? '#202025' : 'white'
     },
     dateContainer: {
         fontSize: 10,
-        color: colorScheme === 'light' ? '#a2a2a2' : '#f6f6f6',
+        color: colorScheme === 'light' ? '#a2a2aa' : '#f4f4f6',
         height: '22%',
-        backgroundColor: colorScheme === 'light' ? '#f6f6f6' : '#a2a2a2',
+        backgroundColor: colorScheme === 'light' ? '#f4f4f6' : '#a2a2aa',
         display: 'flex',
         flexDirection: 'row'
     },
@@ -165,12 +165,12 @@ const styles: any = (colorScheme: any, channelId: any) => StyleSheet.create({
         height: '22%',
         display: 'flex',
         flexDirection: 'row',
-        color: '#f6f6f6',
-        backgroundColor: colorScheme === 'light' ? '#202020' : 'white'
+        color: '#f4f4f6',
+        backgroundColor: colorScheme === 'light' ? '#202025' : 'white'
     },
     date: {
         fontSize: 9,
-        color: colorScheme === 'light' ? '#a2a2a2' : '#333333',
+        color: colorScheme === 'light' ? '#a2a2aa' : '#333333',
         marginLeft: 10
     },
     title: {
@@ -180,11 +180,11 @@ const styles: any = (colorScheme: any, channelId: any) => StyleSheet.create({
         height: '44%',
         width: '100%',
         paddingTop: 5,
-        color: colorScheme === 'light' ? '#202020' : 'white'
+        color: colorScheme === 'light' ? '#202025' : 'white'
     },
     titleFlip: {
-        color: colorScheme === 'light' ? '#fff' : '#202020',
-        backgroundColor: colorScheme === 'light' ? '#202020' : '#fff',
+        color: colorScheme === 'light' ? '#fff' : '#202025',
+        backgroundColor: colorScheme === 'light' ? '#202025' : '#fff',
         fontFamily: 'inter',
         fontSize: 14,
         // ,
@@ -194,7 +194,7 @@ const styles: any = (colorScheme: any, channelId: any) => StyleSheet.create({
     },
     description: {
         fontSize: 13,
-        color: colorScheme === 'light' ? '#a2a2a2' : '#333333',
+        color: colorScheme === 'light' ? '#a2a2aa' : '#333333',
         height: '30%'
     }
 });

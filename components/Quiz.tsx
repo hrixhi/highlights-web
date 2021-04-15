@@ -47,10 +47,10 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         >
             {
                 problems.map((problem: any, index: any) => {
-                    return <View style={{ borderBottomColor: '#f6f6f6', borderBottomWidth: index === (problems.length - 1) ? 0 : 1, marginBottom: 25 }} key={index}>
+                    return <View style={{ borderBottomColor: '#f4f4f6', borderBottomWidth: index === (problems.length - 1) ? 0 : 1, marginBottom: 25 }} key={index}>
                         <View style={{ flexDirection: 'row' }}>
                             <View style={{ paddingTop: 15 }}>
-                                <Text style={{ color: '#a2a2a2', fontSize: 17, paddingBottom: 25, marginRight: 10 }}>
+                                <Text style={{ color: '#a2a2aa', fontSize: 17, paddingBottom: 25, marginRight: 10 }}>
                                     {index + 1}.
                             </Text>
                             </View>
@@ -59,20 +59,20 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 value={problem.question}
                                 style={styles.input}
                                 placeholder={'Problem ' + (index + 1).toString()}
-                                placeholderTextColor={'#a2a2a2'}
+                                placeholderTextColor={'#a2a2aa'}
                             />
                             <TextInput
                                 editable={false}
                                 value={problem.points + ' Points'}
                                 style={styles.input}
                                 placeholder={'Enter points'}
-                                placeholderTextColor={'#a2a2a2'}
+                                placeholderTextColor={'#a2a2aa'}
                             />
                         </View>
                         {
                             problem.options.map((option: any, i: any) => {
 
-                                let color = '#202020'
+                                let color = '#202025'
                                 if (props.isOwner && option.isCorrect) {
                                     color = '#3B64F8'
                                 } else if (props.graded && option.isCorrect && solutions[index].selected[i].isSelected) {
@@ -109,7 +109,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             color
                                         }}
                                         placeholder={'Option ' + (i + 1).toString()}
-                                        placeholderTextColor={'#a2a2a2'}
+                                        placeholderTextColor={'#a2a2aa'}
                                     />
                                 </View>
                             })
@@ -126,7 +126,7 @@ export default Quiz;
 const styles = StyleSheet.create({
     input: {
         width: '50%',
-        borderBottomColor: '#f6f6f6',
+        borderBottomColor: '#f4f4f6',
         borderBottomWidth: 1,
         fontSize: 15,
         padding: 15,

@@ -101,7 +101,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
         return <View style={styles.screen} key={1}>
             <View style={{ width: '100%', backgroundColor: 'white' }}>
                 <View style={styles.colorBar}>
-                    <Text style={{ fontSize: 25, color: '#a2a2a2', }}>
+                    <Text style={{ fontSize: 25, color: '#a2a2aa', }}>
                         Internet connection required to initialise.
                     </Text>
                 </View>
@@ -112,18 +112,18 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
     return (
         <View style={styles.screen} key={1}>
             <ScrollView style={{ width: '100%', backgroundColor: 'white' }} showsVerticalScrollIndicator={false}>
-                <Text style={{ fontSize: 30, color: '#202020', fontFamily: 'inter', paddingBottom: 15, textAlign: 'center', paddingTop: 30 }}>
+                <Text style={{ fontSize: 30, color: '#202025', fontFamily: 'inter', paddingBottom: 15, textAlign: 'center', paddingTop: 30 }}>
                     {
                         !loggedIn ? 'Back Up' : 'Profile'
                     }
                 </Text>
-                <Text style={{ fontSize: 20, color: '#a2a2a2', fontFamily: 'overpass', paddingBottom: 25, textAlign: 'center' }}>
+                <Text style={{ fontSize: 20, color: '#a2a2aa', fontFamily: 'overpass', paddingBottom: 25, textAlign: 'center' }}>
                     {
                         !loggedIn ? 'Create a free account to save your work to the cloud.' : 'Change account details.'
                     }
                 </Text>
                 <View style={{ width: '100%', backgroundColor: 'white', paddingTop: 20, paddingBottom: 20 }}>
-                    <Text style={{ color: '#202020', fontSize: 14, paddingBottom: 10 }}>
+                    <Text style={{ color: '#202025', fontSize: 14, paddingBottom: 10 }}>
                         Email
                             </Text>
                     <TextInput
@@ -132,9 +132,9 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         style={styles.input}
                         placeholder={''}
                         onChangeText={val => setEmail(val)}
-                        placeholderTextColor={'#a2a2a2'}
+                        placeholderTextColor={'#a2a2aa'}
                     />
-                    <Text style={{ color: '#202020', fontSize: 14, paddingBottom: 10 }}>
+                    <Text style={{ color: '#202025', fontSize: 14, paddingBottom: 10 }}>
                         Full Name
                             </Text>
                     <TextInput
@@ -142,9 +142,9 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         style={styles.input}
                         placeholder={''}
                         onChangeText={val => setFullName(val)}
-                        placeholderTextColor={'#a2a2a2'}
+                        placeholderTextColor={'#a2a2aa'}
                     />
-                    <Text style={{ color: '#202020', fontSize: 14, paddingBottom: 10 }}>
+                    <Text style={{ color: '#202025', fontSize: 14, paddingBottom: 10 }}>
                         Display Name
                             </Text>
                     <TextInput
@@ -152,12 +152,12 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         style={styles.input}
                         placeholder={''}
                         onChangeText={val => setDisplayName(val)}
-                        placeholderTextColor={'#a2a2a2'}
+                        placeholderTextColor={'#a2a2aa'}
                     />
                     {
                         loggedIn ? null :
                             <View>
-                                <Text style={{ color: '#202020', fontSize: 14, paddingBottom: 10 }}>
+                                <Text style={{ color: '#202025', fontSize: 14, paddingBottom: 10 }}>
                                     Password
                             </Text>
                                 <TextInput
@@ -165,10 +165,10 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     style={styles.input}
                                     placeholder={''}
                                     onChangeText={val => setPassword(val)}
-                                    placeholderTextColor={'#a2a2a2'}
+                                    placeholderTextColor={'#a2a2aa'}
                                     secureTextEntry={true}
                                 />
-                                <Text style={{ color: '#202020', fontSize: 14, paddingBottom: 10 }}>
+                                <Text style={{ color: '#202025', fontSize: 14, paddingBottom: 10 }}>
                                     Re-enter Password
                             </Text>
                                 <TextInput
@@ -176,7 +176,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     style={styles.input}
                                     placeholder={''}
                                     onChangeText={val => setConfirmPassword(val)}
-                                    placeholderTextColor={'#a2a2a2'}
+                                    placeholderTextColor={'#a2a2aa'}
                                     secureTextEntry={true}
                                 />
                             </View>
@@ -228,9 +228,9 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             <Text style={{
                                 textAlign: 'center',
                                 lineHeight: 35,
-                                color: '#202020',
+                                color: '#202025',
                                 fontSize: 14,
-                                backgroundColor: '#f6f6f6',
+                                backgroundColor: '#f4f4f6',
                                 paddingHorizontal: 25,
                                 fontFamily: 'inter',
                                 height: 35,
@@ -259,24 +259,24 @@ const styles = StyleSheet.create({
     outline: {
         borderRadius: 10,
         borderWidth: 1,
-        borderColor: '#a2a2a2'
+        borderColor: '#a2a2aa'
     },
     all: {
         fontSize: 15,
-        color: '#a2a2a2',
+        color: '#a2a2aa',
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: 'white'
     },
     allOutline: {
         fontSize: 15,
-        color: '#a2a2a2',
+        color: '#a2a2aa',
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: 'white',
         borderRadius: 10,
         borderWidth: 1,
-        borderColor: '#a2a2a2'
+        borderColor: '#a2a2aa'
     },
     colorBar: {
         width: '100%',
@@ -288,7 +288,7 @@ const styles = StyleSheet.create({
     },
     input: {
         width: '100%',
-        borderBottomColor: '#f6f6f6',
+        borderBottomColor: '#f4f4f6',
         borderBottomWidth: 1,
         fontSize: 15,
         padding: 15,
