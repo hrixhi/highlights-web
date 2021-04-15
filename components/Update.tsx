@@ -145,12 +145,12 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         loadThreadsAndStatuses()
     }, [props.cueId, props.channelId])
 
-    const windowHeight = Dimensions.get('window').height;
+    const windowHeight = Dimensions.get('window').width < 1024 ? Dimensions.get('window').height - 30 : Dimensions.get('window').height;
     return (
         <View style={{
             width: '100%',
-            height: windowHeight - 30,
-            backgroundColor: '#f4f4f4',
+            height: windowHeight,
+            backgroundColor: '#f6f6f6',
             borderTopLeftRadius: 30,
             borderTopRightRadius: 30,
         }}>
@@ -166,12 +166,12 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         borderTopLeftRadius: 30,
                         borderTopRightRadius: 30,
                     }}>
-                        <ActivityIndicator color={'#a6a2a2'} />
+                        <ActivityIndicator color={'#a2a2a2'} />
                     </View>
                     :
                     <Animated.View style={{
                         width: '100%',
-                        height: windowHeight - 30,
+                        height: windowHeight,
                         opacity: modalAnimation,
                         borderTopLeftRadius: 30,
                         borderTopRightRadius: 30,
@@ -192,10 +192,10 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 prevPos: 'left',
                                 nextPos: 'right',
                                 nextTitle: '›',
-                                nextTitleStyle: { color: '#a6a2a2', fontSize: 60, fontFamily: 'overpass' },
+                                nextTitleStyle: { color: '#a2a2a2', fontSize: 60, fontFamily: 'overpass' },
                                 prevTitle: '‹',
-                                prevTitleStyle: { color: '#a6a2a2', fontSize: 60, fontFamily: 'overpass' },
-                                dotActiveStyle: { backgroundColor: !Number.isNaN(Number(cueId)) || (props.channelId && !channelOwner) || (!props.channelId || props.channelId === '') ? '#fff' : '#0079fe' }
+                                prevTitleStyle: { color: '#a2a2a2', fontSize: 60, fontFamily: 'overpass' },
+                                dotActiveStyle: { backgroundColor: !Number.isNaN(Number(cueId)) || (props.channelId && !channelOwner) || (!props.channelId || props.channelId === '') ? '#fff' : '#3B64F8' }
                             }}
                         >
                             <ScrollView
@@ -208,7 +208,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 contentContainerStyle={{
                                     borderTopRightRadius: 30,
                                     borderTopLeftRadius: 30,
-                                    minHeight: windowHeight - 30
+                                    minHeight: windowHeight
                                 }}
                             >
                                 <UpdateControls

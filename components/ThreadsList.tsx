@@ -105,7 +105,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
         </View>
     }
 
-    const windowHeight = Dimensions.get('window').height - 30;
+    const windowHeight = Dimensions.get('window').width < 1024 ? Dimensions.get('window').height - 30 : Dimensions.get('window').height;
     return (
         <View style={{
             backgroundColor: 'white',
@@ -115,7 +115,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
             borderTopRightRadius: props.cueId ? 0 : 30,
             borderTopLeftRadius: props.cueId ? 0 : 30,
             // marginBottom: props.cueId ? 0 : 25,
-            borderBottomColor: '#f4f4f4',
+            borderBottomColor: '#f6f6f6',
             borderBottomWidth: props.cueId ? 0 : 1
         }}>
             <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 25 }}>
@@ -139,7 +139,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 width: '100%',
                                 lineHeight: 23
                             }}>
-                                <Ionicons name='chevron-back-outline' size={23} color={'#101010'} />
+                                <Ionicons name='chevron-back-outline' size={23} color={'#202020'} />
                             </Text>
                         </TouchableOpacity>
                     </View>
@@ -149,7 +149,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             !props.cueId
                                 ? <Text
                                     ellipsizeMode="tail"
-                                    style={{ color: '#a6a2a2', fontSize: 18, flex: 1, lineHeight: 25 }}>
+                                    style={{ color: '#a2a2a2', fontSize: 17, flex: 1, lineHeight: 25 }}>
                                     Discussion
                                 </Text>
                                 : <TouchableOpacity
@@ -161,11 +161,11 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                         paddingBottom: 40
                                     }}>
                                     <Text style={{
-                                        color: '#a6a2a2', fontSize: 18, paddingRight: 10
+                                        color: '#a2a2a2', fontSize: 17, paddingRight: 10
                                     }}>
                                         Comments
                                 </Text>
-                                    <Ionicons size={22} name={showComments ? 'caret-down-circle-outline' : 'caret-forward-circle-outline'} color='#a6a2a2' />
+                                    <Ionicons size={22} name={showComments ? 'caret-down-circle-outline' : 'caret-forward-circle-outline'} color='#a2a2a2' />
                                 </TouchableOpacity>
                         }
                         {
@@ -184,7 +184,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                         paddingRight: 10,
                                         marginTop: -1
                                     }}>
-                                        <Ionicons name='create-outline' size={20} color={'#101010'} />
+                                        <Ionicons name='create-outline' size={20} color={'#202020'} />
                                     </Text>
                                 </TouchableOpacity> : null
                         }
@@ -194,7 +194,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 {
                     threads.length === 0 ?
                         <View style={{ backgroundColor: 'white', flex: 1 }}>
-                            <Text style={{ width: '100%', color: '#a6a2a2', fontSize: 25, paddingTop: 100, paddingBottom: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                            <Text style={{ width: '100%', color: '#a2a2a2', fontSize: 25, paddingTop: 100, paddingBottom: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                                 {
                                     !props.cueId ? 'No posts.' : 'No comments.'
                                 }
@@ -209,7 +209,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                     flexDirection: 'column',
                                     backgroundColor: 'white'
                                 }}>
-                                    <ActivityIndicator color={'#a6a2a2'} />
+                                    <ActivityIndicator color={'#a2a2a2'} />
                                 </View> :
                                 <View style={{
                                     width: '100%',
@@ -297,7 +297,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                                         onPress={() => setFilterChoice('All')}>
                                                                         <Text
                                                                             style={{
-                                                                                color: '#a6a2a2',
+                                                                                color: '#a2a2a2',
                                                                                 lineHeight: 20,
                                                                             }}
                                                                         >
@@ -313,7 +313,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                                         onPress={() => setFilterChoice(category)}>
                                                                         <Text
                                                                             style={{
-                                                                                color: '#a6a2a2',
+                                                                                color: '#a2a2a2',
                                                                                 lineHeight: 20
                                                                             }}>
                                                                             {category}
@@ -382,7 +382,7 @@ const styleObject = () => {
             height: 22,
             borderRadius: 10,
             borderWidth: 1,
-            borderColor: '#a6a2a2',
+            borderColor: '#a2a2a2',
             color: 'white'
         }
     })

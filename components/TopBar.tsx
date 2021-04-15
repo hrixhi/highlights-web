@@ -111,7 +111,7 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         style={{ marginRight: 15 }}
                                         onPress={() => props.openDiscussion()}>
                                         <Text style={styles.channelText}>
-                                            <Ionicons name='chatbubble-ellipses-outline' size={19} color={'#a6a2a2'} />
+                                            <Ionicons name='chatbubble-ellipses-outline' size={19} color={'#a2a2a2'} />
                                         </Text>
                                         {
                                             unreadDiscussionThreads !== 0 ?
@@ -122,7 +122,7 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         style={{ marginRight: 15 }}
                                         onPress={() => props.openMeeting()}>
                                         <Text style={styles.channelText}>
-                                            <Ionicons name='videocam-outline' size={21} color={'#a6a2a2'} />
+                                            <Ionicons name='videocam-outline' size={21} color={'#a2a2a2'} />
                                         </Text>
                                         {
                                             meetingOn ?
@@ -133,7 +133,7 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         style={{ marginRight: 15 }}
                                         onPress={() => props.openSubscribers()}>
                                         <Text style={styles.channelText}>
-                                            <Ionicons name='people-circle-outline' size={21} color={'#a6a2a2'} />
+                                            <Ionicons name='people-circle-outline' size={21} color={'#a2a2a2'} />
                                         </Text>
                                         {
                                             unreadMessages !== 0 ?
@@ -144,21 +144,21 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         style={{ marginRight: 15 }}
                                         onPress={() => props.openCalendar()}>
                                         <Text style={styles.channelText}>
-                                            <Ionicons name='calendar-outline' size={20} color={'#a6a2a2'} />
+                                            <Ionicons name='calendar-outline' size={20} color={'#a2a2a2'} />
                                         </Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity
                                         style={{ marginRight: 15 }}
                                         onPress={() => props.openGrades()}>
                                         <Text style={styles.channelText}>
-                                            <Ionicons name='stats-chart-outline' size={19} color={'#a6a2a2'} />
+                                            <Ionicons name='stats-chart-outline' size={19} color={'#a2a2a2'} />
                                         </Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity
                                         style={{ marginRight: 5 }}
                                         onPress={() => props.deleteChannel()}>
                                         <Text style={styles.channelText}>
-                                            <Ionicons name='trash-outline' size={21} color={'#a6a2a2'} />
+                                            <Ionicons name='trash-outline' size={21} color={'#a2a2a2'} />
                                         </Text>
                                     </TouchableOpacity>
                                 </View> :
@@ -167,7 +167,7 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         style={{ marginRight: 15 }}
                                         onPress={() => props.openCalendar()}>
                                         <Text style={styles.channelText}>
-                                            <Ionicons name='calendar-outline' size={20} color={'#a6a2a2'} />
+                                            <Ionicons name='calendar-outline' size={20} color={'#a2a2a2'} />
                                         </Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity
@@ -175,7 +175,7 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         style={{ marginRight: 5 }}
                                     >
                                         <Text style={styles.channelText}>
-                                            <Ionicons name='help-circle-outline' size={21} color={'#a6a2a2'} />
+                                            <Ionicons name='help-circle-outline' size={21} color={'#a2a2a2'} />
                                         </Text>
                                     </TouchableOpacity>
                                 </View>
@@ -195,7 +195,7 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             style={filterChoice === 'All' ? styles.subOutline : styles.sub}
                             onPress={() => props.setChannelFilterChoice('All')}>
                             <Text
-                                style={{ color: '#a6a2a2', lineHeight: 20 }}
+                                style={{ color: '#a2a2a2', lineHeight: 20 }}
                             >
                                 All
                                             </Text>
@@ -207,7 +207,7 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     style={filterChoice === category ? styles.subOutline : styles.sub}
                                     onPress={() => props.setChannelFilterChoice(category)}>
                                     <Text
-                                        style={{ color: '#a6a2a2', lineHeight: 20 }}>
+                                        style={{ color: '#a2a2a2', lineHeight: 20 }}>
                                         {category}
                                     </Text>
                                 </TouchableOpacity>
@@ -249,23 +249,23 @@ const styleObject: any = (channelId: any) => StyleSheet.create({
     },
     text: {
         textAlign: 'right',
-        color: '#101010',
+        color: '#202020',
         fontSize: 15,
         paddingRight: 15
     },
     subOutline: {
         fontSize: 15,
-        color: '#a6a2a2',
+        color: '#a2a2a2',
         height: 22,
         paddingHorizontal: 10,
         lineHeight: 20,
         borderRadius: 10,
-        borderColor: '#a6a2a2',
+        borderColor: '#a2a2a2',
         borderWidth: 1
     },
     sub: {
         fontSize: 15,
-        color: '#a6a2a2',
+        color: '#a2a2a2',
         height: 22,
         paddingHorizontal: 10,
         lineHeight: 20

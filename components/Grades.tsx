@@ -104,12 +104,11 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         loadCuesAndScores()
     }, [props.channelId])
 
-    const windowHeight = Dimensions.get('window').height - 30;
-
+    const windowHeight = Dimensions.get('window').width < 1024 ? Dimensions.get('window').height - 30 : Dimensions.get('window').height;
     return (
         <ScrollView style={{
             width: '100%',
-            height: windowHeight - 30,
+            height: windowHeight,
             backgroundColor: 'white',
             borderTopRightRadius: 30,
             borderTopLeftRadius: 30
@@ -141,7 +140,7 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             borderTopRightRadius: 30,
                             borderTopLeftRadius: 30
                         }}>
-                            <ActivityIndicator color={'#a6a2a2'} />
+                            <ActivityIndicator color={'#a2a2a2'} />
                         </View>
                         :
                         <GradesList

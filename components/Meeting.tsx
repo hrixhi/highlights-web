@@ -124,7 +124,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
             useNativeDriver: true
         }).start();
     }, [props.channelCreatedBy, props.channelId])
-    const windowHeight = Dimensions.get('window').height;
+    const windowHeight = Dimensions.get('window').width < 1024 ? Dimensions.get('window').height - 30 : Dimensions.get('window').height
 
     const updateMeetingStatus = useCallback(() => {
         const server = fetchAPI('')
@@ -175,7 +175,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
     return (
         <ScrollView style={{
             width: '100%',
-            height: windowHeight - 30,
+            height: windowHeight,
             backgroundColor: '#fff',
             borderTopLeftRadius: 30,
             borderTopRightRadius: 30,
@@ -195,7 +195,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                 <View style={{ backgroundColor: 'white', flexDirection: 'row', paddingBottom: 25 }}>
                     <Text
                         ellipsizeMode="tail"
-                        style={{ color: '#a6a2a2', fontSize: 18, flex: 1, lineHeight: 25 }}>
+                        style={{ color: '#a2a2a2', fontSize: 17, flex: 1, lineHeight: 25 }}>
                         Classroom
                     </Text>
                 </View>
@@ -204,7 +204,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                         isOwner ?
                             <View>
                                 <View style={{ width: '100%', paddingTop: 20, backgroundColor: 'white' }}>
-                                    <Text style={{ fontSize: 12, color: '#a6a2a2' }}>
+                                    <Text style={{ fontSize: 12, color: '#a2a2a2' }}>
                                         Initiate Meeting & Allow Participants
                                     </Text>
                                 </View>
@@ -218,8 +218,8 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                         onValueChange={() => updateMeetingStatus()}
                                         style={{ height: 20 }}
                                         trackColor={{
-                                            false: '#f4f4f4',
-                                            true: '#0079fe'
+                                            false: '#f6f6f6',
+                                            true: '#3B64F8'
                                         }}
                                         activeThumbColor='white'
                                     />
@@ -230,10 +230,10 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                         meetingOn ?
                             <View>
                                 <Text
-                                    style={{ color: '#a6a2a2', fontSize: 13, lineHeight: 20, marginVertical: 25 }}
+                                    style={{ color: '#a2a2a2', fontSize: 13, lineHeight: 20, marginVertical: 25 }}
                                 >
                                     Switching from this window to any other window within Cues will revoke your participation from the classroom. {'\n'}
-                                        To continue using Cues without exiting the classroom, open it in a <a href='https://web.cuesapp.co' style={{ color: '#0079fe' }} target='_blank'>new tab</a> and continue working simultaneously.
+                                        To continue using Cues without exiting the classroom, open it in a <a href='https://web.cuesapp.co' style={{ color: '#3B64F8' }} target='_blank'>new tab</a> and continue working simultaneously.
                                 </Text>
                             </View> : null
                     }
@@ -279,8 +279,8 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                 }}
                                 loadingComponent={<p>loading ...</p>}
                                 errorComponent={<p>Oops, something went wrong</p>} />
-                            : <View style={{ backgroundColor: 'white', flex: 1, paddingBottom: 25, borderBottomColor: '#f4f4f4', borderBottomWidth: 1 }}>
-                                <Text style={{ width: '100%', color: '#a6a2a2', fontSize: 25, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                            : <View style={{ backgroundColor: 'white', flex: 1, paddingBottom: 25, borderBottomColor: '#f6f6f6', borderBottomWidth: 1 }}>
+                                <Text style={{ width: '100%', color: '#a2a2a2', fontSize: 25, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                                     {meetingEndText}
                                 </Text>
                             </View>
@@ -289,7 +289,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                         !isOwner ? <View>
                             <Text
                                 ellipsizeMode="tail"
-                                style={{ color: '#a6a2a2', fontSize: 18, lineHeight: 25, marginVertical: 25 }}>
+                                style={{ color: '#a2a2a2', fontSize: 17, lineHeight: 25, marginVertical: 25 }}>
                                 Upcoming
                             </Text>
                         </View> : null
@@ -304,7 +304,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                 <View style={{ width: Dimensions.get('window').width < 768 ? '100%' : '30%' }}>
                                     <Text
                                         ellipsizeMode="tail"
-                                        style={{ color: '#a6a2a2', fontSize: 18, lineHeight: 25, marginBottom: 25, marginTop: 10 }}>
+                                        style={{ color: '#a2a2a2', fontSize: 17, lineHeight: 25, marginBottom: 25, marginTop: 10 }}>
                                         Upcoming
                             </Text>
                                 </View>
@@ -354,7 +354,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                         }}
                                         onPress={() => handleCreate()}
                                     >
-                                        <Ionicons name='add-outline' size={21} color='#101010' />
+                                        <Ionicons name='add-outline' size={21} color='#202020' />
                                     </TouchableOpacity>
                                 </View>
                             </View> : null
@@ -362,7 +362,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                     {
                         upcomingMeetings.length === 0 ?
                             <View style={{ backgroundColor: 'white', flex: 1 }}>
-                                <Text style={{ width: '100%', color: '#a6a2a2', fontSize: 25, paddingVertical: 50, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                <Text style={{ width: '100%', color: '#a2a2a2', fontSize: 25, paddingVertical: 50, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                                     No meetings scheduled.
                                 </Text>
                             </View>
@@ -385,7 +385,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                     }
                     {
                         isOwner ?
-                            <View style={{ borderTopColor: '#f4f4f4', borderTopWidth: 1, marginTop: 25 }}>
+                            <View style={{ borderTopColor: '#f6f6f6', borderTopWidth: 1, marginTop: 25 }}>
                                 <View style={{ paddingVertical: 15 }}>
                                     {
                                         showAttendances ?
@@ -401,15 +401,15 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                                 }}>
                                                 <Text style={{
                                                     width: '100%',
-                                                    fontSize: 18,
-                                                    color: '#a6a2a2'
+                                                    fontSize: 17,
+                                                    color: '#a2a2a2'
                                                 }}>
-                                                    <Ionicons name='chevron-back-outline' size={18} color={'#101010'} style={{ marginRight: 10 }} /> Attended By
+                                                    <Ionicons name='chevron-back-outline' size={17} color={'#202020'} style={{ marginRight: 10 }} /> Attended By
                                                 </Text>
                                             </TouchableOpacity>
                                             : <Text
                                                 ellipsizeMode="tail"
-                                                style={{ color: '#a6a2a2', fontSize: 18, lineHeight: 25, marginVertical: 25 }}>
+                                                style={{ color: '#a2a2a2', fontSize: 17, lineHeight: 25, marginVertical: 25 }}>
                                                 Past
                                         </Text>}
                                 </View>
@@ -420,7 +420,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                             {
                                                 attendances.length === 0 ?
                                                     <View style={{ backgroundColor: 'white', flex: 1 }}>
-                                                        <Text style={{ width: '100%', color: '#a6a2a2', fontSize: 25, paddingVertical: 50, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                                        <Text style={{ width: '100%', color: '#a2a2a2', fontSize: 25, paddingVertical: 50, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                                                             No attendances.
                                                         </Text>
                                                     </View>
@@ -443,7 +443,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                         </View>
                                         : (pastMeetings.length === 0 ?
                                             <View style={{ backgroundColor: 'white', flex: 1 }}>
-                                                <Text style={{ width: '100%', color: '#a6a2a2', fontSize: 25, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                                <Text style={{ width: '100%', color: '#a2a2a2', fontSize: 25, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                                                     No past meetings.
                                                 </Text>
                                             </View>
@@ -490,7 +490,7 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 12,
-        color: '#a6a2a2',
+        color: '#a2a2a2',
         textAlign: 'left',
         paddingHorizontal: 10,
     },

@@ -18,7 +18,7 @@ const SubscriberCard: React.FunctionComponent<{ [label: string]: any }> = (props
                 onPress={() => props.onPress()}
                 key={'textPage'}
                 style={styleObject.card}>
-                <View style={{ backgroundColor: '#f4f4f4', width: '100%', flexDirection: 'row', display: 'flex', height: '44%', minHeight: 25 }}>
+                <View style={{ backgroundColor: '#f6f6f6', width: '100%', flexDirection: 'row', display: 'flex', height: '44%', minHeight: 25 }}>
                     <Text ellipsizeMode={'tail'}
                         numberOfLines={1}
                         style={styleObject.title}>
@@ -26,7 +26,7 @@ const SubscriberCard: React.FunctionComponent<{ [label: string]: any }> = (props
                     </Text>
                     {
                         fullName === 'submitted' || fullName === 'graded' || props.chat ?
-                            <View style={{ flexDirection: 'row', backgroundColor: '#f4f4f4' }}>
+                            <View style={{ flexDirection: 'row', backgroundColor: '#f6f6f6' }}>
                                 {
                                     props.subscriber.unreadMessages !== undefined
                                         && props.subscriber !== null
@@ -47,7 +47,7 @@ const SubscriberCard: React.FunctionComponent<{ [label: string]: any }> = (props
                                         </Text> : null
                                 }
                                 {
-                                    props.hideChevron ? null : <Ionicons name="chevron-forward-outline" color="#a6a2a2" size={20} style={{ marginTop: 3, marginLeft: 10 }} />
+                                    props.hideChevron ? null : <Ionicons name="chevron-forward-outline" color="#a2a2a2" size={20} style={{ marginTop: 3, marginLeft: 10 }} />
                                 }
                             </View>
                             : null
@@ -82,19 +82,19 @@ const styles: any = (status: any) => StyleSheet.create({
         width: '100%',
         borderRadius: 20,
         padding: 13,
-        backgroundColor: '#F4F4F4',
+        backgroundColor: '#f6f6f6',
     },
     text: {
         display: 'flex',
         flexDirection: 'column',
         flex: 1,
-        backgroundColor: '#F4F4F4',
+        backgroundColor: '#f6f6f6',
     },
     titleArrow: {
         fontFamily: 'inter',
         fontSize: 14,
         paddingTop: 5,
-        color: '#101010',
+        color: '#202020',
         marginLeft: 10
     },
     title: {
@@ -102,10 +102,10 @@ const styles: any = (status: any) => StyleSheet.create({
         fontSize: 14,
         width: '100%',
         paddingTop: 5,
-        color: '#101010'
+        color: '#202020'
     },
     description: {
         fontSize: 14,
-        color: '#a6a2a2',
+        color: '#a2a2a2',
     }
 });

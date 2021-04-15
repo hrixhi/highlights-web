@@ -9,7 +9,7 @@ import { Ionicons } from '@expo/vector-icons';
 const ThreadCard: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
     const [loading, setLoading] = useState(true)
-    const [color, setColor] = useState('#a6a2a2');
+    const [color, setColor] = useState('#a2a2a2');
     const [subtitle, setSubtitle] = useState('')
 
     const [imported, setImported] = useState(false)
@@ -78,7 +78,7 @@ const ThreadCard: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         {
                             props.thread.isPrivate ?
                                 <Text style={styleObject.date}>
-                                    <Ionicons name='eye-off-outline' color={'#a6a2a2'} />
+                                    <Ionicons name='eye-off-outline' color={'#a2a2a2'} />
                                 </Text> : null
                         }
                         <Text style={{
@@ -93,17 +93,17 @@ const ThreadCard: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     </View>
                     {
                         imported ?
-                            <View style={{ backgroundColor: '#f4f4f4', flex: 1, flexDirection: 'row' }}>
-                                <Text style={{ width: '100%', color: '#a6a2a2', fontSize: 18, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
-                                    <Ionicons name='document-outline' size={18} color='#a6a2a2' /> {title}.{type}
+                            <View style={{ backgroundColor: '#f6f6f6', flex: 1, flexDirection: 'row' }}>
+                                <Text style={{ width: '100%', color: '#a2a2a2', fontSize: 17, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                    <Ionicons name='document-outline' size={17} color='#a2a2a2' /> {title}.{type}
                                 </Text>
                                 <Text ellipsizeMode={'tail'}
                                     numberOfLines={1}
                                     style={styleObject.titleArrow}>
-                                    <Ionicons name="chevron-forward-outline" color="#a6a2a2" size={20} style={{ marginTop: 4 }} />
+                                    <Ionicons name="chevron-forward-outline" color="#a2a2a2" size={20} style={{ marginTop: 4 }} />
                                 </Text>
                             </View>
-                            : <View style={{ backgroundColor: '#f4f4f4', width: '100%', flexDirection: 'row', display: 'flex', height: '44%' }}>
+                            : <View style={{ backgroundColor: '#f6f6f6', width: '100%', flexDirection: 'row', display: 'flex', height: '44%' }}>
                                 <Text ellipsizeMode={'tail'}
                                     numberOfLines={1}
                                     style={styleObject.title}>
@@ -128,7 +128,7 @@ const ThreadCard: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 <Text ellipsizeMode={'tail'}
                                     numberOfLines={1}
                                     style={styleObject.titleArrow}>
-                                    <Ionicons name="chevron-forward-outline" color="#a6a2a2" size={20} style={{ marginTop: 4 }} />
+                                    <Ionicons name="chevron-forward-outline" color="#a2a2a2" size={20} style={{ marginTop: 4 }} />
                                 </Text>
                             </View>
                     }
@@ -169,43 +169,43 @@ const styles: any = () => StyleSheet.create({
         width: '100%',
         borderRadius: 20,
         padding: 13,
-        backgroundColor: '#f4f4f4',
+        backgroundColor: '#f6f6f6',
     },
     text: {
         display: 'flex',
         flexDirection: 'column',
         flex: 1,
-        backgroundColor: '#f4f4f4'
+        backgroundColor: '#f6f6f6'
     },
     dateContainer: {
         fontSize: 10,
         height: '22%',
-        backgroundColor: '#f4f4f4',
+        backgroundColor: '#f6f6f6',
         display: 'flex',
         flexDirection: 'row'
     },
     date: {
         fontSize: 10,
-        color: '#a6a2a2',
+        color: '#a2a2a2',
         marginLeft: 5
     },
     title: {
         fontFamily: 'inter',
         fontSize: 14,
         paddingTop: 5,
-        color: '#101010',
+        color: '#202020',
         flex: 1
     },
     titleArrow: {
         fontFamily: 'inter',
         fontSize: 14,
         paddingTop: 5,
-        color: '#101010',
+        color: '#202020',
         marginLeft: 10
     },
     description: {
         fontSize: 13,
-        color: '#a6a2a2',
+        color: '#a2a2a2',
         height: '30%',
     },
     color: {

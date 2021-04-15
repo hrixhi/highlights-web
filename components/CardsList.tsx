@@ -143,7 +143,7 @@ const styleObject = (channelId: any) => {
             height: 20,
             marginTop: -2,
             borderRadius: 10,
-            backgroundColor: '#0079fe',
+            backgroundColor: '#3B64F8',
             textAlign: 'center',
             zIndex: 50
         },

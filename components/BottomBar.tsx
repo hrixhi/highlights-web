@@ -42,9 +42,9 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     <Text
                         style={{
                             color: colorScheme === 'light' ? (
-                                choice === 'All' ? 'white' : '#101010'
+                                choice === 'All' ? 'white' : '#202020'
                             ) : (
-                                choice === 'All' ? '#101010' : 'white'
+                                choice === 'All' ? '#202020' : 'white'
                             ),
                             lineHeight: 22,
                             fontSize: 14
@@ -52,9 +52,9 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     >
                         My Cues
                         {/* <Ionicons name='home-outline' size={15} color={colorScheme === 'light' ? (
-                            choice === 'All' ? 'white' : '#101010'
+                            choice === 'All' ? 'white' : '#202020'
                         ) : (
-                            choice === 'All' ? '#101010' : 'white'
+                            choice === 'All' ? '#202020' : 'white'
                         )} /> */}
                     </Text>
                 </TouchableOpacity>
@@ -75,9 +75,9 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             }}>
                             <Text style={{
                                 color: colorScheme === 'light' ? (
-                                    choice === subscription.channelName ? 'white' : '#101010'
+                                    choice === subscription.channelName ? 'white' : '#202020'
                                 ) : (
-                                    choice === subscription.channelName ? '#101010' : 'white'
+                                    choice === subscription.channelName ? '#202020' : 'white'
                                 ),
                                 lineHeight: 22,
                                 fontFamily: 'overpass',
@@ -96,7 +96,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         style={styles.center}
                     >
                         <Text style={{ textAlign: 'center', lineHeight: 30 }}>
-                            <Ionicons name='radio-outline' size={21} color={'#a6a2a2'} />
+                            <Ionicons name='radio-outline' size={21} color={'#202020'} />
                         </Text>
                     </TouchableOpacity>
                 </View>
@@ -106,7 +106,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         style={styles.center}
                     >
                         <Text style={{ textAlign: 'center', lineHeight: 30 }}>
-                            <Ionicons name='add-circle' size={30} color={'#101010'} />
+                            <Ionicons name='add-circle' size={30} color={'#202020'} />
                         </Text>
                     </TouchableOpacity>
                 </View>
@@ -116,7 +116,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         style={styles.center}
                     >
                         <Text style={{ textAlign: 'center', lineHeight: 30 }}>
-                            <Ionicons name={loggedIn ? 'person-circle-outline' : 'cloud-upload-outline'} size={21} color={'#a6a2a2'} />
+                            <Ionicons name={loggedIn ? 'person-circle-outline' : 'cloud-upload-outline'} size={21} color={'#202020'} />
                         </Text>
                         {
                             !loggedIn && userLoaded ?
@@ -179,27 +179,27 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
     },
     outline: {
         borderRadius: 10,
-        backgroundColor: colorScheme === 'light' ? '#101010' : 'white',
-        color: colorScheme === 'light' ? 'white' : '#101010'
+        backgroundColor: colorScheme === 'light' ? '#202020' : 'white',
+        color: colorScheme === 'light' ? 'white' : '#202020'
     },
     cusCategory: {
         fontSize: 15,
-        color: '#a6a2a2',
+        color: '#a2a2a2',
         height: 22,
         paddingHorizontal: 10
     },
     sub: {
         fontSize: 15,
-        color: colorScheme === 'light' ? '#101010' : 'white',
+        color: colorScheme === 'light' ? '#202020' : 'white',
         height: 22,
         paddingHorizontal: 10
     },
     subOutline: {
         fontSize: 15,
-        color: colorScheme === 'light' ? '#101010' : 'white',
+        color: colorScheme === 'light' ? '#202020' : 'white',
         height: 22,
         paddingHorizontal: 10,
         borderRadius: 10,
-        backgroundColor: colorScheme === 'light' ? '#101010' : 'white',
+        backgroundColor: colorScheme === 'light' ? '#202020' : 'white',
     }
 });
