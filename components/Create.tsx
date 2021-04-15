@@ -39,7 +39,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const [channelId, setChannelId] = useState<any>('')
     const [endPlayAt, setEndPlayAt] = useState(new Date())
     const [playChannelCueIndef, setPlayChannelCueIndef] = useState(true)
-    const colorChoices: any[] = ['#CB213F', '#ED7D22', '#F8D41F', '#B8D41F', '#53BE6D'].reverse()
+    const colorChoices: any[] = ['#d91d56', '#ED7D22', '#F8D41F', '#B8D41F', '#53BE6D'].reverse()
     const [modalAnimation] = useState(new Animated.Value(0))
     const now = new Date()
     const [reloadEditorKey, setReloadEditorKey] = useState(Math.random())
@@ -568,7 +568,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             paddingRight: 25,
                             width: '100%'
                         }}>
-                            <Ionicons name='bookmark' size={25} color={starred ? '#CB213F' : '#a2a2aa'} />
+                            <Ionicons name='bookmark' size={25} color={starred ? '#d91d56' : '#a2a2aa'} />
                         </Text>
                     </TouchableOpacity>
                 </View>
@@ -796,13 +796,13 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             padding: 3,
                                             paddingTop: 5,
                                             paddingBottom: 10,
-                                            borderRadius: 0
+                                            borderRadius: 8
                                         }}
                                         ref={RichText}
                                         style={{
                                             width: '100%',
                                             backgroundColor: '#f4f4f6',
-                                            borderRadius: 0,
+                                            borderRadius: 8,
                                             minHeight: 475
                                         }}
                                         editorStyle={{

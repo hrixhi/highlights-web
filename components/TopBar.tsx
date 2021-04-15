@@ -243,7 +243,7 @@ const styleObject: any = (channelId: any) => StyleSheet.create({
         marginRight: -3,
         marginTop: -3,
         borderRadius: 10,
-        backgroundColor: '#CB213F',
+        backgroundColor: '#d91d56',
         textAlign: 'center',
         zIndex: 50
     },

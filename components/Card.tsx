@@ -8,7 +8,7 @@ import { htmlStringParser } from '../helpers/HTMLParser';
 
 const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
-    const colorChoices: any[] = ['#CB213F', '#ED7D22', '#F8D41F', '#B8D41F', '#53BE6D'].reverse()
+    const colorChoices: any[] = ['#d91d56', '#ED7D22', '#F8D41F', '#B8D41F', '#53BE6D'].reverse()
     const colorScheme = useColorScheme();
     const styleObject = styles(colorScheme, props.channelId)
     const starred = props.cue.starred;
@@ -67,7 +67,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     width: '97%',
                                     zIndex: 20
                                 }}>
-                                    <Ionicons name='bookmark' size={18} color={starred ? '#CB213F' : '#a2a2aa'} />
+                                    <Ionicons name='bookmark' size={18} color={starred ? '#d91d56' : '#a2a2aa'} />
                                 </Text>
                                 : null
                         }

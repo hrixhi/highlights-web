@@ -53,7 +53,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const RichText: any = useRef();
     const [height, setHeight] = useState(100)
     const [showOriginal, setShowOriginal] = useState(props.cue.channelId && props.cue.channelId !== '' ? true : false)
-    const colorChoices: any[] = ['#CB213F', '#ED7D22', '#F8D41F', '#B8D41F', '#53BE6D'].reverse()
+    const colorChoices: any[] = ['#d91d56', '#ED7D22', '#F8D41F', '#B8D41F', '#53BE6D'].reverse()
     const [submission, setSubmission] = useState(props.cue.submission ? props.cue.submission : false)
     const dead = props.cue.deadline && props.cue.deadline !== ''
         ? (
@@ -801,7 +801,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     paddingRight: 25,
                                     width: '100%'
                                 }}>
-                                    <Ionicons name='bookmark' size={25} color={starred ? '#CB213F' : '#a2a2aa'} />
+                                    <Ionicons name='bookmark' size={25} color={starred ? '#d91d56' : '#a2a2aa'} />
                                 </Text>
                             </TouchableOpacity>
                         </View>
@@ -836,7 +836,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     paddingRight: 25,
                                     width: '100%'
                                 }}>
-                                    <Ionicons name='bookmark' size={25} color={starred ? '#CB213F' : '#a2a2aa'} />
+                                    <Ionicons name='bookmark' size={25} color={starred ? '#d91d56' : '#a2a2aa'} />
                                 </Text>
                             </TouchableOpacity>
                         </View>
@@ -2041,7 +2041,7 @@ const styles: any = StyleSheet.create({
         lineHeight: 20
     },
     color1: {
-        backgroundColor: '#CB213F'
+        backgroundColor: '#d91d56'
     },
     color2: {
         backgroundColor: '#ED7D22',

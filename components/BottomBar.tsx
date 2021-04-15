@@ -173,7 +173,7 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
         marginBottom: 10,
         marginTop: -8,
         borderRadius: 10,
-        backgroundColor: '#CB213F',
+        backgroundColor: '#d91d56',
         textAlign: 'center',
         zIndex: 50
     },

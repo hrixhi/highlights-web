@@ -115,7 +115,7 @@ const ThreadCard: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                             width: 20,
                                             height: 20,
                                             borderRadius: 10,
-                                            backgroundColor: '#CB213F',
+                                            backgroundColor: '#d91d56',
                                             textAlign: 'center',
                                             zIndex: 150,
                                             marginLeft: 10,
@@ -159,7 +159,7 @@ const styles: any = () => StyleSheet.create({
         width: 20,
         height: 20,
         borderRadius: 10,
-        backgroundColor: '#CB213F',
+        backgroundColor: '#d91d56',
         textAlign: 'center',
         zIndex: 150,
         marginLeft: 10
