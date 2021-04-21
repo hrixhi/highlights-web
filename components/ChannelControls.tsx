@@ -352,7 +352,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     textAlign: 'center',
                                     lineHeight: 35,
                                     color: 'white',
-                                    fontSize: 14,
+                                    fontSize: 12,
                                     backgroundColor: '#3B64F8',
                                     paddingHorizontal: 25,
                                     fontFamily: 'inter',

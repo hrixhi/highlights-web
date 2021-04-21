@@ -51,7 +51,6 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             showsHorizontalScrollIndicator={false}
                             horizontal={true}
                             contentContainerStyle={{
-                                width: '100%',
                                 height: '100%'
                             }}
                             nestedScrollEnabled={true}
@@ -60,13 +59,12 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 showsVerticalScrollIndicator={false}
                                 horizontal={false}
                                 contentContainerStyle={{
-                                    width: '100%',
                                     height: '100%'
                                 }}
                                 nestedScrollEnabled={true}
                             >
                                 <View>
-                                    <ScrollView style={styles.row} key={"-"} horizontal={true}>
+                                    <View style={styles.row} key={"-"}>
                                         <View style={styles.col} key={'0,0'} />
                                         {
                                             cues.map((cue: any, col: number) => {
@@ -92,7 +90,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                     </Text>
                                                 </View>
                                         }
-                                    </ScrollView>
+                                    </View>
                                     {
                                         scores.map((score: any, row: number) => {
 
@@ -105,7 +103,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 }
                                             })
 
-                                            return <ScrollView style={styles.row} key={row} horizontal={true}>
+                                            return <View style={styles.row} key={row}>
                                                 <View style={styles.col} >
                                                     <Text style={{ textAlign: 'left', fontSize: 13, color: '#202025', fontFamily: 'inter' }}>
                                                         {score.fullName}
@@ -136,7 +134,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                         </Text>
                                                         </View>
                                                 }
-                                            </ScrollView>
+                                            </View>
                                         })
                                     }
                                 </View>

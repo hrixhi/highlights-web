@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
-import { Text, View } from './Themed';
+import { Text, TouchableOpacity, View } from './Themed';
 import _ from 'lodash'
 import { Ionicons } from '@expo/vector-icons';
 
@@ -51,18 +51,31 @@ const ThreadReplyCard: React.FunctionComponent<{ [label: string]: any }> = (prop
                         {props.thread.anonymous ? 'Anonymous' : props.thread.displayName}
                     </Text>
                 </View>
-                {
-                    imported ?
-                        <a download={true} href={url} style={{ textDecoration: 'none' }}>
-                            <View style={{ backgroundColor: '#f4f4f6', flex: 1 }}>
+                <View style={{ flexDirection: 'row', backgroundColor: '#f4f4f6' }}>
+                    <View style={{ flex: 1, backgroundColor: '#f4f4f6' }}>
+                        {
+                            imported ?
+                                <a download={true} href={url} style={{ textDecoration: 'none' }}>
+                                    <View style={{ backgroundColor: '#f4f4f6', flex: 1 }}>
+                                        <Text style={{ width: '100%', color: '#a2a2aa', fontSize: 17, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                            <Ionicons name='document-outline' size={17} color='#a2a2aa' /> {title}.{type}
+                                        </Text>
+                                    </View>
+                                </a>
+                                : <div dangerouslySetInnerHTML={{ __html: props.thread.message }} style={{ fontFamily: 'overpass', color: '#202025', fontSize: 14 }} />
+                        }
+                    </View>
+                    {
+                        props.isOwner ?
+                            <TouchableOpacity style={{ backgroundColor: '#f4f4f6' }}
+                                onPress={() => props.deleteThread()}
+                            >
                                 <Text style={{ width: '100%', color: '#a2a2aa', fontSize: 17, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
-                                    <Ionicons name='document-outline' size={17} color='#a2a2aa' /> {title}.{type}
+                                    <Ionicons name='trash-outline' size={17} color={props.index === 0 ? '#d91d56' : '#a2a2aa'} />
                                 </Text>
-                            </View>
-                        </a>
-                        : <div dangerouslySetInnerHTML={{ __html: props.thread.message }} style={{ fontFamily: 'overpass', color: '#202025', fontSize: 14 }} />
-
-                }
+                            </TouchableOpacity> : null
+                    }
+                </View>
             </View>
         </View>
     );

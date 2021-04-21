@@ -238,11 +238,11 @@ const styleObject: any = (channelId: any) => StyleSheet.create({
     badge: {
         position: 'absolute',
         alignSelf: 'flex-end',
-        width: 10,
-        height: 10,
-        marginRight: -3,
-        marginTop: -3,
-        borderRadius: 10,
+        width: 7,
+        height: 7,
+        marginRight: -2,
+        marginTop: -2,
+        borderRadius: 15,
         backgroundColor: '#d91d56',
         textAlign: 'center',
         zIndex: 50

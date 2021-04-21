@@ -440,7 +440,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             textAlign: 'center',
                             lineHeight: 35,
                             color: 'white',
-                            fontSize: 14,
+                            fontSize: 12,
                             backgroundColor: '#3B64F8',
                             borderRadius: 15,
                             paddingHorizontal: 25,

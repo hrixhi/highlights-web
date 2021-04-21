@@ -605,8 +605,8 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                     key={filterChoice + key}
                                                     contentContainerStyle={{
                                                         width: '100%',
-                                                        height: '100%',
-                                                        paddingBottom: 20
+                                                        height: props.cueId ? windowHeight - 200 : '100%',
+                                                        marginBottom: props.cueId ? 20 : 0
                                                     }}
                                                 >
                                                     {
@@ -731,7 +731,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                         textAlign: 'center',
                                                         lineHeight: 35,
                                                         color: 'white',
-                                                        fontSize: 14,
+                                                        fontSize: 12,
                                                         backgroundColor: '#3B64F8',
                                                         paddingHorizontal: 25,
                                                         fontFamily: 'inter',
@@ -896,7 +896,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 textAlign: 'center',
                                 lineHeight: 35,
                                 color: '#202025s',
-                                fontSize: 14,
+                                fontSize: 12,
                                 backgroundColor: '#f4f4f6',
                                 paddingHorizontal: 25,
                                 fontFamily: 'inter',

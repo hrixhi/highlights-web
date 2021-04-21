@@ -146,9 +146,11 @@ const styles: any = (colorScheme: any, channelId: any) => StyleSheet.create({
         height: '30%'
     },
     text: {
+        height: '100%',
         backgroundColor: colorScheme === 'light' ? '#f4f4f6' : '#a2a2aa'
     },
     flipText: {
+        height: '100%',
         color: '#f4f4f6',
         backgroundColor: colorScheme === 'light' ? '#202025' : 'white'
     },

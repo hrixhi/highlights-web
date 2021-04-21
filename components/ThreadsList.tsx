@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, ActivityIndicator, ScrollView, Dimensions } from 'react-native';
 import Alert from '../components/Alert'
 import { View, Text, TouchableOpacity } from './Themed';
@@ -6,7 +6,7 @@ import _ from 'lodash'
 import ThreadCard from './ThreadCard';
 import { Ionicons } from '@expo/vector-icons';
 import { fetchAPI } from '../graphql/FetchAPI';
-import { getThreadWithReplies, markThreadsAsRead } from '../graphql/QueriesAndMutations';
+import { deleteThread, getThreadWithReplies, markThreadsAsRead } from '../graphql/QueriesAndMutations';
 import NewMessage from './NewMessage';
 import ThreadReplyCard from './ThreadReplyCard';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -25,7 +25,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
     const [showPost, setShowPost] = useState(false)
     const [threadId, setThreadId] = useState('')
     const [showComments, setShowComments] = useState(true)
-
+    const [isOwner, setIsOwner] = useState(false)
     const categories: any[] = []
     const categoryObject: any = {}
     let filteredThreads: any[] = []
@@ -78,6 +78,39 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
         }
 
     }, [])
+
+    useEffect(() => {
+        (
+            async () => {
+                const u = await AsyncStorage.getItem("user")
+                if (u) {
+                    const user = JSON.parse(u)
+                    if (user._id.toString().trim() === props.channelCreatedBy.toString().trim()) {
+                        setIsOwner(true)
+                    }
+                }
+            }
+        )()
+    }, [])
+
+    const deletePost = useCallback((threadId: string) => {
+        if (!isOwner) {
+            return;
+        }
+        const server = fetchAPI('')
+        server.mutate({
+            mutation: deleteThread,
+            variables: {
+                threadId
+            }
+        }).then((res) => {
+            if (res.data && res.data.thread.delete) {
+                props.reload()
+            } else {
+                Alert("Something went wrong.")
+            }
+        }).catch(e => Alert("Something went wrong."))
+    }, [isOwner])
 
     if (showPost) {
         return <View style={{
@@ -165,7 +198,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                     }}>
                                         Comments
                                 </Text>
-                                    <Ionicons size={22} name={showComments ? 'caret-down-circle-outline' : 'caret-forward-circle-outline'} color='#a2a2aa' />
+                                    <Ionicons size={17} name={showComments ? 'caret-down-circle-outline' : 'caret-forward-circle-outline'} color='#a2a2aa' />
                                 </TouchableOpacity>
                         }
                         {
@@ -213,6 +246,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 </View> :
                                 <View style={{
                                     width: '100%',
+                                    height: props.cueId ? 'auto' : windowHeight - 75,
                                     backgroundColor: 'white',
                                     flex: 1
                                 }}
@@ -223,6 +257,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                             <ScrollView
                                                 showsVerticalScrollIndicator={false}
                                                 horizontal={false}
+                                                style={{ height: '100%' }}
                                                 contentContainerStyle={{
                                                     width: '100%',
                                                     height: '100%',
@@ -247,9 +282,12 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                 keyboardDismissMode={'on-drag'}
                                                 style={{ flex: 1, paddingTop: 12 }}>
                                                 {
-                                                    threadWithReplies.map((thread) => {
+                                                    threadWithReplies.map((thread, index) => {
                                                         return <View style={{ width: '100%', paddingBottom: 15, backgroundColor: 'white' }} key={Math.random()}>
                                                             <ThreadReplyCard
+                                                                index={index}
+                                                                deleteThread={() => deletePost(thread._id)}
+                                                                isOwner={isOwner}
                                                                 channelCreatedBy={props.channelCreatedBy}
                                                                 thread={thread} />
                                                         </View>

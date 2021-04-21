@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
-import { StyleSheet, Animated, ActivityIndicator, Dimensions, TextInput } from 'react-native';
+import { StyleSheet, Animated, ActivityIndicator, Dimensions, TextInput, Image } from 'react-native';
 import Alert from '../components/Alert'
 import BottomBar from '../components/BottomBar';
 import CardsList from '../components/CardsList';
@@ -15,7 +15,7 @@ import { defaultCues, defaultRandomShuffleFrequency, defaultSleepInfo } from '..
 import Walkthrough from '../components/Walkthrough';
 import Channels from '../components/Channels';
 import { fetchAPI } from '../graphql/FetchAPI';
-import { createUser, getSubscriptions, getCues, unsubscribe, saveConfigToCloud, saveCuesToCloud, login, getCuesFromCloud, findUserById } from '../graphql/QueriesAndMutations';
+import { createUser, getSubscriptions, getCues, unsubscribe, saveConfigToCloud, saveCuesToCloud, login, getCuesFromCloud, findUserById, resetPassword } from '../graphql/QueriesAndMutations';
 import Discussion from '../components/Discussion';
 import Subscribers from '../components/Subscribers';
 import Profile from '../components/Profile';
@@ -50,6 +50,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [reopenUpdateWindow, setReopenUpdateWindow] = useState(Math.random())
+  const [showForgotPassword, setShowForgotPassword] = useState(false)
 
   const onDimensionsChange = useCallback(({ w, s }: any) => {
     // window.location.reload()
@@ -739,6 +740,27 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     }
   }, [])
 
+  const forgotPassword = useCallback(() => {
+
+    if (email === '' || !validateEmail(email)) {
+      Alert('Enter a valid email.')
+      return;
+    }
+
+    const server = fetchAPI('')
+    server.mutate({
+      mutation: resetPassword,
+      variables: {
+        email
+      }
+    }).then(res => {
+      if (res.data && res.data.user.resetPassword) {
+        Alert('We have emailed you a new password!')
+        setShowForgotPassword(false)
+      }
+    })
+  }, [email])
+
   const closeModal = useCallback(() => {
     setInit(true)
     setCueId('')
@@ -904,7 +926,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
       {
         showLoginWindow ? <View style={{
           width: '100%',
-          height: Dimensions.get('screen').height,
+          height: Dimensions.get('window').height,
           flex: 1,
           position: 'absolute',
           zIndex: 50,
@@ -918,16 +940,32 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             alignSelf: 'center',
             justifyContent: 'center',
             backgroundColor: 'white',
-            borderRadius: 20,
-            marginTop: 100,
+            width: Dimensions.get('window').width < 768 ? '100%' : 480,
+            height: Dimensions.get('window').width < 768 ? '100%' : 'auto',
+            borderRadius: Dimensions.get('window').width < 768 ? 0 : 20,
+            marginTop: Dimensions.get('window').width < 768 ? 0 : 75,
             padding: 40
           }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'center', display: 'flex', paddingBottom: 50 }}>
+              <Image
+                source={require('../components/default-images/cues-logo-black-exclamation-hidden.jpg')}
+                style={{
+                  width: Dimensions.get('window').height * 0.16 * 0.53456,
+                  height: Dimensions.get('window').height * 0.16 * 0.2
+                }}
+                resizeMode={'contain'}
+              />
+            </View>
             <Text style={{ fontSize: 30, color: '#202025', fontFamily: 'inter', paddingBottom: 15, maxWidth: 400, textAlign: 'center' }}>
-              Login
-              </Text>
-            <Text style={{ fontSize: 20, color: '#a2a2aa', fontFamily: 'overpass', paddingBottom: 25, maxWidth: 400, textAlign: 'center' }}>
-              Continue where you left off and save changes to the cloud.
-              </Text>
+              {
+                showForgotPassword ? '' : 'Login'
+              }
+            </Text>
+            <Text style={{ fontSize: 18, color: '#a2a2aa', fontFamily: 'overpass', paddingBottom: 25, maxWidth: 400, textAlign: 'center' }}>
+              {
+                showForgotPassword ? 'We\'ll send you a temporary password.' : 'Continue where you left.'
+              }
+            </Text>
             <View style={{
               maxWidth: 400,
               backgroundColor: 'white',
@@ -943,17 +981,22 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 onChangeText={(val: any) => setEmail(val)}
                 placeholderTextColor={'#a2a2aa'}
               />
-              <Text style={{ color: '#202025', fontSize: 14, paddingBottom: 5 }}>
-                Password
-              </Text>
-              <TextInput
-                secureTextEntry={true}
-                value={password}
-                style={styles.input}
-                placeholder={''}
-                onChangeText={(val: any) => setPassword(val)}
-                placeholderTextColor={'#a2a2aa'}
-              />
+              {
+                showForgotPassword ? null :
+                  <View>
+                    <Text style={{ color: '#202025', fontSize: 14, paddingBottom: 5 }}>
+                      Password
+                    </Text>
+                    <TextInput
+                      secureTextEntry={true}
+                      value={password}
+                      style={styles.input}
+                      placeholder={''}
+                      onChangeText={(val: any) => setPassword(val)}
+                      placeholderTextColor={'#a2a2aa'}
+                    />
+                  </View>
+              }
               <View
                 style={{
                   flex: 1,
@@ -961,10 +1004,16 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                   display: 'flex',
                   flexDirection: 'column',
                   paddingBottom: 10,
-                  paddingTop: 20
+                  paddingTop: 40
                 }}>
                 <TouchableOpacity
-                  onPress={() => handleLogin()}
+                  onPress={() => {
+                    if (showForgotPassword) {
+                      forgotPassword()
+                    } else {
+                      handleLogin()
+                    }
+                  }}
                   style={{
                     backgroundColor: 'white',
                     overflow: 'hidden',
@@ -976,19 +1025,21 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     textAlign: 'center',
                     lineHeight: 35,
                     color: 'white',
-                    fontSize: 14,
+                    fontSize: 12,
                     backgroundColor: '#3B64F8',
                     paddingHorizontal: 25,
                     fontFamily: 'inter',
                     height: 35,
-                    width: 150,
+                    width: 180,
                     borderRadius: 15,
                   }}>
-                    LOGIN
+                    {
+                      showForgotPassword ? 'RESET' : 'LOGIN'
+                    }
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  onPress={() => setShowLoginWindow(false)}
+                  onPress={() => setShowForgotPassword(!showForgotPassword)}
                   style={{
                     backgroundColor: 'white',
                     overflow: 'hidden',
@@ -999,16 +1050,45 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                   <Text style={{
                     textAlign: 'center',
                     lineHeight: 35,
-                    color: '#202025s',
-                    fontSize: 14,
+                    color: '#202025',
+                    fontSize: 12,
                     backgroundColor: '#f4f4f6',
                     paddingHorizontal: 25,
                     fontFamily: 'inter',
                     height: 35,
-                    width: 150,
+                    width: 180,
                     borderRadius: 15,
                   }}>
-                    SKIP
+                    {
+                      showForgotPassword ? 'BACK' : 'FORGOT PASSWORD'
+                    }
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    setShowLoginWindow(false)
+                    Alert("Your changes will be saved locally but not in the cloud.")
+                  }}
+                  style={{
+                    backgroundColor: 'white',
+                    overflow: 'hidden',
+                    height: 35,
+                    marginTop: 15,
+                    width: '100%', justifyContent: 'center', flexDirection: 'row'
+                  }}>
+                  <Text style={{
+                    textAlign: 'center',
+                    lineHeight: 35,
+                    color: '#202025',
+                    fontSize: 12,
+                    backgroundColor: '#f4f4f6',
+                    paddingHorizontal: 25,
+                    fontFamily: 'inter',
+                    height: 35,
+                    width: 180,
+                    borderRadius: 15,
+                  }}>
+                    SKIP FOR NOW
                   </Text>
                 </TouchableOpacity>
               </View>

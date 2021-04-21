@@ -214,6 +214,27 @@ mutation($userId: String!, $cueId: String!, $cue: String!) {
     }
 }
 `
+export const deleteThread = gql`
+mutation($threadId: String!) {
+    thread {
+        delete(threadId: $threadId) 
+    }
+}
+`
+export const updatePassword = gql`
+mutation($userId: String!, $currentPassword: String!, $newPassword: String!) {
+    user {
+        updatePassword(userId: $userId, currentPassword: $currentPassword, newPassword: $newPassword)
+    } 
+}
+`
+export const resetPassword = gql`
+mutation($email: String!) {
+    user {
+        resetPassword(email: $email)
+    }
+}
+`
 /**
  * ALL
  * QUERIES
@@ -542,16 +563,6 @@ export const getUpcomingDates = gql`
 query($channelId: String!) {
     attendance {
         getUpcomingDates(channelId: $channelId) {
-            start
-            end
-        }
-    }
-}
-`
-export const getAllUpcomingMeetings = gql`
-query($userId: String!) {
-    attendance {
-        getAllUpcomingDates(userId: $userId) {
             start
             end
         }

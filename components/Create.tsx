@@ -22,6 +22,8 @@ import Alert from '../components/Alert'
 import Select from 'react-select';
 import QuizCreate from './QuizCreate';
 import DurationPicker from 'react-duration-picker'
+import TeXToSVG from "tex-to-svg";
+import EquationEditor from "equation-editor-react";
 
 const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -65,6 +67,16 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const [duration, setDuration] = useState({
         hours: 1, minutes: 0, seconds: 0
     })
+    const [equation, setEquation] = useState('y = x + 1')
+    const [showEquationEditor, setShowEquationEditor] = useState(false)
+
+    const insertEquation = useCallback(() => {
+        const SVGEquation = TeXToSVG(equation, { width: 100 }); // returns svg in html format
+        RichText.current.insertHTML('<div><br/>' + SVGEquation + '<br/></div>');
+        setShowEquationEditor(false)
+        setEquation('')
+        // setReloadEditorKey(Math.random())
+    }, [equation, RichText, RichText.current, cue])
 
     useEffect(() => {
         if (cue[0] === '{' && cue[cue.length - 1] === '}') {
@@ -190,7 +202,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     }, [])
 
     const cameraCallback = useCallback(async () => {
-
         const cameraSettings = await ImagePicker.getCameraPermissionsAsync()
         if (!cameraSettings.granted) {
             await ImagePicker.requestCameraPermissionsAsync();
@@ -199,38 +210,38 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 return;
             }
         }
-
         let result = await ImagePicker.launchCameraAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             quality: 1,
             base64: true
         });
         if (!result.cancelled) {
-            const dir = FileSystem.documentDirectory + 'images'
-            const dirInfo = await FileSystem.getInfoAsync(dir);
-            if (!dirInfo.exists) {
-                await FileSystem.makeDirectoryAsync(dir, { intermediates: true });
-            }
-            const fileName = Math.round((Math.random() * 100)).toString();
-            FileSystem.copyAsync({
-                from: result.uri,
-                to: dir + '/' + fileName + '.jpg'
-            }).then(r => {
-                ImageManipulator.manipulateAsync(
-                    (dir + '/' + fileName + '.jpg'),
-                    [],
-                    { compress: 0.25, format: ImageManipulator.SaveFormat.JPEG, base64: true }
-                ).then(res => {
-                    RichText.current.insertImage(
-                        'data:image/jpeg;base64,' + res.base64, 'border-radius: 10px'
-                    )
-                    // setReloadEditorKey(Math.random())
-                }).catch(err => {
-                    Alert("Unable to load image.")
-                });
-            }).catch((err) => {
-                Alert("Something went wrong.")
-            })
+            RichText.current.insertImage(result.uri, 'border-radius: 8px')
+            // const dir = FileSystem.documentDirectory + 'images'
+            // const dirInfo = await FileSystem.getInfoAsync(dir);
+            // if (!dirInfo.exists) {
+            //     await FileSystem.makeDirectoryAsync(dir, { intermediates: true });
+            // }
+            // const fileName = Math.round((Math.random() * 100)).toString();
+            // FileSystem.copyAsync({
+            //     from: result.uri,
+            //     to: dir + '/' + fileName + '.jpg'
+            // }).then(r => {
+            //     ImageManipulator.manipulateAsync(
+            //         (dir + '/' + fileName + '.jpg'),
+            //         [],
+            //         { compress: 0.25, format: ImageManipulator.SaveFormat.JPEG, base64: true }
+            //     ).then(res => {
+            //         RichText.current.insertImage(
+            //             'data:image/jpeg;base64,' + res.base64, 'border-radius: 10px'
+            //         )
+            //         // setReloadEditorKey(Math.random())
+            //     }).catch(err => {
+            //         Alert("Unable to load image.")
+            //     });
+            // }).catch((err) => {
+            //     Alert("Something went wrong.")
+            // })
         }
     }, [RichText, RichText.current])
 
@@ -250,31 +261,33 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             quality: 1,
             base64: true
         });
+
         if (!result.cancelled) {
-            const dir = FileSystem.documentDirectory + 'images'
-            const dirInfo = await FileSystem.getInfoAsync(dir);
-            if (!dirInfo.exists) {
-                await FileSystem.makeDirectoryAsync(dir, { intermediates: true });
-            }
-            const fileName = Math.round((Math.random() * 100)).toString();
-            FileSystem.copyAsync({
-                from: result.uri,
-                to: dir + '/' + fileName + '.jpg'
-            }).then((r) => {
-                ImageManipulator.manipulateAsync(
-                    (dir + '/' + fileName + '.jpg'),
-                    [],
-                    { compress: 0.25, format: ImageManipulator.SaveFormat.JPEG, base64: true }
-                ).then(res => {
-                    RichText.current.insertImage(
-                        'data:image/jpeg;base64,' + res.base64, 'border-radius: 10px'
-                    )
-                }).catch(err => {
-                    Alert("Unable to load image.")
-                });
-            }).catch((err) => {
-                Alert("Something went wrong.")
-            })
+            RichText.current.insertImage(result.uri, 'border-radius: 8px')
+            // const dir = FileSystem.documentDirectory + 'images'
+            // const dirInfo = await FileSystem.getInfoAsync(dir);
+            // if (!dirInfo.exists) {
+            //     await FileSystem.makeDirectoryAsync(dir, { intermediates: true });
+            // }
+            // const fileName = Math.round((Math.random() * 100)).toString();
+            // FileSystem.copyAsync({
+            //     from: result.uri,
+            //     to: dir + '/' + fileName + '.jpg'
+            // }).then((r) => {
+            //     ImageManipulator.manipulateAsync(
+            //         (dir + '/' + fileName + '.jpg'),
+            //         [],
+            //         { compress: 0.25, format: ImageManipulator.SaveFormat.JPEG, base64: true }
+            //     ).then(res => {
+            //         RichText.current.insertImage(
+            //             'data:image/jpeg;base64,' + res.base64, 'border-radius: 10px'
+            //         )
+            //     }).catch(err => {
+            //         Alert("Unable to load image.")
+            //     });
+            // }).catch((err) => {
+            //     Alert("Something went wrong.")
+            // })
         }
     }, [RichText, RichText.current])
 
@@ -479,11 +492,13 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         setImported(false)
                         setUrl('')
                         setType('')
-                        setReloadEditorKey(Math.random())
                         setTitle('')
                         setProblems([])
                         setIsQuiz(false)
                         setTimer(false)
+                        setShowEquationEditor(false)
+                        setEquation('')
+                        setReloadEditorKey(Math.random())
                     }
                 }
             ]
@@ -606,7 +621,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 actions.checkboxList,
                                                 actions.insertLink,
                                                 actions.insertImage,
-                                                "insertCamera",
+                                                // "insertCamera",
                                                 actions.undo,
                                                 actions.redo,
                                                 "clear"
@@ -634,6 +649,22 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     </View>
                     <View style={{ flexDirection: 'row' }}>
                         {
+                            !isQuiz ?
+                                <Text style={{
+                                    color: '#a2a2aa',
+                                    fontSize: 11,
+                                    lineHeight: 30,
+                                    textAlign: 'right',
+                                    paddingRight: 20
+                                }}
+                                    onPress={() => setShowEquationEditor(!showEquationEditor)}
+                                >
+                                    {
+                                        showEquationEditor ? 'HIDE' : 'FORMULA'
+                                    }
+                                </Text> : null
+                        }
+                        {
                             isQuiz ? null :
                                 <Text style={{
                                     color: '#a2a2aa',
@@ -652,7 +683,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             fontSize: 11,
                             lineHeight: 30,
                             textAlign: 'right',
-                            paddingRight: 20
+                            paddingRight: 10
                         }}
                             onPress={() => {
                                 if (channelId !== '') {
@@ -666,22 +697,42 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             QUIZ
                         </Text>
                     </View>
-                    <Text style={{
-                        color: '#a2a2aa',
-                        fontSize: 11,
-                        lineHeight: 30,
-                        textAlign: 'right',
-                        paddingRight: 10,
-                    }}>
-                        {'|      ' +
-                            now.toString().split(' ')[1] +
-                            ' ' +
-                            now.toString().split(' ')[2] +
-                            ', ' +
-                            now.toString().split(' ')[3]
-                        }
-                    </Text>
                 </View>
+                {
+                    showEquationEditor ?
+                        <View style={{ width: '100%', flexDirection: width < 768 ? 'column' : 'row', paddingBottom: 20 }}>
+                            <View style={{
+                                borderColor: '#f4f4f6',
+                                borderWidth: 1,
+                                borderRadius: 15,
+                                padding: 10,
+                                minWidth: 200,
+                                maxWidth: '50%'
+                            }}>
+                                <EquationEditor
+                                    value={equation}
+                                    onChange={setEquation}
+                                    autoCommands="pi theta sqrt sum prod alpha beta gamma rho int"
+                                    autoOperatorNames="sin cos tan arccos arcsin arctan"
+                                />
+                            </View>
+                            <TouchableOpacity
+                                style={{
+                                    justifyContent: 'center',
+                                    paddingHorizontal: 20,
+                                    maxWidth: '10%'
+                                }}
+                                onPress={() => insertEquation()}
+                            >
+                                <Ionicons name='add-circle-outline' color='#a2a2aa' size={20} />
+                            </TouchableOpacity>
+                            <View style={{ minWidth: '40%', flex: 1, paddingVertical: 5, justifyContent: 'center', }}>
+                                <Text style={{ flex: 1, fontSize: 12, color: '#a2a2aa' }}>
+                                    ^ → Superscript, _ → Subscript, int → Integral, sum → Summation, prod → Product, sqrt → Square root, bar → Bar over letter, alpha, beta, ... omega → Small Greek letter, Alpha, Beta, ... Omega → Capital Greek letter
+                                </Text>
+                            </View>
+                        </View> : null
+                }
                 <ScrollView
                     style={{ paddingBottom: 100 }}
                     showsVerticalScrollIndicator={false}

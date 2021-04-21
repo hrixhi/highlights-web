@@ -4,8 +4,9 @@ import { Text, View, TouchableOpacity } from './Themed';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ScrollView } from 'react-native-gesture-handler';
 import { fetchAPI } from '../graphql/FetchAPI';
-import { signup } from '../graphql/QueriesAndMutations';
+import { signup, updatePassword, updateUser } from '../graphql/QueriesAndMutations';
 import { validateEmail } from '../helpers/emailCheck';
+import Alert from '../components/Alert'
 
 const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -16,6 +17,9 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
     const [fullName, setFullName] = useState('')
     const [userFound, setUserFound] = useState(false)
     const [loggedIn, setLoggedIn] = useState(false)
+    const [showSavePassword, setShowSavePassword] = useState(false)
+    const [newPassword, setNewPassword] = useState('')
+    const [currentPassword, setCurrentPassword] = useState('')
 
     const handleSubmit = useCallback(async () => {
 
@@ -24,29 +28,57 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
             return
         }
         const user = JSON.parse(u)
+        const server = fetchAPI('')
+
+        if (showSavePassword) {
+            // reset password
+            if (newPassword.toString().trim() === '' || currentPassword.toString().trim() === '') {
+                return
+            }
+            server.mutate({
+                mutation: updatePassword,
+                variables: {
+                    userId: user._id,
+                    currentPassword,
+                    newPassword
+                }
+            }).then(res => {
+                if (res.data && res.data.user.updatePassword) {
+                    Alert("Password updated!")
+                    props.reOpenProfile()
+                } else {
+                    Alert("Incorrect value for current password.")
+                }
+            }).catch(err => {
+                Alert("Something went wrong.")
+            })
+            return
+        }
 
         // All data should be complete
         if (email.toString().trim() === ''
             || displayName.toString().trim() === ''
-            || password.toString() === ''
-            || confirmPassword.toString() === ''
             || fullName.toString().trim() === ''
         ) {
             return
         }
 
-        // Passwords should match
-        if (password.toString() !== confirmPassword.toString()) {
-            return
-        }
-
-        // Emails should be validated
-        if (!validateEmail(email.toString().toLowerCase())) {
-            return
-        }
-
         if (!loggedIn) {
-            const server = fetchAPI('')
+
+            if (password.toString() === '' || confirmPassword.toString() === '') {
+                return
+            }
+
+            // Passwords should match
+            if (password.toString() !== confirmPassword.toString()) {
+                return
+            }
+
+            // Emails should be validated
+            if (!validateEmail(email.toString().toLowerCase())) {
+                return
+            }
+
             server.mutate({
                 mutation: signup,
                 variables: {
@@ -70,9 +102,27 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
             })
         } else {
             // save data
-
+            server.mutate({
+                mutation: updateUser,
+                variables: {
+                    displayName,
+                    fullName,
+                    userId: user._id
+                }
+            }).then(async (res) => {
+                if (res.data && res.data.user.update) {
+                    user.fullName = fullName;
+                    user.displayName = displayName;
+                    const updatedUser = JSON.stringify(user)
+                    await AsyncStorage.setItem('user', updatedUser)
+                    Alert("Profile updated!.")
+                    props.reOpenProfile()
+                } else {
+                    Alert("Something went wrong.")
+                }
+            }).catch(e => Alert("Something went wrong."))
         }
-    }, [loggedIn, email, password, displayName, fullName, confirmPassword])
+    }, [loggedIn, email, password, displayName, fullName, confirmPassword, showSavePassword, newPassword, currentPassword])
 
     const getUser = useCallback(async () => {
         const u = await AsyncStorage.getItem('user')
@@ -119,69 +169,96 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                 </Text>
                 <Text style={{ fontSize: 20, color: '#a2a2aa', fontFamily: 'overpass', paddingBottom: 25, textAlign: 'center' }}>
                     {
-                        !loggedIn ? 'Create a free account to save your work to the cloud.' : 'Change account details.'
+                        !loggedIn ? 'Create an account to save your work to the cloud.' : ''
                     }
                 </Text>
-                <View style={{ width: '100%', backgroundColor: 'white', paddingTop: 20, paddingBottom: 20 }}>
-                    <Text style={{ color: '#202025', fontSize: 14, paddingBottom: 10 }}>
-                        Email
+                {
+                    showSavePassword ?
+                        <View style={{ width: '100%', backgroundColor: 'white', paddingTop: 20, paddingBottom: 20 }}>
+                            <Text style={{ color: '#202025', fontSize: 14, paddingBottom: 10 }}>
+                                Current Password
                             </Text>
-                    <TextInput
-                        editable={!loggedIn}
-                        value={email}
-                        style={styles.input}
-                        placeholder={''}
-                        onChangeText={val => setEmail(val)}
-                        placeholderTextColor={'#a2a2aa'}
-                    />
-                    <Text style={{ color: '#202025', fontSize: 14, paddingBottom: 10 }}>
-                        Full Name
+                            <TextInput
+                                secureTextEntry={true}
+                                value={currentPassword}
+                                style={styles.input}
+                                placeholder={''}
+                                onChangeText={val => setCurrentPassword(val)}
+                                placeholderTextColor={'#a2a2aa'}
+                            />
+                            <Text style={{ color: '#202025', fontSize: 14, paddingBottom: 10 }}>
+                                New Password
                             </Text>
-                    <TextInput
-                        value={fullName}
-                        style={styles.input}
-                        placeholder={''}
-                        onChangeText={val => setFullName(val)}
-                        placeholderTextColor={'#a2a2aa'}
-                    />
-                    <Text style={{ color: '#202025', fontSize: 14, paddingBottom: 10 }}>
-                        Display Name
+                            <TextInput
+                                secureTextEntry={true}
+                                value={newPassword}
+                                style={styles.input}
+                                placeholder={''}
+                                onChangeText={val => setNewPassword(val)}
+                                placeholderTextColor={'#a2a2aa'}
+                            />
+                        </View> :
+                        <View style={{ width: '100%', backgroundColor: 'white', paddingTop: 20, paddingBottom: 20 }}>
+                            <Text style={{ color: '#202025', fontSize: 14, paddingBottom: 10 }}>
+                                Email
                             </Text>
-                    <TextInput
-                        value={displayName}
-                        style={styles.input}
-                        placeholder={''}
-                        onChangeText={val => setDisplayName(val)}
-                        placeholderTextColor={'#a2a2aa'}
-                    />
-                    {
-                        loggedIn ? null :
-                            <View>
-                                <Text style={{ color: '#202025', fontSize: 14, paddingBottom: 10 }}>
-                                    Password
+                            <TextInput
+                                editable={!loggedIn}
+                                value={email}
+                                style={styles.input}
+                                placeholder={''}
+                                onChangeText={val => setEmail(val)}
+                                placeholderTextColor={'#a2a2aa'}
+                            />
+                            <Text style={{ color: '#202025', fontSize: 14, paddingBottom: 10 }}>
+                                Full Name
                             </Text>
-                                <TextInput
-                                    value={password}
-                                    style={styles.input}
-                                    placeholder={''}
-                                    onChangeText={val => setPassword(val)}
-                                    placeholderTextColor={'#a2a2aa'}
-                                    secureTextEntry={true}
-                                />
-                                <Text style={{ color: '#202025', fontSize: 14, paddingBottom: 10 }}>
-                                    Re-enter Password
+                            <TextInput
+                                value={fullName}
+                                style={styles.input}
+                                placeholder={''}
+                                onChangeText={val => setFullName(val)}
+                                placeholderTextColor={'#a2a2aa'}
+                            />
+                            <Text style={{ color: '#202025', fontSize: 14, paddingBottom: 10 }}>
+                                Display Name
                             </Text>
-                                <TextInput
-                                    value={confirmPassword}
-                                    style={styles.input}
-                                    placeholder={''}
-                                    onChangeText={val => setConfirmPassword(val)}
-                                    placeholderTextColor={'#a2a2aa'}
-                                    secureTextEntry={true}
-                                />
-                            </View>
-                    }
-                </View>
+                            <TextInput
+                                value={displayName}
+                                style={styles.input}
+                                placeholder={''}
+                                onChangeText={val => setDisplayName(val)}
+                                placeholderTextColor={'#a2a2aa'}
+                            />
+                            {
+                                loggedIn ? null :
+                                    <View>
+                                        <Text style={{ color: '#202025', fontSize: 14, paddingBottom: 10 }}>
+                                            Password
+                            </Text>
+                                        <TextInput
+                                            value={password}
+                                            style={styles.input}
+                                            placeholder={''}
+                                            onChangeText={val => setPassword(val)}
+                                            placeholderTextColor={'#a2a2aa'}
+                                            secureTextEntry={true}
+                                        />
+                                        <Text style={{ color: '#202025', fontSize: 14, paddingBottom: 10 }}>
+                                            Re-enter Password
+                            </Text>
+                                        <TextInput
+                                            value={confirmPassword}
+                                            style={styles.input}
+                                            placeholder={''}
+                                            onChangeText={val => setConfirmPassword(val)}
+                                            placeholderTextColor={'#a2a2aa'}
+                                            secureTextEntry={true}
+                                        />
+                                    </View>
+                            }
+                        </View>
+                }
                 <View
                     style={{
                         flex: 1,
@@ -191,19 +268,48 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         height: 50,
                         paddingTop: 30
                     }}>
+                    {
+                        loggedIn ? <TouchableOpacity
+                            onPress={() => setShowSavePassword(!showSavePassword)}
+                            style={{
+                                backgroundColor: 'white',
+                                overflow: 'hidden',
+                                height: 35,
+                                marginTop: 15,
+                                width: '100%', justifyContent: 'center', flexDirection: 'row',
+                            }}>
+                            <Text style={{
+                                textAlign: 'center',
+                                lineHeight: 35,
+                                color: '#202025',
+                                fontSize: 12,
+                                backgroundColor: '#f4f4f6',
+                                paddingHorizontal: 25,
+                                fontFamily: 'inter',
+                                height: 35,
+                                width: 150,
+                                borderRadius: 15,
+                            }}>
+                                {
+                                    showSavePassword ? 'BACK' : 'PASSWORD'
+                                }
+                            </Text>
+                        </TouchableOpacity> : <View style={{ height: 50 }} />
+                    }
                     <TouchableOpacity
                         onPress={() => handleSubmit()}
                         style={{
                             backgroundColor: 'white',
                             overflow: 'hidden',
                             height: 35,
+                            marginTop: 15,
                             width: '100%', justifyContent: 'center', flexDirection: 'row',
                         }}>
                         <Text style={{
                             textAlign: 'center',
                             lineHeight: 35,
                             color: 'white',
-                            fontSize: 14,
+                            fontSize: 12,
                             backgroundColor: '#3B64F8',
                             paddingHorizontal: 25,
                             fontFamily: 'inter',
@@ -211,7 +317,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             borderRadius: 15,
                             width: 150,
                         }}>
-                            {loggedIn ? 'SAVE CHANGES' : 'SIGN UP'}
+                            {loggedIn ? (showSavePassword ? 'UPDATE' : 'SAVE') : 'SIGN UP'}
                         </Text>
                     </TouchableOpacity>
                     {
@@ -229,7 +335,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 textAlign: 'center',
                                 lineHeight: 35,
                                 color: '#202025',
-                                fontSize: 14,
+                                fontSize: 12,
                                 backgroundColor: '#f4f4f6',
                                 paddingHorizontal: 25,
                                 fontFamily: 'inter',
