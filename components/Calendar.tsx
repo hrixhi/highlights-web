@@ -268,7 +268,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 events={events}
                                 startAccessor="start"
                                 endAccessor="end"
-                                style={{ height: 500, fontFamily: 'roboto', color: '#202025' }}
+                                style={{ height: 500, fontFamily: 'overpass', color: '#202025' }}
                             />
                         </View>
                 }

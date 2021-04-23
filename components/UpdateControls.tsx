@@ -25,6 +25,7 @@ import Quiz from './Quiz';
 import { CountdownCircleTimer } from 'react-countdown-circle-timer';
 import TeXToSVG from "tex-to-svg";
 import EquationEditor from "equation-editor-react";
+import WebView from 'react-native-webview';
 
 const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -1108,7 +1109,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     }
                     <View style={{
                         width: '100%',
-                        minHeight: 475,
+                        minHeight: 500,
                         backgroundColor: 'white'
                     }}
                     >
@@ -1168,26 +1169,28 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     )
                                     : (imported ?
                                         (
-                                            type === 'pptx' ?
-                                                <iframe src={'https://view.officeapps.live.com/op/embed.aspx?src=' + url} width='100%' height='600px' frameBorder='0' />
-                                                : <FileViewer
-                                                    unsupportedComponent={() =>
-                                                        <View style={{ backgroundColor: 'white', flex: 1 }}>
-                                                            <Text style={{ width: '100%', color: '#a2a2aa', fontSize: 25, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
-                                                                <Ionicons name='document-outline' size={50} color='#a2a2aa' />
-                                                            </Text>
-                                                        </View>
-                                                    }
-                                                    style={{ fontFamily: 'overpass' }}
-                                                    fileType={type}
-                                                    filePath={url}
-                                                    key={Math.random()}
-                                                    errorComponent={<View>
-                                                        <Text>
-                                                            ERROR!!
-                                        </Text>
-                                                    </View>}
-                                                    onError={(e: any) => console.log(e)} />
+                                            <WebView source={{ uri: "http://docs.google.com/gview?embedded=true&url=" + url }} />
+                                            //     type === 'pptx' ?
+                                            //     type === 'pptx' ?
+                                            //         <iframe src={'https://view.officeapps.live.com/op/embed.aspx?src=' + url} width='100%' height='600px' frameBorder='0' />
+                                            //         : <FileViewer
+                                            //             unsupportedComponent={() =>
+                                            //                 <View style={{ backgroundColor: 'white', flex: 1 }}>
+                                            //                     <Text style={{ width: '100%', color: '#a2a2aa', fontSize: 25, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                            //                         <Ionicons name='document-outline' size={50} color='#a2a2aa' />
+                                            //                     </Text>
+                                            //                 </View>
+                                            //             }
+                                            //             style={{ fontFamily: 'overpass' }}
+                                            //             fileType={type}
+                                            //             filePath={url}
+                                            //             key={Math.random()}
+                                            //             errorComponent={<View>
+                                            //                 <Text>
+                                            //                     ERROR!!
+                                            // </Text>
+                                            //             </View>}
+                                            //             onError={(e: any) => console.log(e)} />
                                         )
                                         :
                                         <RichEditor
@@ -1235,26 +1238,27 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         {showOriginal ? null
                             : (submissionImported ?
                                 (
-                                    submissionType === 'pptx' ?
-                                        <iframe src={'https://view.officeapps.live.com/op/embed.aspx?src=' + submissionUrl} width='100%' height='600px' frameBorder='0' />
-                                        : <FileViewer
-                                            unsupportedComponent={() =>
-                                                <View style={{ backgroundColor: 'white', flex: 1 }}>
-                                                    <Text style={{ width: '100%', color: '#a2a2aa', fontSize: 25, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
-                                                        <Ionicons name='document-outline' size={50} color='#a2a2aa' />
-                                                    </Text>
-                                                </View>
-                                            }
-                                            key={submissionUrl + submissionType}
-                                            style={{ fontFamily: 'overpass' }}
-                                            fileType={submissionType}
-                                            filePath={submissionUrl}
-                                            errorComponent={<View>
-                                                <Text>
-                                                    ERROR!!
-                                        </Text>
-                                            </View>}
-                                            onError={(e: any) => console.log(e)} />
+                                    <WebView source={{ uri: "http://docs.google.com/gview?embedded=true&url=" + submissionUrl }} />
+                                    // submissionType === 'pptx' ?
+                                    //     <iframe src={'https://view.officeapps.live.com/op/embed.aspx?src=' + submissionUrl} width='100%' height='600px' frameBorder='0' />
+                                    //     : <FileViewer
+                                    //         unsupportedComponent={() =>
+                                    //             <View style={{ backgroundColor: 'white', flex: 1 }}>
+                                    //                 <Text style={{ width: '100%', color: '#a2a2aa', fontSize: 25, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                    //                     <Ionicons name='document-outline' size={50} color='#a2a2aa' />
+                                    //                 </Text>
+                                    //             </View>
+                                    //         }
+                                    //         key={submissionUrl + submissionType}
+                                    //         style={{ fontFamily: 'overpass' }}
+                                    //         fileType={submissionType}
+                                    //         filePath={submissionUrl}
+                                    //         errorComponent={<View>
+                                    //             <Text>
+                                    //                 ERROR!!
+                                    //     </Text>
+                                    //         </View>}
+                                    //         onError={(e: any) => console.log(e)} />
                                 )
                                 :
                                 <RichEditor
