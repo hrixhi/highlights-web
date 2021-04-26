@@ -1169,7 +1169,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     )
                                     : (imported ?
                                         (
-                                            <WebView source={{ uri: "http://docs.google.com/gview?embedded=true&url=" + url }} />
+                                            <WebView source={{ uri: "https://docs.google.com/gview?embedded=true&url=" + url }} />
                                             //     type === 'pptx' ?
                                             //     type === 'pptx' ?
                                             //         <iframe src={'https://view.officeapps.live.com/op/embed.aspx?src=' + url} width='100%' height='600px' frameBorder='0' />
@@ -1238,7 +1238,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         {showOriginal ? null
                             : (submissionImported ?
                                 (
-                                    <WebView source={{ uri: "http://docs.google.com/gview?embedded=true&url=" + submissionUrl }} />
+                                    <WebView source={{ uri: "https://docs.google.com/gview?embedded=true&url=" + submissionUrl }} />
                                     // submissionType === 'pptx' ?
                                     //     <iframe src={'https://view.officeapps.live.com/op/embed.aspx?src=' + submissionUrl} width='100%' height='600px' frameBorder='0' />
                                     //     : <FileViewer

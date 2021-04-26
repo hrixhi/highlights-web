@@ -802,7 +802,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                         backgroundColor: 'white'
                                                     }}
                                                     >
-                                                        <WebView source={{ uri: "http://docs.google.com/gview?embedded=true&url=" + url }} />
+                                                        <WebView source={{ uri: "https://docs.google.com/gview?embedded=true&url=" + url }} />
                                                     </View>
                                                     // <iframe src={'https://view.officeapps.live.com/op/embed.aspx?src=' + url} width='100%' height='600px' frameBorder='0' />
                                                     // : <FileViewer

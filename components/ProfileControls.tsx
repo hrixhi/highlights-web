@@ -320,33 +320,39 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             {loggedIn ? (showSavePassword ? 'UPDATE' : 'SAVE') : 'SIGN UP'}
                         </Text>
                     </TouchableOpacity>
-                    {
-                        loggedIn ? <TouchableOpacity
-                            onPress={() => logout()}
-                            style={{
-                                backgroundColor: 'white',
-                                overflow: 'hidden',
-                                height: 35,
-                                marginTop: 15,
-                                width: '100%', justifyContent: 'center', flexDirection: 'row',
-                                marginBottom: 50
-                            }}>
-                            <Text style={{
-                                textAlign: 'center',
-                                lineHeight: 35,
-                                color: '#202025',
-                                fontSize: 12,
-                                backgroundColor: '#f4f4f6',
-                                paddingHorizontal: 25,
-                                fontFamily: 'inter',
-                                height: 35,
-                                width: 150,
-                                borderRadius: 15,
-                            }}>
-                                LOGOUT
-                  </Text>
-                        </TouchableOpacity> : <View style={{ height: 50 }} />
-                    }
+                    <TouchableOpacity
+                        onPress={() => {
+                            if (loggedIn) {
+                                logout()
+                            } else {
+                                window.location.reload()
+                            }
+                        }}
+                        style={{
+                            backgroundColor: 'white',
+                            overflow: 'hidden',
+                            height: 35,
+                            marginTop: 15,
+                            width: '100%', justifyContent: 'center', flexDirection: 'row',
+                            marginBottom: 100
+                        }}>
+                        <Text style={{
+                            textAlign: 'center',
+                            lineHeight: 35,
+                            color: '#202025',
+                            fontSize: 12,
+                            backgroundColor: '#f4f4f6',
+                            paddingHorizontal: 25,
+                            fontFamily: 'inter',
+                            height: 35,
+                            width: 150,
+                            borderRadius: 15,
+                        }}>
+                            {
+                                loggedIn ? 'LOGOUT' : 'LOGIN'
+                            }
+                        </Text>
+                    </TouchableOpacity>
                 </View>
             </ScrollView>
         </View>

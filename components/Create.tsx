@@ -816,7 +816,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 />
                                 : (imported ?
                                     (
-                                        <WebView source={{ uri: "http://docs.google.com/gview?embedded=true&url=" + url }} />
+                                        <WebView source={{ uri: "https://docs.google.com/gview?embedded=true&url=" + url }} />
                                         // type === 'pptx' ?
                                         //     <iframe src={'https://view.officeapps.live.com/op/embed.aspx?src=' + url} width='100%' height='600px' frameBorder='0' />
                                         //     : <FileViewer
