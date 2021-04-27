@@ -109,17 +109,6 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
                                     <TouchableOpacity
                                         style={{ marginRight: 15 }}
-                                        onPress={() => props.openDiscussion()}>
-                                        <Text style={styles.channelText}>
-                                            <Ionicons name='chatbubble-ellipses-outline' size={19} color={'#a2a2aa'} />
-                                        </Text>
-                                        {
-                                            unreadDiscussionThreads !== 0 ?
-                                                <View style={styles.badge} /> : null
-                                        }
-                                    </TouchableOpacity>
-                                    <TouchableOpacity
-                                        style={{ marginRight: 15 }}
                                         onPress={() => props.openMeeting()}>
                                         <Text style={styles.channelText}>
                                             <Ionicons name='videocam-outline' size={21} color={'#a2a2aa'} />
@@ -133,10 +122,21 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         style={{ marginRight: 15 }}
                                         onPress={() => props.openSubscribers()}>
                                         <Text style={styles.channelText}>
-                                            <Ionicons name='people-circle-outline' size={21} color={'#a2a2aa'} />
+                                            <Ionicons name='mail-outline' size={21} color={'#a2a2aa'} />
                                         </Text>
                                         {
                                             unreadMessages !== 0 ?
+                                                <View style={styles.badge} /> : null
+                                        }
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        style={{ marginRight: 15 }}
+                                        onPress={() => props.openDiscussion()}>
+                                        <Text style={styles.channelText}>
+                                            <Ionicons name='chatbubble-ellipses-outline' size={19} color={'#a2a2aa'} />
+                                        </Text>
+                                        {
+                                            unreadDiscussionThreads !== 0 ?
                                                 <View style={styles.badge} /> : null
                                         }
                                     </TouchableOpacity>

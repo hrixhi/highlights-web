@@ -96,7 +96,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         style={styles.center}
                     >
                         <Text style={{ textAlign: 'center', lineHeight: 30 }}>
-                            <Ionicons name='radio-outline' size={21} color={'#202025'} />
+                            <Ionicons name='book-outline' size={21} color={'#202025'} />
                         </Text>
                     </TouchableOpacity>
                 </View>
