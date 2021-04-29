@@ -816,29 +816,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 />
                                 : (imported ?
                                     (
-                                        <WebView source={{ uri: "https://docs.google.com/gview?embedded=true&url=" + url }} />
-                                        // type === 'pptx' ?
-                                        //     <iframe src={'https://view.officeapps.live.com/op/embed.aspx?src=' + url} width='100%' height='600px' frameBorder='0' />
-                                        //     : <FileViewer
-                                        //         unsupportedComponent={() =>
-                                        //             <View style={{ backgroundColor: 'white', flex: 1 }}>
-                                        //                 <Text style={{ width: '100%', color: '#a2a2aa', fontSize: 25, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
-                                        //                     <Ionicons name='document-outline' size={50} color='#a2a2aa' />
-                                        //                 </Text>
-                                        //             </View>
-                                        //         }
-                                        //         style={{
-                                        //             fontFamily: 'overpass'
-                                        //         }}
-                                        //         fileType={type}
-                                        //         key={url + type}
-                                        //         filePath={url}
-                                        //         errorComponent={<View>
-                                        //             <Text>
-                                        //                 ERROR!!
-                                        //         </Text>
-                                        //         </View>}
-                                        //         onError={(e: any) => console.log(e)} />
+                                        <WebView source={{ uri: "https://docs.google.com/gview?embedded=true&url=" + url }} style={{ flex: 1 }} />
                                     )
                                     :
                                     <RichEditor
