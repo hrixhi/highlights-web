@@ -11,8 +11,7 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     const unparsedCues: any[] = JSON.parse(JSON.stringify(props.cues))
     const [cues] = useState<any[]>(unparsedCues.reverse())
-    const [numCards] = useState(5)
-    const [filterChoice, setFilterChoice] = useState(props.channelFilterChoice)
+    const [filterChoice] = useState(props.channelFilterChoice)
     let filteredCues: any[] = []
     if (filterChoice === 'All') {
         filteredCues = cues
@@ -22,10 +21,6 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
         })
     }
     const styles = styleObject(props.channelId)
-    const pages = new Array(Math.ceil(filteredCues.length / numCards))
-    for (let i = 0; i < pages.length; i++) {
-        pages[i] = 0
-    }
 
     const noChannelCuesAlert = useCallback(async () => {
         if (props.channelId && props.channelId !== '') {
@@ -104,10 +99,11 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
     );
 }
 
-export default React.memo(CardsList, (prev, next) => {
-    return _.isEqual(prev.cues, next.cues)
-})
+export default CardsList;
 
+// export default React.memo(CardsList, (prev, next) => {
+//     return _.isEqual(prev.cues, next.cues)
+// })
 
 const styleObject = (channelId: any) => {
     return StyleSheet.create({

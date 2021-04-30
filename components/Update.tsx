@@ -183,7 +183,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 borderTopRightRadius: 30,
                                 borderTopLeftRadius: 30
                             }}
-                            key={JSON.stringify(threads) + JSON.stringify(threads.length) + JSON.stringify(props.reopenUpdateWindow)}
+                            key={JSON.stringify(threads) + JSON.stringify(threads.length)}
                             vertical={false}
                             from={0}
                             minDistanceForAction={0.1}
@@ -212,7 +212,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 }}
                             >
                                 <UpdateControls
-                                    key={props.reopenUpdateWindow}
+                                    // key={props.reopenUpdateWindow}
                                     channelId={props.channelId}
                                     customCategories={props.customCategories}
                                     cue={props.cue}

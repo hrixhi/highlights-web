@@ -31,9 +31,11 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   const [customCategories, setCustomCategories] = useState<any[]>([])
   const [subscriptions, setSubscriptions] = useState<any[]>([])
   const [cues, setCues] = useState<any>({})
+  // not required
   const [sleepFrom, setSleepFrom] = useState(new Date())
   const [sleepTo, setSleepTo] = useState(new Date())
   const [randomShuffleFrequency, setRandomShuffleFrequency] = useState('1-D')
+  // end of not required
   const [reLoading, setReLoading] = useState(true)
   const [fadeAnimation] = useState(new Animated.Value(0))
   const sheetRef: any = useRef(null);
@@ -91,6 +93,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     }
   }, [randomShuffleFrequency, sleepTo, sleepFrom])
 
+  // imp
   const loadNewChannelCues = useCallback(async () => {
     let user = await AsyncStorage.getItem('user')
     const unparsedCues = await AsyncStorage.getItem('cues')
@@ -312,7 +315,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     );
   }, [channelId, filterChoice])
 
-  const loadData = useCallback(async () => {
+  // imp
+  const loadData = useCallback(async (saveData?: boolean) => {
     setReLoading(true)
     try {
 
@@ -462,10 +466,10 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
       if (u) {
         const parsedUser = JSON.parse(u)
         if (parsedUser.email) {
-          if (!init) {
-            loadDataFromCloud()
+          if (init || saveData) {
+            await saveDataInCloud()
           } else {
-            saveDataInCloud()
+            loadDataFromCloud()
           }
         }
       }
@@ -511,6 +515,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     }).catch(e => console.log(e))
   }, [email, password])
 
+  // imp
   const loadDataFromCloud = useCallback(async () => {
     const u = await AsyncStorage.getItem('user')
     if (u) {
@@ -525,9 +530,11 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
       }).then(async (res) => {
         const u = res.data.user.findById;
         if (u) {
+          // not used
           setRandomShuffleFrequency(u.randomShuffleFrequency)
           setSleepFrom(new Date(u.sleepFrom))
           setSleepTo(new Date(u.sleepTo))
+          // end of use
           await AsyncStorage.setItem('cueDraft', u.currentDraft)
           delete u.currentDraft;
           delete u.__typename
@@ -554,13 +561,17 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             }
           })
           const custom: any = {}
-          allCues['local'].map((item: any) => {
-            if (item.customCategory !== "") {
-              if (!custom[item.customCategory]) {
-                custom[item.customCategory] = 0
+          if (allCues["local"]) {
+            allCues['local'].map((item: any) => {
+              if (item.customCategory !== "") {
+                if (!custom[item.customCategory]) {
+                  custom[item.customCategory] = 0
+                }
               }
-            }
-          })
+            })
+          } else {
+            allCues["local"] = []
+          }
           const customC: any[] = []
           Object.keys(custom).map((item) => {
             customC.push(item)
@@ -590,6 +601,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     }
   }, [])
 
+  // imp
   const saveDataInCloud = useCallback(async () => {
 
     const draft = await AsyncStorage.getItem('cueDraft')
@@ -659,20 +671,52 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         userId: parsedUser._id,
         cues: allCues
       }
-    }).then(async res => {
+    }).then(res => {
       if (res.data.cue.saveCuesToCloud) {
-        res.data.cue.saveCuesToCloud.map((item: any) => {
-          parsedCues["local"][Number(item.oldId)]._id = item.newId
+        const newIds: any = res.data.cue.saveCuesToCloud;
+        const updatedCuesArray: any[] = []
+        allCues.map((c: any) => {
+          const id = c._id;
+          const updatedItem = newIds.find((i: any) => {
+            return id.toString().trim() === i.oldId.toString().trim()
+          })
+          if (updatedItem) {
+            updatedCuesArray.push({
+              ...c,
+              _id: updatedItem.newId
+            })
+          } else {
+            updatedCuesArray.push(c)
+          }
         })
-        const updatedCues = JSON.stringify(parsedCues)
-        await AsyncStorage.setItem('cues', updatedCues)
-        if (res.data.cue.saveCuesToCloud.length !== 0) {
-          setCues(parsedCues)
-          setReopenUpdateWindow(Math.random())
+        const updatedCuesObj: any = {};
+        updatedCuesArray.map((c: any) => {
+          if (c.channelId && c.channelId !== '') {
+            if (updatedCuesObj[c.channelId]) {
+              updatedCuesObj[c.channelId].push(c)
+            } else {
+              updatedCuesObj[c.channelId] = [c]
+            }
+          } else {
+            if (updatedCuesObj["local"]) {
+              updatedCuesObj["local"].push(c)
+            } else {
+              updatedCuesObj["local"] = [c]
+            }
+          }
+        });
+        (async () => {
+          const updatedCues = JSON.stringify(updatedCuesObj)
+          await AsyncStorage.setItem('cues', updatedCues)
+        })();
+        if (newIds.length !== 0) {
+          setCues(updatedCuesObj)
+          // updateCuesHelper(updatedCuesObj)
+          // setReopenUpdateWindow(Math.random())
         }
       }
     }).catch(err => console.log(err))
-  }, [])
+  }, [cues, setCues])
 
   useEffect(() => {
     // Called when component is loaded
@@ -735,7 +779,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     if (u) {
       const user = JSON.parse(u)
       if (user.email) {
-        saveDataInCloud()
+        await saveDataInCloud()
       }
     }
   }, [])
@@ -762,7 +806,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   }, [email])
 
   const closeModal = useCallback(() => {
-    setInit(true)
     setCueId('')
     setModalType('')
     setCreatedBy('')
@@ -773,7 +816,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         setChannelId('')
       }
     }
-    loadData()
+    loadData(true)
   }, [sheetRef, fadeAnimation, modalType, filterChoice])
 
   const modalContent = modalType === 'Menu' ? <Menu
@@ -840,7 +883,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     (
                       modalType === 'Profile' ? <Profile
                         closeModal={() => closeModal()}
-                        saveDataInCloud={() => saveDataInCloud()}
+                        saveDataInCloud={async () => await saveDataInCloud()}
                         reOpenProfile={() => {
                           setModalType('')
                           openModal('Profile')
@@ -1100,13 +1143,9 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         width: Dimensions.get('window').width < 1024 ? Dimensions.get('window').width : Dimensions.get('window').width * 0.3,
         height: Dimensions.get('window').height,
         flexDirection: 'column',
-        // change
-        // backgroundColor: '#f4f4f6',
         backgroundColor: '#fff',
         borderRightColor: '#f4f4f6',
         borderRightWidth: 2,
-        // paddingTop: 30,
-        // paddingLeft: Dimensions.get('window').width < 1024 ? 0 : 30
       }}>
         <TopBar
           key={JSON.stringify(channelFilterChoice) + JSON.stringify(filteredCues) + JSON.stringify(modalType)}

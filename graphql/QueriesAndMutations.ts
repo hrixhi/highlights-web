@@ -235,6 +235,13 @@ mutation($email: String!) {
     }
 }
 `
+export const deleteCue = gql`
+mutation($cueId: String!) {
+    cue {
+        delete(cueId: $cueId) 
+    }
+}
+`
 /**
  * ALL
  * QUERIES
