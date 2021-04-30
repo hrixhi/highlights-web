@@ -42,7 +42,7 @@ function getDefaultIcon() {
     return texts;
 }
 7. In the react-native-pell-rich-editor, also access editor.js. Find 'Arial', and before that, add overpass.
-8. Access the node_modules/react-big-calendar folder and replace its css file with the datetime css file in extra-files folder. 
-9. Access the node_modules/react-datetime folder and replace its css file with the calendar css file in the extra-files folder.
+8. Access the node_modules/react-big-calendar folder and replace its css file with the calendar css file in extra-files folder. 
+9. Access the node_modules/react-datetime folder and replace its css file with the datetime css file in the extra-files folder.
 10. Run: expo start
 11. Click on run in browser.
