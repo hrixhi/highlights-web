@@ -1,5 +1,7 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
-import { StyleSheet, Animated, ActivityIndicator, Dimensions, TextInput, Image } from 'react-native';
+import { StyleSheet, Animated, ActivityIndicator, Dimensions, 
+  Image } from 'react-native';
+import { TextInput } from "../components/CustomTextInput";
 import Alert from '../components/Alert'
 import BottomBar from '../components/BottomBar';
 import CardsList from '../components/CardsList';
@@ -53,6 +55,48 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   const [password, setPassword] = useState('')
   const [reopenUpdateWindow, setReopenUpdateWindow] = useState(Math.random())
   const [showForgotPassword, setShowForgotPassword] = useState(false)
+
+  const [isSubmitDisabled, setIsSubmitDisabled] = useState(true)
+
+  // Login Validation
+  const [emailValidError, setEmailValidError] = useState("");
+
+  useEffect(() => {
+    if (email && !validateEmail(email.toString().toLowerCase())) {
+      setEmailValidError("Enter a valid email.");
+      return;
+    }
+
+    setEmailValidError("");
+  }, [email]);
+
+  //   Validate Submit on Login state change
+  useEffect(() => {
+
+    // Login
+    if (
+      !showForgotPassword &&
+      email &&
+      password &&
+      !emailValidError 
+    ) {
+      setIsSubmitDisabled(false);
+      return;
+    }
+
+    // 
+    if (showForgotPassword && email && !emailValidError ) {
+      setIsSubmitDisabled(false);
+      return;
+    }
+
+    setIsSubmitDisabled(true);
+  }, [
+    showForgotPassword,
+    email,
+    password,   
+    emailValidError,
+  ]);
 
   const onDimensionsChange = useCallback(({ w, s }: any) => {
     // window.location.reload()
@@ -488,12 +532,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
   // Move to profile page
   const handleLogin = useCallback(() => {
-    if (email.toString().trim() === '' || password.toString().trim() === '') {
-      return
-    }
-    if (!validateEmail(email.toString().trim())) {
-      return
-    }
+    
     const server = fetchAPI('')
     server.query({
       query: login,
@@ -502,8 +541,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         password
       }
     }).then(async (r: any) => {
-      if (r.data.user.login) {
-        const u = r.data.user.login
+      if (r.data.user.login.user && !r.data.user.login.error) {
+        const u = r.data.user.login.user
         if (u.__typename) {
           delete u.__typename
         }
@@ -511,6 +550,9 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         await AsyncStorage.setItem('user', sU)
         setShowLoginWindow(false)
         loadDataFromCloud()
+      } else {
+        const { error } = r.data.user.login;
+        Alert(error);
       }
     }).catch(e => console.log(e))
   }, [email, password])
@@ -786,11 +828,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
   const forgotPassword = useCallback(() => {
 
-    if (email === '' || !validateEmail(email)) {
-      Alert('Enter a valid email.')
-      return;
-    }
-
     const server = fetchAPI('')
     server.mutate({
       mutation: resetPassword,
@@ -801,6 +838,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
       if (res.data && res.data.user.resetPassword) {
         Alert('We have emailed you a new password!')
         setShowForgotPassword(false)
+      } else {
+        Alert("Invalid credentials. Ensure email is correct.");
       }
     })
   }, [email])
@@ -1019,10 +1058,10 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 </Text>
               <TextInput
                 value={email}
-                style={styles.input}
                 placeholder={''}
                 onChangeText={(val: any) => setEmail(val)}
                 placeholderTextColor={'#a2a2aa'}
+                errorText={emailValidError}
               />
               {
                 showForgotPassword ? null :
@@ -1033,7 +1072,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     <TextInput
                       secureTextEntry={true}
                       value={password}
-                      style={styles.input}
                       placeholder={''}
                       onChangeText={(val: any) => setPassword(val)}
                       placeholderTextColor={'#a2a2aa'}
@@ -1050,6 +1088,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                   paddingTop: 40
                 }}>
                 <TouchableOpacity
+                  disabled={isSubmitDisabled}
                   onPress={() => {
                     if (showForgotPassword) {
                       forgotPassword()
