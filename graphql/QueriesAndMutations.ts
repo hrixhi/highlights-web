@@ -723,5 +723,12 @@ export const isSubInactive = gql`
     subscription {
       isSubInactive(userId: $userId, channelId: $channelId)
     }
-  }
-`;
+}
+`
+export const getMeetingLink = gql`
+query($channelId: String!, $userId: String!) {
+    channel {
+        getMeetingLink(channelId: $channelId, userId: $userId)
+    }
+}
+`
