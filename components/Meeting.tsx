@@ -9,6 +9,7 @@ import { createScheduledMeeting, editMeeting, getAttendances, getMeetingLink, ge
 import { Ionicons } from '@expo/vector-icons';
 import SubscriberCard from './SubscriberCard';
 import { ScrollView } from 'react-native-gesture-handler';
+import Alert from '../components/Alert'
 
 const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -241,10 +242,12 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                             </View> : null
                     }
                     <TouchableOpacity
-                        disabled={!meetingOn}
                         onPress={() => {
-                            window.open(meetingLink, '_blank');
-                            // Linking.openURL(meetingLink)
+                            if (meetingOn) {
+                                window.open(meetingLink, '_blank');
+                            } else {
+                                Alert("Classroom not in session.", "You will be notified when initiated.")
+                            }
                         }}
                         style={{
                             backgroundColor: 'white',
