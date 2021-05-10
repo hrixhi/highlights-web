@@ -463,7 +463,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
             backgroundColor: "white",
             justifyContent: "center",
             display: "flex",
-            height: 50,
+            // height: 50,
             paddingTop: 30
           }}
         >
