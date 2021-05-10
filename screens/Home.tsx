@@ -1,6 +1,8 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
-import { StyleSheet, Animated, ActivityIndicator, Dimensions, 
-  Image } from 'react-native';
+import {
+  StyleSheet, Animated, ActivityIndicator, Dimensions,
+  Image
+} from 'react-native';
 import { TextInput } from "../components/CustomTextInput";
 import Alert from '../components/Alert'
 import BottomBar from '../components/BottomBar';
@@ -78,14 +80,14 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
       !showForgotPassword &&
       email &&
       password &&
-      !emailValidError 
+      !emailValidError
     ) {
       setIsSubmitDisabled(false);
       return;
     }
 
     // 
-    if (showForgotPassword && email && !emailValidError ) {
+    if (showForgotPassword && email && !emailValidError) {
       setIsSubmitDisabled(false);
       return;
     }
@@ -94,7 +96,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   }, [
     showForgotPassword,
     email,
-    password,   
+    password,
     emailValidError,
   ]);
 
@@ -532,7 +534,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
   // Move to profile page
   const handleLogin = useCallback(() => {
-    
     const server = fetchAPI('')
     server.query({
       query: login,
@@ -657,7 +658,9 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     const sub: any = await AsyncStorage.getItem('subscriptions')
     const parsedSubscriptions = JSON.parse(sub)
 
+    const allCuesToSave: any[] = []
     const allCues: any[] = []
+
     if (parsedCues !== {}) {
       Object.keys(parsedCues).map((key) => {
         parsedCues[key].map((cue: any) => {
@@ -669,6 +672,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             gradeWeight: cue.submission ? cue.gradeWeight.toString() : undefined,
             endPlayAt: cue.endPlayAt && cue.endPlayAt !== '' ? (new Date(cue.endPlayAt)).toISOString() : '',
           }
+          allCuesToSave.push({ ...cueInput })
           // Deleting these because they should not be changed ...
           // but dont delete if it is the person who has made the cue 
           // -> because those channel Cue changes are going to be propagated
@@ -679,13 +683,12 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           // delete cueInput.gradeWeight;
           // delete cueInput.submission;
           delete cueInput.comment;
-
           delete cueInput.unreadThreads;
           // delete cueInput.createdBy;
           delete cueInput.original;
           delete cueInput.status;
           delete cueInput.channelName;
-          delete cueInput.__typename
+          delete cueInput.__typename;
           allCues.push(cueInput)
         })
       })
@@ -717,7 +720,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
       if (res.data.cue.saveCuesToCloud) {
         const newIds: any = res.data.cue.saveCuesToCloud;
         const updatedCuesArray: any[] = []
-        allCues.map((c: any) => {
+        allCuesToSave.map((c: any) => { // allCues -> problematic
           const id = c._id;
           const updatedItem = newIds.find((i: any) => {
             return id.toString().trim() === i.oldId.toString().trim()
@@ -981,6 +984,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     }
     return 0;
   })
+
   if (filterChoice === 'All') {
     filteredCues = cuesCopy.filter((item) => {
       return !item.channelId || item.channelId === ''
