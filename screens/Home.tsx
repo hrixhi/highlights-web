@@ -541,12 +541,15 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         password
       }
     }).then(async (r: any) => {
-      if (r.data.user.login.user && !r.data.user.login.error) {
+      if (r.data.user.login.user && r.data.user.login.token && !r.data.user.login.error) {
         const u = r.data.user.login.user
+        const token = r.data.user.login.token
+
         if (u.__typename) {
           delete u.__typename
         }
         const sU = JSON.stringify(u)
+        await AsyncStorage.setItem('jwt_token', token);
         await AsyncStorage.setItem('user', sU)
         setShowLoginWindow(false)
         loadDataFromCloud()

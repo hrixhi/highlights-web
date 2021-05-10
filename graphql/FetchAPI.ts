@@ -1,4 +1,5 @@
 import ApolloClient from "apollo-boost";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const fetchAPI = (userId: any) => {
   const uri = "https://api.cuesapp.co/";
@@ -8,6 +9,32 @@ export const fetchAPI = (userId: any) => {
     uri,
     headers: {
       userId
-    }
+    },
+    fetchOptions: {
+      credentials: 'include'
+    },
+    request: async (operation) => {
+      const token = await AsyncStorage.getItem('jwt_token')
+      operation.setContext({
+        headers: {
+          authorization: token || ""
+        }
+      });
+    },
+    onError: ({ graphQLErrors, networkError }) => {
+      if (graphQLErrors) {
+        for (let err of graphQLErrors) {
+          if (err.message === "NOT_AUTHENTICATED") {
+            AsyncStorage.clear();
+            window.location.reload();
+            return;
+          }
+        }
+      }
+      if (networkError) {
+        // logoutUser();
+        console.log(networkError)
+      }
+    },
   });
 };

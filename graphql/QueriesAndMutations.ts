@@ -535,6 +535,7 @@ export const login = gql`
           _id
         }
         error
+        token
       }
     }
   }
