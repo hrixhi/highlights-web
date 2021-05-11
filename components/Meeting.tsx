@@ -10,6 +10,7 @@ import { Ionicons } from '@expo/vector-icons';
 import SubscriberCard from './SubscriberCard';
 import { ScrollView } from 'react-native-gesture-handler';
 import Alert from '../components/Alert'
+import moment from 'moment';
 
 const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -27,6 +28,19 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
     const [showAttendances, setShowAttendances] = useState(false)
     const [attendances, setAttendances] = useState<any[]>([])
     const [meetingLink, setMeetingLink] = useState('')
+
+    const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
+
+    useEffect(() => {
+        if (end > start) {
+            setIsSubmitDisabled(false);
+            return;
+        } 
+
+        setIsSubmitDisabled(true);
+
+    }, [start, end])
+
 
     const loadAttendances = useCallback((dateId) => {
         const server = fetchAPI('')
@@ -157,6 +171,11 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
     }, [meetingOn, props.channelId])
 
     const handleCreate = useCallback(() => {
+
+        if (start < new Date()) {
+            Alert('Meeting must be set in future');
+        }
+
         const server = fetchAPI('')
         server.mutate({
             mutation: createScheduledMeeting,
@@ -382,6 +401,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                             marginTop: 9
                                         }}
                                         onPress={() => handleCreate()}
+                                        disabled={isSubmitDisabled}
                                     >
                                         <Ionicons name='add-outline' size={21} color='#202025' />
                                     </TouchableOpacity>
@@ -402,7 +422,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                         hideChevron={true}
                                         fadeAnimation={props.fadeAnimation}
                                         subscriber={{
-                                            displayName: (new Date(date.start)).toString() + ' to ' + (new Date(date.end)).toString(),
+                                            displayName: moment(new Date(date.start)).format('MMMM Do YYYY, h:mm a') + ' to ' + moment(new Date(date.end)).format('MMMM Do YYYY, h:mm a'),
                                             fullName: 'scheduled'
                                         }}
                                         onPress={() => { }}
@@ -483,7 +503,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                                         chat={!props.cueId}
                                                         fadeAnimation={props.fadeAnimation}
                                                         subscriber={{
-                                                            displayName: (new Date(date.start)).toString() + ' to ' + (new Date(date.end)).toString(),
+                                                            displayName: moment(new Date(date.start)).format('MMMM Do YYYY, h:mm a') + ' to ' + moment(new Date(date.end)).format('MMMM Do YYYY, h:mm a'),
                                                             fullName: 'ended'
                                                         }}
                                                         onPress={() => {
