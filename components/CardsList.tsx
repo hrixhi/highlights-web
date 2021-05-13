@@ -56,7 +56,7 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     height: Dimensions.get('window').width < 1024 ? '100%' : (((Dimensions.get('window').height) * 0.7) - 2),
                 }}
             >
-                <View style={styles.marginSmall} />
+                {/* <View style={styles.marginSmall} /> */}
                 {
                     filteredCues.map((cue: any, index: number) => {
                         return <View style={{ height: '20%', paddingBottom: 12 }} key={index}>
@@ -93,7 +93,7 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         </View>
                     })
                 }
-                <View style={styles.marginSmall} />
+                {/* <View style={styles.marginSmall} /> */}
             </ScrollView>
         </Animated.View >
     );

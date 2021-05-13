@@ -9,15 +9,12 @@ import { fetchAPI } from '../graphql/FetchAPI';
 import { createCue, createQuiz, getChannelCategories, getChannels, getSharedWith } from '../graphql/QueriesAndMutations';
 import Datetime from 'react-datetime';
 import * as ImagePicker from 'expo-image-picker';
-import * as ImageManipulator from 'expo-image-manipulator';
-import * as FileSystem from 'expo-file-system';
 import {
     actions,
     RichEditor,
     RichToolbar,
 } from "react-native-pell-rich-editor";
 import FileUpload from './UploadFiles';
-import FileViewer from 'react-file-viewer';
 import Alert from '../components/Alert'
 import Select from 'react-select';
 import QuizCreate from './QuizCreate';

@@ -155,10 +155,18 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         </Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity
-                                        style={{ marginRight: 5 }}
+                                        style={{ marginRight: 15 }}
                                         onPress={() => props.deleteChannel()}>
                                         <Text style={styles.channelText}>
                                             <Ionicons name='trash-outline' size={21} color={'#a2a2aa'} />
+                                        </Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        onPress={() => props.openWalkthrough()}
+                                        style={{ marginRight: 5 }}
+                                    >
+                                        <Text style={styles.channelText}>
+                                            <Ionicons name='help-circle-outline' size={21} color={'#a2a2aa'} />
                                         </Text>
                                     </TouchableOpacity>
                                 </View> :
@@ -187,7 +195,7 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     style={{ width: '100%', height: '55%', paddingTop: 10 }}>
                     <ScrollView style={{
                         width: '98.5%',
-                        paddingTop: 5
+                        paddingTop: 10
                     }} horizontal={true}
                         showsHorizontalScrollIndicator={false}
                     >
@@ -198,7 +206,7 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 style={{ color: '#a2a2aa', lineHeight: 20 }}
                             >
                                 All
-                                            </Text>
+                            </Text>
                         </TouchableOpacity>
                         {
                             channelCategories.map((category: string) => {

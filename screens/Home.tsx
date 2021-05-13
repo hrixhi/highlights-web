@@ -1042,7 +1042,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 resizeMode={'contain'}
               />
             </View>
-            <Text style={{ fontSize: 30, color: '#202025', fontFamily: 'inter', paddingBottom: 15, maxWidth: 400, textAlign: 'center' }}>
+            <Text style={{ fontSize: 25, color: '#202025', fontFamily: 'inter', paddingBottom: 15, maxWidth: 400, textAlign: 'center' }}>
               {
                 showForgotPassword ? '' : 'Login'
               }
