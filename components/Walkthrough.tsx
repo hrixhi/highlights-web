@@ -4,6 +4,7 @@ import { Text, View } from './Themed';
 import Swiper from 'react-native-web-swiper'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import YoutubePlayer from "react-native-youtube-iframe";
+import MessengerCustomerChat from 'react-messenger-customer-chat';
 
 const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -169,6 +170,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     </View>
                 </Swiper>
             </Animated.View>
+            <MessengerCustomerChat pageId="109965671259610" appId="746023139417168" themeColor="#3B64F8" />
         </View >
     );
 }

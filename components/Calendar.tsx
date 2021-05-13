@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { ActivityIndicator, Animated, Dimensions, StyleSheet, TextInput, ScrollView } from 'react-native';
+import { ActivityIndicator, Animated, Dimensions, StyleSheet, ScrollView } from 'react-native';
+import { TextInput } from './CustomTextInput';
 import Alert from './Alert'
 import { Text, View, TouchableOpacity } from './Themed';
 import { fetchAPI } from '../graphql/FetchAPI';
@@ -28,7 +29,18 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     const [title, setTitle] = useState('')
     const [start, setStart] = useState(new Date())
-    const [end, setEnd] = useState(new Date())
+    const [end, setEnd] = useState(new Date(start.getTime() + 1000 * 60 * 60))
+    const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
+
+    useEffect(() => {
+        if (title !== "" && end > start) {
+            setIsSubmitDisabled(false);
+            return;
+        } 
+
+        setIsSubmitDisabled(true);
+
+    }, [title, start, end])
 
     const onDateClick = useCallback((title, date, dateId) => {
         Alert(
@@ -36,7 +48,9 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
             date,
             [
                 {
-                    text: "Cancel", style: "cancel"
+                    text: "Cancel", style: "cancel", onPress: () => {
+                        return;
+                    }
                 },
                 {
                     text: "Delete", onPress: async () => {
@@ -60,6 +74,12 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     }, [])
 
     const handleCreate = useCallback(async () => {
+
+        if (start < new Date()) {
+            Alert('Event must be set in the future.')
+            return;
+        }
+
         const u = await AsyncStorage.getItem('user')
         if (u) {
             const user = JSON.parse(u)
@@ -199,10 +219,10 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 <View style={{ width: Dimensions.get('window').width < 768 ? '100%' : '30%' }}>
                                     <TextInput
                                         value={title}
-                                        style={styles.input}
                                         placeholder={'Event'}
                                         onChangeText={val => setTitle(val)}
                                         placeholderTextColor={'#a2a2aa'}
+                                        required={true}
                                     />
                                 </View>
                                 <View style={{
@@ -250,6 +270,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             marginTop: 9
                                         }}
                                         onPress={() => handleCreate()}
+                                        disabled={isSubmitDisabled}
                                     >
                                         <Ionicons name='add-outline' size={21} color='#202025' />
                                     </TouchableOpacity>
@@ -259,9 +280,9 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 onSelectEvent={(e: any) => {
                                     console.log(e.dateId)
                                     if (e.dateId !== 'channel') {
-                                        onDateClick(e.title, e.start.toString() + ' to ' + e.end.toString(), e.dateId)
+                                        onDateClick(e.title, moment(new Date(e.start)).format('MMMM Do YYYY, h:mm a') + ' to ' + moment(new Date(e.end)).format('MMMM Do YYYY, h:mm a'), e.dateId)
                                     } else {
-                                        Alert(e.title, e.start.toString() + ' to ' + e.end.toString())
+                                        Alert(e.title, moment(new Date(e.start)).format('MMMM Do YYYY, h:mm a') + ' to ' + moment(new Date(e.end)).format('MMMM Do YYYY, h:mm a'))
                                     }
                                 }}
                                 localizer={localizer}
