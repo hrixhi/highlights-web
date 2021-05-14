@@ -30,7 +30,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
         }).start();
     }, [])
 
-    const headings: any[] = ["1. Introduction", "2. Working with Content", "3. Meetings", "4. Text-based Communication", "5. Testing & Grading", "6. Miscellaneous"]
+    const headings: any[] = ["Introduction", "Working with Content", "Meetings", "Text-based Communication", "Testing & Grading", "Miscellaneous"]
     const windowHeight = Dimensions.get('window').width < 1024 ? Dimensions.get('window').height - 30 : Dimensions.get('window').height;
 
     return (
@@ -55,21 +55,31 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 20 }}>
                     {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
                 </Text>
+                <View style={{ backgroundColor: 'white', flexDirection: 'row', paddingBottom: 50 }}>
+                    <Text
+                        style={{
+                            paddingTop: 25,
+                            flex: 1,
+                            textAlign: 'center',
+                            fontSize: 25,
+                            color: "#202025",
+                            fontFamily: "inter",
+                        }}
+                        ellipsizeMode="tail">
+                        Walkthrough
+                    </Text>
+                </View>
                 <View
                     style={{
+                        paddingHorizontal: Dimensions.get('window').width < 768 ? 0 : 100,
                         width: '100%',
-                        height: 80,
+                        height: 50,
                         backgroundColor: 'white',
                         flexDirection: 'row'
                     }}>
                     <View style={{ flex: 1 }}>
                         <Text
-                            style={{
-                                flex: 1,
-                                fontSize: 23,
-                                color: "#202025",
-                                fontFamily: "inter", paddingLeft: 10
-                            }}
+                            style={{ color: '#202025', fontSize: 17, flex: 1, lineHeight: 25 }}
                         >
                             {headings[index]}
                         </Text>
@@ -182,7 +192,6 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         height: '100%',
         width: Dimensions.get('window').width < 1024 ? '100%' : '80%',
-        paddingHorizontal: Dimensions.get('window').width < 1024 ? 20 : 0,
         alignSelf: 'center',
         borderTopRightRadius: 30,
         borderTopLeftRadius: 30,
