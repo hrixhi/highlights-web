@@ -1882,7 +1882,18 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 {
                                     !isOwner && (props.cue.channelId && props.cue.channelId !== '') && submission ?
                                         <TouchableOpacity
-                                            disabled={!userSetupComplete || currentDate >= deadline || props.cue.graded || (isQuiz && isQuizTimed && !initiatedAt) || (isQuiz && (!props.cue.submittedAt || props.cue.submittedAt === ''))}
+                                            disabled={
+                                                // if user has not signed up
+                                                !userSetupComplete ||
+                                                // deadline has passed & its not an initiated timed quiz
+                                                ((currentDate >= deadline) && !(isQuiz && isQuizTimed && initiatedAt)) ||
+                                                // graded
+                                                props.cue.graded ||
+                                                // if timed quiz not initiated
+                                                (isQuiz && isQuizTimed && !initiatedAt) ||
+                                                // if quiz submitted already
+                                                (isQuiz && (props.cue.submittedAt && props.cue.submittedAt !== ''))
+                                            }
                                             onPress={() => handleSubmit()}
                                             style={{ backgroundColor: 'white', borderRadius: 15, }}>
                                             <Text style={{
@@ -1900,7 +1911,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                 {
                                                     userSetupComplete ? (
                                                         ((props.cue.submittedAt && props.cue.submittedAt !== '') || submitted
-                                                            ? (props.cue.graded ? 'GRADED' : (isQuiz ? 'SUBMITTED' : 'RESUBMIT'))
+                                                            ? (props.cue.graded ? 'GRADED' : (isQuiz ? 'SUBMITTED' : ((currentDate < deadline ? 'RE-SUBMIT' : 'SUBMISSIONS ENDED'))))
                                                             : (currentDate < deadline ? 'SUBMIT' : 'SUBMISSIONS ENDED'))
                                                     ) : 'SIGN UP TO SUBMIT'
                                                 }
