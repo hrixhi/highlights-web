@@ -27,6 +27,7 @@ import { validateEmail } from '../helpers/emailCheck';
 import Grades from '../components/Grades';
 import Calendar from '../components/Calendar';
 import Meeting from '../components/Meeting';
+import { PreferredLanguageText } from '../helpers/LanguageContext';
 
 const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -63,9 +64,23 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   // Login Validation
   const [emailValidError, setEmailValidError] = useState("");
 
+  const enterValidEmailError = PreferredLanguageText('enterValidEmail')
+  const alreadyUnsubscribedAlert = PreferredLanguageText('alreadyUnsubscribed')
+  const checkConnectionAlert = PreferredLanguageText('checkConnection')
+  const somethingWentWrongAlert = PreferredLanguageText('somethingWentWrongAlert')
+  const eraseContentLeaveChannelAlert = PreferredLanguageText('eraseContentLeaveChannel')
+  const thisActionWillIrreversiblyAlert = PreferredLanguageText('thisActionWillIrreversibly')
+  const eraseContentAndUnsubscrbeAlert = PreferredLanguageText('eraseContentAndUnsubscrbe')
+  const weHaveEmailedPasswordAlert = PreferredLanguageText('weHaveEmailedPassword')
+  const invalidCredentialsAlert = PreferredLanguageText('invalidCredentials')
+  const unableToRefreshCuesAlert = PreferredLanguageText('unableToRefreshCues')
+  const leaveChannelAlert = PreferredLanguageText('leaveChannel')
+  const areYouSureUnsubscribeAlert = PreferredLanguageText('areYouSureUnsubscribe')
+  const keepContentAndUnsubscribeAlert = PreferredLanguageText('keepContentAndUnsubscribe')
+
   useEffect(() => {
     if (email && !validateEmail(email.toString().toLowerCase())) {
-      setEmailValidError("Enter a valid email.");
+      setEmailValidError(enterValidEmailError);
       return;
     }
 
@@ -214,7 +229,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           }
         })
         .catch(err => {
-          Alert("Unable to refresh channel cues.", "Check connection.")
+          Alert(unableToRefreshCuesAlert, checkConnectionAlert)
           const custom: any = {}
           setCues(allCues)
           if (allCues['local']) {
@@ -269,14 +284,14 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
   const unsubscribeChannel = useCallback(() => {
     Alert(
-      "Leave Channel",
-      "Are you sure you want to unsubscribe from " + filterChoice + "?",
+      leaveChannelAlert,
+      areYouSureUnsubscribeAlert + filterChoice + "?",
       [
         {
           text: "Cancel", style: "cancel"
         },
         {
-          text: "Keep Content & Unsubscribe", onPress: async () => {
+          text: keepContentAndUnsubscribeAlert, onPress: async () => {
             let user = await AsyncStorage.getItem('user')
             if (user) {
               const parsedUser = JSON.parse(user)
@@ -295,10 +310,10 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                   closeModal()
                   loadData()
                 } else {
-                  Alert("Already unsubscribed.")
+                  Alert(alreadyUnsubscribedAlert)
                 }
               }).catch(err => {
-                Alert("Something went wrong.", "Check connection.")
+                Alert(somethingWentWrongAlert, checkConnectionAlert)
               })
             }
           }
@@ -309,14 +324,14 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
   const deleteChannel = useCallback(() => {
     Alert(
-      "Erase content and leave channel?",
-      "This action will irreversibly remove shared content, comunication and any notes directly taken inside " + filterChoice + ".",
+      eraseContentLeaveChannelAlert,
+      thisActionWillIrreversiblyAlert + filterChoice + ".",
       [
         {
           text: "Cancel", style: "cancel"
         },
         {
-          text: "Erase Content & Unsubscribe", onPress: async () => {
+          text: eraseContentAndUnsubscrbeAlert, onPress: async () => {
             let user = await AsyncStorage.getItem('user')
             if (user) {
               const parsedUser = JSON.parse(user)
@@ -349,10 +364,10 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                   closeModal()
                   loadData()
                 } else {
-                  Alert("Already unsubscribed.")
+                  Alert(alreadyUnsubscribedAlert)
                 }
               }).catch(err => {
-                Alert("Something went wrong.", "Check connection.")
+                Alert(somethingWentWrongAlert, checkConnectionAlert)
               })
             }
           }
@@ -839,10 +854,10 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
       }
     }).then(res => {
       if (res.data && res.data.user.resetPassword) {
-        Alert('We have emailed you a new password!')
+        Alert(weHaveEmailedPasswordAlert)
         setShowForgotPassword(false)
       } else {
-        Alert("Invalid credentials. Ensure email is correct.");
+        Alert(invalidCredentialsAlert);
       }
     })
   }, [email])
@@ -1007,6 +1022,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     return null;
   }
 
+  const alertText = PreferredLanguageText('savedLocally');
+
   return (
     <View style={styles.container}>
       {
@@ -1044,12 +1061,12 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             </View>
             <Text style={{ fontSize: 30, color: '#202025', fontFamily: 'inter', paddingBottom: 15, maxWidth: 400, textAlign: 'center' }}>
               {
-                showForgotPassword ? '' : 'Login'
+                showForgotPassword ? '' : PreferredLanguageText('login')
               }
             </Text>
             <Text style={{ fontSize: 18, color: '#a2a2aa', fontFamily: 'overpass', paddingBottom: 25, maxWidth: 400, textAlign: 'center' }}>
               {
-                showForgotPassword ? 'We\'ll send you a temporary password.' : 'Continue where you left off.'
+                showForgotPassword ? PreferredLanguageText('temporaryPassword') : PreferredLanguageText('continueLeftOff')
               }
             </Text>
             <View style={{
@@ -1058,7 +1075,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               justifyContent: 'center'
             }}>
               <Text style={{ color: '#202025', fontSize: 14, paddingBottom: 5, paddingTop: 10 }}>
-                Email
+                {PreferredLanguageText('email')}
                 </Text>
               <TextInput
                 value={email}
@@ -1071,7 +1088,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 showForgotPassword ? null :
                   <View>
                     <Text style={{ color: '#202025', fontSize: 14, paddingBottom: 5 }}>
-                      Password
+                      {PreferredLanguageText('password')}
                     </Text>
                     <TextInput
                       secureTextEntry={true}
@@ -1118,9 +1135,10 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     height: 35,
                     width: 180,
                     borderRadius: 15,
+                    textTransform: 'uppercase'
                   }}>
                     {
-                      showForgotPassword ? 'RESET' : 'LOGIN'
+                      showForgotPassword ? PreferredLanguageText('reset') : PreferredLanguageText('login')
                     }
                   </Text>
                 </TouchableOpacity>
@@ -1144,16 +1162,17 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     height: 35,
                     width: 180,
                     borderRadius: 15,
+                    textTransform: 'uppercase'
                   }}>
                     {
-                      showForgotPassword ? 'BACK' : 'FORGOT PASSWORD'
+                      showForgotPassword ? PreferredLanguageText('back') : PreferredLanguageText('forgotPassword')
                     }
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => {
                     setShowLoginWindow(false)
-                    Alert("Your changes will be saved locally but not in the cloud.")
+                    Alert(alertText);
                   }}
                   style={{
                     backgroundColor: 'white',
@@ -1173,8 +1192,9 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     height: 35,
                     width: 180,
                     borderRadius: 15,
+                    textTransform: 'uppercase'
                   }}>
-                    SKIP FOR NOW
+                    {PreferredLanguageText('skipForNow')}
                   </Text>
                 </TouchableOpacity>
               </View>

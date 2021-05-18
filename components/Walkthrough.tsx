@@ -5,6 +5,7 @@ import Swiper from 'react-native-web-swiper'
 import { Ionicons } from '@expo/vector-icons';
 import * as Linking from 'expo-linking';
 import MessengerCustomerChat from 'react-messenger-customer-chat';
+import { LanguageSelect } from "../helpers/LanguageContext";
 
 const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -39,6 +40,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 20 }}>
                     {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
                 </Text>
+          
                 <Swiper
                     vertical={false}
                     from={0}
@@ -188,6 +190,9 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         </Text>
                     </View>
                 </Swiper>
+                <View style={{ width: '100%', display: 'flex', alignItems: 'flex-start'}}>
+                    <LanguageSelect />
+                </View>
             </Animated.View>
             <MessengerCustomerChat pageId="109965671259610" appId="746023139417168" themeColor="#3B64F8" />
         </View >
@@ -205,5 +210,6 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         borderTopRightRadius: 30,
         borderTopLeftRadius: 30,
+        zIndex: -1,
     },
 });

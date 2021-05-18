@@ -9,6 +9,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { RichEditor } from 'react-native-pell-rich-editor';
 import FileViewer from 'react-file-viewer';
 import FileUpload from './UploadFiles';
+import { PreferredLanguageText } from '../helpers/LanguageContext';
 
 const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -30,6 +31,11 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
     const [title, setTitle] = useState('')
 
     const [showImportOptions, setShowImportOptions] = useState(false)
+
+    const unableToPostAlert = PreferredLanguageText('unableToPost');
+    const somethingWentWrongAlert = PreferredLanguageText('somethingWentWrong');
+    const checkConnectionAlert = PreferredLanguageText('checkConnection');
+
 
     useEffect(() => {
         if (message[0] === '{' && message[message.length - 1] === '}') {
@@ -97,10 +103,10 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
             if (res.data.message.create) {
                 props.back()
             } else {
-                Alert("Unable to post.", "Check connection.")
+                Alert(unableToPostAlert, checkConnectionAlert)
             }
         }).catch(err => {
-            Alert("Something went wrong.", "Check connection.")
+            Alert(somethingWentWrongAlert, checkConnectionAlert)
         })
     }, [props.users, message, props.channelId, imported, type, title, url])
 
@@ -139,10 +145,10 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
             if (res.data.thread.writeMessage) {
                 props.back()
             } else {
-                Alert("Unable to post.", "Check connection.")
+                Alert(unableToPostAlert, checkConnectionAlert)
             }
         }).catch(err => {
-            Alert("Something went wrong.", "Check connection.")
+            Alert(somethingWentWrongAlert, checkConnectionAlert)
         })
 
     }, [message, customCategory, isPrivate, anonymous, cueId, channelId, parentId, props.back, imported, type, title, url])
@@ -306,7 +312,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 <View style={{ width: '33.33%', backgroundColor: 'white' }}>
                                     <View style={{ width: '100%', paddingTop: 40, paddingBottom: 10, backgroundColor: 'white' }}>
                                         <Text style={{ fontSize: 14, color: '#202025' }}>
-                                            Category
+                                            {PreferredLanguageText('category')}
                                 </Text>
                                     </View>
                                     <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white' }}>
@@ -331,7 +337,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                 setCustomCategory('')
                                                             }}>
                                                             <Text style={{ color: '#a2a2aa', lineHeight: 20 }}>
-                                                                None
+                                                                {PreferredLanguageText('none')}
                                                     </Text>
                                                         </TouchableOpacity>
                                                         {
@@ -378,7 +384,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                         <View style={{ width: '33.33%', backgroundColor: 'white' }}>
                                             <View style={{ width: '100%', paddingTop: 40, paddingBottom: 10, backgroundColor: 'white' }}>
                                                 <Text style={{ fontSize: 14, color: '#202025' }}>
-                                                    Private
+                                                    {PreferredLanguageText('private')}
                                         </Text>
                                             </View>
                                             <Switch
@@ -397,7 +403,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         <View style={{ width: '33.33%', backgroundColor: 'white' }}>
                             <View style={{ width: '100%', paddingTop: 40, paddingBottom: 10, backgroundColor: 'white' }}>
                                 <Text style={{ fontSize: 14, color: '#202025' }}>
-                                    Anonymous
+                                    {PreferredLanguageText('anonymous')}
                     </Text>
                             </View>
                             <Switch
@@ -446,9 +452,10 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             paddingHorizontal: 25,
                             overflow: 'hidden',
                             fontFamily: 'inter',
-                            height: 35
+                            height: 35,
+                            textTransform: 'uppercase'
                         }}>
-                            {props.users ? 'SEND' : (parentId ? 'REPLY' : 'POST')}
+                            {props.users ? PreferredLanguageText('send') : (parentId ? PreferredLanguageText('reply') : PreferredLanguageText('post'))}
                         </Text>
                     </TouchableOpacity>
                 </View>
