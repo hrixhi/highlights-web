@@ -319,7 +319,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
       >
         <Text
           style={{
-            fontSize: 30,
+            fontSize: 25,
             color: "#202025",
             fontFamily: "inter",
             paddingBottom: 15,
