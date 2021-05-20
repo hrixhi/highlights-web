@@ -1,7 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { StyleSheet, TextInput } from 'react-native';
+import { StyleSheet } from 'react-native';
+import { TextInput } from "./CustomTextInput";
 import { Text, TouchableOpacity, View } from '../components/Themed';
 import { Ionicons } from '@expo/vector-icons';
+import { PreferredLanguageText } from '../helpers/LanguageContext';
 
 
 const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
@@ -26,11 +28,12 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     {index + 1}.
                             </Text>
                             </View>
-                            <View style={{ flexDirection: 'row' }}>
+                            <View style={{ flexDirection: 'row', width: '95%' }}>
+                                <View style={{ width: '50%'}}>
                                 <TextInput
                                     value={problem.question}
-                                    style={styles.input}
-                                    placeholder={'Problem ' + (index + 1).toString()}
+                                    // style={styles.input}
+                                    placeholder={PreferredLanguageText('problem') + (index + 1).toString()}
                                     onChangeText={val => {
                                         const newProbs = [...problems];
                                         newProbs[index].question = val;
@@ -38,12 +41,16 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                         props.setProblems(newProbs)
                                     }}
                                     placeholderTextColor={'#a2a2aa'}
+                                    hasMultipleLines={true}
                                 />
-                                <View style={{ flex: 1 }} />
+                                </View>
+                                
+                                {/* <View style={{ flex: 1 }} /> */}
+                                <View style={{ width: '50%'}}>
                                 <TextInput
                                     value={problem.points}
-                                    style={styles.input}
-                                    placeholder={'Enter points'}
+                                    // style={styles.input}
+                                    placeholder={PreferredLanguageText('enterPoints')}
                                     onChangeText={val => {
                                         const newProbs = [...problems];
                                         newProbs[index].points = val;
@@ -52,6 +59,8 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     }}
                                     placeholderTextColor={'#a2a2aa'}
                                 />
+                                </View>
+                                
                             </View>
                             <View style={{ paddingTop: 15, paddingLeft: 10 }}>
                                 <Ionicons
@@ -83,8 +92,8 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     </View>
                                     <TextInput
                                         value={option.option}
-                                        style={styles.input}
-                                        placeholder={'Option ' + (i + 1).toString()}
+                                        // style={styles.input}
+                                        placeholder={PreferredLanguageText('option') + (i + 1).toString()}
                                         onChangeText={val => {
                                             const newProbs = [...problems];
                                             newProbs[index].options[i].option = val;
@@ -138,8 +147,9 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 height: 35,
                                 width: 150,
                                 borderRadius: 15,
+                                textTransform: 'uppercase'
                             }}>
-                                ADD CHOICE
+                                {PreferredLanguageText('addChoice')}
                             </Text>
                         </TouchableOpacity>
                     </View>
@@ -171,8 +181,9 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         height: 35,
                         width: 200,
                         borderRadius: 15,
+                        textTransform: 'uppercase'
                     }}>
-                        ADD PROBLEM
+                        {PreferredLanguageText('addProblem')}
                   </Text>
                 </TouchableOpacity>
             </View>

@@ -11,6 +11,7 @@ import NewMessage from './NewMessage';
 import ThreadReplyCard from './ThreadReplyCard';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Collapse } from 'react-collapse';
+import { PreferredLanguageText } from '../helpers/LanguageContext';
 
 
 const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
@@ -45,6 +46,11 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
         })
     }
 
+    const unableToLoadThreadAlert = PreferredLanguageText('unableToLoadThread')
+    const checkConnectionAlert = PreferredLanguageText('checkConnection')
+    const somethingWentWrongAlert = PreferredLanguageText('somethingWentWrong');
+    
+
     const loadCueDiscussions = useCallback(async (tId) => {
         const u = await AsyncStorage.getItem('user')
         if (u) {
@@ -64,7 +70,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     setLoading(false)
                 })
                 .catch(err => {
-                    Alert("Unable to load thread.", "Check connection.")
+                    Alert(unableToLoadThreadAlert, checkConnectionAlert)
                     setLoading(false)
                 })
             server.mutate({
@@ -107,9 +113,9 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
             if (res.data && res.data.thread.delete) {
                 props.reload()
             } else {
-                Alert("Something went wrong.")
+                Alert(somethingWentWrongAlert)
             }
-        }).catch(e => Alert("Something went wrong."))
+        }).catch(e => Alert(somethingWentWrongAlert))
     }, [isOwner])
 
     if (showPost) {
@@ -183,7 +189,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 ? <Text
                                     ellipsizeMode="tail"
                                     style={{ color: '#a2a2aa', fontSize: 17, flex: 1, lineHeight: 25 }}>
-                                    Discussion
+                                    {PreferredLanguageText('discussion')}
                                 </Text>
                                 : <TouchableOpacity
                                     onPress={() => setShowComments(!showComments)}
@@ -196,7 +202,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                     <Text style={{
                                         color: '#a2a2aa', fontSize: 17, paddingRight: 10
                                     }}>
-                                        Comments
+                                        {PreferredLanguageText('comments')}
                                 </Text>
                                     <Ionicons size={17} name={showComments ? 'caret-down-circle-outline' : 'caret-forward-circle-outline'} color='#a2a2aa' />
                                 </TouchableOpacity>
@@ -229,7 +235,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         <View style={{ backgroundColor: 'white', flex: 1 }}>
                             <Text style={{ width: '100%', color: '#a2a2aa', fontSize: 25, paddingTop: 100, paddingBottom: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                                 {
-                                    !props.cueId ? 'No posts.' : 'No comments.'
+                                    !props.cueId ? PreferredLanguageText('noPosts') : PreferredLanguageText('noComments')
                                 }
                             </Text>
                         </View>
@@ -303,7 +309,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                             setShowPost(false)
                                                             setThreadId('')
                                                         }}
-                                                        placeholder='Reply...'
+                                                        placeholder={`${PreferredLanguageText('reply')}...`}
                                                     />
                                                 </View>
                                             </ScrollView>
@@ -339,7 +345,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                                                 lineHeight: 20,
                                                                             }}
                                                                         >
-                                                                            All
+                                                                            {PreferredLanguageText('all')}
                                                                     </Text>
                                                                     </TouchableOpacity>
                                                             }

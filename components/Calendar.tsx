@@ -12,6 +12,7 @@ import moment from 'moment'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import { htmlStringParser } from '../helpers/HTMLParser';
 import { Ionicons } from '@expo/vector-icons';
+import { PreferredLanguageText } from '../helpers/LanguageContext';
 
 const localizer = momentLocalizer(moment)
 
@@ -174,7 +175,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 <Text
                     ellipsizeMode="tail"
                     style={{ color: '#a2a2aa', fontSize: 17, flex: 1, lineHeight: 25, paddingHorizontal: 20, }}>
-                    Planner
+                    {PreferredLanguageText('planner')}
                                 </Text>
             </View>
             <ScrollView style={{
@@ -219,7 +220,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 <View style={{ width: Dimensions.get('window').width < 768 ? '100%' : '30%' }}>
                                     <TextInput
                                         value={title}
-                                        placeholder={'Event'}
+                                        placeholder={PreferredLanguageText('event')}
                                         onChangeText={val => setTitle(val)}
                                         placeholderTextColor={'#a2a2aa'}
                                         required={true}
@@ -232,7 +233,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     marginLeft: Dimensions.get('window').width < 768 ? 0 : 10
                                 }}>
                                     <Text style={styles.text}>
-                                        Start
+                                        {PreferredLanguageText('start')}
                                     </Text>
                                     <Datetime
                                         value={start}
@@ -249,7 +250,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     marginLeft: Dimensions.get('window').width < 768 ? 0 : 10
                                 }}>
                                     <Text style={styles.text}>
-                                        End
+                                        {PreferredLanguageText('end')}
                                     </Text>
                                     <Datetime
                                         value={end}

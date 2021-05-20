@@ -22,6 +22,7 @@ import DurationPicker from 'react-duration-picker'
 import TeXToSVG from "tex-to-svg";
 import EquationEditor from "equation-editor-react";
 import WebView from 'react-native-webview';
+import { PreferredLanguageText } from "../helpers/LanguageContext";
 
 const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -68,6 +69,24 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const [equation, setEquation] = useState('y = x + 1')
     const [showEquationEditor, setShowEquationEditor] = useState(false)
 
+    // Alerts
+
+    const enterOneProblemAlert = PreferredLanguageText('enterOneProblem')
+    const invalidDurationAlert = PreferredLanguageText('invalidDuration')
+    const fillMissingProblemsAlert = PreferredLanguageText('fillMissingProblems')
+    const enterNumericPointsAlert = PreferredLanguageText('enterNumericPoints')
+    const mustHaveOneOptionAlert = PreferredLanguageText('mustHaveOneOption')
+    const fillMissingOptionsAlert = PreferredLanguageText('fillMissingOptions')
+    const eachOptionOneCorrectAlert = PreferredLanguageText('eachOptionOneCorrect')
+    const noStudentSelectedAlert = PreferredLanguageText('noStudentSelected')
+    const selectWhoToShareAlert = PreferredLanguageText('selectWhoToShare')
+    const clearQuestionAlert = PreferredLanguageText('clearQuestion')
+    const cannotUndoAlert = PreferredLanguageText('cannotUndo')
+    const somethingWentWrongAlert = PreferredLanguageText('somethingWentWrong');
+    const checkConnectionAlert = PreferredLanguageText('checkConnection');
+    const enterContentAlert = PreferredLanguageText('enterContent');
+    const enterTitleAlert = PreferredLanguageText('enterTitle');
+
     const insertEquation = useCallback(() => {
         const SVGEquation = TeXToSVG(equation, { width: 100 }); // returns svg in html format
         RichText.current.insertHTML('<div><br/>' + SVGEquation + '<br/></div>');
@@ -93,32 +112,32 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const createNewQuiz = useCallback(() => {
         let error = false
         if (problems.length === 0) {
-            Alert("Enter at least one problem.")
+            Alert(enterOneProblemAlert)
             return;
         }
         if (timer) {
             if (duration.hours === 0 && duration.minutes === 0 && duration.seconds === 0) {
-                Alert("Invalid duration.")
+                Alert(invalidDurationAlert)
                 return;
             }
         }
         problems.map((problem) => {
             if (problem.question === '') {
-                Alert("Fill out missing problems.")
+                Alert(fillMissingProblemsAlert)
                 error = true;
             }
             if (problem.points === '' || Number.isNaN(Number(problem.points))) {
-                Alert("Enter numeric points for all questions.")
+                Alert(enterNumericPointsAlert)
                 error = true;
             }
             let optionFound = false
             if (problem.options.length === 0) {
-                Alert("Each problem must have at least one option.")
+                Alert(mustHaveOneOptionAlert)
                 error = true;
             }
             problem.options.map((option: any) => {
                 if (option.option === '') {
-                    Alert("Fill out missing options.")
+                    Alert(fillMissingOptionsAlert)
                     error = true;
                 }
                 if (option.isCorrect) {
@@ -126,7 +145,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 }
             })
             if (!optionFound) {
-                Alert("Each problem must have at least one correct answer.")
+                Alert(eachOptionOneCorrectAlert)
                 error = true;
             }
         })
@@ -345,12 +364,12 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const handleCreate = useCallback(async (quizId?: string) => {
 
         if (!quizId && (cue === null || cue.toString().trim() === '')) {
-            Alert("Enter content.")
+            Alert(enterContentAlert)
             return
         }
 
         if ((imported || isQuiz) && title === '') {
-            Alert("Enter title.")
+            Alert(enterTitleAlert)
             return
         }
 
@@ -419,7 +438,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             }
 
             if (selected.length === 0) {
-                Alert("No student selected!", "Select who to share with. Re-select channel to select all members.")
+                Alert(noStudentSelectedAlert, selectWhoToShareAlert)
                 return;
             }
 
@@ -465,7 +484,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     }
                 })
                 .catch(err => {
-                    Alert("Something went wrong.", "Check connection.")
+                    Alert(somethingWentWrongAlert, checkConnectionAlert)
                 })
         }
 
@@ -490,8 +509,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
     const clearAll = useCallback(() => {
         Alert(
-            "Clear?",
-            "This action cannot be undone.",
+            clearQuestionAlert,
+            cannotUndoAlert,
             [
                 {
                     text: "Cancel", style: "cancel"
@@ -543,6 +562,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         setDuration({ hours, minutes, seconds });
     }, [])
 
+    const quizAlert = PreferredLanguageText('quizzesCanOnly')
     const width = Dimensions.get('window').width;
     return (
         <View style={{
@@ -578,7 +598,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 textAlign: 'center'
                             }}
                         >
-                            New
+                            {PreferredLanguageText('new')}
                     </Text>
                     </View>
                     <TouchableOpacity
@@ -665,12 +685,13 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     fontSize: 11,
                                     lineHeight: 30,
                                     textAlign: 'right',
-                                    paddingRight: 20
+                                    paddingRight: 20,
+                                    textTransform: 'uppercase'
                                 }}
                                     onPress={() => setShowEquationEditor(!showEquationEditor)}
                                 >
                                     {
-                                        showEquationEditor ? 'HIDE' : 'FORMULA'
+                                        showEquationEditor ? PreferredLanguageText('hide') : PreferredLanguageText('formula')
                                     }
                                 </Text> : null
                         }
@@ -681,11 +702,12 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     fontSize: 11,
                                     lineHeight: 30,
                                     textAlign: 'right',
-                                    paddingRight: 20
+                                    paddingRight: 20,
+                                    textTransform: 'uppercase'
                                 }}
                                     onPress={() => setShowImportOptions(true)}
                                 >
-                                    IMPORT
+                                    {PreferredLanguageText('import')}
                                 </Text>
                         }
                         <Text style={{
@@ -693,18 +715,19 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             fontSize: 11,
                             lineHeight: 30,
                             textAlign: 'right',
-                            paddingRight: 10
+                            paddingRight: 10,
+                            textTransform: 'uppercase'
                         }}
                             onPress={() => {
                                 if (channelId !== '') {
                                     setIsQuiz(true)
                                     setSubmission(true)
                                 } else {
-                                    Alert("Quizzes can only be shared with channels created by you.", "Select a channel from the options below to share the quiz with and then try again.")
+                                    Alert(quizAlert)
                                 }
                             }}
                         >
-                            QUIZ
+                            {PreferredLanguageText('quiz')}
                         </Text>
                     </View>
                 </View>
@@ -759,7 +782,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     <TextInput
                                         value={title}
                                         style={styles.input}
-                                        placeholder={'Title'}
+                                        placeholder={PreferredLanguageText('title')}
                                         onChangeText={val => setTitle(val)}
                                         placeholderTextColor={'#a2a2aa'}
                                     />
@@ -853,7 +876,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         }}
                                         initialContentHTML={cue}
                                         onScroll={() => Keyboard.dismiss()}
-                                        placeholder={"Title"}
+                                        placeholder={PreferredLanguageText('title')}
                                         onChange={(text) => {
                                             const modifedText = text.split('&amp;').join('&')
                                             setCue(modifedText)
@@ -876,7 +899,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 <View style={{ width: width < 768 ? '100%' : '33.33%', borderRightWidth: 0, borderColor: '#f4f4f6' }}>
                                     <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
                                         <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
-                                            Channel
+                                            {PreferredLanguageText('channel')}
                                             {/* <Ionicons
                                                 name='school-outline' size={20} color={'#a2a2aa'} /> */}
                                         </Text>
@@ -902,7 +925,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     }}>
                                                     <Text style={{ lineHeight: 20, fontSize: 12, color: channelId === '' ? '#fff' : '#202025' }}>
                                                         {/* <Ionicons name='home-outline' size={15} /> */}
-                                                        My Cues
+                                                        {PreferredLanguageText('myCues')}
                                                     </Text>
                                                 </TouchableOpacity>
                                                 {
@@ -995,7 +1018,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
                                             <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
                                                 <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
-                                                    Submission Required
+                                                    {PreferredLanguageText('submissionRequired')}
                                                 </Text>
                                             </View>
                                             <View style={{ flexDirection: 'row' }}>
@@ -1027,7 +1050,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             backgroundColor: 'white',
                                                         }}>
                                                             <Text style={styles.text}>
-                                                                Deadline
+                                                                {PreferredLanguageText('deadline')}
                                                         </Text>
                                                             <Datetime
                                                                 value={deadline}
@@ -1047,7 +1070,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
                                             <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
                                                 <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
-                                                    Graded
+                                                    {PreferredLanguageText('graded')}
                                                 </Text>
                                             </View>
                                             <View style={{ flexDirection: 'row' }}>
@@ -1076,7 +1099,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             backgroundColor: 'white'
                                                         }}>
                                                             <Text style={styles.text}>
-                                                                Grade Weight {'\n'}(% of overall grade)
+                                                                Grade Weight {'\n'} {PreferredLanguageText('percentageOverall')}
                                                         </Text>
                                                             <TextInput
                                                                 value={gradeWeight}
@@ -1098,7 +1121,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 <View style={{ width: '100%', backgroundColor: 'white' }}>
                                     <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
                                         <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
-                                            Category
+                                            {PreferredLanguageText('category')}
                                         </Text>
                                     </View>
                                     <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white' }}>
@@ -1123,7 +1146,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                 setCustomCategory('')
                                                             }}>
                                                             <Text style={{ color: '#a2a2aa', lineHeight: 20, fontSize: 12 }}>
-                                                                None
+                                                                {PreferredLanguageText('none')}
                                                     </Text>
                                                         </TouchableOpacity>
                                                         {
@@ -1166,7 +1189,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             <View style={{ width: width < 768 ? '100%' : '33.33%', borderRightWidth: 0, borderColor: '#f4f4f6' }}>
                                 <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
                                     <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
-                                        Priority
+                                        {PreferredLanguageText('priority')}
                                 </Text>
                                 </View>
                                 <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white' }}>
@@ -1263,7 +1286,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         backgroundColor: 'white'
                                                     }}>
                                                         <Text style={styles.text}>
-                                                            Remind every
+                                                            {PreferredLanguageText('remindEvery')}
                                                     </Text>
                                                         <Picker
                                                             style={styles.picker}
@@ -1293,7 +1316,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         backgroundColor: 'white'
                                                     }}>
                                                         <Text style={styles.text}>
-                                                            Remind on
+                                                            {PreferredLanguageText('RemindOn')}
                                                             </Text>
                                                         <Datetime
                                                             value={endPlayAt}
@@ -1342,7 +1365,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         backgroundColor: 'white'
                                                     }}>
                                                         <Text style={styles.text}>
-                                                            Remind till
+                                                            {PreferredLanguageText('remindTill')}
                                                             </Text>
                                                         <Datetime
                                                             value={endPlayAt}
@@ -1393,9 +1416,10 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             paddingHorizontal: 25,
                                             fontFamily: 'inter',
                                             overflow: 'hidden',
-                                            height: 35
+                                            height: 35,
+                                            textTransform: 'uppercase'
                                         }}>
-                                            SAVE
+                                            {PreferredLanguageText('save')}
                                             {/* TO  <Ionicons name='home-outline' size={14} /> */}
                                         </Text> :
                                         <Text style={{
@@ -1408,9 +1432,10 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             paddingHorizontal: 25,
                                             fontFamily: 'inter',
                                             overflow: 'hidden',
-                                            height: 35
+                                            height: 35,
+                                            textTransform: 'uppercase'
                                         }}>
-                                            SHARE
+                                            {PreferredLanguageText('share')}
                                         </Text>
                                 }
                             </TouchableOpacity>

@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
-import { StyleSheet, ScrollView } from 'react-native';
+import { StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { View, Text } from './Themed';
 import _ from 'lodash'
-import { htmlStringParser } from '../helpers/HTMLParser';
+import moment from 'moment'
 import { PreferredLanguageText } from '../helpers/LanguageContext';
 
-const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
+const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
-    const unparsedScores: any[] = JSON.parse(JSON.stringify(props.scores))
-    const unparsedCues: any[] = JSON.parse(JSON.stringify(props.cues))
-    const [scores] = useState<any[]>(unparsedScores)
-    const [cues] = useState<any[]>(unparsedCues)
+    const unparsedPastMeetings: any[] = JSON.parse(JSON.stringify(props.pastMeetings))
+    const unparsedChannelAttendances: any[] = JSON.parse(JSON.stringify(props.channelAttendances))
+    const [pastMeetings] = useState<any[]>(unparsedPastMeetings)
+    const [channelAttendances] = useState<any[]>(unparsedChannelAttendances)    
 
     return (
         <View style={{
@@ -25,18 +26,31 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
             </Text>
             <View style={{ backgroundColor: 'white', flexDirection: 'row', paddingBottom: 25 }}>
-                <Text
-                    ellipsizeMode="tail"
-                    style={{ color: '#a2a2aa', fontSize: 17, flex: 1, lineHeight: 25 }}>
-                    {PreferredLanguageText('grades')}
-                </Text>
+                <TouchableOpacity
+                    key={Math.random()}
+                    style={{
+                        flex: 1,
+                        backgroundColor: 'white'
+                    }}
+                    onPress={() => {
+                        props.hideChannelAttendance()                  
+                    }}>
+                        <Text style={{
+                            width: '100%',
+                            fontSize: 17,
+                            color: '#a2a2aa'
+                        }}>
+                            <Ionicons name='chevron-back-outline' size={17} color={'#202025'} style={{ marginRight: 10 }} /> {PreferredLanguageText('attendance')}
+                        </Text>
+                </TouchableOpacity>
             </View>
             {
-                scores.length === 0 || cues.length === 0 ?
+                channelAttendances.length === 0 || pastMeetings.length === 0 ?
                     <View style={{ backgroundColor: 'white' }}>
                         <Text style={{ width: '100%', color: '#a2a2aa', fontSize: 25, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter' }}>
                             {
-                                cues.length === 0  ? PreferredLanguageText('noGraded') : PreferredLanguageText('noStudents')
+                                pastMeetings.length === 0  ? "No past meetings" : "No Students"
+                                // PreferredLanguageText('noGraded') : PreferredLanguageText('noStudents')
                             }
                         </Text>
                     </View>
@@ -46,7 +60,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         backgroundColor: 'white',
                         flex: 1
                     }}
-                        key={JSON.stringify(scores)}
+                        key={JSON.stringify(channelAttendances)}
                     >
                         <ScrollView
                             showsHorizontalScrollIndicator={false}
@@ -68,73 +82,51 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     <View style={styles.row} key={"-"}>
                                         <View style={styles.col} key={'0,0'} />
                                         {
-                                            cues.map((cue: any, col: number) => {
-                                                const { title } = htmlStringParser(cue.cue)
+                                            pastMeetings.map((meeting: any, col: number) => {
+                                                const { title, start } = meeting
                                                 return <View style={styles.col} key={col.toString()}>
                                                     <Text style={{ textAlign: 'center', fontSize: 13, color: '#202025', fontFamily: 'inter' }}>
                                                         {title}
                                                     </Text>
                                                     <Text style={{ textAlign: 'center', fontSize: 12, color: '#202025' }}>
-                                                        {cue.gradeWeight}%
+                                                        {moment(new Date(start)).format('MMMM Do YYYY, h:mm a')}
                                                     </Text>
                                                 </View>
                                             })
                                         }
-                                        {
-                                            cues.length === 0 ? null :
-                                                <View style={styles.col} key={'total'}>
-                                                    <Text style={{ textAlign: 'center', fontSize: 13, color: '#202025', fontFamily: 'inter' }}>
-                                                        {PreferredLanguageText('total')}
-                                                    </Text>
-                                                    <Text style={{ textAlign: 'center', fontSize: 12, color: '#202025' }}>
-                                                        100%
-                                                    </Text>
-                                                </View>
-                                        }
+
                                     </View>
                                     {
-                                        scores.map((score: any, row: number) => {
-
-                                            let totalPoints = 0;
-                                            let totalScore = 0;
-                                            score.scores.map((s: any) => {
-                                                if (s.graded) {
-                                                    totalPoints += (Number(s.gradeWeight) * Number(s.score))
-                                                    totalScore += Number(s.gradeWeight)
-                                                }
-                                            })
+                                        channelAttendances.map((channelAttendance: any, row: number) => {
 
                                             return <View style={styles.row} key={row}>
                                                 <View style={styles.col} >
                                                     <Text style={{ textAlign: 'left', fontSize: 13, color: '#202025', fontFamily: 'inter' }}>
-                                                        {score.fullName}
+                                                        {channelAttendance.fullName}
                                                     </Text>
                                                     <Text style={{ textAlign: 'left', fontSize: 12, color: '#202025' }}>
-                                                        {score.displayName}
+                                                        {channelAttendance.displayName}
                                                     </Text>
                                                 </View>
                                                 {
-                                                    cues.map((cue: any, col: number) => {
-                                                        const scoreObject = score.scores.find((s: any) => {
-                                                            return s.cueId.toString().trim() === cue._id.toString().trim()
+                                                    pastMeetings.map((meeting: any, col: number) => {
+                                                        const attendanceObject = channelAttendance.attendances.find((s: any) => {
+                                                            return s.dateId.toString().trim() === meeting.dateId.toString().trim()
                                                         })
                                                         return <View style={styles.col} key={row.toString() + '-' + col.toString()}>
                                                             <Text style={{ textAlign: 'center', fontSize: 12, color: '#a2a2aa' }}>
                                                                 {
-                                                                    scoreObject && scoreObject.graded ? scoreObject.score : '-'
+                                                                    attendanceObject ? "Present" : '-'
                                                                 }
                                                             </Text>
+                                                            {attendanceObject ? <Text style={{ textAlign: 'left', fontSize: 12, color: '#202025' }}>
+                                                                {PreferredLanguageText('joinedAt') + ' ' + moment(new Date(attendanceObject.joinedAt)).format('h:mm a')}
+                                                            </Text> : null}
+                                                            
                                                         </View>
                                                     })
                                                 }
-                                                {
-                                                    cues.length === 0 ? null :
-                                                        <View style={styles.col} key={'total'}>
-                                                            <Text style={{ textAlign: 'center', fontSize: 12, color: '#a2a2aa' }}>
-                                                                {totalScore !== 0 ? (totalPoints / totalScore).toFixed(2) : '0'}%
-                                                        </Text>
-                                                        </View>
-                                                }
+                                                
                                             </View>
                                         })
                                     }
@@ -147,10 +139,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
     );
 }
 
-export default React.memo(GradesList, (prev, next) => {
-    return _.isEqual(prev.grades, next.grades)
-})
-
+export default AttendanceList
 
 const styles = StyleSheet.create({
     row: { height: 80, borderRadius: 15, marginBottom: 20, flexDirection: 'row', overflow: 'hidden', backgroundColor: '#f4f4f6', },

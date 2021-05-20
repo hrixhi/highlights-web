@@ -6,6 +6,7 @@ import Card from './Card'
 import _ from 'lodash'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ScrollView } from 'react-native-gesture-handler';
+import { PreferredLanguageText } from '../helpers/LanguageContext';
 
 const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -22,6 +23,8 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
     }
     const styles = styleObject(props.channelId)
 
+    const clickPlusAndSelectAlert = PreferredLanguageText('clickPlusAndSelect');
+
     const noChannelCuesAlert = useCallback(async () => {
         if (props.channelId && props.channelId !== '') {
             const u = await AsyncStorage.getItem("user")
@@ -29,7 +32,7 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 const user = JSON.parse(u)
                 if (user._id.toString().trim() === props.createdBy.toString().trim()) {
                     if (cues.length === 0) {
-                        Alert("Click + and select this channel to broadcast a cue.")
+                        Alert(clickPlusAndSelectAlert)
                     }
                 }
             }
@@ -93,7 +96,12 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         </View>
                     })
                 }
-                {/* <View style={styles.marginSmall} /> */}
+                {
+                    filteredCues.length === 0 ? <Text style={{ fontSize: 25, color: '#a2a2aa', textAlign: 'center' }}>
+                        {PreferredLanguageText('noCuesCreated')}
+                    </Text> : null
+                }
+                <View style={styles.marginSmall} />
             </ScrollView>
         </Animated.View >
     );

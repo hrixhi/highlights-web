@@ -5,6 +5,7 @@ import Swiper from 'react-native-web-swiper'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import YoutubePlayer from "react-native-youtube-iframe";
 import MessengerCustomerChat from 'react-messenger-customer-chat';
+import { LanguageSelect } from "../helpers/LanguageContext";
 
 const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -179,6 +180,9 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         />
                     </View>
                 </Swiper>
+                <View style={{ width: '100%', display: 'flex', alignItems: 'flex-start'}}>
+                    <LanguageSelect />
+                </View>
             </Animated.View>
             <MessengerCustomerChat pageId="109965671259610" appId="746023139417168" themeColor="#3B64F8" />
         </View >
@@ -195,5 +199,6 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         borderTopRightRadius: 30,
         borderTopLeftRadius: 30,
+        zIndex: -1,
     },
 });
