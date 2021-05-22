@@ -630,7 +630,7 @@ export function LanguageSelect() {
 
         //   const selectedLanguage = languageOptions.filter(lang => lang.value === language)[0];
 
-        return (<DefaultView style={{ display: "flex", alignItems: "center", }}>
+        return (<DefaultView style={{ display: "flex" }}>
             {showLanguageDropdown ? <DefaultView style={styles.languageSelectContainer}>
                 <Picker
                     selectedValue={language}

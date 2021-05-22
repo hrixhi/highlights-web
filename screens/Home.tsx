@@ -27,7 +27,7 @@ import { validateEmail } from '../helpers/emailCheck';
 import Grades from '../components/Grades';
 import Calendar from '../components/Calendar';
 import Meeting from '../components/Meeting';
-import { PreferredLanguageText } from '../helpers/LanguageContext';
+import { PreferredLanguageText, LanguageSelect } from '../helpers/LanguageContext';
 
 const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -1198,6 +1198,9 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                   </Text>
                 </TouchableOpacity>
               </View>
+            </View>
+            <View style={{ display: "flex", justifyContent: "flex-start",  paddingLeft: 5, paddingBottom: 5, marginTop: 20 }}>
+                <LanguageSelect />
             </View>
           </View>
         </View> : null
