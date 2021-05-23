@@ -308,30 +308,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         });
         if (!result.cancelled) {
             RichText.current.insertImage(result.uri, 'border-radius: 8px')
-            // const dir = FileSystem.documentDirectory + 'images'
-            // const dirInfo = await FileSystem.getInfoAsync(dir);
-            // if (!dirInfo.exists) {
-            //     await FileSystem.makeDirectoryAsync(dir, { intermediates: true });
-            // }
-            // const fileName = Math.round((Math.random() * 100)).toString();
-            // FileSystem.copyAsync({
-            //     from: result.uri,
-            //     to: dir + '/' + fileName + '.jpg'
-            // }).then(r => {
-            //     ImageManipulator.manipulateAsync(
-            //         (dir + '/' + fileName + '.jpg'),
-            //         [],
-            //         { compress: 0.25, format: ImageManipulator.SaveFormat.JPEG, base64: true }
-            //     ).then(res => {
-            //         RichText.current.insertImage(
-            //             'data:image/jpeg;base64,' + res.base64, 'border-radius: 10px'
-            //         )
-            //     }).catch(err => {
-            //         Alert("Unable to load image.")
-            //     });
-            // }).catch((err) => {
-            //     Alert("Something went wrong.")
-            // })
         }
     }, [RichText, RichText.current])
 
@@ -351,30 +327,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         });
         if (!result.cancelled) {
             RichText.current.insertImage(result.uri, 'border-radius: 8px')
-            // const dir = FileSystem.documentDirectory + 'images'
-            // const dirInfo = await FileSystem.getInfoAsync(dir);
-            // if (!dirInfo.exists) {
-            //     await FileSystem.makeDirectoryAsync(dir, { intermediates: true });
-            // }
-            // const fileName = Math.round((Math.random() * 100)).toString();
-            // FileSystem.copyAsync({
-            //     from: result.uri,
-            //     to: dir + '/' + fileName + '.jpg'
-            // }).then((r) => {
-            //     ImageManipulator.manipulateAsync(
-            //         (dir + '/' + fileName + '.jpg'),
-            //         [],
-            //         { compress: 0.25, format: ImageManipulator.SaveFormat.JPEG, base64: true }
-            //     ).then(res => {
-            //         RichText.current.insertImage(
-            //             'data:image/jpeg;base64,' + res.base64, 'border-radius: 10px'
-            //         )
-            //     }).catch(err => {
-            //         Alert("Unable to load image.")
-            //     });
-            // }).catch((err) => {
-            //     Alert("Something went wrong.")
-            // })
         }
     }, [RichText, RichText.current])
 

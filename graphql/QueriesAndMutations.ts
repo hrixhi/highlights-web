@@ -235,9 +235,9 @@ export const markMessagesAsRead = gql`
   }
 `;
 export const createDate = gql`
-  mutation($title: String!, $userId: String!, $start: String!, $end: String!) {
+  mutation($title: String!, $userId: String!, $start: String!, $end: String!, $channelId: String) {
     date {
-      create(title: $title, start: $start, end: $end, userId: $userId)
+      create(title: $title, start: $start, end: $end, userId: $userId, channelId: $channelId)
     }
   }
 `;
@@ -343,6 +343,13 @@ export const deleteCue = gql`
     }
   }
 `;
+export const updateChannel = gql`
+mutation($channelId: String!, $password: String, $name: String!) {
+  channel {
+    update(channelId: $channelId, password: $password, name: $name)
+  }
+}
+`
 /**
  * ALL
  * QUERIES
@@ -748,5 +755,12 @@ query($channelId: String!, $userId: String!) {
     channel {
         getMeetingLink(channelId: $channelId, userId: $userId)
     }
+}
+`
+export const doesChannelNameExist = gql`
+query($name: String!) {
+  channel {
+    doesChannelNameExist(name: $name)
+  }
 }
 `

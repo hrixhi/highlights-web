@@ -1076,7 +1076,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             }}>
               <Text style={{ color: '#202025', fontSize: 14, paddingBottom: 5, paddingTop: 10 }}>
                 {PreferredLanguageText('email')}
-                </Text>
+              </Text>
               <TextInput
                 value={email}
                 placeholder={''}
@@ -1199,8 +1199,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 </TouchableOpacity>
               </View>
             </View>
-            <View style={{ display: "flex", justifyContent: "flex-start",  paddingLeft: 5, paddingBottom: 5, marginTop: 20 }}>
-                <LanguageSelect />
+            <View style={{ display: "flex", justifyContent: "flex-start", paddingLeft: 5, paddingBottom: 5, marginTop: 20 }}>
+              <LanguageSelect />
             </View>
           </View>
         </View> : null
@@ -1214,12 +1214,14 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         borderRightWidth: 2,
       }}>
         <TopBar
-          key={JSON.stringify(channelFilterChoice) + JSON.stringify(filteredCues) + JSON.stringify(modalType)}
+          key={JSON.stringify(channelFilterChoice) + JSON.stringify(filteredCues) + JSON.stringify(modalType) + JSON.stringify(filterChoice)}
           openChannels={() => openModal('Channels')}
           cues={filteredCues}
           filterChoice={filterChoice}
           channelId={channelId}
           channelFilterChoice={channelFilterChoice}
+          channelCreatedBy={channelCreatedBy}
+          loadData={() => loadData()}
           setChannelFilterChoice={(choice: any) => setChannelFilterChoice(choice)}
           openDiscussion={() => openModal('Discussion')}
           openSubscribers={() => openModal('Subscribers')}

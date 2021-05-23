@@ -233,32 +233,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             base64: true
         });
         if (!result.cancelled) {
-            RichText.current.insertImage(result.uri, 'border-radius: 8px')
-            // const dir = FileSystem.documentDirectory + 'images'
-            // const dirInfo = await FileSystem.getInfoAsync(dir);
-            // if (!dirInfo.exists) {
-            //     await FileSystem.makeDirectoryAsync(dir, { intermediates: true });
-            // }
-            // const fileName = Math.round((Math.random() * 100)).toString();
-            // FileSystem.copyAsync({
-            //     from: result.uri,
-            //     to: dir + '/' + fileName + '.jpg'
-            // }).then(r => {
-            //     ImageManipulator.manipulateAsync(
-            //         (dir + '/' + fileName + '.jpg'),
-            //         [],
-            //         { compress: 0.25, format: ImageManipulator.SaveFormat.JPEG, base64: true }
-            //     ).then(res => {
-            //         RichText.current.insertImage(
-            //             'data:image/jpeg;base64,' + res.base64, 'border-radius: 10px'
-            //         )
-            //         // setReloadEditorKey(Math.random())
-            //     }).catch(err => {
-            //         Alert("Unable to load image.")
-            //     });
-            // }).catch((err) => {
-            //     Alert("Something went wrong.")
-            // })
+            RichText.current.insertImage(result.uri, 'border-radius: 8px; max-width: 400px; width: 100%;')
         }
     }, [RichText, RichText.current])
 
@@ -280,31 +255,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         });
 
         if (!result.cancelled) {
-            RichText.current.insertImage(result.uri, 'border-radius: 8px')
-            // const dir = FileSystem.documentDirectory + 'images'
-            // const dirInfo = await FileSystem.getInfoAsync(dir);
-            // if (!dirInfo.exists) {
-            //     await FileSystem.makeDirectoryAsync(dir, { intermediates: true });
-            // }
-            // const fileName = Math.round((Math.random() * 100)).toString();
-            // FileSystem.copyAsync({
-            //     from: result.uri,
-            //     to: dir + '/' + fileName + '.jpg'
-            // }).then((r) => {
-            //     ImageManipulator.manipulateAsync(
-            //         (dir + '/' + fileName + '.jpg'),
-            //         [],
-            //         { compress: 0.25, format: ImageManipulator.SaveFormat.JPEG, base64: true }
-            //     ).then(res => {
-            //         RichText.current.insertImage(
-            //             'data:image/jpeg;base64,' + res.base64, 'border-radius: 10px'
-            //         )
-            //     }).catch(err => {
-            //         Alert("Unable to load image.")
-            //     });
-            // }).catch((err) => {
-            //     Alert("Something went wrong.")
-            // })
+            RichText.current.insertImage(result.uri, 'border-radius: 8px; max-width: 400px; width: 100%;')
         }
     }, [RichText, RichText.current])
 
@@ -599,7 +550,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             }}
                         >
                             {PreferredLanguageText('new')}
-                    </Text>
+                        </Text>
                     </View>
                     <TouchableOpacity
                         onPress={() => setStarred(!starred)}
@@ -1051,7 +1002,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         }}>
                                                             <Text style={styles.text}>
                                                                 {PreferredLanguageText('deadline')}
-                                                        </Text>
+                                                            </Text>
                                                             <Datetime
                                                                 value={deadline}
                                                                 onChange={(event: any) => {
@@ -1100,7 +1051,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         }}>
                                                             <Text style={styles.text}>
                                                                 Grade Weight {'\n'} {PreferredLanguageText('percentageOverall')}
-                                                        </Text>
+                                                            </Text>
                                                             <TextInput
                                                                 value={gradeWeight}
                                                                 style={styles.picker}
@@ -1147,7 +1098,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             }}>
                                                             <Text style={{ color: '#a2a2aa', lineHeight: 20, fontSize: 12 }}>
                                                                 {PreferredLanguageText('none')}
-                                                    </Text>
+                                                            </Text>
                                                         </TouchableOpacity>
                                                         {
                                                             customCategories.map((category: string) => {
@@ -1190,7 +1141,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
                                     <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
                                         {PreferredLanguageText('priority')}
-                                </Text>
+                                    </Text>
                                 </View>
                                 <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white' }}>
                                     <View style={{ width: '100%', backgroundColor: 'white' }}>
@@ -1287,7 +1238,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     }}>
                                                         <Text style={styles.text}>
                                                             {PreferredLanguageText('remindEvery')}
-                                                    </Text>
+                                                        </Text>
                                                         <Picker
                                                             style={styles.picker}
                                                             itemStyle={{
@@ -1317,7 +1268,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     }}>
                                                         <Text style={styles.text}>
                                                             {PreferredLanguageText('RemindOn')}
-                                                            </Text>
+                                                        </Text>
                                                         <Datetime
                                                             value={endPlayAt}
                                                             onChange={(event: any) => {
@@ -1366,7 +1317,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     }}>
                                                         <Text style={styles.text}>
                                                             {PreferredLanguageText('remindTill')}
-                                                            </Text>
+                                                        </Text>
                                                         <Datetime
                                                             value={endPlayAt}
                                                             onChange={(event: any) => {
