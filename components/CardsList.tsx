@@ -97,7 +97,7 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     })
                 }
                 {
-                    filteredCues.length === 0 ? <Text style={{ fontSize: 25, color: '#a2a2aa', textAlign: 'center' }}>
+                    filteredCues.length === 0 ? <Text style={{ fontSize: 25, color: '#a2a2aa', textAlign: 'center', fontFamily: 'inter' }}>
                         {PreferredLanguageText('noCuesCreated')}
                     </Text> : null
                 }

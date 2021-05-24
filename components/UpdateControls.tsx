@@ -215,6 +215,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     if (isQuiz) {
                         return;
                     }
+                    setShowOptions(true)
                     // load quiz here and set problems
                     const server = fetchAPI('')
                     server.query({
@@ -546,7 +547,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     );
                 }
             }).catch(err => {
-                Alert(somethingWentWrongAlert ,tryAgainLaterAlert)
+                Alert(somethingWentWrongAlert, tryAgainLaterAlert)
             })
         }
     }, [props.cue, cue, submissionTitle, submissionType, submissionUrl, submissionImported, isQuiz, quizId, initiatedAt, solutions, deadline])
@@ -1401,7 +1402,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                                         paddingRight: 10
                                                                     }}>
                                                                         {PreferredLanguageText('due')}
-                                                        </Text>
+                                                                    </Text>
                                                                     {
                                                                         isOwner ? <Datetime
                                                                             value={deadline}
@@ -1429,7 +1430,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                     <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
                                                         <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
                                                             {PreferredLanguageText('graded')}
-                                                </Text>
+                                                        </Text>
                                                     </View>
                                                     <View style={{ flexDirection: 'row' }}>
                                                         <View style={{
@@ -1464,7 +1465,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                                         paddingRight: 10
                                                                     }}>
                                                                         Grade Weight {'\n'}{PreferredLanguageText('percentageOverall')}
-                                                        </Text>
+                                                                    </Text>
                                                                     {
                                                                         isOwner ?
                                                                             <TextInput
@@ -1496,7 +1497,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
                                         <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
                                             {PreferredLanguageText('category')}
-                                    </Text>
+                                        </Text>
                                     </View>
                                     {
                                         props.cue.channelId ?
@@ -1536,7 +1537,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                                     }}>
                                                                     <Text style={{ color: '#a2a2aa', lineHeight: 20 }}>
                                                                         {PreferredLanguageText('none')}
-                                                                </Text>
+                                                                    </Text>
                                                                 </TouchableOpacity>
                                                                 {
                                                                     customCategories.map((category: string) => {
@@ -1579,7 +1580,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
                                         <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
                                             {PreferredLanguageText('priority')}
-                                </Text>
+                                        </Text>
                                     </View>
                                     <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white' }}>
                                         <View style={{ width: '100%', backgroundColor: 'white' }}>
@@ -1611,7 +1612,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
                                                 <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
                                                     {PreferredLanguageText('share')}
-                                            </Text>
+                                                </Text>
                                             </View>
                                             <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white' }}>
                                                 <View style={{ width: '85%', backgroundColor: 'white' }}>
@@ -1800,7 +1801,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                     }}>
                                                         <Text style={styles.text}>
                                                             {PreferredLanguageText('remindTill')}
-                                                            </Text>
+                                                        </Text>
                                                         <Datetime
                                                             onChange={(event: any) => {
                                                                 const date = new Date(event)

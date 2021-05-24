@@ -1,5 +1,6 @@
+import EquationEditor from 'equation-editor-react';
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, TextInput } from 'react-native';
+import { Image, StyleSheet, TextInput } from 'react-native';
 import { Text, View } from './Themed';
 
 
@@ -7,6 +8,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
     const [problems] = useState<any[]>(props.problems)
     const [solutions, setSolutions] = useState<any>([])
+    const [updateKey, setUpdateKey] = useState(Math.random())
 
     useEffect(() => {
         if (props.solutions && props.solutions.length !== 0) {
@@ -43,7 +45,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             flexDirection: 'column',
             justifyContent: 'flex-start'
         }}
-            key={solutions}
+            key={solutions.toString() + updateKey.toString()}
         >
             {
                 problems.map((problem: any, index: any) => {
@@ -54,13 +56,44 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     {index + 1}.
                             </Text>
                             </View>
-                            <TextInput
-                                editable={false}
-                                value={problem.question}
-                                style={styles.input}
-                                placeholder={'Problem ' + (index + 1).toString()}
-                                placeholderTextColor={'#a2a2aa'}
-                            />
+                            {
+                                problem.question && problem.question.includes("image:") ?
+                                    (<Image
+                                        resizeMode={'contain'}
+                                        style={{
+                                            width: 400,
+                                            height: 400
+                                        }}
+                                        source={{
+                                            uri: problem.question.split("image:")[1]
+                                        }}
+                                    />) :
+                                    (
+                                        problem.question && problem.question.includes("formula:") ? (
+                                            <View style={{
+                                                borderColor: '#f4f4f6',
+                                                borderWidth: 1,
+                                                borderRadius: 15,
+                                                padding: 10,
+                                                width: '50%'
+                                            }}>
+                                                <EquationEditor
+                                                    value={problem.question.split("formula:")[1]}
+                                                    onChange={() => { setUpdateKey(Math.random()) }}
+                                                    autoCommands="pi theta sqrt sum prod alpha beta gamma rho int"
+                                                    autoOperatorNames="sin cos tan arccos arcsin arctan"
+                                                />
+                                            </View>
+                                        ) :
+                                            <TextInput
+                                                editable={false}
+                                                value={problem.question}
+                                                style={styles.input}
+                                                placeholder={'Problem ' + (index + 1).toString()}
+                                                placeholderTextColor={'#a2a2aa'}
+                                            />
+                                    )
+                            }
                             <TextInput
                                 editable={false}
                                 value={problem.points + ' Points'}
@@ -95,22 +128,52 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             }}
                                         />
                                     </View>
-                                    <TextInput
-                                        editable={false}
-                                        value={option.option}
-                                        style={{
-                                            width: '50%',
-                                            fontSize: 15,
-                                            padding: 15,
-                                            paddingTop: 12,
-                                            paddingBottom: 12,
-                                            marginTop: 5,
-                                            marginBottom: 20,
-                                            color
-                                        }}
-                                        placeholder={'Option ' + (i + 1).toString()}
-                                        placeholderTextColor={'#a2a2aa'}
-                                    />
+                                    {
+                                        option.option && option.option.includes("image:") ?
+                                            (<Image
+                                                resizeMode={'contain'}
+                                                style={{
+                                                    width: 200,
+                                                    height: 200
+                                                }}
+                                                source={{
+                                                    uri: option.option.split("image:")[1]
+                                                }}
+                                            />) :
+                                            (
+                                                option.option && option.option.includes("formula:") ?
+                                                    <View style={{
+                                                        borderColor: '#f4f4f6',
+                                                        borderWidth: 1,
+                                                        borderRadius: 15,
+                                                        padding: 10,
+                                                        width: '30%'
+                                                    }}>
+                                                        <EquationEditor
+                                                            value={option.option.split("formula:")[1]}
+                                                            onChange={() => { setUpdateKey(Math.random()) }}
+                                                            autoCommands="pi theta sqrt sum prod alpha beta gamma rho int"
+                                                            autoOperatorNames="sin cos tan arccos arcsin arctan"
+                                                        />
+                                                    </View> :
+                                                    <TextInput
+                                                        editable={false}
+                                                        value={option.option}
+                                                        style={{
+                                                            width: '50%',
+                                                            fontSize: 15,
+                                                            padding: 15,
+                                                            paddingTop: 12,
+                                                            paddingBottom: 12,
+                                                            marginTop: 5,
+                                                            marginBottom: 20,
+                                                            color
+                                                        }}
+                                                        placeholder={'Option ' + (i + 1).toString()}
+                                                        placeholderTextColor={'#a2a2aa'}
+                                                    />
+                                            )
+                                    }
                                 </View>
                             })
                         }

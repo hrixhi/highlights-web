@@ -123,7 +123,7 @@ const EnglishBank: {[key: string]: string} = {
     internetRequired: 'Internet connection required to initialise.',
     removeFromChannel: "REMOVE FROM CHANNEL", //
     inbox: 'Inbox',
-    noCuesCreated: 'No cues created.',
+    noCuesCreated: 'No content in channel.',
     present: 'Present',
     addChoice: 'Add Choice',
     addProblem: 'Add Problem',

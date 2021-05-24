@@ -122,7 +122,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             }
         }
         problems.map((problem) => {
-            if (problem.question === '') {
+            if (problem.question === '' || problem.question === 'formula:') {
                 Alert(fillMissingProblemsAlert)
                 error = true;
             }
@@ -136,7 +136,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 error = true;
             }
             problem.options.map((option: any) => {
-                if (option.option === '') {
+                if (option.option === '' || option.option === 'formula:') {
                     Alert(fillMissingOptionsAlert)
                     error = true;
                 }
