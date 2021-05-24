@@ -27,9 +27,11 @@ import TeXToSVG from "tex-to-svg";
 import EquationEditor from "equation-editor-react";
 import WebView from 'react-native-webview';
 import { PreferredLanguageText } from '../helpers/LanguageContext';
+import moment from 'moment';
 
 const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
+    const current = new Date()
     const [cue, setCue] = useState(props.cue.cue)
     const [shuffle, setShuffle] = useState(props.cue.shuffle)
     const [starred, setStarred] = useState(props.cue.starred)
@@ -44,9 +46,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const [isOwner, setIsOwner] = useState(false)
     const stopPlay = props.cue.endPlayAt && props.cue.endPlayAt !== ''
         ? (
-            props.cue.endPlayAt === 'Invalid Date' ? new Date() : new Date(props.cue.endPlayAt)
+            props.cue.endPlayAt === 'Invalid Date' ? new Date(current.getTime() + 1000 * 60 * 60) : new Date(props.cue.endPlayAt)
         )
-        : new Date()
+        : new Date(current.getTime() + 1000 * 60 * 60)
     const [endPlayAt, setEndPlayAt] = useState<Date>(stopPlay)
     const [playChannelCueIndef, setPlayChannelCueIndef] = useState(
         props.cue.endPlayAt && props.cue.endPlayAt !== ''
@@ -61,7 +63,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const [submission, setSubmission] = useState(props.cue.submission ? props.cue.submission : false)
     const dead = props.cue.deadline && props.cue.deadline !== ''
         ? (
-            props.cue.deadline === 'Invalid Date' ? new Date() : new Date(props.cue.deadline)
+            props.cue.deadline === 'Invalid Date' ? new Date(current.getTime() + 1000 * 60 * 60) : new Date(props.cue.deadline)
         )
         : new Date()
     const [deadline, setDeadline] = useState<Date>(dead)
@@ -696,6 +698,11 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     useEffect(() => {
         updateStatusAsRead()
     }, [props.cue.status])
+
+    const yesterday = moment().subtract(1, 'day');
+    const disablePastDt = (current: any) => {
+        return current.isAfter(yesterday);
+    };
 
     const width = Dimensions.get('window').width;
 
@@ -1407,8 +1414,11 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                                             value={deadline}
                                                                             onChange={(event: any) => {
                                                                                 const date = new Date(event)
+
+                                                                                if (date < new Date()) return;
                                                                                 setDeadline(date)
                                                                             }}
+                                                                            isValidDate={disablePastDt}
                                                                         /> : <Text style={{
                                                                             fontSize: 12,
                                                                             color: '#a2a2aa',
@@ -1756,8 +1766,11 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                             value={endPlayAt}
                                                             onChange={(event: any) => {
                                                                 const date = new Date(event)
+                                                                if (date < new Date()) return;
+                                                                
                                                                 setEndPlayAt(date)
                                                             }}
+                                                            isValidDate={disablePastDt}
                                                         />
                                                     </View>
                                             }
@@ -1804,9 +1817,12 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                         <Datetime
                                                             onChange={(event: any) => {
                                                                 const date = new Date(event)
+                                                                if (date < new Date()) return;
+                                                                
                                                                 setEndPlayAt(date)
                                                             }}
                                                             value={endPlayAt}
+                                                            isValidDate={disablePastDt}
                                                         />
                                                     </View>
                                             }

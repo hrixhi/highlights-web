@@ -23,9 +23,11 @@ import TeXToSVG from "tex-to-svg";
 import EquationEditor from "equation-editor-react";
 import WebView from 'react-native-webview';
 import { PreferredLanguageText } from "../helpers/LanguageContext";
+import moment from 'moment';
 
 const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
+    const current = new Date()
     const [cue, setCue] = useState('')
     const [shuffle, setShuffle] = useState(false)
     const [starred, setStarred] = useState(false)
@@ -38,17 +40,16 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const [addCustomCategory, setAddCustomCategory] = useState(false)
     const [channels, setChannels] = useState<any[]>([])
     const [channelId, setChannelId] = useState<any>('')
-    const [endPlayAt, setEndPlayAt] = useState(new Date())
+    const [endPlayAt, setEndPlayAt] = useState(new Date(current.getTime() + 1000 * 60 * 60))
     const [playChannelCueIndef, setPlayChannelCueIndef] = useState(true)
     const colorChoices: any[] = ['#d91d56', '#ED7D22', '#F8D41F', '#B8D41F', '#53BE6D'].reverse()
     const [modalAnimation] = useState(new Animated.Value(0))
-    const now = new Date()
     const [reloadEditorKey, setReloadEditorKey] = useState(Math.random())
     let RichText: any = useRef()
     const [height, setHeight] = useState(100)
     const [init, setInit] = useState(false)
     const [submission, setSubmission] = useState(false)
-    const [deadline, setDeadline] = useState(new Date())
+    const [deadline, setDeadline] = useState(new Date(current.getTime() + 1000 * 60 * 60))
     const [gradeWeight, setGradeWeight] = useState<any>(0)
     const [graded, setGraded] = useState(false)
     const [imported, setImported] = useState(false)
@@ -324,6 +325,12 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             return
         }
 
+        if (submission && deadline < new Date()) {
+            Alert("Submission deadline must be in future")
+            return
+        }
+
+
         let saveCue = ''
         if (quizId) {
             const obj: any = {
@@ -512,6 +519,11 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         const { hours, minutes, seconds } = duration;
         setDuration({ hours, minutes, seconds });
     }, [])
+
+    const yesterday = moment().subtract(1, 'day');
+    const disablePastDt = (current: any) => {
+        return current.isAfter(yesterday);
+    };
 
     const quizAlert = PreferredLanguageText('quizzesCanOnly')
     const width = Dimensions.get('window').width;
@@ -1007,9 +1019,14 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                 value={deadline}
                                                                 onChange={(event: any) => {
                                                                     const date = new Date(event)
+
+                                                                    if (date < new Date()) return;
+
                                                                     setDeadline(date)
                                                                 }}
+                                                                isValidDate={disablePastDt}
                                                             />
+
                                                         </View>
                                                         : null
                                                 }
@@ -1273,8 +1290,11 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             value={endPlayAt}
                                                             onChange={(event: any) => {
                                                                 const date = new Date(event)
+                                                                if (date < new Date()) return;
+                                                                
                                                                 setEndPlayAt(date)
                                                             }}
+                                                            isValidDate={disablePastDt}
                                                         />
                                                     </View>
                                             }
@@ -1322,8 +1342,10 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             value={endPlayAt}
                                                             onChange={(event: any) => {
                                                                 const date = new Date(event)
+                                                                if (date < new Date()) return;
                                                                 setEndPlayAt(date)
                                                             }}
+                                                            isValidDate={disablePastDt}
                                                         />
                                                     </View>
                                             }
@@ -1505,7 +1527,8 @@ const styles: any = StyleSheet.create({
         color: '#202025',
         height: 22,
         paddingHorizontal: 10,
-        backgroundColor: 'white'
+        backgroundColor: 'white',
+        marginBottom: 20
     },
     allOutline: {
         fontSize: 12,
@@ -1513,7 +1536,8 @@ const styles: any = StyleSheet.create({
         height: 22,
         paddingHorizontal: 10,
         borderRadius: 10,
-        backgroundColor: '#202025'
+        backgroundColor: '#202025',
+        marginBottom: 20
     },
     allGrayOutline: {
         fontSize: 12,

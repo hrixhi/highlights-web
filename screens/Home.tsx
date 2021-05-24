@@ -58,8 +58,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   const [password, setPassword] = useState('')
   const [reopenUpdateWindow, setReopenUpdateWindow] = useState(Math.random())
   const [showForgotPassword, setShowForgotPassword] = useState(false)
-
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true)
+  const [saveDataInProgress, setSaveDataInProgress] = useState(false)
 
   // Login Validation
   const [emailValidError, setEmailValidError] = useState("");
@@ -662,6 +662,10 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   // imp
   const saveDataInCloud = useCallback(async () => {
 
+    if (saveDataInProgress) return;
+
+    setSaveDataInProgress(true);
+
     const draft = await AsyncStorage.getItem('cueDraft')
     const f: any = await AsyncStorage.getItem('randomShuffleFrequency')
     const sF: any = await AsyncStorage.getItem('sleepFrom')
@@ -731,7 +735,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         userId: parsedUser._id,
         cues: allCues
       }
-    }).then(res => {
+    }).then(async res => {
       if (res.data.cue.saveCuesToCloud) {
         const newIds: any = res.data.cue.saveCuesToCloud;
         const updatedCuesArray: any[] = []
@@ -765,16 +769,15 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             }
           }
         });
-        (async () => {
-          const updatedCues = JSON.stringify(updatedCuesObj)
-          await AsyncStorage.setItem('cues', updatedCues)
-        })();
+        const updatedCues = JSON.stringify(updatedCuesObj)
+        await AsyncStorage.setItem('cues', updatedCues)
         if (newIds.length !== 0) {
           setCues(updatedCuesObj)
-          // updateCuesHelper(updatedCuesObj)
-          // setReopenUpdateWindow(Math.random())
         }
       }
+
+      setSaveDataInProgress(false)
+
     }).catch(err => console.log(err))
   }, [cues, setCues])
 
