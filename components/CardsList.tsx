@@ -10,6 +10,11 @@ import { PreferredLanguageText } from '../helpers/LanguageContext';
 
 const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
+    const window = Dimensions.get("window");
+    const screen = Dimensions.get("screen");
+
+    const [dimensions, setDimensions] = useState({ window, screen });
+    
     const unparsedCues: any[] = JSON.parse(JSON.stringify(props.cues))
     const [cues] = useState<any[]>(unparsedCues.reverse())
     const [filterChoice] = useState(props.channelFilterChoice)
@@ -39,15 +44,27 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
         }
     }, [props.channelId, props.createdBy, cues])
 
+    const onDimensionsChange = useCallback(({ window, screen }: any) => {
+        // window.location.reload()
+        setDimensions({ window, screen })
+      }, []);
+    
+      useEffect(() => {
+        Dimensions.addEventListener("change", onDimensionsChange);
+        return () => {
+          Dimensions.removeEventListener("change", onDimensionsChange);
+        };
+      }, [])
+
     useEffect(() => {
         noChannelCuesAlert()
     }, [])
 
     return (
         <Animated.View style={{
-            height: ((Dimensions.get('window').height) * 0.7) - 2,
+            height: ((dimensions.window.height) * 0.7) - 2,
             opacity: props.fadeAnimation,
-            width: Dimensions.get('window').width < 1024 ? Dimensions.get('window').width : Dimensions.get('window').width * 0.3,
+            width: dimensions.window.width < 1024 ? dimensions.window.width : dimensions.window.width * 0.3,
             paddingHorizontal: 20,
             // paddingTop: 15
         }}>
@@ -55,8 +72,8 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 showsVerticalScrollIndicator={false}
                 horizontal={false}
                 contentContainerStyle={{
-                    width: Dimensions.get('window').width < 1024 ? Dimensions.get('window').width - 40 : (Dimensions.get('window').width * 0.3 - 40),
-                    height: Dimensions.get('window').width < 1024 ? '100%' : (((Dimensions.get('window').height) * 0.7) - 2),
+                    width: dimensions.window.width < 1024 ? dimensions.window.width - 40 : (dimensions.window.width * 0.3 - 40),
+                    height: dimensions.window.width < 1024 ? '100%' : (((dimensions.window.height) * 0.7) - 2),
                 }}
             >
                 {/* <View style={styles.marginSmall} /> */}

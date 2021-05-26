@@ -15,8 +15,6 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const [cues] = useState<any[]>(unparsedCues.reverse())
     const [filterChoice] = useState(props.channelFilterChoice)
     const [channelCategories, setChannelCategories] = useState([])
-    const [unreadDiscussionThreads, setUnreadDiscussionThreads] = useState(0)
-    const [unreadMessages, setUnreadMessages] = useState(0)
     const [meetingOn, setMeetingOn] = useState(false)
     const [isOwner, setIsOwner] = useState(false)
 
@@ -72,28 +70,6 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             setIsOwner(true)
                         }
                         const server = fetchAPI('')
-                        server.query({
-                            query: totalUnreadDiscussionThreads,
-                            variables: {
-                                userId: user._id,
-                                channelId: props.channelId
-                            }
-                        }).then(res => {
-                            if (res.data.threadStatus.totalUnreadDiscussionThreads) {
-                                setUnreadDiscussionThreads(res.data.threadStatus.totalUnreadDiscussionThreads)
-                            }
-                        })
-                        server.query({
-                            query: totalUnreadMessages,
-                            variables: {
-                                userId: user._id,
-                                channelId: props.channelId
-                            }
-                        }).then(res => {
-                            if (res.data.messageStatus.totalUnreadMessages) {
-                                setUnreadMessages(res.data.messageStatus.totalUnreadMessages)
-                            }
-                        })
                         server.query({
                             query: getMeetingStatus,
                             variables: {
@@ -170,7 +146,7 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             <Ionicons name='mail-outline' size={21} color={'#a2a2aa'} />
                                         </Text>
                                         {
-                                            unreadMessages !== 0 ?
+                                            props.unreadMessages !== 0 ?
                                                 <View style={styles.badge} /> : null
                                         }
                                     </TouchableOpacity>
@@ -181,7 +157,7 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             <Ionicons name='chatbubble-ellipses-outline' size={19} color={'#a2a2aa'} />
                                         </Text>
                                         {
-                                            unreadDiscussionThreads !== 0 ?
+                                            props.unreadDiscussionThreads !== 0 ?
                                                 <View style={styles.badge} /> : null
                                         }
                                     </TouchableOpacity>
