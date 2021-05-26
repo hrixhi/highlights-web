@@ -223,8 +223,10 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                     userId: parsedUser._id,
                     groupId
                 }
-            }).then(res => console.log(res))
-                .catch(e => console.log(e))
+            }).then(res => {
+                props.refreshUnreadMessagesCount()
+            })
+            .catch(e => console.log(e))
             // load the user
             server.query({
                 query: findUserById,
@@ -362,6 +364,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     setIsLoadedUserInactive(false)
                                     setLoadedChatWithUser({})
                                     setUsers([])
+                                    props.reload()
                                 } else {
                                     setShowSubmission(false)
                                     setStatus("")

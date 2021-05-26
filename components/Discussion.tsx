@@ -132,6 +132,7 @@ const Discussion: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             }}
                             channelCreatedBy={props.channelCreatedBy}
                             reload={() => loadThreads()}
+                            refreshUnreadDiscussionCount={() => props.refreshUnreadDiscussionCount()}
                         />
                 }
             </Animated.View>

@@ -79,7 +79,9 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     userId: user._id,
                     threadId: tId
                 }
-            }).then(res => console.log(res))
+            }).then(res => {
+                props.refreshUnreadDiscussionCount()
+            })
                 .catch(e => console.log(e))
         }
 

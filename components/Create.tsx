@@ -70,6 +70,11 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const [equation, setEquation] = useState('y = x + 1')
     const [showEquationEditor, setShowEquationEditor] = useState(false)
 
+    const window = Dimensions.get("window");
+    const screen = Dimensions.get("screen");
+
+    const [dimensions, setDimensions] = useState({ window, screen });
+
     // Alerts
 
     const enterOneProblemAlert = PreferredLanguageText('enterOneProblem')
@@ -87,6 +92,18 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const checkConnectionAlert = PreferredLanguageText('checkConnection');
     const enterContentAlert = PreferredLanguageText('enterContent');
     const enterTitleAlert = PreferredLanguageText('enterTitle');
+
+    const onDimensionsChange = useCallback(({ window, screen }: any) => {
+        // window.location.reload()
+        setDimensions({ window, screen })
+      }, []);
+    
+      useEffect(() => {
+        Dimensions.addEventListener("change", onDimensionsChange);
+        return () => {
+          Dimensions.removeEventListener("change", onDimensionsChange);
+        };
+      }, [])
 
     const insertEquation = useCallback(() => {
         const SVGEquation = TeXToSVG(equation, { width: 100 }); // returns svg in html format
@@ -526,11 +543,11 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     };
 
     const quizAlert = PreferredLanguageText('quizzesCanOnly')
-    const width = Dimensions.get('window').width;
+    const width = dimensions.window.width;
     return (
         <View style={{
             width: '100%',
-            height: Dimensions.get('window').width < 1024 ? Dimensions.get('window').height - 30 : Dimensions.get('window').height,
+            height: dimensions.window.width < 1024 ? dimensions.window.height - 30 : dimensions.window.height,
             backgroundColor: 'white',
             borderTopLeftRadius: 30,
             borderTopRightRadius: 30,
@@ -583,11 +600,11 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 <View style={{
                     width: '100%',
                     display: 'flex',
-                    flexDirection: Dimensions.get('window').width < 768 ? 'column-reverse' : 'row',
+                    flexDirection: dimensions.window.width < 768 ? 'column-reverse' : 'row',
                     paddingBottom: 4,
                     backgroundColor: 'white',
                 }} onTouchStart={() => Keyboard.dismiss()}>
-                    <View style={{ flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row', flex: 1 }}>
+                    <View style={{ flexDirection: dimensions.window.width < 768 ? 'column' : 'row', flex: 1 }}>
                         {
                             showImportOptions ? null :
                                 <RichToolbar

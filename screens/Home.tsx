@@ -19,7 +19,7 @@ import { defaultCues, defaultRandomShuffleFrequency, defaultSleepInfo } from '..
 import Walkthrough from '../components/Walkthrough';
 import Channels from '../components/Channels';
 import { fetchAPI } from '../graphql/FetchAPI';
-import { createUser, getSubscriptions, getCues, unsubscribe, saveConfigToCloud, saveCuesToCloud, login, getCuesFromCloud, findUserById, resetPassword } from '../graphql/QueriesAndMutations';
+import { createUser, getSubscriptions, getCues, unsubscribe, saveConfigToCloud, saveCuesToCloud, login, getCuesFromCloud, findUserById, resetPassword, totalUnreadDiscussionThreads, totalUnreadMessages, } from '../graphql/QueriesAndMutations';
 import Discussion from '../components/Discussion';
 import Subscribers from '../components/Subscribers';
 import Profile from '../components/Profile';
@@ -30,6 +30,9 @@ import Meeting from '../components/Meeting';
 import { PreferredLanguageText, LanguageSelect } from '../helpers/LanguageContext';
 
 const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
+
+  const window = Dimensions.get("window");
+  const screen = Dimensions.get("screen");
 
   const [init, setInit] = useState(false)
   const [filterChoice, setFilterChoice] = useState('All')
@@ -60,6 +63,11 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   const [showForgotPassword, setShowForgotPassword] = useState(false)
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true)
   const [saveDataInProgress, setSaveDataInProgress] = useState(false)
+  const [dimensions, setDimensions] = useState({ window, screen });
+
+  // Notifications count for Top Bar
+  const [unreadDiscussionThreads, setUnreadDiscussionThreads] = useState(0)
+  const [unreadMessages, setUnreadMessages] = useState(0)
 
   // Login Validation
   const [emailValidError, setEmailValidError] = useState("");
@@ -115,8 +123,9 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     emailValidError,
   ]);
 
-  const onDimensionsChange = useCallback(({ w, s }: any) => {
+  const onDimensionsChange = useCallback(({ window, screen }: any) => {
     // window.location.reload()
+    setDimensions({ window, screen })
   }, []);
 
   useEffect(() => {
@@ -143,6 +152,110 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
       }
     )()
   }, [])
+
+
+  useEffect(() => {
+
+    if (channelId !== '') {
+        (
+            async () => {
+              console.log("Calling refresh for notif counts")
+                const u = await AsyncStorage.getItem('user')
+                if (u) {
+                    const user = JSON.parse(u)
+
+                    const server = fetchAPI('')
+                    server.query({
+                        query: totalUnreadDiscussionThreads,
+                        variables: {
+                            userId: user._id,
+                            channelId
+                        }
+                    }).then(res => {
+                        if (res.data.threadStatus.totalUnreadDiscussionThreads) {
+                            setUnreadDiscussionThreads(res.data.threadStatus.totalUnreadDiscussionThreads)
+                        }
+                    })
+                    server.query({
+                        query: totalUnreadMessages,
+                        variables: {
+                            userId: user._id,
+                            channelId
+                        }
+                    }).then(res => {
+                        if (res.data.messageStatus.totalUnreadMessages) {
+                            setUnreadMessages(res.data.messageStatus.totalUnreadMessages)
+                        }
+                    })
+                    .catch(err => console.log(err))
+                }
+            }
+        )()
+    }
+
+  }, [channelId, channelCreatedBy, email])
+
+  const refreshUnreadDiscussionCount = useCallback(async () => {
+    if (channelId !== '') {
+      const u = await AsyncStorage.getItem('user')
+      if (u) {
+        const user = JSON.parse(u)
+        updateDiscussionNotidCounts(user._id)
+      }
+    }
+    
+  }, [channelId])
+
+  const refreshUnreadMessagesCount = useCallback(async () => {
+    if (channelId !== '') {
+      const u = await AsyncStorage.getItem('user')
+      if (u) {
+        const user = JSON.parse(u)
+        updateMessageNotifCounts(user._id)
+        
+      }
+    }
+    
+  }, [channelId])
+
+  const updateDiscussionNotidCounts = useCallback((userId) => {
+    const server = fetchAPI('')
+    server.query({
+      query: totalUnreadDiscussionThreads,
+      variables: {
+        userId,
+        channelId
+      }
+    }).then(res => {
+      if (res.data.threadStatus.totalUnreadDiscussionThreads !== undefined && res.data.threadStatus.totalUnreadDiscussionThreads !== null) {
+        setUnreadDiscussionThreads(res.data.threadStatus.totalUnreadDiscussionThreads)
+      }
+    })
+  .catch(err => console.log(err))
+    }, [channelId])
+
+  const updateMessageNotifCounts = useCallback((userId) => {
+    const server = fetchAPI('')
+        server.query({
+          query: totalUnreadMessages,
+          variables: {
+              userId,
+              channelId
+          }
+        }).then(res => {
+            console.log(res);
+            if (res.data.messageStatus.totalUnreadMessages !== undefined && res.data.messageStatus.totalUnreadMessages !== null) {
+              console.log(res.data.messageStatus.totalUnreadMessages)
+              setUnreadMessages(res.data.messageStatus.totalUnreadMessages)
+            }
+        })
+        .catch(err => console.log(err))
+  }, [channelId])
+
+ 
+  
+  
+
   const storeMenu = useCallback(async () => {
     try {
       await AsyncStorage.setItem('sleepFrom', sleepFrom.toString())
@@ -520,7 +633,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         }).start();
       }
       // OPEN WALKTHROUGH IF FIRST TIME LOAD
-      if (!init && Dimensions.get('window').width >= 1024) {
+      if (!init && dimensions.window.width >= 1024) {
         openModal('Create')
       }
       // HANDLE PROFILE
@@ -927,11 +1040,13 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             modalType === 'Channels' ? <Channels
               closeModal={() => closeModal()}
             /> : (
+
               modalType === 'Discussion' ? <Discussion
                 closeModal={() => closeModal()}
                 channelId={channelId}
                 filterChoice={filterChoice}
                 channelCreatedBy={channelCreatedBy}
+                refreshUnreadDiscussionCount={() => refreshUnreadDiscussionCount()}
               />
                 : (
                   modalType === 'Subscribers' ? <Subscribers
@@ -939,6 +1054,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     channelId={channelId}
                     channelCreatedBy={channelCreatedBy}
                     filterChoice={filterChoice}
+                    refreshUnreadMessagesCount={() => refreshUnreadMessagesCount()}
                   /> :
                     (
                       modalType === 'Profile' ? <Profile
@@ -1032,7 +1148,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
       {
         showLoginWindow ? <View style={{
           width: '100%',
-          height: Dimensions.get('window').height,
+          height: dimensions.window.height,
           flex: 1,
           position: 'absolute',
           zIndex: 50,
@@ -1046,18 +1162,18 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             alignSelf: 'center',
             justifyContent: 'center',
             backgroundColor: 'white',
-            width: Dimensions.get('window').width < 768 ? '100%' : 480,
-            height: Dimensions.get('window').width < 768 ? '100%' : 'auto',
-            borderRadius: Dimensions.get('window').width < 768 ? 0 : 20,
-            marginTop: Dimensions.get('window').width < 768 ? 0 : 75,
+            width: dimensions.window.width < 768 ? '100%' : 480,
+            height: dimensions.window.width < 768 ? '100%' : 'auto',
+            borderRadius: dimensions.window.width < 768 ? 0 : 20,
+            marginTop: dimensions.window.width < 768 ? 0 : 75,
             padding: 40
           }}>
             <View style={{ flexDirection: 'row', justifyContent: 'center', display: 'flex', paddingBottom: 50 }}>
               <Image
                 source={require('../components/default-images/cues-logo-black-exclamation-hidden.jpg')}
                 style={{
-                  width: Dimensions.get('window').height * 0.16 * 0.53456,
-                  height: Dimensions.get('window').height * 0.16 * 0.2
+                  width: dimensions.window.height * 0.16 * 0.53456,
+                  height: dimensions.window.height * 0.16 * 0.2
                 }}
                 resizeMode={'contain'}
               />
@@ -1209,15 +1325,15 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         </View> : null
       }
       <View style={{
-        width: Dimensions.get('window').width < 1024 ? Dimensions.get('window').width : Dimensions.get('window').width * 0.3,
-        height: Dimensions.get('window').height,
+        width: dimensions.window.width < 1024 ? dimensions.window.width : dimensions.window.width * 0.3,
+        height: dimensions.window.height,
         flexDirection: 'column',
         backgroundColor: '#fff',
         borderRightColor: '#f4f4f6',
         borderRightWidth: 2,
       }}>
         <TopBar
-          key={JSON.stringify(channelFilterChoice) + JSON.stringify(filteredCues) + JSON.stringify(modalType) + JSON.stringify(filterChoice)}
+          key={JSON.stringify(channelFilterChoice) + JSON.stringify(filteredCues) + JSON.stringify(modalType) + JSON.stringify(filterChoice) + JSON.stringify(unreadDiscussionThreads) + JSON.stringify(unreadMessages)} 
           openChannels={() => openModal('Channels')}
           cues={filteredCues}
           filterChoice={filterChoice}
@@ -1234,6 +1350,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           deleteChannel={() => deleteChannel()}
           openCalendar={() => openModal('Calendar')}
           openMeeting={() => openModal('Meeting')}
+          unreadDiscussionThreads={unreadDiscussionThreads}
+          unreadMessages={unreadMessages}
         />
         {
           reLoading ? <View style={[styles.activityContainer, styles.horizontal]}>
@@ -1270,26 +1388,26 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
       {
         modalType === '' ? <View
           style={{
-            width: Dimensions.get('window').width < 1024 ? 0 : Dimensions.get('window').width * 0.7,
-            height: Dimensions.get('window').height,
-            // paddingHorizontal: Dimensions.get('window').width < 1024 ? 0 : 30,
+            width: dimensions.window.width < 1024 ? 0 : dimensions.window.width * 0.7,
+            height: dimensions.window.height,
+            // paddingHorizontal: dimensions.window.width < 1024 ? 0 : 30,
             paddingTop: 0,
             // backgroundColor: '#f4f4f6',
             backgroundColor: '#fff',
-            position: Dimensions.get('window').width < 1024 ? 'absolute' : 'relative'
+            position: dimensions.window.width < 1024 ? 'absolute' : 'relative'
           }}
         /> :
           <View style={{
-            width: Dimensions.get('window').width < 1024 ? '100%' : Dimensions.get('window').width * 0.7,
-            height: Dimensions.get('window').height,
-            // paddingHorizontal: Dimensions.get('window').width < 1024 ? 0 : 30,
+            width: dimensions.window.width < 1024 ? '100%' : dimensions.window.width * 0.7,
+            height: dimensions.window.height,
+            // paddingHorizontal: dimensions.window.width < 1024 ? 0 : 30,
             paddingTop: 0,
             // backgroundColor: '#f4f4f6',
             backgroundColor: '#fff',
-            position: Dimensions.get('window').width < 1024 ? 'absolute' : 'relative'
+            position: dimensions.window.width < 1024 ? 'absolute' : 'relative'
           }}>
             {
-              Dimensions.get('window').width < 1024 ?
+              dimensions.window.width < 1024 ?
                 <TouchableOpacity
                   onPress={() => closeModal()}
                   style={{ height: 30, backgroundColor: '#fff', borderBottomWidth: 1, borderBottomColor: '#f4f4f6' }}>
@@ -1318,7 +1436,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0,
     borderColor: '#f4f4f6',
     height: '70%',
-    width: Dimensions.get('window').width < 1024 ? Dimensions.get('window').width : (Dimensions.get('window').width * 0.3) - 5,
+    width: '100%',
     justifyContent: "center",
   },
   horizontal: {

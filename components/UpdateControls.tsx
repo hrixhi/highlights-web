@@ -1392,7 +1392,11 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                                         }}
                                                                         activeThumbColor='white'
                                                                     />
-                                                                </View> : null
+                                                                </View> : <View style={{ flex: 1, backgroundColor: '#fff' }}>
+                                                                    <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
+                                                                        {!submission ? PreferredLanguageText('no') : null}
+                                                                    </Text>
+                                                                </View>
                                                         }
                                                         {
                                                             submission ?

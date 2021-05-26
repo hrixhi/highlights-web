@@ -139,6 +139,7 @@ const Subscribers: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 }).start(() => props.closeModal())
                             }}
                             reload={() => loadSubscribers()}
+                            refreshUnreadMessagesCount={() => props.refreshUnreadMessagesCount()}
                         />
                 }
             </Animated.View>
