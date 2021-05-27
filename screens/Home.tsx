@@ -159,7 +159,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     if (channelId !== '') {
         (
             async () => {
-              console.log("Calling refresh for notif counts")
                 const u = await AsyncStorage.getItem('user')
                 if (u) {
                     const user = JSON.parse(u)
@@ -243,9 +242,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               channelId
           }
         }).then(res => {
-            console.log(res);
             if (res.data.messageStatus.totalUnreadMessages !== undefined && res.data.messageStatus.totalUnreadMessages !== null) {
-              console.log(res.data.messageStatus.totalUnreadMessages)
               setUnreadMessages(res.data.messageStatus.totalUnreadMessages)
             }
         })
@@ -269,80 +266,84 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
   // imp
   const loadNewChannelCues = useCallback(async () => {
+
     let user = await AsyncStorage.getItem('user')
     const unparsedCues = await AsyncStorage.getItem('cues')
     if (user && unparsedCues) {
       const allCues = JSON.parse(unparsedCues)
       const parsedUser = JSON.parse(user)
       const server = fetchAPI(parsedUser._id)
-      server.query({
-        query: getCues,
-        variables: {
-          userId: parsedUser._id
-        }
-      })
-        .then(async res => {
-          if (res.data.cue.findByUserId) {
-            // Here we load all new Cues
-            // we update statuses for the cues that are already stored and add new cues to the list
-            // (cant directly replace the store because channel cues could be modified by the user)
-            const receivedCues = res.data.cue.findByUserId;
-            receivedCues.map((item: any) => {
-              const channelId = item.channelId.toString().trim();
-              let index = -1;
-              if (allCues[channelId]) {
-                index = allCues[channelId].findIndex((cue: any) => {
-                  return cue._id.toString().trim() === item._id.toString().trim()
-                })
+
+      try {
+        const res = await server.query({
+          query: getCues,
+          variables: {
+            userId: parsedUser._id
+          }
+        })
+  
+        if (res.data.cue.findByUserId) {
+          // Here we load all new Cues
+          // we update statuses for the cues that are already stored and add new cues to the list
+          // (cant directly replace the store because channel cues could be modified by the user)
+          const receivedCues = res.data.cue.findByUserId;
+          receivedCues.map((item: any) => {
+            const channelId = item.channelId.toString().trim();
+            let index = -1;
+            if (allCues[channelId]) {
+              index = allCues[channelId].findIndex((cue: any) => {
+                return cue._id.toString().trim() === item._id.toString().trim()
+              })
+            }
+            if (index === -1) {
+              let cue: any = {}
+              cue = {
+                ...item
               }
-              if (index === -1) {
-                let cue: any = {}
-                cue = {
-                  ...item
-                }
-                delete cue.__typename
-                if (allCues[cue.channelId]) {
-                  allCues[cue.channelId].push(cue)
-                } else {
-                  allCues[cue.channelId] = [cue]
-                }
+              delete cue.__typename
+              if (allCues[cue.channelId]) {
+                allCues[cue.channelId].push(cue)
               } else {
-                allCues[item.channelId][index].unreadThreads = item.unreadThreads ? item.unreadThreads : 0;
-                allCues[item.channelId][index].status = item.status;
-                if (!allCues[item.channelId][index].original) {
-                  allCues[item.channelId][index].original = item.cue;
+                allCues[cue.channelId] = [cue]
+              }
+            } else {
+              allCues[item.channelId][index].unreadThreads = item.unreadThreads ? item.unreadThreads : 0;
+              allCues[item.channelId][index].status = item.status;
+              if (!allCues[item.channelId][index].original) {
+                allCues[item.channelId][index].original = item.cue;
+              }
+            }
+          })
+          const custom: any = {}
+          setCues(allCues)
+          if (allCues['local']) {
+            allCues['local'].map((item: any) => {
+              if (item.customCategory !== "") {
+                if (!custom[item.customCategory]) {
+                  custom[item.customCategory] = 0
                 }
               }
             })
-            const custom: any = {}
-            setCues(allCues)
-            if (allCues['local']) {
-              allCues['local'].map((item: any) => {
-                if (item.customCategory !== "") {
-                  if (!custom[item.customCategory]) {
-                    custom[item.customCategory] = 0
-                  }
-                }
-              })
-              const customC: any[] = []
-              Object.keys(custom).map((item) => {
-                customC.push(item)
-              })
-              customC.sort()
-              setCustomCategories(customC)
-            }
-            const stringCues = JSON.stringify(allCues)
-            await AsyncStorage.setItem("cues", stringCues)
-            Animated.timing(fadeAnimation, {
-              toValue: 1,
-              duration: 150,
-              useNativeDriver: true
-            }).start();
-            setReLoading(false)
+            const customC: any[] = []
+            Object.keys(custom).map((item) => {
+              customC.push(item)
+            })
+            customC.sort()
+            setCustomCategories(customC)
           }
-        })
-        .catch(err => {
-          Alert(unableToRefreshCuesAlert, checkConnectionAlert)
+          const stringCues = JSON.stringify(allCues)
+          await AsyncStorage.setItem("cues", stringCues)
+          Animated.timing(fadeAnimation, {
+            toValue: 1,
+            duration: 150,
+            useNativeDriver: true
+          }).start();
+          setReLoading(false)
+        }
+
+      } catch (err) {
+
+        Alert(unableToRefreshCuesAlert, checkConnectionAlert)
           const custom: any = {}
           setCues(allCues)
           if (allCues['local']) {
@@ -366,7 +367,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             useNativeDriver: true
           }).start();
           setReLoading(false)
-        })
+      }
     } else if (unparsedCues) {
       const custom: any = {}
       const allCues = JSON.parse(unparsedCues)
@@ -604,7 +605,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
       }
       // LOAD CUES
       if (sC) {
-        loadNewChannelCues()
+        await loadNewChannelCues()
       } else {
         const custom: any = {}
         let allCues: any = {}
@@ -852,7 +853,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
       if (res.data.cue.saveCuesToCloud) {
         const newIds: any = res.data.cue.saveCuesToCloud;
         const updatedCuesArray: any[] = []
-        allCuesToSave.map((c: any) => { // allCues -> problematic
+        allCuesToSave.map((c: any) => { 
           const id = c._id;
           const updatedItem = newIds.find((i: any) => {
             return id.toString().trim() === i.oldId.toString().trim()
