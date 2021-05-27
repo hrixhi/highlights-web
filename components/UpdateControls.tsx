@@ -10,14 +10,11 @@ import { timedFrequencyOptions } from '../helpers/FrequencyOptions';
 import { fetchAPI } from '../graphql/FetchAPI';
 import { createCue, deleteCue, deleteForEveryone, getChannels, getQuiz, getSharedWith, markAsRead, shareCueWithMoreIds, start, submit } from '../graphql/QueriesAndMutations';
 import * as ImagePicker from 'expo-image-picker';
-import * as ImageManipulator from 'expo-image-manipulator';
-import * as FileSystem from 'expo-file-system';
 import {
     actions,
     RichEditor,
     RichToolbar,
 } from "react-native-pell-rich-editor";
-import FileViewer from 'react-file-viewer';
 import FileUpload from './UploadFiles';
 import Select from 'react-select';
 import { Collapse } from 'react-collapse';
@@ -28,6 +25,8 @@ import EquationEditor from "equation-editor-react";
 import WebView from 'react-native-webview';
 import { PreferredLanguageText } from '../helpers/LanguageContext';
 import moment from 'moment';
+import ReactPlayer from 'react-player'
+
 
 const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -1157,7 +1156,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     )
                                     : (imported ?
                                         (
-                                            <WebView source={{ uri: "https://docs.google.com/gview?embedded=true&url=" + url }} style={{ flex: 1 }} />
+                                            type === 'mp4' || type === 'mp3' || type === 'mov' || type === 'mpeg' || type === 'mp2' || type === 'wav' ?
+                                                <ReactPlayer url={url} controls={true} />
+                                                : <WebView source={{ uri: "https://docs.google.com/gview?embedded=true&url=" + url }} style={{ flex: 1 }} />
                                         )
                                         :
                                         <RichEditor
@@ -1205,7 +1206,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         {showOriginal ? null
                             : (submissionImported ?
                                 (
-                                    <WebView source={{ uri: "https://docs.google.com/gview?embedded=true&url=" + submissionUrl }} style={{ flex: 1 }} />
+                                    submissionType === 'mp4' || submissionType === 'mp3' || submissionType === 'mov' || submissionType === 'mpeg' || submissionType === 'mp2' || submissionType === 'wav' ?
+                                        <ReactPlayer url={submissionUrl} controls={true} />
+                                        : <WebView source={{ uri: "https://docs.google.com/gview?embedded=true&url=" + submissionUrl }} style={{ flex: 1 }} />
                                 )
                                 :
                                 <RichEditor
@@ -1772,7 +1775,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                             onChange={(event: any) => {
                                                                 const date = new Date(event)
                                                                 if (date < new Date()) return;
-                                                                
+
                                                                 setEndPlayAt(date)
                                                             }}
                                                             isValidDate={disablePastDt}
@@ -1823,7 +1826,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                             onChange={(event: any) => {
                                                                 const date = new Date(event)
                                                                 if (date < new Date()) return;
-                                                                
+
                                                                 setEndPlayAt(date)
                                                             }}
                                                             value={endPlayAt}

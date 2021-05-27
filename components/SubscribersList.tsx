@@ -15,9 +15,9 @@ import NewMessage from './NewMessage';
 import MessageCard from './MessageCard';
 import { validateEmail } from '../helpers/emailCheck';
 import Select from 'react-select'
-import FileViewer from 'react-file-viewer';
 import WebView from 'react-native-webview';
 import { PreferredLanguageText } from '../helpers/LanguageContext';
+import ReactPlayer from 'react-player'
 
 
 const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
@@ -26,7 +26,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
     const unparsedSubs: any[] = JSON.parse(JSON.stringify(props.subscribers))
     const [subscribers] = useState<any[]>(unparsedSubs.reverse())
     const categories = ['All', 'Read', 'Delivered', 'Not Delivered']
-    const categoriesLanguageMap: { [label:string]: string } = {
+    const categoriesLanguageMap: { [label: string]: string } = {
         All: 'all',
         Read: 'read',
         Delivered: 'delivered',
@@ -56,14 +56,14 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
     const [title, setTitle] = useState('')
     const [loadedChatWithUser, setLoadedChatWithUser] = useState<any>({})
     const [isLoadedUserInactive, setIsLoadedUserInactive] = useState(false)
-    
+
     // Alerts
     const usersAddedAlert = PreferredLanguageText('usersAdded')
     const emailInviteSentAlert = PreferredLanguageText('emailInviteSent')
-    const unableToLoadMessagesAlert = PreferredLanguageText('unableToLoadMessages') 
+    const unableToLoadMessagesAlert = PreferredLanguageText('unableToLoadMessages')
     const checkConnectionAlert = PreferredLanguageText('checkConnection')
     const somethingWentWrongAlert = PreferredLanguageText('somethingWentWrong');
-    const userSubscriptionActivatedAlert = PreferredLanguageText('userSubscriptionActivated') 
+    const userSubscriptionActivatedAlert = PreferredLanguageText('userSubscriptionActivated')
     const userSubscriptionInactivatedAlert = PreferredLanguageText('userSubscriptionInactivated')
     const userRemovedAlert = PreferredLanguageText('userRemoved');
     const alreadyUnsubscribedAlert = PreferredLanguageText('alreadyUnsubscribed')
@@ -226,7 +226,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
             }).then(res => {
                 props.refreshUnreadMessagesCount()
             })
-            .catch(e => console.log(e))
+                .catch(e => console.log(e))
             // load the user
             server.query({
                 query: findUserById,
@@ -404,7 +404,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             textTransform: 'uppercase'
                                         }}>
                                             {
-                                                isLoadedUserInactive ?  PreferredLanguageText('makeActive') : PreferredLanguageText('makeInactive')
+                                                isLoadedUserInactive ? PreferredLanguageText('makeActive') : PreferredLanguageText('makeInactive')
                                             }
                                         </Text>
                                     </TouchableOpacity>
@@ -434,12 +434,12 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     ellipsizeMode="tail"
                                     style={{ color: '#a2a2aa', fontSize: 17, flex: 1, lineHeight: 25 }}>
                                     {PreferredLanguageText('status')}
-                        </Text> :
+                                </Text> :
                                 <Text
                                     ellipsizeMode="tail"
                                     style={{ color: '#a2a2aa', fontSize: 17, flex: 1, lineHeight: 25 }}>
                                     {PreferredLanguageText('inbox')}
-                        </Text>
+                                </Text>
                         }
                         {
                             !props.cueId ?
@@ -660,8 +660,8 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                         </View>
                                                                     })) : <View style={{ backgroundColor: 'white', flex: 1 }}>
                                                                         <Text style={{ width: '100%', color: '#a2a2aa', fontSize: 25, paddingHorizontal: 50, paddingBottom: 100, paddingTop: 50, fontFamily: 'inter', flex: 1 }}>
-                                                                        {PreferredLanguageText('noGroups')}
-                                                                    </Text>
+                                                                            {PreferredLanguageText('noGroups')}
+                                                                        </Text>
                                                                     </View>
                                                                 }
                                                             </View>
@@ -706,7 +706,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         }}>
                                             <Text style={{ color: '#202025', fontSize: 14, paddingBottom: 10 }}>
                                                 {PreferredLanguageText('score')}
-                                        </Text>
+                                            </Text>
                                             <TextInput
                                                 value={score}
                                                 style={styles.input}
@@ -826,7 +826,13 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                         backgroundColor: 'white'
                                                     }}
                                                     >
-                                                        <WebView source={{ uri: "https://docs.google.com/gview?embedded=true&url=" + url }} style={{ flex: 1 }} />
+                                                        {
+                                                            (
+                                                                type === 'mp4' || type === 'mp3' || type === 'mov' || type === 'mpeg' || type === 'mp2' || type === 'wav' ?
+                                                                    <ReactPlayer url={url} controls={true} />
+                                                                    : <WebView source={{ uri: "https://docs.google.com/gview?embedded=true&url=" + url }} style={{ flex: 1 }} />
+                                                            )
+                                                        }
                                                     </View>
                                                 )
                                         }
@@ -874,7 +880,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                     <View style={{ alignSelf: 'center', width: 400 }}>
                         <Text style={{ color: '#202025', fontSize: 14, paddingBottom: 10 }}>
                             {PreferredLanguageText('inviteByEmail')}
-                            </Text>
+                        </Text>
                         <TextInput
                             value={emails}
                             style={{
@@ -918,7 +924,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 textTransform: 'uppercase'
                             }}>
                                 {PreferredLanguageText("addUsers")}
-                  </Text>
+                            </Text>
                         </TouchableOpacity>
                     </View>
             }

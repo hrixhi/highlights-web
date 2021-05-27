@@ -24,6 +24,8 @@ import EquationEditor from "equation-editor-react";
 import WebView from 'react-native-webview';
 import { PreferredLanguageText } from "../helpers/LanguageContext";
 import moment from 'moment';
+import ReactPlayer from 'react-player'
+
 
 const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -96,14 +98,14 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const onDimensionsChange = useCallback(({ window, screen }: any) => {
         // window.location.reload()
         setDimensions({ window, screen })
-      }, []);
-    
-      useEffect(() => {
+    }, []);
+
+    useEffect(() => {
         Dimensions.addEventListener("change", onDimensionsChange);
         return () => {
-          Dimensions.removeEventListener("change", onDimensionsChange);
+            Dimensions.removeEventListener("change", onDimensionsChange);
         };
-      }, [])
+    }, [])
 
     const insertEquation = useCallback(() => {
         const SVGEquation = TeXToSVG(equation, { width: 100 }); // returns svg in html format
@@ -828,7 +830,9 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 />
                                 : (imported ?
                                     (
-                                        <WebView source={{ uri: "https://docs.google.com/gview?embedded=true&url=" + url }} style={{ flex: 1 }} />
+                                        type === 'mp4' || type === 'mp3' || type === 'mov' || type === 'mpeg' || type === 'mp2' || type === 'wav' ?
+                                            <ReactPlayer url={url} controls={true} />
+                                            : <WebView source={{ uri: "https://docs.google.com/gview?embedded=true&url=" + url }} style={{ flex: 1 }} />
                                     )
                                     :
                                     <RichEditor
@@ -1308,7 +1312,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             onChange={(event: any) => {
                                                                 const date = new Date(event)
                                                                 if (date < new Date()) return;
-                                                                
+
                                                                 setEndPlayAt(date)
                                                             }}
                                                             isValidDate={disablePastDt}
@@ -1448,6 +1452,13 @@ const styles: any = StyleSheet.create({
         color: '#202025',
         borderRadius: 10,
         marginLeft: 10
+    },
+    backgroundVideo: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        bottom: 0,
+        right: 0,
     },
     cuesInput: {
         width: '100%',
