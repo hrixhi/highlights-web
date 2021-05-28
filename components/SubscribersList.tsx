@@ -181,6 +181,8 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                 parsedEmails.push(email)
             }
         })
+
+        if (parsedEmails.length === 0) return;
         const server = fetchAPI('')
         server.mutate({
             mutation: inviteByEmail,
@@ -190,7 +192,9 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
             }
         }).then(res => {
             if (res.data.user.inviteByEmail) {
+                setEmails('')
                 Alert(usersAddedAlert, emailInviteSentAlert)
+                props.reload()
             }
         }).catch(err => {
             console.log(err)
@@ -390,7 +394,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 </View> : null
                         }
                         {
-                            isOwner && !props.cueId
+                            isOwner && !props.cueId && !showAddUsers
                                 ? <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
                                     <TouchableOpacity
                                         onPress={() => handleSubStatusChange()}
@@ -877,7 +881,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 </View>
                         }
                     </View>) :
-                    <View style={{ alignSelf: 'center', width: 400 }}>
+                    <View style={{ alignSelf: 'center', width: 400, maxWidth: '100%' }}>
                         <Text style={{ color: '#202025', fontSize: 14, paddingBottom: 10 }}>
                             {PreferredLanguageText('inviteByEmail')}
                         </Text>
@@ -926,6 +930,41 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 {PreferredLanguageText("addUsers")}
                             </Text>
                         </TouchableOpacity>
+
+                        <Text style={{
+                                textAlign: 'center',
+                                lineHeight: 35,
+                                color: '#202025s',
+                                fontSize: 12,
+                                paddingHorizontal: 25,
+                                width: "100%",
+                                fontFamily: 'inter',
+                                borderRadius: 15,
+                                textTransform: 'uppercase'
+                            }}>
+                                {filteredSubscribers.length !== 0 ? PreferredLanguageText('existingUsers') : PreferredLanguageText('noExistingUsers')}
+                        </Text>
+                        <View style={{ display: "flex", flexDirection: 'column', alignItems: 'center' }}> 
+                            {
+                                filteredSubscribers.map((sub: any) => {
+                                    return (<View style={{ 
+                                        backgroundColor: '#f4f4f6',
+                                        width: '100%',
+                                        padding: 10,
+                                        borderRadius: 8,
+                                        marginBottom: 10
+                                    }}>
+                                        <Text>
+                                            {sub.displayName}
+                                        </Text>
+                                        <Text>
+                                            {sub.email}
+                                        </Text>
+                                    </View>)
+                                })
+                            }
+                        </View>
+                        
                     </View>
             }
         </View >

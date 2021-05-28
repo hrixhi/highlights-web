@@ -16,6 +16,9 @@
 //         subtitle: filteredLines.length > 1 ? filteredLines[1] : ''
 //     }
 // }
+
+import { PreferredLanguageText } from "./LanguageContext";
+
 export const htmlStringParser = (htmlString: string) => {
     const parsedString = htmlString.replace(/<[^>]+>/g, '\n').split('&nbsp;').join(' ');
     const lines = parsedString.split('\n')
@@ -28,10 +31,10 @@ export const htmlStringParser = (htmlString: string) => {
             const obj = JSON.parse(filteredLines[0])
             title = obj.title ? obj.title : 'file'
         } else {
-            title = filteredLines.length > 0 ? filteredLines[0] : 'Alert'
+            title = filteredLines.length > 0 ? filteredLines[0] : PreferredLanguageText('noContent')
         }
     } else {
-        title = 'Alert'
+        title = PreferredLanguageText('noContent')
     }
     return {
         title,

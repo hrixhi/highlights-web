@@ -509,6 +509,7 @@ export const getSubscribers = gql`
     user {
       findByChannelId(channelId: $channelId) {
         _id
+        email
         displayName
         fullName
         unreadMessages
