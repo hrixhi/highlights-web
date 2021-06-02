@@ -831,7 +831,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 : (imported ?
                                     (
                                         type === 'mp4' || type === 'mp3' || type === 'mov' || type === 'mpeg' || type === 'mp2' || type === 'wav' ?
-                                            <ReactPlayer url={url} controls={true} />
+                                            <ReactPlayer url={url} controls={true} onContextMenu={(e: any) => e.preventDefault()}  config={{ file: { attributes: { controlsList: 'nodownload' } } }} />
                                             : <WebView source={{ uri: "https://docs.google.com/gview?embedded=true&url=" + url }} style={{ flex: 1 }} />
                                     )
                                     :
