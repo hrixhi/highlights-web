@@ -1037,11 +1037,11 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             ) : null
                                         )
                                         :
-                                        <View style={{ marginLeft: 25, marginTop: 20, alignSelf: 'flex-start' }}>
+                                        (imported && (type === 'mp4' || type === 'mp3' || type === 'mov' || type === 'mpeg' || type === 'mp2' || type === 'wav') ? null : <View style={{ marginLeft: 25, marginTop: 20, alignSelf: 'flex-start' }}>
                                             <a download={true} href={url} style={{ textDecoration: 'none' }}>
                                                 <Ionicons name='cloud-download-outline' color='#a2a2aa' size={20} />
                                             </a>
-                                        </View>
+                                        </View>)
                                 }
                             </View> : null
                     }
@@ -1157,7 +1157,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     : (imported ?
                                         (
                                             type === 'mp4' || type === 'mp3' || type === 'mov' || type === 'mpeg' || type === 'mp2' || type === 'wav' ?
-                                                <ReactPlayer url={url} controls={true} />
+                                                <ReactPlayer url={url} controls={true} onContextMenu={(e: any) => e.preventDefault()}  config={{ file: { attributes: { controlsList: 'nodownload' } } }}/>
                                                 : <WebView source={{ uri: "https://docs.google.com/gview?embedded=true&url=" + url }} style={{ flex: 1 }} />
                                         )
                                         :
