@@ -95,6 +95,13 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const enterContentAlert = PreferredLanguageText('enterContent');
     const enterTitleAlert = PreferredLanguageText('enterTitle');
 
+    const [webviewKey, setWebviewKey] = useState(Math.random())
+    useEffect(() => {
+        setTimeout(() => {
+            setWebviewKey(Math.random())
+        }, 2000);
+    }, [imported])
+
     const onDimensionsChange = useCallback(({ window, screen }: any) => {
         // window.location.reload()
         setDimensions({ window, screen })
@@ -831,8 +838,17 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 : (imported ?
                                     (
                                         type === 'mp4' || type === 'mp3' || type === 'mov' || type === 'mpeg' || type === 'mp2' || type === 'wav' ?
-                                            <ReactPlayer url={url} controls={true} onContextMenu={(e: any) => e.preventDefault()}  config={{ file: { attributes: { controlsList: 'nodownload' } } }} />
-                                            : <WebView source={{ uri: "https://docs.google.com/gview?embedded=true&url=" + url }} style={{ flex: 1 }} />
+                                            <ReactPlayer url={url} controls={true} onContextMenu={(e: any) => e.preventDefault()} config={{ file: { attributes: { controlsList: 'nodownload' } } }} />
+                                            :
+                                            <View
+                                                key={Math.random()}
+                                                style={{ flex: 1 }}
+                                            >
+                                                <WebView
+                                                    source={{ uri: "https://docs.google.com/gview?embedded=true&url=" + url }}
+                                                    key={webviewKey}
+                                                />
+                                            </View>
                                     )
                                     :
                                     <RichEditor

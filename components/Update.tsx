@@ -218,7 +218,6 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 }}
                             >
                                 <UpdateControls
-                                    // key={props.reopenUpdateWindow}
                                     channelId={props.channelId}
                                     customCategories={props.customCategories}
                                     cue={props.cue}

@@ -68,6 +68,13 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
     const userRemovedAlert = PreferredLanguageText('userRemoved');
     const alreadyUnsubscribedAlert = PreferredLanguageText('alreadyUnsubscribed')
 
+    const [webviewKey, setWebviewKey] = useState(Math.random())
+    useEffect(() => {
+        setTimeout(() => {
+            setWebviewKey(Math.random())
+        }, 2000);
+    }, [imported, url, type])
+
     if (props.cue && props.cue.submission) {
         categories.push('Submitted')
         categories.push('Graded')
@@ -834,7 +841,15 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                             (
                                                                 type === 'mp4' || type === 'mp3' || type === 'mov' || type === 'mpeg' || type === 'mp2' || type === 'wav' ?
                                                                     <ReactPlayer url={url} controls={true} />
-                                                                    : <WebView source={{ uri: "https://docs.google.com/gview?embedded=true&url=" + url }} style={{ flex: 1 }} />
+                                                                    :
+                                                                    <View
+                                                                        key={Math.random()}
+                                                                        style={{ flex: 1 }}
+                                                                    >
+                                                                        <WebView
+                                                                            source={{ uri: "https://docs.google.com/gview?embedded=true&url=" + url }}
+                                                                            key={webviewKey} />
+                                                                    </View>
                                                             )
                                                         }
                                                     </View>
@@ -855,7 +870,8 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 }}>
                                     <ScrollView
                                         contentContainerStyle={{
-                                            height: 20, width: '100%'
+                                            height: 20, width: '100%',
+                                            paddingTop: 15
                                         }}
                                         style={{}}
                                         horizontal={true}
@@ -932,22 +948,22 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                         </TouchableOpacity>
 
                         <Text style={{
-                                textAlign: 'center',
-                                lineHeight: 35,
-                                color: '#202025s',
-                                fontSize: 12,
-                                paddingHorizontal: 25,
-                                width: "100%",
-                                fontFamily: 'inter',
-                                borderRadius: 15,
-                                textTransform: 'uppercase'
-                            }}>
-                                {filteredSubscribers.length !== 0 ? PreferredLanguageText('existingUsers') : PreferredLanguageText('noExistingUsers')}
+                            textAlign: 'center',
+                            lineHeight: 35,
+                            color: '#202025s',
+                            fontSize: 12,
+                            paddingHorizontal: 25,
+                            width: "100%",
+                            fontFamily: 'inter',
+                            borderRadius: 15,
+                            textTransform: 'uppercase'
+                        }}>
+                            {filteredSubscribers.length !== 0 ? PreferredLanguageText('existingUsers') : PreferredLanguageText('noExistingUsers')}
                         </Text>
-                        <View style={{ display: "flex", flexDirection: 'column', alignItems: 'center' }}> 
+                        <View style={{ display: "flex", flexDirection: 'column', alignItems: 'center' }}>
                             {
                                 filteredSubscribers.map((sub: any) => {
-                                    return (<View style={{ 
+                                    return (<View style={{
                                         backgroundColor: '#f4f4f6',
                                         width: '100%',
                                         padding: 10,
@@ -964,7 +980,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 })
                             }
                         </View>
-                        
+
                     </View>
             }
         </View >

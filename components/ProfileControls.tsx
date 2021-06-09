@@ -469,7 +469,6 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
             backgroundColor: "white",
             justifyContent: "center",
             display: "flex",
-            // height: 50,
             paddingTop: 30
           }}
         >
@@ -587,7 +586,7 @@ const styles = StyleSheet.create({
   screen: {
     paddingHorizontal: 30,
     width: "100%",
-    height: Dimensions.get("window").height - 50,
+    height: Dimensions.get("window").height - 75,
     backgroundColor: "white"
   },
   outline: {

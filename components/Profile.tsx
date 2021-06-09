@@ -41,10 +41,10 @@ const Profile: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                     closeModal={() => props.closeModal()}
                     reloadData={() => props.reloadData()}
                 />
+                <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+                    <LanguageSelect />
+                </View>
             </Animated.View>
-            <View style={{ display: "flex", justifyContent: "flex-start",  paddingLeft: 5, paddingBottom: 5}}>
-                <LanguageSelect />
-            </View>
         </View >
     );
 }

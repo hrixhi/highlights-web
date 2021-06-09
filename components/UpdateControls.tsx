@@ -115,7 +115,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     }
 
     // Alerts
-
     const unableToStartQuizAlert = PreferredLanguageText('unableToStartQuiz')
     const deadlineHasPassedAlert = PreferredLanguageText('deadlineHasPassed')
     const enterTitleAlert = PreferredLanguageText('enterTitle')
@@ -129,6 +128,13 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const cannotUndoAlert = PreferredLanguageText('cannotUndo')
     const sharedAlert = PreferredLanguageText('sharedAlert')
     const checkConnectionAlert = PreferredLanguageText('checkConnection')
+
+    const [webviewKey, setWebviewKey] = useState(Math.random())
+    useEffect(() => {
+        setTimeout(() => {
+            setWebviewKey(Math.random())
+        }, 2000);
+    }, [showOriginal])
 
     useEffect(() => {
         setLoading(true)
@@ -1147,7 +1153,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             :
                                             <Quiz
                                                 isOwner={isOwner}
-                                                // disable quiz if graded or deadline has passed
                                                 graded={props.cue.graded || (currentDate >= deadline)}
                                                 solutions={solutions}
                                                 problems={problems}
@@ -1157,8 +1162,19 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     : (imported ?
                                         (
                                             type === 'mp4' || type === 'mp3' || type === 'mov' || type === 'mpeg' || type === 'mp2' || type === 'wav' ?
-                                                <ReactPlayer url={url} controls={true} onContextMenu={(e: any) => e.preventDefault()}  config={{ file: { attributes: { controlsList: 'nodownload' } } }}/>
-                                                : <WebView source={{ uri: "https://docs.google.com/gview?embedded=true&url=" + url }} style={{ flex: 1 }} />
+                                                <ReactPlayer url={url} controls={true} onContextMenu={(e: any) => e.preventDefault()} config={{ file: { attributes: { controlsList: 'nodownload' } } }} />
+                                                :
+                                                <View
+                                                    key={Math.random()}
+                                                    style={{ flex: 1 }}
+                                                >
+                                                    <WebView
+                                                        key={webviewKey}
+                                                        source={{
+                                                            uri: "https://docs.google.com/gview?embedded=true&url=" + url
+                                                        }}
+                                                    />
+                                                </View>
                                         )
                                         :
                                         <RichEditor
@@ -1208,7 +1224,16 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 (
                                     submissionType === 'mp4' || submissionType === 'mp3' || submissionType === 'mov' || submissionType === 'mpeg' || submissionType === 'mp2' || submissionType === 'wav' ?
                                         <ReactPlayer url={submissionUrl} controls={true} />
-                                        : <WebView source={{ uri: "https://docs.google.com/gview?embedded=true&url=" + submissionUrl }} style={{ flex: 1 }} />
+                                        :
+                                        <View
+                                            key={Math.random()}
+                                            style={{ flex: 1 }}
+                                        >
+                                            <WebView
+                                                key={webviewKey}
+                                                source={{ uri: "https://docs.google.com/gview?embedded=true&url=" + submissionUrl }}
+                                            />
+                                        </View>
                                 )
                                 :
                                 <RichEditor
