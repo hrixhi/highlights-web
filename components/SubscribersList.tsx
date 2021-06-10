@@ -72,8 +72,8 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
     useEffect(() => {
         setTimeout(() => {
             setWebviewKey(Math.random())
-        }, 2000);
-    }, [imported, url, type])
+        }, 1500);
+    }, [imported])
 
     if (props.cue && props.cue.submission) {
         categories.push('Submitted')
@@ -843,7 +843,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                     <ReactPlayer url={url} controls={true} />
                                                                     :
                                                                     <View
-                                                                        key={Math.random()}
+                                                                        // key={Math.random()}
                                                                         style={{ flex: 1 }}
                                                                     >
                                                                         <WebView

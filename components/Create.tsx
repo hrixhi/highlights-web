@@ -99,7 +99,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     useEffect(() => {
         setTimeout(() => {
             setWebviewKey(Math.random())
-        }, 2000);
+        }, 1500);
     }, [imported])
 
     const onDimensionsChange = useCallback(({ window, screen }: any) => {
@@ -841,7 +841,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             <ReactPlayer url={url} controls={true} onContextMenu={(e: any) => e.preventDefault()} config={{ file: { attributes: { controlsList: 'nodownload' } } }} />
                                             :
                                             <View
-                                                key={Math.random()}
+                                                // key={Math.random()}
                                                 style={{ flex: 1 }}
                                             >
                                                 <WebView

@@ -133,7 +133,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     useEffect(() => {
         setTimeout(() => {
             setWebviewKey(Math.random())
-        }, 2000);
+        }, 1500);
     }, [showOriginal])
 
     useEffect(() => {
@@ -1165,7 +1165,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                 <ReactPlayer url={url} controls={true} onContextMenu={(e: any) => e.preventDefault()} config={{ file: { attributes: { controlsList: 'nodownload' } } }} />
                                                 :
                                                 <View
-                                                    key={Math.random()}
+                                                    // key={Math.random()}
                                                     style={{ flex: 1 }}
                                                 >
                                                     <WebView
@@ -1226,7 +1226,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         <ReactPlayer url={submissionUrl} controls={true} />
                                         :
                                         <View
-                                            key={Math.random()}
+                                            // key={Math.random()}
                                             style={{ flex: 1 }}
                                         >
                                             <WebView
