@@ -576,15 +576,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     <View style={{ backgroundColor: 'white', flex: 1 }}>
                         <Text
                             style={{
-                                fontSize: 12,
-                                color: '#fff',
-                                paddingHorizontal: 10,
-                                borderRadius: 10,
-                                backgroundColor: '#a2a2aa',
-                                lineHeight: 20,
-                                width: 50,
-                                marginBottom: 20,
-                                textAlign: 'center'
+                                color: '#a2a2aa', fontSize: 17,
+                                paddingBottom: 20
                             }}
                         >
                             {PreferredLanguageText('new')}
