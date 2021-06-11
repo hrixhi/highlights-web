@@ -8,7 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Datetime from 'react-datetime';
 import { timedFrequencyOptions } from '../helpers/FrequencyOptions';
 import { fetchAPI } from '../graphql/FetchAPI';
-import { createCue, deleteCue, deleteForEveryone, getChannels, getQuiz, getSharedWith, markAsRead, shareCueWithMoreIds, start, submit } from '../graphql/QueriesAndMutations';
+import { createCue, deleteCue, deleteForEveryone, getChannelCategories, getChannels, getQuiz, getSharedWith, markAsRead, shareCueWithMoreIds, start, submit } from '../graphql/QueriesAndMutations';
 import * as ImagePicker from 'expo-image-picker';
 import {
     actions,
@@ -38,7 +38,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const [notify, setNotify] = useState(props.cue.frequency !== "0" ? true : false)
     const [frequency, setFrequency] = useState(props.cue.frequency)
     const [customCategory, setCustomCategory] = useState(props.cue.customCategory)
-    const [customCategories] = useState(props.customCategories)
+    const [customCategories, setCustomCategories] = useState(props.customCategories)
     const [addCustomCategory, setAddCustomCategory] = useState(false)
     const [markedAsRead, setMarkedAsRead] = useState(false)
     const [reloadEditorKey, setReloadEditorKey] = useState(Math.random())
@@ -171,6 +171,21 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         if (uString) {
             const user = JSON.parse(uString)
             const server = fetchAPI('')
+
+            if (props.channelId) {
+                server.query({
+                    query: getChannelCategories,
+                    variables: {
+                        channelId: props.channelId
+                    }
+                }).then(res => {
+                    if (res.data.channel && res.data.channel.getChannelCategories) {
+                        setCustomCategories(res.data.channel.getChannelCategories)
+                    }
+                }).catch(err => {
+                })
+            }
+
             server.query({
                 query: getChannels,
                 variables: {
@@ -206,7 +221,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     .catch((err: any) => console.log(err))
             }
         }
-    }, [props.cue,])
+    }, [props.cue, props.channelId])
 
     useEffect(() => {
         loadChannelsAndSharedWith()
@@ -434,7 +449,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         props.reloadCueListAfterUpdate()
     }, [cue, customCategory, shuffle, frequency, starred, color, playChannelCueIndef, notify, submissionImported,
         submission, deadline, gradeWeight, submitted, submissionTitle, submissionType, submissionUrl, isQuiz,
-        props.closeModal, props.cueIndex, props.cueKey, props.cue, endPlayAt, props, solutions, initiatedAt])
+        props.closeModal, props.cueIndex, props.cueKey, props.cue, endPlayAt, props, solutions, initiatedAt, submission, deadline])
 
     const handleDelete = useCallback(async () => {
 
@@ -579,6 +594,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     useEffect(() => {
         handleUpdate()
     }, [cue, shuffle, frequency, starred, color, props.cueIndex, submitted, markedAsRead,
+        submission, deadline,
         submissionTitle, submissionImported, submissionType, isQuiz, solutions, initiatedAt,
         customCategory, props.cueKey, endPlayAt, playChannelCueIndef, notify])
 
@@ -1542,7 +1558,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         </Text>
                                     </View>
                                     {
-                                        props.cue.channelId ?
+                                        props.cue.channelId && !props.channelOwner ?
                                             <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white' }}>
                                                 <View style={{ width: '85%', backgroundColor: 'white' }}>
                                                     <View style={styles.colorBar}>
@@ -1556,7 +1572,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                     </View>
                                                 </View>
                                             </View>
-                                            : <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white' }}>
+                                            :
+                                            <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white' }}>
                                                 <View style={{ width: '85%', backgroundColor: 'white' }}>
                                                     {
                                                         addCustomCategory ?

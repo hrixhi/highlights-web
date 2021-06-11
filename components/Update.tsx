@@ -223,6 +223,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     cue={props.cue}
                                     cueIndex={props.cueIndex}
                                     cueKey={props.cueKey}
+                                    channelOwner={channelOwner}
                                     createdBy={createdBy}
                                     closeModal={() => {
                                         Animated.timing(modalAnimation, {
