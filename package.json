@@ -88,6 +88,7 @@
     "react-native-webview": "11.0.0",
     "react-native-wheel-picker": "^1.2.0",
     "react-native-youtube-iframe": "^2.0.1",
+    "react-onesignal": "^1.7.0",
     "react-player": "^2.9.0",
     "react-select": "^4.3.0",
     "reanimated-bottom-sheet": "^1.0.0-alpha.22",

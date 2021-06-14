@@ -29,6 +29,9 @@ import Calendar from '../components/Calendar';
 import Meeting from '../components/Meeting';
 import { PreferredLanguageText, LanguageSelect } from '../helpers/LanguageContext';
 
+// Web Notification
+import OneSignal, { useOneSignalSetup } from 'react-onesignal';
+
 const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
   const window = Dimensions.get("window");
@@ -251,8 +254,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
  
   
-  
-
   const storeMenu = useCallback(async () => {
     try {
       await AsyncStorage.setItem('sleepFrom', sleepFrom.toString())
@@ -395,6 +396,34 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
       setReLoading(false)
     }
   }, [])
+
+  useOneSignalSetup(async () => {
+
+    const permissions = OneSignal.notificationPermission;
+
+    // Check current permission state
+    const currentState = await OneSignal.getNotificationPermission();
+
+    if (currentState !== "granted") {
+      OneSignal.registerForPushNotifications();
+    } else {
+
+      // If permission granted and logged in then ensure user external id is added
+
+      const externalUserId = await OneSignal.getExternalUserId();
+
+      if (!externalUserId) {
+        let user = await AsyncStorage.getItem('user')
+
+        if (user) {
+          const parsedUser = JSON.parse(user);
+          if (parsedUser.email) {
+            await OneSignal.setExternalUserId(parsedUser._id)
+          }
+        }
+      }
+    }
+  });
 
   const unsubscribeChannel = useCallback(() => {
     Alert(
@@ -656,6 +685,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
       if (!sC) {
         setReLoading(false)
       }
+
     } catch (e) {
       console.log(e)
     }
@@ -676,6 +706,11 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         if (u.__typename) {
           delete u.__typename
         }
+
+        const userId = u._id;
+
+        OneSignal.setExternalUserId(userId);
+
         const sU = JSON.stringify(u)
         await AsyncStorage.setItem('user', sU)
         setShowLoginWindow(false)
@@ -896,6 +931,14 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   }, [cues, setCues])
 
   useEffect(() => {
+
+    OneSignal.initialize("51db5230-f2f3-491a-a5b9-e4fba0f23c76", {
+      notifyButton: {
+        enable: false,
+      },
+      allowLocalhostAsSecureOrigin: true,
+    });
+    
     // Called when component is loaded
     loadData()
   }, [])
