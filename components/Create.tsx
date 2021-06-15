@@ -844,7 +844,9 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             </View>
                                     )
                                     :
-                                    <RichEditor
+                                    null)
+                        }
+                        <RichEditor
                                         key={reloadEditorKey.toString()}
                                         containerStyle={{
                                             height,
@@ -852,20 +854,23 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             padding: 3,
                                             paddingTop: 5,
                                             paddingBottom: 10,
-                                            borderRadius: 8
+                                            borderRadius: 8,
+                                            display:(isQuiz || imported) ? "none" : "flex"
                                         }}
                                         ref={RichText}
                                         style={{
                                             width: '100%',
                                             backgroundColor: '#f4f4f6',
                                             borderRadius: 8,
-                                            minHeight: 475
+                                            minHeight: 475,
+                                            display:(isQuiz || imported) ? "none" : "flex"
                                         }}
                                         editorStyle={{
                                             backgroundColor: '#f4f4f6',
                                             placeholderColor: '#a2a2aa',
                                             color: '#202025',
-                                            contentCSSText: 'font-size: 13px;'
+                                            contentCSSText: 'font-size: 13px;',
+
                                         }}
                                         initialContentHTML={cue}
                                         onScroll={() => Keyboard.dismiss()}
@@ -883,8 +888,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         allowsInlineMediaPlayback={true}
                                         allowsLinkPreview={true}
                                         allowsBackForwardNavigationGestures={true}
-                                    />)
-                        }
+                                    />
+
                     </View>
                     <View style={{ flex: 1, display: 'flex', flexDirection: 'column', marginHorizontal: 10 }}>
                         {channels.length !== 0 ?
