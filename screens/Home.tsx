@@ -14,7 +14,7 @@ import Menu from '../components/Menu'
 import Create from '../components/Create';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Update from '../components/Update';
-import { uniqueNamesGenerator, adjectives, colors, animals } from 'unique-names-generator'
+import { uniqueNamesGenerator, colors } from 'unique-names-generator'
 import { defaultCues, defaultRandomShuffleFrequency, defaultSleepInfo } from '../helpers/DefaultData'
 import Walkthrough from '../components/Walkthrough';
 import Channels from '../components/Channels';
@@ -160,39 +160,39 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   useEffect(() => {
 
     if (channelId !== '') {
-        (
-            async () => {
-                const u = await AsyncStorage.getItem('user')
-                if (u) {
-                    const user = JSON.parse(u)
+      (
+        async () => {
+          const u = await AsyncStorage.getItem('user')
+          if (u) {
+            const user = JSON.parse(u)
 
-                    const server = fetchAPI('')
-                    server.query({
-                        query: totalUnreadDiscussionThreads,
-                        variables: {
-                            userId: user._id,
-                            channelId
-                        }
-                    }).then(res => {
-                        if (res.data.threadStatus.totalUnreadDiscussionThreads) {
-                            setUnreadDiscussionThreads(res.data.threadStatus.totalUnreadDiscussionThreads)
-                        }
-                    })
-                    server.query({
-                        query: totalUnreadMessages,
-                        variables: {
-                            userId: user._id,
-                            channelId
-                        }
-                    }).then(res => {
-                        if (res.data.messageStatus.totalUnreadMessages) {
-                            setUnreadMessages(res.data.messageStatus.totalUnreadMessages)
-                        }
-                    })
-                    .catch(err => console.log(err))
-                }
-            }
-        )()
+            const server = fetchAPI('')
+            server.query({
+              query: totalUnreadDiscussionThreads,
+              variables: {
+                userId: user._id,
+                channelId
+              }
+            }).then(res => {
+              if (res.data.threadStatus.totalUnreadDiscussionThreads) {
+                setUnreadDiscussionThreads(res.data.threadStatus.totalUnreadDiscussionThreads)
+              }
+            })
+            server.query({
+              query: totalUnreadMessages,
+              variables: {
+                userId: user._id,
+                channelId
+              }
+            }).then(res => {
+              if (res.data.messageStatus.totalUnreadMessages) {
+                setUnreadMessages(res.data.messageStatus.totalUnreadMessages)
+              }
+            })
+              .catch(err => console.log(err))
+          }
+        }
+      )()
     }
 
   }, [channelId, channelCreatedBy, email])
@@ -205,7 +205,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         updateDiscussionNotidCounts(user._id)
       }
     }
-    
+
   }, [channelId])
 
   const refreshUnreadMessagesCount = useCallback(async () => {
@@ -214,10 +214,10 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
       if (u) {
         const user = JSON.parse(u)
         updateMessageNotifCounts(user._id)
-        
+
       }
     }
-    
+
   }, [channelId])
 
   const updateDiscussionNotidCounts = useCallback((userId) => {
@@ -233,27 +233,27 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         setUnreadDiscussionThreads(res.data.threadStatus.totalUnreadDiscussionThreads)
       }
     })
-  .catch(err => console.log(err))
-    }, [channelId])
+      .catch(err => console.log(err))
+  }, [channelId])
 
   const updateMessageNotifCounts = useCallback((userId) => {
     const server = fetchAPI('')
-        server.query({
-          query: totalUnreadMessages,
-          variables: {
-              userId,
-              channelId
-          }
-        }).then(res => {
-            if (res.data.messageStatus.totalUnreadMessages !== undefined && res.data.messageStatus.totalUnreadMessages !== null) {
-              setUnreadMessages(res.data.messageStatus.totalUnreadMessages)
-            }
-        })
-        .catch(err => console.log(err))
+    server.query({
+      query: totalUnreadMessages,
+      variables: {
+        userId,
+        channelId
+      }
+    }).then(res => {
+      if (res.data.messageStatus.totalUnreadMessages !== undefined && res.data.messageStatus.totalUnreadMessages !== null) {
+        setUnreadMessages(res.data.messageStatus.totalUnreadMessages)
+      }
+    })
+      .catch(err => console.log(err))
   }, [channelId])
 
- 
-  
+
+
   const storeMenu = useCallback(async () => {
     try {
       await AsyncStorage.setItem('sleepFrom', sleepFrom.toString())
@@ -282,7 +282,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             userId: parsedUser._id
           }
         })
-  
+
         if (res.data.cue.findByUserId) {
           // Here we load all new Cues
           // we update statuses for the cues that are already stored and add new cues to the list
@@ -345,29 +345,29 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
       } catch (err) {
 
         Alert(unableToRefreshCuesAlert, checkConnectionAlert)
-          const custom: any = {}
-          setCues(allCues)
-          if (allCues['local']) {
-            allCues['local'].map((item: any) => {
-              if (item.customCategory !== "") {
-                if (!custom[item.customCategory]) {
-                  custom[item.customCategory] = 0
-                }
+        const custom: any = {}
+        setCues(allCues)
+        if (allCues['local']) {
+          allCues['local'].map((item: any) => {
+            if (item.customCategory !== "") {
+              if (!custom[item.customCategory]) {
+                custom[item.customCategory] = 0
               }
-            })
-            const customC: any[] = []
-            Object.keys(custom).map((item) => {
-              customC.push(item)
-            })
-            customC.sort()
-            setCustomCategories(customC)
-          }
-          Animated.timing(fadeAnimation, {
-            toValue: 1,
-            duration: 150,
-            useNativeDriver: true
-          }).start();
-          setReLoading(false)
+            }
+          })
+          const customC: any[] = []
+          Object.keys(custom).map((item) => {
+            customC.push(item)
+          })
+          customC.sort()
+          setCustomCategories(customC)
+        }
+        Animated.timing(fadeAnimation, {
+          toValue: 1,
+          duration: 150,
+          useNativeDriver: true
+        }).start();
+        setReLoading(false)
       }
     } else if (unparsedCues) {
       const custom: any = {}
@@ -547,11 +547,9 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
       // LOAD USER OR CREATE A NEW ONE IF NOT FOUND
       if (!u) {
         const fullName = uniqueNamesGenerator({
-          dictionaries: [adjectives, colors, animals]
-        });
-        const displayName = uniqueNamesGenerator({
-          dictionaries: [adjectives, colors, animals]
-        });
+          dictionaries: [colors]
+        }) + Math.floor(Math.random() * (999 - 100 + 1) + 100).toString();
+        const displayName = fullName
         const notificationId = 'NOT_SET';
         server.mutate({
           mutation: createUser,
@@ -888,7 +886,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
       if (res.data.cue.saveCuesToCloud) {
         const newIds: any = res.data.cue.saveCuesToCloud;
         const updatedCuesArray: any[] = []
-        allCuesToSave.map((c: any) => { 
+        allCuesToSave.map((c: any) => {
           const id = c._id;
           const updatedItem = newIds.find((i: any) => {
             return id.toString().trim() === i.oldId.toString().trim()
@@ -938,7 +936,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
       },
       allowLocalhostAsSecureOrigin: true,
     });
-    
+
     // Called when component is loaded
     loadData()
   }, [])
@@ -1377,7 +1375,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         borderRightWidth: 2,
       }}>
         <TopBar
-          key={JSON.stringify(channelFilterChoice) + JSON.stringify(filteredCues) + JSON.stringify(modalType) + JSON.stringify(filterChoice) + JSON.stringify(unreadDiscussionThreads) + JSON.stringify(unreadMessages)} 
+          key={JSON.stringify(channelFilterChoice) + JSON.stringify(filteredCues) + JSON.stringify(modalType) + JSON.stringify(filterChoice) + JSON.stringify(unreadDiscussionThreads) + JSON.stringify(unreadMessages)}
           openChannels={() => openModal('Channels')}
           cues={filteredCues}
           filterChoice={filterChoice}

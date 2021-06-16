@@ -6,7 +6,7 @@ import { fetchAPI } from '../graphql/FetchAPI';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { checkChannelStatus, createChannel, createUser, subscribe, updateUser } from '../graphql/QueriesAndMutations';
 import Alert from '../components/Alert'
-import { uniqueNamesGenerator, adjectives, colors, animals } from 'unique-names-generator'
+import { uniqueNamesGenerator, colors } from 'unique-names-generator'
 import { PreferredLanguageText } from '../helpers/LanguageContext';
 
 const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
@@ -25,7 +25,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
     const incorrectPasswordAlert = PreferredLanguageText('incorrectPassword');
     const alreadySubscribedAlert = PreferredLanguageText('alreadySubscribed');
     const somethingWrongAlert = PreferredLanguageText('somethingWentWrong');
-    const checkConnectionAlert = PreferredLanguageText('checkConnection') 
+    const checkConnectionAlert = PreferredLanguageText('checkConnection')
     const doesNotExistAlert = PreferredLanguageText('doesNotExists');
     const invalidChannelNameAlert = PreferredLanguageText('invalidChannelName');
     const nameAlreadyInUseAlert = PreferredLanguageText('nameAlreadyInUse');
@@ -40,8 +40,8 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
             } else if (passwordRequired && name && password) {
                 setIsSubmitDisabled(false);
                 return;
-            } 
-            
+            }
+
         } else {
             if (name) {
                 setIsSubmitDisabled(false)
@@ -219,11 +219,9 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
             setUserFound(true)
         } else {
             const fullName = uniqueNamesGenerator({
-                dictionaries: [adjectives, colors, animals]
-            });
-            const displayName = uniqueNamesGenerator({
-                dictionaries: [adjectives, colors, animals]
-            });
+                dictionaries: [colors]
+            }) + Math.floor(Math.random() * (999 - 100 + 1) + 100).toString();
+            const displayName = fullName
             const notificationId = 'NOT_SET';
             server.mutate({
                 mutation: createUser,
@@ -397,7 +395,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     marginTop: 15
                                 }}
                                 disabled={isSubmitDisabled}
-                                >
+                            >
                                 <Text style={{
                                     textAlign: 'center',
                                     lineHeight: 35,

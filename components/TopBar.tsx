@@ -18,6 +18,9 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const [meetingOn, setMeetingOn] = useState(false)
     const [isOwner, setIsOwner] = useState(false)
 
+    // NAVRACHANA HARD CODE
+    const [showNavrachanaLogo, setShowNavrachanaLogo] = useState(false)
+
     const editChannelInfo = useCallback(() => {
         const name = prompt('Update Name', props.filterChoice)
         const password = prompt('Update Password (Leave blank for for public access.)')
@@ -59,13 +62,15 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     }, [props.filterChoice, props.loadData])
 
     useEffect(() => {
-
-        if (props.channelId !== '') {
-            (
-                async () => {
-                    const u = await AsyncStorage.getItem('user')
-                    if (u) {
-                        const user = JSON.parse(u)
+        (
+            async () => {
+                const u = await AsyncStorage.getItem('user')
+                if (u) {
+                    const user = JSON.parse(u)
+                    if (user.email === 'hrishi@cuesapp.co') {
+                        setShowNavrachanaLogo(true)
+                    }
+                    if (props.channelId !== '') {
                         if (user._id.toString().trim() === props.channelCreatedBy.toString().trim()) {
                             setIsOwner(true)
                         }
@@ -84,9 +89,8 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         }).catch(err => console.log(err))
                     }
                 }
-            )()
-        }
-
+            }
+        )()
         const custom: any = {}
         const cat: any = []
         cues.map((cue) => {
@@ -111,11 +115,16 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     <TouchableOpacity
                         onPress={() => Linking.openURL('http://www.cuesapp.co')}
                         style={{ backgroundColor: 'white' }}>
+                        {/* NAVRACHANA HARD CODE */}
                         <Image
-                            source={require('./default-images/cues-logo-black-exclamation-hidden.jpg')}
+                            source={
+                                showNavrachanaLogo
+                                    ? 'https://cues-files.s3.amazonaws.com/media/png/1623380757563_navrachana.png'
+                                    : require('./default-images/cues-logo-black-exclamation-hidden.jpg')
+                            }
                             style={{
-                                width: Dimensions.get('window').height * 0.16 * 0.53456,
-                                height: Dimensions.get('window').height * 0.16 * 0.2
+                                width: Dimensions.get('window').height * (showNavrachanaLogo ? 0.1 : 0.16) * 0.53456,
+                                height: Dimensions.get('window').height * (showNavrachanaLogo ? 0.2 : 0.16) * 0.2
                             }}
                             resizeMode={'contain'}
                         />
