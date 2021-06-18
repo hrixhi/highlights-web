@@ -18,6 +18,7 @@ import Select from 'react-select'
 import WebView from 'react-native-webview';
 import { PreferredLanguageText } from '../helpers/LanguageContext';
 import ReactPlayer from 'react-player'
+import moment from "moment"
 
 
 const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
@@ -50,6 +51,8 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
     const [selected, setSelected] = useState<any[]>([])
     const [expandMenu, setExpandMenu] = useState(false)
     const [comment, setComment] = useState('')
+    const [isQuiz, setIsQuiz] = useState(false);
+    const [quizSolutions, setQuizSolutions] = useState<any>({});
     const [imported, setImported] = useState(false)
     const [url, setUrl] = useState('')
     const [type, setType] = useState('')
@@ -128,10 +131,15 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
     useEffect(() => {
         if (submission[0] === '{' && submission[submission.length - 1] === '}') {
             const obj = JSON.parse(submission)
-            setImported(true)
-            setUrl(obj.url)
-            setType(obj.type)
-            setTitle(obj.title)
+            if (obj.solutions) {
+                setIsQuiz(true)
+                setQuizSolutions(obj)
+            } else {
+                setImported(true)
+                setUrl(obj.url)
+                setType(obj.type)
+                setTitle(obj.title)
+            }
         } else {
             setImported(false)
             setUrl('')
@@ -349,6 +357,41 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
         })
     }, [isLoadedUserInactive, loadedChatWithUser, props.channelId])
 
+    const renderQuizSubmissions = () => {
+
+        const { initiatedAt, solutions } = quizSolutions;
+
+        return (<View style={{ width: '100%', marginLeft: '5%', display: 'flex', flexDirection: 'column' }}>
+            {initiatedAt ? <Text style={{ width: '100%', height: 15, paddingBottom: 25 }}>
+                Quiz initiated at { moment(new Date(initiatedAt)).format('MMMM Do YYYY, h:mm a')}
+            </Text> : 
+                null
+            }
+            <Text style={{ width: '100%', height: 15, marginTop: '20px', paddingBottom: 25, fontWeight: 'bold' }}>
+                Selected Answers:
+            </Text>
+            <View style={{ marginTop: '20px', display: 'flex', flexDirection: "column"}}>
+                {solutions.map((problem: any, index: number) => {
+
+                    const answers: any[] = problem.selected;
+
+                    const selectedAnswers = answers.filter(ans => ans.isSelected);
+
+                    let selectedAnswersString: any[] = []
+                    
+                    selectedAnswers.forEach((ans: any) => {
+                        selectedAnswersString.push(ans.options)
+                    })
+
+                    return (<Text style={{ width: '100%', height: 15, marginTop: '10px', paddingBottom: 25 }}>
+                        Problem {index + 1} : {selectedAnswersString.join(", ")} 
+                    </Text>)
+                })}
+            </View>
+        </View>)
+
+    }
+    
     return (
         <View style={{
             backgroundColor: 'white',
@@ -783,7 +826,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             {PreferredLanguageText('viewSubmission')}
                                         </Text>
                                         {
-                                            imported ?
+                                            imported && !isQuiz ?
                                                 <View style={{ width: '40%', alignSelf: 'flex-start', marginLeft: '10%' }}>
                                                     <TextInput
                                                         editable={false}
@@ -796,7 +839,11 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 </View> : null
                                         }
                                         {
-                                            !imported ?
+                                            isQuiz && Object.keys(quizSolutions).length > 0 ?
+                                            renderQuizSubmissions() : null
+                                        }
+                                        {
+                                            !imported && !isQuiz ?
                                                 <RichEditor
                                                     disabled={true}
                                                     key={Math.random()}
@@ -842,14 +889,14 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                 type === 'mp4' || type === 'mp3' || type === 'mov' || type === 'mpeg' || type === 'mp2' || type === 'wav' ?
                                                                     <ReactPlayer url={url} controls={true} />
                                                                     :
-                                                                    <View
+                                                                    (!isQuiz ? <View
                                                                         // key={Math.random()}
                                                                         style={{ flex: 1 }}
                                                                     >
                                                                         <WebView
                                                                             source={{ uri: "https://docs.google.com/gview?embedded=true&url=" + url }}
                                                                             key={webviewKey} />
-                                                                    </View>
+                                                                    </View> : null)
                                                             )
                                                         }
                                                     </View>

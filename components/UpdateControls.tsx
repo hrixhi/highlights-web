@@ -1572,7 +1572,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                                 <TextInput
                                                                     value={customCategory}
                                                                     style={styles.allGrayOutline}
-                                                                    placeholder={'New Category'}
+                                                                    placeholder={'Enter Category'}
                                                                     onChangeText={val => {
                                                                         setCustomCategory(val)
                                                                     }}
