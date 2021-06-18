@@ -162,14 +162,27 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 Alert(mustHaveOneOptionAlert)
                 error = true;
             }
+
+            // Create object and check if any options repeat:
+
+            const keys: any = {};
+
             problem.options.map((option: any) => {
                 if (option.option === '' || option.option === 'formula:') {
                     Alert(fillMissingOptionsAlert)
                     error = true;
                 }
+
+                if (option.option in keys) {
+                    Alert("Option repeated in a question");
+                    error = true
+                }
+
                 if (option.isCorrect) {
                     optionFound = true
                 }
+
+                keys[option.option] = 1
             })
             if (!optionFound) {
                 Alert(eachOptionOneCorrectAlert)
@@ -1135,7 +1148,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         <TextInput
                                                             value={customCategory}
                                                             style={styles.allGrayOutline}
-                                                            placeholder={'New Category'}
+                                                            placeholder={'Enter Category'}
                                                             onChangeText={val => {
                                                                 setCustomCategory(val)
                                                             }}

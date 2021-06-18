@@ -324,7 +324,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                         <TextInput
                                                             value={customCategory}
                                                             style={styles.allOutline}
-                                                            placeholder={'New Category'}
+                                                            placeholder={'Enter Category'}
                                                             onChangeText={val => {
                                                                 setCustomCategory(val)
                                                             }}
