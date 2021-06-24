@@ -21,9 +21,9 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             <TouchableOpacity
                 key={'textPage'}
                 onPress={() => props.updateModal()}
-                style={starred ? styleObject.flipCard : styleObject.card}>
-                <View style={starred ? styleObject.flipText : styleObject.text}>
-                    <View style={starred ? styleObject.flipDateContainer : styleObject.dateContainer}>
+                style={styleObject.card}>
+                <View style={styleObject.text}>
+                    <View style={styleObject.dateContainer}>
                         <View style={{
                             width: 8,
                             height: 8,
@@ -38,16 +38,16 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 (new Date(props.cue.date)).toString().split(' ')[2]
                             }
                         </Text>
-                        {
+                        {/* {
                             props.cue.channelName ?
                                 <Text style={styleObject.date}>
                                     {props.cue.channelName}
                                 </Text> : null
-                        }
-                        <Text style={styleObject.date}>
+                        } */}
+                        {/* <Text style={styleObject.date}>
                             {props.cue.customCategory}
-                        </Text>
-                        {
+                        </Text> */}
+                        {/* {
                             props.cue.submission ? <Text style={styleObject.date}>
                                 <Ionicons
                                     name='share-outline'
@@ -65,7 +65,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         color={colorScheme === 'light' ? '#a2a2aa' : '#333333'}
                                     />
                                 </Text> : null
-                        }
+                        } */}
                         {
                             props.cue.graded ? <Text style={{
                                 fontSize: 9,
@@ -80,7 +80,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 <Text style={{
                                     textAlign: 'right',
                                     lineHeight: 30,
-                                    marginTop: -20,
+                                    marginTop: -26,
                                     paddingRight: 30,
                                     position: 'absolute',
                                     width: '97%',
@@ -118,15 +118,15 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     <Text
                         ellipsizeMode={'tail'}
                         numberOfLines={1}
-                        style={starred ? styleObject.titleFlip : styleObject.title}>
+                        style={styleObject.title}>
                         {title}
                     </Text>
-                    <Text
+                    {/* <Text
                         ellipsizeMode={'tail'}
                         numberOfLines={1}
                         style={starred ? styleObject.descriptionFlip : styleObject.description}>
                         {subtitle && subtitle !== '' ? subtitle : '-'}
-                    </Text>
+                    </Text> */}
                 </View>
             </TouchableOpacity>
         </View>
@@ -149,6 +149,7 @@ const styles: any = (colorScheme: any, channelId: any) => StyleSheet.create({
         height: '100%',
         borderRadius: 15,
         padding: 13,
+        paddingTop: 20,
         backgroundColor: colorScheme === 'light' ? '#f4f4f6' : '#a2a2aa',
     },
     flipCard: {
@@ -162,7 +163,7 @@ const styles: any = (colorScheme: any, channelId: any) => StyleSheet.create({
     descriptionFlip: {
         color: '#a2a2aa',
         fontSize: 13,
-        height: '30%'
+        // height: '30%'
     },
     text: {
         height: '100%',
@@ -176,14 +177,14 @@ const styles: any = (colorScheme: any, channelId: any) => StyleSheet.create({
     dateContainer: {
         fontSize: 10,
         color: colorScheme === 'light' ? '#a2a2aa' : '#f4f4f6',
-        height: '22%',
+        height: '25%',
         backgroundColor: colorScheme === 'light' ? '#f4f4f6' : '#a2a2aa',
         display: 'flex',
         flexDirection: 'row'
     },
     flipDateContainer: {
         fontSize: 10,
-        height: '22%',
+        height: '25%',
         display: 'flex',
         flexDirection: 'row',
         color: '#f4f4f6',
@@ -198,15 +199,15 @@ const styles: any = (colorScheme: any, channelId: any) => StyleSheet.create({
         fontSize: 9,
         color: colorScheme === 'light' ? '#a2a2aa' : '#333333',
         marginLeft: 10,
-        marginTop: -2
+        // marginTop: -2
     },
     title: {
         fontFamily: 'inter',
-        fontSize: 13,
+        fontSize: 14,
         // ,
-        height: '44%',
+        height: '75%',
         width: '100%',
-        paddingTop: 5,
+        paddingTop: 10,
         color: colorScheme === 'light' ? '#202025' : 'white'
     },
     titleFlip: {
@@ -215,13 +216,13 @@ const styles: any = (colorScheme: any, channelId: any) => StyleSheet.create({
         fontFamily: 'inter',
         fontSize: 13,
         // ,
-        height: '44%',
+        height: '75%',
         width: '100%',
-        paddingTop: 5,
+        paddingTop: 12,
     },
     description: {
         fontSize: 13,
         color: colorScheme === 'light' ? '#a2a2aa' : '#333333',
-        height: '30%'
+        // height: '30%'
     }
 });
