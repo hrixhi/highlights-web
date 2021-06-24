@@ -118,13 +118,13 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         {/* NAVRACHANA HARD CODE */}
                         <Image
                             source={
-                                showNavrachanaLogo
-                                    ? 'https://cues-files.s3.amazonaws.com/media/png/1624424962493_logo.png'
-                                    : require('./default-images/cues-logo-black-exclamation-hidden.jpg')
+                                // showNavrachanaLogo
+                                // ? 'https://cues-files.s3.amazonaws.com/media/png/1624424962493_logo.png' :
+                                require('./default-images/cues-logo-black-exclamation-hidden.jpg')
                             }
                             style={{
-                                width: Dimensions.get('window').height * (showNavrachanaLogo ? 0.11 : 0.16) * 0.53456,
-                                height: Dimensions.get('window').height * (showNavrachanaLogo ? 0.22 : 0.16) * 0.2
+                                width: Dimensions.get('window').height * (showNavrachanaLogo ? 0.11 : 0.13) * 0.53456,
+                                height: Dimensions.get('window').height * (showNavrachanaLogo ? 0.22 : 0.13) * 0.2
                             }}
                             resizeMode={'contain'}
                         />

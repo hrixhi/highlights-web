@@ -83,7 +83,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const invalidDurationAlert = PreferredLanguageText('invalidDuration')
     const fillMissingProblemsAlert = PreferredLanguageText('fillMissingProblems')
     const enterNumericPointsAlert = PreferredLanguageText('enterNumericPoints')
-    const mustHaveOneOptionAlert = PreferredLanguageText('mustHaveOneOption')
+    // const mustHaveOneOptionAlert = PreferredLanguageText('mustHaveOneOption')
     const fillMissingOptionsAlert = PreferredLanguageText('fillMissingOptions')
     const eachOptionOneCorrectAlert = PreferredLanguageText('eachOptionOneCorrect')
     const noStudentSelectedAlert = PreferredLanguageText('noStudentSelected')
@@ -99,7 +99,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     useEffect(() => {
         setTimeout(() => {
             setWebviewKey(Math.random())
-        }, 3000);
+        }, 3500);
     }, [imported])
 
     const onDimensionsChange = useCallback(({ window, screen }: any) => {

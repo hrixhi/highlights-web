@@ -75,7 +75,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
     useEffect(() => {
         setTimeout(() => {
             setWebviewKey(Math.random())
-        }, 3000);
+        }, 3500);
     }, [imported])
 
     if (props.cue && props.cue.submission) {

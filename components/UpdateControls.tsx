@@ -133,7 +133,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     useEffect(() => {
         setTimeout(() => {
             setWebviewKey(Math.random())
-        }, 3000);
+        }, 3500);
     }, [showOriginal, imported, submissionImported])
     useEffect(() => {
         setLoading(true)
@@ -1050,11 +1050,20 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             ) : null
                                         )
                                         :
-                                        (imported && (type === 'mp4' || type === 'mp3' || type === 'mov' || type === 'mpeg' || type === 'mp2' || type === 'wav') ? null : <View style={{ marginLeft: 25, marginTop: 20, alignSelf: 'flex-start' }}>
-                                            <a download={true} href={url} style={{ textDecoration: 'none' }}>
-                                                <Ionicons name='cloud-download-outline' color='#a2a2aa' size={20} />
-                                            </a>
-                                        </View>)
+                                        (imported && (type === 'mp4' || type === 'mp3' || type === 'mov' || type === 'mpeg' || type === 'mp2' || type === 'wav')
+                                            ? null :
+                                            <View style={{ marginLeft: 25, marginTop: 20, alignSelf: 'flex-start' }}>
+                                                <Ionicons
+                                                    style={{ marginRight: 25 }}
+                                                    name="reload-outline"
+                                                    color="#a2a2aa"
+                                                    size={20}
+                                                    onPress={() => setWebviewKey(Math.random())}
+                                                />
+                                                <a download={true} href={url} style={{ textDecoration: 'none' }}>
+                                                    <Ionicons name='cloud-download-outline' color='#a2a2aa' size={20} />
+                                                </a>
+                                            </View>)
                                 }
                             </View> : null
                     }
