@@ -135,7 +135,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             setWebviewKey(Math.random())
         }, 3000);
     }, [showOriginal, imported, submissionImported])
-
     useEffect(() => {
         setLoading(true)
     }, [props.cue])
@@ -388,7 +387,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
     const handleUpdate = useCallback(async () => {
         if (submissionImported && submissionTitle === '') {
-            Alert(enterTitleAlert)
+            Alert("Your submission has no title")
             return
         }
         let subCues: any = {}
@@ -942,6 +941,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 lineHeight: 30,
                                 textAlign: 'right',
                                 paddingRight: 10,
+                                textTransform: 'uppercase'
                             }}
                                 onPress={() => setShowImportOptions(true)}
                             >
@@ -1181,6 +1181,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                             uri: "https://docs.google.com/gview?embedded=true&url=" + url
                                                         }}
                                                     />
+
+
                                                 </View>
                                         )
                                         :

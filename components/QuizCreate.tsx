@@ -165,7 +165,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                         >
                                             <Text
                                                 style={{
-                                                    paddingTop: problem.question && problem.question.includes("formula:")
+                                                    paddingTop: problem.question && (problem.question.includes("image:") || problem.question.includes("formula:"))
                                                         ? 10 : 0,
                                                     color: '#a2a2aa',
                                                     fontFamily: 'Overpass',

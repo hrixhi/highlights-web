@@ -158,8 +158,13 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 error = true;
             }
             let optionFound = false
-            if (problem.options.length === 0) {
-                Alert(mustHaveOneOptionAlert)
+            // if (problem.options.length === 0) {
+            //     Alert(mustHaveOneOptionAlert)
+            //     error = true;
+            // }
+
+            if (problem.options.length < 2) {
+                Alert("Problem must have at least 2 options")
                 error = true;
             }
 
@@ -623,6 +628,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         {
                             showImportOptions ? null :
                                 <RichToolbar
+                                    key={reloadEditorKey.toString()}
                                     style={{
                                         flexWrap: 'wrap',
                                         backgroundColor: 'white',
@@ -882,7 +888,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             backgroundColor: '#f4f4f6',
                                             placeholderColor: '#a2a2aa',
                                             color: '#202025',
-                                            contentCSSText: 'font-size: 13px;',
+                                            contentCSSText: 'font-size: 14px;',
 
                                         }}
                                         initialContentHTML={cue}
