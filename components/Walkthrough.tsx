@@ -38,8 +38,8 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
             width: '100%',
             height: windowHeight,
             backgroundColor: '#fff',
-            borderTopLeftRadius: 30,
-            borderTopRightRadius: 30,
+            borderTopLeftRadius: 0,
+            borderTopRightRadius: 0,
         }}>
             <Animated.View
                 style={{
@@ -48,8 +48,8 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     backgroundColor: 'white',
                     padding: 15,
                     opacity: modalAnimation,
-                    borderTopLeftRadius: 30,
-                    borderTopRightRadius: 30,
+                    borderTopLeftRadius: 0,
+                    borderTopRightRadius: 0,
                     alignSelf: 'center'
                 }}>
                 <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 20 }}>
@@ -61,7 +61,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             paddingTop: 25,
                             flex: 1,
                             textAlign: 'center',
-                            fontSize: 25,
+                            fontSize: 22,
                             color: "#202025",
                             fontFamily: "inter",
                         }}
@@ -79,7 +79,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     }}>
                     <View style={{ flex: 1 }}>
                         <Text
-                            style={{ color: '#202025', fontSize: 17, flex: 1, lineHeight: 25 }}
+                            style={{ color: '#202025', fontSize: 16, flex: 1, lineHeight: 25 }}
                         >
                             {headings[index]}
                         </Text>
@@ -193,8 +193,8 @@ const styles = StyleSheet.create({
         height: '100%',
         width: Dimensions.get('window').width < 1024 ? '100%' : '80%',
         alignSelf: 'center',
-        borderTopRightRadius: 30,
-        borderTopLeftRadius: 30,
+        borderTopRightRadius: 0,
+        borderTopLeftRadius: 0,
         zIndex: -1,
     },
 });

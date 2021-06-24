@@ -190,7 +190,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             !props.cueId
                                 ? <Text
                                     ellipsizeMode="tail"
-                                    style={{ color: '#a2a2aa', fontSize: 17, flex: 1, lineHeight: 25 }}>
+                                    style={{ color: '#a2a2aa', fontSize: 16, flex: 1, lineHeight: 25 }}>
                                     {PreferredLanguageText('discussion')}
                                 </Text>
                                 : <TouchableOpacity
@@ -202,11 +202,11 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                         paddingBottom: 40
                                     }}>
                                     <Text style={{
-                                        color: '#a2a2aa', fontSize: 17, paddingRight: 10
+                                        color: '#a2a2aa', fontSize: 14, paddingRight: 10
                                     }}>
                                         {PreferredLanguageText('comments')}
                                 </Text>
-                                    <Ionicons size={17} name={showComments ? 'caret-down-circle-outline' : 'caret-forward-circle-outline'} color='#a2a2aa' />
+                                    <Ionicons size={14} name={showComments ? 'caret-down-circle-outline' : 'caret-forward-circle-outline'} color='#a2a2aa' />
                                 </TouchableOpacity>
                         }
                         {
@@ -235,7 +235,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 {
                     threads.length === 0 ?
                         <View style={{ backgroundColor: 'white', flex: 1 }}>
-                            <Text style={{ width: '100%', color: '#a2a2aa', fontSize: 25, paddingTop: 100, paddingBottom: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                            <Text style={{ width: '100%', color: '#a2a2aa', fontSize: 22, paddingTop: 100, paddingBottom: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                                 {
                                     !props.cueId ? PreferredLanguageText('noPosts') : PreferredLanguageText('noComments')
                                 }

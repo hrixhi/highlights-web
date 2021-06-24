@@ -94,7 +94,7 @@ const EnglishBank: { [key: string]: string } = {
     noPastMeetings: 'No past meetings.',
     attendedBy: 'Attended By',
     past: 'Past', // Done
-    options: 'Options', // Done
+    options: 'Details', // Done
     option: 'Option', // Done
     comments: 'Comments', // Done
     noComments: 'No comments.', // Done

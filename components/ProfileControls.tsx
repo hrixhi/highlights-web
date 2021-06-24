@@ -304,7 +304,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
       <View style={styles.screen} key={1}>
         <View style={{ width: "100%", backgroundColor: "white" }}>
           <View style={styles.colorBar}>
-            <Text style={{ fontSize: 25, color: "#a2a2aa" }}>
+            <Text style={{ fontSize: 22, color: "#a2a2aa" }}>
               {PreferredLanguageText('internetRequiried')}
             </Text>
           </View>
@@ -321,7 +321,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
       >
         <Text
           style={{
-            fontSize: 25,
+            fontSize: 22,
             color: "#202025",
             fontFamily: "inter",
             paddingBottom: 15,

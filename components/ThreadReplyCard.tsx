@@ -57,7 +57,7 @@ const ThreadReplyCard: React.FunctionComponent<{ [label: string]: any }> = (prop
                             imported ?
                                 <a download={true} href={url} style={{ textDecoration: 'none' }}>
                                     <View style={{ backgroundColor: '#f4f4f6', flex: 1 }}>
-                                        <Text style={{ width: '100%', color: '#a2a2aa', fontSize: 17, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                        <Text style={{ width: '100%', color: '#a2a2aa', fontSize: 16, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                                             <Ionicons name='document-outline' size={17} color='#a2a2aa' /> {title}.{type}
                                         </Text>
                                     </View>
@@ -70,7 +70,7 @@ const ThreadReplyCard: React.FunctionComponent<{ [label: string]: any }> = (prop
                             <TouchableOpacity style={{ backgroundColor: '#f4f4f6' }}
                                 onPress={() => props.deleteThread()}
                             >
-                                <Text style={{ width: '100%', color: '#a2a2aa', fontSize: 17, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                <Text style={{ width: '100%', color: '#a2a2aa', fontSize: 16, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                                     <Ionicons name='trash-outline' size={17} color={props.index === 0 ? '#d91d56' : '#a2a2aa'} />
                                 </Text>
                             </TouchableOpacity> : null

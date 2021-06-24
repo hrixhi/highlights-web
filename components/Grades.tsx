@@ -114,8 +114,8 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             width: '100%',
             height: windowHeight,
             backgroundColor: 'white',
-            borderTopRightRadius: 30,
-            borderTopLeftRadius: 30
+            borderTopRightRadius: 0,
+            borderTopLeftRadius: 0
         }}
             showsVerticalScrollIndicator={false}
             scrollEnabled={true}
@@ -129,8 +129,8 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 width: '100%',
                 height: windowHeight,
                 backgroundColor: 'white',
-                borderTopRightRadius: 30,
-                borderTopLeftRadius: 30
+                borderTopRightRadius: 0,
+                borderTopLeftRadius: 0
             }}>
                 {
                     loading
@@ -141,8 +141,8 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             display: 'flex',
                             flexDirection: 'column',
                             backgroundColor: 'white',
-                            borderTopRightRadius: 30,
-                            borderTopLeftRadius: 30
+                            borderTopRightRadius: 0,
+                            borderTopLeftRadius: 0
                         }}>
                             <ActivityIndicator color={'#a2a2aa'} />
                         </View>

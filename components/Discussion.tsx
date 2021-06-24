@@ -86,8 +86,8 @@ const Discussion: React.FunctionComponent<{ [label: string]: any }> = (props: an
             width: '100%',
             height: windowHeight,
             backgroundColor: 'white',
-            borderTopRightRadius: 30,
-            borderTopLeftRadius: 30
+            borderTopRightRadius: 0,
+            borderTopLeftRadius: 0
         }}
             showsVerticalScrollIndicator={false}
             scrollEnabled={true}
@@ -101,8 +101,8 @@ const Discussion: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 width: '100%',
                 height: windowHeight,
                 backgroundColor: 'white',
-                borderTopRightRadius: 30,
-                borderTopLeftRadius: 30
+                borderTopRightRadius: 0,
+                borderTopLeftRadius: 0
             }}>
                 {
                     loading

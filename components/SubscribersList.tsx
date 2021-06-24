@@ -398,8 +398,8 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
             width: '100%',
             minHeight: windowHeight,
             paddingHorizontal: 20,
-            borderTopRightRadius: 30,
-            borderTopLeftRadius: 30
+            borderTopRightRadius: 0,
+            borderTopLeftRadius: 0
         }}>
             <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 25 }}>
                 {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
@@ -486,12 +486,12 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                             props.cueId ?
                                 <Text
                                     ellipsizeMode="tail"
-                                    style={{ color: '#a2a2aa', fontSize: 17, flex: 1, lineHeight: 25 }}>
+                                    style={{ color: '#a2a2aa', fontSize: 16, flex: 1, lineHeight: 25 }}>
                                     {PreferredLanguageText('status')}
                                 </Text> :
                                 <Text
                                     ellipsizeMode="tail"
-                                    style={{ color: '#a2a2aa', fontSize: 17, flex: 1, lineHeight: 25 }}>
+                                    style={{ color: '#a2a2aa', fontSize: 16, flex: 1, lineHeight: 25 }}>
                                     {PreferredLanguageText('inbox')}
                                 </Text>
                         }
@@ -538,7 +538,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
             {
                 !showAddUsers ? (subscribers.length === 0 ?
                     <View style={{ backgroundColor: 'white', flex: 1 }}>
-                        <Text style={{ width: '100%', color: '#a2a2aa', fontSize: 25, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                        <Text style={{ width: '100%', color: '#a2a2aa', fontSize: 22, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                             {
                                 props.cueId ? PreferredLanguageText('noStatuses') : PreferredLanguageText('noStudents')
                             }
@@ -561,7 +561,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             style={{ flex: 1, paddingTop: 12 }}>
                                             {
                                                 messages.length === 0 ?
-                                                    <Text style={{ width: '100%', color: '#a2a2aa', fontSize: 25, paddingVertical: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                                    <Text style={{ width: '100%', color: '#a2a2aa', fontSize: 22, paddingVertical: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                                                         {PreferredLanguageText('noMessages')}
                                                     </Text>
                                                     : null
@@ -599,7 +599,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                     style={{ flex: 1, paddingTop: 12 }}>
                                                     <Text
                                                         ellipsizeMode="tail"
-                                                        style={{ color: '#a2a2aa', fontSize: 17, flex: 1, lineHeight: 25 }}>
+                                                        style={{ color: '#a2a2aa', fontSize: 16, flex: 1, lineHeight: 25 }}>
                                                         {PreferredLanguageText('newGroup')}
                                                     </Text>
                                                     <View style={{ maxHeight: 175, flexDirection: 'column', marginTop: 25, overflow: 'scroll', marginBottom: 25 }}>
@@ -713,7 +713,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                             />
                                                                         </View>
                                                                     })) : <View style={{ backgroundColor: 'white', flex: 1 }}>
-                                                                        <Text style={{ width: '100%', color: '#a2a2aa', fontSize: 25, paddingHorizontal: 50, paddingBottom: 100, paddingTop: 50, fontFamily: 'inter', flex: 1 }}>
+                                                                        <Text style={{ width: '100%', color: '#a2a2aa', fontSize: 22, paddingHorizontal: 50, paddingBottom: 100, paddingTop: 50, fontFamily: 'inter', flex: 1 }}>
                                                                             {PreferredLanguageText('noGroups')}
                                                                         </Text>
                                                                     </View>

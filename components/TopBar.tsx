@@ -123,8 +123,10 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 require('./default-images/cues-logo-black-exclamation-hidden.jpg')
                             }
                             style={{
-                                width: Dimensions.get('window').height * (showNavrachanaLogo ? 0.11 : 0.13) * 0.53456,
-                                height: Dimensions.get('window').height * (showNavrachanaLogo ? 0.22 : 0.13) * 0.2
+                                // width: Dimensions.get('window').height * (showNavrachanaLogo ? 0.11 : 0.14) * 0.53456,
+                                // height: Dimensions.get('window').height * (showNavrachanaLogo ? 0.22 : 0.14) * 0.2
+                                width: Dimensions.get('window').height * 0.13 * 0.53456,
+                                height: Dimensions.get('window').height * 0.13 * 0.2
                             }}
                             resizeMode={'contain'}
                         />
@@ -273,8 +275,8 @@ const styleObject: any = (channelId: any) => StyleSheet.create({
         flexDirection: 'column',
         display: 'flex',
         paddingHorizontal: 20,
-        borderTopRightRadius: 30,
-        borderTopLeftRadius: 30,
+        borderTopRightRadius: 0,
+        borderTopLeftRadius: 0,
     },
     badge: {
         position: 'absolute',

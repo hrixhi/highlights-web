@@ -736,8 +736,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             width: '100%',
             // height: Dimensions.get('window').height - 30,
             backgroundColor: 'white',
-            borderTopLeftRadius: 30,
-            borderTopRightRadius: 30,
+            borderTopLeftRadius: 0,
+            borderTopRightRadius: 0,
             paddingHorizontal: 20,
             // overflow: 'hidden'
         }}>
@@ -745,8 +745,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 width: '100%',
                 backgroundColor: 'white',
                 opacity: 1,
-                borderTopLeftRadius: 30,
-                borderTopRightRadius: 30,
+                borderTopLeftRadius: 0,
+                borderTopRightRadius: 0,
                 // height: '100%'
             }}>
                 <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 30 }}>
@@ -828,7 +828,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             <View style={{ backgroundColor: 'white', flex: 1 }}>
                                 <Text
                                     style={{
-                                        color: '#a2a2aa', fontSize: 17, paddingBottom: 20
+                                        color: '#a2a2aa', fontSize: 16, paddingBottom: 20
                                     }}>
                                     {PreferredLanguageText('update')}
                                 </Text>
@@ -1011,7 +1011,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 >
                     {
                         showOriginal && (imported || isQuiz) ?
-                            <View style={{ flexDirection: 'row', marginRight: '10%', marginLeft: '10%' }}>
+                            <View style={{ flexDirection: 'row', marginRight: 0, marginLeft: 0 }}>
                                 <View style={{ width: '40%', alignSelf: 'flex-start' }}>
                                     <TextInput
                                         editable={false}
@@ -1052,7 +1052,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         :
                                         (imported && (type === 'mp4' || type === 'mp3' || type === 'mov' || type === 'mpeg' || type === 'mp2' || type === 'wav')
                                             ? null :
-                                            <View style={{ marginLeft: 25, marginTop: 20, alignSelf: 'flex-start' }}>
+                                            <View style={{ marginLeft: 25, marginTop: 20, alignSelf: 'flex-start', display: 'flex', flexDirection: 'row' }}>
                                                 <Ionicons
                                                     style={{ marginRight: 25 }}
                                                     name="reload-outline"
@@ -1097,7 +1097,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     {
                         !showOriginal && submissionImported && !isQuiz ?
                             <View style={{ flexDirection: 'row' }}>
-                                <View style={{ width: '40%', alignSelf: 'flex-start', marginLeft: '10%' }}>
+                                <View style={{ width: '40%', alignSelf: 'flex-start', marginLeft: 0 }}>
                                     <TextInput
                                         value={submissionTitle}
                                         style={styles.input}
@@ -1309,11 +1309,11 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             paddingBottom: 20
                         }}>
                         <Text style={{
-                            color: '#a2a2aa', fontSize: 17, paddingRight: 10
+                            color: '#a2a2aa', fontSize: 14, paddingRight: 10
                         }}>
                             {PreferredLanguageText('options')}
                         </Text>
-                        <Ionicons size={17} name={showOptions ? 'caret-down-circle-outline' : 'caret-forward-circle-outline'} color='#a2a2aa' />
+                        <Ionicons size={14} name={showOptions ? 'caret-down-circle-outline' : 'caret-forward-circle-outline'} color='#a2a2aa' />
                     </TouchableOpacity>
                     <Collapse isOpened={showOptions}>
                         <View style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
@@ -1787,7 +1787,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                         <Picker
                                                             style={styles.picker}
                                                             itemStyle={{
-                                                                fontSize: 17
+                                                                fontSize: 16
                                                             }}
                                                             selectedValue={frequency}
                                                             onValueChange={(itemValue: any) =>
@@ -1972,7 +1972,7 @@ export default UpdateControls
 const styles: any = StyleSheet.create({
     timePicker: {
         width: 125,
-        fontSize: 17,
+        fontSize: 16,
         height: 45,
         color: '#202025',
         borderRadius: 10,

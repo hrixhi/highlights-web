@@ -19,8 +19,8 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
             width: '100%',
             height: '100%',
             paddingHorizontal: 20,
-            borderTopRightRadius: 30,
-            borderTopLeftRadius: 30
+            borderTopRightRadius: 0,
+            borderTopLeftRadius: 0
         }}>
             <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 25 }}>
                 {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
@@ -37,7 +37,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                     }}>
                         <Text style={{
                             width: '100%',
-                            fontSize: 17,
+                            fontSize: 16,
                             color: '#a2a2aa'
                         }}>
                             <Ionicons name='chevron-back-outline' size={17} color={'#202025'} style={{ marginRight: 10 }} /> {PreferredLanguageText('attendance')}
@@ -47,7 +47,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
             {
                 channelAttendances.length === 0 || pastMeetings.length === 0 ?
                     <View style={{ backgroundColor: 'white' }}>
-                        <Text style={{ width: '100%', color: '#a2a2aa', fontSize: 25, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter' }}>
+                        <Text style={{ width: '100%', color: '#a2a2aa', fontSize: 22, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter' }}>
                             {
                                 pastMeetings.length === 0  ? "No past meetings" : "No Students"
                                 // PreferredLanguageText('noGraded') : PreferredLanguageText('noStudents')

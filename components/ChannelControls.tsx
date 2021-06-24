@@ -257,7 +257,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
             <View style={{ width: '100%', backgroundColor: 'white' }}>
                 <View style={styles.colorBar}>
                     <Text style={{
-                        fontSize: 25, color: '#a2a2aa',
+                        fontSize: 22, color: '#a2a2aa',
                         // 
                     }}>
                         {PreferredLanguageText('internetRequired')}
@@ -272,7 +272,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
             <View style={{ width: '100%', backgroundColor: 'white' }}>
                 <Text
                     style={{
-                        fontSize: 30,
+                        fontSize: 22,
                         color: "#202025",
                         fontFamily: "inter",
                         paddingBottom: 15,

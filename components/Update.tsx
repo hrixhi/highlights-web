@@ -157,8 +157,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             width: '100%',
             height: windowHeight,
             backgroundColor: '#f4f4f6',
-            borderTopLeftRadius: 30,
-            borderTopRightRadius: 30,
+            borderTopLeftRadius: 0,
+            borderTopRightRadius: 0,
         }}>
             {
                 loading
@@ -169,8 +169,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         display: 'flex',
                         flexDirection: 'column',
                         backgroundColor: 'white',
-                        borderTopLeftRadius: 30,
-                        borderTopRightRadius: 30,
+                        borderTopLeftRadius: 0,
+                        borderTopRightRadius: 0,
                     }}>
                         <ActivityIndicator color={'#a2a2aa'} />
                     </View>
@@ -179,15 +179,15 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         width: '100%',
                         height: windowHeight,
                         opacity: modalAnimation,
-                        borderTopLeftRadius: 30,
-                        borderTopRightRadius: 30,
+                        borderTopLeftRadius: 0,
+                        borderTopRightRadius: 0,
                     }}
                         key={JSON.stringify(threads)}
                     >
                         <Swiper
                             containerStyle={{
-                                borderTopRightRadius: 30,
-                                borderTopLeftRadius: 30
+                                borderTopRightRadius: 0,
+                                borderTopLeftRadius: 0
                             }}
                             key={JSON.stringify(threads) + JSON.stringify(threads.length)}
                             vertical={false}
@@ -208,12 +208,12 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 nestedScrollEnabled={true}
                                 horizontal={false}
                                 style={{
-                                    borderTopRightRadius: 30,
-                                    borderTopLeftRadius: 30,
+                                    borderTopRightRadius: 0,
+                                    borderTopLeftRadius: 0,
                                 }}
                                 contentContainerStyle={{
-                                    borderTopRightRadius: 30,
-                                    borderTopLeftRadius: 30,
+                                    borderTopRightRadius: 0,
+                                    borderTopLeftRadius: 0,
                                     minHeight: windowHeight
                                 }}
                             >
