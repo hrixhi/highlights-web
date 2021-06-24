@@ -14,7 +14,7 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const screen = Dimensions.get("screen");
 
     const [dimensions, setDimensions] = useState({ window, screen });
-    
+
     const unparsedCues: any[] = JSON.parse(JSON.stringify(props.cues))
     const [cues] = useState<any[]>(unparsedCues.reverse())
     const [filterChoice] = useState(props.channelFilterChoice)
@@ -47,14 +47,14 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const onDimensionsChange = useCallback(({ window, screen }: any) => {
         // window.location.reload()
         setDimensions({ window, screen })
-      }, []);
-    
-      useEffect(() => {
+    }, []);
+
+    useEffect(() => {
         Dimensions.addEventListener("change", onDimensionsChange);
         return () => {
-          Dimensions.removeEventListener("change", onDimensionsChange);
+            Dimensions.removeEventListener("change", onDimensionsChange);
         };
-      }, [])
+    }, [])
 
     useEffect(() => {
         noChannelCuesAlert()
@@ -62,24 +62,28 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     return (
         <Animated.View style={{
+            borderColor: '#f4f4f6',
+            borderBottomWidth: 2,
+            // borderTopWidth: 1,
             height: ((dimensions.window.height) * 0.7) - 2,
             opacity: props.fadeAnimation,
             width: dimensions.window.width < 1024 ? dimensions.window.width : dimensions.window.width * 0.3,
-            paddingHorizontal: 20,
+            paddingHorizontal: 18,
             // paddingTop: 15
         }}>
             <ScrollView
                 showsVerticalScrollIndicator={false}
                 horizontal={false}
                 contentContainerStyle={{
-                    width: dimensions.window.width < 1024 ? dimensions.window.width - 40 : (dimensions.window.width * 0.3 - 40),
+                    width: dimensions.window.width < 1024 ? dimensions.window.width - 30 : (dimensions.window.width * 0.3 - 36),
                     height: dimensions.window.width < 1024 ? '100%' : (((dimensions.window.height) * 0.7) - 2),
                 }}
+                style={{ paddingBottom: 15 }}
             >
                 {/* <View style={styles.marginSmall} /> */}
                 {
                     filteredCues.map((cue: any, index: number) => {
-                        return <View style={{ height: '20%', paddingBottom: 12 }} key={index}>
+                        return <View style={{ height: 80, marginBottom: 10, maxWidth: 400 }} key={index}>
                             <Card
                                 fadeAnimation={props.fadeAnimation}
                                 updateModal={() => props.openUpdate(
@@ -114,11 +118,11 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     })
                 }
                 {
-                    filteredCues.length === 0 ? <Text style={{ fontSize: 22, color: '#a2a2aa', textAlign: 'center', fontFamily: 'inter' }}>
+                    filteredCues.length === 0 ? <Text style={{ fontSize: 25, color: '#a2a2aa', textAlign: 'center', fontFamily: 'inter' }}>
                         {PreferredLanguageText('noCuesCreated')}
                     </Text> : null
                 }
-                <View style={styles.marginSmall} />
+                <View style={{ height: 15 }} />
             </ScrollView>
         </Animated.View >
     );
@@ -134,7 +138,7 @@ const styleObject = (channelId: any) => {
     return StyleSheet.create({
         screen: {
             height: '100%',
-            width: Dimensions.get('window').width < 1024 ? Dimensions.get('window').width : Dimensions.get('window').width * 0.3 - 40
+            width: Dimensions.get('window').width < 1024 ? Dimensions.get('window').width : Dimensions.get('window').width * 0.3 - 36
         },
         margin: {
             height: '2.5%'

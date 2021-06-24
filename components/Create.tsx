@@ -594,8 +594,9 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     <View style={{ backgroundColor: 'white', flex: 1 }}>
                         <Text
                             style={{
-                                color: '#a2a2aa', fontSize: 16,
-                                paddingBottom: 20
+                                color: '#a2a2aa', fontSize: 15,
+                                paddingBottom: 20,
+                                fontWeight: 'bold'
                             }}
                         >
                             {PreferredLanguageText('new')}
@@ -609,11 +610,11 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         <Text style={{
                             textAlign: 'right',
                             lineHeight: 30,
-                            marginTop: -36,
+                            marginTop: -31,
                             paddingRight: 25,
                             width: '100%'
                         }}>
-                            <Ionicons name='bookmark' size={25} color={starred ? '#d91d56' : '#a2a2aa'} />
+                            <Ionicons name='bookmark' size={34} color={starred ? '#d91d56' : '#a2a2aa'} />
                         </Text>
                     </TouchableOpacity>
                 </View>
@@ -866,48 +867,48 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     null)
                         }
                         <RichEditor
-                                        key={reloadEditorKey.toString()}
-                                        containerStyle={{
-                                            height,
-                                            backgroundColor: '#f4f4f6',
-                                            padding: 3,
-                                            paddingTop: 5,
-                                            paddingBottom: 10,
-                                            borderRadius: 8,
-                                            display:(isQuiz || imported) ? "none" : "flex"
-                                        }}
-                                        ref={RichText}
-                                        style={{
-                                            width: '100%',
-                                            backgroundColor: '#f4f4f6',
-                                            borderRadius: 8,
-                                            minHeight: 475,
-                                            display:(isQuiz || imported) ? "none" : "flex"
-                                        }}
-                                        editorStyle={{
-                                            backgroundColor: '#f4f4f6',
-                                            placeholderColor: '#a2a2aa',
-                                            color: '#202025',
-                                            contentCSSText: 'font-size: 14px;',
+                            key={reloadEditorKey.toString()}
+                            containerStyle={{
+                                height,
+                                backgroundColor: '#f4f4f6',
+                                padding: 3,
+                                paddingTop: 5,
+                                paddingBottom: 10,
+                                borderRadius: 15,
+                                display: (isQuiz || imported) ? "none" : "flex"
+                            }}
+                            ref={RichText}
+                            style={{
+                                width: '100%',
+                                backgroundColor: '#f4f4f6',
+                                borderRadius: 15,
+                                minHeight: 475,
+                                display: (isQuiz || imported) ? "none" : "flex"
+                            }}
+                            editorStyle={{
+                                backgroundColor: '#f4f4f6',
+                                placeholderColor: '#a2a2aa',
+                                color: '#202025',
+                                contentCSSText: 'font-size: 14px;',
 
-                                        }}
-                                        initialContentHTML={cue}
-                                        onScroll={() => Keyboard.dismiss()}
-                                        placeholder={PreferredLanguageText('title')}
-                                        onChange={(text) => {
-                                            const modifedText = text.split('&amp;').join('&')
-                                            setCue(modifedText)
-                                        }}
-                                        onHeightChange={handleHeightChange}
-                                        onBlur={() => Keyboard.dismiss()}
-                                        allowFileAccess={true}
-                                        allowFileAccessFromFileURLs={true}
-                                        allowUniversalAccessFromFileURLs={true}
-                                        allowsFullscreenVideo={true}
-                                        allowsInlineMediaPlayback={true}
-                                        allowsLinkPreview={true}
-                                        allowsBackForwardNavigationGestures={true}
-                                    />
+                            }}
+                            initialContentHTML={cue}
+                            onScroll={() => Keyboard.dismiss()}
+                            placeholder={PreferredLanguageText('title')}
+                            onChange={(text) => {
+                                const modifedText = text.split('&amp;').join('&')
+                                setCue(modifedText)
+                            }}
+                            onHeightChange={handleHeightChange}
+                            onBlur={() => Keyboard.dismiss()}
+                            allowFileAccess={true}
+                            allowFileAccessFromFileURLs={true}
+                            allowUniversalAccessFromFileURLs={true}
+                            allowsFullscreenVideo={true}
+                            allowsInlineMediaPlayback={true}
+                            allowsLinkPreview={true}
+                            allowsBackForwardNavigationGestures={true}
+                        />
 
                     </View>
                     <View style={{ flex: 1, display: 'flex', flexDirection: 'column', marginHorizontal: 10 }}>
@@ -916,7 +917,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 <View style={{ width: width < 768 ? '100%' : '33.33%', borderRightWidth: 0, borderColor: '#f4f4f6' }}>
                                     <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
                                         <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
-                                            {PreferredLanguageText('channel')}
+                                            {/* {PreferredLanguageText('channel')} */}
+                                            Share with
                                             {/* <Ionicons
                                                 name='school-outline' size={20} color={'#a2a2aa'} /> */}
                                         </Text>
@@ -1222,8 +1224,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     return <View style={color === i ? styles.colorContainerOutline : styles.colorContainer} key={Math.random()}>
                                                         <TouchableOpacity
                                                             style={{
-                                                                width: 9,
-                                                                height: 9,
+                                                                width: 12,
+                                                                height: 12,
                                                                 borderRadius: 6,
                                                                 backgroundColor: colorChoices[i]
                                                             }}
@@ -1242,8 +1244,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         <View style={{ width: '100%', paddingTop: 15, flexDirection: width < 768 ? 'column' : 'row' }}>
                             <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
                                 <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                    <Text style={{ fontSize: 15, color: '#a2a2aa' }}>
-                                        <Ionicons name='notifications-outline' size={20} color={'#a2a2aa'} />
+                                    <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
+                                        Reminder
                                     </Text>
                                 </View>
                                 <View style={{
@@ -1279,8 +1281,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
                                         <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
                                             <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
-                                                <Ionicons
-                                                    name='repeat-outline' size={20} color={'#a2a2aa'} />
+                                                Recurring
                                             </Text>
                                         </View>
                                         <View style={{ flexDirection: 'row', }}>
@@ -1313,7 +1314,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         <Picker
                                                             style={styles.picker}
                                                             itemStyle={{
-                                                                fontSize: 16
+                                                                fontSize: 15
                                                             }}
                                                             selectedValue={frequency}
                                                             onValueChange={(itemValue: any) =>
@@ -1360,8 +1361,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
                                         <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
                                             <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
-                                                <Ionicons
-                                                    name='infinite-outline' size={20} color={'#a2a2aa'} />
+                                                Indefinite
                                             </Text>
                                         </View>
                                         <View style={{ flexDirection: 'row' }}>
@@ -1480,7 +1480,7 @@ export default Create
 const styles: any = StyleSheet.create({
     timePicker: {
         width: 125,
-        fontSize: 16,
+        fontSize: 15,
         height: 45,
         color: '#202025',
         borderRadius: 10,
@@ -1521,7 +1521,7 @@ const styles: any = StyleSheet.create({
         backgroundColor: 'white'
     },
     colorContainerOutline: {
-        lineHeight: 20,
+        lineHeight: 22,
         justifyContent: 'center',
         display: 'flex',
         flexDirection: 'column',

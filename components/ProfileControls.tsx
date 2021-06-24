@@ -320,24 +320,18 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
         showsVerticalScrollIndicator={false}
       >
         <Text
-          style={{
-            fontSize: 22,
-            color: "#202025",
-            fontFamily: "inter",
-            paddingBottom: 15,
-            textAlign: "center",
-            paddingTop: 30
-          }}
+          style={{ color: '#a2a2aa', fontSize: 17, flex: 1, lineHeight: 25, fontWeight: 'bold' }}
         >
           {!loggedIn ? PreferredLanguageText('backUp') : PreferredLanguageText('profile')}
         </Text>
         <Text
           style={{
-            fontSize: 20,
+            fontSize: 12,
+            paddingTop: 10,
             color: "#a2a2aa",
             fontFamily: "overpass",
             paddingBottom: 25,
-            textAlign: "center"
+            // textAlign: "center"
           }}
         >
           {!loggedIn ? PreferredLanguageText('createAccount') : ""}
@@ -588,6 +582,7 @@ const styles = StyleSheet.create({
   screen: {
     paddingHorizontal: 30,
     width: "100%",
+    maxWidth: 600,
     height: Dimensions.get("window").height - 75,
     backgroundColor: "white"
   },

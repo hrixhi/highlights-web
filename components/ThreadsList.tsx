@@ -49,7 +49,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
     const unableToLoadThreadAlert = PreferredLanguageText('unableToLoadThread')
     const checkConnectionAlert = PreferredLanguageText('checkConnection')
     const somethingWentWrongAlert = PreferredLanguageText('somethingWentWrong');
-    
+
 
     const loadCueDiscussions = useCallback(async (tId) => {
         const u = await AsyncStorage.getItem('user')
@@ -190,7 +190,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             !props.cueId
                                 ? <Text
                                     ellipsizeMode="tail"
-                                    style={{ color: '#a2a2aa', fontSize: 16, flex: 1, lineHeight: 25 }}>
+                                    style={{ color: '#a2a2aa', fontSize: 15, flex: 1, lineHeight: 25, fontWeight: 'bold' }}>
                                     {PreferredLanguageText('discussion')}
                                 </Text>
                                 : <TouchableOpacity
@@ -202,10 +202,10 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                         paddingBottom: 40
                                     }}>
                                     <Text style={{
-                                        color: '#a2a2aa', fontSize: 14, paddingRight: 10
+                                        color: '#a2a2aa', fontSize: 14, paddingRight: 10, fontWeight: 'bold'
                                     }}>
                                         {PreferredLanguageText('comments')}
-                                </Text>
+                                    </Text>
                                     <Ionicons size={14} name={showComments ? 'caret-down-circle-outline' : 'caret-forward-circle-outline'} color='#a2a2aa' />
                                 </TouchableOpacity>
                         }
@@ -291,7 +291,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                 style={{ flex: 1, paddingTop: 12 }}>
                                                 {
                                                     threadWithReplies.map((thread, index) => {
-                                                        return <View style={{ width: '100%', paddingBottom: 15, backgroundColor: 'white' }} key={Math.random()}>
+                                                        return <View style={{ width: '100%', paddingBottom: 10, backgroundColor: 'white' }} key={Math.random()}>
                                                             <ThreadReplyCard
                                                                 index={index}
                                                                 deleteThread={() => deletePost(thread._id)}
@@ -349,7 +349,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                                             }}
                                                                         >
                                                                             {PreferredLanguageText('all')}
-                                                                    </Text>
+                                                                        </Text>
                                                                     </TouchableOpacity>
                                                             }
                                                             {
@@ -401,7 +401,7 @@ const styleObject = () => {
         col: {
             width: '100%',
             height: 80,
-            marginBottom: 20,
+            marginBottom: 10,
             backgroundColor: 'white'
         },
         colorBar: {

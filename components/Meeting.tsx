@@ -15,7 +15,7 @@ import moment from 'moment';
 import { PreferredLanguageText } from '../helpers/LanguageContext';
 
 const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
-    
+
     const [modalAnimation] = useState(new Animated.Value(0))
     const [room] = useState(props.channelId)
     const [name, setName] = useState('')
@@ -42,7 +42,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
         if (end > start) {
             setIsSubmitDisabled(false);
             return;
-        } 
+        }
 
         setIsSubmitDisabled(true);
 
@@ -236,7 +236,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
     if (isOwner) {
         toolbarButtons.push('mute-everyone', 'mute-video-everyone', 'stats', 'settings', 'livestreaming')
     }
-    
+
     const mainClassroomView = (<ScrollView style={{
         width: '100%',
         height: windowHeight,
@@ -259,164 +259,141 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
             <View style={{ backgroundColor: 'white', flexDirection: 'row', paddingBottom: 25 }}>
                 <Text
                     ellipsizeMode="tail"
-                    style={{ color: '#a2a2aa', fontSize: 16, flex: 1, lineHeight: 25 }}>
+                    style={{ color: '#a2a2aa', fontSize: 17, flex: 1, lineHeight: 25, fontWeight: 'bold' }}>
                     {PreferredLanguageText('classroom')}
                 </Text>
             </View>
             <View style={{ backgroundColor: 'white', flex: 1 }}>
-                {
-                    isOwner ?
-                        <View>
-                            <View style={{ width: '100%', paddingTop: 20, backgroundColor: 'white' }}>
-                                <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
-                                    {PreferredLanguageText('initiateMeeting')}
-                                </Text>
-                            </View>
-                            <View style={{
-                                backgroundColor: 'white',
-                                height: 40,
-                                marginRight: 10
-                            }}>
-                                <Switch
-                                    value={meetingOn}
-                                    onValueChange={() => updateMeetingStatus()}
-                                    style={{ height: 20 }}
-                                    trackColor={{
-                                        false: '#f4f4f6',
-                                        true: '#3B64F8'
-                                    }}
-                                    activeThumbColor='white'
-                                />
-                            </View>
-                        </View> : null
-                }
-                <TouchableOpacity
-                    onPress={async () => {
-                        if (meetingOn) {
-                            window.open(meetingLink, '_blank');
-
-                            // Mark attendance her
-                            const u = await AsyncStorage.getItem('user')
-                            if (u) {
-                                const user = JSON.parse(u)
-
-                                const server = fetchAPI('')
-                                server.mutate({
-                                    mutation: markAttendance,
-                                    variables: {
-                                        userId: user._id,
-                                        channelId: props.channelId
-                                    }
-                                }).then(res => {
-                                    // do nothing...
-                                    // attendance marked
-                                })
-                            }
-
-                        } else {
-                            Alert(classroomNotInSession)
+                <View style={{ width: '100%', backgroundColor: 'white', flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row' }}>
+                    <View style={{
+                        width: Dimensions.get('window').width < 768 ? '100%' : '33.33%',
+                        marginBottom: 25,
+                        backgroundColor: 'white'
+                    }}>
+                        {
+                            isOwner ?
+                                <View>
+                                    <View style={{
+                                        backgroundColor: 'white',
+                                        height: 40,
+                                        marginTop: 20,
+                                        flexDirection: 'row'
+                                    }}>
+                                        <Switch
+                                            value={meetingOn}
+                                            onValueChange={() => updateMeetingStatus()}
+                                            style={{ height: 20, marginRight: 20 }}
+                                            trackColor={{
+                                                false: '#f4f4f6',
+                                                true: '#3B64F8'
+                                            }}
+                                            activeThumbColor='white'
+                                        />
+                                        <View style={{ width: '100%', backgroundColor: 'white', paddingTop: 3 }}>
+                                            <Text style={{ fontSize: 15, color: '#a2a2aa', }}>
+                                                {PreferredLanguageText('initiateMeeting')}
+                                            </Text>
+                                        </View>
+                                    </View>
+                                    <Text style={{ fontSize: 12, color: '#a2a2aa', paddingTop: 10 }}>
+                                        Turn on to begin session. Restart switch if you are unable to join the classroom.
+                                    </Text>
+                                </View> : null
                         }
-                    }}
-                    style={{
-                        backgroundColor: 'white',
-                        overflow: 'hidden',
-                        height: 35,
-                        marginTop: 15,
-                        width: '100%', justifyContent: 'center', flexDirection: 'row',
-                        marginBottom: 20
-                    }}>
-                    <Text style={{
-                        textAlign: 'center',
-                        lineHeight: 35,
-                        color: meetingOn ? '#fff' : '#202025',
-                        fontSize: 12,
-                        backgroundColor: meetingOn ? '#3B64F8' : '#f4f4f6',
-                        paddingHorizontal: 25,
-                        fontFamily: 'inter',
-                        height: 35,
-                        width: 200,
-                        borderRadius: 15,
-                        textTransform: 'uppercase'
-                    }}>
-                        {PreferredLanguageText('enterClassroom')}
-                    </Text>
-                </TouchableOpacity>
+                    </View>
+                    <View style={{ width: Dimensions.get('window').width < 768 ? '100%' : '33.33%', backgroundColor: 'white' }}>
+                        <TouchableOpacity
+                            onPress={async () => {
+                                if (meetingOn) {
+                                    window.open(meetingLink, '_blank');
 
+                                    // Mark attendance her
+                                    const u = await AsyncStorage.getItem('user')
+                                    if (u) {
+                                        const user = JSON.parse(u)
 
-                <TouchableOpacity
-                    onPress={async () => {
-                        setViewChannelAttendance(true)
-                    }}
-                    style={{
-                        backgroundColor: 'white',
-                        overflow: 'hidden',
-                        height: 35,
-                        marginTop: 15,
-                        width: '100%', justifyContent: 'center', flexDirection: 'row',
-                        marginBottom: 100
-                    }}>
-                    <Text style={{
-                        textAlign: 'center',
-                        lineHeight: 35,
-                        color: '#202025',
-                        fontSize: 12,
-                        backgroundColor: '#f4f4f6',
-                        paddingHorizontal: 25,
-                        fontFamily: 'inter',
-                        height: 35,
-                        width: 200,
-                        borderRadius: 15,
-                        textTransform: 'uppercase'
-                    }}>
-                        {PreferredLanguageText('viewAttendance')}
-                    </Text>
-                </TouchableOpacity>
-                {/* 
-                    // <Jutsu
-                    //     containerStyles={{
-                    //         width: '100%',
-                    //         height: 500,
-                    //         marginTop: isOwner ? 20 : 70,
-                    //         borderRadius: 20
-                    //     }}
-                    //     configOverwrite={{
-                    //         // disableInviteFunctions: true,
-                    //         startWithAudioMuted: true,
-                    //         startWithVideoMuted: true,
-                    //         prejoinPageEnabled: false,
-                    //         disableProfile: true,
-                    //         remoteVideoMenu:
-                    //         {
-                    //             disableKick: !isOwner,
-                    //         },
-                    //         toolbarButtons,
-                    //     }}
-                    //     interfaceConfigOverwrite={{
-                    //         TOOLBAR_BUTTONS: toolbarButtons,
-                    //         SHOW_JITSI_WATERMARK: false,
-                    //         showJitsiWatermark: false,
-                    //         SHOW_POWERED_BY: false,
-                    //         SHOW_PROMOTIONAL_CLOSE_PAGE: false
-                    //     }}
-                    //     // domain='cuesapp.co'
-                    //     roomName={room}
-                    //     displayName={name}
-                    //     subject={props.channelName}
-                    //     password={password}
-                    //     onMeetingEnd={() => {
-                    //         if (isOwner) {
-                    //             updateMeetingStatus();
-                    //         }
-                    //         setMeetingOn(false);
-                    //         setMeetingEndText('Meeting exited.');
-                    //     }}
-                    //     loadingComponent={<p>loading ...</p>}
-                    //     errorComponent={<p>Oops, something went wrong</p>} /> */}
+                                        const server = fetchAPI('')
+                                        server.mutate({
+                                            mutation: markAttendance,
+                                            variables: {
+                                                userId: user._id,
+                                                channelId: props.channelId
+                                            }
+                                        }).then(res => {
+                                            // do nothing...
+                                            // attendance marked
+                                        })
+                                    }
+
+                                } else {
+                                    Alert(classroomNotInSession)
+                                }
+                            }}
+                            style={{
+                                backgroundColor: 'white',
+                                overflow: 'hidden',
+                                height: 35,
+                                marginTop: 15,
+                                marginBottom: 20
+                            }}>
+                            <Text style={{
+                                textAlign: 'center',
+                                lineHeight: 35,
+                                color: meetingOn ? '#fff' : '#202025',
+                                fontSize: 12,
+                                backgroundColor: meetingOn ? '#3B64F8' : '#f4f4f6',
+                                paddingHorizontal: 25,
+                                fontFamily: 'inter',
+                                height: 35,
+                                width: 200,
+                                borderRadius: 15,
+                                textTransform: 'uppercase'
+                            }}>
+                                {PreferredLanguageText('enterClassroom')}
+                            </Text>
+                        </TouchableOpacity>
+                        <Text style={{ fontSize: 12, color: '#a2a2aa', marginBottom: 10 }}>
+                            Enabled only when classroom in session.
+                        </Text>
+                    </View>
+                    <View style={{ width: Dimensions.get('window').width < 768 ? '100%' : '33.33%', backgroundColor: 'white' }}>
+                        <TouchableOpacity
+                            onPress={async () => {
+                                setViewChannelAttendance(true)
+                            }}
+                            style={{
+                                backgroundColor: 'white',
+                                overflow: 'hidden',
+                                height: 35,
+                                marginTop: 15,
+                                marginBottom: 20
+                            }}>
+                            <Text style={{
+                                textAlign: 'center',
+                                lineHeight: 35,
+                                color: '#202025',
+                                fontSize: 12,
+                                backgroundColor: '#f4f4f6',
+                                paddingHorizontal: 25,
+                                fontFamily: 'inter',
+                                height: 35,
+                                width: 200,
+                                borderRadius: 15,
+                                textTransform: 'uppercase'
+                            }}>
+                                {PreferredLanguageText('viewAttendance')}
+                            </Text>
+                        </TouchableOpacity>
+                        <Text style={{ fontSize: 12, color: '#a2a2aa', marginBottom: 20 }}>
+                            Attendances will only be captured for scheduled lectures.
+                        </Text>
+                    </View>
+                </View>
                 {
                     !isOwner ? <View style={{ borderColor: '#f4f4f6', borderTopWidth: 1 }}>
                         <Text
                             ellipsizeMode="tail"
-                            style={{ color: '#a2a2aa', fontSize: 16, lineHeight: 25, marginVertical: 25 }}>
+                            style={{ color: '#a2a2aa', fontSize: 15, lineHeight: 25, marginVertical: 25 }}>
                             {PreferredLanguageText('upcoming')}
                         </Text>
                     </View> : null
@@ -432,9 +409,9 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                             <View style={{ width: Dimensions.get('window').width < 768 ? '100%' : '30%' }}>
                                 <Text
                                     ellipsizeMode="tail"
-                                    style={{ color: '#a2a2aa', fontSize: 16, lineHeight: 25, marginBottom: 25, marginTop: 10 }}>
+                                    style={{ color: '#a2a2aa', fontSize: 15, lineHeight: 25, marginBottom: 25, marginTop: 10 }}>
                                     {PreferredLanguageText('upcoming')}
-                        </Text>
+                                </Text>
                             </View>
                             <View style={{
                                 width: Dimensions.get('window').width < 768 ? '100%' : '30%',
@@ -443,8 +420,8 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                 marginLeft: Dimensions.get('window').width < 768 ? 0 : 10
                             }}>
                                 <Text style={styles.text}>
-                                {PreferredLanguageText('start')}
-                            </Text>
+                                    {PreferredLanguageText('start')}
+                                </Text>
                                 <Datetime
                                     value={start}
                                     onChange={(event: any) => {
@@ -460,8 +437,8 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                 marginLeft: Dimensions.get('window').width < 768 ? 0 : 10
                             }}>
                                 <Text style={styles.text}>
-                                {PreferredLanguageText('end')}
-                            </Text>
+                                    {PreferredLanguageText('end')}
+                                </Text>
                                 <Datetime
                                     value={end}
                                     onChange={(event: any) => {
@@ -530,7 +507,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                             }}>
                                             <Text style={{
                                                 width: '100%',
-                                                fontSize: 16,
+                                                fontSize: 15,
                                                 color: '#a2a2aa'
                                             }}>
                                                 <Ionicons name='chevron-back-outline' size={17} color={'#202025'} style={{ marginRight: 10 }} /> Attended By
@@ -538,9 +515,9 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                         </TouchableOpacity>
                                         : <Text
                                             ellipsizeMode="tail"
-                                            style={{ color: '#a2a2aa', fontSize: 16, lineHeight: 25, marginVertical: 25 }}>
+                                            style={{ color: '#a2a2aa', fontSize: 15, lineHeight: 25, marginVertical: 25 }}>
                                             {PreferredLanguageText('past')}
-                                    </Text>}
+                                        </Text>}
                             </View>
                             {
 
@@ -644,6 +621,7 @@ const styles = StyleSheet.create({
         color: '#a2a2aa',
         textAlign: 'left',
         paddingHorizontal: 10,
+        paddingTop: 5
     },
     col: {
         width: '100%',

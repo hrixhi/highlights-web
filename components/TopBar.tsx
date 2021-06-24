@@ -22,8 +22,8 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const [showNavrachanaLogo, setShowNavrachanaLogo] = useState(false)
 
     const editChannelInfo = useCallback(() => {
-        const name = prompt('Update Name', props.filterChoice)
-        const password = prompt('Update Password (Leave blank for for public access.)')
+        const name = prompt('Update Channel Name', props.filterChoice)
+        const password = prompt('Update Channel Password (Optional)')
         if (!name || name === '') {
             alert("Enter channel name.")
             return;
@@ -106,15 +106,16 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
     return (
         <View style={styles.topbar} key={Math.random()}>
-            <View style={{ width: '80%', height: Dimensions.get('window').height * 0.15 * 0.22, alignSelf: 'center' }} />
-            <View style={{ width: '100%', height: Dimensions.get('window').height * 0.15 * 0.78 }}>
+            <View style={{ width: '80%', height: Dimensions.get('window').height * 0.15 * 0.15, alignSelf: 'center' }} />
+            <View style={{ width: '100%', height: Dimensions.get('window').height * 0.15 * 0.85 }}>
                 <View style={{
                     flexDirection: 'row',
-                    display: 'flex'
+                    display: 'flex',
+                    paddingHorizontal: 20
                 }}>
                     <TouchableOpacity
                         onPress={() => Linking.openURL('http://www.cuesapp.co')}
-                        style={{ backgroundColor: 'white' }}>
+                        style={{ backgroundColor: 'white', paddingTop: 6 }}>
                         {/* NAVRACHANA HARD CODE */}
                         <Image
                             source={
@@ -149,6 +150,9 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             meetingOn ?
                                                 <View style={styles.badge} /> : null
                                         }
+                                        <Text style={{ fontSize: 9, color: '#a2a2aa', textAlign: 'center' }}>
+                                            Lectures
+                                        </Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity
                                         style={{ marginRight: 15 }}
@@ -160,23 +164,22 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             props.unreadMessages !== 0 ?
                                                 <View style={styles.badge} /> : null
                                         }
+                                        <Text style={{ fontSize: 9, color: '#a2a2aa', textAlign: 'center' }}>
+                                            Inbox
+                                        </Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity
                                         style={{ marginRight: 15 }}
                                         onPress={() => props.openDiscussion()}>
                                         <Text style={styles.channelText}>
-                                            <Ionicons name='chatbubble-ellipses-outline' size={19} color={'#a2a2aa'} />
+                                            <Ionicons name='chatbubble-ellipses-outline' size={20} color={'#a2a2aa'} />
                                         </Text>
                                         {
                                             props.unreadDiscussionThreads !== 0 ?
                                                 <View style={styles.badge} /> : null
                                         }
-                                    </TouchableOpacity>
-                                    <TouchableOpacity
-                                        style={{ marginRight: 15 }}
-                                        onPress={() => props.openCalendar()}>
-                                        <Text style={styles.channelText}>
-                                            <Ionicons name='calendar-outline' size={20} color={'#a2a2aa'} />
+                                        <Text style={{ fontSize: 9, color: '#a2a2aa', textAlign: 'center' }}>
+                                            Discussion
                                         </Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity
@@ -185,6 +188,9 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         <Text style={styles.channelText}>
                                             <Ionicons name='stats-chart-outline' size={19} color={'#a2a2aa'} />
                                         </Text>
+                                        <Text style={{ fontSize: 9, color: '#a2a2aa', textAlign: 'center' }}>
+                                            Grades
+                                        </Text>
                                     </TouchableOpacity>
                                     {
                                         isOwner ?
@@ -192,45 +198,36 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 style={{ marginRight: 15 }}
                                                 onPress={() => editChannelInfo()}>
                                                 <Text style={styles.channelText}>
-                                                    <Ionicons name='hammer-outline' size={19} color={'#a2a2aa'} />
+                                                    <Ionicons name='settings-outline' size={19} color={'#a2a2aa'} />
+                                                </Text>
+                                                <Text style={{ fontSize: 9, color: '#a2a2aa', textAlign: 'center' }}>
+                                                    Settings
                                                 </Text>
                                             </TouchableOpacity> : null
                                     }
-                                    <TouchableOpacity
-                                        onPress={() => props.openWalkthrough()}
-                                        style={{ marginRight: 5 }}
-                                    >
-                                        <Text style={styles.channelText}>
-                                            <Ionicons name='help-circle-outline' size={21} color={'#a2a2aa'} />
-                                        </Text>
-                                    </TouchableOpacity>
                                 </View> :
-                                <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
-                                    <TouchableOpacity
-                                        style={{ marginRight: 15 }}
-                                        onPress={() => props.openCalendar()}>
-                                        <Text style={styles.channelText}>
-                                            <Ionicons name='calendar-outline' size={20} color={'#a2a2aa'} />
-                                        </Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity
-                                        onPress={() => props.openWalkthrough()}
-                                        style={{ marginRight: 5 }}
-                                    >
-                                        <Text style={styles.channelText}>
-                                            <Ionicons name='help-circle-outline' size={21} color={'#a2a2aa'} />
-                                        </Text>
-                                    </TouchableOpacity>
-                                </View>
+                                <View style={{ height: 31 }} />
                         }
                     </View>
                 </View>
                 <View
                     key={JSON.stringify(cues) + JSON.stringify(filterChoice)}
-                    style={{ width: '100%', height: '55%', paddingTop: 10 }}>
+                    style={{ width: '100%', height: '55%', paddingTop: 22 }}>
+                    {/* <View>
+                        <Text
+                            style={{
+                                // paddingTop: 5,
+                                paddingLeft: 5,
+                                paddingBottom: 4,
+                                fontSize: 8,
+                                color: '#a2a2aa'
+                            }}>
+                            {props.channelId && props.channelId !== '' ? props.filterChoice : 'My Cues'}
+                        </Text>
+                    </View> */}
                     <ScrollView style={{
                         width: '98.5%',
-                        paddingTop: 10
+                        paddingLeft: 20,
                     }} horizontal={true}
                         showsHorizontalScrollIndicator={false}
                     >
@@ -238,7 +235,7 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             style={filterChoice === 'All' ? styles.subOutline : styles.sub}
                             onPress={() => props.setChannelFilterChoice('All')}>
                             <Text
-                                style={{ color: '#a2a2aa', lineHeight: 20 }}
+                                style={{ color: '#a2a2aa', lineHeight: 20, fontSize: 13 }}
                             >
                                 All
                             </Text>
@@ -250,7 +247,7 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     style={filterChoice === category ? styles.subOutline : styles.sub}
                                     onPress={() => props.setChannelFilterChoice(category)}>
                                     <Text
-                                        style={{ color: '#a2a2aa', lineHeight: 20 }}>
+                                        style={{ color: '#a2a2aa', lineHeight: 20, fontSize: 13 }}>
                                         {category}
                                     </Text>
                                 </TouchableOpacity>
@@ -270,11 +267,10 @@ export default React.memo(TopBar, (prev, next) => {
 
 const styleObject: any = (channelId: any) => StyleSheet.create({
     topbar: {
-        height: '15%',
+        height: '14%',
         width: '100%',
         flexDirection: 'column',
         display: 'flex',
-        paddingHorizontal: 20,
         borderTopRightRadius: 0,
         borderTopLeftRadius: 0,
     },
@@ -283,8 +279,8 @@ const styleObject: any = (channelId: any) => StyleSheet.create({
         alignSelf: 'flex-end',
         width: 7,
         height: 7,
-        marginRight: -2,
-        marginTop: -2,
+        marginRight: 4,
+        marginTop: 2,
         borderRadius: 15,
         backgroundColor: '#d91d56',
         textAlign: 'center',
@@ -315,6 +311,7 @@ const styleObject: any = (channelId: any) => StyleSheet.create({
     },
     channelText: {
         // paddingTop: 1
-        lineHeight: 21
+        lineHeight: 21,
+        textAlign: 'center'
     }
 });

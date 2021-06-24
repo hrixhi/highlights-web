@@ -816,11 +816,11 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 <Text style={{
                                     textAlign: 'right',
                                     lineHeight: 30,
-                                    marginTop: -35,
+                                    marginTop: -31,
                                     paddingRight: 25,
                                     width: '100%'
                                 }}>
-                                    <Ionicons name='bookmark' size={25} color={starred ? '#d91d56' : '#a2a2aa'} />
+                                    <Ionicons name='bookmark' size={34} color={starred ? '#d91d56' : '#a2a2aa'} />
                                 </Text>
                             </TouchableOpacity>
                         </View>
@@ -828,7 +828,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             <View style={{ backgroundColor: 'white', flex: 1 }}>
                                 <Text
                                     style={{
-                                        color: '#a2a2aa', fontSize: 16, paddingBottom: 20
+                                        color: '#a2a2aa', fontSize: 15, paddingBottom: 20, fontWeight: 'bold'
                                     }}>
                                     {PreferredLanguageText('update')}
                                 </Text>
@@ -842,11 +842,11 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 <Text style={{
                                     textAlign: 'right',
                                     lineHeight: 30,
-                                    marginTop: -36,
+                                    marginTop: -31,
                                     paddingRight: 25,
                                     width: '100%'
                                 }}>
-                                    <Ionicons name='bookmark' size={25} color={starred ? '#d91d56' : '#a2a2aa'} />
+                                    <Ionicons name='bookmark' size={34} color={starred ? '#d91d56' : '#a2a2aa'} />
                                 </Text>
                             </TouchableOpacity>
                         </View>
@@ -1204,14 +1204,14 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                 padding: 3,
                                                 paddingTop: 5,
                                                 paddingBottom: 10,
-                                                borderRadius: 8,
+                                                borderRadius: 15,
                                             }}
                                             ref={RichText}
                                             style={{
                                                 width: '100%',
                                                 backgroundColor: '#f4f4f6',
                                                 minHeight: 475,
-                                                borderRadius: 8,
+                                                borderRadius: 15,
                                             }}
                                             editorStyle={{
                                                 backgroundColor: '#f4f4f6',
@@ -1262,7 +1262,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         padding: 3,
                                         paddingTop: 5,
                                         paddingBottom: 10,
-                                        borderRadius: 8,
+                                        borderRadius: 15,
                                     }}
                                     disabled={props.cue.submittedAt && props.cue.submittedAt !== ''}
                                     ref={RichText}
@@ -1270,7 +1270,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         width: '100%',
                                         backgroundColor: '#f4f4f6',
                                         minHeight: 475,
-                                        borderRadius: 8,
+                                        borderRadius: 15,
                                     }}
                                     editorStyle={{
                                         backgroundColor: '#f4f4f6',
@@ -1302,14 +1302,14 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         style={{
                             width: '100%',
                             flexDirection: 'row',
-                            // marginTop: 20,
+                            marginTop: 20,
                             borderTopColor: '#f4f4f6',
                             borderTopWidth: 1,
                             paddingTop: 40,
                             paddingBottom: 20
                         }}>
                         <Text style={{
-                            color: '#a2a2aa', fontSize: 14, paddingRight: 10
+                            color: '#a2a2aa', fontSize: 14, paddingRight: 10, fontWeight: 'bold'
                         }}>
                             {PreferredLanguageText('options')}
                         </Text>
@@ -1323,7 +1323,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
                                             <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
                                                 <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
-                                                    {PreferredLanguageText('channel')}
+                                                    {/* {PreferredLanguageText('channel')} */}
+                                                    {props.cue.channelId && props.cue.channelId !== '' ? 'Shared with' : 'Saved in'}
                                                     {/* <Ionicons
                                                         name='school-outline' size={20} color={'#a2a2aa'} /> */}
                                                 </Text>
@@ -1596,7 +1597,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                                     onPress={() => {
                                                                         setCustomCategory('')
                                                                     }}>
-                                                                    <Text style={{ color: '#a2a2aa', lineHeight: 20 }}>
+                                                                    <Text style={{ color: '#a2a2aa', lineHeight: 20, fontSize: 12 }}>
                                                                         {PreferredLanguageText('none')}
                                                                     </Text>
                                                                 </TouchableOpacity>
@@ -1651,8 +1652,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                         return <View style={color === i ? styles.colorContainerOutline : styles.colorContainer} key={Math.random()}>
                                                             <TouchableOpacity
                                                                 style={{
-                                                                    width: 9,
-                                                                    height: 9,
+                                                                    width: 12,
+                                                                    height: 12,
                                                                     borderRadius: 6,
                                                                     backgroundColor: colorChoices[i]
                                                                 }}
@@ -1717,7 +1718,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
                                 <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
                                     <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
-                                        <Ionicons name='notifications-outline' size={20} color={'#a2a2aa'} />
+                                        Reminder
                                     </Text>
                                 </View>
                                 <View style={{
@@ -1753,8 +1754,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
                                         <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
                                             <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
-                                                <Ionicons
-                                                    name='repeat-outline' size={20} color={'#a2a2aa'} />
+                                                Recurring
                                             </Text>
                                         </View>
                                         <View style={{ flexDirection: 'row', }}>
@@ -1787,7 +1787,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                         <Picker
                                                             style={styles.picker}
                                                             itemStyle={{
-                                                                fontSize: 16
+                                                                fontSize: 15
                                                             }}
                                                             selectedValue={frequency}
                                                             onValueChange={(itemValue: any) =>
@@ -1834,8 +1834,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
                                         <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
                                             <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
-                                                <Ionicons
-                                                    name='infinite-outline' size={20} color={'#a2a2aa'} />
+                                                Indefinite
                                             </Text>
                                         </View>
                                         <View style={{ flexDirection: 'row' }}>
@@ -1972,7 +1971,7 @@ export default UpdateControls
 const styles: any = StyleSheet.create({
     timePicker: {
         width: 125,
-        fontSize: 16,
+        fontSize: 15,
         height: 45,
         color: '#202025',
         borderRadius: 10,
@@ -2006,7 +2005,7 @@ const styles: any = StyleSheet.create({
         backgroundColor: 'white'
     },
     colorContainerOutline: {
-        lineHeight: 20,
+        lineHeight: 22,
         justifyContent: 'center',
         display: 'flex',
         flexDirection: 'column',

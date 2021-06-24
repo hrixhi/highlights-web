@@ -56,7 +56,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     return <View style={{ borderBottomColor: '#f4f4f6', borderBottomWidth: index === (problems.length - 1) ? 0 : 1, marginBottom: 25 }}>
                         <View style={{ flexDirection: 'row' }}>
                             <View style={{ paddingTop: 15 }}>
-                                <Text style={{ color: '#a2a2aa', fontSize: 16, paddingBottom: 25, marginRight: 10 }}>
+                                <Text style={{ color: '#a2a2aa', fontSize: 15, paddingBottom: 25, marginRight: 10 }}>
                                     {index + 1}.
                             </Text>
                             </View>

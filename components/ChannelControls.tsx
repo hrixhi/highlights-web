@@ -271,16 +271,16 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
         <View style={styles.screen} key={1}>
             <View style={{ width: '100%', backgroundColor: 'white' }}>
                 <Text
-                    style={{
-                        fontSize: 22,
-                        color: "#202025",
-                        fontFamily: "inter",
-                        paddingBottom: 15,
-                        textAlign: "center",
-                        paddingTop: 30
-                    }}
+                    style={{ color: '#a2a2aa', fontSize: 17, flex: 1, lineHeight: 25, fontWeight: 'bold' }}
                 >
                     {PreferredLanguageText('channels')}
+                </Text>
+                <Text style={{ paddingVertical: 25, fontSize: 14, color: '#a2a2a2' }}>
+                    Channels faciliate classrooms of various types & sizes.{'\n\n'}
+                    Each subject/section should have its own unique channel.{'\n\n'}
+                    Once an instructor creates a channel, students can subscribe to it using the channel name & password.{'\n\n'}
+                    Instructors can also directly add students to a channel through its inbox.{'\n\n'}
+                    Users can store personal content in the 'My Cues' channel.{'\n\n'}
                 </Text>
                 <View style={styles.colorBar}>
                     <TouchableOpacity
@@ -336,7 +336,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         :
                         <View style={{ backgroundColor: 'white' }}>
                             <Text style={{ color: '#202025', fontSize: 14, paddingBottom: 10 }}>
-                                {PreferredLanguageText('channel')}
+                                {PreferredLanguageText('channel') + ' ' + PreferredLanguageText('name')}
                             </Text>
                             <TextInput
                                 value={name}
@@ -381,7 +381,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         display: 'flex',
                         flexDirection: 'row',
                         height: 50,
-                        paddingTop: 75
+                        paddingTop: 25
                     }}>
                     {
                         option === 'About' ? null :

@@ -57,7 +57,7 @@ const MessageCard: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     imported ?
                         <a download={true} href={url} style={{ textDecoration: 'none' }}>
                             <View style={{ backgroundColor: '#f4f4f6', flex: 1 }}>
-                                <Text style={{ width: '100%', color: '#a2a2aa', fontSize: 16, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                <Text style={{ width: '100%', color: '#a2a2aa', fontSize: 15, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                                     <Ionicons name='document-outline' size={17} color='#a2a2aa' /> {title}.{type}
                                 </Text>
                             </View>
@@ -77,7 +77,7 @@ export default React.memo(MessageCard, (prev, next) => {
 const styles: any = () => StyleSheet.create({
     card: {
         width: '100%',
-        borderRadius: 20,
+        borderRadius: 15,
         padding: 13,
         paddingBottom: 20,
         backgroundColor: '#f4f4f6'
@@ -86,6 +86,7 @@ const styles: any = () => StyleSheet.create({
         display: 'flex',
         flexDirection: 'column',
         flex: 1,
+        fontWeight: 'bold',
         backgroundColor: '#f4f4f6',
     },
     dateContainer: {

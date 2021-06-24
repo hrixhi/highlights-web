@@ -37,7 +37,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                     }}>
                         <Text style={{
                             width: '100%',
-                            fontSize: 16,
+                            fontSize: 15,
                             color: '#a2a2aa'
                         }}>
                             <Ionicons name='chevron-back-outline' size={17} color={'#202025'} style={{ marginRight: 10 }} /> {PreferredLanguageText('attendance')}

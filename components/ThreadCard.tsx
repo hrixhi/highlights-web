@@ -94,7 +94,7 @@ const ThreadCard: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     {
                         imported ?
                             <View style={{ backgroundColor: '#f4f4f6', flex: 1, flexDirection: 'row' }}>
-                                <Text style={{ width: '100%', color: '#a2a2aa', fontSize: 16, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                <Text style={{ width: '100%', color: '#a2a2aa', fontSize: 15, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                                     <Ionicons name='document-outline' size={17} color='#a2a2aa' /> {title}.{type}
                                 </Text>
                                 <Text ellipsizeMode={'tail'}
@@ -151,7 +151,8 @@ const styles: any = () => StyleSheet.create({
     swiper: {
         height: '100%',
         width: '100%',
-        borderRadius: 20,
+        maxWidth: 500,
+        borderRadius: 15,
         overflow: 'hidden',
         backgroundColor: 'white'
     },
@@ -167,7 +168,7 @@ const styles: any = () => StyleSheet.create({
     card: {
         height: '100%',
         width: '100%',
-        borderRadius: 20,
+        borderRadius: 15,
         padding: 13,
         backgroundColor: '#f4f4f6',
     },
@@ -191,14 +192,14 @@ const styles: any = () => StyleSheet.create({
     },
     title: {
         fontFamily: 'inter',
-        fontSize: 14,
+        fontSize: 13,
         paddingTop: 5,
         color: '#202025',
         flex: 1
     },
     titleArrow: {
         fontFamily: 'inter',
-        fontSize: 14,
+        fontSize: 13,
         paddingTop: 5,
         color: '#202025',
         marginLeft: 10

@@ -189,15 +189,16 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
             height: windowHeight,
             backgroundColor: 'white',
             borderTopRightRadius: 0,
-            borderTopLeftRadius: 0
+            borderTopLeftRadius: 0,
+            paddingHorizontal: Dimensions.get('window').width < 768 ? 10 : 25
         }}>
-            <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 25 }}>
+            <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 40 }}>
                 {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
             </Text>
             <View style={{ backgroundColor: 'white', flexDirection: 'row', paddingBottom: 25 }}>
                 <Text
                     ellipsizeMode="tail"
-                    style={{ color: '#a2a2aa', fontSize: 16, flex: 1, lineHeight: 25, paddingHorizontal: 20, }}>
+                    style={{ color: '#a2a2aa', fontSize: 17, flex: 1, lineHeight: 25, paddingHorizontal: 20, fontWeight: 'bold' }}>
                     {PreferredLanguageText('planner')}
                 </Text>
             </View>
@@ -242,7 +243,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 <View style={{ width: Dimensions.get('window').width < 768 ? '100%' : '30%' }}>
                                     <TextInput
                                         value={title}
-                                        placeholder={PreferredLanguageText('event')}
+                                        placeholder={PreferredLanguageText('new') + ' ' + PreferredLanguageText('event')}
                                         onChangeText={val => setTitle(val)}
                                         placeholderTextColor={'#a2a2aa'}
                                         required={true}
@@ -286,7 +287,9 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     width: Dimensions.get('window').width < 768 ? '100%' : '10%',
                                     flexDirection: 'row',
                                     display: 'flex',
-                                    justifyContent: 'center'
+                                    marginBottom: 10,
+                                    paddingLeft: 7
+                                    // justifyContent: 'center'
                                 }}>
                                     <TouchableOpacity
                                         style={{
@@ -299,16 +302,17 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     </TouchableOpacity>
                                 </View>
                             </View>
-                            <View style={{ marginBottom: 40 }}>
-                                <View style={{ width: '100%', paddingBottom: 15, backgroundColor: 'white' }}>
-                                    <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
-                                        {PreferredLanguageText('channel')}
+                            <View style={{ marginBottom: 20, borderColor: '#f4f4f6', borderBottomWidth: 1, paddingBottom: 20 }}>
+                                <View style={{ width: '100%', paddingBottom: 20, backgroundColor: 'white' }}>
+                                    <Text style={{ fontSize: 12, color: '#a2a2aa', paddingTop: Dimensions.get('window').width < 768 ? 15 : 5 }}>
+                                        {/* {PreferredLanguageText('channel')} */}
+                                        Share with
                                         {/* <Ionicons
                                                 name='school-outline' size={20} color={'#a2a2aa'} /> */}
                                     </Text>
                                 </View>
                                 <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white' }}>
-                                    <View style={{ width: '85%', backgroundColor: 'white', display: 'flex' }}>
+                                    <View style={{ width: '100%', backgroundColor: 'white', display: 'flex' }}>
                                         <ScrollView style={styles.colorBar} horizontal={true} showsHorizontalScrollIndicator={false}>
                                             <TouchableOpacity
                                                 style={channelId === '' ? styles.allOutline : styles.allBlack}

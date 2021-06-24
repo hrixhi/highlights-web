@@ -49,37 +49,33 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     padding: 15,
                     opacity: modalAnimation,
                     borderTopLeftRadius: 0,
-                    borderTopRightRadius: 0,
-                    alignSelf: 'center'
+                    borderTopRightRadius: 0
                 }}>
                 <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 20 }}>
                     {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
                 </Text>
-                <View style={{ backgroundColor: 'white', flexDirection: 'row', paddingBottom: 50 }}>
+                <View style={{ backgroundColor: 'white', paddingLeft: 20, paddingTop: 10 }}>
                     <Text
-                        style={{
-                            paddingTop: 25,
-                            flex: 1,
-                            textAlign: 'center',
-                            fontSize: 22,
-                            color: "#202025",
-                            fontFamily: "inter",
-                        }}
+                        style={{ color: '#a2a2aa', fontSize: 17, flex: 1, lineHeight: 25, fontWeight: 'bold' }}
                         ellipsizeMode="tail">
                         Walkthrough
+                    </Text>
+                    <Text style={{ paddingTop: 25, paddingBottom: 40, fontSize: 13, color: '#a2a2a2' }}>
+                        Reach out to us using the blue Messenger icon.
                     </Text>
                 </View>
                 <View
                     style={{
-                        paddingHorizontal: Dimensions.get('window').width < 768 ? 0 : 100,
                         width: '100%',
-                        height: 50,
+                        maxWidth: 400,
+                        //height: 50,
+                        paddingLeft: 55,
                         backgroundColor: 'white',
-                        flexDirection: 'row'
+                        // flexDirection: 'row'
                     }}>
                     <View style={{ flex: 1 }}>
                         <Text
-                            style={{ color: '#202025', fontSize: 16, flex: 1, lineHeight: 25 }}
+                            style={{ color: '#202025', fontSize: 15, flex: 1, lineHeight: 25 }}
                         >
                             {headings[index]}
                         </Text>
@@ -112,8 +108,8 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 textAlign: 'left',
                                 paddingTop: 2
                             }}>
-                                Instructor
-                        </Text>
+                                For Instructor
+                            </Text>
                         </View>
                     </View>
                 </View>
@@ -121,6 +117,12 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     key={isInstructor.toString()}
                     onIndexChanged={(ind) => {
                         setIndex(ind)
+                    }}
+                    containerStyle={{
+                        width: '100%',
+                        maxWidth: 700,
+                        height: '100%',
+                        maxHeight: 400
                     }}
                     vertical={false}
                     from={index}
@@ -191,8 +193,10 @@ const styles = StyleSheet.create({
     screen: {
         backgroundColor: 'white',
         height: '100%',
-        width: Dimensions.get('window').width < 1024 ? '100%' : '80%',
-        alignSelf: 'center',
+        width: '100%',
+        maxWidth: 700,
+        paddingHorizontal: 50,
+        // alignSelf: 'center',
         borderTopRightRadius: 0,
         borderTopLeftRadius: 0,
         zIndex: -1,

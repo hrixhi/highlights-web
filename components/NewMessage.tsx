@@ -261,6 +261,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     : <View style={{
                         width: '100%',
                         minHeight: 100,
+                        maxWidth: 400,
                         backgroundColor: 'white',
                         paddingBottom: 5
                     }}>
@@ -268,7 +269,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             disabled={false}
                             containerStyle={{
                                 backgroundColor: '#f4f4f6',
-                                borderRadius: 8,
+                                borderRadius: 15,
                                 padding: 3,
                                 paddingTop: 5,
                                 paddingBottom: 10,
@@ -278,7 +279,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             style={{
                                 width: '100%',
                                 backgroundColor: '#f4f4f6',
-                                borderRadius: 8,
+                                borderRadius: 15,
                                 minHeight: 100
                             }}
                             editorStyle={{
@@ -314,7 +315,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     <View style={{ width: '100%', paddingTop: 40, paddingBottom: 10, backgroundColor: 'white' }}>
                                         <Text style={{ fontSize: 14, color: '#202025' }}>
                                             {PreferredLanguageText('category')}
-                                </Text>
+                                        </Text>
                                     </View>
                                     <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white' }}>
                                         <View style={{ width: '85%', backgroundColor: 'white' }}>
@@ -339,7 +340,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                             }}>
                                                             <Text style={{ color: '#a2a2aa', lineHeight: 20 }}>
                                                                 {PreferredLanguageText('none')}
-                                                    </Text>
+                                                            </Text>
                                                         </TouchableOpacity>
                                                         {
                                                             categories.map((category) => {
@@ -378,6 +379,23 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 </View>
                                 : null
                         }
+                        <View style={{ width: '33.33%', backgroundColor: 'white' }}>
+                            <View style={{ width: '100%', paddingTop: 40, paddingBottom: 10, backgroundColor: 'white' }}>
+                                <Text style={{ fontSize: 14, color: '#202025' }}>
+                                    {PreferredLanguageText('anonymous')}
+                                </Text>
+                            </View>
+                            <Switch
+                                value={anonymous}
+                                onValueChange={() => setAnonymous(!anonymous)}
+                                trackColor={{
+                                    false: '#f4f4f6',
+                                    true: '#a2a2aa'
+                                }}
+                                activeThumbColor='white'
+                                style={{ height: 20 }}
+                            />
+                        </View>
                         {
                             parentId ? null :
                                 (
@@ -386,7 +404,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                             <View style={{ width: '100%', paddingTop: 40, paddingBottom: 10, backgroundColor: 'white' }}>
                                                 <Text style={{ fontSize: 14, color: '#202025' }}>
                                                     {PreferredLanguageText('private')}
-                                        </Text>
+                                                </Text>
                                             </View>
                                             <Switch
                                                 value={isPrivate}
@@ -401,29 +419,13 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                         </View>
                                 )
                         }
-                        <View style={{ width: '33.33%', backgroundColor: 'white' }}>
-                            <View style={{ width: '100%', paddingTop: 40, paddingBottom: 10, backgroundColor: 'white' }}>
-                                <Text style={{ fontSize: 14, color: '#202025' }}>
-                                    {PreferredLanguageText('anonymous')}
-                    </Text>
-                            </View>
-                            <Switch
-                                value={anonymous}
-                                onValueChange={() => setAnonymous(!anonymous)}
-                                trackColor={{
-                                    false: '#f4f4f6',
-                                    true: '#a2a2aa'
-                                }}
-                                activeThumbColor='white'
-                                style={{ height: 20 }}
-                            />
-                        </View>
                     </View>
             }
             <View style={styles.footer}>
                 <View
                     style={{
                         flex: 1,
+                        maxWidth: 400,
                         backgroundColor: 'white',
                         justifyContent: 'center',
                         display: 'flex',
@@ -478,11 +480,13 @@ const styles: any = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         marginTop: 80,
-        lineHeight: 18
+        lineHeight: 18,
+        marginBottom: 25
     },
     date: {
         width: '100%',
         display: 'flex',
+        maxWidth: 400,
         flexDirection: 'row',
         paddingBottom: 4,
         backgroundColor: 'white'

@@ -363,14 +363,14 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
 
         return (<View style={{ width: '100%', marginLeft: '5%', display: 'flex', flexDirection: 'column' }}>
             {initiatedAt ? <Text style={{ width: '100%', height: 15, paddingBottom: 25 }}>
-                Quiz initiated at { moment(new Date(initiatedAt)).format('MMMM Do YYYY, h:mm a')}
-            </Text> : 
+                Quiz initiated at {moment(new Date(initiatedAt)).format('MMMM Do YYYY, h:mm a')}
+            </Text> :
                 null
             }
             <Text style={{ width: '100%', height: 15, marginTop: '20px', paddingBottom: 25, fontWeight: 'bold' }}>
                 Selected Answers:
             </Text>
-            <View style={{ marginTop: '20px', display: 'flex', flexDirection: "column"}}>
+            <View style={{ marginTop: '20px', display: 'flex', flexDirection: "column" }}>
                 {solutions.map((problem: any, index: number) => {
 
                     const answers: any[] = problem.selected;
@@ -378,20 +378,20 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                     const selectedAnswers = answers.filter(ans => ans.isSelected);
 
                     let selectedAnswersString: any[] = []
-                    
+
                     selectedAnswers.forEach((ans: any) => {
                         selectedAnswersString.push(ans.options)
                     })
 
                     return (<Text style={{ width: '100%', height: 15, marginTop: '10px', paddingBottom: 25 }}>
-                        Problem {index + 1} : {selectedAnswersString.join(", ")} 
+                        Problem {index + 1} : {selectedAnswersString.join(", ")}
                     </Text>)
                 })}
             </View>
         </View>)
 
     }
-    
+
     return (
         <View style={{
             backgroundColor: 'white',
@@ -436,7 +436,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                             </Text>
                         </TouchableOpacity>
                         {
-                            loadedChatWithUser !== {} ?
+                            loadedChatWithUser && loadedChatWithUser !== {} && !showNewGroup && !showAddUsers ?
                                 <View style={{ marginHorizontal: 20 }}>
                                     <Text>
                                         {loadedChatWithUser.displayName}, {loadedChatWithUser.fullName} {loadedChatWithUser.email ? ("(" + loadedChatWithUser.email + ")") : ''}
@@ -486,12 +486,12 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                             props.cueId ?
                                 <Text
                                     ellipsizeMode="tail"
-                                    style={{ color: '#a2a2aa', fontSize: 16, flex: 1, lineHeight: 25 }}>
+                                    style={{ color: '#a2a2aa', fontSize: 15, flex: 1, lineHeight: 25, fontWeight: 'bold' }}>
                                     {PreferredLanguageText('status')}
                                 </Text> :
                                 <Text
                                     ellipsizeMode="tail"
-                                    style={{ color: '#a2a2aa', fontSize: 16, flex: 1, lineHeight: 25 }}>
+                                    style={{ color: '#a2a2aa', fontSize: 15, flex: 1, lineHeight: 25, fontWeight: 'bold' }}>
                                     {PreferredLanguageText('inbox')}
                                 </Text>
                         }
@@ -599,11 +599,11 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                     style={{ flex: 1, paddingTop: 12 }}>
                                                     <Text
                                                         ellipsizeMode="tail"
-                                                        style={{ color: '#a2a2aa', fontSize: 16, flex: 1, lineHeight: 25 }}>
+                                                        style={{ color: '#a2a2aa', fontSize: 15, flex: 1, lineHeight: 25 }}>
                                                         {PreferredLanguageText('newGroup')}
                                                     </Text>
                                                     <View style={{ maxHeight: 175, flexDirection: 'column', marginTop: 25, overflow: 'scroll', marginBottom: 25 }}>
-                                                        <View style={{ width: '90%', padding: 5, height: expandMenu ? 175 : 'auto' }}>
+                                                        <View style={{ width: '90%', padding: 5, height: expandMenu ? 175 : 'auto', maxWidth: 400 }}>
                                                             <Select
                                                                 placeholder='Share with'
                                                                 styles={{
@@ -840,7 +840,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         }
                                         {
                                             isQuiz && Object.keys(quizSolutions).length > 0 ?
-                                            renderQuizSubmissions() : null
+                                                renderQuizSubmissions() : null
                                         }
                                         {
                                             !imported && !isQuiz ?
@@ -852,13 +852,13 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                         padding: 3,
                                                         paddingTop: 5,
                                                         paddingBottom: 10,
-                                                        borderRadius: 8,
+                                                        borderRadius: 15,
                                                     }}
                                                     ref={RichText}
                                                     style={{
                                                         width: '100%',
                                                         backgroundColor: '#f4f4f6',
-                                                        borderRadius: 8,
+                                                        borderRadius: 15,
                                                         minHeight: 450
                                                     }}
                                                     editorStyle={{
@@ -1061,7 +1061,7 @@ const styleObject = () => {
         col: {
             width: '100%',
             height: 80,
-            marginBottom: 20,
+            marginBottom: 10,
             // flex: 1,
             backgroundColor: 'white'
         },

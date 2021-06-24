@@ -662,7 +662,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
       }
       // OPEN WALKTHROUGH IF FIRST TIME LOAD
       if (!init && dimensions.window.width >= 1024) {
-        openModal('Create')
+        openModal('Calendar')
       }
       // HANDLE PROFILE
       if (u) {
@@ -1371,8 +1371,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         height: dimensions.window.height,
         flexDirection: 'column',
         backgroundColor: '#fff',
-        borderRightColor: '#f4f4f6',
-        borderRightWidth: 2,
+        borderRightColor: '#dddddd',
+        borderRightWidth: 1,
       }}>
         <TopBar
           key={JSON.stringify(channelFilterChoice) + JSON.stringify(filteredCues) + JSON.stringify(modalType) + JSON.stringify(filterChoice) + JSON.stringify(unreadDiscussionThreads) + JSON.stringify(unreadMessages)}
@@ -1414,6 +1414,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             </View>
         }
         <BottomBar
+          openWalkthrough={() => openModal('Walkthrough')}
+          openCalendar={() => openModal('Calendar')}
           openCreate={() => openModal('Create')}
           openChannels={() => openModal('Channels')}
           openProfile={() => openModal('Profile')}
@@ -1433,7 +1435,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             width: dimensions.window.width < 1024 ? 0 : dimensions.window.width * 0.7,
             height: dimensions.window.height,
             // paddingHorizontal: dimensions.window.width < 1024 ? 0 : 30,
-            paddingTop: 0,
+            paddingTop: 10,
             // backgroundColor: '#f4f4f6',
             backgroundColor: '#fff',
             position: dimensions.window.width < 1024 ? 'absolute' : 'relative'
@@ -1476,8 +1478,8 @@ const styles = StyleSheet.create({
   activityContainer: {
     borderTopWidth: 0,
     borderBottomWidth: 0,
-    borderColor: '#f4f4f6',
-    height: '70%',
+    borderColor: '#dddddd',
+    height: '68%',
     width: '100%',
     justifyContent: "center",
   },
