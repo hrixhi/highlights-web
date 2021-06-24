@@ -99,7 +99,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     useEffect(() => {
         setTimeout(() => {
             setWebviewKey(Math.random())
-        }, 1500);
+        }, 3000);
     }, [imported])
 
     const onDimensionsChange = useCallback(({ window, screen }: any) => {

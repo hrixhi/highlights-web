@@ -133,8 +133,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     useEffect(() => {
         setTimeout(() => {
             setWebviewKey(Math.random())
-        }, 1500);
-    }, [showOriginal])
+        }, 3000);
+    }, [showOriginal, imported, submissionImported])
 
     useEffect(() => {
         setLoading(true)
