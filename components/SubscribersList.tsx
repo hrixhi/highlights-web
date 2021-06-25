@@ -406,46 +406,48 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
             </Text>
             {
                 showSubmission || showChat || showAddUsers || showNewGroup ?
-                    <View style={{ backgroundColor: 'white', flexDirection: 'row', paddingBottom: 15 }}>
-                        <TouchableOpacity
-                            key={Math.random()}
-                            style={{
-                                backgroundColor: 'white'
-                            }}
-                            onPress={() => {
-                                if (showChat) {
-                                    setShowChat(false)
-                                    setIsLoadedUserInactive(false)
-                                    setLoadedChatWithUser({})
-                                    setUsers([])
-                                    props.reload()
-                                } else {
-                                    setShowSubmission(false)
-                                    setStatus("")
-                                    setScore("0")
-                                    setUserId("")
-                                }
-                                setShowAddUsers(false)
-                                setShowNewGroup(false)
-                            }}>
-                            <Text style={{
-                                width: '100%',
-                                lineHeight: 23
-                            }}>
-                                <Ionicons name='chevron-back-outline' size={23} color={'#202025'} />
-                            </Text>
-                        </TouchableOpacity>
+                    <View style={{ backgroundColor: 'white', paddingBottom: 15, maxWidth: 600 }}>
+                        <View style={{ flexDirection: 'row' }}>
+                            <TouchableOpacity
+                                key={Math.random()}
+                                style={{
+                                    backgroundColor: 'white'
+                                }}
+                                onPress={() => {
+                                    if (showChat) {
+                                        setShowChat(false)
+                                        setIsLoadedUserInactive(false)
+                                        setLoadedChatWithUser({})
+                                        setUsers([])
+                                        props.reload()
+                                    } else {
+                                        setShowSubmission(false)
+                                        setStatus("")
+                                        setScore("0")
+                                        setUserId("")
+                                    }
+                                    setShowAddUsers(false)
+                                    setShowNewGroup(false)
+                                }}>
+                                <Text style={{
+                                    width: '100%',
+                                    lineHeight: 23
+                                }}>
+                                    <Ionicons name='chevron-back-outline' size={23} color={'#202025'} />
+                                </Text>
+                            </TouchableOpacity>
+                            {
+                                loadedChatWithUser && loadedChatWithUser !== {} && !showNewGroup && !showAddUsers && users.length < 3 ?
+                                    <View style={{ marginHorizontal: 20, paddingTop: 5 }}>
+                                        <Text>
+                                            {loadedChatWithUser.displayName}, {loadedChatWithUser.fullName} {loadedChatWithUser.email ? ("(" + loadedChatWithUser.email + ")") : ''}
+                                        </Text>
+                                    </View> : null
+                            }
+                        </View>
                         {
-                            loadedChatWithUser && loadedChatWithUser !== {} && !showNewGroup && !showAddUsers ?
-                                <View style={{ marginHorizontal: 20 }}>
-                                    <Text>
-                                        {loadedChatWithUser.displayName}, {loadedChatWithUser.fullName} {loadedChatWithUser.email ? ("(" + loadedChatWithUser.email + ")") : ''}
-                                    </Text>
-                                </View> : null
-                        }
-                        {
-                            isOwner && !props.cueId && !showAddUsers
-                                ? <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
+                            isOwner && !props.cueId && !showAddUsers && users.length < 3
+                                ? <View style={{ flexDirection: 'row', flex: 1 }}>
                                     <TouchableOpacity
                                         onPress={() => handleSubStatusChange()}
                                     >
@@ -481,7 +483,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                         }
                     </View>
                     :
-                    <View style={{ backgroundColor: 'white', flexDirection: 'row', paddingBottom: 25 }}>
+                    <View style={{ backgroundColor: 'white', flexDirection: 'row', paddingBottom: 25, maxWidth: 500 }}>
                         {
                             props.cueId ?
                                 <Text
@@ -508,9 +510,10 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         textAlign: 'right',
                                         lineHeight: 23,
                                         marginRight: 20,
-                                        marginTop: -1
+                                        color: '#a2a2aa',
+                                        fontSize: 11,
                                     }}>
-                                        <Ionicons name='people-outline' size={23} color={'#202025'} />
+                                        NEW GROUP
                                     </Text>
                                 </TouchableOpacity> : null
                         }
@@ -527,9 +530,10 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         textAlign: 'right',
                                         lineHeight: 23,
                                         marginRight: 20,
-                                        marginTop: -1
+                                        color: '#a2a2aa',
+                                        fontSize: 11,
                                     }}>
-                                        <Ionicons name='person-add-outline' size={21} color={'#202025'} />
+                                        ADD USERS
                                     </Text>
                                 </TouchableOpacity> : null
                         }
@@ -568,7 +572,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             }
                                             {
                                                 messages.map((message) => {
-                                                    return <View style={{ width: '100%', paddingBottom: 15, backgroundColor: 'white' }} key={Math.random()}>
+                                                    return <View style={{ width: '100%', maxWidth: 500, paddingBottom: 15, backgroundColor: 'white' }} key={Math.random()}>
                                                         <MessageCard
                                                             message={message} />
                                                     </View>
@@ -603,7 +607,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                         {PreferredLanguageText('newGroup')}
                                                     </Text>
                                                     <View style={{ maxHeight: 175, flexDirection: 'column', marginTop: 25, overflow: 'scroll', marginBottom: 25 }}>
-                                                        <View style={{ width: '90%', padding: 5, height: expandMenu ? 175 : 'auto', maxWidth: 400 }}>
+                                                        <View style={{ width: '90%', padding: 5, height: expandMenu ? 175 : 'auto', maxWidth: 500 }}>
                                                             <Select
                                                                 placeholder='Share with'
                                                                 styles={{
@@ -944,7 +948,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 </View>
                         }
                     </View>) :
-                    <View style={{ alignSelf: 'center', width: 400, maxWidth: '100%' }}>
+                    <View style={{ width: 500, maxWidth: '100%' }}>
                         <Text style={{ color: '#202025', fontSize: 14, paddingBottom: 10 }}>
                             {PreferredLanguageText('inviteByEmail')}
                         </Text>
@@ -1061,7 +1065,7 @@ const styleObject = () => {
         col: {
             width: '100%',
             height: 80,
-            marginBottom: 10,
+            marginBottom: 12,
             // flex: 1,
             backgroundColor: 'white'
         },

@@ -145,11 +145,11 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         onPress={() => props.openMeeting()}>
                                         <Text style={styles.channelText}>
                                             <Ionicons name='videocam-outline' size={21} color={'#a2a2aa'} />
+                                            {
+                                                meetingOn ?
+                                                    <View style={styles.badge} /> : null
+                                            }
                                         </Text>
-                                        {
-                                            meetingOn ?
-                                                <View style={styles.badge} /> : null
-                                        }
                                         <Text style={{ fontSize: 9, color: '#a2a2aa', textAlign: 'center' }}>
                                             Lectures
                                         </Text>
@@ -159,11 +159,11 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         onPress={() => props.openSubscribers()}>
                                         <Text style={styles.channelText}>
                                             <Ionicons name='mail-outline' size={21} color={'#a2a2aa'} />
+                                            {
+                                                props.unreadMessages !== 0 ?
+                                                    <View style={styles.badge} /> : null
+                                            }
                                         </Text>
-                                        {
-                                            props.unreadMessages !== 0 ?
-                                                <View style={styles.badge} /> : null
-                                        }
                                         <Text style={{ fontSize: 9, color: '#a2a2aa', textAlign: 'center' }}>
                                             Inbox
                                         </Text>
@@ -173,11 +173,11 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         onPress={() => props.openDiscussion()}>
                                         <Text style={styles.channelText}>
                                             <Ionicons name='chatbubble-ellipses-outline' size={20} color={'#a2a2aa'} />
+                                            {
+                                                props.unreadDiscussionThreads !== 0 ?
+                                                    <View style={styles.badge} /> : null
+                                            }
                                         </Text>
-                                        {
-                                            props.unreadDiscussionThreads !== 0 ?
-                                                <View style={styles.badge} /> : null
-                                        }
                                         <Text style={{ fontSize: 9, color: '#a2a2aa', textAlign: 'center' }}>
                                             Discussion
                                         </Text>
@@ -279,8 +279,8 @@ const styleObject: any = (channelId: any) => StyleSheet.create({
         alignSelf: 'flex-end',
         width: 7,
         height: 7,
-        marginRight: 4,
-        marginTop: 2,
+        marginRight: -2,
+        marginTop: 0,
         borderRadius: 15,
         backgroundColor: '#d91d56',
         textAlign: 'center',

@@ -82,7 +82,8 @@ const ThreadCard: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 </Text> : null
                         }
                         <Text style={{
-                            fontSize: 10,
+                            fontSize: 11,
+                            fontWeight: 'bold',
                             color,
                             marginRight: 5,
                             flex: 1,

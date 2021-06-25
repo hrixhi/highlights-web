@@ -261,7 +261,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     : <View style={{
                         width: '100%',
                         minHeight: 100,
-                        maxWidth: 400,
+                        maxWidth: 500,
                         backgroundColor: 'white',
                         paddingBottom: 5
                     }}>
@@ -308,12 +308,12 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
             }
             {
                 props.users ? null :
-                    <View style={{ display: 'flex', flexDirection: 'row' }}>
+                    <View>
                         {
                             !cueId && !parentId ?
                                 <View style={{ width: '33.33%', backgroundColor: 'white' }}>
                                     <View style={{ width: '100%', paddingTop: 40, paddingBottom: 10, backgroundColor: 'white' }}>
-                                        <Text style={{ fontSize: 14, color: '#202025' }}>
+                                        <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
                                             {PreferredLanguageText('category')}
                                         </Text>
                                     </View>
@@ -379,53 +379,55 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 </View>
                                 : null
                         }
-                        <View style={{ width: '33.33%', backgroundColor: 'white' }}>
-                            <View style={{ width: '100%', paddingTop: 40, paddingBottom: 10, backgroundColor: 'white' }}>
-                                <Text style={{ fontSize: 14, color: '#202025' }}>
-                                    {PreferredLanguageText('anonymous')}
-                                </Text>
+                        <View style={{ flexDirection: 'row' }}>
+                            <View style={{ width: '33.33%', backgroundColor: 'white' }}>
+                                <View style={{ width: '100%', paddingTop: 40, paddingBottom: 10, backgroundColor: 'white' }}>
+                                    <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
+                                        {PreferredLanguageText('anonymous')}
+                                    </Text>
+                                </View>
+                                <Switch
+                                    value={anonymous}
+                                    onValueChange={() => setAnonymous(!anonymous)}
+                                    trackColor={{
+                                        false: '#f4f4f6',
+                                        true: '#a2a2aa'
+                                    }}
+                                    activeThumbColor='white'
+                                    style={{ height: 20 }}
+                                />
                             </View>
-                            <Switch
-                                value={anonymous}
-                                onValueChange={() => setAnonymous(!anonymous)}
-                                trackColor={{
-                                    false: '#f4f4f6',
-                                    true: '#a2a2aa'
-                                }}
-                                activeThumbColor='white'
-                                style={{ height: 20 }}
-                            />
-                        </View>
-                        {
-                            parentId ? null :
-                                (
-                                    parentId ? null :
-                                        <View style={{ width: '33.33%', backgroundColor: 'white' }}>
-                                            <View style={{ width: '100%', paddingTop: 40, paddingBottom: 10, backgroundColor: 'white' }}>
-                                                <Text style={{ fontSize: 14, color: '#202025' }}>
-                                                    {PreferredLanguageText('private')}
-                                                </Text>
+                            {
+                                parentId ? null :
+                                    (
+                                        parentId ? null :
+                                            <View style={{ width: '33.33%', backgroundColor: 'white' }}>
+                                                <View style={{ width: '100%', paddingTop: 40, paddingBottom: 10, backgroundColor: 'white' }}>
+                                                    <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
+                                                        {PreferredLanguageText('private')}
+                                                    </Text>
+                                                </View>
+                                                <Switch
+                                                    value={isPrivate}
+                                                    onValueChange={() => setIsPrivate(!isPrivate)}
+                                                    trackColor={{
+                                                        false: '#f4f4f6',
+                                                        true: '#a2a2aa'
+                                                    }}
+                                                    activeThumbColor='white'
+                                                    style={{ height: 20 }}
+                                                />
                                             </View>
-                                            <Switch
-                                                value={isPrivate}
-                                                onValueChange={() => setIsPrivate(!isPrivate)}
-                                                trackColor={{
-                                                    false: '#f4f4f6',
-                                                    true: '#a2a2aa'
-                                                }}
-                                                activeThumbColor='white'
-                                                style={{ height: 20 }}
-                                            />
-                                        </View>
-                                )
-                        }
+                                    )
+                            }
+                        </View>
                     </View>
             }
             <View style={styles.footer}>
                 <View
                     style={{
                         flex: 1,
-                        maxWidth: 400,
+                        maxWidth: 500,
                         backgroundColor: 'white',
                         justifyContent: 'center',
                         display: 'flex',
@@ -486,7 +488,7 @@ const styles: any = StyleSheet.create({
     date: {
         width: '100%',
         display: 'flex',
-        maxWidth: 400,
+        maxWidth: 500,
         flexDirection: 'row',
         paddingBottom: 4,
         backgroundColor: 'white'
@@ -524,7 +526,7 @@ const styles: any = StyleSheet.create({
         width: '100%',
         borderBottomColor: '#f4f4f6',
         borderBottomWidth: 1,
-        fontSize: 15,
+        fontSize: 12,
         padding: 15,
         paddingTop: 12,
         paddingBottom: 12,
@@ -532,14 +534,14 @@ const styles: any = StyleSheet.create({
         marginBottom: 20
     },
     all: {
-        fontSize: 15,
+        fontSize: 12,
         color: '#a2a2aa',
         height: 20,
         paddingHorizontal: 10,
         backgroundColor: 'white'
     },
     allOutline: {
-        fontSize: 15,
+        fontSize: 12,
         color: '#a2a2aa',
         height: 22,
         paddingHorizontal: 10,

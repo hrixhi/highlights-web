@@ -265,13 +265,14 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
             </View>
             <View style={{ backgroundColor: 'white', flex: 1 }}>
                 <View style={{ width: '100%', backgroundColor: 'white', flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row' }}>
-                    <View style={{
-                        width: Dimensions.get('window').width < 768 ? '100%' : '33.33%',
-                        marginBottom: 25,
-                        backgroundColor: 'white'
-                    }}>
-                        {
-                            isOwner ?
+                    {
+                        isOwner ?
+                            <View style={{
+                                width: Dimensions.get('window').width < 768 ? '100%' : '33.33%',
+                                marginBottom: 25,
+                                backgroundColor: 'white'
+                            }}>
+
                                 <View>
                                     <View style={{
                                         backgroundColor: 'white',
@@ -298,9 +299,10 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                     <Text style={{ fontSize: 12, color: '#a2a2aa', paddingTop: 10 }}>
                                         Turn on to begin session. Restart switch if you are unable to join the classroom.
                                     </Text>
-                                </View> : null
-                        }
-                    </View>
+                                </View>
+                            </View>
+                            : null
+                    }
                     <View style={{ width: Dimensions.get('window').width < 768 ? '100%' : '33.33%', backgroundColor: 'white' }}>
                         <TouchableOpacity
                             onPress={async () => {
@@ -406,15 +408,15 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                             borderColor: '#f4f4f6', borderTopWidth: 1,
                             paddingTop: 25
                         }}>
-                            <View style={{ width: Dimensions.get('window').width < 768 ? '100%' : '30%' }}>
+                            <View style={{ width: Dimensions.get('window').width < 768 ? '100%' : '25%' }}>
                                 <Text
                                     ellipsizeMode="tail"
-                                    style={{ color: '#a2a2aa', fontSize: 15, lineHeight: 25, marginBottom: 25, marginTop: 10 }}>
+                                    style={{ color: '#a2a2aa', fontSize: 14, lineHeight: 25, marginBottom: 25, marginTop: 10, fontWeight: 'bold' }}>
                                     {PreferredLanguageText('upcoming')}
                                 </Text>
                             </View>
                             <View style={{
-                                width: Dimensions.get('window').width < 768 ? '100%' : '30%',
+                                width: Dimensions.get('window').width < 768 ? '100%' : '27%',
                                 flexDirection: 'row',
                                 marginTop: 12,
                                 marginLeft: Dimensions.get('window').width < 768 ? 0 : 10
@@ -431,7 +433,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                 />
                             </View>
                             <View style={{
-                                width: Dimensions.get('window').width < 768 ? '100%' : '30%',
+                                width: Dimensions.get('window').width < 768 ? '100%' : '27%',
                                 flexDirection: 'row',
                                 marginTop: 12,
                                 marginLeft: Dimensions.get('window').width < 768 ? 0 : 10
@@ -448,19 +450,37 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                 />
                             </View>
                             <View style={{
-                                width: Dimensions.get('window').width < 768 ? '100%' : '10%',
+                                width: Dimensions.get('window').width < 768 ? '100%' : '21%',
                                 flexDirection: 'row',
                                 display: 'flex',
                                 justifyContent: 'center'
                             }}>
                                 <TouchableOpacity
                                     style={{
-                                        marginTop: 9
+                                        backgroundColor: 'white',
+                                        overflow: 'hidden',
+                                        height: 35,
+                                        marginTop: 5,
+                                        // marginBottom: 20
                                     }}
                                     onPress={() => handleCreate()}
                                     disabled={isSubmitDisabled}
                                 >
-                                    <Ionicons name='add-outline' size={21} color='#202025' />
+                                    <Text style={{
+                                        textAlign: 'center',
+                                        lineHeight: 35,
+                                        color: '#202025',
+                                        fontSize: 12,
+                                        backgroundColor: '#f4f4f6',
+                                        paddingHorizontal: 25,
+                                        fontFamily: 'inter',
+                                        height: 35,
+                                        width: 100,
+                                        borderRadius: 15,
+                                        textTransform: 'uppercase'
+                                    }}>
+                                        ADD
+                                    </Text>
                                 </TouchableOpacity>
                             </View>
                         </View> : null
@@ -515,7 +535,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                         </TouchableOpacity>
                                         : <Text
                                             ellipsizeMode="tail"
-                                            style={{ color: '#a2a2aa', fontSize: 15, lineHeight: 25, marginVertical: 25 }}>
+                                            style={{ color: '#a2a2aa', fontSize: 14, lineHeight: 25, marginVertical: 25, fontWeight: 'bold' }}>
                                             {PreferredLanguageText('past')}
                                         </Text>}
                             </View>
@@ -626,7 +646,7 @@ const styles = StyleSheet.create({
     col: {
         width: '100%',
         height: 80,
-        marginBottom: 20,
+        marginBottom: 12,
         // flex: 1,
         backgroundColor: 'white'
     }

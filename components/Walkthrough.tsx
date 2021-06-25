@@ -67,7 +67,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 <View
                     style={{
                         width: '100%',
-                        maxWidth: 400,
+                        maxWidth: 500,
                         //height: 50,
                         paddingLeft: 55,
                         backgroundColor: 'white',

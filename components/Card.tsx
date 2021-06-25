@@ -80,7 +80,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 <Text style={{
                                     textAlign: 'right',
                                     lineHeight: 30,
-                                    marginTop: -26,
+                                    marginTop: -23,
                                     paddingRight: 30,
                                     position: 'absolute',
                                     width: '97%',
@@ -115,12 +115,47 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             }
                         </View> */}
                     </View>
-                    <Text
-                        ellipsizeMode={'tail'}
-                        numberOfLines={1}
-                        style={styleObject.title}>
-                        {title}
-                    </Text>
+                    <View style={{ backgroundColor: '#f4f4f6', width: '100%', flexDirection: 'row', flex: 1, height: '75%', paddingTop: 6 }}>
+                        <Text ellipsizeMode={'tail'}
+                            numberOfLines={1}
+                            style={styleObject.title}>
+                            {title}
+                        </Text>
+                        {
+                            props.cue.status && (props.cue.status !== 'read' && props.cue.status !== 'submitted')
+                                ?
+                                <Text style={{
+                                    width: 20,
+                                    height: 20,
+                                    borderRadius: 10,
+                                    backgroundColor: '#3B64F8',
+                                    textAlign: 'center',
+                                    zIndex: 150,
+                                    marginLeft: 10,
+                                    marginTop: -3,
+                                    color: 'white', lineHeight: 20, fontSize: 10
+                                }}>
+                                    !
+                                </Text>
+                                : null
+                        }
+                        {
+                            props.cue.channelId && props.cue.unreadThreads !== 0 ?
+                                <Text style={{
+                                    width: 20,
+                                    height: 20,
+                                    borderRadius: 10,
+                                    backgroundColor: '#d91d56',
+                                    textAlign: 'center',
+                                    zIndex: 150,
+                                    marginLeft: 5,
+                                    marginTop: -3,
+                                    color: 'white', lineHeight: 20, fontSize: 10
+                                }}>
+                                    {props.cue.unreadThreads}
+                                </Text> : <Text style={{ width: 25 }} />
+                        }
+                    </View>
                     {/* <Text
                         ellipsizeMode={'tail'}
                         numberOfLines={1}
@@ -142,14 +177,14 @@ const styles: any = (colorScheme: any, channelId: any) => StyleSheet.create({
         height: '100%',
         borderRadius: 15,
         overflow: 'hidden',
-        maxWidth: 400
+        maxWidth: 500
     },
     card: {
-        maxWidth: 400,
+        maxWidth: 500,
         height: '100%',
         borderRadius: 15,
         padding: 13,
-        paddingTop: 20,
+        paddingTop: 17,
         backgroundColor: colorScheme === 'light' ? '#f4f4f6' : '#a2a2aa',
     },
     flipCard: {
@@ -203,11 +238,13 @@ const styles: any = (colorScheme: any, channelId: any) => StyleSheet.create({
     },
     title: {
         fontFamily: 'inter',
-        fontSize: 14,
-        // ,
-        height: '75%',
-        width: '100%',
-        paddingTop: 10,
+        fontSize: 13,
+        lineHeight: 20,
+        // height: '75%',
+        // width: '100%',
+        flex: 1,
+        // borderWidth: 1,
+        // paddingTop: 12,
         color: colorScheme === 'light' ? '#202025' : 'white'
     },
     titleFlip: {

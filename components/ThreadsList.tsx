@@ -185,7 +185,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         </TouchableOpacity>
                     </View>
                     :
-                    <View style={{ backgroundColor: 'white', flexDirection: 'row', paddingBottom: 25 }}>
+                    <View style={{ backgroundColor: 'white', flexDirection: 'row', paddingBottom: 25, maxWidth: 500 }}>
                         {
                             !props.cueId
                                 ? <Text
@@ -291,7 +291,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                 style={{ flex: 1, paddingTop: 12 }}>
                                                 {
                                                     threadWithReplies.map((thread, index) => {
-                                                        return <View style={{ width: '100%', paddingBottom: 10, backgroundColor: 'white' }} key={Math.random()}>
+                                                        return <View style={{ width: '100%', maxWidth: 500, paddingBottom: 10, backgroundColor: 'white' }} key={Math.random()}>
                                                             <ThreadReplyCard
                                                                 index={index}
                                                                 deleteThread={() => deletePost(thread._id)}
@@ -401,7 +401,7 @@ const styleObject = () => {
         col: {
             width: '100%',
             height: 80,
-            marginBottom: 10,
+            marginBottom: 12,
             backgroundColor: 'white'
         },
         colorBar: {
