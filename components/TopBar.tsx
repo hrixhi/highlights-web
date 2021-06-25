@@ -109,9 +109,11 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             <View style={{ width: '80%', height: Dimensions.get('window').height * 0.15 * 0.15, alignSelf: 'center' }} />
             <View style={{ width: '100%', height: Dimensions.get('window').height * 0.15 * 0.85 }}>
                 <View style={{
+                    height: '45%',
                     flexDirection: 'row',
                     display: 'flex',
-                    paddingHorizontal: 20
+                    paddingLeft: 20,
+                    paddingTop: 3
                 }}>
                     <TouchableOpacity
                         onPress={() => Linking.openURL('http://www.cuesapp.co')}
@@ -127,7 +129,7 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 // width: Dimensions.get('window').height * (showNavrachanaLogo ? 0.11 : 0.14) * 0.53456,
                                 // height: Dimensions.get('window').height * (showNavrachanaLogo ? 0.22 : 0.14) * 0.2
                                 width: Dimensions.get('window').height * 0.13 * 0.53456,
-                                height: Dimensions.get('window').height * 0.13 * 0.2
+                                height: Dimensions.get('window').height * 0.15 * 0.2
                             }}
                             resizeMode={'contain'}
                         />
@@ -206,13 +208,17 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             </TouchableOpacity> : null
                                     }
                                 </View> :
-                                <View style={{ height: 31 }} />
+                                <View style={{ height: 34 }} />
                         }
                     </View>
                 </View>
                 <View
                     key={JSON.stringify(cues) + JSON.stringify(filterChoice)}
-                    style={{ width: '100%', height: '55%', paddingTop: 18 }}>
+                    style={{
+                        width: '100%', height: '55%', flexDirection: 'column',
+                        paddingTop: 5
+                    }}>
+                    <View style={{ flex: 1 }} />
                     {/* <View>
                         <Text
                             style={{
@@ -267,12 +273,13 @@ export default React.memo(TopBar, (prev, next) => {
 
 const styleObject: any = (channelId: any) => StyleSheet.create({
     topbar: {
-        height: '14%',
+        height: '18%',
         width: '100%',
         flexDirection: 'column',
         display: 'flex',
         borderTopRightRadius: 0,
         borderTopLeftRadius: 0,
+        paddingTop: 18
     },
     badge: {
         position: 'absolute',

@@ -1479,7 +1479,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 0,
     borderBottomWidth: 0,
     borderColor: '#dddddd',
-    height: '68%',
+    height: '64%',
     width: '100%',
     justifyContent: "center",
   },
