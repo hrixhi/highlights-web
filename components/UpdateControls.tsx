@@ -1078,275 +1078,275 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 }
                             </View> : null
                     }
-                {
-                    !showOriginal && props.cue.graded && props.cue.comment ?
-                        <View>
-                            <Text style={{ color: '#202025', fontSize: 14, paddingBottom: 25, marginLeft: '5%' }}>
-                                {PreferredLanguageText('gradersRemarks')}
-                            </Text>
-                            <TextInput
-                                value={props.cue.comment}
-                                style={{
-                                    height: 200,
-                                    backgroundColor: '#f4f4f6',
-                                    borderRadius: 10,
-                                    fontSize: 15,
-                                    padding: 15,
-                                    paddingTop: 13,
-                                    paddingBottom: 13,
-                                    marginTop: 5,
-                                    marginBottom: 20
-                                }}
-                                editable={false}
-                                placeholder={'Optional'}
-                                placeholderTextColor={'#a2a2aa'}
-                                multiline={true}
-                            />
-                        </View>
-                        : null
-                }
-                {
-                    !showOriginal && submissionImported && !isQuiz ?
-                        <View style={{ flexDirection: 'row' }}>
-                            <View style={{ width: '40%', alignSelf: 'flex-start', marginLeft: 0 }}>
+                    {
+                        !showOriginal && props.cue.graded && props.cue.comment ?
+                            <View>
+                                <Text style={{ color: '#202025', fontSize: 14, paddingBottom: 25, marginLeft: '5%' }}>
+                                    {PreferredLanguageText('gradersRemarks')}
+                                </Text>
                                 <TextInput
-                                    value={submissionTitle}
-                                    style={styles.input}
-                                    placeholder={'Title'}
-                                    onChangeText={val => setSubmissionTitle(val)}
+                                    value={props.cue.comment}
+                                    style={{
+                                        height: 200,
+                                        backgroundColor: '#f4f4f6',
+                                        borderRadius: 10,
+                                        fontSize: 15,
+                                        padding: 15,
+                                        paddingTop: 13,
+                                        paddingBottom: 13,
+                                        marginTop: 5,
+                                        marginBottom: 20
+                                    }}
+                                    editable={false}
+                                    placeholder={'Optional'}
                                     placeholderTextColor={'#a2a2aa'}
+                                    multiline={true}
                                 />
                             </View>
-                            {props.cue.submittedAt && props.cue.submittedAt !== '' ?
-                                <View style={{ width: 175, marginLeft: 25, marginTop: 5, alignSelf: 'flex-start' }}>
-                                    <a download={true} href={submissionUrl} style={{ textDecoration: 'none', textAlign: 'center' }}>
-                                        <View>
-                                            <Ionicons name='cloud-download-outline' color='#a2a2aa' size={20} />
-                                            <Text style={{ fontSize: 9, color: '#a2a2aa', textAlign: 'center' }}>
-                                                Download
-                                            </Text>
-                                        </View>
-                                    </a>
-                                </View> : null
-                            }
-                        </View> : null
-                }
-                <View style={{
-                    width: '100%',
-                    minHeight: 475,
-                    backgroundColor: 'white'
-                }}
-                >
-                    {!showOriginal ? null
-                        : (
-                            isQuiz ?
-                                (
-                                    isQuizTimed && !isOwner ?
-                                        (
-                                            initiatedAt ?
-                                                <Quiz
-                                                    // disable quiz if graded or deadline has passed
-                                                    graded={props.cue.graded}
-                                                    hasEnded={currentDate >= deadline}
-                                                    solutions={solutions}
-                                                    problems={problems}
-                                                    setSolutions={(s: any) => setSolutions(s)}
-                                                /> : <View>
-                                                    <View>
-                                                        <TouchableOpacity
-                                                            onPress={() => initQuiz()}
-                                                            style={{
-                                                                backgroundColor: 'white',
-                                                                overflow: 'hidden',
-                                                                height: 35,
-                                                                marginTop: 15,
-                                                                justifyContent: 'center', flexDirection: 'row',
-                                                                marginBottom: 50
-                                                            }}>
-                                                            <Text style={{
-                                                                textAlign: 'center',
-                                                                lineHeight: 35,
-                                                                color: '#202025',
-                                                                fontSize: 12,
-                                                                backgroundColor: '#f4f4f6',
-                                                                paddingHorizontal: 25,
-                                                                fontFamily: 'inter',
-                                                                height: 35,
-                                                                width: 200,
-                                                                borderRadius: 15,
-                                                                textTransform: 'uppercase'
-                                                            }}>
-                                                                {PreferredLanguageText('startQuiz')}
-                                                            </Text>
-                                                        </TouchableOpacity>
+                            : null
+                    }
+                    {
+                        !showOriginal && submissionImported && !isQuiz ?
+                            <View style={{ flexDirection: 'row' }}>
+                                <View style={{ width: '40%', alignSelf: 'flex-start', marginLeft: 0 }}>
+                                    <TextInput
+                                        value={submissionTitle}
+                                        style={styles.input}
+                                        placeholder={'Title'}
+                                        onChangeText={val => setSubmissionTitle(val)}
+                                        placeholderTextColor={'#a2a2aa'}
+                                    />
+                                </View>
+                                {props.cue.submittedAt && props.cue.submittedAt !== '' ?
+                                    <View style={{ width: 175, marginLeft: 25, marginTop: 5, alignSelf: 'flex-start' }}>
+                                        <a download={true} href={submissionUrl} style={{ textDecoration: 'none', textAlign: 'center' }}>
+                                            <View>
+                                                <Ionicons name='cloud-download-outline' color='#a2a2aa' size={20} />
+                                                <Text style={{ fontSize: 9, color: '#a2a2aa', textAlign: 'center' }}>
+                                                    Download
+                                                </Text>
+                                            </View>
+                                        </a>
+                                    </View> : null
+                                }
+                            </View> : null
+                    }
+                    <View style={{
+                        width: '100%',
+                        minHeight: 475,
+                        backgroundColor: 'white'
+                    }}
+                    >
+                        {!showOriginal ? null
+                            : (
+                                isQuiz ?
+                                    (
+                                        isQuizTimed && !isOwner ?
+                                            (
+                                                initiatedAt ?
+                                                    <Quiz
+                                                        // disable quiz if graded or deadline has passed
+                                                        graded={props.cue.graded}
+                                                        hasEnded={currentDate >= deadline}
+                                                        solutions={solutions}
+                                                        problems={problems}
+                                                        setSolutions={(s: any) => setSolutions(s)}
+                                                    /> : <View>
+                                                        <View>
+                                                            <TouchableOpacity
+                                                                onPress={() => initQuiz()}
+                                                                style={{
+                                                                    backgroundColor: 'white',
+                                                                    overflow: 'hidden',
+                                                                    height: 35,
+                                                                    marginTop: 15,
+                                                                    justifyContent: 'center', flexDirection: 'row',
+                                                                    marginBottom: 50
+                                                                }}>
+                                                                <Text style={{
+                                                                    textAlign: 'center',
+                                                                    lineHeight: 35,
+                                                                    color: '#202025',
+                                                                    fontSize: 12,
+                                                                    backgroundColor: '#f4f4f6',
+                                                                    paddingHorizontal: 25,
+                                                                    fontFamily: 'inter',
+                                                                    height: 35,
+                                                                    width: 200,
+                                                                    borderRadius: 15,
+                                                                    textTransform: 'uppercase'
+                                                                }}>
+                                                                    {PreferredLanguageText('startQuiz')}
+                                                                </Text>
+                                                            </TouchableOpacity>
+                                                        </View>
                                                     </View>
+                                            )
+                                            :
+                                            <Quiz
+                                                isOwner={isOwner}
+                                                graded={props.cue.graded || (currentDate >= deadline)}
+                                                solutions={solutions}
+                                                problems={problems}
+                                                setSolutions={(s: any) => setSolutions(s)}
+                                            />
+                                    )
+                                    : (imported ?
+                                        (
+                                            type === 'mp4' || type === 'mp3' || type === 'mov' || type === 'mpeg' || type === 'mp2' || type === 'wav' ?
+                                                <ReactPlayer url={url} controls={true} onContextMenu={(e: any) => e.preventDefault()} config={{ file: { attributes: { controlsList: 'nodownload' } } }} />
+                                                :
+                                                <View
+                                                    // key={Math.random()}
+                                                    style={{ flex: 1 }}
+                                                >
+                                                    <WebView
+                                                        key={webviewKey}
+                                                        source={{
+                                                            uri: "https://docs.google.com/gview?embedded=true&url=" + url
+                                                        }}
+                                                    />
+
+
                                                 </View>
                                         )
                                         :
-                                        <Quiz
-                                            isOwner={isOwner}
-                                            graded={props.cue.graded || (currentDate >= deadline)}
-                                            solutions={solutions}
-                                            problems={problems}
-                                            setSolutions={(s: any) => setSolutions(s)}
-                                        />
+                                        <RichEditor
+                                            key={showOriginal.toString() + reloadEditorKey.toString()}
+                                            disabled={true}
+                                            containerStyle={{
+                                                height: height,
+                                                backgroundColor: '#f4f4f6',
+                                                padding: 3,
+                                                paddingTop: 5,
+                                                paddingBottom: 10,
+                                                borderRadius: 15,
+                                            }}
+                                            ref={RichText}
+                                            style={{
+                                                width: '100%',
+                                                backgroundColor: '#f4f4f6',
+                                                minHeight: 475,
+                                                borderRadius: 15,
+                                            }}
+                                            editorStyle={{
+                                                backgroundColor: '#f4f4f6',
+                                                placeholderColor: '#a2a2aa',
+                                                color: '#202025',
+                                                contentCSSText: 'font-size: 13px;'
+                                            }}
+                                            initialContentHTML={props.cue.original}
+                                            onScroll={() => Keyboard.dismiss()}
+                                            placeholder={"Title"}
+                                            onChange={(text) => {
+                                                const modifedText = text.split('&amp;').join('&')
+                                                setCue(modifedText)
+                                            }}
+                                            onHeightChange={handleHeightChange}
+                                            onBlur={() => Keyboard.dismiss()}
+                                            allowFileAccess={true}
+                                            allowFileAccessFromFileURLs={true}
+                                            allowUniversalAccessFromFileURLs={true}
+                                            allowsFullscreenVideo={true}
+                                            allowsInlineMediaPlayback={true}
+                                            allowsLinkPreview={true}
+                                            allowsBackForwardNavigationGestures={true}
+                                        />))
+                        }
+                        {showOriginal ? null
+                            : (submissionImported ?
+                                (
+                                    submissionType === 'mp4' || submissionType === 'mp3' || submissionType === 'mov' || submissionType === 'mpeg' || submissionType === 'mp2' || submissionType === 'wav' ?
+                                        <ReactPlayer url={submissionUrl} controls={true} />
+                                        :
+                                        <View
+                                            // key={Math.random()}
+                                            style={{ flex: 1 }}
+                                        >
+                                            <WebView
+                                                key={webviewKey}
+                                                source={{ uri: "https://docs.google.com/gview?embedded=true&url=" + submissionUrl }}
+                                            />
+                                        </View>
                                 )
-                                : (imported ?
-                                    (
-                                        type === 'mp4' || type === 'mp3' || type === 'mov' || type === 'mpeg' || type === 'mp2' || type === 'wav' ?
-                                            <ReactPlayer url={url} controls={true} onContextMenu={(e: any) => e.preventDefault()} config={{ file: { attributes: { controlsList: 'nodownload' } } }} />
-                                            :
-                                            <View
-                                                // key={Math.random()}
-                                                style={{ flex: 1 }}
-                                            >
-                                                <WebView
-                                                    key={webviewKey}
-                                                    source={{
-                                                        uri: "https://docs.google.com/gview?embedded=true&url=" + url
-                                                    }}
-                                                />
-
-
-                                            </View>
-                                    )
-                                    :
-                                    <RichEditor
-                                        key={showOriginal.toString() + reloadEditorKey.toString()}
-                                        disabled={true}
-                                        containerStyle={{
-                                            height: height,
-                                            backgroundColor: '#f4f4f6',
-                                            padding: 3,
-                                            paddingTop: 5,
-                                            paddingBottom: 10,
-                                            borderRadius: 15,
-                                        }}
-                                        ref={RichText}
-                                        style={{
-                                            width: '100%',
-                                            backgroundColor: '#f4f4f6',
-                                            minHeight: 475,
-                                            borderRadius: 15,
-                                        }}
-                                        editorStyle={{
-                                            backgroundColor: '#f4f4f6',
-                                            placeholderColor: '#a2a2aa',
-                                            color: '#202025',
-                                            contentCSSText: 'font-size: 13px;'
-                                        }}
-                                        initialContentHTML={props.cue.original}
-                                        onScroll={() => Keyboard.dismiss()}
-                                        placeholder={"Title"}
-                                        onChange={(text) => {
-                                            const modifedText = text.split('&amp;').join('&')
-                                            setCue(modifedText)
-                                        }}
-                                        onHeightChange={handleHeightChange}
-                                        onBlur={() => Keyboard.dismiss()}
-                                        allowFileAccess={true}
-                                        allowFileAccessFromFileURLs={true}
-                                        allowUniversalAccessFromFileURLs={true}
-                                        allowsFullscreenVideo={true}
-                                        allowsInlineMediaPlayback={true}
-                                        allowsLinkPreview={true}
-                                        allowsBackForwardNavigationGestures={true}
-                                    />))
-                    }
-                    {showOriginal ? null
-                        : (submissionImported ?
-                            (
-                                submissionType === 'mp4' || submissionType === 'mp3' || submissionType === 'mov' || submissionType === 'mpeg' || submissionType === 'mp2' || submissionType === 'wav' ?
-                                    <ReactPlayer url={submissionUrl} controls={true} />
-                                    :
-                                    <View
-                                        // key={Math.random()}
-                                        style={{ flex: 1 }}
-                                    >
-                                        <WebView
-                                            key={webviewKey}
-                                            source={{ uri: "https://docs.google.com/gview?embedded=true&url=" + submissionUrl }}
-                                        />
-                                    </View>
-                            )
-                            :
-                            <RichEditor
-                                key={showOriginal.toString() + reloadEditorKey.toString()}
-                                containerStyle={{
-                                    height: height,
-                                    backgroundColor: '#f4f4f6',
-                                    padding: 3,
-                                    paddingTop: 5,
-                                    paddingBottom: 10,
-                                    borderRadius: 15,
-                                }}
-                                disabled={props.cue.submittedAt && props.cue.submittedAt !== ''}
-                                ref={RichText}
-                                style={{
-                                    width: '100%',
-                                    backgroundColor: '#f4f4f6',
-                                    minHeight: 475,
-                                    borderRadius: 15,
-                                }}
-                                editorStyle={{
-                                    backgroundColor: '#f4f4f6',
-                                    placeholderColor: '#a2a2aa',
-                                    color: '#202025',
-                                    contentCSSText: 'font-size: 13px;'
-                                }}
-                                initialContentHTML={cue}
-                                onScroll={() => Keyboard.dismiss()}
-                                placeholder={"Title"}
-                                onChange={(text) => {
-                                    const modifedText = text.split('&amp;').join('&')
-                                    setCue(modifedText)
-                                }}
-                                onHeightChange={handleHeightChange}
-                                onBlur={() => Keyboard.dismiss()}
-                                allowFileAccess={true}
-                                allowFileAccessFromFileURLs={true}
-                                allowUniversalAccessFromFileURLs={true}
-                                allowsFullscreenVideo={true}
-                                allowsInlineMediaPlayback={true}
-                                allowsLinkPreview={true}
-                                allowsBackForwardNavigationGestures={true}
-                            />)
-                    }
-                </View>
-                <TouchableOpacity
-                    onPress={() => setShowOptions(!showOptions)}
-                    style={{
-                        width: '100%',
-                        flexDirection: 'row',
-                        marginTop: 20,
-                        borderTopColor: '#f4f4f6',
-                        borderTopWidth: 1,
-                        paddingTop: 40,
-                        paddingBottom: 20
-                    }}>
-                    <Text style={{
-                        color: '#a2a2aa', fontSize: 14, paddingRight: 10, fontWeight: 'bold'
-                    }}>
-                        {PreferredLanguageText('options')}
-                    </Text>
-                    <Ionicons size={14} name={showOptions ? 'caret-down-circle-outline' : 'caret-forward-circle-outline'} color='#a2a2aa' />
-                </TouchableOpacity>
-                <Collapse isOpened={showOptions}>
-                    <View style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-                        {
-                            props.cue.channelId ?
-                                <View style={{ display: 'flex', flexDirection: width < 768 ? 'column' : 'row' }}>
-                                    {
-                                        props.cue.channelId !== '' && isOwner ? <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
-                                            <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                                <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
-                                                    {/* {PreferredLanguageText('channel')} */}
-                                                    {props.cue.channelId && props.cue.channelId !== '' ? 'Shared with' : 'Saved in'}
-                                                    {/* <Ionicons
+                                :
+                                <RichEditor
+                                    key={showOriginal.toString() + reloadEditorKey.toString()}
+                                    containerStyle={{
+                                        height: height,
+                                        backgroundColor: '#f4f4f6',
+                                        padding: 3,
+                                        paddingTop: 5,
+                                        paddingBottom: 10,
+                                        borderRadius: 15,
+                                    }}
+                                    disabled={props.cue.submittedAt && props.cue.submittedAt !== ''}
+                                    ref={RichText}
+                                    style={{
+                                        width: '100%',
+                                        backgroundColor: '#f4f4f6',
+                                        minHeight: 475,
+                                        borderRadius: 15,
+                                    }}
+                                    editorStyle={{
+                                        backgroundColor: '#f4f4f6',
+                                        placeholderColor: '#a2a2aa',
+                                        color: '#202025',
+                                        contentCSSText: 'font-size: 13px;'
+                                    }}
+                                    initialContentHTML={cue}
+                                    onScroll={() => Keyboard.dismiss()}
+                                    placeholder={"Title"}
+                                    onChange={(text) => {
+                                        const modifedText = text.split('&amp;').join('&')
+                                        setCue(modifedText)
+                                    }}
+                                    onHeightChange={handleHeightChange}
+                                    onBlur={() => Keyboard.dismiss()}
+                                    allowFileAccess={true}
+                                    allowFileAccessFromFileURLs={true}
+                                    allowUniversalAccessFromFileURLs={true}
+                                    allowsFullscreenVideo={true}
+                                    allowsInlineMediaPlayback={true}
+                                    allowsLinkPreview={true}
+                                    allowsBackForwardNavigationGestures={true}
+                                />)
+                        }
+                    </View>
+                    <TouchableOpacity
+                        onPress={() => setShowOptions(!showOptions)}
+                        style={{
+                            width: '100%',
+                            flexDirection: 'row',
+                            marginTop: 20,
+                            borderTopColor: '#f4f4f6',
+                            borderTopWidth: 1,
+                            paddingTop: 40,
+                            paddingBottom: 20
+                        }}>
+                        <Text style={{
+                            color: '#a2a2aa', fontSize: 14, paddingRight: 10, fontWeight: 'bold'
+                        }}>
+                            {PreferredLanguageText('options')}
+                        </Text>
+                        <Ionicons size={14} name={showOptions ? 'caret-down-circle-outline' : 'caret-forward-circle-outline'} color='#a2a2aa' />
+                    </TouchableOpacity>
+                    <Collapse isOpened={showOptions}>
+                        <View style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+                            {
+                                props.cue.channelId ?
+                                    <View style={{ display: 'flex', flexDirection: width < 768 ? 'column' : 'row' }}>
+                                        {
+                                            props.cue.channelId !== '' && isOwner ? <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
+                                                <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
+                                                    <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
+                                                        {/* {PreferredLanguageText('channel')} */}
+                                                        {props.cue.channelId && props.cue.channelId !== '' ? 'Shared with' : 'Saved in'}
+                                                        {/* <Ionicons
                                                         name='school-outline' size={20} color={'#a2a2aa'} /> */}
-                                                </Text>
-                                            </View>
-                                            {/* <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white' }}>
+                                                    </Text>
+                                                </View>
+                                                {/* <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white' }}>
                                                 <View style={{ width: '85%', backgroundColor: 'white' }}>
                                                     <View style={styles.colorBar}>
                                                         <TouchableOpacity
@@ -1359,622 +1359,625 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                     </View>
                                                 </View>
                                             </View> */}
-                                            <View style={{ maxHeight: 175, flexDirection: 'column', overflow: 'scroll' }}>
-                                                <View style={{ width: '90%', padding: 5, height: expandMenu ? 175 : 'auto' }}>
-                                                    <Select
-                                                        isClearable={false}
-                                                        placeholder='Share with'
-                                                        styles={{
-                                                            menu: (provided: any, state: any) => ({
-                                                                ...provided,
-                                                                zIndex: 9999,
-                                                                overflow: 'scroll',
-                                                                height: 125,
-                                                                display: 'flex',
-                                                                margin: 5,
-                                                                width: '97%',
-                                                                boxShadow: 'none'
-                                                            }),
-                                                            option: (provided: any, state: any) => ({
-                                                                ...provided,
-                                                                fontFamily: 'overpass',
-                                                                color: '#a2a2aa',
-                                                                fontSize: 10,
-                                                                height: 25,
-                                                                width: '97%'
-                                                            }),
-                                                            input: (styles: any) => ({
-                                                                // ...styles,
-                                                                width: '100%',
-                                                                border: 'none',
-                                                                borderWidth: 0,
-                                                                fontSize: 12
-                                                            }),
-                                                            placeholder: (styles: any) => ({
-                                                                ...styles,
-                                                                fontFamily: 'overpass',
-                                                                color: '#a2a2aa',
-                                                                fontSize: 12
-                                                            }),
-                                                            multiValueLabel: (styles: any, { data }: any) => ({
-                                                                ...styles,
-                                                                color: '#202025',
-                                                                fontFamily: 'overpass'
-                                                            }),
-                                                            multiValue: (styles: any, { data }: any) => ({
-                                                                ...styles,
-                                                                backgroundColor: '#f4f4f6',
-                                                                fontFamily: 'overpass'
-                                                            }),
-                                                            multiValueRemove: (base: any, state: any) => {
-                                                                return state.data.isFixed ? { ...base, display: 'none' } : base;
-                                                            },
-                                                        }}
-                                                        value={selected}
-                                                        isMulti={true}
-                                                        onMenuOpen={() => setExpandMenu(true)}
-                                                        onMenuClose={() => setExpandMenu(false)}
-                                                        name="Share with"
-                                                        className="basic-multi-select"
-                                                        classNamePrefix="select"
-                                                        onChange={onChange}
-                                                        options={subscribers}
-                                                    />
-                                                </View>
-                                            </View>
-                                        </View> : null
-                                    }
-                                    {
-                                        props.cue.channelId !== '' ?
-                                            <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
-                                                <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                                    <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
-                                                        {PreferredLanguageText('submissionRequired')}
-                                                    </Text>
-                                                </View>
-                                                <View style={{ flexDirection: 'row' }}>
-                                                    {
-                                                        isOwner ?
-                                                            <View style={{
-                                                                backgroundColor: 'white',
-                                                                height: 40,
-                                                                marginRight: 10
-                                                            }}>
-
-                                                                <Switch
-                                                                    disabled={isQuiz}
-                                                                    value={submission}
-                                                                    onValueChange={() => {
-                                                                        setSubmission(!submission)
-                                                                    }}
-                                                                    style={{ height: 20 }}
-                                                                    trackColor={{
-                                                                        false: '#f4f4f6',
-                                                                        true: '#a2a2aa'
-                                                                    }}
-                                                                    activeThumbColor='white'
-                                                                />
-                                                            </View> : <View style={{ flex: 1, backgroundColor: '#fff' }}>
-                                                                <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
-                                                                    {!submission ? PreferredLanguageText('no') : null}
-                                                                </Text>
-                                                            </View>
-                                                    }
-                                                    {
-                                                        submission ?
-                                                            <View style={{
-                                                                width: '100%',
-                                                                display: 'flex',
-                                                                flexDirection: 'row',
-                                                                backgroundColor: 'white'
-                                                            }}>
-                                                                <Text style={{
-                                                                    fontSize: 12,
+                                                <View style={{ maxHeight: 175, flexDirection: 'column', overflow: 'scroll' }}>
+                                                    <View style={{ width: '90%', padding: 5, height: expandMenu ? 175 : 'auto' }}>
+                                                        <Select
+                                                            isClearable={false}
+                                                            placeholder='Share with'
+                                                            styles={{
+                                                                menu: (provided: any, state: any) => ({
+                                                                    ...provided,
+                                                                    zIndex: 9999,
+                                                                    overflow: 'scroll',
+                                                                    height: 125,
+                                                                    display: 'flex',
+                                                                    margin: 5,
+                                                                    width: '97%',
+                                                                    boxShadow: 'none'
+                                                                }),
+                                                                option: (provided: any, state: any) => ({
+                                                                    ...provided,
+                                                                    fontFamily: 'overpass',
                                                                     color: '#a2a2aa',
-                                                                    textAlign: 'left',
-                                                                    paddingRight: 10
-                                                                }}>
-                                                                    {PreferredLanguageText('due')}
-                                                                </Text>
-                                                                {
-                                                                    isOwner ? <Datetime
-                                                                        value={deadline}
-                                                                        onChange={(event: any) => {
-                                                                            const date = new Date(event)
-
-                                                                            if (date < new Date()) return;
-                                                                            setDeadline(date)
-                                                                        }}
-                                                                        isValidDate={disablePastDt}
-                                                                    /> : <Text style={{
-                                                                        fontSize: 12,
-                                                                        color: '#a2a2aa',
-                                                                        textAlign: 'left'
-                                                                    }}>
-                                                                        {deadline.toLocaleString()}
-                                                                    </Text>
-                                                                }
-                                                            </View>
-                                                            : null
-                                                    }
-                                                </View>
-                                            </View> : null
-                                    }
-                                    {
-                                        submission ?
-                                            <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
-                                                <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                                    <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
-                                                        {PreferredLanguageText('graded')}
-                                                    </Text>
-                                                </View>
-                                                <View style={{ flexDirection: 'row' }}>
-                                                    <View style={{
-                                                        backgroundColor: 'white',
-                                                        height: 40,
-                                                        marginRight: 10
-                                                    }}>
-                                                        <Switch
-                                                            disabled={!isOwner}
-                                                            value={graded}
-                                                            onValueChange={() => setGraded(!graded)}
-                                                            style={{ height: 20 }}
-                                                            trackColor={{
-                                                                false: '#f4f4f6',
-                                                                true: '#a2a2aa'
+                                                                    fontSize: 10,
+                                                                    height: 25,
+                                                                    width: '97%'
+                                                                }),
+                                                                input: (styles: any) => ({
+                                                                    // ...styles,
+                                                                    width: '100%',
+                                                                    border: 'none',
+                                                                    borderWidth: 0,
+                                                                    fontSize: 12
+                                                                }),
+                                                                placeholder: (styles: any) => ({
+                                                                    ...styles,
+                                                                    fontFamily: 'overpass',
+                                                                    color: '#a2a2aa',
+                                                                    fontSize: 12
+                                                                }),
+                                                                multiValueLabel: (styles: any, { data }: any) => ({
+                                                                    ...styles,
+                                                                    color: '#202025',
+                                                                    fontFamily: 'overpass'
+                                                                }),
+                                                                multiValue: (styles: any, { data }: any) => ({
+                                                                    ...styles,
+                                                                    backgroundColor: '#f4f4f6',
+                                                                    fontFamily: 'overpass'
+                                                                }),
+                                                                multiValueRemove: (base: any, state: any) => {
+                                                                    return state.data.isFixed ? { ...base, display: 'none' } : base;
+                                                                },
                                                             }}
-                                                            activeThumbColor='white'
+                                                            value={selected}
+                                                            isMulti={true}
+                                                            onMenuOpen={() => setExpandMenu(true)}
+                                                            onMenuClose={() => setExpandMenu(false)}
+                                                            name="Share with"
+                                                            className="basic-multi-select"
+                                                            classNamePrefix="select"
+                                                            onChange={onChange}
+                                                            options={subscribers}
                                                         />
                                                     </View>
-                                                    {
-                                                        graded ?
-                                                            <View style={{
-                                                                width: '100%',
-                                                                display: 'flex',
-                                                                flexDirection: 'row',
-                                                                backgroundColor: 'white'
-                                                            }}>
-                                                                <Text style={{
-                                                                    fontSize: 12,
-                                                                    color: '#a2a2aa',
-                                                                    textAlign: 'left',
-                                                                    paddingRight: 10
-                                                                }}>
-                                                                    Grade Weight {'\n'}{PreferredLanguageText('percentageOverall')}
-                                                                </Text>
-                                                                {
-                                                                    isOwner ?
-                                                                        <TextInput
-                                                                            value={gradeWeight}
-                                                                            style={styles.picker}
-                                                                            placeholder={'0-100'}
-                                                                            onChangeText={val => setGradeWeight(val)}
-                                                                            placeholderTextColor={'#a2a2aa'}
-                                                                        /> :
-                                                                        <Text style={{
-                                                                            color: '#a2a2aa',
-                                                                            textAlign: 'left',
-                                                                            fontSize: 12
-                                                                        }}>
-                                                                            {gradeWeight}
-                                                                        </Text>
-                                                                }
-                                                            </View>
-                                                            : null
-                                                    }
                                                 </View>
                                             </View> : null
-                                    }
-                                </View>
-                                : null
-                        }
-                        <View style={{ display: 'flex', flexDirection: width < 768 ? 'column' : 'row' }}>
-                            <View style={{ width: width < 768 ? '100%' : '33.33%', borderRightWidth: 0, borderColor: '#f4f4f6' }}>
-                                <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                    <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
-                                        {PreferredLanguageText('category')}
-                                    </Text>
+                                        }
+                                        {
+                                            props.cue.channelId !== '' ?
+                                                <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
+                                                    <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
+                                                        <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
+                                                            {PreferredLanguageText('submissionRequired')}
+                                                        </Text>
+                                                    </View>
+                                                    <View style={{ flexDirection: 'row' }}>
+                                                        {
+                                                            isOwner ?
+                                                                <View style={{
+                                                                    backgroundColor: 'white',
+                                                                    height: 40,
+                                                                    marginRight: 10
+                                                                }}>
+
+                                                                    <Switch
+                                                                        disabled={isQuiz}
+                                                                        value={submission}
+                                                                        onValueChange={() => {
+                                                                            setSubmission(!submission)
+                                                                        }}
+                                                                        style={{ height: 20 }}
+                                                                        trackColor={{
+                                                                            false: '#f4f4f6',
+                                                                            true: '#a2a2aa'
+                                                                        }}
+                                                                        activeThumbColor='white'
+                                                                    />
+                                                                </View> : <View style={{ flex: 1, backgroundColor: '#fff' }}>
+                                                                    <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
+                                                                        {!submission ? PreferredLanguageText('no') : null}
+                                                                    </Text>
+                                                                </View>
+                                                        }
+                                                        {
+                                                            submission ?
+                                                                <View style={{
+                                                                    width: '100%',
+                                                                    display: 'flex',
+                                                                    flexDirection: 'row',
+                                                                    backgroundColor: 'white'
+                                                                }}>
+                                                                    <Text style={{
+                                                                        fontSize: 12,
+                                                                        color: '#a2a2aa',
+                                                                        textAlign: 'left',
+                                                                        paddingRight: 10
+                                                                    }}>
+                                                                        {PreferredLanguageText('due')}
+                                                                    </Text>
+                                                                    {
+                                                                        isOwner ? <Datetime
+                                                                            value={deadline}
+                                                                            onChange={(event: any) => {
+                                                                                const date = new Date(event)
+
+                                                                                if (date < new Date()) return;
+                                                                                setDeadline(date)
+                                                                            }}
+                                                                            isValidDate={disablePastDt}
+                                                                        /> : <Text style={{
+                                                                            fontSize: 12,
+                                                                            color: '#a2a2aa',
+                                                                            textAlign: 'left'
+                                                                        }}>
+                                                                            {deadline.toLocaleString()}
+                                                                        </Text>
+                                                                    }
+                                                                </View>
+                                                                : null
+                                                        }
+                                                    </View>
+                                                </View> : null
+                                        }
+                                        {
+                                            submission ?
+                                                <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
+                                                    <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
+                                                        <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
+                                                            {PreferredLanguageText('graded')}
+                                                        </Text>
+                                                    </View>
+                                                    <View style={{ flexDirection: 'row' }}>
+                                                        <View style={{
+                                                            backgroundColor: 'white',
+                                                            height: 40,
+                                                            marginRight: 10
+                                                        }}>
+                                                            <Switch
+                                                                disabled={!isOwner}
+                                                                value={graded}
+                                                                onValueChange={() => setGraded(!graded)}
+                                                                style={{ height: 20 }}
+                                                                trackColor={{
+                                                                    false: '#f4f4f6',
+                                                                    true: '#a2a2aa'
+                                                                }}
+                                                                activeThumbColor='white'
+                                                            />
+                                                        </View>
+                                                        {
+                                                            graded ?
+                                                                <View style={{
+                                                                    width: '100%',
+                                                                    display: 'flex',
+                                                                    flexDirection: 'row',
+                                                                    backgroundColor: 'white'
+                                                                }}>
+                                                                    <Text style={{
+                                                                        fontSize: 12,
+                                                                        color: '#a2a2aa',
+                                                                        textAlign: 'left',
+                                                                        paddingRight: 10
+                                                                    }}>
+                                                                        Grade Weight {'\n'}{PreferredLanguageText('percentageOverall')}
+                                                                    </Text>
+                                                                    {
+                                                                        isOwner ?
+                                                                            <TextInput
+                                                                                value={gradeWeight}
+                                                                                style={styles.picker}
+                                                                                placeholder={'0-100'}
+                                                                                onChangeText={val => setGradeWeight(val)}
+                                                                                placeholderTextColor={'#a2a2aa'}
+                                                                            /> :
+                                                                            <Text style={{
+                                                                                color: '#a2a2aa',
+                                                                                textAlign: 'left',
+                                                                                fontSize: 12
+                                                                            }}>
+                                                                                {gradeWeight}
+                                                                            </Text>
+                                                                    }
+                                                                </View>
+                                                                : null
+                                                        }
+                                                    </View>
+                                                </View> : null
+                                        }
+                                    </View>
+                                    : null
+                            }
+                            <View style={{ display: 'flex', flexDirection: width < 768 ? 'column' : 'row' }}>
+                                {
+                                    (props.cue.channelId && props.cue.channelId !== '' && isOwner) || (!props.channelId || props.channelId === '') ?
+                                        <View style={{ width: width < 768 ? '100%' : '33.33%', borderRightWidth: 0, borderColor: '#f4f4f6' }}>
+                                            <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
+                                                <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
+                                                    {PreferredLanguageText('category')}
+                                                </Text>
+                                            </View>
+                                            {
+                                                props.cue.channelId && !props.channelOwner ?
+                                                    <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white' }}>
+                                                        <View style={{ width: '85%', backgroundColor: 'white' }}>
+                                                            <View style={styles.colorBar}>
+                                                                <TouchableOpacity
+                                                                    style={styles.allGrayOutline}
+                                                                    onPress={() => { }}>
+                                                                    <Text style={{ color: '#a2a2aa', lineHeight: 20, fontSize: 12 }}>
+                                                                        {props.cue.customCategory === '' ? PreferredLanguageText('none') : props.cue.customCategory}
+                                                                    </Text>
+                                                                </TouchableOpacity>
+                                                            </View>
+                                                        </View>
+                                                    </View>
+                                                    :
+                                                    <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white' }}>
+                                                        <View style={{ width: '85%', backgroundColor: 'white' }}>
+                                                            {
+                                                                addCustomCategory ?
+                                                                    <View style={styles.colorBar}>
+                                                                        <TextInput
+                                                                            value={customCategory}
+                                                                            style={styles.allGrayOutline}
+                                                                            placeholder={'Enter Category'}
+                                                                            onChangeText={val => {
+                                                                                setCustomCategory(val)
+                                                                            }}
+                                                                            placeholderTextColor={'#a2a2aa'}
+                                                                        />
+                                                                    </View> :
+                                                                    <ScrollView style={styles.colorBar} horizontal={true} showsHorizontalScrollIndicator={false}>
+                                                                        <TouchableOpacity
+                                                                            style={customCategory === '' ? styles.allGrayOutline : styles.all}
+                                                                            onPress={() => {
+                                                                                setCustomCategory('')
+                                                                            }}>
+                                                                            <Text style={{ color: '#a2a2aa', lineHeight: 20, fontSize: 12 }}>
+                                                                                {PreferredLanguageText('none')}
+                                                                            </Text>
+                                                                        </TouchableOpacity>
+                                                                        {
+                                                                            customCategories.map((category: string) => {
+                                                                                return <TouchableOpacity
+                                                                                    key={Math.random()}
+                                                                                    style={customCategory === category ? styles.allGrayOutline : styles.all}
+                                                                                    onPress={() => {
+                                                                                        setCustomCategory(category)
+                                                                                    }}>
+                                                                                    <Text style={{ color: '#a2a2aa', lineHeight: 20, fontSize: 12 }}>
+                                                                                        {category}
+                                                                                    </Text>
+                                                                                </TouchableOpacity>
+                                                                            })
+                                                                        }
+                                                                    </ScrollView>
+                                                            }
+                                                        </View>
+                                                        <View style={{ width: '15%', backgroundColor: 'white' }}>
+                                                            <TouchableOpacity
+                                                                onPress={() => {
+                                                                    if (addCustomCategory) {
+                                                                        setCustomCategory('')
+                                                                        setAddCustomCategory(false)
+                                                                    } else {
+                                                                        setCustomCategory('')
+                                                                        setAddCustomCategory(true)
+                                                                    }
+                                                                }}
+                                                                style={{ backgroundColor: 'white' }}>
+                                                                <Text style={{ textAlign: 'right', lineHeight: 20, width: '100%' }}>
+                                                                    <Ionicons name={addCustomCategory ? 'close' : 'add'} size={20} color={'#a2a2aa'} />
+                                                                </Text>
+                                                            </TouchableOpacity>
+                                                        </View>
+                                                    </View>
+                                            }
+                                        </View> : null
+                                }
+                                <View style={{ width: width < 768 ? '100%' : '33.33%', borderRightWidth: 0, borderColor: '#f4f4f6' }}>
+                                    <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
+                                        <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
+                                            {PreferredLanguageText('priority')}
+                                        </Text>
+                                    </View>
+                                    <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white' }}>
+                                        <View style={{ width: '100%', backgroundColor: 'white' }}>
+                                            <ScrollView style={{ ...styles.colorBar, height: 20 }} horizontal={true} showsHorizontalScrollIndicator={false}>
+                                                {
+                                                    colorChoices.map((c: string, i: number) => {
+                                                        return <View style={color === i ? styles.colorContainerOutline : styles.colorContainer} key={Math.random()}>
+                                                            <TouchableOpacity
+                                                                style={{
+                                                                    width: 12,
+                                                                    height: 12,
+                                                                    borderRadius: 6,
+                                                                    backgroundColor: colorChoices[i]
+                                                                }}
+                                                                onPress={() => {
+                                                                    setColor(i)
+                                                                }}
+                                                            />
+                                                        </View>
+                                                    })
+                                                }
+                                            </ScrollView>
+                                        </View>
+                                    </View>
                                 </View>
                                 {
-                                    props.cue.channelId && !props.channelOwner ?
-                                        <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white' }}>
-                                            <View style={{ width: '85%', backgroundColor: 'white' }}>
-                                                <View style={styles.colorBar}>
+                                    channels.length === 0 || !isOwner ? null :
+                                        <View style={{ width: width < 768 ? '100%' : '33.33%', borderRightWidth: 0, borderColor: '#f4f4f6' }}>
+                                            <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
+                                                <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
+                                                    Forward
+                                                </Text>
+                                            </View>
+                                            <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white' }}>
+                                                <View style={{ width: '85%', backgroundColor: 'white' }}>
+                                                    <ScrollView style={styles.colorBar} horizontal={true} showsHorizontalScrollIndicator={false}>
+                                                        {
+                                                            channels.map((channel) => {
+                                                                return <TouchableOpacity
+                                                                    key={Math.random()}
+                                                                    style={shareWithChannelId === channel._id ? styles.allOutline : styles.allBlack}
+                                                                    onPress={() => {
+                                                                        if (shareWithChannelId === '') {
+                                                                            setShareWithChannelId(channel._id)
+                                                                        } else {
+                                                                            setShareWithChannelId('')
+                                                                        }
+                                                                    }}>
+                                                                    <Text style={{ lineHeight: 20, fontSize: 12, color: shareWithChannelId === channel._id ? '#fff' : '#202025' }}>
+                                                                        {channel.name}
+                                                                    </Text>
+                                                                </TouchableOpacity>
+                                                            })
+                                                        }
+                                                    </ScrollView>
+                                                </View>
+                                                <View style={{ width: '15%', backgroundColor: 'white' }}>
                                                     <TouchableOpacity
-                                                        style={styles.allGrayOutline}
-                                                        onPress={() => { }}>
-                                                        <Text style={{ color: '#a2a2aa', lineHeight: 20, fontSize: 12 }}>
-                                                            {props.cue.customCategory === '' ? PreferredLanguageText('none') : props.cue.customCategory}
+                                                        disabled={shareWithChannelId === ''}
+                                                        onPress={() => shareCue()}
+                                                        style={{ backgroundColor: 'white' }}>
+                                                        <Text style={{ textAlign: 'center', lineHeight: 20, width: '100%' }}>
+                                                            <Ionicons name={'arrow-redo-outline'} size={20} color={shareWithChannelId === '' ? '#a2a2aa' : '#202025'} />
                                                         </Text>
                                                     </TouchableOpacity>
                                                 </View>
                                             </View>
                                         </View>
-                                        :
-                                        <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white' }}>
-                                            <View style={{ width: '85%', backgroundColor: 'white' }}>
-                                                {
-                                                    addCustomCategory ?
-                                                        <View style={styles.colorBar}>
-                                                            <TextInput
-                                                                value={customCategory}
-                                                                style={styles.allGrayOutline}
-                                                                placeholder={'Enter Category'}
-                                                                onChangeText={val => {
-                                                                    setCustomCategory(val)
-                                                                }}
-                                                                placeholderTextColor={'#a2a2aa'}
-                                                            />
-                                                        </View> :
-                                                        <ScrollView style={styles.colorBar} horizontal={true} showsHorizontalScrollIndicator={false}>
-                                                            <TouchableOpacity
-                                                                style={customCategory === '' ? styles.allGrayOutline : styles.all}
-                                                                onPress={() => {
-                                                                    setCustomCategory('')
-                                                                }}>
-                                                                <Text style={{ color: '#a2a2aa', lineHeight: 20, fontSize: 12 }}>
-                                                                    {PreferredLanguageText('none')}
-                                                                </Text>
-                                                            </TouchableOpacity>
-                                                            {
-                                                                customCategories.map((category: string) => {
-                                                                    return <TouchableOpacity
-                                                                        key={Math.random()}
-                                                                        style={customCategory === category ? styles.allGrayOutline : styles.all}
-                                                                        onPress={() => {
-                                                                            setCustomCategory(category)
-                                                                        }}>
-                                                                        <Text style={{ color: '#a2a2aa', lineHeight: 20, fontSize: 12 }}>
-                                                                            {category}
-                                                                        </Text>
-                                                                    </TouchableOpacity>
-                                                                })
-                                                            }
-                                                        </ScrollView>
-                                                }
-                                            </View>
-                                            <View style={{ width: '15%', backgroundColor: 'white' }}>
-                                                <TouchableOpacity
-                                                    onPress={() => {
-                                                        if (addCustomCategory) {
-                                                            setCustomCategory('')
-                                                            setAddCustomCategory(false)
-                                                        } else {
-                                                            setCustomCategory('')
-                                                            setAddCustomCategory(true)
-                                                        }
-                                                    }}
-                                                    style={{ backgroundColor: 'white' }}>
-                                                    <Text style={{ textAlign: 'right', lineHeight: 20, width: '100%' }}>
-                                                        <Ionicons name={addCustomCategory ? 'close' : 'add'} size={20} color={'#a2a2aa'} />
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            </View>
-                                        </View>
                                 }
                             </View>
-                            <View style={{ width: width < 768 ? '100%' : '33.33%', borderRightWidth: 0, borderColor: '#f4f4f6' }}>
+                        </View>
+                        <View style={{ width: '100%', paddingTop: 15, flexDirection: width < 768 ? 'column' : 'row' }}>
+                            <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
                                 <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
                                     <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
-                                        {PreferredLanguageText('priority')}
+                                        Reminder
                                     </Text>
                                 </View>
-                                <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white' }}>
-                                    <View style={{ width: '100%', backgroundColor: 'white' }}>
-                                        <ScrollView style={{ ...styles.colorBar, height: 20 }} horizontal={true} showsHorizontalScrollIndicator={false}>
-                                            {
-                                                colorChoices.map((c: string, i: number) => {
-                                                    return <View style={color === i ? styles.colorContainerOutline : styles.colorContainer} key={Math.random()}>
-                                                        <TouchableOpacity
-                                                            style={{
-                                                                width: 12,
-                                                                height: 12,
-                                                                borderRadius: 6,
-                                                                backgroundColor: colorChoices[i]
-                                                            }}
-                                                            onPress={() => {
-                                                                setColor(i)
-                                                            }}
-                                                        />
-                                                    </View>
-                                                })
+                                <View style={{
+                                    backgroundColor: 'white',
+                                    width: '100%',
+                                    height: 40,
+                                    marginHorizontal: 10
+                                }}>
+                                    <Switch
+                                        value={notify}
+                                        onValueChange={() => {
+                                            if (notify) {
+                                                // setShuffle(false)
+                                                setFrequency("0")
+                                            } else {
+                                                // setShuffle(true)
+                                                setFrequency("1-D")
                                             }
-                                        </ScrollView>
-                                    </View>
+                                            setPlayChannelCueIndef(true)
+                                            setNotify(!notify)
+                                        }}
+                                        style={{ height: 20 }}
+                                        trackColor={{
+                                            false: '#f4f4f6',
+                                            true: '#3B64F8'
+                                        }}
+                                        activeThumbColor='white'
+                                    />
                                 </View>
                             </View>
                             {
-                                channels.length === 0 || !isOwner ? null :
-                                    <View style={{ width: width < 768 ? '100%' : '33.33%', borderRightWidth: 0, borderColor: '#f4f4f6' }}>
+                                notify ?
+                                    <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
                                         <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
                                             <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
-                                                Forward
+                                                Recurring
                                             </Text>
                                         </View>
-                                        <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white' }}>
-                                            <View style={{ width: '85%', backgroundColor: 'white' }}>
-                                                <ScrollView style={styles.colorBar} horizontal={true} showsHorizontalScrollIndicator={false}>
-                                                    {
-                                                        channels.map((channel) => {
-                                                            return <TouchableOpacity
-                                                                key={Math.random()}
-                                                                style={shareWithChannelId === channel._id ? styles.allOutline : styles.allBlack}
-                                                                onPress={() => {
-                                                                    if (shareWithChannelId === '') {
-                                                                        setShareWithChannelId(channel._id)
-                                                                    } else {
-                                                                        setShareWithChannelId('')
-                                                                    }
-                                                                }}>
-                                                                <Text style={{ lineHeight: 20, fontSize: 12, color: shareWithChannelId === channel._id ? '#fff' : '#202025' }}>
-                                                                    {channel.name}
-                                                                </Text>
-                                                            </TouchableOpacity>
-                                                        })
-                                                    }
-                                                </ScrollView>
+                                        <View style={{ flexDirection: 'row', }}>
+                                            <View style={{
+                                                backgroundColor: 'white',
+                                                height: 40,
+                                                marginHorizontal: 10
+                                            }}>
+                                                <Switch
+                                                    value={!shuffle}
+                                                    onValueChange={() => setShuffle(!shuffle)}
+                                                    style={{ height: 20 }}
+                                                    trackColor={{
+                                                        false: '#f4f4f6',
+                                                        true: '#a2a2aa'
+                                                    }}
+                                                    activeThumbColor='white'
+                                                />
                                             </View>
-                                            <View style={{ width: '15%', backgroundColor: 'white' }}>
-                                                <TouchableOpacity
-                                                    disabled={shareWithChannelId === ''}
-                                                    onPress={() => shareCue()}
-                                                    style={{ backgroundColor: 'white' }}>
-                                                    <Text style={{ textAlign: 'center', lineHeight: 20, width: '100%' }}>
-                                                        <Ionicons name={'arrow-redo-outline'} size={20} color={shareWithChannelId === '' ? '#a2a2aa' : '#202025'} />
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            </View>
-                                        </View>
-                                    </View>
-                            }
-                        </View>
-                    </View>
-                    <View style={{ width: '100%', paddingTop: 15, flexDirection: width < 768 ? 'column' : 'row' }}>
-                        <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
-                            <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
-                                    Reminder
-                                </Text>
-                            </View>
-                            <View style={{
-                                backgroundColor: 'white',
-                                width: '100%',
-                                height: 40,
-                                marginHorizontal: 10
-                            }}>
-                                <Switch
-                                    value={notify}
-                                    onValueChange={() => {
-                                        if (notify) {
-                                            // setShuffle(false)
-                                            setFrequency("0")
-                                        } else {
-                                            // setShuffle(true)
-                                            setFrequency("1-D")
-                                        }
-                                        setPlayChannelCueIndef(true)
-                                        setNotify(!notify)
-                                    }}
-                                    style={{ height: 20 }}
-                                    trackColor={{
-                                        false: '#f4f4f6',
-                                        true: '#3B64F8'
-                                    }}
-                                    activeThumbColor='white'
-                                />
-                            </View>
-                        </View>
-                        {
-                            notify ?
-                                <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
-                                    <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                        <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
-                                            Recurring
-                                        </Text>
-                                    </View>
-                                    <View style={{ flexDirection: 'row', }}>
-                                        <View style={{
-                                            backgroundColor: 'white',
-                                            height: 40,
-                                            marginHorizontal: 10
-                                        }}>
-                                            <Switch
-                                                value={!shuffle}
-                                                onValueChange={() => setShuffle(!shuffle)}
-                                                style={{ height: 20 }}
-                                                trackColor={{
-                                                    false: '#f4f4f6',
-                                                    true: '#a2a2aa'
-                                                }}
-                                                activeThumbColor='white'
-                                            />
-                                        </View>
-                                        {
-                                            !shuffle ?
-                                                <View style={{
-                                                    display: 'flex',
-                                                    flexDirection: 'row',
-                                                    backgroundColor: 'white'
-                                                }}>
-                                                    <Text style={styles.text}>
-                                                        {PreferredLanguageText('remindEvery')}
-                                                    </Text>
-                                                    <Picker
-                                                        style={styles.picker}
-                                                        itemStyle={{
-                                                            fontSize: 15
-                                                        }}
-                                                        selectedValue={frequency}
-                                                        onValueChange={(itemValue: any) =>
-                                                            setFrequency(itemValue)
-                                                        }>
-                                                        {
-                                                            timedFrequencyOptions.map((item: any, index: number) => {
-                                                                return <Picker.Item
-                                                                    color={frequency === item.value ? '#3B64F8' : "#202025"}
-                                                                    label={item.value === '0' && cue.channelId !== '' ? 'Once' : item.label}
-                                                                    value={item.value}
-                                                                    key={index}
-                                                                />
-                                                            })
-                                                        }
-                                                    </Picker>
-                                                </View> :
-                                                <View style={{
-                                                    width: '100%',
-                                                    display: 'flex',
-                                                    flexDirection: 'row',
-                                                    backgroundColor: 'white'
-                                                }}>
-                                                    <Text style={styles.text}>
-                                                        {PreferredLanguageText('remindOn')}
-                                                    </Text>
-                                                    <Datetime
-                                                        value={endPlayAt}
-                                                        onChange={(event: any) => {
-                                                            const date = new Date(event)
-                                                            if (date < new Date()) return;
-
-                                                            setEndPlayAt(date)
-                                                        }}
-                                                        isValidDate={disablePastDt}
-                                                    />
-                                                </View>
-                                        }
-                                    </View>
-                                </View> : null
-                        }
-                        {
-                            notify && !shuffle ?
-                                <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
-                                    <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                        <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
-                                            Indefinite
-                                        </Text>
-                                    </View>
-                                    <View style={{ flexDirection: 'row' }}>
-                                        <View style={{
-                                            backgroundColor: 'white',
-                                            height: 40,
-                                            marginHorizontal: 10
-                                        }}>
-                                            <Switch
-                                                value={playChannelCueIndef}
-                                                onValueChange={() => setPlayChannelCueIndef(!playChannelCueIndef)}
-                                                style={{ height: 20 }}
-                                                trackColor={{
-                                                    false: '#f4f4f6',
-                                                    true: '#a2a2aa'
-                                                }}
-                                                activeThumbColor='white'
-                                            />
-                                        </View>
-                                        {
-                                            playChannelCueIndef ? null :
-                                                <View style={{
-                                                    width: '100%',
-                                                    display: 'flex',
-                                                    flexDirection: 'row',
-                                                    backgroundColor: 'white'
-                                                }}>
-                                                    <Text style={styles.text}>
-                                                        {PreferredLanguageText('remindTill')}
-                                                    </Text>
-                                                    <Datetime
-                                                        onChange={(event: any) => {
-                                                            const date = new Date(event)
-                                                            if (date < new Date()) return;
-
-                                                            setEndPlayAt(date)
-                                                        }}
-                                                        value={endPlayAt}
-                                                        isValidDate={disablePastDt}
-                                                    />
-                                                </View>
-                                        }
-                                    </View>
-                                </View> : null
-                        }
-                    </View>
-                    <View style={styles.footer}>
-                        <View
-                            style={{
-                                flex: 1,
-                                backgroundColor: 'white',
-                                justifyContent: 'center',
-                                display: 'flex',
-                                flexDirection: 'row',
-                                height: 50,
-                                paddingTop: 10
-                            }}>
-                            {
-                                isOwner || (!props.cue.channelId || props.cue.channelId === '') ?
-                                    <TouchableOpacity
-                                        onPress={() => handleDelete()}
-                                        style={{ backgroundColor: 'white', borderRadius: 15, }}>
-                                        <Text style={{
-                                            textAlign: 'center',
-                                            lineHeight: 35,
-                                            color: 'white',
-                                            fontSize: 12,
-                                            backgroundColor: '#3B64F8',
-                                            borderRadius: 15,
-                                            paddingHorizontal: 25,
-                                            fontFamily: 'inter',
-                                            overflow: 'hidden',
-                                            height: 35,
-                                            textTransform: 'uppercase'
-                                        }}>
                                             {
-                                                isOwner ? (
-                                                    props.cue.channelId && props.cue.channelId !== '' ? PreferredLanguageText('deleteForEveryone') : PreferredLanguageText('delete')
-                                                ) : PreferredLanguageText('delete')
+                                                !shuffle ?
+                                                    <View style={{
+                                                        display: 'flex',
+                                                        flexDirection: 'row',
+                                                        backgroundColor: 'white'
+                                                    }}>
+                                                        <Text style={styles.text}>
+                                                            {PreferredLanguageText('remindEvery')}
+                                                        </Text>
+                                                        <Picker
+                                                            style={styles.picker}
+                                                            itemStyle={{
+                                                                fontSize: 15
+                                                            }}
+                                                            selectedValue={frequency}
+                                                            onValueChange={(itemValue: any) =>
+                                                                setFrequency(itemValue)
+                                                            }>
+                                                            {
+                                                                timedFrequencyOptions.map((item: any, index: number) => {
+                                                                    return <Picker.Item
+                                                                        color={frequency === item.value ? '#3B64F8' : "#202025"}
+                                                                        label={item.value === '0' && cue.channelId !== '' ? 'Once' : item.label}
+                                                                        value={item.value}
+                                                                        key={index}
+                                                                    />
+                                                                })
+                                                            }
+                                                        </Picker>
+                                                    </View> :
+                                                    <View style={{
+                                                        width: '100%',
+                                                        display: 'flex',
+                                                        flexDirection: 'row',
+                                                        backgroundColor: 'white'
+                                                    }}>
+                                                        <Text style={styles.text}>
+                                                            {PreferredLanguageText('remindOn')}
+                                                        </Text>
+                                                        <Datetime
+                                                            value={endPlayAt}
+                                                            onChange={(event: any) => {
+                                                                const date = new Date(event)
+                                                                if (date < new Date()) return;
+
+                                                                setEndPlayAt(date)
+                                                            }}
+                                                            isValidDate={disablePastDt}
+                                                        />
+                                                    </View>
                                             }
-                                        </Text>
-                                    </TouchableOpacity> : null
+                                        </View>
+                                    </View> : null
                             }
                             {
-                                !isOwner && (props.cue.channelId && props.cue.channelId !== '') && submission ?
-                                    <TouchableOpacity
-                                        disabled={
-                                            // if user has not signed up
-                                            !userSetupComplete ||
-                                            // deadline has passed & its not an initiated timed quiz
-                                            ((currentDate >= deadline) && !(isQuiz && isQuizTimed && initiatedAt)) ||
-                                            // graded
-                                            props.cue.graded ||
-                                            // if timed quiz not initiated
-                                            (isQuiz && isQuizTimed && !initiatedAt) ||
-                                            // if quiz submitted already
-                                            (isQuiz && (props.cue.submittedAt && props.cue.submittedAt !== ''))
-                                        }
-                                        onPress={() => handleSubmit()}
-                                        style={{ backgroundColor: 'white', borderRadius: 15, }}>
-                                        <Text style={{
-                                            textAlign: 'center',
-                                            lineHeight: 35,
-                                            color: 'white',
-                                            fontSize: 12,
-                                            backgroundColor: '#3B64F8',
-                                            borderRadius: 15,
-                                            paddingHorizontal: 25,
-                                            fontFamily: 'inter',
-                                            overflow: 'hidden',
-                                            height: 35
-                                        }}>
+                                notify && !shuffle ?
+                                    <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
+                                        <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
+                                            <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
+                                                Indefinite
+                                            </Text>
+                                        </View>
+                                        <View style={{ flexDirection: 'row' }}>
+                                            <View style={{
+                                                backgroundColor: 'white',
+                                                height: 40,
+                                                marginHorizontal: 10
+                                            }}>
+                                                <Switch
+                                                    value={playChannelCueIndef}
+                                                    onValueChange={() => setPlayChannelCueIndef(!playChannelCueIndef)}
+                                                    style={{ height: 20 }}
+                                                    trackColor={{
+                                                        false: '#f4f4f6',
+                                                        true: '#a2a2aa'
+                                                    }}
+                                                    activeThumbColor='white'
+                                                />
+                                            </View>
                                             {
-                                                userSetupComplete ? (
-                                                    ((props.cue.submittedAt && props.cue.submittedAt !== '') || submitted
-                                                        ? (props.cue.graded ? PreferredLanguageText('graded') : (isQuiz ? PreferredLanguageText('submitted') : ((currentDate < deadline ? PreferredLanguageText('resubmit') : PreferredLanguageText('submissionEnded')))))
-                                                        : (currentDate < deadline ? PreferredLanguageText('submit') : PreferredLanguageText('submissionEnded')))
-                                                ) : PreferredLanguageText('signupToSubmit')
+                                                playChannelCueIndef ? null :
+                                                    <View style={{
+                                                        width: '100%',
+                                                        display: 'flex',
+                                                        flexDirection: 'row',
+                                                        backgroundColor: 'white'
+                                                    }}>
+                                                        <Text style={styles.text}>
+                                                            {PreferredLanguageText('remindTill')}
+                                                        </Text>
+                                                        <Datetime
+                                                            onChange={(event: any) => {
+                                                                const date = new Date(event)
+                                                                if (date < new Date()) return;
+
+                                                                setEndPlayAt(date)
+                                                            }}
+                                                            value={endPlayAt}
+                                                            isValidDate={disablePastDt}
+                                                        />
+                                                    </View>
                                             }
-                                        </Text>
-                                    </TouchableOpacity> : null
+                                        </View>
+                                    </View> : null
                             }
                         </View>
-                    </View>
-                </Collapse>
+                        <View style={styles.footer}>
+                            <View
+                                style={{
+                                    flex: 1,
+                                    backgroundColor: 'white',
+                                    justifyContent: 'center',
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    height: 50,
+                                    paddingTop: 10
+                                }}>
+                                {
+                                    isOwner || (!props.cue.channelId || props.cue.channelId === '') ?
+                                        <TouchableOpacity
+                                            onPress={() => handleDelete()}
+                                            style={{ backgroundColor: 'white', borderRadius: 15, }}>
+                                            <Text style={{
+                                                textAlign: 'center',
+                                                lineHeight: 35,
+                                                color: 'white',
+                                                fontSize: 12,
+                                                backgroundColor: '#3B64F8',
+                                                borderRadius: 15,
+                                                paddingHorizontal: 25,
+                                                fontFamily: 'inter',
+                                                overflow: 'hidden',
+                                                height: 35,
+                                                textTransform: 'uppercase'
+                                            }}>
+                                                {
+                                                    isOwner ? (
+                                                        props.cue.channelId && props.cue.channelId !== '' ? PreferredLanguageText('deleteForEveryone') : PreferredLanguageText('delete')
+                                                    ) : PreferredLanguageText('delete')
+                                                }
+                                            </Text>
+                                        </TouchableOpacity> : null
+                                }
+                                {
+                                    !isOwner && (props.cue.channelId && props.cue.channelId !== '') && submission ?
+                                        <TouchableOpacity
+                                            disabled={
+                                                // if user has not signed up
+                                                !userSetupComplete ||
+                                                // deadline has passed & its not an initiated timed quiz
+                                                ((currentDate >= deadline) && !(isQuiz && isQuizTimed && initiatedAt)) ||
+                                                // graded
+                                                props.cue.graded ||
+                                                // if timed quiz not initiated
+                                                (isQuiz && isQuizTimed && !initiatedAt) ||
+                                                // if quiz submitted already
+                                                (isQuiz && (props.cue.submittedAt && props.cue.submittedAt !== ''))
+                                            }
+                                            onPress={() => handleSubmit()}
+                                            style={{ backgroundColor: 'white', borderRadius: 15, }}>
+                                            <Text style={{
+                                                textAlign: 'center',
+                                                lineHeight: 35,
+                                                color: 'white',
+                                                fontSize: 12,
+                                                backgroundColor: '#3B64F8',
+                                                borderRadius: 15,
+                                                paddingHorizontal: 25,
+                                                fontFamily: 'inter',
+                                                overflow: 'hidden',
+                                                height: 35
+                                            }}>
+                                                {
+                                                    userSetupComplete ? (
+                                                        ((props.cue.submittedAt && props.cue.submittedAt !== '') || submitted
+                                                            ? (props.cue.graded ? PreferredLanguageText('graded') : (isQuiz ? PreferredLanguageText('submitted') : ((currentDate < deadline ? PreferredLanguageText('resubmit') : PreferredLanguageText('submissionEnded')))))
+                                                            : (currentDate < deadline ? PreferredLanguageText('submit') : PreferredLanguageText('submissionEnded')))
+                                                    ) : PreferredLanguageText('signupToSubmit')
+                                                }
+                                            </Text>
+                                        </TouchableOpacity> : null
+                                }
+                            </View>
+                        </View>
+                    </Collapse>
                 </ScrollView>
             </Animated.View>
         </View >

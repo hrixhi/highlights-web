@@ -212,7 +212,7 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 </View>
                 <View
                     key={JSON.stringify(cues) + JSON.stringify(filterChoice)}
-                    style={{ width: '100%', height: '55%', paddingTop: 22 }}>
+                    style={{ width: '100%', height: '55%', paddingTop: 18 }}>
                     {/* <View>
                         <Text
                             style={{

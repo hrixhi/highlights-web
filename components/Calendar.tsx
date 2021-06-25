@@ -33,6 +33,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const [end, setEnd] = useState(new Date(start.getTime() + 1000 * 60 * 60))
     const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
     const [channels, setChannels] = useState<any[]>([])
+    const [showAddEvent, setShowAddEvent] = useState(false)
     const [channelId, setChannelId] = useState('')
 
     const loadChannels = useCallback(async () => {
@@ -204,6 +205,21 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     style={{ color: '#a2a2aa', fontSize: 17, flex: 1, lineHeight: 25, paddingHorizontal: 20, fontWeight: 'bold' }}>
                     {PreferredLanguageText('planner')}
                 </Text>
+                <Text style={{
+                    color: '#a2a2aa',
+                    fontSize: 11,
+                    lineHeight: 30,
+                    paddingTop: 5,
+                    textAlign: 'right',
+                    paddingRight: 20,
+                    textTransform: 'uppercase'
+                }}
+                    onPress={() => setShowAddEvent(!showAddEvent)}
+                >
+                    {
+                        showAddEvent ? PreferredLanguageText('hide') : PreferredLanguageText('add')
+                    }
+                </Text>
             </View>
             <ScrollView style={{
                 width: '100%',
@@ -240,131 +256,137 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             borderTopRightRadius: 0,
                             borderTopLeftRadius: 0
                         }}>
-                            <View style={{
-                                flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row',
-                            }}>
-                                <View style={{ width: Dimensions.get('window').width < 768 ? '100%' : '30%' }}>
-                                    <TextInput
-                                        value={title}
-                                        placeholder={PreferredLanguageText('new') + ' ' + PreferredLanguageText('event')}
-                                        onChangeText={val => setTitle(val)}
-                                        placeholderTextColor={'#a2a2aa'}
-                                        required={true}
-                                    />
-                                </View>
-                                <View style={{
-                                    width: Dimensions.get('window').width < 768 ? '100%' : '30%',
-                                    flexDirection: 'row',
-                                    marginTop: 12,
-                                    marginLeft: Dimensions.get('window').width < 768 ? 0 : 10
-                                }}>
-                                    <Text style={styles.text}>
-                                        {PreferredLanguageText('start')}
-                                    </Text>
-                                    <Datetime
-                                        value={start}
-                                        onChange={(event: any) => {
-                                            const date = new Date(event)
-                                            setStart(date)
-                                        }}
-                                    />
-                                </View>
-                                <View style={{
-                                    width: Dimensions.get('window').width < 768 ? '100%' : '30%',
-                                    flexDirection: 'row',
-                                    marginTop: 12,
-                                    marginLeft: Dimensions.get('window').width < 768 ? 0 : 10
-                                }}>
-                                    <Text style={styles.text}>
-                                        {PreferredLanguageText('end')}
-                                    </Text>
-                                    <Datetime
-                                        value={end}
-                                        onChange={(event: any) => {
-                                            const date = new Date(event)
-                                            setEnd(date)
-                                        }}
-                                    />
-                                </View>
-                            </View>
-                            <View style={{ marginBottom: 20, borderColor: '#f4f4f6', borderBottomWidth: 1, paddingBottom: 20 }}>
-                                {channels.length > 0 ?
+                            {
+                                showAddEvent ?
                                     <View>
-                                        <View style={{ width: '100%', paddingBottom: 20, backgroundColor: 'white' }}>
-                                            <Text style={{ fontSize: 12, color: '#a2a2aa', paddingTop: Dimensions.get('window').width < 768 ? 15 : 5 }}>
-                                                {/* {PreferredLanguageText('channel')} */}
-                                                Share with
-                                                {/* <Ionicons
-                                            name='school-outline' size={20} color={'#a2a2aa'} /> */}
-                                            </Text>
-                                        </View>
-                                        <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white' }}>
-                                            <View style={{ width: '100%', backgroundColor: 'white', display: 'flex' }}>
-                                                <ScrollView style={styles.colorBar} horizontal={true} showsHorizontalScrollIndicator={false}>
-                                                    <TouchableOpacity
-                                                        style={channelId === '' ? styles.allOutline : styles.allBlack}
-                                                        onPress={() => {
-                                                            setChannelId('')
-                                                        }}>
-                                                        <Text style={{ lineHeight: 20, fontSize: 12, color: channelId === '' ? '#fff' : '#202025' }}>
-                                                            {PreferredLanguageText('myCues')}
-                                                        </Text>
-                                                    </TouchableOpacity>
-                                                    {
-                                                        channels.map((channel) => {
-                                                            return <TouchableOpacity
-                                                                key={Math.random()}
-                                                                style={channelId === channel._id ? styles.allOutline : styles.allBlack}
-                                                                onPress={() => {
-                                                                    setChannelId(channel._id)
-                                                                }}>
-                                                                <Text style={{ lineHeight: 20, fontSize: 12, color: channelId === channel._id ? '#fff' : '#202025' }}>
-                                                                    {channel.name}
-                                                                </Text>
-                                                            </TouchableOpacity>
-                                                        })
-                                                    }
-                                                </ScrollView>
+                                        <View style={{
+                                            flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row',
+                                        }}>
+                                            <View style={{ width: Dimensions.get('window').width < 768 ? '100%' : '30%' }}>
+                                                <TextInput
+                                                    value={title}
+                                                    placeholder={PreferredLanguageText('new') + ' ' + PreferredLanguageText('event')}
+                                                    onChangeText={val => setTitle(val)}
+                                                    placeholderTextColor={'#a2a2aa'}
+                                                    required={true}
+                                                />
+                                            </View>
+                                            <View style={{
+                                                width: Dimensions.get('window').width < 768 ? '100%' : '30%',
+                                                flexDirection: 'row',
+                                                marginTop: 12,
+                                                marginLeft: Dimensions.get('window').width < 768 ? 0 : 10
+                                            }}>
+                                                <Text style={styles.text}>
+                                                    {PreferredLanguageText('start')}
+                                                </Text>
+                                                <Datetime
+                                                    value={start}
+                                                    onChange={(event: any) => {
+                                                        const date = new Date(event)
+                                                        setStart(date)
+                                                    }}
+                                                />
+                                            </View>
+                                            <View style={{
+                                                width: Dimensions.get('window').width < 768 ? '100%' : '30%',
+                                                flexDirection: 'row',
+                                                marginTop: 12,
+                                                marginLeft: Dimensions.get('window').width < 768 ? 0 : 10
+                                            }}>
+                                                <Text style={styles.text}>
+                                                    {PreferredLanguageText('end')}
+                                                </Text>
+                                                <Datetime
+                                                    value={end}
+                                                    onChange={(event: any) => {
+                                                        const date = new Date(event)
+                                                        setEnd(date)
+                                                    }}
+                                                />
                                             </View>
                                         </View>
-                                    </View> : null}
-                                <View style={{
-                                    width: Dimensions.get('window').width < 768 ? '100%' : '10%',
-                                    flexDirection: 'row',
-                                    display: 'flex',
-                                    marginBottom: 10,
-                                    // paddingLeft: 7
-                                    // justifyContent: 'center'
-                                }}>
-                                    <TouchableOpacity
-                                        style={{
-                                            backgroundColor: 'white',
-                                            overflow: 'hidden',
-                                            height: 35,
-                                            marginTop: 35,
-                                            // marginBottom: 20
-                                        }}
-                                        onPress={() => handleCreate()}
-                                        disabled={isSubmitDisabled}
-                                    >
-                                        <Text style={{
-                                            textAlign: 'center',
-                                            lineHeight: 35,
-                                            color: '#202025',
-                                            fontSize: 12,
-                                            backgroundColor: '#f4f4f6',
-                                            paddingHorizontal: 25,
-                                            fontFamily: 'inter',
-                                            height: 35,
-                                            width: 100,
-                                            borderRadius: 15,
-                                            textTransform: 'uppercase'
-                                        }}>
-                                            ADD
-                                        </Text>
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
+                                        <View style={{ marginBottom: 20, borderColor: '#f4f4f6', borderBottomWidth: 1, paddingBottom: 20 }}>
+                                            {channels.length > 0 ?
+                                                <View>
+                                                    <View style={{ width: '100%', paddingBottom: 20, backgroundColor: 'white' }}>
+                                                        <Text style={{ fontSize: 12, color: '#a2a2aa', paddingTop: Dimensions.get('window').width < 768 ? 15 : 5 }}>
+                                                            {/* {PreferredLanguageText('channel')} */}
+                                                            Share with
+                                                            {/* <Ionicons
+                                                name='school-outline' size={20} color={'#a2a2aa'} /> */}
+                                                        </Text>
+                                                    </View>
+                                                    <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white' }}>
+                                                        <View style={{ width: '100%', backgroundColor: 'white', display: 'flex' }}>
+                                                            <ScrollView style={styles.colorBar} horizontal={true} showsHorizontalScrollIndicator={false}>
+                                                                <TouchableOpacity
+                                                                    style={channelId === '' ? styles.allOutline : styles.allBlack}
+                                                                    onPress={() => {
+                                                                        setChannelId('')
+                                                                    }}>
+                                                                    <Text style={{ lineHeight: 20, fontSize: 12, color: channelId === '' ? '#fff' : '#202025' }}>
+                                                                        {PreferredLanguageText('myCues')}
+                                                                    </Text>
+                                                                </TouchableOpacity>
+                                                                {
+                                                                    channels.map((channel) => {
+                                                                        return <TouchableOpacity
+                                                                            key={Math.random()}
+                                                                            style={channelId === channel._id ? styles.allOutline : styles.allBlack}
+                                                                            onPress={() => {
+                                                                                setChannelId(channel._id)
+                                                                            }}>
+                                                                            <Text style={{ lineHeight: 20, fontSize: 12, color: channelId === channel._id ? '#fff' : '#202025' }}>
+                                                                                {channel.name}
+                                                                            </Text>
+                                                                        </TouchableOpacity>
+                                                                    })
+                                                                }
+                                                            </ScrollView>
+                                                        </View>
+                                                    </View>
+                                                </View> : null}
+                                            <View style={{
+                                                width: Dimensions.get('window').width < 768 ? '100%' : '10%',
+                                                flexDirection: 'row',
+                                                display: 'flex',
+                                                marginBottom: 10,
+                                                // paddingLeft: 7
+                                                // justifyContent: 'center'
+                                            }}>
+                                                <TouchableOpacity
+                                                    style={{
+                                                        backgroundColor: 'white',
+                                                        overflow: 'hidden',
+                                                        height: 35,
+                                                        marginTop: 35,
+                                                        // marginBottom: 20
+                                                    }}
+                                                    onPress={() => handleCreate()}
+                                                    disabled={isSubmitDisabled}
+                                                >
+                                                    <Text style={{
+                                                        textAlign: 'center',
+                                                        lineHeight: 35,
+                                                        color: '#202025',
+                                                        fontSize: 12,
+                                                        backgroundColor: '#f4f4f6',
+                                                        paddingHorizontal: 25,
+                                                        fontFamily: 'inter',
+                                                        height: 35,
+                                                        width: 100,
+                                                        borderRadius: 15,
+                                                        textTransform: 'uppercase'
+                                                    }}>
+                                                        ADD
+                                                    </Text>
+                                                </TouchableOpacity>
+                                            </View>
+                                        </View>
+                                    </View>
+                                    : null
+                            }
                             <Calendar
                                 onSelectEvent={(e: any) => {
                                     console.log(e.dateId)

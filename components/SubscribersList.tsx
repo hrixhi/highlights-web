@@ -59,6 +59,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
     const [title, setTitle] = useState('')
     const [loadedChatWithUser, setLoadedChatWithUser] = useState<any>({})
     const [isLoadedUserInactive, setIsLoadedUserInactive] = useState(false)
+    const [user, setUser] = useState<any>({})
 
     // Alerts
     const usersAddedAlert = PreferredLanguageText('usersAdded')
@@ -179,6 +180,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                 const u = await AsyncStorage.getItem('user')
                 if (u) {
                     const user = JSON.parse(u)
+                    setUser(user)
                     if (user._id && props.channelCreatedBy && user._id.toString().trim() === props.channelCreatedBy.toString().trim()) {
                         setIsOwner(true)
                     }
@@ -446,7 +448,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                             }
                         </View>
                         {
-                            isOwner && !props.cueId && !showAddUsers && users.length < 3
+                            isOwner && !props.cueId && !showAddUsers && !showNewGroup && users.length < 3
                                 ? <View style={{ flexDirection: 'row', flex: 1 }}>
                                     <TouchableOpacity
                                         onPress={() => handleSubStatusChange()}
@@ -574,6 +576,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 messages.map((message) => {
                                                     return <View style={{ width: '100%', maxWidth: 500, paddingBottom: 15, backgroundColor: 'white' }} key={Math.random()}>
                                                         <MessageCard
+                                                            user={user}
                                                             message={message} />
                                                     </View>
                                                 })

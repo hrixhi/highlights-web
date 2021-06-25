@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { Text, View } from './Themed';
 import _ from 'lodash'
@@ -13,7 +13,6 @@ const MessageCard: React.FunctionComponent<{ [label: string]: any }> = (props: a
     const [url, setUrl] = useState('')
     const [title, setTitle] = useState('')
     const [type, setType] = useState('')
-
 
     useEffect(() => {
         if (props.message.message[0] === '{' && props.message.message[props.message.message.length - 1] === '}') {
@@ -46,7 +45,7 @@ const MessageCard: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     <Text style={{
                         fontSize: 11,
                         fontWeight: 'bold',
-                        color: '#a2a2aa',
+                        color: props.user.displayName === props.message.displayName ? '#333333' : '#a2a2aa',
                         marginRight: 5,
                         flex: 1,
                         textAlign: 'right'
