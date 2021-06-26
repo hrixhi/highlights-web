@@ -136,7 +136,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         setTimeout(() => {
             setWebviewKey(Math.random())
         }, 3500);
-    }, [showOriginal, imported, submissionImported])
+    }, [props.showOriginal, imported, submissionImported])
     useEffect(() => {
         setLoading(true)
     }, [props.cue])
@@ -761,6 +761,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         return null;
     }
 
+    console.log(props.showOriginal)
+
     return (
         <View style={{
             width: '100%',
@@ -782,6 +784,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 30 }}>
                     {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
                 </Text>
+                
                 {
                     (props.cue.channelId && props.cue.channelId !== '') ?
                         <View style={{
@@ -796,9 +799,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                 flexDirection: 'column'
                                             }}
                                             onPress={() => {
-                                                setShowOriginal(true)
+                                                props.setShowOriginal(true)
                                             }}>
-                                            <Text style={showOriginal ? styles.allGrayFill : styles.all}>
+                                            <Text style={props.showOriginal ? styles.allGrayFill : styles.all}>
                                                 {PreferredLanguageText('viewShared')}
                                             </Text>
                                         </TouchableOpacity>
@@ -810,9 +813,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                         flexDirection: 'column'
                                                     }}
                                                     onPress={() => {
-                                                        setShowOriginal(false)
+                                                        props.setShowOriginal(false)
                                                     }}>
-                                                    <Text style={!showOriginal ? styles.allGrayFill : styles.all}>
+                                                    <Text style={!props.showOriginal ? styles.allGrayFill : styles.all}>
                                                         {
                                                             submission ? PreferredLanguageText('mySubmission') : PreferredLanguageText('myNotes')
                                                         }
@@ -828,9 +831,10 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                     flexDirection: 'column'
                                                 }}
                                                 onPress={() => {
+                                                    props.setShowOriginal(false)
                                                     props.changeViewStatus()
                                                 }}>
-                                                <Text style={!showOriginal ? styles.allGrayFill : styles.all}>
+                                                <Text style={props.viewStatus ? styles.allGrayFill : styles.all}>
                                                     View Status
                                                 </Text>
                                             </TouchableOpacity>
@@ -906,12 +910,12 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 }} onTouchStart={() => Keyboard.dismiss()}>
                     <View style={{ flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row', flex: 1 }}>
                         {
-                            (showOriginal)
+                            (props.showOriginal)
                                 ? <View style={{ height: 28 }} />
                                 : (
-                                    showImportOptions || props.cue.graded || currentDate > deadline ? null :
+                                    showImportOptions || (props.cue.graded && submission)|| (currentDate > deadline && submission) ? null :
                                         <RichToolbar
-                                            key={reloadEditorKey.toString() + showOriginal.toString()}
+                                            key={reloadEditorKey.toString() + props.showOriginal.toString()}
                                             style={{
                                                 flexWrap: 'wrap',
                                                 backgroundColor: 'white',
@@ -963,7 +967,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         }
                     </View>
                     {
-                        !showOriginal && !submissionImported && !props.cue.graded ?
+                        !props.showOriginal && !submissionImported && !props.cue.graded ?
                             <Text style={{
                                 color: '#a2a2aa',
                                 fontSize: 11,
@@ -980,7 +984,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             </Text> : null
                     }
                     {
-                        !showOriginal && props.cue.submission && !submissionImported && !props.cue.graded ?
+                        !props.showOriginal && props.cue.submission && !submissionImported && !props.cue.graded ?
                             <Text style={{
                                 color: '#a2a2aa',
                                 fontSize: 11,
@@ -1056,7 +1060,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     nestedScrollEnabled={true}
                 >
                     {
-                        showOriginal && (imported || isQuiz) ?
+                        props.showOriginal && (imported || isQuiz) ?
                             <View style={{ flexDirection: 'row', marginRight: 0, marginLeft: 0 }}>
                                 <View style={{ width: '40%', alignSelf: 'flex-start' }}>
                                     <TextInput
@@ -1125,7 +1129,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             </View> : null
                     }
                     {
-                        !showOriginal && props.cue.graded && props.cue.comment ?
+                        !props.showOriginal && props.cue.graded && props.cue.comment ?
                             <View>
                                 <Text style={{ color: '#202025', fontSize: 14, paddingBottom: 25, marginLeft: '5%' }}>
                                     {PreferredLanguageText('gradersRemarks')}
@@ -1152,7 +1156,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             : null
                     }
                     {
-                        !showOriginal && submissionImported && !isQuiz ?
+                        !props.showOriginal && submissionImported && !isQuiz ?
                             <View style={{ flexDirection: 'row' }}>
                                 <View style={{ width: '40%', alignSelf: 'flex-start', marginLeft: 0 }}>
                                     <TextInput
@@ -1163,7 +1167,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         placeholderTextColor={'#a2a2aa'}
                                     />
                                 </View>
-                                {props.cue.submittedAt && props.cue.submittedAt !== '' ?<View style={{ marginLeft: 25, marginTop: 20, alignSelf: 'flex-start', display: 'flex', flexDirection: 'row' }}>
+                                {props.cue.submittedAt && props.cue.submittedAt !== '' ? <View style={{ marginLeft: 25, marginTop: 20, alignSelf: 'flex-start', display: 'flex', flexDirection: 'row' }}>
                                     <View style={{ marginRight: 25 }}>
                                         <View style={{ flexDirection: 'row', justifyContent: 'center', flex: 1 }}>
                                             <Ionicons
@@ -1195,7 +1199,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         backgroundColor: 'white'
                     }}
                     >
-                        {!showOriginal ? null
+                        {!props.showOriginal ? null
                             : (
                                 isQuiz ?
                                     (
@@ -1270,7 +1274,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         )
                                         :
                                         <RichEditor
-                                            key={showOriginal.toString() + reloadEditorKey.toString()}
+                                            key={props.showOriginal.toString() + reloadEditorKey.toString()}
                                             disabled={true}
                                             containerStyle={{
                                                 height: height,
@@ -1311,7 +1315,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             allowsBackForwardNavigationGestures={true}
                                         />))
                         }
-                        {showOriginal ? null
+                        {props.showOriginal ? null
                             : (submissionImported ?
                                 (
                                     submissionType === 'mp4' || submissionType === 'mp3' || submissionType === 'mov' || submissionType === 'mpeg' || submissionType === 'mp2' || submissionType === 'wav' ?
@@ -1329,7 +1333,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 )
                                 :
                                 <RichEditor
-                                    key={showOriginal.toString() + reloadEditorKey.toString()}
+                                    key={props.showOriginal.toString() + reloadEditorKey.toString()}
                                     containerStyle={{
                                         height: height,
                                         backgroundColor: '#f4f4f6',
@@ -1338,7 +1342,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         paddingBottom: 10,
                                         borderRadius: 15,
                                     }}
-                                    disabled={props.cue.graded || currentDate > deadline}
+                                    disabled={(props.cue.graded && submission) || (currentDate > deadline && submission)}
                                     ref={RichText}
                                     style={{
                                         width: '100%',

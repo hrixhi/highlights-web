@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState, Fragment } from 'react';
-import { Animated, ActivityIndicator, Dimensions } from 'react-native';
+import { Animated, ActivityIndicator, Dimensions, StyleSheet } from 'react-native';
 import Alert from '../components/Alert'
 import { View, TouchableOpacity, Text } from '../components/Themed';
 import Swiper from 'react-native-web-swiper'
@@ -26,11 +26,28 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const scroll3: any = useRef()
     const [channelOwner, setChannelOwner] = useState(false)
     const [viewStatus, setViewStatus] = useState(false);
+    const [isOwner, setIsOwner] = useState(false)
+    const [submission, setSubmission] = useState(props.cue.submission ? props.cue.submission : false)
+    const [showOriginal, setShowOriginal] = useState(props.cue.channelId && props.cue.channelId !== '' ? true : false)
+
 
     const unableToLoadStatusesAlert = PreferredLanguageText('unableToLoadStatuses');
     const checkConnectionAlert = PreferredLanguageText('checkConnection');
     const unableToLoadCommentsAlert = PreferredLanguageText('unableToLoadComments')
 
+    useEffect(() => {
+        (
+            async () => {
+                const u = await AsyncStorage.getItem('user')
+                if (u && props.cue.createdBy) {
+                    const parsedUser = JSON.parse(u)
+                    if (parsedUser._id.toString().trim() === props.cue.createdBy.toString().trim()) {
+                        setIsOwner(true)
+                    }
+                }
+            }
+        )()
+    }, [props.cue])
 
     const loadThreadsAndStatuses = useCallback(async () => {
         const u = await AsyncStorage.getItem('user')
@@ -153,6 +170,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         loadThreadsAndStatuses()
     }, [props.cueId, props.channelId])
 
+    // console.log(showOriginal)
+
     const windowHeight = Dimensions.get('window').width < 1024 ? Dimensions.get('window').height - 30 : Dimensions.get('window').height;
     return (
         <View style={{
@@ -217,7 +236,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 contentContainerStyle={{
                                     borderTopRightRadius: 0,
                                     borderTopLeftRadius: 0,
-                                    minHeight: windowHeight
+                                    minHeight: windowHeight - 55
                                 }}
                             >
                                 <UpdateControls
@@ -237,6 +256,9 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     }}
                                     reloadCueListAfterUpdate={() => props.reloadCueListAfterUpdate()}
                                     changeViewStatus={() => setViewStatus(true)}
+                                    viewStatus={viewStatus}
+                                    showOriginal={showOriginal}
+                                    setShowOriginal={(val: boolean) => setShowOriginal(val)}
                                 />
                                 {
                                     !Number.isNaN(Number(cueId))
@@ -275,6 +297,59 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 }
                             </ScrollView>
                             : <Fragment>
+                                <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 30, backgroundColor: 'white' }}>
+                                    {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
+                                </Text>
+
+                                <View style={{ flexDirection: 'row', paddingLeft: 20 }}>
+                                        <TouchableOpacity
+                                            style={{
+                                                justifyContent: 'center',
+                                                flexDirection: 'column'
+                                            }}
+                                            onPress={() => {
+                                                setViewStatus(false)
+                                                setShowOriginal(true)
+                                            }}>
+                                            <Text style={showOriginal ? styles.allGrayFill : styles.all}>
+                                                {PreferredLanguageText('viewShared')}
+                                            </Text>
+                                        </TouchableOpacity>
+                                        {
+                                            isOwner && submission ? null :
+                                                <TouchableOpacity
+                                                    style={{
+                                                        justifyContent: 'center',
+                                                        flexDirection: 'column'
+                                                    }}
+                                                    onPress={() => {
+                                                        setViewStatus(false)
+                                                        setShowOriginal(false)
+                                                    }}>
+                                                    <Text style={!showOriginal ? styles.allGrayFill : styles.all}>
+                                                        {
+                                                            submission ? PreferredLanguageText('mySubmission') : PreferredLanguageText('myNotes')
+                                                        }
+                                                    </Text>
+                                                </TouchableOpacity>
+                                        }
+                                        {/* Add Status button here */}
+                                        {
+                                            !isOwner ? null :
+                                            <TouchableOpacity
+                                                style={{
+                                                    justifyContent: 'center',
+                                                    flexDirection: 'column'
+                                                }}
+                                                onPress={() => {
+                                                    setViewStatus(true)
+                                                }}>
+                                                <Text style={viewStatus ? styles.allGrayFill : styles.all}>
+                                                    View Status
+                                                </Text>
+                                            </TouchableOpacity>
+                                        }
+                                    </View>
                             {
                                 channelOwner ?
                                 <View 
@@ -285,9 +360,9 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         paddingHorizontal: 20,
                                         borderTopRightRadius: 0,
                                         borderTopLeftRadius: 0,
-                                        paddingTop: 30
+                                        // paddingTop: 30
                                     }}>  
-                                    <View style={{ backgroundColor: 'white', flexDirection: 'row', paddingBottom: 25 }}>
+                                    {/* <View style={{ backgroundColor: 'white', flexDirection: 'row', paddingBottom: 25 }}>
                                     <TouchableOpacity
                                         key={Math.random()}
                                         style={{
@@ -305,7 +380,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 <Ionicons name='chevron-back-outline' size={17} color={'#202025'} style={{ marginRight: 10 }} /> Cue
                                             </Text>
                                     </TouchableOpacity>
-                                </View>
+                                    </View> */}
                                     <ScrollView
                                         ref={scroll3}
                                         contentContainerStyle={{
@@ -351,3 +426,22 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 }
 
 export default Update
+
+const styles: any = StyleSheet.create({
+    all: {
+        fontSize: 12,
+        color: '#a2a2aa',
+        height: 22,
+        paddingHorizontal: 10,
+        backgroundColor: 'white',
+        lineHeight: 20
+    },
+    allGrayFill: {
+        fontSize: 12,
+        color: '#fff',
+        paddingHorizontal: 10,
+        borderRadius: 10,
+        backgroundColor: '#a2a2aa',
+        lineHeight: 20
+    },
+})
