@@ -19,7 +19,7 @@ import { defaultCues, defaultRandomShuffleFrequency, defaultSleepInfo } from '..
 import Walkthrough from '../components/Walkthrough';
 import Channels from '../components/Channels';
 import { fetchAPI } from '../graphql/FetchAPI';
-import { createUser, getSubscriptions, getCues, unsubscribe, saveConfigToCloud, saveCuesToCloud, login, getCuesFromCloud, findUserById, resetPassword, totalUnreadDiscussionThreads, totalUnreadMessages, } from '../graphql/QueriesAndMutations';
+import { createUser, getSubscriptions, getCues, unsubscribe, saveConfigToCloud, saveCuesToCloud, login, getCuesFromCloud, findUserById, resetPassword, totalUnreadDiscussionThreads, totalUnreadMessages, getMeetingStatus } from '../graphql/QueriesAndMutations';
 import Discussion from '../components/Discussion';
 import Subscribers from '../components/Subscribers';
 import Profile from '../components/Profile';
@@ -71,6 +71,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   // Notifications count for Top Bar
   const [unreadDiscussionThreads, setUnreadDiscussionThreads] = useState(0)
   const [unreadMessages, setUnreadMessages] = useState(0)
+  const [meetingOn, setMeetingOn] = useState(false)
 
   // Login Validation
   const [emailValidError, setEmailValidError] = useState("");
@@ -189,7 +190,19 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 setUnreadMessages(res.data.messageStatus.totalUnreadMessages)
               }
             })
-              .catch(err => console.log(err))
+            server.query({
+              query: getMeetingStatus,
+              variables: {
+                  channelId
+              }
+            }).then(res => {
+                if (res.data && res.data.channel && res.data.channel.getMeetingStatus) {
+                    setMeetingOn(true)
+                } else {
+                    setMeetingOn(false)
+                }
+            })
+            .catch(err => console.log(err))
           }
         }
       )()
@@ -219,6 +232,26 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     }
 
   }, [channelId])
+
+  const refreshMeetingStatus = useCallback(async () => {
+    if (channelId !== '') {
+      const server = fetchAPI('')
+      server.query({
+        query: getMeetingStatus,
+        variables: {
+            channelId
+        }
+      }).then(res => {
+          if (res.data && res.data.channel && res.data.channel.getMeetingStatus) {
+              setMeetingOn(true)
+          } else {
+              setMeetingOn(false)
+          }
+      })
+    }
+
+  }, [channelId])
+
 
   const updateDiscussionNotidCounts = useCallback((userId) => {
     const server = fetchAPI('')
@@ -1125,6 +1158,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     channelId={channelId}
                                     channelName={filterChoice}
                                     channelCreatedBy={channelCreatedBy}
+                                    refreshMeetingStatus={refreshMeetingStatus}
                                   />
                                     : null
                                 )
@@ -1375,7 +1409,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         borderRightWidth: 1,
       }}>
         <TopBar
-          key={JSON.stringify(channelFilterChoice) + JSON.stringify(filteredCues) + JSON.stringify(modalType) + JSON.stringify(filterChoice) + JSON.stringify(unreadDiscussionThreads) + JSON.stringify(unreadMessages)}
+          key={JSON.stringify(channelFilterChoice) + JSON.stringify(filteredCues) + JSON.stringify(modalType) + JSON.stringify(filterChoice) + JSON.stringify(unreadDiscussionThreads) + JSON.stringify(unreadMessages) + JSON.stringify(meetingOn)}
           openChannels={() => openModal('Channels')}
           cues={filteredCues}
           filterChoice={filterChoice}
@@ -1394,6 +1428,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           openMeeting={() => openModal('Meeting')}
           unreadDiscussionThreads={unreadDiscussionThreads}
           unreadMessages={unreadMessages}
+          meetingOn={meetingOn}
         />
         {
           reLoading ? <View style={[styles.activityContainer, styles.horizontal]}>

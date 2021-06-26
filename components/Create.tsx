@@ -71,6 +71,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     })
     const [equation, setEquation] = useState('y = x + 1')
     const [showEquationEditor, setShowEquationEditor] = useState(false)
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const window = Dimensions.get("window");
     const screen = Dimensions.get("screen");
@@ -359,18 +360,25 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
     const handleCreate = useCallback(async (quizId?: string) => {
 
+        setIsSubmitting(true)
+
+        if (isSubmitting) return;
+
         if (!quizId && (cue === null || cue.toString().trim() === '')) {
             Alert(enterContentAlert)
+            setIsSubmitting(false)
             return
         }
 
         if ((imported || isQuiz) && title === '') {
             Alert(enterTitleAlert)
+            setIsSubmitting(false)
             return
         }
 
         if (submission && deadline < new Date()) {
             Alert("Submission deadline must be in future")
+            setIsSubmitting(false)
             return
         }
 
@@ -431,6 +439,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             const stringifiedCues = JSON.stringify(subCues)
             await AsyncStorage.setItem('cues', stringifiedCues)
             storeDraft('cueDraft', '')
+            setIsSubmitting(false)
             props.closeModal()
         } else {
             // CHANNEL CUE
@@ -481,14 +490,17 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             useNativeDriver: true
                         }).start(() => {
                             storeDraft('cueDraft', '')
+                            setIsSubmitting(false)
                             props.closeModal()
                         })
                     }
                 })
                 .catch(err => {
+                    setIsSubmitting(false)
                     Alert(somethingWentWrongAlert, checkConnectionAlert)
                 })
         }
+        setIsSubmitting(false)
 
     }, [cue, modalAnimation, customCategory, props.saveDataInCloud, isQuiz, timer, duration,
         gradeWeight, deadline, submission, imported, selected, subscribers,
@@ -1446,8 +1458,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             height: 35,
                                             textTransform: 'uppercase'
                                         }}>
-                                            {PreferredLanguageText('save')}
-                                            {/* TO  <Ionicons name='home-outline' size={14} /> */}
+                                            {isSubmitting ? PreferredLanguageText('sharing') : PreferredLanguageText('save')}
                                         </Text> :
                                         <Text style={{
                                             textAlign: 'center',
@@ -1462,7 +1473,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             height: 35,
                                             textTransform: 'uppercase'
                                         }}>
-                                            {PreferredLanguageText('share')}
+                                            {isSubmitting ? PreferredLanguageText('sharing') : PreferredLanguageText('share')}
                                         </Text>
                                 }
                             </TouchableOpacity>

@@ -197,6 +197,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
         }).then(res => {
             if (res.data && res.data.channel && res.data.channel.editMeeting) {
                 loadMeetingStatus()
+                props.refreshMeetingStatus()
             }
         }).catch(e => console.log(e))
     }, [meetingOn, props.channelId])

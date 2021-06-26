@@ -146,9 +146,10 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         style={{ marginRight: 15 }}
                                         onPress={() => props.openMeeting()}>
                                         <Text style={styles.channelText}>
-                                            <Ionicons name='videocam-outline' size={21} color={'#a2a2aa'} />
+                                            <Ionicons 
+                                            name='videocam-outline' size={21} color={'#a2a2aa'} />
                                             {
-                                                meetingOn ?
+                                                props.meetingOn ?
                                                     <View style={styles.badge} /> : null
                                             }
                                         </Text>

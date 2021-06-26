@@ -133,6 +133,7 @@ const EnglishBank: { [key: string]: string } = {
     noContent: 'No Content',
     existingUsers: 'Existing Users',
     noExistingUsers: 'No Existing Users',
+    sharing: 'Sharing...',
 
     // Alerts
     savedLocally: 'Your changes will be saved locally but not in the cloud.',
@@ -325,6 +326,7 @@ const HindiBank: { [key: string]: string } = {
     noContent: 'कोई सामग्री नहीं है',
     existingUsers: 'मौजूदा उपयोगकर्ता',
     noExistingUsers: 'कोई मौजूदा उपयोगकर्ता नहीं',
+    sharing: 'Sharing',
 
     savedLocally: 'आपके परिवर्तन स्थानीय रूप से सहेजे जाएंगे लेकिन क्लाउड में नहीं।',
     quizzesCanOnly: 'क्विज़ को केवल आपके द्वारा बनाए गए चैनलों के साथ साझा किया जा सकता है। क्विज़ को साझा करने के लिए नीचे दिए विकल्पों में से एक चैनल चुनें और फिर पुनः प्रयास करें।',
@@ -515,6 +517,7 @@ const GujaratiBank: { [key: string]: string } = {
     noContent: 'કોઈ સામગ્રી નથી',
     existingUsers: 'હાલના વપરાશકર્તાઓ',
     noExistingUsers: 'કોઈ વર્તમાન વપરાશકર્તાઓ નથી',
+    sharing: 'Sharing...',
 
     savedLocally: 'તમારા ફેરફારો ઇન્ટરને નહીં પરંતુ સ્થાનિક રૂપે સાચવવામાં આવશે.',
     quizzesCanOnly: 'ક્વિઝ ફક્ત તમારા દ્વારા બનાવેલ ચેનલો સાથે જ શેર કરી શકાય છે. ક્વિઝને શેર કરવા માટે નીચેના વિકલ્પોમાંથી ચેનલ પસંદ કરો અને પછી ફરીથી પ્રયાસ કરો.',
@@ -594,7 +597,6 @@ export const LanguageProvider: React.FC<React.ReactNode> = ({ children }) => {
 
     const retrieveSavedLang = async () => {
         const storedLang: string = await AsyncStorage.getItem('preferred_lang') || "en";
-        console.log(storedLang);
         setLanguage(storedLang);
         return;
     };
@@ -647,7 +649,7 @@ export function LanguageSelect() {
                 display: "flex",
                 backgroundColor: 'white',
                 width: "100%",
-                justifyContent: 'center'
+                justifyContent: ''
             }}>
                 {showLanguageDropdown ? <DefaultView style={styles.languageSelectContainer}>
                     <Picker
@@ -674,7 +676,7 @@ export function LanguageSelect() {
                 </DefaultView>
                     :
                     (
-                        <DefaultView style={{ width: '100%', flexDirection: 'row', justifyContent: 'center', backgroundColor: 'white' }}>
+                        <DefaultView style={{ width: '100%', flexDirection: 'row', justifyContent: '', backgroundColor: 'white' }}>
                             <Ionicons name='language-outline' size={30} color={color} style={{ marginRight: 5 }} onPress={() => setShowLanguageDropdown(true)} />
                         </DefaultView>
                     )}
@@ -691,7 +693,7 @@ const styles = StyleSheet.create({
     languageSelectContainer: {
         width: "140px",
         display: "flex",
-        justifyContent: "center",
+        // justifyContent: "center",
         alignContent: 'center',
         flexDirection: "row",
     },

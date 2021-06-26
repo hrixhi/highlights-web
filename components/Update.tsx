@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState, Fragment } from 'react';
 import { Animated, ActivityIndicator, Dimensions } from 'react-native';
 import Alert from '../components/Alert'
-import { View } from '../components/Themed';
+import { View, TouchableOpacity, Text } from '../components/Themed';
 import Swiper from 'react-native-web-swiper'
 import UpdateControls from './UpdateControls';
 import { ScrollView } from 'react-native-gesture-handler'
@@ -11,6 +11,7 @@ import ThreadsList from './ThreadsList';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SubscribersList from './SubscribersList';
 import { PreferredLanguageText } from '../helpers/LanguageContext';
+import { Ionicons } from '@expo/vector-icons';
 
 const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -24,6 +25,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const scroll2: any = useRef()
     const scroll3: any = useRef()
     const [channelOwner, setChannelOwner] = useState(false)
+    const [viewStatus, setViewStatus] = useState(false);
 
     const unableToLoadStatusesAlert = PreferredLanguageText('unableToLoadStatuses');
     const checkConnectionAlert = PreferredLanguageText('checkConnection');
@@ -184,7 +186,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     }}
                         key={JSON.stringify(threads)}
                     >
-                        <Swiper
+                        {/* <Swiper
                             containerStyle={{
                                 borderTopRightRadius: 0,
                                 borderTopLeftRadius: 0
@@ -203,8 +205,9 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 prevTitleStyle: { color: '#a2a2aa', fontSize: 60, fontFamily: 'overpass' },
                                 dotActiveStyle: { backgroundColor: !Number.isNaN(Number(cueId)) || (props.channelId && !channelOwner) || (!props.channelId || props.channelId === '') ? '#fff' : '#3B64F8' }
                             }}
-                        >
-                            <ScrollView
+                        > */}
+                            
+                           { !viewStatus ? <ScrollView
                                 nestedScrollEnabled={true}
                                 horizontal={false}
                                 style={{
@@ -233,6 +236,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         }).start(() => props.closeModal())
                                     }}
                                     reloadCueListAfterUpdate={() => props.reloadCueListAfterUpdate()}
+                                    changeViewStatus={() => setViewStatus(true)}
                                 />
                                 {
                                     !Number.isNaN(Number(cueId))
@@ -270,8 +274,38 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         </ScrollView>
                                 }
                             </ScrollView>
+                            : <Fragment>
                             {
                                 channelOwner ?
+                                <View 
+                                    style={{
+                                        backgroundColor: 'white',
+                                        width: '100%',
+                                        height: '100%',
+                                        paddingHorizontal: 20,
+                                        borderTopRightRadius: 0,
+                                        borderTopLeftRadius: 0,
+                                        paddingTop: 30
+                                    }}>  
+                                    <View style={{ backgroundColor: 'white', flexDirection: 'row', paddingBottom: 25 }}>
+                                    <TouchableOpacity
+                                        key={Math.random()}
+                                        style={{
+                                            flex: 1,
+                                            backgroundColor: 'white'
+                                        }}
+                                        onPress={() => {
+                                            setViewStatus(false)   
+                                        }}>
+                                            <Text style={{
+                                                width: '100%',
+                                                fontSize: 16,
+                                                color: '#a2a2aa'
+                                            }}>
+                                                <Ionicons name='chevron-back-outline' size={17} color={'#202025'} style={{ marginRight: 10 }} /> Cue
+                                            </Text>
+                                    </TouchableOpacity>
+                                </View>
                                     <ScrollView
                                         ref={scroll3}
                                         contentContainerStyle={{
@@ -303,9 +337,13 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             reload={() => loadThreadsAndStatuses()}
                                             cue={props.cue}
                                         />
-                                    </ScrollView> : null
+                                    </ScrollView> 
+                                    </View>  
+                                    : null
                             }
-                        </Swiper>
+                            </Fragment>}
+
+                        {/* </Swiper> */}
                     </Animated.View>
             }
         </View >

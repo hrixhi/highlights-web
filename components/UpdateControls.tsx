@@ -114,6 +114,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         return Math.abs(Math.round(diff));
     }
 
+    console.log("")
+
     // Alerts
     const unableToStartQuizAlert = PreferredLanguageText('unableToStartQuiz')
     const deadlineHasPassedAlert = PreferredLanguageText('deadlineHasPassed')
@@ -418,9 +420,14 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             saveCue = cue
         }
         const submittedNow = new Date()
+
+        console.log(props.cue.submittedAt)
+        
+        console.log(props.cue.cue)
+
         subCues[props.cueKey][props.cueIndex] = {
             _id: props.cue._id,
-            cue: saveCue,
+            cue: props.cue.submittedAt ? props.cue.cue : saveCue ,
             date: props.cue.date,
             color,
             shuffle,
@@ -452,125 +459,148 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
     const handleDelete = useCallback(async () => {
 
-        const server = fetchAPI('')
-        if (props.cue.channelId && isOwner) {
-            server.mutate({
-                mutation: deleteForEveryone,
-                variables: {
-                    cueId: props.cue._id
+        Alert("Delete cue?", "", [
+            {
+                text: "Cancel", style: "cancel", onPress: () => { return; }
+            },
+            {
+                text: "Okay", onPress: async () => {
+                    const server = fetchAPI('')
+                    if (props.cue.channelId && isOwner) {
+                        server.mutate({
+                            mutation: deleteForEveryone,
+                            variables: {
+                                cueId: props.cue._id
+                            }
+                        }).then(res => {
+                            if (res.data.cue.deleteForEveryone) {
+                                Alert(cueDeletedAlert);
+                            }
+                        })
+                    }
+            
+                    if (!props.cue.channelId) {
+                        server.mutate({
+                            mutation: deleteCue,
+                            variables: {
+                                cueId: props.cue._id
+                            }
+                        })
+                    }
+            
+                    let subCues: any = {}
+                    try {
+                        const value = await AsyncStorage.getItem('cues')
+                        if (value) {
+                            subCues = JSON.parse(value)
+                        }
+                    } catch (e) {
+                    }
+                    if (subCues[props.cueKey].length === 0) {
+                        return
+                    }
+                    const updatedCues: any[] = []
+                    subCues[props.cueKey].map((i: any, j: any) => {
+                        if (j !== props.cueIndex) {
+                            updatedCues.push({ ...i })
+                        }
+                    })
+                    subCues[props.cueKey] = updatedCues
+                    const stringifiedCues = JSON.stringify(subCues)
+                    await AsyncStorage.setItem('cues', stringifiedCues)
+                    props.closeModal()
                 }
-            }).then(res => {
-                if (res.data.cue.deleteForEveryone) {
-                    Alert(cueDeletedAlert);
-                }
-            })
-        }
-
-        if (!props.cue.channelId) {
-            server.mutate({
-                mutation: deleteCue,
-                variables: {
-                    cueId: props.cue._id
-                }
-            })
-        }
-
-        let subCues: any = {}
-        try {
-            const value = await AsyncStorage.getItem('cues')
-            if (value) {
-                subCues = JSON.parse(value)
             }
-        } catch (e) {
-        }
-        if (subCues[props.cueKey].length === 0) {
-            return
-        }
-        const updatedCues: any[] = []
-        subCues[props.cueKey].map((i: any, j: any) => {
-            if (j !== props.cueIndex) {
-                updatedCues.push({ ...i })
-            }
-        })
-        subCues[props.cueKey] = updatedCues
-        const stringifiedCues = JSON.stringify(subCues)
-        await AsyncStorage.setItem('cues', stringifiedCues)
-        props.closeModal()
+        ])
+
+        
     }, [props.cueIndex, props.closeModal, props.cueKey, props.cue, isOwner])
 
     const handleSubmit = useCallback(async () => {
-        const u: any = await AsyncStorage.getItem('user')
-        let now = new Date()
-        // one minute of extra time to submit 
-        now.setMinutes(now.getMinutes() - 1)
-        if (isQuiz) {
-            if (now >= deadline) {
-                Alert(submissionFailedAlert, ifYouStartTimedQuizAlert)
-                return;
-            }
-            // over here check that all options have been selected
-            // TO DO
-        } else {
-            if (now >= deadline) {
-                Alert(submissionFailedAlert, deadlineHasPassedAlert)
-                return;
-            }
-        }
-        if (u) {
-            const parsedUser = JSON.parse(u)
-            if (!parsedUser.email || parsedUser.email === '') {
-                // cannot submit
-                return
-            }
-            let saveCue = ''
-            if (isQuiz) {
-                saveCue = JSON.stringify({
-                    solutions,
-                    initiatedAt
-                })
-            } else if (submissionImported) {
-                const obj = {
-                    type: submissionType,
-                    url: submissionUrl,
-                    title: submissionTitle
-                }
-                saveCue = JSON.stringify(obj)
-            } else {
-                if (cue === '') {
-                    // submission cannot be empty
-                    return;
-                }
-                saveCue = cue
-            }
+        
 
-            const server = fetchAPI('')
-            server.mutate({
-                mutation: submit,
-                variables: {
-                    cue: saveCue,
-                    cueId: props.cue._id,
-                    userId: parsedUser._id,
-                    quizId: isQuiz ? quizId : null
-                }
-            }).then(res => {
-                if (res.data.cue.submitModification) {
-                    Alert(
-                        submissionCompleteAlert,
-                        (new Date()).toString(),
-                        [
-                            {
-                                text: "Cancel", style: "cancel"
-                            },
-                            {
-                                text: "Okay", onPress: () => window.location.reload()
+        Alert("Submit?", "", [
+            {
+                text: "Cancel", style: "cancel", onPress: () => { return; }
+            },
+            {
+                text: "Okay", onPress: async () => {
+                    const u: any = await AsyncStorage.getItem('user')
+                    let now = new Date()
+                    // one minute of extra time to submit 
+                    now.setMinutes(now.getMinutes() - 1)
+                    if (isQuiz) {
+                        if (now >= deadline) {
+                            Alert(submissionFailedAlert, ifYouStartTimedQuizAlert)
+                            return;
+                        }
+                        // over here check that all options have been selected
+                        // TO DO
+                    } else {
+                        if (now >= deadline) {
+                            Alert(submissionFailedAlert, deadlineHasPassedAlert)
+                            return;
+                        }
+                    }
+                    if (u) {
+                        const parsedUser = JSON.parse(u)
+                        if (!parsedUser.email || parsedUser.email === '') {
+                            // cannot submit
+                            return
+                        }
+                        let saveCue = ''
+                        if (isQuiz) {
+                            saveCue = JSON.stringify({
+                                solutions,
+                                initiatedAt
+                            })
+                        } else if (submissionImported) {
+                            const obj = {
+                                type: submissionType,
+                                url: submissionUrl,
+                                title: submissionTitle
                             }
-                        ]
-                    );
+                            saveCue = JSON.stringify(obj)
+                        } else {
+                            if (cue === '') {
+                                // submission cannot be empty
+                                return;
+                            }
+                            saveCue = cue
+                        }
+
+                        const server = fetchAPI('')
+                        server.mutate({
+                            mutation: submit,
+                            variables: {
+                                cue: saveCue,
+                                cueId: props.cue._id,
+                                userId: parsedUser._id,
+                                quizId: isQuiz ? quizId : null
+                            }
+                        }).then(res => {
+                            if (res.data.cue.submitModification) {
+                                Alert(
+                                    submissionCompleteAlert,
+                                    (new Date()).toString(),
+                                    [
+                                        {
+                                            text: "Cancel", style: "cancel"
+                                        },
+                                        {
+                                            text: "Okay", onPress: () => window.location.reload()
+                                        }
+                                    ]
+                                );
+                            }
+                        }).catch(err => {
+                            Alert(somethingWentWrongAlert, tryAgainLaterAlert)
+                        })
+                    }
                 }
-            }).catch(err => {
-                Alert(somethingWentWrongAlert, tryAgainLaterAlert)
-            })
-        }
+            }
+        ])
+        
     }, [props.cue, cue, submissionTitle, submissionType, submissionUrl, submissionImported, isQuiz, quizId, initiatedAt, solutions, deadline])
 
     useEffect(() => {
@@ -789,6 +819,22 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                     </Text>
                                                 </TouchableOpacity>
                                         }
+                                        {/* Add Status button here */}
+                                        {
+                                            !isOwner ? null :
+                                            <TouchableOpacity
+                                                style={{
+                                                    justifyContent: 'center',
+                                                    flexDirection: 'column'
+                                                }}
+                                                onPress={() => {
+                                                    props.changeViewStatus()
+                                                }}>
+                                                <Text style={!showOriginal ? styles.allGrayFill : styles.all}>
+                                                    View Status
+                                                </Text>
+                                            </TouchableOpacity>
+                                        }
                                     </View>
                             }
                             {
@@ -863,7 +909,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             (showOriginal)
                                 ? <View style={{ height: 28 }} />
                                 : (
-                                    showImportOptions || (props.cue.submittedAt && props.cue.submittedAt !== '') || submitted ? null :
+                                    showImportOptions || props.cue.graded || currentDate > deadline ? null :
                                         <RichToolbar
                                             key={reloadEditorKey.toString() + showOriginal.toString()}
                                             style={{
@@ -1023,7 +1069,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     />
                                 </View>
                                 {
-                                    isQuiz ?
+                                    isQuiz && !props.cue.graded ?
                                         (
                                             isQuizTimed && (!props.cue.submittedAt || props.cue.submittedAt !== '') ? (
                                                 initiatedAt && initDuration !== 0 ?
@@ -1050,7 +1096,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             ) : null
                                         )
                                         :
-                                        (imported && (type === 'mp4' || type === 'mp3' || type === 'mov' || type === 'mpeg' || type === 'mp2' || type === 'wav')
+                                        ((imported && (type === 'mp4' || type === 'mp3' || type === 'mov' || type === 'mpeg' || type === 'mp2' || type === 'wav')) || props.cue.graded
                                             ? null :
                                             <View style={{ marginLeft: 25, marginTop: 20, alignSelf: 'flex-start', display: 'flex', flexDirection: 'row' }}>
                                                 <View style={{ marginRight: 25 }}>
@@ -1117,17 +1163,29 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         placeholderTextColor={'#a2a2aa'}
                                     />
                                 </View>
-                                {props.cue.submittedAt && props.cue.submittedAt !== '' ?
-                                    <View style={{ width: 175, marginLeft: 25, marginTop: 5, alignSelf: 'flex-start' }}>
-                                        <a download={true} href={submissionUrl} style={{ textDecoration: 'none', textAlign: 'center' }}>
-                                            <View>
-                                                <Ionicons name='cloud-download-outline' color='#a2a2aa' size={20} />
-                                                <Text style={{ fontSize: 9, color: '#a2a2aa', textAlign: 'center' }}>
-                                                    Download
-                                                </Text>
-                                            </View>
-                                        </a>
-                                    </View> : null
+                                {props.cue.submittedAt && props.cue.submittedAt !== '' ?<View style={{ marginLeft: 25, marginTop: 20, alignSelf: 'flex-start', display: 'flex', flexDirection: 'row' }}>
+                                    <View style={{ marginRight: 25 }}>
+                                        <View style={{ flexDirection: 'row', justifyContent: 'center', flex: 1 }}>
+                                            <Ionicons
+                                                name="reload-outline"
+                                                color="#a2a2aa"
+                                                size={20}
+                                                onPress={() => setWebviewKey(Math.random())}
+                                            />
+                                        </View>
+                                        <Text style={{ fontSize: 9, color: '#a2a2aa', textAlign: 'center' }}>
+                                            Reload
+                                        </Text>
+                                    </View>
+                                    <a download={true} href={submissionUrl} style={{ textDecoration: 'none', textAlign: 'center' }}>
+                                        <View>
+                                            <Ionicons name='cloud-download-outline' color='#a2a2aa' size={20} />
+                                            <Text style={{ fontSize: 9, color: '#a2a2aa', textAlign: 'center' }}>
+                                                Download
+                                            </Text>
+                                        </View>
+                                    </a>
+                                </View> : null
                                 }
                             </View> : null
                     }
@@ -1280,7 +1338,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         paddingBottom: 10,
                                         borderRadius: 15,
                                     }}
-                                    disabled={props.cue.submittedAt && props.cue.submittedAt !== ''}
+                                    disabled={props.cue.graded || currentDate > deadline}
                                     ref={RichText}
                                     style={{
                                         width: '100%',
@@ -1667,7 +1725,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             <ScrollView style={{ ...styles.colorBar, height: 20 }} horizontal={true} showsHorizontalScrollIndicator={false}>
                                                 {
                                                     colorChoices.map((c: string, i: number) => {
-                                                        return <View style={color === i ? styles.colorContainerOutline : styles.colorContainer} key={Math.random()}>
+                                                        return <View style={color == i ? styles.colorContainerOutline : styles.colorContainer} key={Math.random()}>
                                                             <TouchableOpacity
                                                                 style={{
                                                                     width: 12,
