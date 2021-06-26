@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { StyleSheet, ScrollView, TextInput, Dimensions, Button } from 'react-native';
+import { StyleSheet, ScrollView, TextInput, Dimensions, Button, Switch } from 'react-native';
 import { View, Text, TouchableOpacity } from './Themed';
 import _ from 'lodash'
 import { Ionicons } from '@expo/vector-icons';
@@ -8,7 +8,7 @@ import {
     RichEditor
 } from "react-native-pell-rich-editor";
 import { fetchAPI } from '../graphql/FetchAPI';
-import { findUserById, getMessages, inviteByEmail, isSubInactive, makeSubActive, makeSubInactive, markMessagesAsRead, submitGrade, unsubscribe } from '../graphql/QueriesAndMutations';
+import { editPersonalMeeting, findUserById, getMessages, getPersonalMeetingLink, getPersonalMeetingLinkStatus, inviteByEmail, isSubInactive, makeSubActive, makeSubInactive, markMessagesAsRead, submitGrade, unsubscribe } from '../graphql/QueriesAndMutations';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Alert from './Alert';
 import NewMessage from './NewMessage';
@@ -19,6 +19,7 @@ import WebView from 'react-native-webview';
 import { PreferredLanguageText } from '../helpers/LanguageContext';
 import ReactPlayer from 'react-player'
 import moment from "moment"
+import alert from './Alert';
 
 
 const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
@@ -60,6 +61,8 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
     const [loadedChatWithUser, setLoadedChatWithUser] = useState<any>({})
     const [isLoadedUserInactive, setIsLoadedUserInactive] = useState(false)
     const [user, setUser] = useState<any>({})
+    const [meetingOn, setMeetingOn] = useState(false)
+    const [meetingLink, setMeetingLink] = useState('')
 
     // Alerts
     const usersAddedAlert = PreferredLanguageText('usersAdded')
@@ -189,6 +192,72 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
         )()
     }, [props.channelCreatedBy])
 
+    useEffect(() => {
+        // get meeting status & set the meeting link accordingly
+        if (users && users.length > 0) {
+            const server = fetchAPI('')
+            server.query({
+                query: getPersonalMeetingLinkStatus,
+                variables: {
+                    users
+                }
+            }).then((res: any) => {
+                if (res.data && res.data.channel.getPersonalMeetingLinkStatus) {
+                    setMeetingOn(true)
+                    getMeetingLink()
+                }
+            })
+        }
+    }, [users])
+
+    const getMeetingLink = useCallback(() => {
+        const server = fetchAPI('')
+        server.query({
+            query: getPersonalMeetingLink,
+            variables: {
+                userId: user._id,
+                users: users
+            }
+        }).then((res: any) => {
+            if (res.data && res.data.channel.getPersonalMeetingLink && res.data.channel.getPersonalMeetingLink !== 'error') {
+                setMeetingLink(res.data.channel.getPersonalMeetingLink)
+            }
+        }).catch(err => {
+            console.log(err)
+            alert('Something went wrong')
+        })
+    }, [users, user])
+
+    const updateMeetingStatus = useCallback(() => {
+        const server = fetchAPI('')
+        server.mutate({
+            mutation: editPersonalMeeting,
+            variables: {
+                users,
+                channelId: props.channelId,
+                meetingOn: !meetingOn
+            }
+        }).then((res: any) => {
+            if (res.data && res.data.channel.editPersonalMeeting) {
+                if (!meetingOn) {
+                    // meeting turned on
+                    getMeetingLink()
+                }
+                setMeetingOn(!meetingOn)
+            } else {
+                console.log(res)
+                alert('Something went wrong')
+            }
+        }).catch(err => {
+            console.log(err)
+            alert('Something went wrong')
+        })
+    }, [users, props.channelId, meetingOn, getMeetingLink])
+
+    const showError = useCallback(() => {
+        alert('Meeting is inactive.')
+    }, [])
+
     const submitEmails = useCallback(async () => {
         const lowerCaseEmails = emails.toLowerCase()
         const parsedEmails: any[] = []
@@ -223,6 +292,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
         if (u) {
             const parsedUser = JSON.parse(u)
             setUsers([parsedUser._id, userId])
+            setMeetingOn(false)
             const server = fetchAPI('')
             server.query({
                 query: getMessages,
@@ -278,6 +348,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
         if (u) {
             const parsedUser = JSON.parse(u)
             setUsers(groupUsers)
+            setMeetingOn(false)
             const server = fetchAPI('')
             server.query({
                 query: getMessages,
@@ -338,14 +409,14 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                 }
             ]
         )
-        
+
     }, [loadedChatWithUser, props.channelId, props.reload])
 
     const handleSubStatusChange = useCallback(() => {
 
         const alertMessage = isLoadedUserInactive ? "Make user active?" : "Make user inactive?"
 
-        Alert(alertMessage, "", 
+        Alert(alertMessage, "",
             [
                 {
                     text: "Cancel", style: "cancel", onPress: () => { return; }
@@ -385,7 +456,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
             ]
         )
 
-        
+
     }, [isLoadedUserInactive, loadedChatWithUser, props.channelId])
 
     const renderQuizSubmissions = () => {
@@ -478,7 +549,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                         </View>
                         {
                             isOwner && !props.cueId && !showAddUsers && !showNewGroup && users.length < 3
-                                ? <View style={{ flexDirection: 'row', flex: 1 }}>
+                                ? <View style={{ flexDirection: 'row', flex: 1, paddingLeft: 43 }}>
                                     <TouchableOpacity
                                         onPress={() => handleSubStatusChange()}
                                     >
@@ -510,6 +581,81 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         </Text>
                                     </TouchableOpacity>
                                 </View>
+                                : null
+                        }
+                        {
+                            showChat ? <View style={{ flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row', flex: 1, paddingLeft: 43 }}>
+                                <View style={{
+                                    marginBottom: 25,
+                                    backgroundColor: 'white',
+                                    minWidth: '40%,'
+                                }}>
+
+                                    <View>
+                                        <View style={{
+                                            backgroundColor: 'white',
+                                            height: 40,
+                                            marginTop: 20,
+                                            flexDirection: 'row'
+                                        }}>
+                                            <Switch
+                                                value={meetingOn}
+                                                onValueChange={() => updateMeetingStatus()}
+                                                style={{ height: 20, marginRight: 20 }}
+                                                trackColor={{
+                                                    false: '#f4f4f6',
+                                                    true: '#3B64F8'
+                                                }}
+                                                activeThumbColor='white'
+                                            />
+                                            <View style={{ width: '100%', backgroundColor: 'white', paddingTop: 3 }}>
+                                                <Text style={{ fontSize: 15, color: '#a2a2aa', }}>
+                                                    Meeting
+                                                </Text>
+                                            </View>
+                                        </View>
+                                        <Text style={{ fontSize: 12, color: '#a2a2aa', paddingTop: 10 }}>
+                                            Turn on to begin private meeting. {'\n'}Restart switch if you are unable to join the call.
+                                        </Text>
+                                    </View>
+                                </View>
+                                <View style={{ backgroundColor: 'white' }}>
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            if (meetingOn) {
+                                                window.open(meetingLink, '_blank');
+                                            } else {
+                                                showError()
+                                            }
+                                        }}
+                                        style={{
+                                            backgroundColor: 'white',
+                                            overflow: 'hidden',
+                                            height: 35,
+                                            marginTop: 15,
+                                            marginBottom: 20
+                                        }}>
+                                        <Text style={{
+                                            textAlign: 'center',
+                                            lineHeight: 35,
+                                            color: meetingOn ? '#fff' : '#202025',
+                                            fontSize: 12,
+                                            backgroundColor: meetingOn ? '#3B64F8' : '#f4f4f6',
+                                            paddingHorizontal: 25,
+                                            fontFamily: 'inter',
+                                            height: 35,
+                                            width: 175,
+                                            borderRadius: 15,
+                                            textTransform: 'uppercase'
+                                        }}>
+                                            Join Meeting
+                                        </Text>
+                                    </TouchableOpacity>
+                                    <Text style={{ fontSize: 12, color: '#a2a2aa', marginBottom: 10 }}>
+                                        Enabled only when meeting in session.
+                                    </Text>
+                                </View>
+                            </View>
                                 : null
                         }
                     </View>
