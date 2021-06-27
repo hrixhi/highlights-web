@@ -224,15 +224,15 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     }, [])
 
     useEffect(() => {
-        if (!loading) {
-            return
-        }
         if (props.cue.channelId && props.cue.channelId !== '') {
             const data1 = props.cue.original;
             const data2 = cue;
             if (data1 && data1[0] && data1[0] === '{' && data1[data1.length - 1] === '}') {
                 const obj = JSON.parse(data1)
                 if (obj.quizId) {
+                    if (!loading) {
+                        return
+                    }
                     if (isQuiz) {
                         return;
                     }
@@ -386,10 +386,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     }, [props.cue._id, solutions, deadline])
 
     const handleUpdate = useCallback(async () => {
-        if (submissionImported && submissionTitle === '') {
-            Alert("Your submission has no title")
-            return
-        }
         let subCues: any = {}
         try {
             const value = await AsyncStorage.getItem('cues')
@@ -418,10 +414,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             saveCue = cue
         }
         const submittedNow = new Date()
-
-        console.log(props.cue.submittedAt)
-
-        console.log(props.cue.cue)
 
         subCues[props.cueKey][props.cueIndex] = {
             _id: props.cue._id,
@@ -516,6 +508,10 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
     const handleSubmit = useCallback(async () => {
 
+        if (!isQuiz && submissionImported && submissionTitle === '') {
+            Alert("Your submission has no title")
+            return
+        }
 
         Alert("Submit?", "", [
             {
@@ -583,7 +579,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     (new Date()).toString(),
                                     [
                                         {
-                                            text: "Cancel", style: "cancel"
+                                            text: "Cancel", style: "cancel", onPress: () => window.location.reload()
                                         },
                                         {
                                             text: "Okay", onPress: () => window.location.reload()
@@ -754,8 +750,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     };
 
     const width = Dimensions.get('window').width;
-
-    console.log(loading)
 
     if (loading) {
         return null;
@@ -998,7 +992,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         }}
                             onPress={() => setShowImportOptions(true)}
                         >
-                            {PreferredLanguageText('import')}     {Dimensions.get('window').width < 768 ? '' : '|  '}
+                            {PreferredLanguageText('import')}     {Dimensions.get('window').width < 768 ? '' : '   '}
                         </Text> :
                         null
                     }

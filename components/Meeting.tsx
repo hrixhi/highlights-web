@@ -44,9 +44,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
             setIsSubmitDisabled(false);
             return;
         }
-
         setIsSubmitDisabled(true);
-
     }, [start, end])
 
 
