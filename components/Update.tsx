@@ -283,7 +283,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     style={{ flex: 1, backgroundColor: 'white' }}
                                 /> :
                                     <ScrollView
-                                        key={Math.random()}
+                                        // key={Math.random()}
                                         ref={scroll2}
                                         contentContainerStyle={{
                                             width: '100%',
