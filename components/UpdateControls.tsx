@@ -879,7 +879,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             <View style={{ backgroundColor: 'white', flex: 1 }}>
                                 <Text
                                     style={{
-                                        color: '#a2a2aa', fontSize: 15, paddingBottom: 20, fontWeight: 'bold'
+                                        fontSize: 11, paddingBottom: 20, textTransform: 'uppercase', paddingLeft: 10
                                     }}>
                                     {PreferredLanguageText('update')}
                                 </Text>
