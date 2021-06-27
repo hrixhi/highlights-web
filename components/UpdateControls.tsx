@@ -101,6 +101,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const [equation, setEquation] = useState('y = x + 1')
     const [showEquationEditor, setShowEquationEditor] = useState(false)
 
+    console.log(isQuiz);
+
     const insertEquation = useCallback(() => {
         const SVGEquation = TeXToSVG(equation, { width: 100 }); // returns svg in html format
         RichText.current.insertHTML('<div><br/>' + SVGEquation + '<br/></div>');
@@ -113,8 +115,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         var diff = (dt2.getTime() - dt1.getTime()) / 1000;
         return Math.abs(Math.round(diff));
     }
-
-    console.log("")
 
     // Alerts
     const unableToStartQuizAlert = PreferredLanguageText('unableToStartQuiz')
@@ -308,7 +308,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         }
         setLoading(false)
         setKey(Math.random())
-    }, [props.cue, cue, isQuiz])
+    }, [props.cue, cue, isQuiz, props.showOriginal, props.viewStatus])
 
     const handleHeightChange = useCallback((h: any) => {
         setHeight(h)
@@ -791,7 +791,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             width: '100%', flexDirection: 'row', marginBottom: 5
                         }}>
                             {
-                                isQuiz ? null :
+                            
                                     <View style={{ flexDirection: 'row' }}>
                                         <TouchableOpacity
                                             style={{
@@ -806,7 +806,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             </Text>
                                         </TouchableOpacity>
                                         {
-                                            isOwner && submission ? null :
+                                            (isOwner && submission) || isQuiz ? null :
                                                 <TouchableOpacity
                                                     style={{
                                                         justifyContent: 'center',
@@ -815,7 +815,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                     onPress={() => {
                                                         props.setShowOriginal(false)
                                                     }}>
-                                                    <Text style={!props.showOriginal ? styles.allGrayFill : styles.all}>
+                                                    <Text style={!props.showOriginal && !props.viewStatus ? styles.allGrayFill : styles.all}>
                                                         {
                                                             submission ? PreferredLanguageText('mySubmission') : PreferredLanguageText('myNotes')
                                                         }
@@ -832,10 +832,11 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                 }}
                                                 onPress={() => {
                                                     props.setShowOriginal(false)
+                                                    setIsQuiz(false)
                                                     props.changeViewStatus()
                                                 }}>
                                                 <Text style={props.viewStatus ? styles.allGrayFill : styles.all}>
-                                                    View Status
+                                                    Status
                                                 </Text>
                                             </TouchableOpacity>
                                         }
@@ -954,7 +955,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 )
                         }
                         {
-                            !showOriginal && props.cue.submission && !submissionImported && showImportOptions ?
+                            !props.showOriginal && props.cue.submission && !submissionImported && showImportOptions ?
                                 <FileUpload
                                     back={() => setShowImportOptions(false)}
                                     onUpload={(u: any, t: any) => {
@@ -983,8 +984,10 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 }
                             </Text> : null
                     }
-                    {
-                        !props.showOriginal && props.cue.submission && !submissionImported && !props.cue.graded ?
+                    {!props.showOriginal &&
+                        (props.cue.submission && currentDate < deadline) &&
+                        !submissionImported &&
+                        !props.cue.graded ?
                             <Text style={{
                                 color: '#a2a2aa',
                                 fontSize: 11,
@@ -1207,6 +1210,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             (
                                                 initiatedAt ?
                                                     <Quiz
+                                                        key={JSON.stringify(props.showOriginal) + JSON.stringify(props.viewStatus)}
                                                         // disable quiz if graded or deadline has passed
                                                         graded={props.cue.graded}
                                                         hasEnded={currentDate >= deadline}
@@ -1246,6 +1250,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             )
                                             :
                                             <Quiz
+                                                key={JSON.stringify(props.showOriginal) + JSON.stringify(props.viewStatus)}
                                                 isOwner={isOwner}
                                                 graded={props.cue.graded || (currentDate >= deadline)}
                                                 solutions={solutions}

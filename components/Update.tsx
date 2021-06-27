@@ -29,11 +29,24 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const [isOwner, setIsOwner] = useState(false)
     const [submission, setSubmission] = useState(props.cue.submission ? props.cue.submission : false)
     const [showOriginal, setShowOriginal] = useState(props.cue.channelId && props.cue.channelId !== '' ? true : false)
+    const [isQuiz, setIsQuiz] = useState(false)
 
 
     const unableToLoadStatusesAlert = PreferredLanguageText('unableToLoadStatuses');
     const checkConnectionAlert = PreferredLanguageText('checkConnection');
     const unableToLoadCommentsAlert = PreferredLanguageText('unableToLoadComments')
+
+    useEffect(() => {
+        if (props.cue.channelId && props.cue.channelId !== '') {
+            const data1 = props.cue.original;
+            if (data1 && data1[0] && data1[0] === '{' && data1[data1.length - 1] === '}') {
+                const obj = JSON.parse(data1)
+                if (obj.quizId) {
+                    setIsQuiz(true)
+                }
+            }
+        }
+    }, [props.cue])
 
     useEffect(() => {
         (
@@ -240,6 +253,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 }}
                             >
                                 <UpdateControls
+                                    key={JSON.stringify(showOriginal) + JSON.stringify(viewStatus)}
                                     channelId={props.channelId}
                                     customCategories={props.customCategories}
                                     cue={props.cue}
@@ -316,7 +330,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             </Text>
                                         </TouchableOpacity>
                                         {
-                                            isOwner && submission ? null :
+                                            (isOwner && submission) || isQuiz ? null :
                                                 <TouchableOpacity
                                                     style={{
                                                         justifyContent: 'center',
@@ -326,7 +340,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         setViewStatus(false)
                                                         setShowOriginal(false)
                                                     }}>
-                                                    <Text style={!showOriginal ? styles.allGrayFill : styles.all}>
+                                                    <Text style={!showOriginal && !viewStatus  ? styles.allGrayFill : styles.all}>
                                                         {
                                                             submission ? PreferredLanguageText('mySubmission') : PreferredLanguageText('myNotes')
                                                         }
@@ -345,7 +359,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     setViewStatus(true)
                                                 }}>
                                                 <Text style={viewStatus ? styles.allGrayFill : styles.all}>
-                                                    View Status
+                                                    Status
                                                 </Text>
                                             </TouchableOpacity>
                                         }
