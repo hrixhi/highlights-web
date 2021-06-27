@@ -225,117 +225,117 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 dotActiveStyle: { backgroundColor: !Number.isNaN(Number(cueId)) || (props.channelId && !channelOwner) || (!props.channelId || props.channelId === '') ? '#fff' : '#3B64F8' }
                             }}
                         > */}
-                            
-                           { !viewStatus ? <ScrollView
-                                nestedScrollEnabled={true}
-                                horizontal={false}
-                                style={{
-                                    borderTopRightRadius: 0,
-                                    borderTopLeftRadius: 0,
+
+                        {!viewStatus ? <ScrollView
+                            nestedScrollEnabled={true}
+                            horizontal={false}
+                            style={{
+                                borderTopRightRadius: 0,
+                                borderTopLeftRadius: 0,
+                            }}
+                            contentContainerStyle={{
+                                borderTopRightRadius: 0,
+                                borderTopLeftRadius: 0,
+                                minHeight: windowHeight
+                            }}
+                        >
+                            <UpdateControls
+                                channelId={props.channelId}
+                                customCategories={props.customCategories}
+                                cue={props.cue}
+                                cueIndex={props.cueIndex}
+                                cueKey={props.cueKey}
+                                channelOwner={channelOwner}
+                                createdBy={createdBy}
+                                closeModal={() => {
+                                    Animated.timing(modalAnimation, {
+                                        toValue: 0,
+                                        duration: 150,
+                                        useNativeDriver: true
+                                    }).start(() => props.closeModal())
                                 }}
-                                contentContainerStyle={{
-                                    borderTopRightRadius: 0,
-                                    borderTopLeftRadius: 0,
-                                    minHeight: windowHeight - 55
-                                }}
-                            >
-                                <UpdateControls
-                                    channelId={props.channelId}
-                                    customCategories={props.customCategories}
-                                    cue={props.cue}
-                                    cueIndex={props.cueIndex}
-                                    cueKey={props.cueKey}
-                                    channelOwner={channelOwner}
-                                    createdBy={createdBy}
-                                    closeModal={() => {
-                                        Animated.timing(modalAnimation, {
-                                            toValue: 0,
-                                            duration: 150,
-                                            useNativeDriver: true
-                                        }).start(() => props.closeModal())
-                                    }}
-                                    reloadCueListAfterUpdate={() => props.reloadCueListAfterUpdate()}
-                                    changeViewStatus={() => setViewStatus(true)}
-                                    viewStatus={viewStatus}
-                                    showOriginal={showOriginal}
-                                    setShowOriginal={(val: boolean) => setShowOriginal(val)}
-                                />
-                                {
-                                    !Number.isNaN(Number(cueId))
-                                        || !props.channelId
-                                        || (
-                                            props.cue.original && props.cue.original.includes("quizId")
-                                        ) ? <View
-                                        style={{ flex: 1, backgroundColor: 'white' }}
-                                    /> :
-                                        <ScrollView
-                                            key={Math.random()}
-                                            ref={scroll2}
-                                            contentContainerStyle={{
-                                                width: '100%',
-                                                height: '100%'
-                                            }}
-                                            contentOffset={{ x: 0, y: 1 }}
-                                            showsVerticalScrollIndicator={false}
-                                            overScrollMode={'always'}
-                                            alwaysBounceVertical={true}
-                                            scrollEnabled={true}
-                                            scrollEventThrottle={1}
-                                            keyboardDismissMode={'on-drag'}
-                                        >
-                                            <ThreadsList
-                                                channelCreatedBy={props.channelCreatedBy}
-                                                key={JSON.stringify(threads)}
-                                                threads={threads}
-                                                cueId={cueId}
-                                                channelId={props.channelId}
-                                                channelName={props.filterChoice}
-                                                closeModal={() => props.closeModal()}
-                                                reload={() => loadThreadsAndStatuses()}
-                                            />
-                                        </ScrollView>
-                                }
-                            </ScrollView>
+                                reloadCueListAfterUpdate={() => props.reloadCueListAfterUpdate()}
+                                changeViewStatus={() => setViewStatus(true)}
+                                viewStatus={viewStatus}
+                                showOriginal={showOriginal}
+                                setShowOriginal={(val: boolean) => setShowOriginal(val)}
+                            />
+                            {
+                                !Number.isNaN(Number(cueId))
+                                    || !props.channelId
+                                    || (
+                                        props.cue.original && props.cue.original.includes("quizId")
+                                    ) ? <View
+                                    style={{ flex: 1, backgroundColor: 'white' }}
+                                /> :
+                                    <ScrollView
+                                        key={Math.random()}
+                                        ref={scroll2}
+                                        contentContainerStyle={{
+                                            width: '100%',
+                                            height: '100%'
+                                        }}
+                                        contentOffset={{ x: 0, y: 1 }}
+                                        showsVerticalScrollIndicator={false}
+                                        overScrollMode={'always'}
+                                        alwaysBounceVertical={true}
+                                        scrollEnabled={true}
+                                        scrollEventThrottle={1}
+                                        keyboardDismissMode={'on-drag'}
+                                    >
+                                        <ThreadsList
+                                            channelCreatedBy={props.channelCreatedBy}
+                                            key={JSON.stringify(threads)}
+                                            threads={threads}
+                                            cueId={cueId}
+                                            channelId={props.channelId}
+                                            channelName={props.filterChoice}
+                                            closeModal={() => props.closeModal()}
+                                            reload={() => loadThreadsAndStatuses()}
+                                        />
+                                    </ScrollView>
+                            }
+                        </ScrollView>
                             : <Fragment>
                                 <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 30, backgroundColor: 'white' }}>
                                     {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
                                 </Text>
 
                                 <View style={{ flexDirection: 'row', paddingLeft: 20 }}>
-                                        <TouchableOpacity
-                                            style={{
-                                                justifyContent: 'center',
-                                                flexDirection: 'column'
-                                            }}
-                                            onPress={() => {
-                                                setViewStatus(false)
-                                                setShowOriginal(true)
-                                            }}>
-                                            <Text style={showOriginal ? styles.allGrayFill : styles.all}>
-                                                {PreferredLanguageText('viewShared')}
-                                            </Text>
-                                        </TouchableOpacity>
-                                        {
-                                            isOwner && submission ? null :
-                                                <TouchableOpacity
-                                                    style={{
-                                                        justifyContent: 'center',
-                                                        flexDirection: 'column'
-                                                    }}
-                                                    onPress={() => {
-                                                        setViewStatus(false)
-                                                        setShowOriginal(false)
-                                                    }}>
-                                                    <Text style={!showOriginal ? styles.allGrayFill : styles.all}>
-                                                        {
-                                                            submission ? PreferredLanguageText('mySubmission') : PreferredLanguageText('myNotes')
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                        }
-                                        {/* Add Status button here */}
-                                        {
-                                            !isOwner ? null :
+                                    <TouchableOpacity
+                                        style={{
+                                            justifyContent: 'center',
+                                            flexDirection: 'column'
+                                        }}
+                                        onPress={() => {
+                                            setViewStatus(false)
+                                            setShowOriginal(true)
+                                        }}>
+                                        <Text style={showOriginal ? styles.allGrayFill : styles.all}>
+                                            {PreferredLanguageText('viewShared')}
+                                        </Text>
+                                    </TouchableOpacity>
+                                    {
+                                        isOwner && submission ? null :
+                                            <TouchableOpacity
+                                                style={{
+                                                    justifyContent: 'center',
+                                                    flexDirection: 'column'
+                                                }}
+                                                onPress={() => {
+                                                    setViewStatus(false)
+                                                    setShowOriginal(false)
+                                                }}>
+                                                <Text style={!showOriginal ? styles.allGrayFill : styles.all}>
+                                                    {
+                                                        submission ? PreferredLanguageText('mySubmission') : PreferredLanguageText('myNotes')
+                                                    }
+                                                </Text>
+                                            </TouchableOpacity>
+                                    }
+                                    {/* Add Status button here */}
+                                    {
+                                        !isOwner ? null :
                                             <TouchableOpacity
                                                 style={{
                                                     justifyContent: 'center',
@@ -348,21 +348,21 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     View Status
                                                 </Text>
                                             </TouchableOpacity>
-                                        }
-                                    </View>
-                            {
-                                channelOwner ?
-                                <View 
-                                    style={{
-                                        backgroundColor: 'white',
-                                        width: '100%',
-                                        height: '100%',
-                                        paddingHorizontal: 20,
-                                        borderTopRightRadius: 0,
-                                        borderTopLeftRadius: 0,
-                                        // paddingTop: 30
-                                    }}>  
-                                    {/* <View style={{ backgroundColor: 'white', flexDirection: 'row', paddingBottom: 25 }}>
+                                    }
+                                </View>
+                                {
+                                    channelOwner ?
+                                        <View
+                                            style={{
+                                                backgroundColor: 'white',
+                                                width: '100%',
+                                                height: windowHeight - 52,
+                                                // paddingHorizontal: 20,
+                                                borderTopRightRadius: 0,
+                                                borderTopLeftRadius: 0,
+                                                // paddingTop: 30
+                                            }}>
+                                            {/* <View style={{ backgroundColor: 'white', flexDirection: 'row', paddingBottom: 25 }}>
                                     <TouchableOpacity
                                         key={Math.random()}
                                         style={{
@@ -381,41 +381,41 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             </Text>
                                     </TouchableOpacity>
                                     </View> */}
-                                    <ScrollView
-                                        ref={scroll3}
-                                        contentContainerStyle={{
-                                            width: '100%',
-                                            height: '100%'
-                                        }}
-                                        showsVerticalScrollIndicator={false}
-                                        contentOffset={{ x: 0, y: 1 }}
-                                        key={channelOwner.toString()}
-                                        overScrollMode={'always'}
-                                        alwaysBounceVertical={true}
-                                        scrollEnabled={true}
-                                        scrollEventThrottle={1}
-                                        keyboardDismissMode={'on-drag'}
-                                    >
-                                        <SubscribersList
-                                            key={JSON.stringify(subscribers)}
-                                            subscribers={subscribers}
-                                            cueId={cueId}
-                                            channelName={props.filterChoice}
-                                            channelId={props.channelId}
-                                            closeModal={() => {
-                                                Animated.timing(modalAnimation, {
-                                                    toValue: 0,
-                                                    duration: 150,
-                                                    useNativeDriver: true
-                                                }).start(() => props.closeModal())
-                                            }}
-                                            reload={() => loadThreadsAndStatuses()}
-                                            cue={props.cue}
-                                        />
-                                    </ScrollView> 
-                                    </View>  
-                                    : null
-                            }
+                                            <ScrollView
+                                                ref={scroll3}
+                                                contentContainerStyle={{
+                                                    width: '100%',
+                                                    height: windowHeight - 52
+                                                }}
+                                                showsVerticalScrollIndicator={false}
+                                                contentOffset={{ x: 0, y: 1 }}
+                                                key={channelOwner.toString()}
+                                                overScrollMode={'always'}
+                                                alwaysBounceVertical={true}
+                                                scrollEnabled={true}
+                                                scrollEventThrottle={1}
+                                                keyboardDismissMode={'on-drag'}
+                                            >
+                                                <SubscribersList
+                                                    key={JSON.stringify(subscribers)}
+                                                    subscribers={subscribers}
+                                                    cueId={cueId}
+                                                    channelName={props.filterChoice}
+                                                    channelId={props.channelId}
+                                                    closeModal={() => {
+                                                        Animated.timing(modalAnimation, {
+                                                            toValue: 0,
+                                                            duration: 150,
+                                                            useNativeDriver: true
+                                                        }).start(() => props.closeModal())
+                                                    }}
+                                                    reload={() => loadThreadsAndStatuses()}
+                                                    cue={props.cue}
+                                                />
+                                            </ScrollView>
+                                        </View>
+                                        : null
+                                }
                             </Fragment>}
 
                         {/* </Swiper> */}

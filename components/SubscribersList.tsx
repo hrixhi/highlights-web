@@ -496,9 +496,10 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
 
     return (
         <View style={{
+            // borderWidth: 2,
             backgroundColor: 'white',
             width: '100%',
-            minHeight: windowHeight,
+            minHeight: windowHeight - 200,
             paddingHorizontal: 20,
             borderTopRightRadius: 0,
             borderTopLeftRadius: 0
@@ -539,7 +540,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 </Text>
                             </TouchableOpacity>
                             {
-                                loadedChatWithUser && loadedChatWithUser !== {} && !showNewGroup && !showAddUsers && users.length < 3 ?
+                                loadedChatWithUser && loadedChatWithUser !== {} && !showNewGroup && !showAddUsers && users.length < 3 && !showSubmission ?
                                     <View style={{ marginHorizontal: 20, paddingTop: 5 }}>
                                         <Text>
                                             {loadedChatWithUser.displayName}, {loadedChatWithUser.fullName} {loadedChatWithUser.email ? ("(" + loadedChatWithUser.email + ")") : ''}
@@ -548,7 +549,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                             }
                         </View>
                         {
-                            isOwner && !props.cueId && !showAddUsers && !showNewGroup && users.length < 3
+                            isOwner && !props.cueId && !showAddUsers && !showNewGroup && !showSubmission && users.length < 3
                                 ? <View style={{ flexDirection: 'row', flex: 1, paddingLeft: 43 }}>
                                     <TouchableOpacity
                                         onPress={() => handleSubStatusChange()}
@@ -663,11 +664,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                     <View style={{ backgroundColor: 'white', flexDirection: 'row', paddingBottom: 25, maxWidth: 500 }}>
                         {
                             props.cueId ?
-                                <Text
-                                    ellipsizeMode="tail"
-                                    style={{ color: '#a2a2aa', fontSize: 15, flex: 1, lineHeight: 25, fontWeight: 'bold' }}>
-                                    {PreferredLanguageText('status')}
-                                </Text> :
+                                null :
                                 <Text
                                     ellipsizeMode="tail"
                                     style={{ color: '#a2a2aa', fontSize: 15, flex: 1, lineHeight: 25, fontWeight: 'bold' }}>
@@ -936,6 +933,9 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     <ScrollView
                                         showsVerticalScrollIndicator={false}
                                         keyboardDismissMode={'on-drag'}
+                                        contentContainerStyle={{
+                                            height: windowHeight - 132
+                                        }}
                                         style={{ flex: 1, paddingTop: 12 }}>
                                         <View style={{
                                             width: Dimensions.get('window').width < 1024 ? '100%' : '60%', alignSelf: 'center'
