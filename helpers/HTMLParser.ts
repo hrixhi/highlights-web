@@ -21,7 +21,7 @@ import { PreferredLanguageText } from "./LanguageContext";
 
 export const htmlStringParser = (htmlString: string) => {
 
-    if (!htmlString) {
+    if (htmlString === null || !htmlString) {
         return {
             title: 'No content',
             subtitle: ''
