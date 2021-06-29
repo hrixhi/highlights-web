@@ -586,40 +586,43 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                         }
                         {
                             showChat ? <View style={{ flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row', flex: 1, paddingLeft: 43 }}>
-                                <View style={{
-                                    marginBottom: 25,
-                                    backgroundColor: 'white',
-                                    minWidth: '40%,'
-                                }}>
-
-                                    <View>
+                                {
+                                    isOwner ?
                                         <View style={{
+                                            marginBottom: 25,
                                             backgroundColor: 'white',
-                                            height: 40,
-                                            marginTop: 20,
-                                            flexDirection: 'row'
+                                            minWidth: '40%,'
                                         }}>
-                                            <Switch
-                                                value={meetingOn}
-                                                onValueChange={() => updateMeetingStatus()}
-                                                style={{ height: 20, marginRight: 20 }}
-                                                trackColor={{
-                                                    false: '#f4f4f6',
-                                                    true: '#3B64F8'
-                                                }}
-                                                activeThumbColor='white'
-                                            />
-                                            <View style={{ width: '100%', backgroundColor: 'white', paddingTop: 3 }}>
-                                                <Text style={{ fontSize: 15, color: '#a2a2aa', }}>
-                                                    Meeting
+
+                                            <View>
+                                                <View style={{
+                                                    backgroundColor: 'white',
+                                                    height: 40,
+                                                    marginTop: 20,
+                                                    flexDirection: 'row'
+                                                }}>
+                                                    <Switch
+                                                        value={meetingOn}
+                                                        onValueChange={() => updateMeetingStatus()}
+                                                        style={{ height: 20, marginRight: 20 }}
+                                                        trackColor={{
+                                                            false: '#f4f4f6',
+                                                            true: '#3B64F8'
+                                                        }}
+                                                        activeThumbColor='white'
+                                                    />
+                                                    <View style={{ width: '100%', backgroundColor: 'white', paddingTop: 3 }}>
+                                                        <Text style={{ fontSize: 15, color: '#a2a2aa', }}>
+                                                            Meeting
+                                                        </Text>
+                                                    </View>
+                                                </View>
+                                                <Text style={{ fontSize: 12, color: '#a2a2aa', paddingTop: 10 }}>
+                                                    Turn on to begin private meeting. {'\n'}Restart switch if you are unable to join the call.
                                                 </Text>
                                             </View>
-                                        </View>
-                                        <Text style={{ fontSize: 12, color: '#a2a2aa', paddingTop: 10 }}>
-                                            Turn on to begin private meeting. {'\n'}Restart switch if you are unable to join the call.
-                                        </Text>
-                                    </View>
-                                </View>
+                                        </View> : null
+                                }
                                 <View style={{ backgroundColor: 'white' }}>
                                     <TouchableOpacity
                                         onPress={() => {
@@ -672,7 +675,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 </Text>
                         }
                         {
-                            !props.cueId ?
+                            !props.cueId && isOwner ?
                                 <TouchableOpacity
                                     key={Math.random()}
                                     style={{
@@ -1115,7 +1118,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                     <Text
                                                         style={{
                                                             color: '#a2a2aa',
-                                                            lineHeight: 20
+                                                            lineHeight: 20, fontSize: 12
                                                         }}>
                                                         {PreferredLanguageText(categoriesLanguageMap[category])}
                                                     </Text>

@@ -884,7 +884,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           delete cueInput.comment;
           delete cueInput.unreadThreads;
           // delete cueInput.createdBy;
-          delete cueInput.original;
+          // delete cueInput.original;
           delete cueInput.status;
           delete cueInput.channelName;
           delete cueInput.__typename;

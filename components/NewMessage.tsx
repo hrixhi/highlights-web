@@ -337,7 +337,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                             onPress={() => {
                                                                 setCustomCategory('')
                                                             }}>
-                                                            <Text style={{ color: '#a2a2aa', lineHeight: 20 }}>
+                                                            <Text style={{ color: '#a2a2aa', lineHeight: 20, fontSize: 12 }}>
                                                                 {PreferredLanguageText('none')}
                                                             </Text>
                                                         </TouchableOpacity>
@@ -349,7 +349,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                     onPress={() => {
                                                                         setCustomCategory(category)
                                                                     }}>
-                                                                    <Text style={{ color: '#a2a2aa', lineHeight: 20 }}>
+                                                                    <Text style={{ color: '#a2a2aa', lineHeight: 20, fontSize: 12 }}>
                                                                         {category}
                                                                     </Text>
                                                                 </TouchableOpacity>
@@ -379,7 +379,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 : null
                         }
                         <View style={{ flexDirection: 'row' }}>
-                            <View style={{ width: '33.33%', backgroundColor: 'white' }}>
+                            {/* <View style={{ width: '33.33%', backgroundColor: 'white' }}>
                                 <View style={{ width: '100%', paddingTop: 40, paddingBottom: 10, backgroundColor: 'white' }}>
                                     <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
                                         {PreferredLanguageText('anonymous')}
@@ -395,7 +395,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     activeThumbColor='white'
                                     style={{ height: 20 }}
                                 />
-                            </View>
+                            </View> */}
                             {
                                 parentId ? null :
                                     (

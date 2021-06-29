@@ -88,6 +88,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const [selected, setSelected] = useState<any[]>([])
     const [subscribers, setSubscribers] = useState<any[]>([])
     const [expandMenu, setExpandMenu] = useState(false)
+    const [original, setOriginal] = useState(props.cue.original)
     // quiz options
     const [isQuiz, setIsQuiz] = useState(false)
     const [problems, setProblems] = useState<any[]>([])
@@ -306,7 +307,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         }
         setLoading(false)
         setKey(Math.random())
-    }, [props.cue, cue, isQuiz, props.showOriginal, props.viewStatus, loading])
+    }, [props.cue, cue, isQuiz, props.showOriginal, props.viewStatus, loading, original, imported, setSubmissionImported])
 
     const handleHeightChange = useCallback((h: any) => {
         setHeight(h)
@@ -413,6 +414,19 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         } else {
             saveCue = cue
         }
+
+        let tempOriginal = ''
+        if (imported) {
+            const obj = {
+                type,
+                url,
+                title
+            }
+            tempOriginal = JSON.stringify(obj)
+        } else {
+            tempOriginal = original
+        }
+
         const submittedNow = new Date()
 
         subCues[props.cueKey][props.cueIndex] = {
@@ -429,7 +443,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             createdBy: props.cue.createdBy,
             endPlayAt: notify && (shuffle || !playChannelCueIndef) ? endPlayAt.toISOString() : '',
             channelName: props.cue.channelName,
-            original: props.cue.original,
+            original: tempOriginal,
             status: 'read',
             graded: props.cue.graded,
             gradeWeight,
@@ -443,9 +457,12 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         const stringifiedCues = JSON.stringify(subCues)
         await AsyncStorage.setItem('cues', stringifiedCues)
         props.reloadCueListAfterUpdate()
-    }, [cue, customCategory, shuffle, frequency, starred, color, playChannelCueIndef, notify, submissionImported,
-        submission, deadline, gradeWeight, submitted, submissionTitle, submissionType, submissionUrl, isQuiz,
-        props.closeModal, props.cueIndex, props.cueKey, props.cue, endPlayAt, props, solutions, initiatedAt, submission, deadline])
+    }, [cue, customCategory, shuffle, frequency, starred, color, playChannelCueIndef,
+        notify, submissionImported, title, imported, url, type,
+        submission, deadline, gradeWeight, submitted, submissionTitle,
+        submissionType, submissionUrl, isQuiz, original,
+        props.closeModal, props.cueIndex, props.cueKey, props.cue,
+        endPlayAt, props, solutions, initiatedAt, submission, deadline])
 
     const handleDelete = useCallback(async () => {
 
@@ -617,7 +634,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     useEffect(() => {
         handleUpdate()
     }, [cue, shuffle, frequency, starred, color, props.cueIndex, submitted, markedAsRead,
-        submission, deadline,
+        submission, deadline, original, url, type, imported, title, submissionUrl,
         submissionTitle, submissionImported, submissionType, isQuiz, solutions, initiatedAt,
         customCategory, props.cueKey, endPlayAt, playChannelCueIndef, notify])
 
@@ -655,17 +672,25 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 },
                 {
                     text: "Clear", onPress: () => {
-                        setSubmissionImported(false)
-                        setCue('')
-                        setSubmissionUrl('')
-                        setSubmissionType('')
-                        setSubmissionTitle('')
+                        if (props.showOriginal) {
+                            setImported(false)
+                            setOriginal('')
+                            setUrl('')
+                            setType('')
+                            setTitle('')
+                        } else {
+                            setSubmissionImported(false)
+                            setCue('')
+                            setSubmissionUrl('')
+                            setSubmissionType('')
+                            setSubmissionTitle('')
+                        }
                         setReloadEditorKey(Math.random())
                     }
                 }
             ]
         )
-    }, [])
+    }, [props.showOriginal])
 
     const shareCue = useCallback(async () => {
         let saveCue = ''
@@ -679,11 +704,24 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         } else {
             saveCue = cue
         }
+
+        let tempOriginal = ''
+        if (imported) {
+            const obj = {
+                type,
+                url,
+                title
+            }
+            tempOriginal = JSON.stringify(obj)
+        } else {
+            tempOriginal = original
+        }
+
         const server = fetchAPI('')
         server.mutate({
             mutation: createCue,
             variables: {
-                cue: props.cue.channelId ? props.cue.original : saveCue,
+                cue: props.cue.channelId ? tempOriginal : saveCue,
                 starred,
                 color: color.toString(),
                 channelId: shareWithChannelId,
@@ -905,9 +943,10 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 }} onTouchStart={() => Keyboard.dismiss()}>
                     <View style={{ flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row', flex: 1 }}>
                         {
-                            (props.showOriginal)
+                            (props.cue.channelId && props.cue.channelId !== '' && !isOwner && props.showOriginal)
                                 ? <View style={{ height: 28 }} />
-                                : (
+                                :
+                                (
                                     showImportOptions || (props.cue.graded && submission) || (currentDate > deadline && submission) ? null :
                                         <RichToolbar
                                             key={reloadEditorKey.toString() + props.showOriginal.toString()}
@@ -924,7 +963,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             selectedIconTint={"#a2a2aa"}
                                             disabledIconTint={"#a2a2aa"}
                                             actions={
-                                                submissionImported ? ["clear"] :
+                                                (!props.showOriginal && submissionImported) || (imported && props.showOriginal) ? ["clear"] :
                                                     [
                                                         actions.setBold,
                                                         actions.setItalic,
@@ -949,12 +988,21 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 )
                         }
                         {
-                            !props.showOriginal && props.cue.submission && !submissionImported && showImportOptions ?
+                            (!props.showOriginal && props.cue.submission && !submissionImported && showImportOptions)
+                                || (props.showOriginal && showImportOptions && isOwner)
+                                ?
                                 <FileUpload
                                     back={() => setShowImportOptions(false)}
                                     onUpload={(u: any, t: any) => {
-                                        const obj = { url: u, type: t, title: submissionTitle }
-                                        setCue(JSON.stringify(obj))
+                                        const obj = {
+                                            url: u, type: t,
+                                            title: props.showOriginal ? title : submissionTitle
+                                        }
+                                        if (props.showOriginal) {
+                                            setOriginal(JSON.stringify(obj))
+                                        } else {
+                                            setCue(JSON.stringify(obj))
+                                        }
                                         setShowImportOptions(false)
                                     }}
                                 />
@@ -980,7 +1028,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     }
                     {!props.showOriginal &&
                         (props.cue.submission && currentDate < deadline) &&
-                        !submissionImported &&
+                        !submissionImported && !showImportOptions &&
                         !props.cue.graded ?
                         <Text style={{
                             color: '#a2a2aa',
@@ -994,7 +1042,23 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         >
                             {PreferredLanguageText('import')}     {Dimensions.get('window').width < 768 ? '' : '   '}
                         </Text> :
-                        null
+                        (
+                            props.showOriginal && isOwner && !imported && !showImportOptions ?
+                                (
+                                    <Text style={{
+                                        color: '#a2a2aa',
+                                        fontSize: 11,
+                                        lineHeight: 30,
+                                        textAlign: 'right',
+                                        paddingRight: 10,
+                                        textTransform: 'uppercase'
+                                    }}
+                                        onPress={() => setShowImportOptions(true)}
+                                    >
+                                        {PreferredLanguageText('import')}     {Dimensions.get('window').width < 768 ? '' : '   '}
+                                    </Text>
+                                ) : null
+                        )
                     }
                     <Text style={{
                         color: '#a2a2aa',
@@ -1061,7 +1125,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             <View style={{ flexDirection: 'row', marginRight: 0, marginLeft: 0 }}>
                                 <View style={{ width: '40%', alignSelf: 'flex-start' }}>
                                     <TextInput
-                                        editable={false}
+                                        editable={isOwner}
                                         value={title}
                                         style={styles.input}
                                         placeholder={'Title'}
@@ -1274,7 +1338,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         :
                                         <RichEditor
                                             key={props.showOriginal.toString() + reloadEditorKey.toString()}
-                                            disabled={true}
+                                            disabled={!isOwner}
                                             containerStyle={{
                                                 height: height,
                                                 backgroundColor: '#f4f4f6',
@@ -1296,12 +1360,12 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                 color: '#202025',
                                                 contentCSSText: 'font-size: 13px;'
                                             }}
-                                            initialContentHTML={props.cue.original}
+                                            initialContentHTML={original}
                                             onScroll={() => Keyboard.dismiss()}
                                             placeholder={"Title"}
                                             onChange={(text) => {
                                                 const modifedText = text.split('&amp;').join('&')
-                                                setCue(modifedText)
+                                                setOriginal(modifedText)
                                             }}
                                             onHeightChange={handleHeightChange}
                                             onBlur={() => Keyboard.dismiss()}
@@ -1357,7 +1421,13 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     }}
                                     initialContentHTML={cue}
                                     onScroll={() => Keyboard.dismiss()}
-                                    placeholder={"Title"}
+                                    placeholder={(
+                                        props.cue.channelId && props.cue.channelId !== '' ?
+                                            (
+                                                submission && !isOwner ?
+                                                    'Enter Submission' : 'Add Notes'
+                                            ) : "Title"
+                                    )}
                                     onChange={(text) => {
                                         const modifedText = text.split('&amp;').join('&')
                                         setCue(modifedText)
@@ -2024,6 +2094,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                 paddingHorizontal: 25,
                                                 fontFamily: 'inter',
                                                 overflow: 'hidden',
+                                                textTransform: 'uppercase',
                                                 height: 35
                                             }}>
                                                 {
