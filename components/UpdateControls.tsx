@@ -62,7 +62,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const now = new Date(props.cue.date);
     const RichText: any = useRef();
     const [height, setHeight] = useState(100);
-    const [showOriginal, setShowOriginal] = useState(props.cue.channelId && props.cue.channelId !== "" ? true : false);
     const colorChoices: any[] = ["#d91d56", "#ED7D22", "#F8D41F", "#B8D41F", "#53BE6D"].reverse();
     const [submission, setSubmission] = useState(props.cue.submission ? props.cue.submission : false);
     const dead =
@@ -136,19 +135,20 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const cannotUndoAlert = PreferredLanguageText("cannotUndo");
     const sharedAlert = PreferredLanguageText("sharedAlert");
     const checkConnectionAlert = PreferredLanguageText("checkConnection");
+    
+    const [webviewKey, setWebviewKey] = useState(Math.random());
+    const [intervalKey, setIntervalKey] = useState(0)
+    useEffect(() => {
+        const id = setInterval(() => {
+            setWebviewKey(Math.random());
+        }, 3000);
+        setIntervalKey(id)
+    }, []);
 
     // ON INIT = LOAD CHANNEL RELATED CONTENT
     useEffect(() => {
         loadChannelsAndSharedWith();
     }, []);
-
-    // Used to Refresh the Webview - Most probably call to google gets blocked
-    const [webviewKey, setWebviewKey] = useState(Math.random());
-    useEffect(() => {
-        setTimeout(() => {
-            setWebviewKey(Math.random());
-        }, 400);
-    }, [props.showOriginal, imported, submissionImported]);
 
     // Used to detect ongoing quiz and
     useEffect(() => {
@@ -252,7 +252,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     if (isQuiz) {
                         return;
                     }
-                    setShowOptions(true);
+                    // setShowOptions(true);
                     // load quiz here and set problems
                     const server = fetchAPI("");
                     server
@@ -1115,7 +1115,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             display: "flex",
                             flexDirection: "row"
                         }}>
-                        <View style={{ marginRight: 25 }}>
+                        {/* <View style={{ marginRight: 25 }}>
                             <View
                                 style={{
                                     flexDirection: "row",
@@ -1137,7 +1137,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 }}>
                                 Reload
                             </Text>
-                        </View>
+                        </View> */}
                         <a download={true} href={url} style={{ textDecoration: "none", textAlign: "center" }}>
                             <View>
                                 <Ionicons name="cloud-download-outline" color="#a2a2aa" size={20} />
@@ -1267,6 +1267,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         // key={Math.random()}
                         style={{ flex: 1 }}>
                         <WebView
+                            onLoad={e => clearInterval(intervalKey)}
                             key={webviewKey}
                             source={{
                                 uri: "https://docs.google.com/gview?embedded=true&url=" + url
@@ -1290,6 +1291,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         // key={Math.random()}
                         style={{ flex: 1 }}>
                         <WebView
+                            onLoad={e => clearInterval(intervalKey)}
                             key={webviewKey}
                             source={{
                                 uri: "https://docs.google.com/gview?embedded=true&url=" + submissionUrl
@@ -2406,7 +2408,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         display: "flex",
                                         flexDirection: "row"
                                     }}>
-                                    <View style={{ marginRight: 25 }}>
+                                    {/* <View style={{ marginRight: 25 }}>
                                         <View
                                             style={{
                                                 flexDirection: "row",
@@ -2428,7 +2430,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             }}>
                                             Reload
                                         </Text>
-                                    </View>
+                                    </View> */}
                                     <a download={true} href={submissionUrl} style={{ textDecoration: "none", textAlign: "center" }}>
                                         <View>
                                             <Ionicons name="cloud-download-outline" color="#a2a2aa" size={20} />

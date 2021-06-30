@@ -183,10 +183,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         loadThreadsAndStatuses()
     }, [props.cueId, props.channelId])
 
-    // console.log(showOriginal)
-    console.log(viewStatus)
-
     const windowHeight = Dimensions.get('window').width < 1024 ? Dimensions.get('window').height - 30 : Dimensions.get('window').height;
+    
     return (
         <View style={{
             width: '100%',

@@ -76,11 +76,14 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
     const alreadyUnsubscribedAlert = PreferredLanguageText('alreadyUnsubscribed')
 
     const [webviewKey, setWebviewKey] = useState(Math.random())
+    
+    const [intervalKey, setIntervalKey] = useState(0)
     useEffect(() => {
-        setTimeout(() => {
-            setWebviewKey(Math.random())
-        }, 400);
-    }, [imported])
+        const id = setInterval(() => {
+            setWebviewKey(Math.random());
+        }, 3000);
+        setIntervalKey(id)
+    }, []);
 
     if (props.cue && props.cue.submission) {
         categories.push('Submitted')
@@ -1079,6 +1082,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                         style={{ flex: 1 }}
                                                                     >
                                                                         <WebView
+                                                                            onLoad={e => clearInterval(intervalKey)}
                                                                             source={{ uri: "https://docs.google.com/gview?embedded=true&url=" + url }}
                                                                             key={webviewKey} />
                                                                     </View> : null)
