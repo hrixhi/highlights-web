@@ -554,7 +554,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                         {
                             isOwner && !props.cueId && !showAddUsers && !showNewGroup && !showSubmission && users.length < 3
                                 ? <View style={{ flexDirection: 'row', flex: 1, paddingLeft: 43 }}>
-                                    <TouchableOpacity
+                                    {/* <TouchableOpacity
                                         onPress={() => handleSubStatusChange()}
                                     >
                                         <Text style={{
@@ -569,7 +569,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 isLoadedUserInactive ? PreferredLanguageText('makeActive') : PreferredLanguageText('makeInactive')
                                             }
                                         </Text>
-                                    </TouchableOpacity>
+                                    </TouchableOpacity> */}
                                     <TouchableOpacity
                                         onPress={() => handleDelete()}
                                     >
