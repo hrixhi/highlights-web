@@ -75,16 +75,6 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
     const userRemovedAlert = PreferredLanguageText('userRemoved');
     const alreadyUnsubscribedAlert = PreferredLanguageText('alreadyUnsubscribed')
 
-    // const [webviewKey, setWebviewKey] = useState(Math.random())
-
-    // const [intervalKey, setIntervalKey] = useState(0)
-    // useEffect(() => {
-    //     const id = setInterval(() => {
-    //         setWebviewKey(Math.random());
-    //     }, 3000);
-    //     setIntervalKey(id)
-    // }, []);
-
     if (props.cue && props.cue.submission) {
         categories.push('Submitted')
         categories.push('Graded')

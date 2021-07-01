@@ -114,68 +114,68 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 })
                                 setSubscribers(subs)
                                 setLoading(false)
-                                modalAnimation.setValue(0)
-                                Animated.timing(modalAnimation, {
-                                    toValue: 1,
-                                    duration: 150,
-                                    useNativeDriver: true
-                                }).start();
+                                // modalAnimation.setValue(0)
+                                // Animated.timing(modalAnimation, {
+                                //     toValue: 1,
+                                //     duration: 150,
+                                //     useNativeDriver: true
+                                // }).start();
                             } else {
                                 setLoading(false)
-                                modalAnimation.setValue(0)
-                                Animated.timing(modalAnimation, {
-                                    toValue: 1,
-                                    duration: 150,
-                                    useNativeDriver: true
-                                }).start();
+                                // modalAnimation.setValue(0)
+                                // Animated.timing(modalAnimation, {
+                                //     toValue: 1,
+                                //     duration: 150,
+                                //     useNativeDriver: true
+                                // }).start();
                             }
                         }).catch(err => {
                             Alert(unableToLoadStatusesAlert, checkConnectionAlert)
                             setLoading(false)
-                            modalAnimation.setValue(0)
-                            Animated.timing(modalAnimation, {
-                                toValue: 1,
-                                duration: 150,
-                                useNativeDriver: true
-                            }).start();
+                            // modalAnimation.setValue(0)
+                            // Animated.timing(modalAnimation, {
+                            //     toValue: 1,
+                            //     duration: 150,
+                            //     useNativeDriver: true
+                            // }).start();
                         })
                     } else {
                         setLoading(false)
-                        modalAnimation.setValue(0)
-                        Animated.timing(modalAnimation, {
-                            toValue: 1,
-                            duration: 150,
-                            useNativeDriver: true
-                        }).start();
+                        // modalAnimation.setValue(0)
+                        // Animated.timing(modalAnimation, {
+                        //     toValue: 1,
+                        //     duration: 150,
+                        //     useNativeDriver: true
+                        // }).start();
                     }
                 } else {
                     setThreads(res.data.thread.findByCueId)
                     setLoading(false)
-                    modalAnimation.setValue(0)
-                    Animated.timing(modalAnimation, {
-                        toValue: 1,
-                        duration: 150,
-                        useNativeDriver: true
-                    }).start();
+                    // modalAnimation.setValue(0)
+                    // Animated.timing(modalAnimation, {
+                    //     toValue: 1,
+                    //     duration: 150,
+                    //     useNativeDriver: true
+                    // }).start();
                 }
             }).catch(err => {
                 Alert(unableToLoadCommentsAlert, checkConnectionAlert)
                 setLoading(false)
-                modalAnimation.setValue(0)
-                Animated.timing(modalAnimation, {
-                    toValue: 1,
-                    duration: 150,
-                    useNativeDriver: true
-                }).start();
+                // modalAnimation.setValue(0)
+                // Animated.timing(modalAnimation, {
+                //     toValue: 1,
+                //     duration: 150,
+                //     useNativeDriver: true
+                // }).start();
             })
         } else {
             setLoading(false)
-            modalAnimation.setValue(0)
-            Animated.timing(modalAnimation, {
-                toValue: 1,
-                duration: 150,
-                useNativeDriver: true
-            }).start();
+            // modalAnimation.setValue(0)
+            // Animated.timing(modalAnimation, {
+            //     toValue: 1,
+            //     duration: 150,
+            //     useNativeDriver: true
+            // }).start();
         }
     }, [cueId, modalAnimation, createdBy, channelCreatedBy])
 
@@ -251,7 +251,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             }}
                         >
                             <UpdateControls
-                                key={JSON.stringify(showOriginal) + JSON.stringify(viewStatus)}
+                                // key={JSON.stringify(showOriginal) + JSON.stringify(viewStatus)}
                                 channelId={props.channelId}
                                 customCategories={props.customCategories}
                                 cue={props.cue}

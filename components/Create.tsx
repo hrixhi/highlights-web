@@ -97,17 +97,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const enterContentAlert = PreferredLanguageText('enterContent');
     const enterTitleAlert = PreferredLanguageText('enterTitle');
 
-    // const [webviewKey, setWebviewKey] = useState(Math.random())
-    // const [intervalKey, setIntervalKey] = useState(0)
-    // useEffect(() => {
-    //     const id = setInterval(() => {
-    //         setWebviewKey(Math.random());
-    //     }, 3000);
-    //     setIntervalKey(id)
-    // }, []);
-
     const onDimensionsChange = useCallback(({ window, screen }: any) => {
-        // window.location.reload()
         setDimensions({ window, screen })
     }, []);
 

@@ -137,15 +137,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const sharedAlert = PreferredLanguageText("sharedAlert");
     const checkConnectionAlert = PreferredLanguageText("checkConnection");
 
-    // const [webviewKey, setWebviewKey] = useState(Math.random());
-    // const [intervalKey, setIntervalKey] = useState(0)
-    // useEffect(() => {
-    //     const id = setInterval(() => {
-    //         setWebviewKey(Math.random());
-    //     }, 3000);
-    //     setIntervalKey(id)
-    // }, []);
-
     // ON INIT = LOAD CHANNEL RELATED CONTENT
     useEffect(() => {
         loadChannelsAndSharedWith();
@@ -244,15 +235,27 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         if (props.cue.channelId && props.cue.channelId !== "") {
             const data1 = original;
             const data2 = cue;
+            if (data2 && data2[0] && data2[0] === "{" && data2[data2.length - 1] === "}") {
+                const obj = JSON.parse(data2);
+                setSubmissionImported(true);
+                setSubmissionUrl(obj.url);
+                setSubmissionType(obj.type);
+                setSubmissionTitle(obj.title);
+            } else {
+                setSubmissionImported(false);
+                setSubmissionUrl("");
+                setSubmissionType("");
+                setSubmissionTitle("");
+            }
             if (data1 && data1[0] && data1[0] === "{" && data1[data1.length - 1] === "}") {
                 const obj = JSON.parse(data1);
                 if (obj.quizId) {
                     if (!loading) {
                         return;
                     }
-                    if (isQuiz) {
-                        return;
-                    }
+                    // if (isQuiz) {
+                    //     return;
+                    // }
                     // setShowOptions(true);
                     // load quiz here and set problems
                     const server = fetchAPI("");
@@ -286,29 +289,18 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         });
                 } else {
                     setImported(true);
-                    setUrl(obj.url);
                     setType(obj.type);
                     if (loading) {
                         setTitle(obj.title);
                     }
+                    setUrl(obj.url);
+                    setKey(Math.random());
                 }
             } else {
                 setImported(false);
                 setUrl("");
                 setType("");
                 setTitle("");
-            }
-            if (data2 && data2[0] && data2[0] === "{" && data2[data2.length - 1] === "}") {
-                const obj = JSON.parse(data2);
-                setSubmissionImported(true);
-                setSubmissionUrl(obj.url);
-                setSubmissionType(obj.type);
-                setSubmissionTitle(obj.title);
-            } else {
-                setSubmissionImported(false);
-                setSubmissionUrl("");
-                setSubmissionType("");
-                setSubmissionTitle("");
             }
         } else {
             const data = cue;
@@ -326,8 +318,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             }
         }
         setLoading(false);
-        setKey(Math.random());
-    }, [props.cue, cue, isQuiz, loading, original, imported]);
+    }, [props.cue, cue, loading, original]);
 
     useEffect(() => {
         console.log("Handle update called", new Date().toDateString());
@@ -912,10 +903,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             <View style={{ height: 28, backgroundColor: "#fff" }} />
         ) : ((props.cue.graded && submission && !isOwner) || (currentDate > deadline && submission)) && !props.showOriginal ? (
             <View style={{ height: 28, backgroundColor: "#fff" }} />
-        ) : RichText &&
-            RichText.current !== undefined &&
-            RichText.current !== null &&
-            !showImportOptions ? (
+        ) : (
             <RichToolbar
                 key={reloadEditorKey.toString() + props.showOriginal.toString()}
                 style={{
@@ -957,7 +945,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 onPressAddImage={galleryCallback}
                 insertCamera={cameraCallback}
             />
-        ) : null
+        )
     };
 
     const renderEquationEditor = () => {

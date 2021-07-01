@@ -18,7 +18,7 @@ import { eventFrequencyOptions } from "../helpers/FrequencyOptions";
 
 // Try New Calendar
 // import Scheduler, {SchedulerData, ViewTypes, DATE_FORMAT} from 'react-big-scheduler'
-import 'react-big-scheduler/lib/css/style.css';
+// import 'react-big-scheduler/lib/css/style.css';
 
 
 const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
