@@ -2347,7 +2347,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             (props.showOriginal && isOwner && imported) ||  // viewing import as owner
                             (!props.showOriginal && isOwner && (props.cue.channelId && props.cue.channelId !== '')) || // no submission as owner
                             (!props.showOriginal && submissionImported && !isOwner) ||  // submitted as non owner
-                            (!props.showOriginal && !submission)   // my notes
+                            (!props.showOriginal && !submission && (props.cue.channelId && props.cue.channelId !== ''))   // my notes
                             ? null :
                             (
                                 <Text style={{
