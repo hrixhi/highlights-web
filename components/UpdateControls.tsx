@@ -2343,7 +2343,12 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             {PreferredLanguageText("import")} {Dimensions.get("window").width < 768 ? "" : "   "}
                         </Text>
                     ) : (
-                        props.showOriginal && isOwner && !imported && !showImportOptions ?
+                        (props.showOriginal && !isOwner) || // viewing import as non import
+                            (props.showOriginal && isOwner && imported) ||  // viewing import as owner
+                            (!props.showOriginal && isOwner) || // no submission as owner
+                            (!props.showOriginal && submissionImported && !isOwner) ||  // submitted as non owner
+                            (!props.showOriginal && !submission)   // my notes
+                            ? null :
                             (
                                 <Text style={{
                                     color: '#a2a2aa',
@@ -2357,7 +2362,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 >
                                     {PreferredLanguageText('import')}     {Dimensions.get('window').width < 768 ? '' : '   '}
                                 </Text>
-                            ) : null
+                            )
                     )}
                     {/* <Text
                         style={{
