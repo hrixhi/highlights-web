@@ -68,14 +68,14 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
             height: ((dimensions.window.height) * 0.64),
             opacity: props.fadeAnimation,
             width: dimensions.window.width < 1024 ? dimensions.window.width : dimensions.window.width * 0.3,
-            paddingHorizontal: 18,
+            paddingHorizontal: 25,
             // paddingTop: 15
         }}>
             <ScrollView
                 showsVerticalScrollIndicator={false}
                 horizontal={false}
                 contentContainerStyle={{
-                    width: dimensions.window.width < 1024 ? dimensions.window.width - 36 : (dimensions.window.width * 0.3 - 36),
+                    width: dimensions.window.width < 1024 ? dimensions.window.width - 50 : (dimensions.window.width * 0.3 - 50),
                     height: dimensions.window.width < 1024 ? '100%' : (((dimensions.window.height) * 0.7) - 2),
                 }}
                 style={{ paddingBottom: 15 }}
@@ -83,7 +83,7 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 {/* <View style={styles.marginSmall} /> */}
                 {
                     filteredCues.map((cue: any, index: number) => {
-                        return <View style={{ height: 80, marginBottom: 12, maxWidth: 500 }} key={index}>
+                        return <View style={{ height: 70, marginBottom: 15, maxWidth: 500 }} key={index}>
                             <Card
                                 fadeAnimation={props.fadeAnimation}
                                 updateModal={() => props.openUpdate(

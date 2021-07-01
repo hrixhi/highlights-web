@@ -34,7 +34,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
         <View style={styles.bottombar}>
             <View style={styles.colorBar}>
                 <View style={{ flexDirection: 'row', width: '100%' }}>
-                    <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{ paddingLeft: 20 }}>
+                    <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{ paddingHorizontal: 25 }}>
                         <TouchableOpacity
                             style={choice === 'All' ? styles.subOutline : styles.sub}
                             onPress={() => {
@@ -88,20 +88,20 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         }
                     </ScrollView>
                 </View>
-                <Text style={{ fontSize: 9, color: '#a2a2aa', paddingTop: 7, paddingLeft: 30 }}>
+                <Text style={{ fontSize: 9, color: '#a2a2aa', paddingTop: 7, paddingLeft: 35 }}>
                     My Channels
                 </Text>
             </View>
-            <View style={{ display: 'flex', flexDirection: 'row', height: '53%', paddingHorizontal: 15 }}>
+            <View style={{ display: 'flex', flexDirection: 'row', height: '45%', paddingHorizontal: 15 }}>
                 <View style={styles.icons}>
                     <TouchableOpacity
                         onPress={() => props.openChannels()}
                         style={styles.center}
                     >
                         <Text style={{ textAlign: 'center', lineHeight: 22 }}>
-                            <Ionicons name='radio-outline' size={21} color={'#a2a2aa'} />
+                            <Ionicons name='radio-outline' size={21} color={'#202025'} />
                         </Text>
-                        <Text style={{ fontSize: 9, color: '#a2a2a2' }}>
+                        <Text style={{ fontSize: 9, color: '#202025' }}>
                             Channels
                         </Text>
                     </TouchableOpacity>
@@ -112,9 +112,9 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         style={styles.center}
                     >
                         <Text style={{ textAlign: 'center', lineHeight: 20 }}>
-                            <Ionicons name='calendar-outline' size={21} color={'#a2a2aa'} />
+                            <Ionicons name='calendar-outline' size={21} color={'#202025'} />
                         </Text>
-                        <Text style={{ fontSize: 9, color: '#a2a2aa' }}>
+                        <Text style={{ fontSize: 9, color: '#202025' }}>
                             Planner
                         </Text>
                     </TouchableOpacity>
@@ -135,9 +135,9 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         style={styles.center}
                     >
                         <Text style={{ textAlign: 'center', lineHeight: 22 }}>
-                            <Ionicons name={loggedIn ? 'person-circle-outline' : 'cloud-upload-outline'} size={22} color={'#a2a2aa'} />
+                            <Ionicons name={loggedIn ? 'person-circle-outline' : 'cloud-upload-outline'} size={22} color={'#202025'} />
                         </Text>
-                        <Text style={{ fontSize: 9, color: '#a2a2aa' }}>
+                        <Text style={{ fontSize: 9, color: '#202025' }}>
                             {!loggedIn && userLoaded ? 'Sign Up' : 'Profile'}
                         </Text>
                     </TouchableOpacity>
@@ -148,9 +148,9 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         style={styles.center}
                     >
                         <Text style={{ textAlign: 'center', lineHeight: 22 }}>
-                            <Ionicons name='help-circle-outline' size={22} color={'#a2a2aa'} />
+                            <Ionicons name='help-circle-outline' size={22} color={'#202025'} />
                         </Text>
-                        <Text style={{ fontSize: 9, color: '#a2a2aa' }}>
+                        <Text style={{ fontSize: 9, color: '#202025' }}>
                             Help
                         </Text>
                     </TouchableOpacity>
@@ -169,7 +169,7 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
         display: 'flex',
         paddingBottom: 10,
         borderTopWidth: 1,
-        borderColor: '#dddddd'
+        borderColor: '#eeeeee'
     },
     icons: {
         width: '20%',
@@ -189,9 +189,9 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
     },
     colorBar: {
         width: '100%',
-        height: '47%',
+        height: '55%',
         // flexDirection: 'row',
-        paddingTop: 24,
+        paddingTop: 20,
         // paddingLeft: 20
     },
     iconContainer: {

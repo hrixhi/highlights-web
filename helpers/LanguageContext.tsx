@@ -14,7 +14,7 @@ const languageOptions = [
 ]
 
 const EnglishBank: { [key: string]: string } = {
-    login: "Login", // Done
+    login: "Log in", // Done
     continueLeftOff: "Continue where you left off.", // Done
     email: "Email", // Done
     password: "Password", // Done
@@ -74,7 +74,7 @@ const EnglishBank: { [key: string]: string } = {
     newPassword: "New Password", // Done
     atleast8char: 'At least 8 characters, 1 uppercase letter, 1 number & 1 symbol', // Done
     confirmNewPassword: "Confirm New Password", // Done
-    logout: "Logout", // Done
+    logout: "Log out", // Done
     enrolmentPassword: "Enrolment password",
     backUp: 'Sign Up', // Done
     createAccount: 'Create an account to save your work to the cloud.', // Done

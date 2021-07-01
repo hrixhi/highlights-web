@@ -151,7 +151,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
         <View style={{
             backgroundColor: 'white',
             width: '100%',
-            height: props.cueId ? 'auto' : windowHeight,
+            height: props.cueId ? 'auto' : windowHeight - 50,
             paddingHorizontal: 20,
             borderTopRightRadius: props.cueId ? 0 : 30,
             borderTopLeftRadius: props.cueId ? 0 : 30,
@@ -190,7 +190,14 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             !props.cueId
                                 ? <Text
                                     ellipsizeMode="tail"
-                                    style={{ color: '#a2a2aa', fontSize: 15, flex: 1, lineHeight: 25, fontWeight: 'bold' }}>
+                                    style={{
+                                        fontSize: 11,
+                                        paddingBottom: 20,
+                                        textTransform: "uppercase",
+                                        // paddingLeft: 10,
+                                        flex: 1,
+                                        lineHeight: 25
+                                    }}>
                                     {PreferredLanguageText('discussion')}
                                 </Text>
                                 : <TouchableOpacity
@@ -202,11 +209,17 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                         paddingBottom: 40
                                     }}>
                                     <Text style={{
-                                        color: '#a2a2aa', fontSize: 14, paddingRight: 10, fontWeight: 'bold'
+                                        lineHeight: 23,
+                                        marginRight: 10,
+                                        color: '#a2a2aa',
+                                        fontSize: 11,
+                                        textTransform: 'uppercase'
                                     }}>
                                         {PreferredLanguageText('comments')}
                                     </Text>
-                                    <Ionicons size={14} name={showComments ? 'caret-down-circle-outline' : 'caret-forward-circle-outline'} color='#a2a2aa' />
+                                    <Text style={{ lineHeight: 21 }}>
+                                        <Ionicons size={14} name={showComments ? 'caret-down-outline' : 'caret-forward-outline'} color='#a2a2aa' />
+                                    </Text>
                                 </TouchableOpacity>
                         }
                         {
@@ -214,7 +227,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 <TouchableOpacity
                                     key={Math.random()}
                                     style={{
-                                        width: '10%',
+                                        width: '20%',
                                         backgroundColor: 'white'
                                     }}
                                     onPress={() => setShowPost(true)}>
@@ -222,10 +235,12 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                         width: '100%',
                                         textAlign: 'right',
                                         lineHeight: 23,
-                                        paddingRight: 10,
-                                        marginTop: -1
+                                        marginRight: 20,
+                                        color: '#a2a2aa',
+                                        fontSize: 11,
                                     }}>
-                                        <Ionicons name='create-outline' size={20} color={'#202025'} />
+                                        NEW POST
+                                        {/* <Ionicons name='create-outline' size={20} color={'#202025'} /> */}
                                     </Text>
                                 </TouchableOpacity> : null
                         }
@@ -254,7 +269,8 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 </View> :
                                 <View style={{
                                     width: '100%',
-                                    height: props.cueId ? 'auto' : windowHeight - 75,
+                                    height: props.cueId ? 'auto' : windowHeight - 100,
+                                    // borderWidth: 1,
                                     backgroundColor: 'white',
                                     flex: 1
                                 }}
@@ -265,10 +281,11 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                             <ScrollView
                                                 showsVerticalScrollIndicator={false}
                                                 horizontal={false}
-                                                style={{ height: '100%' }}
+                                                // style={{ height: '100%' }}
                                                 contentContainerStyle={{
+                                                    // borderWidth: 2,
                                                     width: '100%',
-                                                    height: '100%',
+                                                    // height: windowHeight - 200,
                                                 }}
                                             >
                                                 {
@@ -402,8 +419,8 @@ const styleObject = () => {
         },
         col: {
             width: '100%',
-            height: 80,
-            marginBottom: 12,
+            height: 70,
+            marginBottom: 15,
             backgroundColor: 'white'
         },
         colorBar: {

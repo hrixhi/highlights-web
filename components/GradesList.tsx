@@ -27,7 +27,14 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
             <View style={{ backgroundColor: 'white', flexDirection: 'row', paddingBottom: 25 }}>
                 <Text
                     ellipsizeMode="tail"
-                    style={{ color: '#a2a2aa', fontSize: 15, flex: 1, lineHeight: 25, fontWeight: 'bold' }}>
+                    style={{
+                        fontSize: 11,
+                        paddingBottom: 20,
+                        textTransform: "uppercase",
+                        // paddingLeft: 10,
+                        flex: 1,
+                        lineHeight: 25
+                    }}>
                     {PreferredLanguageText('grades')}
                 </Text>
             </View>
@@ -109,9 +116,9 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                     <Text style={{ textAlign: 'left', fontSize: 12, color: '#202025', fontFamily: 'inter' }}>
                                                         {score.fullName}
                                                     </Text>
-                                                    <Text style={{ textAlign: 'left', fontSize: 12, color: '#202025' }}>
+                                                    {/* <Text style={{ textAlign: 'left', fontSize: 12, color: '#202025' }}>
                                                         {score.displayName}
-                                                    </Text>
+                                                    </Text> */}
                                                 </View>
                                                 {
                                                     cues.map((cue: any, col: number) => {
@@ -153,6 +160,6 @@ export default React.memo(GradesList, (prev, next) => {
 
 
 const styles = StyleSheet.create({
-    row: { height: 80, borderRadius: 15, marginBottom: 12, flexDirection: 'row', overflow: 'hidden', backgroundColor: '#f4f4f6', },
+    row: { height: 70, borderRadius: 15, marginBottom: 15, flexDirection: 'row', overflow: 'hidden', backgroundColor: '#f4f4f6', },
     col: { width: 100, justifyContent: 'center', display: 'flex', flexDirection: 'column', backgroundColor: '#f4f4f6', padding: 7 }
 })

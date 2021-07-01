@@ -46,21 +46,28 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     width: '100%',
                     height: '100%',
                     backgroundColor: 'white',
-                    padding: 15,
+                    paddingHorizontal: 20,
                     opacity: modalAnimation,
                     borderTopLeftRadius: 0,
                     borderTopRightRadius: 0
                 }}>
-                <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 20 }}>
+                <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 10 }}>
                     {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
                 </Text>
-                <View style={{ backgroundColor: 'white', paddingLeft: 20, paddingTop: 10 }}>
+                <View style={{ backgroundColor: 'white', paddingTop: 10 }}>
                     <Text
-                        style={{ color: '#a2a2aa', fontSize: 17, flex: 1, lineHeight: 25, fontWeight: 'bold' }}
+                        style={{
+                            fontSize: 11,
+                            paddingBottom: 20,
+                            textTransform: "uppercase",
+                            // paddingLeft: 10,
+                            flex: 1,
+                            lineHeight: 25
+                        }}
                         ellipsizeMode="tail">
                         Walkthrough
                     </Text>
-                    <Text style={{ paddingTop: 25, paddingBottom: 40, fontSize: 13, color: '#a2a2a2' }}>
+                    <Text style={{ paddingTop: 0, paddingBottom: 20, fontSize: 13, color: '#a2a2a2' }}>
                         Reach out to us using the blue Messenger icon.
                     </Text>
                 </View>
@@ -70,6 +77,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         maxWidth: 500,
                         //height: 50,
                         paddingLeft: 55,
+                        paddingTop: 20,
                         backgroundColor: 'white',
                         // flexDirection: 'row'
                     }}>

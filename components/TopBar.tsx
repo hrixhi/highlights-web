@@ -106,18 +106,18 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
     return (
         <View style={styles.topbar} key={Math.random()}>
-            <View style={{ width: '80%', height: Dimensions.get('window').height * 0.15 * 0.15, alignSelf: 'center' }} />
-            <View style={{ width: '100%', height: Dimensions.get('window').height * 0.15 * 0.85 }}>
+            {/* <View style={{ width: '80%', height: Dimensions.get('window').height * 0.15 * 0.1, alignSelf: 'center' }} /> */}
+            <View style={{ width: '100%', height: Dimensions.get('window').height * 0.15 }}>
                 <View style={{
                     height: '45%',
                     flexDirection: 'row',
                     display: 'flex',
-                    paddingLeft: 20,
-                    paddingTop: 3
+                    paddingHorizontal: 25,
+                    paddingTop: 5
                 }}>
                     <TouchableOpacity
                         onPress={() => Linking.openURL('http://www.cuesapp.co')}
-                        style={{ backgroundColor: 'white', paddingTop: 6 }}>
+                        style={{ backgroundColor: 'white' }}>
                         {/* NAVRACHANA HARD CODE */}
                         <Image
                             source={
@@ -128,8 +128,8 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             style={{
                                 // width: Dimensions.get('window').height * (showNavrachanaLogo ? 0.11 : 0.14) * 0.53456,
                                 // height: Dimensions.get('window').height * (showNavrachanaLogo ? 0.22 : 0.14) * 0.2
-                                width: Dimensions.get('window').height * 0.13 * 0.53456,
-                                height: Dimensions.get('window').height * 0.15 * 0.2
+                                width: Dimensions.get('window').height * 0.07,
+                                height: Dimensions.get('window').height * 0.03
                             }}
                             resizeMode={'contain'}
                         />
@@ -146,8 +146,8 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         style={{ marginRight: 15 }}
                                         onPress={() => props.openMeeting()}>
                                         <Text style={styles.channelText}>
-                                            <Ionicons 
-                                            name='videocam-outline' size={21} color={'#a2a2aa'} />
+                                            <Ionicons
+                                                name='videocam-outline' size={21} color={'#a2a2aa'} />
                                             {
                                                 props.meetingOn ?
                                                     <View style={styles.badge} /> : null
@@ -186,7 +186,7 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         </Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity
-                                        style={{ marginRight: 15 }}
+                                        style={{ marginRight: isOwner ? 15 : 0 }}
                                         onPress={() => props.openGrades()}>
                                         <Text style={styles.channelText}>
                                             <Ionicons name='stats-chart-outline' size={19} color={'#a2a2aa'} />
@@ -198,7 +198,7 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     {
                                         isOwner ?
                                             <TouchableOpacity
-                                                style={{ marginRight: 15 }}
+                                                style={{ marginRight: 0 }}
                                                 onPress={() => editChannelInfo()}>
                                                 <Text style={styles.channelText}>
                                                     <Ionicons name='settings-outline' size={19} color={'#a2a2aa'} />
@@ -217,7 +217,7 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     key={JSON.stringify(cues) + JSON.stringify(filterChoice)}
                     style={{
                         width: '100%', height: '55%', flexDirection: 'column',
-                        paddingTop: 5
+                        paddingTop: 2
                     }}>
                     <View style={{ flex: 1 }} />
                     {/* <View>
@@ -280,7 +280,8 @@ const styleObject: any = (channelId: any) => StyleSheet.create({
         display: 'flex',
         borderTopRightRadius: 0,
         borderTopLeftRadius: 0,
-        paddingTop: 18
+        paddingTop: 25,
+        maxWidth: 550
     },
     badge: {
         position: 'absolute',

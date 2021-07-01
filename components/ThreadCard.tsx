@@ -94,7 +94,7 @@ const ThreadCard: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     </View>
                     {
                         imported ?
-                            <View style={{ backgroundColor: '#f4f4f6', flex: 1, flexDirection: 'row' }}>
+                            <View style={{ backgroundColor: '#f4f4f6', flex: 1, flexDirection: 'row', paddingTop: 6 }}>
                                 <Text style={{ width: '100%', color: '#a2a2aa', fontSize: 15, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                                     <Ionicons name='document-outline' size={17} color='#a2a2aa' /> {title}.{type}
                                 </Text>
@@ -104,7 +104,7 @@ const ThreadCard: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     <Ionicons name="chevron-forward-outline" color="#a2a2aa" size={20} style={{ marginTop: 4 }} />
                                 </Text>
                             </View>
-                            : <View style={{ backgroundColor: '#f4f4f6', width: '100%', flexDirection: 'row', display: 'flex', height: '44%' }}>
+                            : <View style={{ backgroundColor: '#f4f4f6', width: '100%', flexDirection: 'row', display: 'flex' }}>
                                 <Text ellipsizeMode={'tail'}
                                     numberOfLines={1}
                                     style={styleObject.title}>
@@ -133,11 +133,11 @@ const ThreadCard: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 </Text>
                             </View>
                     }
-                    <Text ellipsizeMode={'tail'}
+                    {/* <Text ellipsizeMode={'tail'}
                         numberOfLines={1}
                         style={styleObject.description}>
                         {subtitle}
-                    </Text>
+                    </Text> */}
                 </View>
             </TouchableOpacity>
         </View>
@@ -201,6 +201,7 @@ const styles: any = () => StyleSheet.create({
     titleArrow: {
         fontFamily: 'inter',
         fontSize: 13,
+        lineHeight: 20,
         paddingTop: 5,
         color: '#202025',
         marginLeft: 10
@@ -208,7 +209,7 @@ const styles: any = () => StyleSheet.create({
     description: {
         fontSize: 13,
         color: '#a2a2aa',
-        height: '30%',
+        // height: '30%',
     },
     color: {
         width: 10,

@@ -302,7 +302,14 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                 <View style={{ backgroundColor: "white", flexDirection: "row", paddingBottom: 50 }}>
                     <Text
                         ellipsizeMode="tail"
-                        style={{ color: "#a2a2aa", fontSize: 17, flex: 1, lineHeight: 25, fontWeight: "bold" }}>
+                        style={{
+                            fontSize: 11,
+                            paddingBottom: 20,
+                            textTransform: "uppercase",
+                            // paddingLeft: 10,
+                            flex: 1,
+                            lineHeight: 25
+                        }}>
                         {PreferredLanguageText("classroom")}
                     </Text>
                 </View>
@@ -345,8 +352,8 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                         </View>
                                     </View>
                                     <Text style={{ fontSize: 12, color: "#a2a2aa", paddingTop: 10 }}>
-                                        Turn on to begin session. {"\n"}Restart switch if you are unable to join the
-                                        classroom.
+                                        {/* Turn on to begin session. {"\n"} */}
+                                        Restart switch if you cannot join.
                                     </Text>
                                 </View>
                             </View>
@@ -454,7 +461,15 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                         <View style={{ borderColor: "#f4f4f6", borderTopWidth: 1 }}>
                             <Text
                                 ellipsizeMode="tail"
-                                style={{ color: "#a2a2aa", fontSize: 15, lineHeight: 25, marginVertical: 25 }}>
+                                style={{
+                                    color: "#a2a2aa",
+                                    fontSize: 11,
+                                    lineHeight: 30,
+                                    paddingTop: 5,
+                                    // textAlign: "right",
+                                    // paddingRight: 20,
+                                    textTransform: "uppercase"
+                                }}>
                                 {PreferredLanguageText("upcoming")}
                             </Text>
                         </View>
@@ -474,11 +489,12 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                         ellipsizeMode="tail"
                                         style={{
                                             color: "#a2a2aa",
-                                            fontSize: 14,
-                                            lineHeight: 25,
-                                            marginBottom: 25,
-                                            marginTop: 10,
-                                            fontWeight: "bold"
+                                            fontSize: 11,
+                                            lineHeight: 30,
+                                            paddingTop: 5,
+                                            // textAlign: "right",
+                                            // paddingRight: 20,
+                                            textTransform: "uppercase"
                                         }}>
                                         {PreferredLanguageText("upcoming")}
                                     </Text>
@@ -600,7 +616,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                             fullName: "scheduled"
                                         }}
                                         disabled={true}
-                                        onPress={() => {}}
+                                        onPress={() => { }}
                                         status={!props.cueId ? false : true}
                                     />
                                 </View>
@@ -744,8 +760,8 @@ const styles = StyleSheet.create({
     },
     col: {
         width: "100%",
-        height: 80,
-        marginBottom: 12,
+        height: 70,
+        marginBottom: 15,
         // flex: 1,
         backgroundColor: "white"
     }

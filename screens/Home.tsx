@@ -193,16 +193,16 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             server.query({
               query: getMeetingStatus,
               variables: {
-                  channelId
+                channelId
               }
             }).then(res => {
-                if (res.data && res.data.channel && res.data.channel.getMeetingStatus) {
-                    setMeetingOn(true)
-                } else {
-                    setMeetingOn(false)
-                }
+              if (res.data && res.data.channel && res.data.channel.getMeetingStatus) {
+                setMeetingOn(true)
+              } else {
+                setMeetingOn(false)
+              }
             })
-            .catch(err => console.log(err))
+              .catch(err => console.log(err))
           }
         }
       )()
@@ -239,14 +239,14 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
       server.query({
         query: getMeetingStatus,
         variables: {
-            channelId
+          channelId
         }
       }).then(res => {
-          if (res.data && res.data.channel && res.data.channel.getMeetingStatus) {
-              setMeetingOn(true)
-          } else {
-              setMeetingOn(false)
-          }
+        if (res.data && res.data.channel && res.data.channel.getMeetingStatus) {
+          setMeetingOn(true)
+        } else {
+          setMeetingOn(false)
+        }
       })
     }
 
@@ -1254,11 +1254,11 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 resizeMode={'contain'}
               />
             </View>
-            <Text style={{ fontSize: 22, color: '#202025', fontFamily: 'inter', paddingBottom: 15, maxWidth: 500, textAlign: 'center' }}>
+            {/* <Text style={{ fontSize: 22, color: '#202025', fontFamily: 'inter', paddingBottom: 15, maxWidth: 500, textAlign: 'center' }}>
               {
                 showForgotPassword ? '' : PreferredLanguageText('login')
               }
-            </Text>
+            </Text> */}
             <Text style={{ fontSize: 18, color: '#a2a2aa', fontFamily: 'overpass', paddingBottom: 25, maxWidth: 500, textAlign: 'center' }}>
               {
                 showForgotPassword ? PreferredLanguageText('temporaryPassword') : PreferredLanguageText('continueLeftOff')
@@ -1405,7 +1405,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         height: dimensions.window.height,
         flexDirection: 'column',
         backgroundColor: '#fff',
-        borderRightColor: '#dddddd',
+        borderRightColor: '#eeeeee',
         borderRightWidth: 1,
       }}>
         <TopBar
@@ -1485,18 +1485,20 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             backgroundColor: '#fff',
             position: dimensions.window.width < 1024 ? 'absolute' : 'relative'
           }}>
+            <View style={{ flex: 1, backgroundColor: 'white', paddingHorizontal: 5 }}>
+              {modalContent}
+            </View>
             {
               dimensions.window.width < 1024 ?
                 <TouchableOpacity
                   onPress={() => closeModal()}
-                  style={{ height: 30, backgroundColor: '#fff', borderBottomWidth: 1, borderBottomColor: '#f4f4f6' }}>
-                  <Text style={{ flex: 1, textAlign: 'center', fontSize: 15, lineHeight: 15, marginTop: 7, color: '#202025' }}>
-                    Close <Ionicons name='chevron-down-outline' size={15} />
+                  style={{ height: 50, backgroundColor: '#fff', borderTopWidth: 1, borderColor: '#f4f4f6' }}>
+                  <Text style={{ flex: 1, textAlign: 'center', fontSize: 15, lineHeight: 15, marginTop: 15, color: '#202025' }}>
+                    <Ionicons name='chevron-back-outline' size={15} /> Back
                   </Text>
                 </TouchableOpacity> :
                 <View style={{ backgroundColor: '#f4f4f6', height: 0 }} />
             }
-            {modalContent}
           </View>
       }
     </View>
@@ -1513,7 +1515,7 @@ const styles = StyleSheet.create({
   activityContainer: {
     borderTopWidth: 0,
     borderBottomWidth: 0,
-    borderColor: '#dddddd',
+    borderColor: '#eeeeee',
     height: '64%',
     width: '100%',
     justifyContent: "center",

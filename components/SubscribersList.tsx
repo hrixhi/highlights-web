@@ -497,9 +497,11 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
             borderTopRightRadius: 0,
             borderTopLeftRadius: 0
         }}>
-            <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 25 }}>
-                {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
-            </Text>
+            {
+                props.cueId ? null : <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 25 }}>
+                    {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
+                </Text>
+            }
             {
                 showSubmission || showChat || showAddUsers || showNewGroup ?
                     <View style={{ backgroundColor: 'white', paddingBottom: 15, maxWidth: 600 }}>
@@ -611,7 +613,8 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                     </View>
                                                 </View>
                                                 <Text style={{ fontSize: 12, color: '#a2a2aa', paddingTop: 10 }}>
-                                                    Turn on to begin private meeting. {'\n'}Restart switch if you are unable to join the call.
+                                                    {/* Turn on to begin private meeting. {'\n'} */}
+                                                    Restart switch if you cannot join.
                                                 </Text>
                                             </View>
                                         </View> : null
@@ -663,7 +666,14 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 null :
                                 <Text
                                     ellipsizeMode="tail"
-                                    style={{ color: '#a2a2aa', fontSize: 15, flex: 1, lineHeight: 25, fontWeight: 'bold' }}>
+                                    style={{
+                                        fontSize: 11,
+                                        paddingBottom: 20,
+                                        textTransform: "uppercase",
+                                        // paddingLeft: 10,
+                                        flex: 1,
+                                        lineHeight: 25
+                                    }}>
                                     {PreferredLanguageText('inbox')}
                                 </Text>
                         }
@@ -860,7 +870,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                     key={filterChoice + key}
                                                     contentContainerStyle={{
                                                         width: '100%',
-                                                        height: props.cueId ? windowHeight - 200 : '100%',
+                                                        height: props.cueId ? windowHeight - 150 : '100%',
                                                         marginBottom: props.cueId ? 20 : 0
                                                     }}
                                                 >
@@ -1239,8 +1249,8 @@ const styleObject = () => {
         },
         col: {
             width: '100%',
-            height: 80,
-            marginBottom: 12,
+            height: 70,
+            marginBottom: 15,
             // flex: 1,
             backgroundColor: 'white'
         },

@@ -602,7 +602,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 fontSize: 11,
                                 paddingBottom: 20,
                                 textTransform: 'uppercase',
-                                paddingLeft: 10
+                                // paddingLeft: 10
                             }}
                         >
                             {PreferredLanguageText('new')}
@@ -617,7 +617,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             textAlign: 'right',
                             lineHeight: 30,
                             marginTop: -31,
-                            paddingRight: 25,
+                            // paddingRight: 25,
                             width: '100%'
                         }}>
                             <Ionicons name='bookmark' size={34} color={starred ? '#d91d56' : '#a2a2aa'} />
@@ -629,6 +629,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     display: 'flex',
                     flexDirection: dimensions.window.width < 768 ? 'column-reverse' : 'row',
                     paddingBottom: 4,
+                    marginTop: showImportOptions || imported || isQuiz ? 0 : 20,
                     backgroundColor: 'white',
                 }} onTouchStart={() => Keyboard.dismiss()}>
                     <View style={{ flexDirection: dimensions.window.width < 768 ? 'column' : 'row', flex: 1 }}>
@@ -649,7 +650,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     selectedIconTint={"#a2a2aa"}
                                     disabledIconTint={"#a2a2aa"}
                                     actions={
-                                        imported || isQuiz ? ["clear"] :
+                                        imported || isQuiz ? [""] :
                                             [
                                                 actions.setBold,
                                                 actions.setItalic,
@@ -786,7 +787,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     {
                         imported || isQuiz ?
                             <View style={{ display: 'flex', flexDirection: width < 768 ? 'column' : 'row', overflow: 'visible' }}>
-                                <View style={{ width: width < 768 ? '100%' : '33.33%', borderRightWidth: 0, borderColor: '#f4f4f6', paddingRight: 15, paddingTop: 20 }}>
+                                <View style={{ width: width < 768 ? '100%' : '33.33%', borderRightWidth: 0, borderColor: '#f4f4f6', paddingRight: 15, display: 'flex', flexDirection: 'row' }}>
                                     <TextInput
                                         value={title}
                                         style={styles.input}
@@ -794,6 +795,23 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         onChangeText={val => setTitle(val)}
                                         placeholderTextColor={'#a2a2aa'}
                                     />
+                                    <TouchableOpacity
+                                        style={{
+                                            marginLeft: 15,
+                                            paddingTop: 15
+                                        }}
+                                        onPress={() => clearAll()}
+                                    >
+                                        <Ionicons name="trash-outline" color="#a2a2aa" size={20} style={{ alignSelf: 'center' }} />
+                                        <Text
+                                            style={{
+                                                fontSize: 9,
+                                                color: "#a2a2aa",
+                                                textAlign: "center"
+                                            }}>
+                                            Remove
+                                        </Text>
+                                    </TouchableOpacity>
                                 </View>
                                 {
                                     isQuiz ?

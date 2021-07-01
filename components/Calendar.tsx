@@ -45,11 +45,11 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const [editEvent, setEditEvent] = useState<any>(null);
     // Stores channel name of event being modified
     const [editChannelName, setEditChannelName] = useState("")
-	const [isEditingEvents, setIsEditingEvents] = useState(false);
+    const [isEditingEvents, setIsEditingEvents] = useState(false);
     const [isDeletingEvents, setIsDeletingEvents] = useState(false);
 
     // const [viewModel, setViewModel] = useState<any>(new SchedulerData(new moment().format(DATE_FORMAT), ViewTypes.Week))
-    
+
     const localizer = momentLocalizer(moment);
 
     const loadChannels = useCallback(async () => {
@@ -69,7 +69,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         setChannels(res.data.channel.findByUserId);
                     }
                 })
-                .catch(err => {});
+                .catch(err => { });
         }
     }, []);
 
@@ -83,16 +83,16 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     let resources = [
         {
-           id: 'lectures',
-           name: 'Lectures',
+            id: 'lectures',
+            name: 'Lectures',
         },
         {
-           id: 'submissions',
-           name: 'Submissions'
+            id: 'submissions',
+            name: 'Submissions'
         },
         {
-           id: 'others',
-           name: 'Others',
+            id: 'others',
+            name: 'Others',
         },
     ];
 
@@ -101,7 +101,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     //     console.log(events);
 
     //     const schedulerData = new SchedulerData(new moment().format(DATE_FORMAT), ViewTypes.Week);
-    
+
     //     schedulerData.setResources(resources)
 
     //     schedulerData.setEvents(events)
@@ -128,7 +128,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 if (editEvent.recordMeeting) {
                     setRecordMeeting(true)
                 }
-            } 
+            }
 
         } else {
 
@@ -238,37 +238,37 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
         setIsEditingEvents(true);
 
         const server = fetchAPI("");
-            server
-                .mutate({
-                    mutation: editDateV1,
-                    variables: {
-                        id: editEvent.eventId,
-                        title,
-                        start: start.toUTCString(),
-                        end: end.toUTCString(),
-                        description,
-                        recordMeeting,
-                    }
-                })
-                .then(res => {
-                    const updated = new Date();
-                    loadEvents();
-                    setTitle("");
-                    setRepeatTill(new Date())
-                    setIsMeeting(false);
-                    setDescription("");
-                    setFrequency("1-W");
-                    setRecurring(false);
-                    setRecordMeeting(false);
-                    setIsEditingEvents(false);
-                    setEditEvent(null)
-                    setShowAddEvent(false)
+        server
+            .mutate({
+                mutation: editDateV1,
+                variables: {
+                    id: editEvent.eventId,
+                    title,
+                    start: start.toUTCString(),
+                    end: end.toUTCString(),
+                    description,
+                    recordMeeting,
+                }
+            })
+            .then(res => {
+                const updated = new Date();
+                loadEvents();
+                setTitle("");
+                setRepeatTill(new Date())
+                setIsMeeting(false);
+                setDescription("");
+                setFrequency("1-W");
+                setRecurring(false);
+                setRecordMeeting(false);
+                setIsEditingEvents(false);
+                setEditEvent(null)
+                setShowAddEvent(false)
 
-                })
-                .catch(err => {
-                    setIsEditingEvents(false);
-                    console.log(err)
-                });
+            })
+            .catch(err => {
+                setIsEditingEvents(false);
+                console.log(err)
+            });
 
     }, [editEvent, title, start, end, description, isMeeting, recordMeeting]);
 
@@ -279,34 +279,34 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
         setIsDeletingEvents(true);
 
-            const server = fetchAPI("");
-            server
-                .mutate({
-                    mutation: deleteDateV1,
-                    variables: {
-                        id: !deleteAll ? eventId : recurringId,
-                        deleteAll
-                    }
-                })
-                .then(res => {
-                    const updated = new Date();
-                    loadEvents();
-                    setTitle("");
-                    setRepeatTill(new Date())
-                    setIsMeeting(false);
-                    setDescription("");
-                    setFrequency("1-W");
-                    setRecurring(false);
-                    setRecordMeeting(false);
-                    setIsDeletingEvents(false);
-                    setEditEvent(null)
-                    setShowAddEvent(false)
-                })
-                .catch(err => {
-                    setIsDeletingEvents(false);
-                    console.log(err)
-                });
-       
+        const server = fetchAPI("");
+        server
+            .mutate({
+                mutation: deleteDateV1,
+                variables: {
+                    id: !deleteAll ? eventId : recurringId,
+                    deleteAll
+                }
+            })
+            .then(res => {
+                const updated = new Date();
+                loadEvents();
+                setTitle("");
+                setRepeatTill(new Date())
+                setIsMeeting(false);
+                setDescription("");
+                setFrequency("1-W");
+                setRecurring(false);
+                setRecordMeeting(false);
+                setIsDeletingEvents(false);
+                setEditEvent(null)
+                setShowAddEvent(false)
+            })
+            .catch(err => {
+                setIsDeletingEvents(false);
+                console.log(err)
+            });
+
     }, [title, start, end, description, isMeeting, recordMeeting]);
 
     const loadEvents = useCallback(async () => {
@@ -333,10 +333,10 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     const parsedEvents: any[] = [];
                     console.log(res)
                     res.data.date.getCalendar.map((e: any) => {
-						// console.log("event", e)
-						const { title } = htmlStringParser(e.title);
-						console.log("Title" , title)
-						console.log("Time", new Date(e.start))
+                        // console.log("event", e)
+                        const { title } = htmlStringParser(e.title);
+                        console.log("Title", title)
+                        console.log("Time", new Date(e.start))
                         parsedEvents.push({
                             eventId: e.eventId ? e.eventId : "",
                             originalTitle: title,
@@ -382,7 +382,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     //     }
                     // })
 
-                    
+
 
                     // schedulerData.setEvents(events);
                     // setEvents(events)
@@ -421,7 +421,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     // console.log(editEvent);
 
-    const datesEqual = (date1: string, date2: string)  => {
+    const datesEqual = (date1: string, date2: string) => {
         const one = new Date(date1);
         const two = new Date(date2);
 
@@ -435,7 +435,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
         const uString: any = await AsyncStorage.getItem("user");
         // Only allow edit if event is not past
-        if (uString ) {
+        if (uString) {
 
             const user = JSON.parse(uString);
 
@@ -455,21 +455,21 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     },
                     {
                         text: "Edit",
-                        onPress:  () => {
+                        onPress: () => {
                             setEditEvent(event)
                             setShowAddEvent(true)
                         }
                     }
                 ]);
-                
+
             } else {
                 Alert(
-                    event.title, 
+                    event.title,
                     descriptionString
                 );
             }
-            
-        } 
+
+        }
 
 
     }
@@ -479,7 +479,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const windowHeight =
         width < 1024 ? Dimensions.get("window").height - 30 : Dimensions.get("window").height;
 
-  
+
 
 
     const renderRecurringOptions = () => (
@@ -508,7 +508,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
             </View>
 
             {recurring ? <View style={{ width: width < 768 ? "100%" : "33.33%", display: "flex" }}>
-                <View style={{ width: "100%",  paddingTop: width < 768 ? 20 : 40, paddingBottom: 15, backgroundColor: "white" }}>
+                <View style={{ width: "100%", paddingTop: width < 768 ? 20 : 40, paddingBottom: 15, backgroundColor: "white" }}>
                     <Text style={{ fontSize: 12, color: "#a2a2aa" }}>Repeat every</Text>
                 </View>
                 <DefaultView
@@ -519,51 +519,51 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         // marginRight: 10
                     }}>
                     <Picker
-                            style={styles.picker}
-                            itemStyle={{
-                                fontSize: 15
-                            }}
-                            selectedValue={frequency}
-                            onValueChange={(itemValue: any) => {
-                                console.log(itemValue);
-                                setFrequency(itemValue)
-                            }}>
-                            {eventFrequencyOptions.map((item: any, index: number) => {
-                                return (
-                                    <Picker.Item
-                                        color={frequency === item.value ? "#3B64F8" : "#202025"}
-                                        label={item.value === "" ? "Once" : item.label}
-                                        value={item.value}
-                                        key={index}
-                                    />
-                                );
-                            })}
-                </Picker>
+                        style={styles.picker}
+                        itemStyle={{
+                            fontSize: 15
+                        }}
+                        selectedValue={frequency}
+                        onValueChange={(itemValue: any) => {
+                            console.log(itemValue);
+                            setFrequency(itemValue)
+                        }}>
+                        {eventFrequencyOptions.map((item: any, index: number) => {
+                            return (
+                                <Picker.Item
+                                    color={frequency === item.value ? "#3B64F8" : "#202025"}
+                                    label={item.value === "" ? "Once" : item.label}
+                                    value={item.value}
+                                    key={index}
+                                />
+                            );
+                        })}
+                    </Picker>
                 </DefaultView>
             </View> : null}
 
             {recurring ? <View style={{ width: width < 768 ? "100%" : "33.33%", display: "flex" }}>
-                <View style={{ width: "100%",  paddingTop: width < 768 ? 20 : 40, paddingBottom: 15, backgroundColor: "white" }}>
+                <View style={{ width: "100%", paddingTop: width < 768 ? 20 : 40, paddingBottom: 15, backgroundColor: "white" }}>
                     <Text style={{ fontSize: 12, color: "#a2a2aa" }}>Repeat until</Text>
                 </View>
                 <View
                     style={{
-                    width: width < 768 ? "100%" : "30%",
-                                    flexDirection: "row",
-                                            marginLeft: 0
-                                        }}>
-                                       
-                                       <Datetime
-                            value={repeatTill}
-                            onChange={(event: any) => {
-                                const date = new Date(event);
-                                if (date < new Date()) return;
+                        width: width < 768 ? "100%" : "30%",
+                        flexDirection: "row",
+                        marginLeft: 0
+                    }}>
 
-                                setRepeatTill(date);
-                            }}
-                            isValidDate={disablePastDt}
+                    <Datetime
+                        value={repeatTill}
+                        onChange={(event: any) => {
+                            const date = new Date(event);
+                            if (date < new Date()) return;
+
+                            setRepeatTill(date);
+                        }}
+                        isValidDate={disablePastDt}
                     />
-                                    </View>
+                </View>
                 {/* <View
                     style={{
                         backgroundColor: "white",
@@ -582,14 +582,14 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     />
                 </View> */}
             </View> : null}
-            
-                
+
+
         </View>
     )
 
     const renderMeetingOptions = () => {
         return channelId !== "" || editChannelName !== "" ? (
-            <DefaultView style={{ width: "100%", flexDirection: width < 768 ? "column" : "row" , paddingBottom: 15 }}>
+            <DefaultView style={{ width: "100%", flexDirection: width < 768 ? "column" : "row", paddingBottom: 15 }}>
                 {!editEvent ? <View
                     style={{
                         display: "flex",
@@ -619,7 +619,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             activeThumbColor="white"
                         />
                     </View>
-                </View> : null }
+                </View> : null}
                 {isMeeting ? (
                     <View
                         style={{
@@ -628,8 +628,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             width: width < 768 ? "100%" : "33.33%"
                         }}>
                         <View style={{ width: "100%", paddingTop: width < 768 ? 20 : 30, paddingBottom: 15, backgroundColor: "white" }}>
-                        <Text style={{ fontSize: 12, color: "#a2a2aa", marginBottom: 5 }}>Record Lecture</Text>
-                    </View>
+                            <Text style={{ fontSize: 12, color: "#a2a2aa", marginBottom: 5 }}>Record Lecture</Text>
+                        </View>
                         <Switch
                             value={recordMeeting}
                             onValueChange={() => {
@@ -663,14 +663,14 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         style={{
                             lineHeight: 20,
                             fontSize: 12,
-                            color:"#a2a2aa"
+                            color: "#a2a2aa"
                         }}>
                         Shared with {editChannelName}
                     </Text>
                 </TouchableOpacity>
             </View>
-                
-            );
+
+        );
     }
 
     const renderEditEventOptions = () => {
@@ -710,7 +710,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         borderRadius: 15,
                         textTransform: "uppercase"
                     }}>
-                   {isEditingEvents ? "EDITING..." : "EDIT"}
+                    {isEditingEvents ? "EDITING..." : "EDIT"}
                 </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -737,7 +737,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         borderRadius: 15,
                         textTransform: "uppercase"
                     }}>
-                   {isDeletingEvents ? "DELETING..." : "DELETE"}
+                    {isDeletingEvents ? "DELETING..." : "DELETE"}
                 </Text>
             </TouchableOpacity>
 
@@ -765,7 +765,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         borderRadius: 15,
                         textTransform: "uppercase"
                     }}>
-                   {isDeletingEvents ? "DELETING..." : "DELETE ALL"}
+                    {isDeletingEvents ? "DELETING..." : "DELETE ALL"}
                 </Text>
             </TouchableOpacity> : null
             }
@@ -830,21 +830,21 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 backgroundColor: "white",
                 borderTopRightRadius: 0,
                 borderTopLeftRadius: 0,
-                paddingHorizontal: width < 768 ? 10 : 25
+                paddingHorizontal: 20
             }}>
-            <Text style={{ width: "100%", textAlign: "center", height: 15, paddingBottom: 40 }}>
+            <Text style={{ width: "100%", textAlign: "center", height: 15, paddingBottom: 25 }}>
                 {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
             </Text>
             <View style={{ backgroundColor: "white", flexDirection: "row", paddingBottom: 25 }}>
                 <Text
                     ellipsizeMode="tail"
                     style={{
-                        color: "#a2a2aa",
-                        fontSize: 17,
+                        fontSize: 11,
+                        paddingBottom: 20,
+                        textTransform: "uppercase",
+                        // paddingLeft: 20,
                         flex: 1,
-                        lineHeight: 25,
-                        paddingHorizontal: 20,
-                        fontWeight: "bold"
+                        lineHeight: 25
                     }}>
                     {PreferredLanguageText("planner")}
                 </Text>
@@ -852,16 +852,16 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     style={{
                         color: "#a2a2aa",
                         fontSize: 11,
-                        lineHeight: 30,
-                        paddingTop: 5,
+                        lineHeight: 25,
+                        // paddingTop: 5,
                         textAlign: "right",
-                        paddingRight: 20,
+                        // paddingRight: 20,
                         textTransform: "uppercase"
                     }}
                     onPress={() => {
                         setShowAddEvent(!showAddEvent)
                         setEditEvent(null)
-                        }}>
+                    }}>
                     {showAddEvent ? PreferredLanguageText("hide") : PreferredLanguageText("add")}
                 </Text>
             </View>
@@ -897,7 +897,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             backgroundColor: "white",
                             width: "100%",
                             height: "100%",
-                            paddingHorizontal: 20,
+                            // paddingHorizontal: 20,
                             borderTopRightRadius: 0,
                             borderTopLeftRadius: 0
                         }}>
@@ -931,7 +931,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
                                 </View>
                                 {/* Put time here */}
-                                <View style={{ display: 'flex', width: "100%", flexDirection: width < 768 ? "column": "row", marginBottom: 30,  }} >
+                                <View style={{ display: 'flex', width: "100%", flexDirection: width < 768 ? "column" : "row", marginBottom: 30, }} >
                                     <View
                                         style={{
                                             width: width < 768 ? "100%" : "30%",
@@ -1055,8 +1055,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     {renderEditChannelName()}
                                     {!editEvent && renderRecurringOptions()}
                                     {renderMeetingOptions()}
-                                    {channelId !== "" &&  <Text style={{ fontSize: 12, color: "#a2a2aa", paddingTop: 10 }}>
-                                    Attendances will only be captured for scheduled lectures.
+                                    {channelId !== "" && <Text style={{ fontSize: 12, color: "#a2a2aa", paddingTop: 10 }}>
+                                        Attendances will only be captured for scheduled lectures.
                                     </Text>}
                                     {!editEvent ? <View
                                         style={{
@@ -1087,11 +1087,11 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     paddingHorizontal: 25,
                                                     fontFamily: "inter",
                                                     height: 35,
-                                                    width: 200,
+                                                    // width: 125,
                                                     borderRadius: 15,
                                                     textTransform: "uppercase"
                                                 }}>
-                                               {isCreatingEvents ? "SAVING..." : "SAVE"}
+                                                {isCreatingEvents ? "SAVING..." : "SAVE"}
                                             </Text>
                                         </TouchableOpacity>
                                     </View> : null}
@@ -1106,9 +1106,9 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             events={events}
                             startAccessor="start"
                             endAccessor="end"
-                            style={{ height: 425, fontFamily: "overpass", color: "#202025" }}
+                            style={{ height: 525, fontFamily: "overpass", color: "#202025" }}
                         /> : null}
-                        
+
                     </View>
                 )}
             </ScrollView>

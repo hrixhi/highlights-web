@@ -27,14 +27,14 @@ const Channels: React.FunctionComponent<{ [label: string]: any }> = (props: any)
         >
             <Animated.View style={{
                 width: Dimensions.get('window').width < 1024 ? '100%' : '60%',
-                paddingHorizontal: Dimensions.get('window').width < 1024 ? 20 : 0,
+                paddingHorizontal: 0,
                 minHeight: '100%',
                 backgroundColor: 'white',
                 opacity: modalAnimation,
                 // alignSelf: 'center',
-                paddingLeft: 20
+                // paddingLeft: 20
             }}>
-                <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 25 }}>
+                <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 10 }}>
                     {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
                 </Text>
                 <ChannelControls
