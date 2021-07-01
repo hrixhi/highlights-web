@@ -30,10 +30,11 @@ import Quiz from "./Quiz";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
 import TeXToSVG from "tex-to-svg";
 import EquationEditor from "equation-editor-react";
-import WebView from "react-native-webview";
+// import WebView from "react-native-webview";
 import { PreferredLanguageText } from "../helpers/LanguageContext";
 import moment from "moment";
 import ReactPlayer from "react-player";
+import Webview from './Webview'
 
 const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const current = new Date();
@@ -135,15 +136,15 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const cannotUndoAlert = PreferredLanguageText("cannotUndo");
     const sharedAlert = PreferredLanguageText("sharedAlert");
     const checkConnectionAlert = PreferredLanguageText("checkConnection");
-    
-    const [webviewKey, setWebviewKey] = useState(Math.random());
-    const [intervalKey, setIntervalKey] = useState(0)
-    useEffect(() => {
-        const id = setInterval(() => {
-            setWebviewKey(Math.random());
-        }, 3000);
-        setIntervalKey(id)
-    }, []);
+
+    // const [webviewKey, setWebviewKey] = useState(Math.random());
+    // const [intervalKey, setIntervalKey] = useState(0)
+    // useEffect(() => {
+    //     const id = setInterval(() => {
+    //         setWebviewKey(Math.random());
+    //     }, 3000);
+    //     setIntervalKey(id)
+    // }, []);
 
     // ON INIT = LOAD CHANNEL RELATED CONTENT
     useEffect(() => {
@@ -1264,14 +1265,11 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     />
                 ) : (
                     <View
-                        // key={Math.random()}
+                        key={url}
                         style={{ flex: 1 }}>
-                        <WebView
-                            onLoad={e => clearInterval(intervalKey)}
-                            key={webviewKey}
-                            source={{
-                                uri: "https://docs.google.com/gview?embedded=true&url=" + url
-                            }}
+                        <Webview
+                            url={url}
+                            key={url}
                         />
                     </View>
                 )
@@ -1288,14 +1286,11 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     <ReactPlayer url={submissionUrl} controls={true} />
                 ) : (
                     <View
-                        // key={Math.random()}
+                        key={submissionUrl}
                         style={{ flex: 1 }}>
-                        <WebView
-                            onLoad={e => clearInterval(intervalKey)}
-                            key={webviewKey}
-                            source={{
-                                uri: "https://docs.google.com/gview?embedded=true&url=" + submissionUrl
-                            }}
+                        <Webview
+                            key={submissionUrl}
+                            url={submissionUrl}
                         />
                     </View>
                 )

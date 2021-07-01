@@ -21,10 +21,11 @@ import QuizCreate from './QuizCreate';
 import DurationPicker from 'react-duration-picker'
 import TeXToSVG from "tex-to-svg";
 import EquationEditor from "equation-editor-react";
-import WebView from 'react-native-webview';
+// import WebView from 'react-native-webview';
 import { PreferredLanguageText } from "../helpers/LanguageContext";
 import moment from 'moment';
 import ReactPlayer from 'react-player'
+import Webview from './Webview'
 
 
 const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
@@ -96,14 +97,14 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const enterContentAlert = PreferredLanguageText('enterContent');
     const enterTitleAlert = PreferredLanguageText('enterTitle');
 
-    const [webviewKey, setWebviewKey] = useState(Math.random())
-    const [intervalKey, setIntervalKey] = useState(0)
-    useEffect(() => {
-        const id = setInterval(() => {
-            setWebviewKey(Math.random());
-        }, 3000);
-        setIntervalKey(id)
-    }, []);
+    // const [webviewKey, setWebviewKey] = useState(Math.random())
+    // const [intervalKey, setIntervalKey] = useState(0)
+    // useEffect(() => {
+    //     const id = setInterval(() => {
+    //         setWebviewKey(Math.random());
+    //     }, 3000);
+    //     setIntervalKey(id)
+    // }, []);
 
     const onDimensionsChange = useCallback(({ window, screen }: any) => {
         // window.location.reload()
@@ -869,13 +870,12 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             <ReactPlayer url={url} controls={true} onContextMenu={(e: any) => e.preventDefault()} config={{ file: { attributes: { controlsList: 'nodownload' } } }} />
                                             :
                                             <View
-                                                // key={Math.random()}
+                                                key={url}
                                                 style={{ flex: 1 }}
                                             >
-                                                <WebView
-                                                    onLoad={e => clearInterval(intervalKey)}
-                                                    source={{ uri: "https://docs.google.com/gview?embedded=true&url=" + url }}
-                                                    key={webviewKey}
+                                                <Webview
+                                                    key={url}
+                                                    url={url}
                                                 />
                                             </View>
                                     )

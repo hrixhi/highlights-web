@@ -15,11 +15,11 @@ import NewMessage from './NewMessage';
 import MessageCard from './MessageCard';
 import { validateEmail } from '../helpers/emailCheck';
 import Select from 'react-select'
-import WebView from 'react-native-webview';
 import { PreferredLanguageText } from '../helpers/LanguageContext';
 import ReactPlayer from 'react-player'
 import moment from "moment"
 import alert from './Alert';
+import Webview from './Webview'
 
 
 const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
@@ -75,15 +75,15 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
     const userRemovedAlert = PreferredLanguageText('userRemoved');
     const alreadyUnsubscribedAlert = PreferredLanguageText('alreadyUnsubscribed')
 
-    const [webviewKey, setWebviewKey] = useState(Math.random())
-    
-    const [intervalKey, setIntervalKey] = useState(0)
-    useEffect(() => {
-        const id = setInterval(() => {
-            setWebviewKey(Math.random());
-        }, 3000);
-        setIntervalKey(id)
-    }, []);
+    // const [webviewKey, setWebviewKey] = useState(Math.random())
+
+    // const [intervalKey, setIntervalKey] = useState(0)
+    // useEffect(() => {
+    //     const id = setInterval(() => {
+    //         setWebviewKey(Math.random());
+    //     }, 3000);
+    //     setIntervalKey(id)
+    // }, []);
 
     if (props.cue && props.cue.submission) {
         categories.push('Submitted')
@@ -1078,13 +1078,13 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                     <ReactPlayer url={url} controls={true} />
                                                                     :
                                                                     (!isQuiz ? <View
-                                                                        // key={Math.random()}
+                                                                        key={url}
                                                                         style={{ flex: 1 }}
                                                                     >
-                                                                        <WebView
-                                                                            onLoad={e => clearInterval(intervalKey)}
-                                                                            source={{ uri: "https://docs.google.com/gview?embedded=true&url=" + url }}
-                                                                            key={webviewKey} />
+                                                                        <Webview
+                                                                            key={url}
+                                                                            url={url}
+                                                                        />
                                                                     </View> : null)
                                                             )
                                                         }
