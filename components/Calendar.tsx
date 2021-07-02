@@ -383,10 +383,12 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     }, [, modalAnimation]);
 
 
+    console.log("Cues", props.cues)
+
     useEffect(() => {
         loadEvents();
         loadChannels();
-    }, []);
+    }, [props.cues]);
 
     // console.log(editEvent);
 

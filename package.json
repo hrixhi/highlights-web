@@ -99,7 +99,8 @@
     "reanimated-bottom-sheet": "^1.0.0-alpha.22",
     "rmc-date-picker": "^6.0.10",
     "tex-to-svg": "^0.2.0",
-    "unique-names-generator": "^4.3.1"
+    "unique-names-generator": "^4.3.1",
+    "xlsx": "^0.17.0"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0",
