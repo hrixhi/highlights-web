@@ -474,7 +474,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                             </Text>
                         </View>
                     ) : null}
-                    {isOwner ? (
+                    {/* {isOwner ? (
                         <View
                             style={{
                                 flexDirection: "column",
@@ -499,7 +499,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                         {PreferredLanguageText("upcoming")}
                                     </Text>
                                 </View>
-                                {/* <Text
+                                <Text
                                     style={{
                                         color: "#a2a2aa",
                                         fontSize: 11,
@@ -511,7 +511,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                     }}
                                     onPress={() => setShowAddEvent(!showAddEvent)}>
                                     {showAddEvent ? PreferredLanguageText("hide") : PreferredLanguageText("add")}
-                                </Text> */}
+                                </Text>
                             </View>
                             {showAddEvent ? (
                                 <View style={{ flexDirection: "row" }}>
@@ -585,8 +585,8 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                 </View>
                             ) : null}
                         </View>
-                    ) : null}
-                    {upcomingMeetings.length === 0 ? (
+                    ) : null} */}
+                    {/* {upcomingMeetings.length === 0 ? (
                         <View style={{ backgroundColor: "white", flex: 1 }}>
                             <Text
                                 style={{
@@ -622,8 +622,8 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                 </View>
                             );
                         })
-                    )}
-                    {/* {
+                    )} */}
+                    {
                     isOwner ?
                         <View style={{ borderTopColor: '#f4f4f6', borderTopWidth: 1, marginTop: 25 }}>
                             <View style={{ paddingVertical: 15 }}>
@@ -709,7 +709,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
 
                             }
                         </View> : null
-                } */}
+                }
                 </View>
             </Animated.View>
         </ScrollView>
