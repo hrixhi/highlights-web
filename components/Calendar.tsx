@@ -146,37 +146,6 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
         return current.isAfter(yesterday);
     };
 
-    const onDateClick = useCallback((title, date, dateId) => {
-        Alert("Delete " + title + "?", date, [
-            {
-                text: "Cancel",
-                style: "cancel",
-                onPress: () => {
-                    return;
-                }
-            },
-            {
-                text: "Delete",
-                onPress: async () => {
-                    const server = fetchAPI("");
-                    server
-                        .mutate({
-                            mutation: deleteDate,
-                            variables: {
-                                dateId
-                            }
-                        })
-                        .then(res => {
-                            if (res.data && res.data.date.delete) {
-                                Alert("Event Deleted!");
-                                loadEvents();
-                            }
-                        });
-                }
-            }
-        ]);
-    }, []);
-
     const handleCreate = useCallback(async () => {
         if (start < new Date()) {
             Alert("Event must be set in the future.");
@@ -414,10 +383,12 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     }, [, modalAnimation]);
 
 
+    console.log("Cues", props.cues)
+
     useEffect(() => {
         loadEvents();
         loadChannels();
-    }, []);
+    }, [props.cues]);
 
     // console.log(editEvent);
 
@@ -443,6 +414,9 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
             const descriptionString = event.description ? event.description + "- " + timeString : "" + timeString
 
+            console.log(event.dateId)
+            console.log(new Date(event.end) < new Date())
+
             if (user._id === event.createdBy && new Date(event.end) > new Date() && event.eventId) {
 
                 Alert("Edit " + event.title + "?", descriptionString, [
@@ -462,7 +436,40 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     }
                 ]);
 
+            } else if (user._id === event.createdBy && new Date(event.end) < new Date() && event.eventId) {
+                Alert("Delete " + event.title + "?", descriptionString, [
+                    {
+                        text: "Cancel",
+                        style: "cancel",
+                        onPress: () => {
+                            return;
+                        }
+                    },
+                    {
+                        text: "Delete",
+                        onPress: async () => {
+                            const server = fetchAPI("");
+                            server
+                                .mutate({
+                                    mutation: deleteDateV1,
+                                    variables: {
+                                        id: event.eventId,
+                                        deleteAll: false
+                                    }
+                                })
+                                .then(res => {
+                                    if (res.data && res.data.date.deleteV1) {
+                                        Alert("Event Deleted!");
+                                        loadEvents();
+                                    }
+                                });
+                        }
+                    }
+                ]);
+
             } else {
+
+                
                 Alert(
                     event.title,
                     descriptionString
