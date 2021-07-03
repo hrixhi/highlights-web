@@ -279,9 +279,25 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                             fontSize: 15,
                             color: '#a2a2aa'
                         }}>
-                            <Ionicons name='chevron-back-outline' size={17} color={'#202025'} style={{ marginRight: 10 }} /> {PreferredLanguageText('attendance')}
+                            <Ionicons name='chevron-back-outline' size={17} color={'#202025'} style={{ marginRight: 10 }} /> {renderAttendanceStatsTabs()}
                         </Text>
                 </TouchableOpacity>
+                {pastMeetings.length === 0 || channelAttendances.length === 0 ?  null : <Text
+                    style={{
+                        color: "#a2a2aa",
+                        fontSize: 11,
+                        lineHeight: 25,
+                        // paddingTop: 5,
+                        textAlign: "right",
+                        // paddingRight: 20,
+                        textTransform: "uppercase",
+                        marginRight: 20
+                    }}
+                    onPress={() => {
+                        setEnableFilter(!enableFilter)
+                    }}>
+                    {!enableFilter ? "FILTER" : "HIDE"}
+                </Text>}
                 {pastMeetings.length === 0 || channelAttendances.length === 0 ?  null : <Text
                     style={{
                         color: "#a2a2aa",
@@ -298,40 +314,12 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                     EXPORT
                 </Text>}
             </View>
-
-           
-            {/* Tabs */}
-            {renderAttendanceStatsTabs()}
             
             {/* Filters */}
 
             {unparsedPastMeetings.length === 0 || channelAttendances.length === 0 ?  null : <View style={{ paddingTop: 30 }}>
 
             <View style={{ display: 'flex', width: "100%", flexDirection: width < 768 ? "column" : "row", marginBottom: 30, }} >
-
-
-            <View style={{ width: width < 768 ? "100%" : "33.33%", display: "flex" }}>
-                <View style={{ width: "100%", paddingTop: width < 768 ? 40 : 0, paddingBottom: 15, backgroundColor: "white" }}>
-                    <Text style={{ fontSize: 12, color: "#a2a2aa" }}>Filter</Text>
-                </View>
-                <View
-                    style={{
-                        backgroundColor: "white",
-                        height: 40,
-                        marginRight: 10
-                    }}>
-                    <Switch
-                        value={enableFilter}
-                        onValueChange={() => setEnableFilter(!enableFilter)}
-                        style={{ height: 20 }}
-                        trackColor={{
-                            false: "#f4f4f6",
-                            true: "#3B64F8"
-                        }}
-                        activeThumbColor="white"
-                    />
-                </View>
-            </View>
 
 
                                     {!enableFilter ? null : <View
@@ -382,7 +370,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                     </View>
                     :
                     (!showAttendanceStats ? <View style={{
-                        width: '80%',
+                        width: '100%',
                         backgroundColor: 'white',
                         flex: 1,
                         flexDirection: 'row'
@@ -409,6 +397,11 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                 <View>
                                     <View style={styles.row} key={"-"}>
                                         <View style={styles.col} key={'0,0'} />
+                                        <View style={styles.col} key={'0,0'} >
+                                            <Text style={{ fontSize: 13, color: '#202025', fontFamily: 'inter' }}>
+                                                Total
+                                            </Text>
+                                        </View>
                                         {
                                             pastMeetings.map((meeting: any, col: number) => {
                                                 const { title, start } = meeting
@@ -422,18 +415,21 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                                 </View>
                                             })
                                         }
-
                                     </View>
                                     {
                                         channelAttendances.map((channelAttendance: any, row: number) => {
+
+                                            const studentCount = attendanceTotalMap[channelAttendance.userId];
 
                                             return <View style={styles.row} key={row}>
                                                 <View style={styles.col} >
                                                     <Text style={{ textAlign: 'left', fontSize: 13, color: '#202025', fontFamily: 'inter' }}>
                                                         {channelAttendance.fullName}
                                                     </Text>
-                                                    <Text style={{ textAlign: 'left', fontSize: 12, color: '#202025' }}>
-                                                        {channelAttendance.displayName}
+                                                </View>
+                                                <View style={styles.col} >
+                                                    <Text style={{ textAlign: 'left', fontSize: 13, color: '#202025', fontFamily: 'inter' }}>
+                                                        {studentCount} / {pastMeetings.length}
                                                     </Text>
                                                 </View>
                                                 {
@@ -461,7 +457,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                 </View>
                             </ScrollView>
                         </ScrollView>
-                        {channelAttendances.length === 0 || pastMeetings.length === 0  ? 
+                        {/* {channelAttendances.length === 0 || pastMeetings.length === 0  ? 
                             null : 
                             (<View 
                                 style={{ display: 'flex', flexDirection: 'column', paddingLeft: 20 }}
@@ -488,7 +484,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                             </View>)
                                         })
                                     }
-                            </View>)}
+                            </View>)} */}
                     </View> : renderAttendanceChart())
             }
         </View >

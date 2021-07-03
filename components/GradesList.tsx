@@ -166,7 +166,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
             width: '100%',
             backgroundColor: 'white',
             flex: 1,
-            paddingLeft: 50
+            paddingLeft: Dimensions.get("window").width < 768 ? 0 : 50
         }}
             key={JSON.stringify(scores)}
         >
@@ -218,7 +218,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     },
                   };
 
-                return (<View style={{ flexDirection: 'column', alignItems: 'center', paddingTop :30, width: 400}}>
+                return (<View style={{ flexDirection: 'column', alignItems: 'center', paddingTop :30, width: Dimensions.get("window").width < 768 ? "100%" : 400}}>
                     <Text style={{ textAlign: 'left', fontSize: 13, color: '#202025', fontFamily: 'inter', paddingBottom: 20, textAlign: 'center' }}>
                         {title}
                     </Text>
@@ -244,7 +244,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
                     <LineChart 
                         data={data}
-                        width={400}
+                        width={Dimensions.get("window").width < 768 ? 300 : 400 }
                         height={300}
                         // chartConfig={chartConfig}
                         chartConfig={{

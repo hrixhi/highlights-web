@@ -43,6 +43,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
     const [channelAttendances, setChannelAttendances] = useState<any[]>([]);
     const [viewChannelAttendance, setViewChannelAttendance] = useState(false);
     const [showAddEvent, setShowAddEvent] = useState(false);
+    const [showPastMeetings, setShowPastMeetings] = useState(false);
 
     const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
 
@@ -276,6 +277,95 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
     ];
     if (isOwner) {
         toolbarButtons.push("mute-everyone", "mute-video-everyone", "stats", "settings", "livestreaming");
+    }
+
+    const renderPastMeetings = () => {
+        return (pastMeetings.length === 0 ?
+            <View style={{ backgroundColor: 'white', flex: 1 }}>
+                <Text style={{ width: '100%', color: '#a2a2aa', fontSize: 22, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                    {PreferredLanguageText('noPastMeetings')}
+                </Text>
+            </View>
+            :
+            pastMeetings.map((date: any, index: any) => {
+                console.log(date);
+                return <View style={styles.col} key={index}>
+                     <View
+                        style={styles.swiper}
+                    >
+                        <View
+                            disabled={true}
+                            onPress={() => {return}}
+                            key={'textPage'}
+                            style={styles.card}>
+
+                        <View style={{ flexDirection: 'column'}}>
+                            <View style={{ backgroundColor: '#f4f4f6', width: '100%', flexDirection: 'row', display: 'flex', height: '44%', minHeight: 25 }}>
+                                <Text ellipsizeMode={'tail'}
+                                    numberOfLines={1}
+                                    style={styles.title}>
+                                    {moment(new Date(date.start)).format('MMMM Do YYYY, h:mm a') + ' to ' + moment(new Date(date.end)).format('MMMM Do YYYY, h:mm a')}
+                                </Text>
+                            </View>
+                            <View style={styles.meetingText}>
+                                <Text ellipsizeMode={'tail'}
+                                    numberOfLines={1}
+                                    style={styles.description}>
+                                    {PreferredLanguageText('ended')}
+                                </Text>
+                            </View>
+
+                        </View>
+
+                            {
+                                isOwner ?
+                                     <TouchableOpacity style={{ backgroundColor: '#f4f4f6', width: '10%',  }}
+                                        onPress={() => {
+
+                                            Alert("Delete past lecture ?", "", [
+                                                {
+                                                    text: "Cancel",
+                                                    style: "cancel",
+                                                    onPress: () => {
+                                                        return;
+                                                    }
+                                                },
+                                                {
+                                                    text: "Delete",
+                                                    onPress: async () => {
+                                                        const server = fetchAPI("");
+                                                        server
+                                                            .mutate({
+                                                                mutation: deleteDateV1,
+                                                                variables: {
+                                                                    id: date.dateId,
+                                                                    deleteAll: false
+                                                                }
+                                                            })
+                                                            .then(res => {
+                                                                if (res.data && res.data.date.deleteV1) {
+                                                                    Alert("Event Deleted!");
+                                                                    loadPastSchedule();
+                                                                }
+                                                            });
+                                                    }
+                                                }
+                                            ]);
+                                        }}
+                                    >
+                                        <Text style={{ width: '100%', color: '#a2a2aa', fontSize: 15, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                            <Ionicons name='trash-outline' size={17} color="#d91d56" />
+                                        </Text>
+                                    </TouchableOpacity>
+                                : null
+                            }
+                            
+                            
+                        </View>
+                        
+                    </View>
+                </View>
+            }))
     }
 
     const mainClassroomView = (
@@ -627,21 +717,30 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                     {
                     
                         <View style={{ borderTopColor: '#f4f4f6', borderTopWidth: 1, marginTop: 25 }}>
-                            <View style={{ borderColor: "#f4f4f6", borderTopWidth: 1 }}>
-                                <Text
-                                    ellipsizeMode="tail"
+                             <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 25 }}>
+                            {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
+                        </Text>
+                            <TouchableOpacity
+                                    onPress={() => setShowPastMeetings(!showPastMeetings)}
                                     style={{
-                                        color: "#a2a2aa",
-                                        fontSize: 11,
-                                        lineHeight: 30,
-                                        paddingTop: 5,
-                                        // textAlign: "right",
-                                        // paddingRight: 20,
-                                        textTransform: "uppercase"
+                                        flex: 1,
+                                        flexDirection: 'row',
+                                        // paddingTop: 10,
+                                        paddingBottom: 40
                                     }}>
-                                    {PreferredLanguageText("past")}
-                                </Text>
-                            </View>
+                                    <Text style={{
+                                        lineHeight: 23,
+                                        marginRight: 10,
+                                        color: '#a2a2aa',
+                                        fontSize: 11,
+                                        textTransform: 'uppercase'
+                                    }}>
+                                        {PreferredLanguageText('past')}
+                                    </Text>
+                                    <Text style={{ lineHeight: 21 }}>
+                                        <Ionicons size={14} name={showPastMeetings ? 'caret-down-outline' : 'caret-forward-outline'} color='#a2a2aa' />
+                                    </Text>
+                                </TouchableOpacity>
                             {
 
                                 showAttendances ?
@@ -670,94 +769,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                                 })
                                         }
                                     </View>
-                                    : (pastMeetings.length === 0 ?
-                                        <View style={{ backgroundColor: 'white', flex: 1 }}>
-                                            <Text style={{ width: '100%', color: '#a2a2aa', fontSize: 22, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
-                                                {PreferredLanguageText('noPastMeetings')}
-                                            </Text>
-                                        </View>
-                                        :
-                                        pastMeetings.map((date: any, index: any) => {
-                                            console.log(date);
-                                            return <View style={styles.col} key={index}>
-                                                 <View
-                                                    style={styles.swiper}
-                                                >
-                                                    <View
-                                                        disabled={true}
-                                                        onPress={() => {return}}
-                                                        key={'textPage'}
-                                                        style={styles.card}>
-
-                                                    <View style={{ flexDirection: 'column'}}>
-                                                        <View style={{ backgroundColor: '#f4f4f6', width: '100%', flexDirection: 'row', display: 'flex', height: '44%', minHeight: 25 }}>
-                                                            <Text ellipsizeMode={'tail'}
-                                                                numberOfLines={1}
-                                                                style={styles.title}>
-                                                                {moment(new Date(date.start)).format('MMMM Do YYYY, h:mm a') + ' to ' + moment(new Date(date.end)).format('MMMM Do YYYY, h:mm a')}
-                                                            </Text>
-                                                        </View>
-                                                        <View style={styles.meetingText}>
-                                                            <Text ellipsizeMode={'tail'}
-                                                                numberOfLines={1}
-                                                                style={styles.description}>
-                                                                {PreferredLanguageText('ended')}
-                                                            </Text>
-                                                        </View>
-
-                                                    </View>
-
-                                                        {
-                                                            isOwner ?
-                                                                 <TouchableOpacity style={{ backgroundColor: '#f4f4f6', width: '10%',  }}
-                                                                    onPress={() => {
-
-                                                                        Alert("Delete past lecture ?", "", [
-                                                                            {
-                                                                                text: "Cancel",
-                                                                                style: "cancel",
-                                                                                onPress: () => {
-                                                                                    return;
-                                                                                }
-                                                                            },
-                                                                            {
-                                                                                text: "Delete",
-                                                                                onPress: async () => {
-                                                                                    const server = fetchAPI("");
-                                                                                    server
-                                                                                        .mutate({
-                                                                                            mutation: deleteDateV1,
-                                                                                            variables: {
-                                                                                                id: date.dateId,
-                                                                                                deleteAll: false
-                                                                                            }
-                                                                                        })
-                                                                                        .then(res => {
-                                                                                            if (res.data && res.data.date.deleteV1) {
-                                                                                                Alert("Event Deleted!");
-                                                                                                loadPastSchedule();
-                                                                                            }
-                                                                                        });
-                                                                                }
-                                                                            }
-                                                                        ]);
-                                                                    }}
-                                                                >
-                                                                    <Text style={{ width: '100%', color: '#a2a2aa', fontSize: 15, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
-                                                                        <Ionicons name='trash-outline' size={17} color="#d91d56" />
-                                                                    </Text>
-                                                                </TouchableOpacity>
-                                                            : null
-                                                        }
-                                                        
-                                                        
-                                                    </View>
-                                                    
-                                                </View>
-                                            </View>
-                                        }))
-
-
+                                    : (showPastMeetings ? renderPastMeetings() : null)
                             }
                         </View> 
                 }
@@ -770,6 +782,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
         <AttendanceList
             key={JSON.stringify(channelAttendances)}
             channelAttendances={channelAttendances}
+            isOwner={isOwner}
             pastMeetings={pastMeetings}
             channelName={props.filterChoice}
             channelId={props.channelId}
