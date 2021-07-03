@@ -419,23 +419,9 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
             if (user._id === event.createdBy && new Date(event.end) > new Date() && event.eventId) {
 
-                Alert("Edit " + event.title + "?", descriptionString, [
-                    {
-                        text: "Cancel",
-                        style: "cancel",
-                        onPress: () => {
-                            return;
-                        }
-                    },
-                    {
-                        text: "Edit",
-                        onPress: () => {
-                            setEditEvent(event)
-                            setShowAddEvent(true)
-                        }
-                    }
-                ]);
-
+                setEditEvent(event)
+                setShowAddEvent(true)
+                        
             } else if (user._id === event.createdBy && new Date(event.end) < new Date() && event.eventId) {
                 Alert("Delete " + event.title + "?", descriptionString, [
                     {

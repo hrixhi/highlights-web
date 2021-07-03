@@ -7,6 +7,11 @@ import moment from 'moment'
 import { PreferredLanguageText } from '../helpers/LanguageContext';
 import Datetime from "react-datetime";
 import XLSX from "xlsx";
+import {
+    LineChart,
+  } from "react-native-chart-kit";
+import * as FileSaver from 'file-saver';
+
 
 const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -20,6 +25,8 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
     const [start, setStart] = useState(new Date(end.getTime() - (2630000 * 60 * 10)));
     
     const [attendanceTotalMap, setAttendanceTotalMap] = useState<any>({});
+
+    const [showAttendanceStats, setShowAttendanceStats] = useState(false);
 
     const [exportAoa, setExportAoa] = useState<any[]>()
 
@@ -114,14 +121,135 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
     }, [enableFilter, start, end])
 
     const exportAttendance = () => {
+        const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+        const fileExtension = '.xlsx';
+
         const ws = XLSX.utils.aoa_to_sheet(exportAoa);
 		const wb = XLSX.utils.book_new();
-		XLSX.utils.book_append_sheet(wb, ws, "Attendance ");
+		XLSX.utils.book_append_sheet(wb, ws, "Grades ");
 		/* generate XLSX file and send to client */
-		XLSX.writeFile(wb, "attendance.xlsx")
+        const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' })
+        const data = new Blob([excelBuffer], {type: fileType});
+        FileSaver.saveAs(data, "attendances" + fileExtension);
     }
 
     const width = Dimensions.get("window").width;
+
+    const renderAttendanceStatsTabs = () => {
+        return (<View style={{ flexDirection: "row" }}>
+            <TouchableOpacity
+                style={{
+                    justifyContent: "center",
+                    flexDirection: "column"
+                }}
+                onPress={() => {
+                    setShowAttendanceStats(false);
+                }}>
+                <Text style={!showAttendanceStats ? styles.allGrayFill : styles.all}>
+                    Students
+                </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+                style={{
+                    justifyContent: "center",
+                    flexDirection: "column"
+                }}
+                onPress={() => {
+                    setShowAttendanceStats(true);
+                }}>
+                <Text style={showAttendanceStats ? styles.allGrayFill : styles.all}>Lectures</Text>
+            </TouchableOpacity>
+    </View>)
+    }
+
+    const renderAttendanceChart = () => {
+
+        const studentCount = channelAttendances.length;
+
+        const meetingLabels: any[] = [];
+
+        const attendanceCounts:any[] = [];
+
+        pastMeetings.map((meeting: any) => {
+
+            const { title, start, dateId } = meeting
+            console.log(meeting);
+
+            meetingLabels.push(`${moment(new Date(start)).format('MMMM Do YYYY, h:mm a')}`)
+
+            let count = 0;
+
+            // Total count map
+            channelAttendances.forEach((att: any) => {
+                const filteredDateId = att.attendances.filter((x: any) => x.dateId === dateId)
+                if (filteredDateId.length > 0) count++;
+
+            })
+
+            let percentage = (count/studentCount) * 100
+
+            attendanceCounts.push(`${percentage.toFixed(1)}`)
+            
+        })
+
+        const data = {
+            labels: meetingLabels,
+            datasets: [
+              {
+                data: attendanceCounts,
+                color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // optional
+                strokeWidth: 2 // optional
+              }
+            ],
+            // legend: ["Rainy Days"] // optional
+          };
+
+
+
+        return (<View style={{
+            width: '100%',
+            backgroundColor: 'white',
+            flex: 1
+        }}
+            key={JSON.stringify(pastMeetings)}
+        >
+            <Text style={{ textAlign: 'left', fontSize: 13, color: '#202025', fontFamily: 'inter', paddingBottom: 20 }}>
+                        Attendance By Lectures
+            </Text>
+            <ScrollView
+                            showsHorizontalScrollIndicator={false}
+                            horizontal={true}
+                            contentContainerStyle={{
+                                height: '100%'
+                            }}
+                            nestedScrollEnabled={true}
+                        >
+                    <LineChart 
+                        data={data}
+                        width={width - 100}
+                        height={500}
+                        // chartConfig={chartConfig}
+                        chartConfig={{
+                            backgroundGradientFrom: "#fff",
+                            backgroundGradientFromOpacity: 0,
+                            backgroundGradientTo: "#fff",
+                            backgroundGradientToOpacity: 0,
+                            color: (opacity = 1) => `rgba(1, 122, 205, 1)`,
+                            labelColor: (opacity = 1) => `rgba(0, 0, 0, 1)`,
+                            strokeWidth: 2, // optional, default 3
+                            barPercentage: 0.5,
+                            useShadowColorFromDataset: false, // optional
+                            propsForBackgroundLines: {
+                                strokeWidth: 1,
+                                stroke: '#efefef',
+                                strokeDasharray: '0',
+                              },
+                          }}
+                    />
+                </ScrollView>
+
+        </View>)
+    }
 
 
     return (
@@ -154,44 +282,30 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                             <Ionicons name='chevron-back-outline' size={17} color={'#202025'} style={{ marginRight: 10 }} /> {PreferredLanguageText('attendance')}
                         </Text>
                 </TouchableOpacity>
+                {pastMeetings.length === 0 || channelAttendances.length === 0 ?  null : <Text
+                    style={{
+                        color: "#a2a2aa",
+                        fontSize: 11,
+                        lineHeight: 25,
+                        // paddingTop: 5,
+                        textAlign: "right",
+                        // paddingRight: 20,
+                        textTransform: "uppercase"
+                    }}
+                    onPress={() => {
+                        exportAttendance()
+                    }}>
+                    EXPORT
+                </Text>}
             </View>
 
-            {/* Export Buttons */}
+           
+            {/* Tabs */}
+            {renderAttendanceStatsTabs()}
             
-            {pastMeetings.length === 0 || channelAttendances.length === 0 ?  null : 
-            <View style={{ display: 'flex', flexDirection: 'row', marginVertical: 25 }}>
-            <TouchableOpacity
-                                onPress={async () => {
-                                    exportAttendance()
-                                }}
-                                style={{
-                                    borderRadius: 15,
-                                    backgroundColor: 'white'
-                                }}>
-                                {
-                                  
-                                        <Text style={{
-                                            textAlign: 'center',
-                                            lineHeight: 35,
-                                            color: 'white',
-                                            fontSize: 12,
-                                            backgroundColor: '#3B64F8',
-                                            borderRadius: 15,
-                                            paddingHorizontal: 25,
-                                            fontFamily: 'inter',
-                                            overflow: 'hidden',
-                                            height: 35,
-                                            textTransform: 'uppercase'
-                                        }}>
-                                            EXPORT
-                                    </Text> 
-                                }
-                </TouchableOpacity>
-            </View>
-            }
             {/* Filters */}
 
-            {unparsedPastMeetings.length === 0 || channelAttendances.length === 0 ?  null : <View>
+            {unparsedPastMeetings.length === 0 || channelAttendances.length === 0 ?  null : <View style={{ paddingTop: 30 }}>
 
             <View style={{ display: 'flex', width: "100%", flexDirection: width < 768 ? "column" : "row", marginBottom: 30, }} >
 
@@ -267,7 +381,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                         </Text>
                     </View>
                     :
-                    <View style={{
+                    (!showAttendanceStats ? <View style={{
                         width: '80%',
                         backgroundColor: 'white',
                         flex: 1,
@@ -375,7 +489,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                         })
                                     }
                             </View>)}
-                    </View>
+                    </View> : renderAttendanceChart())
             }
         </View >
     );
@@ -391,6 +505,33 @@ const styles = StyleSheet.create({
         color: "#a2a2aa",
         textAlign: "left",
         paddingHorizontal: 10
+    },
+    allGrayFill: {
+        fontSize: 12,
+        color: "#fff",
+        paddingHorizontal: 10,
+        borderRadius: 10,
+        backgroundColor: "#a2a2aa",
+        lineHeight: 20
+    },
+    allGrayOutline: {
+        fontSize: 12,
+        color: "#a2a2aa",
+        height: 22,
+        paddingHorizontal: 10,
+        backgroundColor: "white",
+        borderRadius: 10,
+        borderWidth: 1,
+        borderColor: "#a2a2aa",
+        lineHeight: 20
+    },
+    all: {
+        fontSize: 12,
+        color: "#a2a2aa",
+        height: 22,
+        paddingHorizontal: 10,
+        backgroundColor: "white",
+        lineHeight: 20
     },
 })
 

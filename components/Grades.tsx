@@ -265,6 +265,7 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             }}
                             reload={() => loadCuesAndScores()}
                             onSelectSubmission={(cue: any) => setViewStatisticsCue(cue)}
+                            submissionStatistics={submissionStatistics}
                         />)
                 }
             </Animated.View>
