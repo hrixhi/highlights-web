@@ -27,69 +27,17 @@ import { PreferredLanguageText } from "../helpers/LanguageContext";
 
 const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const [modalAnimation] = useState(new Animated.Value(0));
-    const [room] = useState(props.channelId);
     const [name, setName] = useState("");
-    const [password] = useState(props.channelCreatedBy);
     const [isOwner, setIsOwner] = useState(false);
     const [meetingOn, setMeetingOn] = useState(false);
-    const [start, setStart] = useState(new Date());
-    const [end, setEnd] = useState(new Date(start.getTime() + 1000 * 60 * 60));
-    const [meetingEndText, setMeetingEndText] = useState("Classroom not in session.");
-    const [upcomingMeetings, setUpcomingMeetings] = useState<any[]>([]);
     const [pastMeetings, setPastMeetings] = useState<any[]>([]);
     const [showAttendances, setShowAttendances] = useState(false);
     const [attendances, setAttendances] = useState<any[]>([]);
     const [meetingLink, setMeetingLink] = useState("");
     const [channelAttendances, setChannelAttendances] = useState<any[]>([]);
     const [viewChannelAttendance, setViewChannelAttendance] = useState(false);
-    const [showAddEvent, setShowAddEvent] = useState(false);
     const [showPastMeetings, setShowPastMeetings] = useState(false);
-
-    const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
-
-    const meetingMustBeFutureAlert = PreferredLanguageText("meetingMustBeFuture");
     const classroomNotInSession = PreferredLanguageText("classroomNotInSession");
-
-    useEffect(() => {
-        if (end > start) {
-            setIsSubmitDisabled(false);
-            return;
-        }
-        setIsSubmitDisabled(true);
-    }, [start, end]);
-
-    const loadAttendances = useCallback(dateId => {
-        const server = fetchAPI("");
-        server
-            .query({
-                query: getAttendances,
-                variables: {
-                    dateId
-                }
-            })
-            .then(res => {
-                if (res.data && res.data.attendance.getAttendances) {
-                    setShowAttendances(true);
-                    setAttendances(res.data.attendance.getAttendances);
-                }
-            });
-    }, []);
-
-    const loadSchedule = useCallback(() => {
-        const server = fetchAPI("");
-        server
-            .query({
-                query: getUpcomingDates,
-                variables: {
-                    channelId: props.channelId
-                }
-            })
-            .then(res => {
-                if (res.data && res.data.attendance.getUpcomingDates) {
-                    setUpcomingMeetings(res.data.attendance.getUpcomingDates);
-                }
-            });
-    }, [props.channelId]);
 
     const loadChannelAttendances = useCallback(() => {
         const server = fetchAPI("");
@@ -138,7 +86,6 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
     }, [props.channelId]);
 
     useEffect(() => {
-        loadSchedule();
         loadChannelAttendances();
         setPastMeetings([]);
         setShowAttendances(false);
@@ -228,29 +175,6 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
             .catch(e => console.log(e));
     }, [meetingOn, props.channelId]);
 
-    const handleCreate = useCallback(() => {
-        if (start < new Date()) {
-            Alert(meetingMustBeFutureAlert);
-            return;
-        }
-
-        const server = fetchAPI("");
-        server
-            .mutate({
-                mutation: createScheduledMeeting,
-                variables: {
-                    channelId: props.channelId,
-                    start: start.toISOString(),
-                    end: end.toISOString()
-                }
-            })
-            .then(res => {
-                if (res.data && res.data.attendance.create) {
-                    loadSchedule();
-                }
-            });
-    }, [start, end, props.channelId]);
-
     if (name === "") {
         return null;
     }
@@ -288,13 +212,11 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
             </View>
             :
             pastMeetings.map((date: any, index: any) => {
-                console.log(date);
                 return <View style={styles.col} key={index}>
                      <View
                         style={styles.swiper}
                     >
                         <View
-                            disabled={true}
                             onPress={() => {return}}
                             key={'textPage'}
                             style={styles.card}>
@@ -548,172 +470,6 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                             </Text>
                         </View>
                     </View>
-                    {/* {!isOwner ? (
-                        <View style={{ borderColor: "#f4f4f6", borderTopWidth: 1 }}>
-                            <Text
-                                ellipsizeMode="tail"
-                                style={{
-                                    color: "#a2a2aa",
-                                    fontSize: 11,
-                                    lineHeight: 30,
-                                    paddingTop: 5,
-                                    // textAlign: "right",
-                                    // paddingRight: 20,
-                                    textTransform: "uppercase"
-                                }}>
-                                {PreferredLanguageText("upcoming")}
-                            </Text>
-                        </View>
-                    ) : null} */}
-                    {/* {isOwner ? (
-                        <View
-                            style={{
-                                flexDirection: "column",
-                                marginBottom: 40,
-                                borderColor: "#f4f4f6",
-                                borderTopWidth: 1,
-                                paddingTop: 25
-                            }}>
-                            <View style={{ flexDirection: "row", maxWidth: 500 }}>
-                                <View style={{ flex: 1 }}>
-                                    <Text
-                                        ellipsizeMode="tail"
-                                        style={{
-                                            color: "#a2a2aa",
-                                            fontSize: 11,
-                                            lineHeight: 30,
-                                            paddingTop: 5,
-                                            // textAlign: "right",
-                                            // paddingRight: 20,
-                                            textTransform: "uppercase"
-                                        }}>
-                                        {PreferredLanguageText("upcoming")}
-                                    </Text>
-                                </View>
-                                <Text
-                                    style={{
-                                        color: "#a2a2aa",
-                                        fontSize: 11,
-                                        lineHeight: 30,
-                                        paddingTop: 8,
-                                        textAlign: "right",
-                                        paddingRight: 20,
-                                        textTransform: "uppercase"
-                                    }}
-                                    onPress={() => setShowAddEvent(!showAddEvent)}>
-                                    {showAddEvent ? PreferredLanguageText("hide") : PreferredLanguageText("add")}
-                                </Text>
-                            </View>
-                            {showAddEvent ? (
-                                <View style={{ flexDirection: "row" }}>
-                                    <View
-                                        style={{
-                                            width: Dimensions.get("window").width < 768 ? "100%" : "27%",
-                                            flexDirection: "row",
-                                            marginTop: 12
-                                            // marginLeft: Dimensions.get('window').width < 768 ? 0 : 10
-                                        }}>
-                                        <Text style={styles.text}>{PreferredLanguageText("start")}</Text>
-                                        <Datetime
-                                            value={start}
-                                            onChange={(event: any) => {
-                                                const date = new Date(event);
-                                                setStart(date);
-                                            }}
-                                        />
-                                    </View>
-                                    <View
-                                        style={{
-                                            width: Dimensions.get("window").width < 768 ? "100%" : "27%",
-                                            flexDirection: "row",
-                                            marginTop: 12,
-                                            marginLeft: Dimensions.get("window").width < 768 ? 0 : 10
-                                        }}>
-                                        <Text style={styles.text}>{PreferredLanguageText("end")}</Text>
-                                        <Datetime
-                                            value={end}
-                                            onChange={(event: any) => {
-                                                const date = new Date(event);
-                                                setEnd(date);
-                                            }}
-                                        />
-                                    </View>
-                                    <View
-                                        style={{
-                                            width: Dimensions.get("window").width < 768 ? "100%" : "21%",
-                                            flexDirection: "row",
-                                            display: "flex",
-                                            justifyContent: "center"
-                                        }}>
-                                        <TouchableOpacity
-                                            style={{
-                                                backgroundColor: "white",
-                                                overflow: "hidden",
-                                                height: 35,
-                                                marginTop: 5
-                                                // marginBottom: 20
-                                            }}
-                                            onPress={() => handleCreate()}
-                                            disabled={isSubmitDisabled}>
-                                            <Text
-                                                style={{
-                                                    textAlign: "center",
-                                                    lineHeight: 35,
-                                                    color: "#202025",
-                                                    fontSize: 12,
-                                                    backgroundColor: "#f4f4f6",
-                                                    paddingHorizontal: 25,
-                                                    fontFamily: "inter",
-                                                    height: 35,
-                                                    width: 100,
-                                                    borderRadius: 15,
-                                                    textTransform: "uppercase"
-                                                }}>
-                                                ADD
-                                            </Text>
-                                        </TouchableOpacity>
-                                    </View>
-                                </View>
-                            ) : null}
-                        </View>
-                    ) : null} */}
-                    {/* {upcomingMeetings.length === 0 ? (
-                        <View style={{ backgroundColor: "white", flex: 1 }}>
-                            <Text
-                                style={{
-                                    width: "100%",
-                                    color: "#a2a2aa",
-                                    fontSize: 22,
-                                    paddingVertical: 50,
-                                    paddingHorizontal: 5,
-                                    fontFamily: "inter",
-                                    flex: 1
-                                }}>
-                                {PreferredLanguageText("noMeeting")}
-                            </Text>
-                        </View>
-                    ) : (
-                        upcomingMeetings.map((date: any, index: any) => {
-                            return (
-                                <View style={styles.col} key={index}>
-                                    <SubscriberCard
-                                        hideChevron={true}
-                                        fadeAnimation={props.fadeAnimation}
-                                        subscriber={{
-                                            displayName:
-                                                moment(new Date(date.start)).format("MMMM Do YYYY, h:mm a") +
-                                                " to " +
-                                                moment(new Date(date.end)).format("MMMM Do YYYY, h:mm a"),
-                                            fullName: "scheduled"
-                                        }}
-                                        disabled={true}
-                                        onPress={() => { }}
-                                        status={!props.cueId ? false : true}
-                                    />
-                                </View>
-                            );
-                        })
-                    )} */}
                     {
                     
                         <View style={{ borderTopColor: '#f4f4f6', borderTopWidth: 1, marginTop: 25 }}>
@@ -851,13 +607,6 @@ const styles = StyleSheet.create({
             flexDirection: 'column',
             flex: 1,
             backgroundColor: '#f4f4f6',
-        },
-        titleArrow: {
-            fontFamily: 'inter',
-            fontSize: 13,
-            paddingTop: 5,
-            color: '#202025',
-            marginLeft: 10
         },
         title: {
             fontFamily: 'inter',

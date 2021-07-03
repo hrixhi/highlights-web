@@ -183,12 +183,11 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
             channelAttendances.forEach((att: any) => {
                 const filteredDateId = att.attendances.filter((x: any) => x.dateId === dateId)
                 if (filteredDateId.length > 0) count++;
-
             })
 
             let percentage = (count/studentCount) * 100
 
-            attendanceCounts.push(`${percentage.toFixed(1)}`)
+            attendanceCounts.push(percentage)
             
         })
 
@@ -247,7 +246,6 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                           }}
                     />
                 </ScrollView>
-
         </View>)
     }
 
