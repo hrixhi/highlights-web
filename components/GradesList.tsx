@@ -235,7 +235,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
         }}
             key={JSON.stringify(scores)}
         >
-            <Text style={{ textAlign: 'left', fontSize: 13, color: '#202025', fontFamily: 'inter', paddingBottom: 20, paddingLeft: Dimensions.get('window').width < 768 ? 50 : 150}}>
+            <Text style={{ textAlign: 'left', fontSize: 13, color: '#202025', fontFamily: 'inter', paddingBottom: 20, paddingLeft: Dimensions.get('window').width < 768 ? 0 : 150}}>
                 Grade Weightage 
             </Text> 
             <PieChart
@@ -251,7 +251,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
             />
 
 
-            <Text style={{ textAlign: 'left', fontSize: 13, color: '#202025', fontFamily: 'inter', paddingTop: 50, paddingBottom: 20, paddingLeft: 150}}>
+            <Text style={{ textAlign: 'left', fontSize: 13, color: '#202025', fontFamily: 'inter', paddingTop: 50, paddingBottom: 20, paddingLeft: Dimensions.get('window').width < 768 ? 0 : 150}}>
                 Submissions
             </Text> 
 
