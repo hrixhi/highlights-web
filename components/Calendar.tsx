@@ -122,8 +122,6 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
             setEditChannelName(editEvent.channelName)
 
             if (editEvent.dateId !== "channel" && editEvent.createdBy) {
-                console.log("Could be meeting")
-                console.log(editEvent)
                 setIsMeeting(true)
                 if (editEvent.recordMeeting) {
                     setRecordMeeting(true)
@@ -300,12 +298,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
             .then(res => {
                 if (res.data.date && res.data.date.getCalendar) {
                     const parsedEvents: any[] = [];
-                    console.log(res)
                     res.data.date.getCalendar.map((e: any) => {
-                        // console.log("event", e)
                         const { title } = htmlStringParser(e.title);
-                        console.log("Title", title)
-                        console.log("Time", new Date(e.start))
                         parsedEvents.push({
                             eventId: e.eventId ? e.eventId : "",
                             originalTitle: title,
@@ -390,8 +384,6 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
         loadChannels();
     }, [props.cues]);
 
-    // console.log(editEvent);
-
     const datesEqual = (date1: string, date2: string) => {
         const one = new Date(date1);
         const two = new Date(date2);
@@ -402,7 +394,6 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     }
 
     const onSelectEvent = async (event: any) => {
-        console.log(event)
 
         const uString: any = await AsyncStorage.getItem("user");
         // Only allow edit if event is not past
@@ -413,9 +404,6 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
             const timeString = datesEqual(event.start, event.end) ? moment(new Date(event.start)).format("MMMM Do YYYY, h:mm a") : moment(new Date(event.start)).format("MMMM Do YYYY, h:mm a") + " to " + moment(new Date(event.end)).format("MMMM Do YYYY, h:mm a")
 
             const descriptionString = event.description ? event.description + "- " + timeString : "" + timeString
-
-            console.log(event.dateId)
-            console.log(new Date(event.end) < new Date())
 
             if (user._id === event.createdBy && new Date(event.end) > new Date() && event.eventId) {
 
@@ -518,7 +506,6 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         }}
                         selectedValue={frequency}
                         onValueChange={(itemValue: any) => {
-                            console.log(itemValue);
                             setFrequency(itemValue)
                         }}>
                         {eventFrequencyOptions.map((item: any, index: number) => {

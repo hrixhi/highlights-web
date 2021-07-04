@@ -126,7 +126,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
 
         const ws = XLSX.utils.aoa_to_sheet(exportAoa);
 		const wb = XLSX.utils.book_new();
-		XLSX.utils.book_append_sheet(wb, ws, "Grades ");
+		XLSX.utils.book_append_sheet(wb, ws, "Attendance ");
 		/* generate XLSX file and send to client */
         const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' })
         const data = new Blob([excelBuffer], {type: fileType});

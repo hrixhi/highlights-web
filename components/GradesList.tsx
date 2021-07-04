@@ -6,10 +6,14 @@ import { htmlStringParser } from '../helpers/HTMLParser';
 import { PreferredLanguageText } from '../helpers/LanguageContext';
 import XLSX from "xlsx"
 import * as FileSaver from 'file-saver';
+// import { PieChart } from 'react-native-svg-charts'
+import { Chart } from "react-google-charts";
+
 
 import {
     LineChart,
     BarChart,
+    PieChart
   } from "react-native-chart-kit";
 
 const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
@@ -20,7 +24,6 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
     const [scores] = useState<any[]>(unparsedScores)
     const [cues] = useState<any[]>(unparsedCues)
     const [submissionStatistics] = useState<any[]>(unparsedSubmissionStatistics)
-
     const [exportAoa, setExportAoa] = useState<any[]>()
 
     // Statistics
@@ -32,7 +35,6 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
             return;
         }
 
-        
         const exportAoa = [];
 
         // Add row 1 with past meetings and total
@@ -98,7 +100,6 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
         const ws = XLSX.utils.aoa_to_sheet(exportAoa);
 		const wb = XLSX.utils.book_new();
 		XLSX.utils.book_append_sheet(wb, ws, "Grades ");
-		/* generate XLSX file and send to client */
         const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' })
         const data = new Blob([excelBuffer], {type: fileType});
         FileSaver.saveAs(data, "grades" + fileExtension);
@@ -134,7 +135,6 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
     const screenWidth = Dimensions.get("window").width;
 
-
     const renderStatistics = () => {
         
 
@@ -162,16 +162,121 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
         const statisticsLabels = ["Max", "Min", "Mean", "Median", "Std Dev"]
 
+
+        const randomColor = () => ('#' + ((Math.random() * 0xffffff) << 0).toString(16) + '000000').slice(0, 7)
+
+        // PIE CHART FOR GRADE WEIGHTS
+
+        // ADD MORE COLORS HERE LATER
+        const colors = ["#d91d56", "#ed7d22", "#f8d41f", "#b8d41f", "#53be6d", "#f95d6a", "#ff7c43", "#ffa600"]
+
+        const nonZeroGradeWeight = cues.filter((cue: any) => cue.gradeWeight > 0)
+
+        const pieChartData = nonZeroGradeWeight.map((cue: any, index: number) => {
+
+            const { title } = htmlStringParser(cue.cue)
+
+            let color = "";
+
+            if (index < colors.length) {
+                color = colors[index]
+            } else {
+                // Fallack
+                color = randomColor()
+            }
+
+            return {
+                gradeWeight: cue.gradeWeight,
+                name: title,
+                color,
+                legendFontColor: "#7F7F7F",
+                legendFontSize: 15,
+                
+            }
+        })
+
+        const data = [["Cues", "Min", "Max", "Mean", "Median", "Standard Deviation"]];
+
+        const chartData = submissionStatistics.map((stat: any) => {
+            const { cueId, min, max, mean, median, std } = stat;
+            
+            const cue = cues.filter((cue: any) => {
+                return cueId === cue._id
+            })
+
+            const { title } = htmlStringParser(cue[0].cue);
+
+            let cueStats = [title, min, max, mean, median, std];
+
+            data.push(cueStats)
+        })
+
+        const chartConfig = {
+            backgroundColor: '#000000',
+            backgroundGradientFrom: '#1E2923',
+            backgroundGradientTo: '#08130D',
+            fontFamily: "inter",
+            color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
+            style: {
+              borderRadius: 16,
+            },
+            propsForLabels:{
+                fontFamily:'overpass; Arial',
+            },
+          }
+
+
         return (<View style={{
             width: '100%',
             backgroundColor: 'white',
             flex: 1,
-            paddingLeft: Dimensions.get("window").width < 768 ? 0 : 50
+            paddingLeft: Dimensions.get("window").width < 768 ? 0 : 50,
+            paddingTop: 30
         }}
             key={JSON.stringify(scores)}
         >
-            {/* Add Scroll View here */}
-            {Object.keys(mapCuesData).map((cueId: any) => {
+            <Text style={{ textAlign: 'left', fontSize: 13, color: '#202025', fontFamily: 'inter', paddingBottom: 20, paddingLeft: Dimensions.get('window').width < 768 ? 50 : 150}}>
+                Grade Weightage 
+            </Text> 
+            <PieChart
+            data={pieChartData}
+            width={Dimensions.get('window').width < 768 ? 350 : 500}
+            height={Dimensions.get('window').width < 768 ? 150 : 200}
+            chartConfig={chartConfig}
+            accessor={"gradeWeight"}
+            backgroundColor={"transparent"}
+            paddingLeft={Dimensions.get('window').width < 768 ? "10" : "50"}
+            // center={[10, 50]}
+            hasLegend={true}
+            />
+
+
+            <Text style={{ textAlign: 'left', fontSize: 13, color: '#202025', fontFamily: 'inter', paddingTop: 50, paddingBottom: 20, paddingLeft: 150}}>
+                Submissions
+            </Text> 
+
+            {/* <ScrollView
+                            showsHorizontalScrollIndicator={false}
+                            horizontal={true}
+                            contentContainerStyle={{
+                                height: '100%'
+                            }}
+                            nestedScrollEnabled={true}
+                        > */}
+            <Chart
+                width={Dimensions.get('window').width < 768 ? '350px' : '600px'}
+                height={Dimensions.get('window').width < 768 ? '300px' : '400px'}
+                chartType="Bar"
+                loader={<div>Loading Chart</div>}
+                data={data}
+                options={{
+                    // Material design options
+                }}
+            />
+            {/* </ScrollView> */}
+
+            <View style={{ height: 20 }} />
+            {/* {Object.keys(mapCuesData).map((cueId: any) => {
             
                 // Get name of cue from id
 
@@ -219,7 +324,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                   };
 
                 return (<View style={{ flexDirection: 'column', alignItems: 'center', paddingTop :30, width: Dimensions.get("window").width < 768 ? "100%" : 400}}>
-                    <Text style={{ textAlign: 'left', fontSize: 13, color: '#202025', fontFamily: 'inter', paddingBottom: 20, textAlign: 'center' }}>
+                    <Text style={{ textAlign: 'left', fontSize: 13, color: '#202025', fontFamily: 'inter', paddingBottom: 20,}}>
                         {title}
                     </Text>
 
@@ -266,12 +371,8 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     />
                 </View>)
             })
-        }
-            
-            
+        }         */}
         </View>)
-        
-        
 
 
     }
