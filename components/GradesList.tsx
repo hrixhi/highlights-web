@@ -195,7 +195,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
             }
         })
 
-        const data = [["Cues", "Min", "Max", "Mean", "Median", "Standard Deviation"]];
+        const data = [["", "Min", "Max", "Mean", "Median", "Standard Deviation"]];
 
         const chartData = submissionStatistics.map((stat: any) => {
             const { cueId, min, max, mean, median, std } = stat;
@@ -271,6 +271,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 data={data}
                 options={{
                     // Material design options
+                    fontFamily: 'inter'
                 }}
             />
             {/* </ScrollView> */}
