@@ -678,7 +678,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 <FileUpload
                                     back={() => setShowImportOptions(false)}
                                     onUpload={(u: any, t: any) => {
-                                        console.log(t)
+                                        // console.log(t)
                                         const obj = { url: u, type: t, title }
                                         setCue(JSON.stringify(obj))
                                         setShowImportOptions(false)

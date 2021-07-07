@@ -382,6 +382,13 @@ mutation($channelId: String!, $meetingOn: Boolean!, $users: [String!]!) {
   }
 }
 `
+export const deleteRecording = gql`
+mutation($recordID: String!) {
+  channel {
+    deleteRecording(recordID: $recordID)
+  }
+}
+`
 /**
  * ALL
  * QUERIES
@@ -830,6 +837,19 @@ export const getPersonalMeetingLinkStatus = gql`
 query($users: [String!]!) {
   channel {
     getPersonalMeetingLinkStatus(users: $users)
+  }
+}
+`
+export const getRecordings = gql`
+query($channelId: String!) {
+  channel {
+    getRecordings(channelId: $channelId) {
+      recordID
+      url
+      startTime
+      endTime
+      thumbnail
+    }
   }
 }
 `
