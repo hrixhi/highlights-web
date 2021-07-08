@@ -91,7 +91,7 @@ const EnglishBank: { [key: string]: string } = {
     noMessages: 'No messages.',
     message: 'Message',
     joinedAt: 'Joined at', // Done
-    noPastMeetings: 'No past meetings.',
+    noPastMeetings: 'No recordings found.',
     attendedBy: 'Attended By',
     past: 'Past', // Done
     options: 'Details', // Done
@@ -135,7 +135,7 @@ const EnglishBank: { [key: string]: string } = {
     noExistingUsers: 'No Existing Users',
     sharing: 'Sharing...',
     meeting: "Lecture",
-    
+
     // Alerts
     savedLocally: 'Your changes will be saved locally but not in the cloud.',
     quizzesCanOnly: 'Quizzes can only be shared with channels created by you. Select a channel from the options below to share the quiz with and then try again.',
