@@ -10,6 +10,7 @@ import {
     getMeetingStatus,
     markAttendance,
     getAttendancesForChannel,
+    getPastDates,
     getRecordings,
     deleteRecording,
 } from "../graphql/QueriesAndMutations";
@@ -26,6 +27,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
     const [name, setName] = useState("");
     const [isOwner, setIsOwner] = useState(false);
     const [meetingOn, setMeetingOn] = useState(false);
+    const [pastAttendances, setPastAttendances] = useState<any[]>([]);
     const [pastMeetings, setPastMeetings] = useState<any[]>([]);
     const [showAttendances, setShowAttendances] = useState(false);
     const [attendances, setAttendances] = useState<any[]>([]);
@@ -82,10 +84,28 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
 
     useEffect(() => {
         loadChannelAttendances();
+        setPastAttendances([]);
+        loadPastSchedule();
         setPastMeetings([]);
         setShowAttendances(false);
         setIsOwner(false);
         setViewChannelAttendance(false);
+    }, [props.channelId]);
+
+    const loadPastSchedule = useCallback(() => {
+        const server = fetchAPI("");
+        server
+            .query({
+                query: getPastDates,
+                variables: {
+                    channelId: props.channelId
+                }
+            })
+            .then(res => {
+                if (res.data && res.data.attendance.getPastDates) {
+                    setPastAttendances(res.data.attendance.getPastDates);
+                }
+            });
     }, [props.channelId]);
 
     const loadMeetingStatus = useCallback(() => {
@@ -531,7 +551,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
             key={JSON.stringify(channelAttendances)}
             channelAttendances={channelAttendances}
             isOwner={isOwner}
-            pastMeetings={pastMeetings}
+            pastMeetings={pastAttendances}
             channelName={props.filterChoice}
             channelId={props.channelId}
             closeModal={() => {
