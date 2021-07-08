@@ -1603,7 +1603,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 display: "flex",
                                 flexDirection: "row",
                                 backgroundColor: "white",
-                                // marginLeft: 50
+                                marginLeft: 50
                             }}>
                             <Text
                                 style={{
