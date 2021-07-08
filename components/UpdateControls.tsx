@@ -68,10 +68,19 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const dead =
         props.cue.deadline && props.cue.deadline !== ""
             ? props.cue.deadline === "Invalid Date"
-                ? new Date(current.getTime() + 1000 * 60 * 60)
+                ? new Date(current.getTime() + 1000 * 60 * 60 * 24)
                 : new Date(props.cue.deadline)
+            : new Date(current.getTime() + 1000 * 60 * 60 * 24);
+
+    const initiate =
+        props.cue.initiateAt && props.cue.initiateAt !== ""
+            ? props.cue.initiateAt === "Invalid Date"
+                ? new Date()
+                : new Date(props.cue.initiateAt)
             : new Date();
+
     const [deadline, setDeadline] = useState<Date>(dead);
+    const [initiateAt, setInitiateAt] = useState<Date>(initiate)
     const [gradeWeight, setGradeWeight] = useState<any>(props.cue.gradeWeight ? props.cue.gradeWeight : 0);
     const [score] = useState<any>(props.cue.score ? props.cue.score : 0);
     const [graded, setGraded] = useState(props.cue.gradeWeight && props.cue.gradeWeight !== 0 ? true : false);
@@ -108,6 +117,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const [initDuration, setInitDuration] = useState(0);
     const [equation, setEquation] = useState("y = x + 1");
     const [showEquationEditor, setShowEquationEditor] = useState(false);
+    const [shuffleQuiz, setShuffleQuiz] = useState(false);
 
     const insertEquation = useCallback(() => {
         const SVGEquation = TeXToSVG(equation, { width: 100 }); // returns svg in html format
@@ -121,7 +131,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         var diff = (dt2.getTime() - dt1.getTime()) / 1000;
         return Math.abs(Math.round(diff));
     };
-
     // ALERTS
     const unableToStartQuizAlert = PreferredLanguageText("unableToStartQuiz");
     const deadlineHasPassedAlert = PreferredLanguageText("deadlineHasPassed");
@@ -282,6 +291,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     const init = new Date(solutionsObject.initiatedAt);
                                     setInitiatedAt(init);
                                 }
+                                setShuffleQuiz(res.data.quiz.getQuiz.shuffleQuiz ? true : false)
                                 setTitle(obj.title);
                                 setIsQuiz(true);
                                 setLoading(false);
@@ -334,6 +344,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         markedAsRead,
         submission,
         deadline,
+        initiateAt,
         submissionTitle,
         submissionImported,
         submissionType,
@@ -400,6 +411,12 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             Alert(unableToStartQuizAlert, deadlineHasPassedAlert);
             return;
         }
+
+        if (now < initiateAt) {
+            Alert("Quiz not available")
+            return;
+        }
+
         const u = await AsyncStorage.getItem("user");
         if (u) {
             const user = JSON.parse(u);
@@ -428,11 +445,15 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             // after saving time in cloud, save it locally, set initiatedAt
             // quiz gets triggered
         }
-    }, [props.cue._id, solutions, deadline]);
+    }, [props.cue._id, solutions, deadline, initiateAt]);
 
     // Handle Update for CUES. Called everytime there is a cue modification
     // Overrides local cues in AsyncStorage and then calls reloadCuesAfterList to sync with the cloud
     const handleUpdate = useCallback(async () => {
+
+        // If available From set after Deadline or Dealine set before Available then 
+        // we need to throw an Alert and return without updating
+
         let subCues: any = {};
         try {
             const value = await AsyncStorage.getItem("cues");
@@ -496,7 +517,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             score,
             comment: props.cue.comment,
             submittedAt: submitted ? submittedNow.toISOString() : props.cue.submittedAt,
-            deadline: submission ? deadline.toISOString() : ""
+            deadline: submission ? deadline.toISOString() : "",
+            initiateAt: submission ? initiateAt.toISOString() : "",
         };
         const stringifiedCues = JSON.stringify(subCues);
         await AsyncStorage.setItem("cues", stringifiedCues);
@@ -527,8 +549,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         props,
         solutions,
         initiatedAt,
-        submission,
-        deadline,
+        // submission,
+        // deadline,
+        initiateAt,
         title, original, imported, type, url
     ]);
 
@@ -642,6 +665,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 solutions,
                                 initiatedAt
                             });
+                            console.log("Save Cue", saveCue)
                         } else if (submissionImported) {
                             const obj = {
                                 type: submissionType,
@@ -1211,11 +1235,13 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     initiatedAt ? (
                         <Quiz
                             // disable quiz if graded or deadline has passed
+                            submitted={props.cue.submittedAt && props.cue.submittedAt !== ""}
                             graded={props.cue.graded}
                             hasEnded={currentDate >= deadline}
                             solutions={solutions}
                             problems={problems}
                             setSolutions={(s: any) => setSolutions(s)}
+                            // shuffleQuiz={shuffleQuiz}
                         />
                     ) : (
                         <View>
@@ -1254,10 +1280,12 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 ) : (
                     <Quiz
                         isOwner={isOwner}
+                        submitted={props.cue.submittedAt && props.cue.submittedAt !== ""}
                         graded={props.cue.graded || currentDate >= deadline}
                         solutions={solutions}
                         problems={problems}
                         setSolutions={(s: any) => setSolutions(s)}
+                        shuffleQuiz={shuffleQuiz}
                     />
                 )
             ) : imported ? (
@@ -1498,7 +1526,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     }}>
                     <Text style={{ fontSize: 12, color: "#a2a2aa" }}>{PreferredLanguageText("submissionRequired")}</Text>
                 </View>
-                <View style={{ flexDirection: "row" }}>
+                <View style={{ flexDirection: "row", width: '100%'}}>
                     {isOwner ? (
                         <View
                             style={{
@@ -1531,7 +1559,51 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 width: "100%",
                                 display: "flex",
                                 flexDirection: "row",
-                                backgroundColor: "white"
+                                backgroundColor: "white",
+                                marginBottom: 10
+                            }}>
+                            <Text
+                                style={{
+                                    fontSize: 12,
+                                    color: "#a2a2aa",
+                                    textAlign: "left",
+                                    paddingRight: 10
+                                }}>
+                                Available
+                            </Text>
+                            {isOwner ? (
+                                <Datetime
+                                    value={initiateAt}
+                                    onChange={(event: any) => {
+                                        const date = new Date(event);
+
+                                        if (date < new Date()) return;
+                                        setInitiateAt(date);
+                                    }}
+                                    isValidDate={disablePastDt}
+                                />
+                            ) : (
+                                <Text
+                                    style={{
+                                        fontSize: 12,
+                                        color: "#a2a2aa",
+                                        textAlign: "left"
+                                    }}>
+                                    {initiateAt.toLocaleString()}
+                                </Text>
+                            )}
+                        </View>
+                    ) : null}
+                    
+                </View>
+                {submission ? (
+                        <View
+                            style={{
+                                width: "100%",
+                                display: "flex",
+                                flexDirection: "row",
+                                backgroundColor: "white",
+                                // marginLeft: 50
                             }}>
                             <Text
                                 style={{
@@ -1565,7 +1637,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             )}
                         </View>
                     ) : null}
-                </View>
             </View>
         ) : null;
     };
@@ -2172,6 +2243,18 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             </View>
         );
     };
+    
+
+
+    if (initiateAt > new Date() && !isOwner) {
+        return  (<View style={{ minHeight: Dimensions.get('window').height }}>
+                <View style={{ backgroundColor: 'white', flex: 1,  }}>
+                    <Text style={{ width: '100%', color: '#a2a2aa', fontSize: 22, paddingTop: 200, paddingBottom: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1, textAlign: 'center' }}>
+                        This assignment is locked till {moment(initiateAt).format('MMMM Do YYYY, h:mm a')}
+                    </Text>
+                </View>
+            </View>)
+    }
 
     // MAIN RETURN
     return (
@@ -2533,6 +2616,32 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             </View>
                         </View>
                         {renderReminderOptions()}
+                        {isQuiz && isOwner ?  <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
+                                        <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
+                                            <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
+                                                Shuffle Questions
+                                            </Text>
+                                        </View>
+                                        <View style={{ flexDirection: 'row' }}>
+                                            <View style={{
+                                                backgroundColor: 'white',
+                                                height: 40,
+                                                marginRight: 10
+                                            }}>
+                                                <Switch
+                                                    value={shuffleQuiz}
+                                                    disabled={true}
+                                                    onValueChange={() => setShuffleQuiz(!shuffleQuiz)}
+                                                    style={{ height: 20 }}
+                                                    trackColor={{
+                                                        false: '#f4f4f6',
+                                                        true: '#a2a2aa'
+                                                    }}
+                                                    activeThumbColor='white'
+                                                />
+                                            </View>
+                                        </View>
+                                    </View> : null}
                         {renderFooter()}
                     </Collapse>
                 </ScrollView>
