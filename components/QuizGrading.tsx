@@ -1,109 +1,53 @@
-import EquationEditor from 'equation-editor-react';
 import React, { useEffect, useState } from 'react';
-import { Image, StyleSheet, TextInput, ActivityIndicator } from 'react-native';
+import { Image, StyleSheet, TextInput, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { TextInput as CustomTextInput } from './CustomTextInput'
 import { Text, View } from './Themed';
+import EquationEditor from 'equation-editor-react';
+
 
 const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
-    const [problems, setProblems] = useState<any[]>(props.problems)
-    const [solutions, setSolutions] = useState<any>([])
-    const [updateKey, setUpdateKey] = useState(Math.random())
-    const [shuffledProblems, setShuffledProblems] = useState<any[]>([]);
-    const [loading, setLoading] = useState(false);
+    const [problems] = useState<any[]>(props.problems)
+    const [solutions, setSolutions] = useState<any[]>(props.solutions.solutions)
+    const [problemScores, setProblemScores] = useState<any[]>(props.solutions.problemScores)
+
+    const [totalPossible, setTotalPossible] = useState(0);
+    const [currentScore, setCurrentScore] = useState(0);
+    const [percentage, setPercentage] = useState("");
 
     console.log(props);
-
-    console.log(solutions);
-
-    // Over here the solutions objeect for modification is first set and updated based on changes...
+    
     useEffect(() => {
-        if (props.solutions && props.solutions.length !== 0) {
-            setSolutions(props.solutions)
-        } else {
-            const solutionInit: any = []
-            problems.map((problem: any) => {
-
-                if (!problem.questionType) {
-                    const arr: any = []
-
-                    problem.options.map((i: any) => {
-                        arr.push({
-                            options: i.option,
-                            isSelected: false
-                        })
-                    })
-
-                    solutionInit.push({
-                        selected: arr
-                    })
-                } else {
-                    solutionInit.push({
-                        response: ''
-                    })
-                }
-                
-                
-            })
-            setSolutions(solutionInit)
-            props.setSolutions(solutionInit)
-        }
-    }, [problems, props.solutions, props.setSolutions])
+        let currentScore = 0;
+        props.solutions.problemScores.forEach((score: any) => {
+            currentScore += Number(score)
+        })
+        setCurrentScore(currentScore);
+    }, [props.solutions])
 
     useEffect(() => {
-        if (props.shuffleQuiz && !props.isOwner) {
-            setLoading(true)
-            const updatedProblemsWithIndex = problems.map((prob: any, index: number) => {
-                const updated = { ...prob, problemIndex: index };
-                return updated
-            })
+        let total = 0;
+        props.problems.forEach((problem: any) => {
+            total += problem.points;
+        })
+        setTotalPossible(total);
+    }, [props.problems])
 
-            const shuffledArray = shuffle(updatedProblemsWithIndex);
+    useEffect(() => {
+        let currentScore = 0;
+        problemScores.forEach((score: any) => {
+            currentScore += Number(score)
+        })
 
-            console.log(updatedProblemsWithIndex)
+        setCurrentScore(currentScore);
 
-            setProblems(updatedProblemsWithIndex)
-            setShuffledProblems(shuffledArray)
-            
-        } else {
-            const updatedProblemsWithIndex = problems.map((prob: any, index: number) => {
-                const updated = { ...prob, problemIndex: index };
-                return updated
-            })
-            console.log(updatedProblemsWithIndex)
+        if (totalPossible === 0) return;
 
-            setProblems(updatedProblemsWithIndex)
-        }
-        setLoading(false)
+        setPercentage(((currentScore/totalPossible)*100).toFixed(2))
 
-    }, [props.shuffleQuiz])
+    }, [problemScores, totalPossible])
 
-    function shuffle(array: any[]) {
-        var currentIndex = array.length,  randomIndex;
-      
-        // While there remain elements to shuffle...
-        while (0 !== currentIndex) {
-      
-          // Pick a remaining element...
-          randomIndex = Math.floor(Math.random() * currentIndex);
-          currentIndex--;
-      
-          // And swap it with the current element.
-          [array[currentIndex], array[randomIndex]] = [
-            array[randomIndex], array[currentIndex]];
-        }
-      
-        return array;
-      }
-      
-
-    if (problems.length !== solutions.length) {
-        return null
-    }
-
-    let displayProblems = props.shuffleQuiz && !props.isOwner && !props.submitted ? shuffledProblems : problems;
-
-    if (loading || props.loading) return  (<View
+    if (props.loading) return (<View
         style={{
             width: "100%",
             flex: 1,
@@ -115,6 +59,8 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         <ActivityIndicator color={"#a2a2aa"} />
     </View>)
 
+    console.log(problemScores);
+
     return (
         <View style={{
             width: '100%', height: '100%', backgroundColor: 'white',
@@ -124,21 +70,55 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             flexDirection: 'column',
             justifyContent: 'flex-start'
         }}
-            key={solutions.toString() + updateKey.toString()}
         >
+            <View style={{ width: '100%', flexDirection: 'row' }}>
+                <Text style={{ width: '25%', fontSize: 15, color: "#202025", marginBottom: 10  }}>
+                    {props.partiallyGraded ? "Finish Grading" : "Graded" }
+                </Text>
+                <View style={{ width: '80%', flexDirection: 'row', justifyContent: 'flex-end', marginBottom: 10  }}>
+                    <Text
+                        style={{
+                            fontSize: 12,
+                            color: "white",
+                            height: 22,
+                            textAlign: 'right',
+                            paddingHorizontal: 10,
+                            marginLeft: 10,
+                            borderRadius: 10,
+                            backgroundColor: "#3B64F8",
+                            lineHeight: 20,
+                            paddingTop: 1
+                        }}>
+                        {percentage}%
+                    </Text>
+                    <Text
+                        style={{
+                            fontSize: 12,
+                            color: "white",
+                            height: 22,
+                            textAlign: 'right',
+                            paddingHorizontal: 10,
+                            marginLeft: 10,
+                            borderRadius: 10,
+                            backgroundColor: "#3B64F8",
+                            lineHeight: 20,
+                            paddingTop: 1
+                        }}>
+                        {currentScore}/{totalPossible}
+                    </Text>
+                </View>
+                
+            </View>
+            
             {
-                displayProblems.map((problem: any, index: any) => {
-
-                    const { problemIndex } = problem;
-
-                    if (problemIndex === undefined || problemIndex === null) return;
-
-                    return <View style={{ borderBottomColor: '#f4f4f6', borderBottomWidth: index === (problems.length - 1) ? 0 : 1, marginBottom: 25 }} key={index}>
+                props.problems.map((problem: any, index: any) => {
+                    console.log(problem.questionType)
+                    return <View style={{ borderBottomColor: '#f4f4f6', borderBottomWidth: index === (props.problems.length - 1) ? 0 : 1, marginBottom: 25 }} key={index}>
                         <View style={{ flexDirection: 'row' }}>
                             <View style={{ paddingTop: 15 }}>
                                 <Text style={{ color: '#a2a2aa', fontSize: 15, paddingBottom: 25, marginRight: 10 }}>
                                     {index + 1}.
-                            </Text>
+                                </Text>
                             </View>
                             {
                                 problem.question && problem.question.includes("image:") ?
@@ -163,7 +143,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             }}>
                                                 <EquationEditor
                                                     value={problem.question.split("formula:")[1]}
-                                                    onChange={() => { setUpdateKey(Math.random()) }}
+                                                    onChange={() => { return; }}
                                                     autoCommands="pi theta sqrt sum prod alpha beta gamma rho int"
                                                     autoOperatorNames="sin cos tan arccos arcsin arctan"
                                                 />
@@ -179,9 +159,43 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     )
                             }
                             <TextInput
+                                editable={true}
+                                value={problemScores[index]}
+                                onChange={(e: any) => {
+                                    // console.log(Number.isNaN(e.target.value))
+                                    if (Number.isNaN(Number(e.target.value))) return
+                                    const updateProblemScores = [...problemScores]
+                                    updateProblemScores[index] = e.target.value;
+                                    setProblemScores(updateProblemScores)
+                                }}
+                                style={{
+                                    width: '25%',
+                                    borderBottomColor: '#f4f4f6',
+                                    borderBottomWidth: 1,
+                                    fontSize: 15,
+                                    padding: 15,
+                                    paddingTop: 12,
+                                    paddingBottom: 12,
+                                    marginTop: 5,
+                                    marginBottom: 20
+                                }}
+                                placeholder={'Enter points'}
+                                placeholderTextColor={'#a2a2aa'}
+                            />
+                            <TextInput
                                 editable={false}
-                                value={problem.points + ' Points'}
-                                style={styles.input}
+                                value={"/ " + problem.points + ' Points'}
+                                style={{
+                                    width: '25%',
+                                    borderBottomColor: '#f4f4f6',
+                                    borderBottomWidth: 1,
+                                    fontSize: 15,
+                                    padding: 15,
+                                    paddingTop: 12,
+                                    paddingBottom: 12,
+                                    marginTop: 5,
+                                    marginBottom: 20
+                                }}
                                 placeholder={'Enter points'}
                                 placeholderTextColor={'#a2a2aa'}
                             />
@@ -190,11 +204,9 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             !problem.questionType && problem.options.map((option: any, i: any) => {
 
                                 let color = '#202025'
-                                if (props.isOwner && option.isCorrect) {
+                                if (option.isCorrect) {
                                     color = '#3B64F8'
-                                } else if (props.submitted && option.isCorrect ) {
-                                    color = '#3B64F8'
-                                } else if (props.submitted && !option.isCorrect && solutions[problemIndex].selected[i].isSelected)  {
+                                } else if (!option.isCorrect && solutions[index].selected[i].isSelected)  {
                                     color = '#D91D56'
                                 }
 
@@ -202,17 +214,17 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 return <View style={{ flexDirection: 'row' }} key={solutions.toString() + i.toString()}>
                                     <View style={{ paddingTop: 15 }}>
                                         <input
-                                            disabled={props.submitted || props.isOwner || props.hasEnded}
+                                            disabled={true}
                                             style={{ paddingRight: 20 }}
                                             type='checkbox'
                                             // value={props.isOwner ? String(option.isCorrect) : String(solutions[index].selected[i].isSelected)}
-                                            checked={props.isOwner ? option.isCorrect : solutions[problemIndex].selected[i].isSelected}
-                                            onChange={(e) => {
-                                                const updatedSolution = [...solutions]
-                                                updatedSolution[problemIndex].selected[i].isSelected = !updatedSolution[problemIndex].selected[i].isSelected;
-                                                setSolutions(updatedSolution)
-                                                props.setSolutions(updatedSolution)
-                                            }}
+                                            checked={solutions[index].selected[i].isSelected}
+                                            // onChange={(e) => {
+                                            //     const updatedSolution = [...solutions]
+                                            //     updatedSolution[index].selected[i].isSelected = !updatedSolution[index].selected[i].isSelected;
+                                            //     setSolutions(updatedSolution)
+                                            //     props.setSolutions(updatedSolution)
+                                            // }}
                                         />
                                     </View>
                                     {
@@ -238,7 +250,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                     }}>
                                                         <EquationEditor
                                                             value={option.option.split("formula:")[1]}
-                                                            onChange={() => { setUpdateKey(Math.random()) }}
+                                                            onChange={() => { return; }}
                                                             autoCommands="pi theta sqrt sum prod alpha beta gamma rho int"
                                                             autoOperatorNames="sin cos tan arccos arcsin arctan"
                                                         />
@@ -269,15 +281,25 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
                             <View style={{ width: '80%',  }}>
                                 <CustomTextInput 
-                                    editable={!props.submitted && !props.graded && !props.isOwner && !props.hasEnded}
-                                    value={solutions[problemIndex].response}
-                                    onChange={(e: any) => {
-                                        const updatedSolution = [...solutions]
-                                        updatedSolution[problemIndex].response = e.target.value;
-                                        setSolutions(updatedSolution)
-                                        props.setSolutions(updatedSolution)
-                                    }}
+                                    editable={false}
+                                    value={solutions[index].response}
+                                    // onChange={(e: any) => {
+                                    //     const updatedSolution = [...solutions]
+                                    //     updatedSolution[index].response = e.target.value;
+                                    //     setSolutions(updatedSolution)
+                                    //     props.setSolutions(updatedSolution)
+                                    // }}
                                     placeholder='Answer'
+                                    // style={{
+                                    //     width: '50%',
+                                    //     fontSize: 15,
+                                    //     padding: 15,
+                                    //     paddingTop: 12,
+                                    //     paddingBottom: 12,
+                                    //     marginTop: 5,
+                                    //     marginBottom: 20,
+                                    //     color:  '#202025'
+                                    // }}
                                     hasMultipleLines={true}
 
                                 />
@@ -293,6 +315,38 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
 
             {/* Add Submit button here */}
+            <View
+                style={{
+                    flex: 1,
+                    backgroundColor: 'white',
+                    justifyContent: 'center',
+                    display: 'flex',
+                    flexDirection: 'row',
+                    marginTop: 25,
+                    marginBottom: 25
+                }}>
+                <TouchableOpacity
+                    onPress={() => props.onGradeQuiz(problemScores, Number(percentage))}
+                    style={{
+                        backgroundColor: 'white',
+                        borderRadius: 15,
+                        overflow: 'hidden',
+                        height: 35,
+                    }}>
+                    <Text style={{
+                        textAlign: 'center',
+                        lineHeight: 35,
+                        color: 'white',
+                        fontSize: 12,
+                        backgroundColor: '#3B64F8',
+                        paddingHorizontal: 25,
+                        fontFamily: 'inter',
+                        height: 35,
+                    }}>
+                        SUBMIT 
+                    </Text>
+                </TouchableOpacity>
+            </View>
         </View >
     );
 }

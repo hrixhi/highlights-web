@@ -52,7 +52,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const [height, setHeight] = useState(100)
     const [init, setInit] = useState(false)
     const [submission, setSubmission] = useState(false)
-    const [deadline, setDeadline] = useState(new Date(current.getTime() + 1000 * 60 * 60))
+    const [deadline, setDeadline] = useState(new Date(current.getTime() + 1000 * 60 * 60 * 24))
+    const [initiateAt, setInitiateAt] = useState(new Date(current.getTime()))
     const [gradeWeight, setGradeWeight] = useState<any>(0)
     const [graded, setGraded] = useState(false)
     const [imported, setImported] = useState(false)
@@ -73,6 +74,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const [equation, setEquation] = useState('y = x + 1')
     const [showEquationEditor, setShowEquationEditor] = useState(false)
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [shuffleQuiz, setShuffleQuiz] = useState(false);
 
     const window = Dimensions.get("window");
     const screen = Dimensions.get("screen");
@@ -130,6 +132,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         }
     }, [cue])
 
+    console.log("Shuffle Quiz", shuffleQuiz)
+
     const createNewQuiz = useCallback(() => {
         let error = false
         if (problems.length === 0) {
@@ -157,40 +161,45 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             //     error = true;
             // }
 
-            if (problem.options.length < 2) {
+            // If MCQ then > 2 options
+            if (!problem.questionType && problem.options.length < 2) {
                 Alert("Problem must have at least 2 options")
                 error = true;
             }
 
-            // Create object and check if any options repeat:
+            // If MCQ, check if any options repeat:
+            if (!problem.questionType) {
+                const keys: any = {};
 
-            const keys: any = {};
+                problem.options.map((option: any) => {
+                    if (option.option === '' || option.option === 'formula:') {
+                        Alert(fillMissingOptionsAlert)
+                        error = true;
+                    }
 
-            problem.options.map((option: any) => {
-                if (option.option === '' || option.option === 'formula:') {
-                    Alert(fillMissingOptionsAlert)
+                    if (option.option in keys) {
+                        Alert("Option repeated in a question");
+                        error = true
+                    }
+
+                    if (option.isCorrect) {
+                        optionFound = true
+                    }
+
+                    keys[option.option] = 1
+                })
+                
+                if (!optionFound) {
+                    Alert(eachOptionOneCorrectAlert)
                     error = true;
                 }
-
-                if (option.option in keys) {
-                    Alert("Option repeated in a question");
-                    error = true
-                }
-
-                if (option.isCorrect) {
-                    optionFound = true
-                }
-
-                keys[option.option] = 1
-            })
-            if (!optionFound) {
-                Alert(eachOptionOneCorrectAlert)
-                error = true;
             }
+            
         })
         if (error) {
             return
         }
+
         const server = fetchAPI('')
         const durationMinutes = (duration.hours * 60) + (duration.minutes) + (duration.seconds / 60);
         server.mutate({
@@ -198,18 +207,20 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             variables: {
                 quiz: {
                     problems,
-                    duration: timer ? durationMinutes.toString() : null
+                    duration: timer ? durationMinutes.toString() : null,
+                    shuffleQuiz
                 }
             }
         }).then(res => {
             if (res.data && res.data.quiz.createQuiz !== 'error') {
+                storeDraft('quizDraft', '');
                 handleCreate(res.data.quiz.createQuiz)
             }
         })
     }, [problems, cue, modalAnimation, customCategory, props.saveDataInCloud, isQuiz,
-        gradeWeight, deadline, submission, imported, selected, subscribers,
+        gradeWeight, deadline, initiateAt, submission, imported, selected, subscribers,
         shuffle, frequency, starred, color, notify, title, type, url, timer, duration,
-        props.closeModal, channelId, endPlayAt, playChannelCueIndef])
+        props.closeModal, channelId, endPlayAt, playChannelCueIndef, shuffleQuiz])
 
     const loadChannelCategoriesAndSubscribers = useCallback(async () => {
 
@@ -337,6 +348,17 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 title
             }
             saveCue = JSON.stringify(obj)
+        } else if (isQuiz)  {
+            const quiz = {
+                title,
+                problems,
+                timer,
+                duration
+            }
+
+            const saveQuiz = JSON.stringify(quiz)
+
+            storeDraft('quizDraft', saveQuiz)
         } else {
             saveCue = cue
         }
@@ -345,7 +367,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         } else {
             storeDraft('cueDraft', '')
         }
-    }, [cue, init, type, imported, url, title])
+    }, [cue, init, type, imported, url, title, isQuiz, problems, timer, duration])
 
     const storeDraft = useCallback(async (type, value) => {
         await AsyncStorage.setItem(type, value)
@@ -446,6 +468,11 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 return;
             }
 
+            if ((submission || isQuiz) && deadline < initiateAt) {
+                Alert("Available from time must be set before deadline", "")
+                return;
+            }
+
             const user = JSON.parse(uString)
             const server = fetchAPI('')
             const userIds: any[] = []
@@ -467,6 +494,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 gradeWeight: gradeWeight.toString(),
                 submission: submission || isQuiz,
                 deadline: submission || isQuiz ? deadline.toISOString() : '',
+                initiateAt: submission || isQuiz ? initiateAt.toISOString() : '',
                 endPlayAt: notify && (shuffle || !playChannelCueIndef) ? endPlayAt.toISOString() : '',
                 shareWithUserIds: selected.length === subscribers.length ? null : userIds
             }
@@ -496,7 +524,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         setIsSubmitting(false)
 
     }, [cue, modalAnimation, customCategory, props.saveDataInCloud, isQuiz, timer, duration,
-        gradeWeight, deadline, submission, imported, selected, subscribers,
+        gradeWeight, deadline, initiateAt, submission, imported, selected, subscribers,
         shuffle, frequency, starred, color, notify, title, type, url,
         props.closeModal, channelId, endPlayAt, playChannelCueIndef])
 
@@ -506,6 +534,15 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 const h = await AsyncStorage.getItem('cueDraft')
                 if (h !== null) {
                     setCue(h)
+                }
+                const quizDraft = await AsyncStorage.getItem('quizDraft')
+                if (quizDraft !== null) {
+                    const { duration, timer, problems, title } = JSON.parse(quizDraft);
+
+                    setDuration(duration);
+                    setTimer(timer);
+                    setProblems(problems);
+                    setTitle(title);
                 }
             } catch (e) {
                 console.log(e)
@@ -678,7 +715,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 <FileUpload
                                     back={() => setShowImportOptions(false)}
                                     onUpload={(u: any, t: any) => {
-                                        // console.log(t)
                                         const obj = { url: u, type: t, title }
                                         setCue(JSON.stringify(obj))
                                         setShowImportOptions(false)
@@ -1092,7 +1128,39 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             flexDirection: 'row',
                                                             backgroundColor: 'white',
                                                         }}>
-                                                            <Text style={styles.text}>
+                                                           <Text style={styles.text}>
+                                                                Available 
+                                                            </Text>
+                                                            <Datetime
+                                                                value={initiateAt}
+                                                                onChange={(event: any) => {
+                                                                    const date = new Date(event)
+
+                                                                    if (date < new Date()) return;
+                                                                        setInitiateAt(date)
+                                                                    }}
+                                                                    isValidDate={disablePastDt}
+                                                                />
+
+                                                        </View>
+                                                        : null
+                                                }
+                                            </View>
+
+                                            {/* Add it here */}
+
+                                            <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
+                                                <View style={{ flexDirection: 'row' }}>
+                                                    {
+                                                        submission ?
+                                                            <View style={{
+                                                                width: '100%',
+                                                                display: 'flex',
+                                                                flexDirection: 'row',
+                                                                backgroundColor: 'white',
+                                                                marginLeft: 50
+                                                            }}>
+                                                                 <Text style={styles.text}>
                                                                 {PreferredLanguageText('deadline')}
                                                             </Text>
                                                             <Datetime
@@ -1106,11 +1174,16 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                 }}
                                                                 isValidDate={disablePastDt}
                                                             />
+                                                                
 
-                                                        </View>
-                                                        : null
-                                                }
-                                            </View>
+                                                            </View>
+                                                            : null
+                                                    }
+                                                </View>
+
+                                            {/* Add it here */}
+                                        </View>
+
                                         </View> : null
                                 }
                                 {
@@ -1431,6 +1504,32 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     </View> : null
                             }
                         </View>
+                        {/* if Quiz then ask Shuffle */}
+                        {isQuiz ?  <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
+                                        <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
+                                            <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
+                                                Shuffle Questions
+                                            </Text>
+                                        </View>
+                                        <View style={{ flexDirection: 'row' }}>
+                                            <View style={{
+                                                backgroundColor: 'white',
+                                                height: 40,
+                                                marginRight: 10
+                                            }}>
+                                                <Switch
+                                                    value={shuffleQuiz}
+                                                    onValueChange={() => setShuffleQuiz(!shuffleQuiz)}
+                                                    style={{ height: 20 }}
+                                                    trackColor={{
+                                                        false: '#f4f4f6',
+                                                        true: '#a2a2aa'
+                                                    }}
+                                                    activeThumbColor='white'
+                                                />
+                                            </View>
+                                        </View>
+                                    </View> : null}
                     </View>
                     <View style={styles.footer}>
                         <View

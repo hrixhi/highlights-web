@@ -44,6 +44,7 @@ export const createCue = gql`
     $endPlayAt: String
     $customCategory: String
     $deadline: String
+    $initiateAt: String
     $shareWithUserIds: [String!]
   ) {
     cue {
@@ -60,6 +61,7 @@ export const createCue = gql`
         endPlayAt: $endPlayAt
         customCategory: $customCategory
         deadline: $deadline
+        initiateAt: $initiateAt
         shareWithUserIds: $shareWithUserIds
       )
     }
@@ -440,6 +442,7 @@ export const getCues = gql`
         original
         submission
         deadline
+        initiateAt
         gradeWeight
         graded
         score
@@ -568,6 +571,7 @@ export const getStatuses = gql`
         email
         submission
         score
+        submittedAt
         graded
         comment
       }
@@ -606,6 +610,7 @@ export const getCuesFromCloud = gql`
         original
         submission
         deadline
+        initiateAt
         gradeWeight
         score
         graded
@@ -792,9 +797,11 @@ export const getQuiz = gql`
   query($quizId: String!) {
     quiz {
       getQuiz(quizId: $quizId) {
+        shuffleQuiz
         duration
         problems {
           question
+          questionType
           points
           options {
             option
@@ -805,6 +812,15 @@ export const getQuiz = gql`
     }
   }
 `;
+
+export const gradeQuiz = gql`
+  mutation($userId: String!, $cueId: String! $problemScores: [String!]!, $score: Float!) {
+    cue {
+      gradeQuiz(userId: $userId, cueId: $cueId, problemScores: $problemScores, score: $score)
+    }
+  }
+` 
+
 export const isSubInactive = gql`
   query($userId: String!, $channelId: String!) {
     subscription {
