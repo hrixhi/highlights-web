@@ -196,7 +196,10 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     </View>
                                 </View>
                                 {/* <View style={{ flex: 1 }} /> */}
-                                <View style={{ width: '50%' }}>
+                                <View style={{ width: '25%',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        flexDirection: 'row' }}>
                                     <TextInput
                                         value={problem.points}
                                         // style={styles.input}
@@ -209,6 +212,43 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                         }}
                                         placeholderTextColor={'#a2a2aa'}
                                     />
+                                </View>
+                                {/* Add dropdown here */}
+                                <View
+                                    style={{
+                                        width: '25%',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        flexDirection: 'row'
+                                    }}>
+                                    <Picker
+                                        style={styles.picker}
+                                        itemStyle={{
+                                            fontSize: 15
+                                        }}
+                                        selectedValue={questionType}
+                                        onValueChange={(questionType: any) => {
+                                            const updatedProblems = [...problems]
+                                            updatedProblems[index].questionType = questionType;
+
+                                            // Clear Options 
+                                            if (questionType !== "") {
+                                                updatedProblems[index].options = []
+                                            }
+                                            setProblems(updatedProblems)
+                                            props.setProblems(updatedProblems)
+                                        }}>
+                                        {questionTypeOptions.map((item: any, index: number) => {
+                                            return (
+                                                <Picker.Item
+                                                    color={questionType === item.value ? "#3B64F8" : "#202025"}
+                                                    label={item.value === "" ? "MCQ" : item.label}
+                                                    value={item.value}
+                                                    key={index}
+                                                />
+                                            );
+                                        })}
+                                    </Picker>
                                 </View>
 
                             </View>
@@ -224,56 +264,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 />
                             </View>
                         </View>
-                        <View
-                            style={{
-                                backgroundColor: "white",
-                                display: "flex",
-                                flexDirection: 'row',
-                                marginTop: 10
-                                // height: 40,
-                                // marginRight: 10
-                            }}>
-                            <Text
-                                style={{
-                                    paddingTop: 10,
-                                    color: '#a2a2aa',
-                                    fontFamily: 'Overpass',
-                                    fontSize: 12,
-                                    marginRight: 10,
-                                    marginLeft: 20
-                                }}
-                            >
-                                Question Type:
-                            </Text>
-                            <Picker
-                                style={styles.picker}
-                                itemStyle={{
-                                    fontSize: 15
-                                }}
-                                selectedValue={questionType}
-                                onValueChange={(questionType: any) => {
-                                    const updatedProblems = [...problems]
-                                    updatedProblems[index].questionType = questionType;
-
-                                    // Clear Options 
-                                    if (questionType !== "") {
-                                        updatedProblems[index].options = []
-                                    }
-                                    setProblems(updatedProblems)
-                                    props.setProblems(updatedProblems)
-                                }}>
-                                {questionTypeOptions.map((item: any, index: number) => {
-                                    return (
-                                        <Picker.Item
-                                            color={questionType === item.value ? "#3B64F8" : "#202025"}
-                                            label={item.value === "" ? "MCQ" : item.label}
-                                            value={item.value}
-                                            key={index}
-                                        />
-                                    );
-                                })}
-                            </Picker>
-                        </View>
+                        
                         {
                             problem.options.map((option: any, i: any) => {
                                 return <View style={{ flexDirection: 'row', marginTop: 10 }}>
@@ -290,7 +281,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                             }}
                                         />
                                     </View>
-                                    <View style={{ width: '95%'}}>
+                                    <View style={{ width: '50%'}}>
                                         {
                                             option.option && option.option.includes("image:") ?
                                                 <Image
@@ -324,7 +315,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                             autoOperatorNames="sin cos tan arccos arcsin arctan"
                                                         />
                                                     </View> :
-                                                     <View style={{ width: '50%' }}>
+                                                     <View style={{ width: '100%' }}>
                                                         <TextInput
                                                             value={option.option}
                                                             // style={styles.input}

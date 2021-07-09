@@ -73,7 +73,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         >
             <View style={{ width: '100%', flexDirection: 'row' }}>
                 <Text style={{ width: '25%', fontSize: 15, color: "#202025", marginBottom: 10  }}>
-                    {props.partiallyGraded ? "Finish Grading" : "Graded" }
+                    {props.partiallyGraded ? "Finish Grading" : "" }
                 </Text>
                 <View style={{ width: '80%', flexDirection: 'row', justifyContent: 'flex-end', marginBottom: 10  }}>
                     <Text
@@ -187,8 +187,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 value={"/ " + problem.points + ' Points'}
                                 style={{
                                     width: '25%',
-                                    borderBottomColor: '#f4f4f6',
-                                    borderBottomWidth: 1,
                                     fontSize: 15,
                                     padding: 15,
                                     paddingTop: 12,
@@ -283,23 +281,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 <CustomTextInput 
                                     editable={false}
                                     value={solutions[index].response}
-                                    // onChange={(e: any) => {
-                                    //     const updatedSolution = [...solutions]
-                                    //     updatedSolution[index].response = e.target.value;
-                                    //     setSolutions(updatedSolution)
-                                    //     props.setSolutions(updatedSolution)
-                                    // }}
                                     placeholder='Answer'
-                                    // style={{
-                                    //     width: '50%',
-                                    //     fontSize: 15,
-                                    //     padding: 15,
-                                    //     paddingTop: 12,
-                                    //     paddingBottom: 12,
-                                    //     marginTop: 5,
-                                    //     marginBottom: 20,
-                                    //     color:  '#202025'
-                                    // }}
                                     hasMultipleLines={true}
 
                                 />
@@ -356,8 +338,8 @@ export default Quiz;
 const styles = StyleSheet.create({
     input: {
         width: '50%',
-        borderBottomColor: '#f4f4f6',
-        borderBottomWidth: 1,
+        // borderBottomColor: '#f4f4f6',
+        // borderBottomWidth: 1,
         fontSize: 15,
         padding: 15,
         paddingTop: 12,

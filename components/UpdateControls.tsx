@@ -1237,13 +1237,13 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     initiatedAt ? (
                         <Quiz
                             // disable quiz if graded or deadline has passed
-                            submitted={props.cue.submittedAt && props.cue.submittedAt !== ""}
+                            submitted={isQuiz && props.cue.submittedAt && props.cue.submittedAt !== "" ? true : false}
                             graded={props.cue.graded}
                             hasEnded={currentDate >= deadline}
                             solutions={solutions}
                             problems={problems}
                             setSolutions={(s: any) => setSolutions(s)}
-                        // shuffleQuiz={shuffleQuiz}
+                            shuffleQuiz={shuffleQuiz}
                         />
                     ) : (
                         <View>
@@ -1282,7 +1282,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 ) : (
                     <Quiz
                         isOwner={isOwner}
-                        submitted={props.cue.submittedAt && props.cue.submittedAt !== ""}
+                        submitted={isQuiz && props.cue.submittedAt && props.cue.submittedAt !== "" ? true : false}
                         graded={props.cue.graded || currentDate >= deadline}
                         solutions={solutions}
                         problems={problems}
@@ -1609,10 +1609,11 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         }}>
                         <Text
                             style={{
-                                fontSize: 12,
-                                color: "#a2a2aa",
-                                textAlign: "left",
-                                paddingRight: 10
+                                width: "100%",
+                                display: "flex",
+                                flexDirection: "row",
+                                backgroundColor: "white",
+                                // marginLeft: 50
                             }}>
                             {PreferredLanguageText("due")}
                         </Text>
@@ -1634,7 +1635,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     color: "#a2a2aa",
                                     textAlign: "left"
                                 }}>
-                                {deadline.toLocaleString()}
+                                Deadline
                             </Text>
                         )}
                     </View>
