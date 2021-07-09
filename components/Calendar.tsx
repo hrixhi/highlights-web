@@ -492,13 +492,13 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 <View style={{ width: "100%", paddingTop: width < 768 ? 20 : 40, paddingBottom: 15, backgroundColor: "white" }}>
                     <Text style={{ fontSize: 12, color: "#a2a2aa" }}>Repeat every</Text>
                 </View>
-                <DefaultView
+                <View
                     style={{
-                        backgroundColor: "white",
-                        display: "flex",
-                        // height: 40,
-                        // marginRight: 10
+                        width: "100%",
+                        flexDirection: "row",
+                        marginLeft: 0
                     }}>
+
                     <Picker
                         style={styles.picker}
                         itemStyle={{
@@ -519,7 +519,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             );
                         })}
                     </Picker>
-                </DefaultView>
+                </View>
             </View> : null}
 
             {recurring ? <View style={{ width: width < 768 ? "100%" : "33.33%", display: "flex" }}>
@@ -1138,7 +1138,7 @@ const styles: any = StyleSheet.create({
         fontSize: 12,
         textAlign: "center",
         borderWidth: 1,
-        width: 100,
+        width: 150,
         height: 20,
         alignSelf: "center",
         marginTop: 0,

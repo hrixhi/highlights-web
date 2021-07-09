@@ -19,10 +19,23 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const [cues, setCues] = useState<any[]>([])
     const [scores, setScores] = useState<any[]>([])
     const [submissionStatistics, setSubmissionStatistics] = useState<any[]>([])
+    const [isOwner, setIsOwner] = useState(false);
     const [viewStatisticsCue, setViewStatisticsCue] = useState<any>({})
 
     const couldNotLoadSubscribersAlert = PreferredLanguageText('couldNotLoadSubscribers');
     const checkConnectionAlert = PreferredLanguageText('checkConnection');
+
+    useEffect(() => {
+        (async () => {
+            const u = await AsyncStorage.getItem("user");
+            if (u) {
+                const user = JSON.parse(u);
+                if (user._id.toString().trim() === props.channelCreatedBy) {
+                    setIsOwner(true);
+                }
+            }
+        })();
+    }, [props.channelCreatedBy, props.channelId]);
 
     const loadCuesAndScores = useCallback(() => {
         setLoading(true)
@@ -178,6 +191,7 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             scores={scores}
                             cues={cues}
                             channelName={props.filterChoice}
+                            isOwner={isOwner}
                             channelId={props.channelId}
                             closeModal={() => {
                                 Animated.timing(modalAnimation, {

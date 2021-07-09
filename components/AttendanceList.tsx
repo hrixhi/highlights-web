@@ -212,9 +212,9 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
         }}
             key={JSON.stringify(pastMeetings)}
         >
-            <Text style={{ textAlign: 'left', fontSize: 13, color: '#202025', fontFamily: 'inter', paddingBottom: 20 }}>
+            {/* <Text style={{ textAlign: 'left', fontSize: 13, color: '#202025', fontFamily: 'inter', paddingBottom: 20 }}>
                         Attendance By Lectures
-            </Text>
+            </Text> */}
             <ScrollView
                             showsHorizontalScrollIndicator={false}
                             horizontal={true}
@@ -228,6 +228,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                         width={width - 100}
                         height={500}
                         // chartConfig={chartConfig}
+                        // xAxisLabel="Lectures"
                         chartConfig={{
                             backgroundGradientFrom: "#fff",
                             backgroundGradientFromOpacity: 0,
@@ -296,7 +297,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                     }}>
                     {!enableFilter ? "FILTER" : "HIDE"}
                 </Text>}
-                {pastMeetings.length === 0 || channelAttendances.length === 0 ?  null : <Text
+                {(pastMeetings.length === 0 || channelAttendances.length === 0 || !props.isOwner)  ?  null : <Text
                     style={{
                         color: "#a2a2aa",
                         fontSize: 11,

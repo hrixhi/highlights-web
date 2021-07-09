@@ -1191,7 +1191,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
                                             <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
                                                 <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
-                                                    {PreferredLanguageText('graded')}
+                                                    Grade Weight 
                                                 </Text>
                                             </View>
                                             <View style={{ flexDirection: 'row' }}>
@@ -1220,7 +1220,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             backgroundColor: 'white'
                                                         }}>
                                                             <Text style={styles.text}>
-                                                                Grade Weight {'\n'} {PreferredLanguageText('percentageOverall')}
+                                                                {PreferredLanguageText('percentageOverall')}
                                                             </Text>
                                                             <TextInput
                                                                 value={gradeWeight}

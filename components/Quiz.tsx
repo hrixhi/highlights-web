@@ -156,7 +156,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 borderWidth: 1,
                                                 borderRadius: 15,
                                                 padding: 10,
-                                                width: '50%'
+                                                width: '80%'
                                             }}>
                                                 <EquationEditor
                                                     value={problem.question.split("formula:")[1]}
@@ -169,7 +169,15 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             <TextInput
                                                 editable={false}
                                                 value={problem.question}
-                                                style={styles.input}
+                                                style={{
+                                                    fontSize: 15,
+                                                    padding: 15,
+                                                    paddingTop: 12,
+                                                    paddingBottom: 12,
+                                                    marginTop: 5,
+                                                    marginBottom: 20,
+                                                    width: '80%'
+                                                }}
                                                 placeholder={'Problem ' + (index + 1).toString()}
                                                 placeholderTextColor={'#a2a2aa'}
                                             />
@@ -178,7 +186,15 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             <TextInput
                                 editable={false}
                                 value={problem.points + ' Points'}
-                                style={styles.input}
+                                style={{
+                                    fontSize: 15,
+                                    padding: 15,
+                                    paddingTop: 12,
+                                    paddingBottom: 12,
+                                    marginTop: 5,
+                                    marginBottom: 20,
+                                    width: '20%'
+                                }}
                                 placeholder={'Enter points'}
                                 placeholderTextColor={'#a2a2aa'}
                             />
@@ -299,8 +315,8 @@ export default Quiz;
 const styles = StyleSheet.create({
     input: {
         width: '50%',
-        borderBottomColor: '#f4f4f6',
-        borderBottomWidth: 1,
+        // borderBottomColor: '#f4f4f6',
+        // borderBottomWidth: 1,
         fontSize: 15,
         padding: 15,
         paddingTop: 12,

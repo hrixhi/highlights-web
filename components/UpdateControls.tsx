@@ -1605,18 +1605,17 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             display: "flex",
                             flexDirection: "row",
                             backgroundColor: "white",
-                            marginLeft: 50
+                            marginLeft: isOwner ? 50 : 0
                         }}>
                         <Text
                             style={{
-                                width: "100%",
-                                display: "flex",
-                                flexDirection: "row",
-                                backgroundColor: "white",
-                                // marginLeft: 50
-                            }}>
-                            {PreferredLanguageText("due")}
-                        </Text>
+                                fontSize: 12,
+                                    color: "#a2a2aa",
+                                    textAlign: "left",
+                                    paddingRight: 10
+                                }}>
+                                Deadline
+                            </Text>
                         {isOwner ? (
                             <Datetime
                                 value={deadline}
@@ -1630,13 +1629,13 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             />
                         ) : (
                             <Text
-                                style={{
-                                    fontSize: 12,
-                                    color: "#a2a2aa",
-                                    textAlign: "left"
-                                }}>
-                                Deadline
-                            </Text>
+                                    style={{
+                                        fontSize: 12,
+                                        color: "#a2a2aa",
+                                        textAlign: "left"
+                                    }}>
+                                    {deadline.toLocaleString()}
+                                </Text>
                         )}
                     </View>
                 ) : null}
@@ -1654,7 +1653,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         paddingBottom: 15,
                         backgroundColor: "white"
                     }}>
-                    <Text style={{ fontSize: 12, color: "#a2a2aa" }}>{PreferredLanguageText("graded")}</Text>
+                    <Text style={{ fontSize: 12, color: "#a2a2aa" }}>Grade Weight</Text>
                 </View>
                 <View style={{ flexDirection: "row" }}>
                     <View
@@ -1688,9 +1687,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     fontSize: 12,
                                     color: "#a2a2aa",
                                     textAlign: "left",
-                                    paddingRight: 10
+                                    paddingRight: 10,
+                                    paddingLeft: 10,
                                 }}>
-                                Grade Weight {"\n"}
                                 {PreferredLanguageText("percentageOverall")}
                             </Text>
                             {isOwner ? (
@@ -2253,7 +2252,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         return (<View style={{ minHeight: Dimensions.get('window').height }}>
             <View style={{ backgroundColor: 'white', flex: 1, }}>
                 <Text style={{ width: '100%', color: '#a2a2aa', fontSize: 22, paddingTop: 200, paddingBottom: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1, textAlign: 'center' }}>
-                    This assignment is locked till {moment(initiateAt).format('MMMM Do YYYY, h:mm a')}
+                    Available from {moment(initiateAt).format('MMMM Do YYYY, h:mm a')}
                 </Text>
             </View>
         </View>)
