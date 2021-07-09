@@ -12,10 +12,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     const [shuffledProblems, setShuffledProblems] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
 
-    console.log(props);
-
-    console.log(solutions);
-
     // Over here the solutions objeect for modification is first set and updated based on changes...
     useEffect(() => {
         if (props.solutions && props.solutions.length !== 0) {
@@ -58,11 +54,10 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 return updated
             })
 
-            const shuffledArray = shuffle(updatedProblemsWithIndex);
-
-            console.log(updatedProblemsWithIndex)
-
             setProblems(updatedProblemsWithIndex)
+
+            const shuffledArray = shuffle(updatedProblemsWithIndex);
+          
             setShuffledProblems(shuffledArray)
             
         } else {
@@ -70,7 +65,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 const updated = { ...prob, problemIndex: index };
                 return updated
             })
-            console.log(updatedProblemsWithIndex)
 
             setProblems(updatedProblemsWithIndex)
         }
@@ -78,7 +72,10 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
     }, [props.shuffleQuiz])
 
-    function shuffle(array: any[]) {
+    function shuffle(input: any[]) {
+
+        const array = [...input];
+
         var currentIndex = array.length,  randomIndex;
       
         // While there remain elements to shuffle...

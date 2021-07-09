@@ -374,7 +374,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 // paddingHorizontal: 20,
                                                 borderTopRightRadius: 0,
                                                 borderTopLeftRadius: 0,
-                                                // paddingTop: 30
+                                                paddingTop: 10
                                             }}>
                                             {/* <View style={{ backgroundColor: 'white', flexDirection: 'row', paddingBottom: 25 }}>
                                     <TouchableOpacity

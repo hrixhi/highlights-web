@@ -590,7 +590,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                             <TouchableOpacity
                                 key={Math.random()}
                                 style={{
-                                    backgroundColor: 'white'
+                                    backgroundColor: 'white',
                                 }}
                                 onPress={() => {
                                     if (showChat) {
@@ -610,7 +610,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 }}>
                                 <Text style={{
                                     width: '100%',
-                                    lineHeight: 23
+                                    lineHeight: 23,
                                 }}>
                                     <Ionicons name='chevron-back-outline' size={23} color={'#202025'} />
                                 </Text>
