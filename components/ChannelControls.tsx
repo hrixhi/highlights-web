@@ -4,7 +4,7 @@ import { TextInput } from "./CustomTextInput";
 import { Text, View, TouchableOpacity } from './Themed';
 import { fetchAPI } from '../graphql/FetchAPI';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { checkChannelStatus, createChannel, createUser, subscribe, updateUser } from '../graphql/QueriesAndMutations';
+import { checkChannelStatus, createChannel, createUser, getOrganisation, getRole, subscribe, updateUser } from '../graphql/QueriesAndMutations';
 import Alert from '../components/Alert'
 import { uniqueNamesGenerator, colors } from 'unique-names-generator'
 import { PreferredLanguageText } from '../helpers/LanguageContext';
@@ -18,6 +18,8 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
     const [displayName, setDisplayName] = useState('')
     const [fullName, setFullName] = useState('')
     const [userFound, setUserFound] = useState(false)
+    const [school, setSchool] = useState<any>(null)
+    const [role, setRole] = useState('')
 
     const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
 
@@ -217,6 +219,27 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
             setDisplayName(parsedUser.displayName)
             setFullName(parsedUser.fullName)
             setUserFound(true)
+            const server = fetchAPI('')
+            server.query({
+                query: getOrganisation,
+                variables: {
+                    userId: parsedUser._id
+                }
+            }).then(res => {
+                if (res.data && res.data.school.findByUserId) {
+                    setSchool(res.data.school.findByUserId)
+                }
+            })
+            server.query({
+                query: getRole,
+                variables: {
+                    userId: parsedUser._id
+                }
+            }).then(res => {
+                if (res.data && res.data.user.getRole) {
+                    setRole(res.data.user.getRole)
+                }
+            })
         } else {
             const fullName = uniqueNamesGenerator({
                 dictionaries: [colors]
@@ -294,15 +317,19 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             {PreferredLanguageText('subscribe')}
                         </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity
-                        style={option === 'Create' ? styles.allOutline : styles.all}
-                        onPress={() => {
-                            setOption('Create')
-                        }}>
-                        <Text style={{ color: '#a2a2aa', lineHeight: 20, fontSize: 12 }}>
-                            {PreferredLanguageText('create')}
-                        </Text>
-                    </TouchableOpacity>
+                    {
+                        role === 'student' && (school && school.allowStudentChannelCreation === false) ?
+                            null :
+                            <TouchableOpacity
+                                style={option === 'Create' ? styles.allOutline : styles.all}
+                                onPress={() => {
+                                    setOption('Create')
+                                }}>
+                                <Text style={{ color: '#a2a2aa', lineHeight: 20, fontSize: 12 }}>
+                                    {PreferredLanguageText('create')}
+                                </Text>
+                            </TouchableOpacity>
+                    }
                     {/* <TouchableOpacity
                         style={option === 'Profile' ? styles.allOutline : styles.all}
                         onPress={() => {

@@ -819,7 +819,7 @@ export const gradeQuiz = gql`
       gradeQuiz(userId: $userId, cueId: $cueId, problemScores: $problemScores, score: $score)
     }
   }
-` 
+`
 
 export const isSubInactive = gql`
   query($userId: String!, $channelId: String!) {
@@ -866,6 +866,24 @@ query($channelId: String!) {
       endTime
       thumbnail
     }
+  }
+}
+`
+export const getOrganisation = gql`
+query($userId: String!) {
+  school {
+    findByUserId(userId: $userId) {
+      logo
+      allowStudentChannelCreation
+    }
+  }
+}
+`
+
+export const getRole = gql`
+query($userId: String!) {
+  user {
+    getRole(userId: $userId) 
   }
 }
 `

@@ -5,7 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import _ from 'lodash'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { fetchAPI } from '../graphql/FetchAPI';
-import { doesChannelNameExist, getMeetingStatus, totalUnreadDiscussionThreads, totalUnreadMessages, updateChannel } from '../graphql/QueriesAndMutations';
+import { doesChannelNameExist, getMeetingStatus, getOrganisation, totalUnreadDiscussionThreads, totalUnreadMessages, updateChannel } from '../graphql/QueriesAndMutations';
 import alert from './Alert';
 
 const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
@@ -17,6 +17,7 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const [channelCategories, setChannelCategories] = useState([])
     const [meetingOn, setMeetingOn] = useState(false)
     const [isOwner, setIsOwner] = useState(false)
+    const [school, setSchool] = useState<any>(null)
 
     // NAVRACHANA HARD CODE
     const [showNavrachanaLogo, setShowNavrachanaLogo] = useState(false)
@@ -70,11 +71,21 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     if (user.email === 'hrishi@cuesapp.co') {
                         setShowNavrachanaLogo(true)
                     }
+                    const server = fetchAPI('')
+                    server.query({
+                        query: getOrganisation,
+                        variables: {
+                            userId: user._id
+                        }
+                    }).then(res => {
+                        if (res.data && res.data.school.findByUserId) {
+                            setSchool(res.data.school.findByUserId)
+                        }
+                    })
                     if (props.channelId !== '') {
                         if (user._id.toString().trim() === props.channelCreatedBy.toString().trim()) {
                             setIsOwner(true)
                         }
-                        const server = fetchAPI('')
                         server.query({
                             query: getMeetingStatus,
                             variables: {
@@ -123,13 +134,15 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             source={
                                 // showNavrachanaLogo
                                 // ? 'https://cues-files.s3.amazonaws.com/media/png/1624424962493_logo.png' :
-                                require('./default-images/cues-logo-black-exclamation-hidden.jpg')
+                                school && school.logo && school.logo !== ''
+                                    ? school.logo
+                                    : require('./default-images/cues-logo-black-exclamation-hidden.jpg')
                             }
                             style={{
                                 // width: Dimensions.get('window').height * (showNavrachanaLogo ? 0.11 : 0.14) * 0.53456,
                                 // height: Dimensions.get('window').height * (showNavrachanaLogo ? 0.22 : 0.14) * 0.2
-                                width: Dimensions.get('window').height * 0.07,
-                                height: Dimensions.get('window').height * 0.03
+                                width: school && school.logo && school.logo !== '' ? Dimensions.get('window').height * 0.07 : Dimensions.get('window').height * 0.07,
+                                height: school && school.logo && school.logo !== '' ? Dimensions.get('window').height * 0.05 : Dimensions.get('window').height * 0.03
                             }}
                             resizeMode={'contain'}
                         />

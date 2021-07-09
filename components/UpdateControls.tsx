@@ -249,7 +249,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 setSubmissionImported(true);
                 setSubmissionUrl(obj.url);
                 setSubmissionType(obj.type);
-                setSubmissionTitle(obj.title);
+                if (loading) {
+                    setSubmissionTitle(obj.title);
+                }
             } else {
                 setSubmissionImported(false);
                 setSubmissionUrl("");
@@ -923,7 +925,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     // RENDER METHODS
 
     const renderRichToolbar = () => {
-        return (props.cue.channelId && props.cue.channelId !== '' && !isOwner && props.showOriginal) || (props.showOriginal && showImportOptions) ? (
+        return (props.cue.channelId && props.cue.channelId !== '' && !isOwner && props.showOriginal) || (props.showOriginal && showImportOptions) || isQuiz ? (
             <View style={{ height: 0, backgroundColor: "#fff" }} />
         ) : (((props.cue.graded && submission && !isOwner) || (currentDate > deadline && submission)) && !props.showOriginal) || (!props.showOriginal && showImportOptions) ? (
             <View style={{ height: 0, backgroundColor: "#fff" }} />
@@ -1241,7 +1243,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             solutions={solutions}
                             problems={problems}
                             setSolutions={(s: any) => setSolutions(s)}
-                            // shuffleQuiz={shuffleQuiz}
+                        // shuffleQuiz={shuffleQuiz}
                         />
                     ) : (
                         <View>
@@ -1526,7 +1528,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     }}>
                     <Text style={{ fontSize: 12, color: "#a2a2aa" }}>{PreferredLanguageText("submissionRequired")}</Text>
                 </View>
-                <View style={{ flexDirection: "row", width: '100%'}}>
+                <View style={{ flexDirection: "row", width: '100%' }}>
                     {isOwner ? (
                         <View
                             style={{
@@ -1594,49 +1596,49 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             )}
                         </View>
                     ) : null}
-                    
+
                 </View>
                 {submission ? (
-                        <View
+                    <View
+                        style={{
+                            width: "100%",
+                            display: "flex",
+                            flexDirection: "row",
+                            backgroundColor: "white",
+                            marginLeft: 50
+                        }}>
+                        <Text
                             style={{
-                                width: "100%",
-                                display: "flex",
-                                flexDirection: "row",
-                                backgroundColor: "white",
-                                marginLeft: 50
+                                fontSize: 12,
+                                color: "#a2a2aa",
+                                textAlign: "left",
+                                paddingRight: 10
                             }}>
+                            {PreferredLanguageText("due")}
+                        </Text>
+                        {isOwner ? (
+                            <Datetime
+                                value={deadline}
+                                onChange={(event: any) => {
+                                    const date = new Date(event);
+
+                                    if (date < new Date()) return;
+                                    setDeadline(date);
+                                }}
+                                isValidDate={disablePastDt}
+                            />
+                        ) : (
                             <Text
                                 style={{
                                     fontSize: 12,
                                     color: "#a2a2aa",
-                                    textAlign: "left",
-                                    paddingRight: 10
+                                    textAlign: "left"
                                 }}>
-                                {PreferredLanguageText("due")}
+                                {deadline.toLocaleString()}
                             </Text>
-                            {isOwner ? (
-                                <Datetime
-                                    value={deadline}
-                                    onChange={(event: any) => {
-                                        const date = new Date(event);
-
-                                        if (date < new Date()) return;
-                                        setDeadline(date);
-                                    }}
-                                    isValidDate={disablePastDt}
-                                />
-                            ) : (
-                                <Text
-                                    style={{
-                                        fontSize: 12,
-                                        color: "#a2a2aa",
-                                        textAlign: "left"
-                                    }}>
-                                    {deadline.toLocaleString()}
-                                </Text>
-                            )}
-                        </View>
-                    ) : null}
+                        )}
+                    </View>
+                ) : null}
             </View>
         ) : null;
     };
@@ -2243,17 +2245,17 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             </View>
         );
     };
-    
+
 
 
     if (initiateAt > new Date() && !isOwner) {
-        return  (<View style={{ minHeight: Dimensions.get('window').height }}>
-                <View style={{ backgroundColor: 'white', flex: 1,  }}>
-                    <Text style={{ width: '100%', color: '#a2a2aa', fontSize: 22, paddingTop: 200, paddingBottom: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1, textAlign: 'center' }}>
-                        This assignment is locked till {moment(initiateAt).format('MMMM Do YYYY, h:mm a')}
-                    </Text>
-                </View>
-            </View>)
+        return (<View style={{ minHeight: Dimensions.get('window').height }}>
+            <View style={{ backgroundColor: 'white', flex: 1, }}>
+                <Text style={{ width: '100%', color: '#a2a2aa', fontSize: 22, paddingTop: 200, paddingBottom: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1, textAlign: 'center' }}>
+                    This assignment is locked till {moment(initiateAt).format('MMMM Do YYYY, h:mm a')}
+                </Text>
+            </View>
+        </View>)
     }
 
     // MAIN RETURN
@@ -2447,16 +2449,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 </Text>
                             )
                     )}
-                    {/* <Text
-                        style={{
-                            color: "#a2a2aa",
-                            fontSize: 11,
-                            lineHeight: 30,
-                            textAlign: "right",
-                            marginRight: 10
-                        }}>
-                        {now.toString().split(" ")[1] + " " + now.toString().split(" ")[2] + ", " + now.toString().split(" ")[3]}
-                    </Text> */}
                 </View>
                 {renderEquationEditor()}
                 <ScrollView
@@ -2535,22 +2527,40 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             </Text>
                                         </View>
                                     </a>
-                                    <TouchableOpacity
-                                        onPress={() => clearAll()}
-                                        style={{ marginLeft: 15, alignContent: 'center' }}
-                                    >
-                                        <Ionicons name="trash-outline" color="#a2a2aa" size={20} />
-                                        <Text
-                                            style={{
-                                                fontSize: 9,
-                                                color: "#a2a2aa",
-                                                textAlign: "center"
-                                            }}>
-                                            REMOVE
-                                        </Text>
-                                    </TouchableOpacity>
+                                    {
+                                        props.cue.graded || (currentDate > deadline) ? null :
+                                            <TouchableOpacity
+                                                onPress={() => clearAll()}
+                                                style={{ marginLeft: 15, alignContent: 'center' }}
+                                            >
+                                                <Ionicons name="trash-outline" color="#a2a2aa" size={20} />
+                                                <Text
+                                                    style={{
+                                                        fontSize: 9,
+                                                        color: "#a2a2aa",
+                                                        textAlign: "center"
+                                                    }}>
+                                                    Remove
+                                                </Text>
+                                            </TouchableOpacity>
+                                    }
                                 </View>
-                            ) : null}
+                            ) : <TouchableOpacity
+                                style={{
+                                    marginLeft: 15
+                                }}
+                                onPress={() => clearAll()}
+                            >
+                                <Ionicons name="trash-outline" color="#a2a2aa" size={20} style={{ alignSelf: 'center' }} />
+                                <Text
+                                    style={{
+                                        fontSize: 9,
+                                        color: "#a2a2aa",
+                                        textAlign: "center"
+                                    }}>
+                                    Remove
+                                </Text>
+                            </TouchableOpacity>}
                         </View>
                     ) : null}
                     {submissionImported || imported ? (
@@ -2616,32 +2626,32 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             </View>
                         </View>
                         {renderReminderOptions()}
-                        {isQuiz && isOwner ?  <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
-                                        <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                            <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
-                                                Shuffle Questions
-                                            </Text>
-                                        </View>
-                                        <View style={{ flexDirection: 'row' }}>
-                                            <View style={{
-                                                backgroundColor: 'white',
-                                                height: 40,
-                                                marginRight: 10
-                                            }}>
-                                                <Switch
-                                                    value={shuffleQuiz}
-                                                    disabled={true}
-                                                    onValueChange={() => setShuffleQuiz(!shuffleQuiz)}
-                                                    style={{ height: 20 }}
-                                                    trackColor={{
-                                                        false: '#f4f4f6',
-                                                        true: '#a2a2aa'
-                                                    }}
-                                                    activeThumbColor='white'
-                                                />
-                                            </View>
-                                        </View>
-                                    </View> : null}
+                        {isQuiz && isOwner ? <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
+                            <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
+                                <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
+                                    Shuffle Questions
+                                </Text>
+                            </View>
+                            <View style={{ flexDirection: 'row' }}>
+                                <View style={{
+                                    backgroundColor: 'white',
+                                    height: 40,
+                                    marginRight: 10
+                                }}>
+                                    <Switch
+                                        value={shuffleQuiz}
+                                        disabled={true}
+                                        onValueChange={() => setShuffleQuiz(!shuffleQuiz)}
+                                        style={{ height: 20 }}
+                                        trackColor={{
+                                            false: '#f4f4f6',
+                                            true: '#a2a2aa'
+                                        }}
+                                        activeThumbColor='white'
+                                    />
+                                </View>
+                            </View>
+                        </View> : null}
                         {renderFooter()}
                     </Collapse>
                 </ScrollView>
