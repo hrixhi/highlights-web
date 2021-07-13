@@ -7,7 +7,7 @@ import { fetchAPI } from '../graphql/FetchAPI';
 import { getThreadCategories, createMessage, sendDirectMessage } from '../graphql/QueriesAndMutations';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { RichEditor } from 'react-native-pell-rich-editor';
-import FileViewer from 'react-file-viewer';
+// import FileViewer from 'react-file-viewer';
 import FileUpload from './UploadFiles';
 import { PreferredLanguageText } from '../helpers/LanguageContext';
 
@@ -72,7 +72,11 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
     }, [channelId])
 
     const createDirectMessage = useCallback(async () => {
+        
         const u = await AsyncStorage.getItem('user')
+        if (message.replace(/\&nbsp;/g, '').replace(/\s/g, '') === '<div></div>') {
+            return
+        }
         if (!message || message === '' || !u) {
             return
         }
@@ -112,6 +116,10 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
     }, [props.users, message, props.channelId, imported, type, title, url])
 
     const createThreadMessage = useCallback(async () => {
+       
+        if (message.replace(/\&nbsp;/g, '').replace(/\s/g, '') === '<div></div>') {
+            return
+        }
         if (!message || message === '') {
             return
         }
@@ -292,8 +300,11 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             onScroll={() => Keyboard.dismiss()}
                             placeholder={props.placeholder}
                             onChange={(text) => {
+                              
                                 const modifedText = text.split('&amp;').join('&')
+                               
                                 setMessage(modifedText)
+                                
                             }}
                             onBlur={() => Keyboard.dismiss()}
                             allowFileAccess={true}
@@ -414,7 +425,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                         false: '#f4f4f6',
                                                         true: '#a2a2aa'
                                                     }}
-                                                    activeThumbColor='white'
+                                                    // activeThumbColor='white'
                                                     style={{ height: 20 }}
                                                 />
                                             </View>
@@ -458,7 +469,8 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             overflow: 'hidden',
                             fontFamily: 'inter',
                             height: 35,
-                            textTransform: 'uppercase'
+                            textTransform: 'uppercase',
+                            
                         }}>
                             {props.users ? PreferredLanguageText('send') : (parentId ? PreferredLanguageText('reply') : PreferredLanguageText('post'))}
                         </Text>
