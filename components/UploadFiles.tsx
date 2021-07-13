@@ -7,9 +7,9 @@ import { Dimensions } from 'react-native'
 const mime = require('mime-types')
 
 const FileUpload: React.FC<any> = (props: any) => {
-
     const [uploading, setUploading] = useState(false)
     const onChange = useCallback((e) => {
+        console.log('uploading data')
         setUploading(true)
         e.preventDefault();
         const file = e.target.files[0]
@@ -21,7 +21,7 @@ const FileUpload: React.FC<any> = (props: any) => {
         if (type === 'mpga') {
             type = 'mp3'
         }
-        if (type === 'png' || type === 'jpeg' || type === 'jpg' || type === 'gif') {
+        if ((type === 'png' || type === 'jpeg' || type === 'jpg' || type === 'gif') && props.action!=='send') {
             alert('Error! Images should be directly added to the text editor using the gallery icon in the toolbar.')
             setUploading(false)
             return

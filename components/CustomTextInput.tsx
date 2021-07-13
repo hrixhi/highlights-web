@@ -31,6 +31,8 @@ export function TextInput(props: TextInputProps) {
 
   const requiredErrorText = PreferredLanguageText('required')
   const onValidateValue = (value: string) => {
+    console.log('props', props.required)
+    console.log('value',value)
     const { errorText, regEx } = props;
     if (props.required && !value) {
       setErrorType(requiredErrorText);

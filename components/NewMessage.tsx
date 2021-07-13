@@ -229,6 +229,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 {
                     showImportOptions && !imported ?
                         <FileUpload
+                            action={'send'}
                             back={() => setShowImportOptions(false)}
                             onUpload={(u: any, t: any) => {
                                 console.log(t)
