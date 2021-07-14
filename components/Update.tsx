@@ -110,7 +110,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         score: status.score,
                                         graded: status.graded,
                                         userId: status.userId,
-                                        submittedAt: status.submittedAt
+                                        submittedAt: status.submittedAt,
+                                        releaseSubmission: status.releaseSubmission
                                     })
                                 })
                                 setSubscribers(subs)
