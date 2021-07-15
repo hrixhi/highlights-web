@@ -56,7 +56,6 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
         
         })
 
-        // console.log(studentTotalMap)
         setAttendanceTotalMap(studentTotalMap)
         
         const exportAoa = [];

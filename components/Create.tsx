@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState, useRef } from 'react';
 import { Keyboard, StyleSheet, Switch, TextInput, ScrollView, Animated, Dimensions } from 'react-native';
+import { TextInput as CustomTextInput } from './CustomTextInput';
 import { Text, View, TouchableOpacity } from '../components/Themed';
 import { Ionicons } from '@expo/vector-icons';
 import { Picker } from '@react-native-picker/picker';
@@ -67,6 +68,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     // options to create Quiz
     const [isQuiz, setIsQuiz] = useState(false)
     const [problems, setProblems] = useState<any[]>([])
+    const [headers, setHeaders] = useState<any>({});
+
     const [timer, setTimer] = useState(false)
     const [duration, setDuration] = useState({
         hours: 1, minutes: 0, seconds: 0
@@ -75,12 +78,12 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const [showEquationEditor, setShowEquationEditor] = useState(false)
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [shuffleQuiz, setShuffleQuiz] = useState(false);
+    const [quizInstructions, setQuizInstructions] = useState('');
 
     const window = Dimensions.get("window");
     const screen = Dimensions.get("screen");
 
     const [dimensions, setDimensions] = useState({ window, screen });
-
     // Alerts
 
     const enterOneProblemAlert = PreferredLanguageText('enterOneProblem')
@@ -131,8 +134,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             setTitle('')
         }
     }, [cue])
-
-    console.log("Shuffle Quiz", shuffleQuiz)
 
     const createNewQuiz = useCallback(() => {
         let error = false
@@ -208,7 +209,9 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 quiz: {
                     problems,
                     duration: timer ? durationMinutes.toString() : null,
-                    shuffleQuiz
+                    shuffleQuiz,
+                    instructions: quizInstructions,
+                    headers: JSON.stringify(headers)
                 }
             }
         }).then(res => {
@@ -220,7 +223,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     }, [problems, cue, modalAnimation, customCategory, props.saveDataInCloud, isQuiz,
         gradeWeight, deadline, initiateAt, submission, imported, selected, subscribers,
         shuffle, frequency, starred, color, notify, title, type, url, timer, duration,
-        props.closeModal, channelId, endPlayAt, playChannelCueIndef, shuffleQuiz])
+        props.closeModal, channelId, endPlayAt, playChannelCueIndef, shuffleQuiz, quizInstructions,
+        headers])
 
     const loadChannelCategoriesAndSubscribers = useCallback(async () => {
 
@@ -353,7 +357,9 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 title,
                 problems,
                 timer,
-                duration
+                duration,
+                headers,
+                quizInstructions
             }
 
             const saveQuiz = JSON.stringify(quiz)
@@ -367,7 +373,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         } else {
             storeDraft('cueDraft', '')
         }
-    }, [cue, init, type, imported, url, title, isQuiz, problems, timer, duration])
+    }, [cue, init, type, imported, url, title, isQuiz, problems, timer, duration, headers, quizInstructions])
 
     const storeDraft = useCallback(async (type, value) => {
         await AsyncStorage.setItem(type, value)
@@ -537,12 +543,14 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 }
                 const quizDraft = await AsyncStorage.getItem('quizDraft')
                 if (quizDraft !== null) {
-                    const { duration, timer, problems, title } = JSON.parse(quizDraft);
+                    const { duration, timer, problems, title, headers, quizInstructions } = JSON.parse(quizDraft);
 
                     setDuration(duration);
                     setTimer(timer);
                     setProblems(problems);
                     setTitle(title);
+                    setHeaders(headers)
+                    setQuizInstructions(quizInstructions)
                 }
             } catch (e) {
                 console.log(e)
@@ -904,10 +912,28 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     }}>
                         {
                             isQuiz ?
-                                <QuizCreate
-                                    problems={problems}
-                                    setProblems={(p: any) => setProblems(p)}
-                                />
+                                (
+                                <View style={{
+                                    width: '100%',
+                                    flexDirection: 'column',
+                                }}>
+                                    <CustomTextInput
+                                        value={quizInstructions}
+                                        placeholder="Instructions"
+                                        onChangeText={val => setQuizInstructions(val)}
+                                        placeholderTextColor={"#a2a2aa"}
+                                        required={false}
+                                        hasMultipleLines={true}
+                                    />
+                                    <QuizCreate
+                                        problems={problems}
+                                        headers={headers}
+                                        setProblems={(p: any) => setProblems(p)}
+                                        setHeaders={(h: any) => 
+                                        setHeaders(h)}
+                                    />
+                                </View>
+                               )
                                 : (imported ?
                                     (
                                         type === 'mp4' || type === 'mp3' || type === 'mov' || type === 'mpeg' || type === 'mp2' || type === 'wav' ?

@@ -22,6 +22,7 @@ const questionTypeOptions = [
 const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
     const [problems, setProblems] = useState<any[]>(props.problems ? props.problems : [])
+    const [headers, setHeaders] = useState<any>(props.headers ? props.headers : {});
 
     const galleryCallback = useCallback(async (index: any, i: any) => {
         const gallerySettings = await ImagePicker.getMediaLibraryPermissionsAsync()
@@ -54,6 +55,108 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
         }
     }, [problems, props.setProblems])
 
+    const removeHeadersOnDeleteProblem = (index: number) => {
+
+        const headerPositions = Object.keys(headers);
+
+        const headerIndicesToUpdate = headerPositions.filter((i: any) => i > index);
+
+        const currentHeaders = JSON.parse(JSON.stringify(headers));
+
+        delete currentHeaders[index];
+
+        headerIndicesToUpdate.forEach((i: any) => {
+
+            // Set i - 1
+
+            const currHeaderValue = headers[i];
+
+            delete currentHeaders[i];
+
+            currentHeaders[i - 1] = currHeaderValue;
+
+        })
+
+        setHeaders(currentHeaders);
+        props.setHeaders(currentHeaders)
+
+
+    }
+
+
+    const addHeader = (index: number) => {
+
+        // Use headers as an object with key as index values
+        const currentHeaders = JSON.parse(JSON.stringify(headers));
+        currentHeaders[index] = "";
+        setHeaders(currentHeaders);
+        props.setHeaders(currentHeaders);
+
+    }
+
+    const removeHeader = (index: number) => {
+
+        const currentHeaders = JSON.parse(JSON.stringify(headers));
+        delete currentHeaders[index];
+        setHeaders(currentHeaders)
+        props.setHeaders(currentHeaders);
+
+    }
+
+
+    const renderHeaderOption = (index: number) => {
+        return <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'center' }} >
+                { index in headers
+                ? 
+                <View style={{ flexDirection: 'row', width: '100%', marginTop: 50 }}>
+                    <View style={{ width: '50%'}}>
+                        <TextInput
+                            value={headers[index]}
+                            placeholder={'Header'}
+                            onChangeText={val => {
+                                const currentHeaders = JSON.parse(JSON.stringify(headers)) 
+                                currentHeaders[index] = val
+                                setHeaders(currentHeaders);
+                                props.setHeaders(currentHeaders)
+                            }}
+                            placeholderTextColor={'#a2a2aa'}
+                            hasMultipleLines={false}
+                        />
+                    </View>
+
+                    <View style={{ paddingTop: 15, paddingLeft: 10 }}>
+                        <Ionicons
+                            name='close-outline'
+                            onPress={() => {
+                               removeHeader(index)
+                            }}
+                        />
+                    </View>
+                </View>
+                : 
+                
+                <TouchableOpacity 
+                    style={{ width: 100, flexDirection: 'row', }} 
+                    onPress={() => addHeader(index)}
+                >
+                    {/* <Ionicons name='add-circle' size={19} color={"#202025"} /> */}
+                    <Text
+                        style={{
+                            marginLeft: 10,
+                            fontSize: 10,
+                            paddingBottom: 20,
+                            textTransform: "uppercase",
+                            // paddingLeft: 20,
+                            flex: 1,
+                            lineHeight: 25,
+                            // color: '#a2a2aa'
+                        }}>
+                        Add HEADER
+                    </Text>
+                </TouchableOpacity>}
+            </View>
+    }
+
     return (
         <View style={{
             width: '100%', height: '100%', backgroundColor: 'white',
@@ -62,7 +165,10 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
             paddingTop: 15,
             flexDirection: 'column',
             justifyContent: 'flex-start'
-        }}>
+        }}
+        >
+            {/* Insert HEADER FOR INDEX 0 */}
+            {renderHeaderOption(0)}
             {
                 problems.map((problem: any, index: any) => {
 
@@ -214,43 +320,62 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     />
                                 </View>
                                 {/* Add dropdown here */}
-                                <View
-                                    style={{
-                                        width: '25%',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        flexDirection: 'row'
-                                    }}>
-                                    <Picker
-                                        style={styles.picker}
-                                        itemStyle={{
-                                            fontSize: 15
-                                        }}
-                                        selectedValue={questionType}
-                                        onValueChange={(questionType: any) => {
-                                            const updatedProblems = [...problems]
-                                            updatedProblems[index].questionType = questionType;
+                                <View style={{ width: '25%', justifyContent: 'center'}}>
 
-                                            // Clear Options 
-                                            if (questionType !== "") {
-                                                updatedProblems[index].options = []
-                                            }
-                                            setProblems(updatedProblems)
-                                            props.setProblems(updatedProblems)
+                                    <View
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            flexDirection: 'row'
                                         }}>
-                                        {questionTypeOptions.map((item: any, index: number) => {
-                                            return (
-                                                <Picker.Item
-                                                    color={questionType === item.value ? "#3B64F8" : "#202025"}
-                                                    label={item.value === "" ? "MCQ" : item.label}
-                                                    value={item.value}
-                                                    key={index}
-                                                />
-                                            );
-                                        })}
-                                    </Picker>
-                                </View>
+                                        <Picker
+                                            style={styles.picker}
+                                            itemStyle={{
+                                                fontSize: 15
+                                            }}
+                                            selectedValue={questionType}
+                                            onValueChange={(questionType: any) => {
+                                                const updatedProblems = [...problems]
+                                                updatedProblems[index].questionType = questionType;
 
+                                                // Clear Options 
+                                                if (questionType !== "") {
+                                                    updatedProblems[index].options = []
+                                                }
+                                                setProblems(updatedProblems)
+                                                props.setProblems(updatedProblems)
+                                            }}>
+                                            {questionTypeOptions.map((item: any, index: number) => {
+                                                return (
+                                                    <Picker.Item
+                                                        color={questionType === item.value ? "#3B64F8" : "#202025"}
+                                                        label={item.value === "" ? "MCQ" : item.label}
+                                                        value={item.value}
+                                                        key={index}
+                                                    />
+                                                );
+                                            })}
+                                        </Picker>
+                                    </View>
+
+                                    <View style={{ paddingTop: 15, flexDirection: 'row', alignItems: 'center', }}>
+                                        <input
+                                            style={{ paddingRight: 20}}
+                                            type='checkbox'
+                                            checked={problem.required}
+                                            onChange={(e) => {
+                                                const updatedProblems = [...problems]
+                                                updatedProblems[index].required = !updatedProblems[index].required;
+                                                setProblems(updatedProblems)
+                                                props.setProblems(updatedProblems)
+                                            }}
+                                        />
+                                        <Text style={{ fontSize: 10, textTransform: 'uppercase', marginLeft: 10  }}>
+                                            Required
+                                        </Text>
+                                    </View>
+                                </View>
+                                
                             </View>
                             <View style={{ paddingTop: 15, paddingLeft: 10 }}>
                                 <Ionicons
@@ -258,12 +383,18 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     onPress={() => {
                                         const updatedProblems = [...problems]
                                         updatedProblems.splice(index, 1);
+
+                                        removeHeadersOnDeleteProblem(index + 1);
+
                                         setProblems(updatedProblems)
                                         props.setProblems(updatedProblems)
                                     }}
                                 />
                             </View>
                         </View>
+
+                         {/* Add is requied Checkbox */}
+
                         
                         {
                             problem.options.map((option: any, i: any) => {
@@ -411,7 +542,9 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 </View>
                             })
                         }
+
                         {/* Only show Add Choice if questionType is MCQ ("") */}
+
                         {questionType === "" ? <TouchableOpacity
                             onPress={() => {
                                 const updatedProblems = [...problems]
@@ -422,67 +555,55 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 setProblems(updatedProblems)
                                 props.setProblems(updatedProblems)
                             }}
-                            style={{
-                                backgroundColor: 'white',
-                                overflow: 'hidden',
-                                height: 35,
-                                maxHeight: 70,
-                                marginTop: 15,
-                                width: '100%',
-                                justifyContent: 'flex-start', flexDirection: 'row',
-                                marginBottom: 50
-                            }}>
-                            <Text style={{
-                                textAlign: 'center',
-                                lineHeight: 35,
-                                color: '#202025',
-                                fontSize: 12,
-                                backgroundColor: '#f4f4f6',
-                                paddingHorizontal: 25,
-                                fontFamily: 'inter',
-                                height: 35,
-                                width: 150,
-                                borderRadius: 15,
-                                textTransform: 'uppercase'
-                            }}>
-                                {PreferredLanguageText('addChoice')}
+                            style={{ width: 100, flexDirection: 'row', marginLeft: 20, marginTop: 20 }} >
+                            {/* <Ionicons name='add-circle' size={19} color={"#202025"} /> */}
+                            <Text
+                                style={{
+                                    marginLeft: 10,
+                                    fontSize: 10,
+                                    paddingBottom: 20,
+                                    textTransform: "uppercase",
+                                    // paddingLeft: 20,
+                                    flex: 1,
+                                    lineHeight: 25,
+                                    // color: '#a2a2aa'
+                                }}>
+                                Add Choice
                             </Text>
-                        </TouchableOpacity> : <View style={{ height: 100 }}  />}
+                        </TouchableOpacity> :  <View style={{ height: 100 }} /> }
+                           
+                        {renderHeaderOption(index + 1)}
+                        
                     </View>
                 })
             }
-            <View>
+            <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'center'}}>
                 <TouchableOpacity
                     onPress={() => {
-                        const updatedProblems = [...problems, { question: '', options: [], points: '', questionType: '' }]
+                        const updatedProblems = [...problems, { question: '', options: [], points: '', questionType: '', required: true }]
                         setProblems(updatedProblems)
                         props.setProblems(updatedProblems)
                     }}
-                    style={{
-                        backgroundColor: 'white',
-                        overflow: 'hidden',
-                        height: 35,
-                        marginTop: 15,
-                        width: '100%', justifyContent: 'center', flexDirection: 'row',
-                        marginBottom: 50
-                    }}>
-                    <Text style={{
-                        textAlign: 'center',
-                        lineHeight: 35,
-                        color: '#202025',
-                        fontSize: 12,
-                        backgroundColor: '#f4f4f6',
-                        paddingHorizontal: 25,
-                        fontFamily: 'inter',
-                        height: 35,
-                        width: 200,
-                        borderRadius: 15,
-                        textTransform: 'uppercase'
-                    }}>
-                        {PreferredLanguageText('addProblem')}
+                    style={{ width: 100, flexDirection: 'row', }} 
+                    >
+                    {/* <Ionicons name='add-circle' size={19} color={"#202025"} /> */}
+                    <Text
+                        style={{
+                            marginLeft: 10,
+                            fontSize: 10,
+                            paddingBottom: 20,
+                            textTransform: "uppercase",
+                            // paddingLeft: 20,
+                            flex: 1,
+                            lineHeight: 25,
+                            // color: "#a2a2aa"
+                        }}>
+                        Add Problem
                     </Text>
                 </TouchableOpacity>
             </View>
+            
+            
         </View >
     );
 }

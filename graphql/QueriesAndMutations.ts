@@ -384,6 +384,14 @@ mutation($channelId: String!, $meetingOn: Boolean!, $users: [String!]!) {
   }
 }
 `
+export const editReleaseSubmission = gql`
+mutation($cueId: String!, $releaseSubmission: Boolean!) {
+  cue {
+    editReleaseSubmission(cueId: $cueId, releaseSubmission: $releaseSubmission)
+  }
+}
+`
+
 export const deleteRecording = gql`
 mutation($recordID: String!) {
   channel {
@@ -449,6 +457,7 @@ export const getCues = gql`
         comment
         status
         submittedAt
+        releaseSubmission
       }
     }
   }
@@ -574,6 +583,7 @@ export const getStatuses = gql`
         submittedAt
         graded
         comment
+        releaseSubmission
       }
     }
   }
@@ -617,6 +627,7 @@ export const getCuesFromCloud = gql`
         comment
         status
         submittedAt
+        releaseSubmission
       }
     }
   }
@@ -807,16 +818,19 @@ export const getQuiz = gql`
             option
             isCorrect
           }
+          required
         }
+        instructions
+        headers
       }
     }
   }
 `;
 
 export const gradeQuiz = gql`
-  mutation($userId: String!, $cueId: String! $problemScores: [String!]!, $score: Float!) {
+  mutation($userId: String!, $cueId: String! $problemScores: [String!]!, $problemComments: [String!]!, $score: Float!, $comment: String) {
     cue {
-      gradeQuiz(userId: $userId, cueId: $cueId, problemScores: $problemScores, score: $score)
+      gradeQuiz(userId: $userId, cueId: $cueId, problemScores: $problemScores, problemComments: $problemComments, score: $score, comment: $comment)
     }
   }
 `
