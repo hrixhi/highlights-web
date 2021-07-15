@@ -135,7 +135,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
     })
 
     useEffect(() => {
-        if (props.cue.releaseSubmission !== null && props.cue.releaseSubmission !== undefined) {
+        if (props.cue && props.cue.releaseSubmission !== null && props.cue.releaseSubmission !== undefined) {
             setReleaseSubmission(props.cue.releaseSubmission)
         } else {
             setReleaseSubmission(false)
