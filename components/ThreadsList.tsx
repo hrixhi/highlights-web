@@ -141,7 +141,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     setShowPost(false)
                     setThreadId('')
                 }}
-                placeholder='Post...'
+                placeholder='Post'
             />
         </View>
     }

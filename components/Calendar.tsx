@@ -92,8 +92,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (
 
   useEffect(() => {
     if (title !== "" && end > start) {
-        setIsSubmitDisabled(false);
-        return;
+      setIsSubmitDisabled(false);
+      return;
     }
     setIsSubmitDisabled(true);
   }, [title, start, end]);
@@ -160,12 +160,22 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (
   };
 
   const handleCreate = useCallback(async () => {
+    
     if (start < new Date()) {
       Alert("Event must be set in the future.");
       return;
     } else if (title === "") {
-      alert("New Event/Lecture cannot be empty");
+      alert("New Event/Lecture cannot be empty.");
       return;
+    } else if (start > end) {
+      alert("End time must be greater than start time.");
+      return
+    }
+    if (recurring) {
+       if (start > repeatTill) {
+         alert("Repeat until must be set in the future.");
+         return
+      } 
     }
     setIsCreatingEvents(true);
 
