@@ -10,7 +10,7 @@ import CardsList from '../components/CardsList';
 import { Text, TouchableOpacity, View } from '../components/Themed';
 import TopBar from '../components/TopBar';
 import { Ionicons } from '@expo/vector-icons';
-import Menu from '../components/Menu'
+import ChannelSettings from '../components/ChannelSettings'
 import Create from '../components/Create';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Update from '../components/Update';
@@ -1067,22 +1067,9 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     loadData(true)
   }, [sheetRef, fadeAnimation, modalType, filterChoice])
 
-  const modalContent = modalType === 'Menu' ? <Menu
-    sleepFrom={sleepFrom}
-    sleepTo={sleepTo}
-    randomShuffleFrequency={randomShuffleFrequency}
-    setRandomShuffleFrequency={(option: any) => {
-      setRandomShuffleFrequency(option)
-      storeMenu()
-    }}
-    setSleepFrom={(date: any) => {
-      setSleepFrom(date)
-      storeMenu()
-    }}
-    setSleepTo={(date: any) => {
-      setSleepTo(date)
-      storeMenu()
-    }}
+  const modalContent = modalType === 'ChannelSettings' ? <ChannelSettings
+    channelId={channelId}
+    closeModal={() => closeModal()}
   /> :
     (modalType === 'Create' ? <Create
       key={JSON.stringify(customCategories)}
@@ -1426,6 +1413,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           deleteChannel={() => deleteChannel()}
           openCalendar={() => openModal('Calendar')}
           openMeeting={() => openModal('Meeting')}
+          openChannelSettings={() => openModal('ChannelSettings')}
           unreadDiscussionThreads={unreadDiscussionThreads}
           unreadMessages={unreadMessages}
           meetingOn={meetingOn}

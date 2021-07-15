@@ -13,6 +13,7 @@ import {
     getPastDates,
     getRecordings,
     deleteRecording,
+    getSharableLink,
 } from "../graphql/QueriesAndMutations";
 import { Ionicons } from "@expo/vector-icons";
 import SubscriberCard from "./SubscriberCard";
@@ -37,6 +38,9 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
     const [showPastMeetings, setShowPastMeetings] = useState(false);
     const [reloadKey, setReloadKey] = useState(Math.random())
     const classroomNotInSession = PreferredLanguageText("classroomNotInSession");
+
+    const [guestLink, setGuestLink] = useState('')
+    const [instructorLink, setInstructorLink] = useState('')
 
     const loadChannelAttendances = useCallback(() => {
         const server = fetchAPI("");
@@ -67,6 +71,32 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                 }
             });
     }, [props.channelId]);
+
+    useEffect(() => {
+        const server = fetchAPI('')
+        server.query({
+            query: getSharableLink,
+            variables: {
+                channelId: props.channelId,
+                moderator: true
+            }
+        }).then((res: any) => {
+            if (res.data && res.data.channel.getSharableLink) {
+                setInstructorLink(res.data.channel.getSharableLink)
+            }
+        })
+        server.query({
+            query: getSharableLink,
+            variables: {
+                channelId: props.channelId,
+                moderator: false
+            }
+        }).then((res: any) => {
+            if (res.data && res.data.channel.getSharableLink) {
+                setGuestLink(res.data.channel.getSharableLink)
+            }
+        })
+    }, [isOwner, props.channelId])
 
     useEffect(() => {
         const server = fetchAPI('')
@@ -331,7 +361,6 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                             fontSize: 11,
                             paddingBottom: 20,
                             textTransform: "uppercase",
-                            // paddingLeft: 10,
                             flex: 1,
                             lineHeight: 25
                         }}>
@@ -380,6 +409,27 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                         {/* Turn on to begin session. {"\n"} */}
                                         Restart switch if you cannot join.
                                     </Text>
+                                    {
+                                        isOwner && meetingOn ?
+                                            <View>
+                                                <a href={instructorLink} style={{ textDecorationColor: '#a2a2aa' }}>
+                                                    <Text style={{
+                                                        fontSize: 12,
+                                                        color: '#a2a2aa'
+                                                    }}>
+                                                        Sharable Instructor Link
+                                                    </Text>
+                                                </a>
+                                                <a href={guestLink} style={{ textDecorationColor: '#a2a2aa' }}>
+                                                    <Text style={{
+                                                        fontSize: 12,
+                                                        color: '#a2a2aa'
+                                                    }}>
+                                                        Sharable Guest Link
+                                                    </Text>
+                                                </a>
+                                            </View> : null
+                                    }
                                 </View>
                             </View>
                         ) : null}

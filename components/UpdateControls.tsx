@@ -923,7 +923,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     }
 
     // RENDER METHODS
-
     const renderRichToolbar = () => {
         return (props.cue.channelId && props.cue.channelId !== '' && !isOwner && props.showOriginal) || (props.showOriginal && showImportOptions) || isQuiz ? (
             <View style={{ height: 0, backgroundColor: "#fff" }} />

@@ -57,6 +57,7 @@
     "lodash": "^4.17.20",
     "mime-types": "^2.1.29",
     "moment": "^2.29.1",
+    "multiselect-react-dropdown": "^2.0.4",
     "native-base": "^2.15.2",
     "react": "16.13.1",
     "react-big-calendar": "^0.33.2",

@@ -5,7 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import _ from 'lodash'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { fetchAPI } from '../graphql/FetchAPI';
-import { doesChannelNameExist, getMeetingStatus, getOrganisation, totalUnreadDiscussionThreads, totalUnreadMessages, updateChannel } from '../graphql/QueriesAndMutations';
+import { doesChannelNameExist, getMeetingStatus, getOrganisation, isChannelTemporary, totalUnreadDiscussionThreads, totalUnreadMessages, updateChannel } from '../graphql/QueriesAndMutations';
 import alert from './Alert';
 
 const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
@@ -19,58 +19,12 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const [isOwner, setIsOwner] = useState(false)
     const [school, setSchool] = useState<any>(null)
 
-    // NAVRACHANA HARD CODE
-    const [showNavrachanaLogo, setShowNavrachanaLogo] = useState(false)
-
-    const editChannelInfo = useCallback(() => {
-        const name = prompt('Update Channel Name', props.filterChoice)
-        const password = prompt('Update Channel Password (Optional)')
-        if (!name || name === '') {
-            alert("Enter channel name.")
-            return;
-        }
-        const server = fetchAPI("")
-        server.query({
-            query: doesChannelNameExist,
-            variables: {
-                name
-            }
-        }).then(res => {
-            if (res.data && (res.data.channel.doesChannelNameExist !== true || name.trim() === props.filterChoice.trim())) {
-                server.mutate({
-                    mutation: updateChannel,
-                    variables: {
-                        name: name.trim(),
-                        password,
-                        channelId: props.channelId
-                    }
-                }).then(res => {
-                    if (res.data && res.data.channel.update) {
-                        props.loadData()
-                        alert("Channel updated!")
-                    } else {
-                        alert("Something went wrong.")
-                    }
-                }).catch(err => {
-                    alert("Something went wrong.")
-                })
-            } else {
-                alert("Channel name in use.")
-            }
-        }).catch(err => {
-            alert("Something went wrong.")
-        })
-    }, [props.filterChoice, props.loadData])
-
     useEffect(() => {
         (
             async () => {
                 const u = await AsyncStorage.getItem('user')
                 if (u) {
                     const user = JSON.parse(u)
-                    if (user.email === 'hrishi@cuesapp.co') {
-                        setShowNavrachanaLogo(true)
-                    }
                     const server = fetchAPI('')
                     server.query({
                         query: getOrganisation,
@@ -117,7 +71,6 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
     return (
         <View style={styles.topbar} key={Math.random()}>
-            {/* <View style={{ width: '80%', height: Dimensions.get('window').height * 0.15 * 0.1, alignSelf: 'center' }} /> */}
             <View style={{ width: '100%', height: Dimensions.get('window').height * 0.15 }}>
                 <View style={{
                     height: '45%',
@@ -129,18 +82,13 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     <TouchableOpacity
                         onPress={() => Linking.openURL('http://www.cuesapp.co')}
                         style={{ backgroundColor: 'white' }}>
-                        {/* NAVRACHANA HARD CODE */}
                         <Image
                             source={
-                                // showNavrachanaLogo
-                                // ? 'https://cues-files.s3.amazonaws.com/media/png/1624424962493_logo.png' :
                                 school && school.logo && school.logo !== ''
                                     ? school.logo
                                     : require('./default-images/cues-logo-black-exclamation-hidden.jpg')
                             }
                             style={{
-                                // width: Dimensions.get('window').height * (showNavrachanaLogo ? 0.11 : 0.14) * 0.53456,
-                                // height: Dimensions.get('window').height * (showNavrachanaLogo ? 0.22 : 0.14) * 0.2
                                 width: school && school.logo && school.logo !== '' ? Dimensions.get('window').height * 0.07 : Dimensions.get('window').height * 0.07,
                                 height: school && school.logo && school.logo !== '' ? Dimensions.get('window').height * 0.05 : Dimensions.get('window').height * 0.03
                             }}
@@ -212,7 +160,7 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         isOwner ?
                                             <TouchableOpacity
                                                 style={{ marginRight: 0 }}
-                                                onPress={() => editChannelInfo()}>
+                                                onPress={() => props.openChannelSettings()}>
                                                 <Text style={styles.channelText}>
                                                     <Ionicons name='settings-outline' size={19} color={'#a2a2aa'} />
                                                 </Text>
@@ -233,18 +181,6 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         paddingTop: 2
                     }}>
                     <View style={{ flex: 1 }} />
-                    {/* <View>
-                        <Text
-                            style={{
-                                // paddingTop: 5,
-                                paddingLeft: 5,
-                                paddingBottom: 4,
-                                fontSize: 8,
-                                color: '#a2a2aa'
-                            }}>
-                            {props.channelId && props.channelId !== '' ? props.filterChoice : 'My Cues'}
-                        </Text>
-                    </View> */}
                     <ScrollView style={{
                         width: '98.5%',
                         paddingLeft: 20,

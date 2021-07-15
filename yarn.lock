@@ -10290,6 +10290,11 @@ ms@2.1.2:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.2.tgz#d09d1f357b443f493382a8eb3ccd183872ae6009"
   integrity sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==
 
+multiselect-react-dropdown@^2.0.4:
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/multiselect-react-dropdown/-/multiselect-react-dropdown-2.0.4.tgz#4c96314efb2276ae8d550d36731da5c60bb461c8"
+  integrity sha512-a0W2t6B3PhA3sVm2K2aEaXpJHNs3OSB3ZFYp5j/fr3iGX7FZvAZxabwhB1GcDVDOSiRDQ9HssCB7cSoHGCyASQ==
+
 mutationobserver-shim@^0.3.2:
   version "0.3.7"
   resolved "https://registry.yarnpkg.com/mutationobserver-shim/-/mutationobserver-shim-0.3.7.tgz#8bf633b0c0b0291a1107255ed32c13088a8c5bf3"
