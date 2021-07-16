@@ -165,7 +165,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         const x = { ...item, selected: false, index }
                                         delete x.__typename
                                         tempUsers.push({
-                                            name: (item.fullName + ', ' + item.displayName + ', ' + (item.email ? item.email : '')),
+                                            name: (item.fullName + ', ' + item.displayName),
                                             id: item._id
                                         })
                                         return x
@@ -219,13 +219,13 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 console.log(item._id)
                                 if (item._id.toString().trim() === user._id.toString().trim()) {
                                     setOwner({
-                                        name: (item.fullName + ', ' + item.displayName + ', ' + (item.email ? item.email : '')),
+                                        name: (item.fullName + ', ' + item.displayName),
                                         id: item._id
                                     })
                                 } else {
                                     delete x.__typename
                                     tempUsers.push({
-                                        name: (item.fullName + ', ' + item.displayName + ', ' + (item.email ? item.email : '')),
+                                        name: (item.fullName + ', ' + item.displayName),
                                         id: item._id
                                     })
                                 }
@@ -259,7 +259,8 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         Keyboard.dismiss()
                     }}
                     contentContainerStyle={{
-                        maxHeight: Dimensions.get('window').height - 150
+                        maxHeight: Dimensions.get('window').height - 150,
+                        minHeight: 100
                     }}
                 >
                     <View style={{ backgroundColor: 'white' }}>
@@ -293,12 +294,23 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                     <Text style={{ color: '#202025', fontSize: 14, paddingBottom: 10 }}>
                         Subscribers
                     </Text>
-                    <View>
+                    <ScrollView
+                        onScroll={() => {
+                            Keyboard.dismiss()
+                        }}
+                        contentContainerStyle={{
+                            maxHeight: 250
+                        }}
+                    >
                         <Multiselect
                             placeholder='Select...'
                             displayValue='name'
                             // key={userDropdownOptions.toString()}
-                            style={{ width: '100%', color: '#202025' }}
+                            style={{ 
+                                multiselectContainer: { // To change css for option container 
+                                    minHeight: 200
+                                }
+                            }}
                             options={options} // Options to display in the dropdown
                             selectedValues={selected} // Preselected value to persist in dropdown
                             onSelect={(e, f) => {
@@ -310,16 +322,32 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 return true
                             }}
                         />
-                    </View>
+                    </ScrollView>
                     <Text style={{ color: '#202025', fontSize: 14, paddingBottom: 10, paddingTop: 20 }}>
                         Moderators
                     </Text>
-                    <View>
+                    <ScrollView
+                        onScroll={() => {
+                            Keyboard.dismiss()
+                        }}
+                        contentContainerStyle={{
+                            maxHeight: 250
+                        }}
+                    >
                         <Multiselect
                             placeholder='Select...'
                             displayValue='name'
                             // key={userDropdownOptions.toString()}
-                            style={{ width: '100%', color: '#202025' }}
+                            // style={{ width: '100%', color: '#202025', 
+                            //     optionContainer: { // To change css for option container 
+                            //         zIndex: 9999
+                            //     }
+                            // }}
+                            style={{ 
+                                multiselectContainer: { // To change css for option container 
+                                    minHeight: 100
+                                }
+                            }}
                             options={options} // Options to display in the dropdown
                             selectedValues={owners} // Preselected value to persist in dropdown
                             onSelect={(e, f) => {
@@ -331,7 +359,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 return true
                             }}
                         />
-                    </View>
+                    </ScrollView>
                     <View
                         style={{
                             flex: 1,
@@ -349,7 +377,8 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 borderRadius: 15,
                                 overflow: 'hidden',
                                 height: 35,
-                                marginTop: 15
+                                marginTop: 15,
+                                marginBottom: 100,
                             }}
                         >
                             <Text style={{

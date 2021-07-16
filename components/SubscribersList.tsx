@@ -89,6 +89,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
     const userRemovedAlert = PreferredLanguageText('userRemoved');
     const alreadyUnsubscribedAlert = PreferredLanguageText('alreadyUnsubscribed')
 
+
     const [annotation, setAnnotation] = useState<any>({})
     const [annotations, setAnnotations] = useState<any[]>([])
 
@@ -1021,9 +1022,12 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 }}
                                 activeThumbColor='white'
                             />
-                            <View style={{ backgroundColor: 'white', paddingTop: 3 }}>
-                                <Text style={{ fontSize: 15, color: '#a2a2aa', }}>
-                                    Visible to Students
+                            <View style={{ backgroundColor: 'white', }}>
+                                <Text style={{ color: "#a2a2aa",
+                                    fontSize: 11,
+                                    lineHeight: 25,
+                                    textTransform: 'uppercase'}}>
+                                    Release Grades
                                 </Text>
                             </View>
                         </View>
