@@ -48,6 +48,12 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const [isEditingEvents, setIsEditingEvents] = useState(false);
     const [isDeletingEvents, setIsDeletingEvents] = useState(false);
 
+    // Used for filtering by channels
+    const [eventChannels, setEventChannels] = useState<any[]>([]);
+    const [filterChannels, setFilterChannels] = useState<any[]>([]);
+    const [allEvents, setAllEvents] = useState<any[]>([]);
+    const [filterByLectures, setFilterByLectures] = useState(false);
+
     // const [viewModel, setViewModel] = useState<any>(new SchedulerData(new moment().format(DATE_FORMAT), ViewTypes.Week))
 
     const localizer = momentLocalizer(moment);
@@ -96,21 +102,162 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
         },
     ];
 
-    // useEffect(() => {
-    //     if (!events || events.length === 0) return;
-    //     console.log(events);
+    useEffect(() => {
 
-    //     const schedulerData = new SchedulerData(new moment().format(DATE_FORMAT), ViewTypes.Week);
+        let total = [...allEvents];
 
-    //     schedulerData.setResources(resources)
+        // Filter the meetings first 
+        if (filterByLectures) {
+            total = total.filter((e: any) => e.meeting)
+        } 
 
-    //     schedulerData.setEvents(events)
+        if (filterChannels.length === 0) {
+            setEvents(total);
+        } else {
+            const all = [...total];
+            const filter = all.filter((e: any) => filterChannels.includes(e.channelName));
+            setEvents(filter)
+        }
 
-    //     console.log(schedulerData)
+    }, [filterChannels, filterByLectures])
+    
+    const renderFilterEvents = () => {
 
-    //     setViewModel(schedulerData)
+        return (eventChannels.length > 0 ? (
+            <View style={{ marginTop: 20 }} key={JSON.stringify(eventChannels)}>
+                <View
+                    style={{ width: "100%", paddingBottom: 20, backgroundColor: "white" }}>
+                    <Text
+                        style={{
+                            fontSize: 12,
+                            color: "#a2a2aa",
+                            paddingTop: width < 768 ? 15 : 5
+                        }}>
+                        Filter by Channels
+                    </Text>
+                </View>
+                <View
+                    style={{
+                        width: "100%",
+                        display: "flex",
+                        flexDirection: "row",
+                        backgroundColor: "white"
+                    }}>
+                    <View
+                        style={{
+                            width: "100%",
+                            backgroundColor: "white",
+                            display: "flex"
+                        }}>
+                        <ScrollView
+                            style={styles.colorBar}
+                            horizontal={true}
+                            showsHorizontalScrollIndicator={false}>
+                            <TouchableOpacity
+                                style={
+                                    filterChannels.includes('') ? styles.allOutline : styles.allBlack
+                                }
+                                onPress={() => {
+                                    const currentFilterChannels = [...filterChannels];
 
-    // }, [events])
+                                    if (currentFilterChannels.includes("")) {
+                                        const filter = currentFilterChannels.filter((channel: any) => channel !== "");
+
+                                        setFilterChannels(filter);
+                                    } else {
+                                        currentFilterChannels.push("");
+                                        setFilterChannels(currentFilterChannels);
+                                    }
+                                }}>
+                                <Text
+                                    style={{
+                                        lineHeight: 20,
+                                        fontSize: 12,
+                                        color: filterChannels.includes('') ? "#fff" : "#202025"
+                                    }}>
+                                    {PreferredLanguageText("myCues")}
+                                </Text>
+                            </TouchableOpacity>
+                            {eventChannels.map(channel => {
+                                return (
+                                    <TouchableOpacity
+                                        key={Math.random()}
+                                        style={
+                                            filterChannels.includes(channel)
+                                                ? styles.allOutline
+                                                : styles.allBlack
+                                        }
+                                        onPress={() => {
+                                            const currentFilterChannels = [...filterChannels]
+
+                                            if (currentFilterChannels.includes(channel)) {
+                                                const filter = currentFilterChannels.filter((channelName: any) => channelName !== channel);
+                                                setFilterChannels(filter);
+
+                                            } else {
+                                                currentFilterChannels.push(channel);
+                                                setFilterChannels(currentFilterChannels);
+                                            }
+                                        }}>
+                                        <Text
+                                            style={{
+                                                lineHeight: 20,
+                                                fontSize: 12,
+                                                color:
+                                                    filterChannels.includes(channel)
+                                                        ? "#fff"
+                                                        : "#202025"
+                                            }}>
+                                            {channel}
+                                        </Text>
+                                    </TouchableOpacity>
+                                );
+                            })}
+                        </ScrollView>
+                    </View>
+                </View>
+
+                <View style={{ width: width < 768 ? "100%" : "33.33%", display: "flex" }}>
+                    <View style={{ width: "100%", paddingTop: width < 768 ? 40 : 40, paddingBottom: 15, backgroundColor: "white" }}>
+                        <Text style={{ fontSize: 12, color: "#a2a2aa" }}>Lectures</Text>
+                    </View>
+                    <View
+                        style={{
+                            backgroundColor: "white",
+                            height: 40,
+                            marginRight: 10
+                        }}>
+                        <Switch
+                            value={filterByLectures}
+                            onValueChange={() => setFilterByLectures(!filterByLectures)}
+                            style={{ height: 20 }}
+                            trackColor={{
+                                false: "#f4f4f6",
+                                true: "#3B64F8"
+                            }}
+                            activeThumbColor="white"
+                        />
+                    </View>
+            </View>
+
+            {filterChannels.length === 0 && !filterByLectures ? null : <Text style={{
+            // width: '50%',
+            color: '#a2a2aa',
+            fontSize: 11,
+            paddingTop: 5,
+            paddingRight: 25,
+            textTransform: 'uppercase'
+          }}
+            onPress={() => {
+              setFilterChannels([]);
+              setFilterByLectures(false) 
+            }}
+          >
+            RESET
+          </Text>}
+            </View>
+        ) : null)    }
+
 
     // use effect for edit events
     useEffect(() => {
@@ -298,8 +445,14 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
             .then(res => {
                 if (res.data.date && res.data.date.getCalendar) {
                     const parsedEvents: any[] = [];
+
+                    const channelsSet = new Set();
+
                     res.data.date.getCalendar.map((e: any) => {
                         const { title } = htmlStringParser(e.title);
+
+                        channelsSet.add(e.channelName);
+
                         parsedEvents.push({
                             eventId: e.eventId ? e.eventId : "",
                             originalTitle: title,
@@ -311,46 +464,12 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             createdBy: e.createdBy,
                             channelName: e.channelName,
                             recurringId: e.recurringId,
-                            recordMeeting: e.recordMeeting ? true : false
+                            recordMeeting: e.recordMeeting ? true : false,
+                            meeting: e.meeting
                         });
                     });
-
-                    // Sort events first according to start time
-
-                    // const sortedEvents = parsedEvents.sort((a: any, b: any) => {
-                    //     return a.start < b.start ? 1 : -1
-                    // })
-
-                    // Push events to schedular
-
-                    // const events = sortedEvents.map((e: any, index: number) => {
-                    //     const { eventId, title, dateId, start, end } = e;
-
-                    //     let resourceId = "";
-
-                    //     if (!eventId) {
-                    //         resourceId = "submissions"
-                    //     }  else if (dateId === "channel") {
-                    //         resourceId = "lectures"
-                    //     } else {
-                    //         resourceId = "others"
-                    //     }
-
-                    //     return {
-                    //         id: index,
-                    //         title,
-                    //         resourceId,
-                    //         start,
-                    //         end
-                    //     }
-                    // })
-
-
-
-                    // schedulerData.setEvents(events);
-                    // setEvents(events)
-
-                    // console.log(parsedEvents)
+                    setEventChannels(Array.from(channelsSet))
+                    setAllEvents(parsedEvents)
                     setEvents(parsedEvents);
                 } else {
                     setLoading(false);
@@ -375,9 +494,6 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 }).start();
             });
     }, [, modalAnimation]);
-
-
-    console.log("Cues", props.cues)
 
     useEffect(() => {
         loadEvents();
@@ -459,9 +575,6 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     const windowHeight =
         width < 1024 ? Dimensions.get("window").height - 30 : Dimensions.get("window").height;
-
-
-
 
     const renderRecurringOptions = () => (
         <View style={{ flexDirection: width < 768 ? "column" : "row" }}>
@@ -1088,6 +1201,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             endAccessor="end"
                             style={{ height: 525, fontFamily: "overpass", color: "#202025" }}
                         /> : null}
+
+                        {!showAddEvent ? renderFilterEvents() : null}
 
                     </View>
                 )}

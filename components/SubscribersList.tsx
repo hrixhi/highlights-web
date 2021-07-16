@@ -22,6 +22,9 @@ import alert from './Alert';
 import Webview from './Webview'
 import QuizGrading from './QuizGrading';
 import Annotation from 'react-image-annotation'
+import XLSX from "xlsx"
+import * as FileSaver from 'file-saver';
+import { htmlStringParser } from '../helpers/HTMLParser'
 
 const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -73,6 +76,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
     const [submittedAt, setSubmittedAt] = useState('');
     const [isV0Quiz, setIsV0Quiz] = useState(false)
     const [headers, setHeaders] = useState({})
+    const [exportAoa, setExportAoa] = useState<any[]>()
 
     // Alerts
     const usersAddedAlert = PreferredLanguageText('usersAdded')
@@ -154,7 +158,115 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
         return s.value
     })
 
+    // PREPARE EXPORT DATA 
     useEffect(() => {
+
+        if (problems.length === 0 || subscribers.length === 0) {
+            return;
+        }
+
+        const exportAoa = [];
+
+        // Add row 1 with Overall, problem Score, problem Comments,
+        let row1 = [""];
+
+        // Add Graded 
+        row1.push("Graded")
+
+        // Add total
+        row1.push("Total score")
+
+        problems.forEach((prob: any, index: number) => {
+            row1.push(`${index + 1}: ${prob.question} (${prob.points})`)
+            row1.push("Score + Remark")
+        })
+
+        row1.push("Submission Date")
+
+        row1.push("Overall Remarks")
+
+        exportAoa.push(row1);
+
+        // Row 2 should be correct answers
+        const row2 = ["", "", ""];
+
+        problems.forEach((prob: any, i: number) => {
+            const { questionType, required, options = [], } = prob;
+            let type = questionType === "" ? "MCQ" : "Free Response";
+
+            let require = required ? "Required" : "Optional";
+
+            let answer = "";
+
+            if (questionType === "") {
+                answer += "Ans: "
+                options.forEach((opt: any, index: number) => {
+                    if (opt.isCorrect) {
+                        answer += ((index + 1) + ", ");
+                    }
+                })
+            }
+
+            row2.push(`${type} ${answer}`)
+            row2.push(`(${require})`)
+        })
+
+        exportAoa.push(row2)
+
+        // Subscribers
+        subscribers.forEach((sub: any) => {
+
+            const subscriberRow: any[] = [];
+
+            const { displayName, submission, submittedAt, comment, graded, score } = sub;
+
+            subscriberRow.push(displayName);
+            subscriberRow.push(graded ? "Graded" : (submittedAt !== null ? "Submitted" : "Not Submitted"))
+
+            if (!graded || !submittedAt) {
+                exportAoa.push(subscriberRow);
+                return;
+            }
+
+            subscriberRow.push(`${score}`)
+
+            const obj = JSON.parse(submission);
+
+            const { solutions, problemScores, problemComments } = obj;
+
+            solutions.forEach((sol: any, i: number) => {
+                let response = ''
+                if ("selected" in sol) {
+                    const options = sol["selected"];
+
+                    options.forEach((opt: any, index: number) => {
+                        if (opt.isSelected) response += ((index + 1) + " ")
+                    })
+                } else {
+                    response = sol["response"]
+                }
+
+                subscriberRow.push(`${response}`);
+                subscriberRow.push(`${problemScores[i]} - Remark: ${problemComments ? problemComments[i] : ''}`)
+
+
+            })
+
+            subscriberRow.push(moment(new Date(submittedAt)).format("MMMM Do YYYY, h:mm a"))
+
+            subscriberRow.push(comment)
+
+            exportAoa.push(subscriberRow);
+
+        })
+
+        setExportAoa(exportAoa)
+
+
+    }, [problems, subscribers])
+
+    useEffect(() => {
+
         if (!props.cue) {
             return
         }
@@ -163,6 +275,17 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
         } else {
             setReleaseSubmission(false)
         }
+
+        // Set if quiz when cue loaded
+
+        if (props.cue && props.cue.original && props.cue.original[0] === '{' && props.cue.original[props.cue.original.length - 1] === '}') {
+            const obj = JSON.parse(props.cue.original);
+
+            if (obj.quizId) {
+                setIsQuiz(true);
+            }
+        }
+
     }, [props.cue])
 
     useEffect(() => {
@@ -554,6 +677,27 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
 
     }
 
+    const exportScores = () => {
+
+        const { title } = htmlStringParser(props.cue.original)
+
+        const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+        const fileExtension = '.xlsx';
+
+        if (!exportAoa) {
+            Alert("Export document being processed. Try again.")
+            return;
+        }
+
+        const ws = XLSX.utils.aoa_to_sheet(exportAoa);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Scores ");
+        const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' })
+        const data = new Blob([excelBuffer], { type: fileType });
+        FileSaver.saveAs(data, `${title} scores` + fileExtension);
+
+    }
+
 
     const updateReleaseSubmission = useCallback(() => {
         const server = fetchAPI('')
@@ -855,27 +999,42 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
             }
             {
                 !showAddUsers && !showSubmission && props.cue && props.cue.submission ?
-                    <View style={{
-                        backgroundColor: 'white',
-                        height: 40,
-                        // marginTop: 20,
-                        flexDirection: 'row'
-                    }}>
-                        <Switch
-                            value={releaseSubmission}
-                            onValueChange={() => updateReleaseSubmission()}
-                            style={{ height: 20, marginRight: 20 }}
-                            trackColor={{
-                                false: '#f4f4f6',
-                                true: '#3B64F8'
-                            }}
-                            activeThumbColor='white'
-                        />
-                        <View style={{ width: '100%', backgroundColor: 'white', paddingTop: 3 }}>
-                            <Text style={{ fontSize: 15, color: '#a2a2aa', }}>
-                                Visible to Students
-                            </Text>
+
+                    <View style={{ backgroundColor: 'white', flexDirection: 'row', height: 40, width: '500px', justifyContent: 'space-between' }}>
+                        <View style={{
+                            backgroundColor: 'white',
+                            // marginTop: 20,
+                            flexDirection: 'row'
+                        }}>
+                            <Switch
+                                value={releaseSubmission}
+                                onValueChange={() => updateReleaseSubmission()}
+                                style={{ height: 20, marginRight: 20 }}
+                                trackColor={{
+                                    false: '#f4f4f6',
+                                    true: '#3B64F8'
+                                }}
+                                activeThumbColor='white'
+                            />
+                            <View style={{ backgroundColor: 'white', paddingTop: 3 }}>
+                                <Text style={{ fontSize: 15, color: '#a2a2aa', }}>
+                                    Visible to Students
+                                </Text>
+                            </View>
                         </View>
+                        {isQuiz ? <Text
+                            style={{
+                                color: "#a2a2aa",
+                                fontSize: 11,
+                                lineHeight: 25,
+                                textAlign: "right",
+                                textTransform: "uppercase"
+                            }}
+                            onPress={() => {
+                                exportScores()
+                            }}>
+                            EXPORT
+                        </Text> : null}
                     </View>
                     : null
             }
@@ -1183,7 +1342,14 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                     </TouchableOpacity>
                                                 </View>
                                             </View>
-                                            <Text style={{ color: '#202025', fontSize: 14, paddingBottom: 25, marginLeft: '5%' }}>
+                                            <Text style={{
+                                                fontSize: 11,
+                                                paddingBottom: 20,
+                                                textTransform: "uppercase",
+                                                // paddingLeft: 20,
+                                                flex: 1,
+                                                lineHeight: 25
+                                            }}>
                                                 {PreferredLanguageText('viewSubmission')}
                                             </Text>
                                             {
