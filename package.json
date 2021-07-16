@@ -71,6 +71,7 @@
     "react-duration-picker": "^1.1.1",
     "react-file-viewer": "^1.2.1",
     "react-google-charts": "^3.0.15",
+    "react-image-annotation": "^0.9.10",
     "react-jutsu": "^3.0.2",
     "react-messenger-customer-chat": "^0.8.0",
     "react-moment": "^1.1.1",
