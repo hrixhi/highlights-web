@@ -23,6 +23,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
     const [options, setOptions] = useState<any[]>([])
     const [selected, setSelected] = useState<any[]>([])
     const [owner, setOwner] = useState<any>({})
+    const [owners, setOwners] = useState<any[]>([])
 
     const handleSubmit = useCallback(() => {
         if (name.toString().trim() === '') {
@@ -42,13 +43,23 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
             }
         }).then(res => {
             if (res.data && (res.data.channel.doesChannelNameExist !== true || name.trim() === originalName.trim())) {
+
+                let unsub = false
+                if (confirm('Unsubscribe removed moderators?')) {
+                    unsub = true
+                }
+
                 server.mutate({
                     mutation: updateChannel,
                     variables: {
                         name: name.trim(),
                         password,
                         channelId: props.channelId,
-                        temporary
+                        temporary,
+                        owners: owners.map((item) => {
+                            return item.id
+                        }),
+                        unsubscribe: unsub
                     }
                 }).then(res2 => {
                     console.log(res2)
@@ -58,7 +69,6 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             const og = originalSubs.find((o: any) => {
                                 return o.id === sub.id
                             })
-                            console.log(og)
                             if (!og) {
                                 server.mutate({
                                     mutation: subscribe,
@@ -102,7 +112,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
         }).catch(err => {
             alert("Something went wrong.")
         })
-    }, [name, password, props.channelId, options, originalSubs,
+    }, [name, password, props.channelId, options, originalSubs, owners,
         temporary, selected, originalName])
 
     const handleDelete = useCallback(() => {
@@ -160,24 +170,37 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         })
                                         return x
                                     })
+
+                                    // get channel details
+                                    server.query({
+                                        query: findChannelById,
+                                        variables: {
+                                            channelId: props.channelId
+                                        }
+                                    }).then(res => {
+                                        if (res.data && res.data.channel.findById) {
+                                            setName(res.data.channel.findById.name)
+                                            setOriginalName(res.data.channel.findById.name)
+                                            setPassword(res.data.channel.findById.password ? res.data.channel.findById.password : '')
+                                            setTemporary(res.data.channel.findById.temporary ? true : false)
+                                            if (res.data.channel.findById.owners) {
+                                                const ownerOptions: any[] = []
+                                                tempUsers.map((item: any) => {
+                                                    const u = res.data.channel.findById.owners.find((i: any) => {
+                                                        return i === item.id
+                                                    })
+                                                    if (u) {
+                                                        ownerOptions.push(item)
+                                                    }
+                                                })
+                                                setOwners(ownerOptions)
+                                            }
+                                        }
+                                    })
+
                                     setOptions(tempUsers)
                                 })
                             }
-                        }
-                    })
-
-                    // get channel details
-                    server.query({
-                        query: findChannelById,
-                        variables: {
-                            channelId: props.channelId
-                        }
-                    }).then(res => {
-                        if (res.data && res.data.channel.findById) {
-                            setName(res.data.channel.findById.name)
-                            setOriginalName(res.data.channel.findById.name)
-                            setPassword(res.data.channel.findById.password ? res.data.channel.findById.password : '')
-                            setTemporary(res.data.channel.findById.temporary ? true : false)
                         }
                     })
 
@@ -216,7 +239,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
             }
         )()
 
-    }, [props.channelId])
+    }, [props.channelId, props.user])
 
     return (
         <View style={styles.screen} key={1}>
@@ -284,6 +307,27 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             }} // Function will trigger on select event
                             onRemove={(e, f) => {
                                 setSelected(e);
+                                return true
+                            }}
+                        />
+                    </View>
+                    <Text style={{ color: '#202025', fontSize: 14, paddingBottom: 10, paddingTop: 20 }}>
+                        Moderators
+                    </Text>
+                    <View>
+                        <Multiselect
+                            placeholder='Select...'
+                            displayValue='name'
+                            // key={userDropdownOptions.toString()}
+                            style={{ width: '100%', color: '#202025' }}
+                            options={options} // Options to display in the dropdown
+                            selectedValues={owners} // Preselected value to persist in dropdown
+                            onSelect={(e, f) => {
+                                setOwners(e);
+                                return true
+                            }} // Function will trigger on select event
+                            onRemove={(e, f) => {
+                                setOwners(e);
                                 return true
                             }}
                         />
