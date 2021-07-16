@@ -360,7 +360,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     setShowOriginal(false)
                                                 }}>
                                                 <Text style={viewStatus ? styles.allGrayFill : styles.all}>
-                                                    Status
+                                                    Responses
                                                 </Text>
                                             </TouchableOpacity>
                                     }

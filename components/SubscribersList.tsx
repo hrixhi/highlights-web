@@ -93,9 +93,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
     const [annotations, setAnnotations] = useState<any[]>([])
 
     const onSubmit = useCallback((ann: any) => {
-
         const { geometry, data }: any = ann
-
         const updatedAnnot = annotations.concat({
             geometry,
             data: {
@@ -103,10 +101,16 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                 id: Math.random()
             }
         })
-
         setAnnotations(updatedAnnot)
-
     }, [annotations])
+
+    useEffect(() => {
+        const comm = {
+            annotation,
+            annotations
+        }
+        setComment(JSON.stringify(comm))
+    }, [annotation, annotations])
 
     if (props.cue && props.cue.submission) {
         categories.push('Submitted')
@@ -277,7 +281,6 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
         }
 
         // Set if quiz when cue loaded
-
         if (props.cue && props.cue.original && props.cue.original[0] === '{' && props.cue.original[props.cue.original.length - 1] === '}') {
             const obj = JSON.parse(props.cue.original);
 
@@ -285,6 +288,8 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                 setIsQuiz(true);
             }
         }
+
+
 
     }, [props.cue])
 
@@ -1241,6 +1246,14 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                                 setScore(subscriber.score)
                                                                                 setGraded(subscriber.graded)
                                                                                 setComment(subscriber.comment)
+                                                                                console.log(subscriber.comment)
+                                                                                try {
+                                                                                    const comm = JSON.parse(subscriber.comment)
+                                                                                    setAnnotation(comm.annotation)
+                                                                                    setAnnotations(comm.annotations)
+                                                                                } catch (e) {
+                                                                                    console.log('')
+                                                                                }
                                                                                 setUserId(subscriber.userId)
                                                                             }
                                                                         } else {
@@ -1275,71 +1288,54 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 height: windowHeight - 132
                                             }}
                                             style={{ flex: 1, paddingTop: 12 }}>
-                                            <View style={{
-                                                width: Dimensions.get('window').width < 1024 ? '100%' : '60%', alignSelf: 'center'
-                                            }}>
-                                                <Text style={{ color: '#202025', fontSize: 14, paddingBottom: 10 }}>
-                                                    {PreferredLanguageText('score')}
-                                                </Text>
-                                                <TextInput
-                                                    value={score}
-                                                    style={styles.input}
-                                                    placeholder={'0-100'}
-                                                    onChangeText={val => setScore(val)}
-                                                    placeholderTextColor={'#a2a2aa'}
-                                                />
-                                                <Text style={{ color: '#202025', fontSize: 14, paddingVertical: 10, }}>
-                                                    {PreferredLanguageText('comment')}
-                                                </Text>
-                                                <TextInput
-                                                    value={comment}
-                                                    style={{
-                                                        height: 200,
-                                                        backgroundColor: '#f4f4f6',
-                                                        borderRadius: 10,
-                                                        fontSize: 15,
-                                                        padding: 15,
-                                                        paddingTop: 13,
-                                                        paddingBottom: 13,
-                                                        marginTop: 5,
-                                                        marginBottom: 20
-                                                    }}
-                                                    placeholder={'Optional'}
-                                                    onChangeText={val => setComment(val)}
-                                                    placeholderTextColor={'#a2a2aa'}
-                                                    multiline={true}
-                                                />
-                                                <View
-                                                    style={{
-                                                        flex: 1,
-                                                        backgroundColor: 'white',
-                                                        justifyContent: 'center',
-                                                        display: 'flex',
-                                                        flexDirection: 'row',
-                                                        marginTop: 25,
-                                                        marginBottom: 25
-                                                    }}>
-                                                    <TouchableOpacity
-                                                        onPress={() => handleGradeSubmit()}
+                                            <View style={{ flexDirection: 'row', maxWidth: 800 }}>
+                                                <View style={{
+                                                    width: '40%'
+                                                }}>
+                                                    <Text style={{ color: '#202025', fontSize: 14, paddingBottom: 10 }}>
+                                                        {PreferredLanguageText('score')}
+                                                    </Text>
+                                                    <TextInput
+                                                        value={score}
+                                                        style={styles.input}
+                                                        placeholder={'0-100'}
+                                                        onChangeText={val => setScore(val)}
+                                                        placeholderTextColor={'#a2a2aa'}
+                                                    />
+                                                </View>
+                                                <View style={{ width: '60%' }}>
+                                                    <View
                                                         style={{
+                                                            flex: 1,
                                                             backgroundColor: 'white',
-                                                            borderRadius: 15,
-                                                            overflow: 'hidden',
-                                                            height: 35,
+                                                            justifyContent: 'flex-end',
+                                                            display: 'flex',
+                                                            flexDirection: 'row',
+                                                            // marginTop: 25,
+                                                            // marginBottom: 25
                                                         }}>
-                                                        <Text style={{
-                                                            textAlign: 'center',
-                                                            lineHeight: 35,
-                                                            color: 'white',
-                                                            fontSize: 12,
-                                                            backgroundColor: '#3B64F8',
-                                                            paddingHorizontal: 25,
-                                                            fontFamily: 'inter',
-                                                            height: 35,
-                                                        }}>
-                                                            {status === 'graded' ? 'REGRADE' : 'ENTER GRADE'}
-                                                        </Text>
-                                                    </TouchableOpacity>
+                                                        <TouchableOpacity
+                                                            onPress={() => handleGradeSubmit()}
+                                                            style={{
+                                                                backgroundColor: 'white',
+                                                                borderRadius: 15,
+                                                                overflow: 'hidden',
+                                                                height: 35,
+                                                            }}>
+                                                            <Text style={{
+                                                                textAlign: 'center',
+                                                                lineHeight: 35,
+                                                                color: 'white',
+                                                                fontSize: 12,
+                                                                backgroundColor: '#3B64F8',
+                                                                paddingHorizontal: 25,
+                                                                fontFamily: 'inter',
+                                                                height: 35,
+                                                            }}>
+                                                                SAVE
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    </View>
                                                 </View>
                                             </View>
                                             <Text style={{
@@ -1354,7 +1350,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             </Text>
                                             {
                                                 imported && !isQuiz ?
-                                                    <View style={{ width: '40%', alignSelf: 'flex-start', marginLeft: '10%' }}>
+                                                    <View style={{ width: '40%', alignSelf: 'flex-start' }}>
                                                         <TextInput
                                                             editable={false}
                                                             value={title}
@@ -1420,19 +1416,18 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                             key={url}
                                                                             style={{ flex: 1 }}
                                                                         >
-                                                                            <View style={{ position: 'relative', flex: 1 }}>
-                                                                                <View style={{ position: 'absolute', zIndex: 1, flex: 1 }}>
+                                                                            <View style={{ position: 'relative', flex: 1, overflow: 'scroll' }}>
+                                                                                <View style={{ position: 'absolute', zIndex: 1, width: 800, height: 20000 }}>
                                                                                     <Webview
-                                                                                        style={{ width: '100%', }}
                                                                                         key={url}
                                                                                         url={url}
-                                                                                        style={{ resizeMode: 'cover', flex: 1 }}
+                                                                                        fullScreen={true}
                                                                                     />
                                                                                 </View>
-                                                                                <View style={{ position: 'absolute', zIndex: 3, flex: 1 }}>
+                                                                                <View style={{ position: 'absolute', zIndex: 1, flex: 1, width: 800, height: 20000, backgroundColor: 'rgb(0,0,0,0)' }}>
                                                                                     <Annotation
-                                                                                        style={{ resizeMode: 'cover' }}
-                                                                                        // src={require('./default-images/transparent.png')}
+                                                                                        style={{ resizeMode: 'cover', width: '100%', height: '100%', backgroundColor: 'rgb(0,0,0,0)', background: 'none' }}
+                                                                                        src={require('./default-images/transparent.png')}
                                                                                         annotations={annotations}
                                                                                         // type={this.state.type}
                                                                                         value={annotation}

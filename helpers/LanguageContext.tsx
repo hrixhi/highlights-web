@@ -48,14 +48,14 @@ const EnglishBank: { [key: string]: string } = {
     graded: "Graded", // Done
     percentageOverall: "% of overall grade", // Done
     none: 'None', // Done
-    viewShared: "View Shared", // Done
-    viewSubmission: "View Submission",
+    viewShared: "Content", // Done
+    viewSubmission: "Submission",
     viewAttendance: "View Attendance",
     inviteByEmail: "Add by Email",
-    myNotes: "My Notes", // Done
-    mySubmission: "My Submission", // Done
+    myNotes: "Notes", // Done
+    mySubmission: "Submission", // Done
     status: "Status", // DOne
-    noStatuses: "No statuses.",
+    noStatuses: "No Responses.",
     unableToLoadStatuses: "Unable to load statuses.",
     noStudents: "No students.",
     update: "Update", // Done
