@@ -1243,7 +1243,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                                 setSubmittedAt(subscriber.submittedAt)
                                                                                 setShowSubmission(true)
                                                                                 setStatus(subscriber.fullName)
-                                                                                setScore(subscriber.score)
+                                                                                setScore(subscriber.score ? subscriber.score.toString() : '0')
                                                                                 setGraded(subscriber.graded)
                                                                                 setComment(subscriber.comment)
                                                                                 console.log(subscriber.comment)
@@ -1343,7 +1343,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 paddingBottom: 20,
                                                 textTransform: "uppercase",
                                                 // paddingLeft: 20,
-                                                flex: 1,
+                                                // flex: 1,
                                                 lineHeight: 25
                                             }}>
                                                 {PreferredLanguageText('viewSubmission')}
@@ -1367,40 +1367,56 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             }
                                             {
                                                 !imported && !isQuiz ?
-                                                    <RichEditor
-                                                        disabled={true}
-                                                        key={Math.random()}
-                                                        containerStyle={{
-                                                            backgroundColor: '#f4f4f6',
-                                                            padding: 3,
-                                                            paddingTop: 5,
-                                                            paddingBottom: 10,
-                                                            borderRadius: 15,
-                                                        }}
-                                                        ref={RichText}
-                                                        style={{
-                                                            width: '100%',
-                                                            backgroundColor: '#f4f4f6',
-                                                            borderRadius: 15,
-                                                            minHeight: 450
-                                                        }}
-                                                        editorStyle={{
-                                                            backgroundColor: '#f4f4f6',
-                                                            placeholderColor: '#a2a2aa',
-                                                            color: '#202025',
-                                                            contentCSSText: 'font-size: 13px;'
-                                                        }}
-                                                        initialContentHTML={submission}
-                                                        placeholder={"Title"}
-                                                        onChange={(text) => { }}
-                                                        allowFileAccess={true}
-                                                        allowFileAccessFromFileURLs={true}
-                                                        allowUniversalAccessFromFileURLs={true}
-                                                        allowsFullscreenVideo={true}
-                                                        allowsInlineMediaPlayback={true}
-                                                        allowsLinkPreview={true}
-                                                        allowsBackForwardNavigationGestures={true}
-                                                    /> : (
+                                                    <View style={{ position: 'relative', flex: 1, overflow: 'scroll', height: 20000 }}>
+                                                        <View style={{ position: 'absolute', zIndex: 1, width: 800, height: 20000 }}>
+                                                            <RichEditor
+                                                                disabled={true}
+                                                                key={Math.random()}
+                                                                containerStyle={{
+                                                                    backgroundColor: '#f4f4f6',
+                                                                    padding: 3,
+                                                                    paddingTop: 5,
+                                                                    paddingBottom: 10,
+                                                                    borderRadius: 15,
+                                                                }}
+                                                                ref={RichText}
+                                                                style={{
+                                                                    width: '100%',
+                                                                    backgroundColor: '#f4f4f6',
+                                                                    borderRadius: 15,
+                                                                    height: 20000
+                                                                }}
+                                                                editorStyle={{
+                                                                    backgroundColor: '#f4f4f6',
+                                                                    placeholderColor: '#a2a2aa',
+                                                                    color: '#202025',
+                                                                    contentCSSText: 'font-size: 13px;'
+                                                                }}
+                                                                initialContentHTML={submission}
+                                                                placeholder={"Title"}
+                                                                onChange={(text) => { }}
+                                                                allowFileAccess={true}
+                                                                allowFileAccessFromFileURLs={true}
+                                                                allowUniversalAccessFromFileURLs={true}
+                                                                allowsFullscreenVideo={true}
+                                                                allowsInlineMediaPlayback={true}
+                                                                allowsLinkPreview={true}
+                                                                allowsBackForwardNavigationGestures={true}
+                                                            />
+                                                        </View>
+                                                        <View style={{ position: 'absolute', zIndex: 1, flex: 1, width: 800, height: 20000, backgroundColor: 'rgb(0,0,0,0)' }}>
+                                                            <Annotation
+                                                                style={{ resizeMode: 'cover', width: '100%', height: '100%', backgroundColor: 'rgb(0,0,0,0)', background: 'none' }}
+                                                                src={require('./default-images/transparent.png')}
+                                                                annotations={annotations}
+                                                                // type={this.state.type}
+                                                                value={annotation}
+                                                                onChange={(e: any) => setAnnotation(e)}
+                                                                onSubmit={onSubmit}
+                                                            />
+                                                        </View>
+                                                    </View>
+                                                    : (
                                                         <View style={{
                                                             width: '100%',
                                                             minHeight: 500,
