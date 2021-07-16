@@ -1094,7 +1094,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         paddingVertical: 5,
                         justifyContent: "center"
                     }}>
-                    <Text style={{ flex: 1, fontSize: 12, color: "#a2a2aa" }}>
+                    <Text style={{ flex: 1, fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
                         ^ → Superscript, _ → Subscript, int → Integral, sum → Summation, prod → Product, sqrt → Square root, bar →
                         Bar over letter, alpha, beta, ... omega → Small Greek letter, Alpha, Beta, ... Omega → Capital Greek letter
                     </Text>
@@ -1519,7 +1519,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         paddingBottom: 15,
                         backgroundColor: "white"
                     }}>
-                    <Text style={{ fontSize: 12, color: "#a2a2aa" }}>
+                    <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
                         {props.cue.channelId && props.cue.channelId !== "" ? "Shared with" : "Saved in"}
                     </Text>
                 </View>
@@ -1652,7 +1652,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         paddingBottom: 15,
                         backgroundColor: "white"
                     }}>
-                    <Text style={{ fontSize: 12, color: "#a2a2aa" }}>{PreferredLanguageText("submissionRequired")}</Text>
+                    <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>{PreferredLanguageText("submissionRequired")}</Text>
                 </View>
                 <View style={{ flexDirection: "row", width: '100%' }}>
                     {isOwner ? (
@@ -1678,7 +1678,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         </View>
                     ) : (
                         <View style={{ flex: 1, backgroundColor: "#fff" }}>
-                            <Text style={{ fontSize: 12, color: "#a2a2aa" }}>{!submission ? PreferredLanguageText("no") : null}</Text>
+                            <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>{!submission ? PreferredLanguageText("no") : null}</Text>
                         </View>
                     )}
                     {submission ? (
@@ -1779,7 +1779,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         paddingBottom: 15,
                         backgroundColor: "white"
                     }}>
-                    <Text style={{ fontSize: 12, color: "#a2a2aa" }}>Grade Weight</Text>
+                    <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>Grade Weight</Text>
                 </View>
                 <View style={{ flexDirection: "row" }}>
                     <View
@@ -1860,7 +1860,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         paddingBottom: 15,
                         backgroundColor: "white"
                     }}>
-                    <Text style={{ fontSize: 12, color: "#a2a2aa" }}>{PreferredLanguageText("category")}</Text>
+                    <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>{PreferredLanguageText("category")}</Text>
                 </View>
                 {props.cue.channelId && !props.channelOwner ? (
                     <View
@@ -1987,7 +1987,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         paddingBottom: 15,
                         backgroundColor: "white"
                     }}>
-                    <Text style={{ fontSize: 12, color: "#a2a2aa" }}>{PreferredLanguageText("priority")}</Text>
+                    <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>{PreferredLanguageText("priority")}</Text>
                 </View>
                 <View
                     style={{
@@ -2040,7 +2040,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         paddingBottom: 15,
                         backgroundColor: "white"
                     }}>
-                    <Text style={{ fontSize: 12, color: "#a2a2aa" }}>Forward</Text>
+                    <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>Forward</Text>
                 </View>
                 <View
                     style={{
@@ -2116,7 +2116,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             paddingBottom: 15,
                             backgroundColor: "white"
                         }}>
-                        <Text style={{ fontSize: 12, color: "#a2a2aa" }}>Reminder</Text>
+                        <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>Reminder</Text>
                     </View>
                     <View
                         style={{
@@ -2156,7 +2156,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 paddingBottom: 15,
                                 backgroundColor: "white"
                             }}>
-                            <Text style={{ fontSize: 12, color: "#a2a2aa" }}>Recurring</Text>
+                            <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>Recurring</Text>
                         </View>
                         <View style={{ flexDirection: "row" }}>
                             <View
@@ -2236,7 +2236,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 paddingBottom: 15,
                                 backgroundColor: "white"
                             }}>
-                            <Text style={{ fontSize: 12, color: "#a2a2aa" }}>Indefinite</Text>
+                            <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>Indefinite</Text>
                         </View>
                         <View style={{ flexDirection: "row" }}>
                             <View
@@ -2775,7 +2775,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         {renderReminderOptions()}
                         {isQuiz && isOwner ? <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
                             <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
+                                <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
                                     Shuffle Questions
                                 </Text>
                             </View>

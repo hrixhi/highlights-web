@@ -896,7 +896,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                         </Text>
                                                     </View>
                                                 </View>
-                                                <Text style={{ fontSize: 12, color: '#a2a2aa', paddingTop: 10 }}>
+                                                <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase', paddingTop: 10 }}>
                                                     {/* Turn on to begin private meeting. {'\n'} */}
                                                     Restart switch if you cannot join.
                                                 </Text>
@@ -935,7 +935,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             Join Meeting
                                         </Text>
                                     </TouchableOpacity>
-                                    <Text style={{ fontSize: 12, color: '#a2a2aa', marginBottom: 10 }}>
+                                    <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase', marginBottom: 10 }}>
                                         Enabled only when meeting in session.
                                     </Text>
                                 </View>

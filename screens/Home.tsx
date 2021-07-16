@@ -1405,7 +1405,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           channelFilterChoice={channelFilterChoice}
           channelCreatedBy={channelCreatedBy}
           loadData={() => loadData()}
-          setChannelFilterChoice={(choice: any) => setChannelFilterChoice(choice)}
+          // setChannelFilterChoice={(choice: any) => setChannelFilterChoice(choice)}
           openDiscussion={() => openModal('Discussion')}
           openSubscribers={() => openModal('Subscribers')}
           openGrades={() => openModal('Grades')}
@@ -1438,6 +1438,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             </View>
         }
         <BottomBar
+          cues={filteredCues}
           openWalkthrough={() => openModal('Walkthrough')}
           openCalendar={() => openModal('Calendar')}
           openCreate={() => openModal('Create')}
@@ -1451,6 +1452,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           setChannelId={(id: string) => setChannelId(id)}
           setChannelCreatedBy={(id: any) => setChannelCreatedBy(id)}
           setChannelFilterChoice={(choice: string) => setChannelFilterChoice(choice)}
+          channelFilterChoice={channelFilterChoice}
         />
       </View >
       {
@@ -1505,7 +1507,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 0,
     borderBottomWidth: 0,
     borderColor: '#eeeeee',
-    height: '64%',
+    height: '66%',
     width: '100%',
     justifyContent: "center",
   },

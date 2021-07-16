@@ -8,6 +8,7 @@ import Navigation from './navigation/Navigator';
 import * as SplashScreen from 'expo-splash-screen';
 import "react-datetime/css/react-datetime.css"
 import { LanguageProvider } from "./helpers/LanguageContext";
+import { MenuProvider } from 'react-native-popup-menu';
 // import {DragDropContextProvider} from 'react-dnd';
 // import HTML5Backend from 'react-dnd-html5-backend';
 
@@ -35,11 +36,13 @@ export default function App() {
   } else {
     return (
       <SafeAreaProvider style={styles.font}>
-        {/* <DragDropContextProvider backend={HTML5Backend}> */}
-        <LanguageProvider>
-          <Navigation colorScheme={colorScheme} />
-        </LanguageProvider>
-        {/* </DragDropContextProvider> */}
+        <MenuProvider>
+          {/* <DragDropContextProvider backend={HTML5Backend}> */}
+          <LanguageProvider>
+            <Navigation colorScheme={colorScheme} />
+          </LanguageProvider>
+          {/* </DragDropContextProvider> */}
+        </MenuProvider>
         <StatusBar />
       </SafeAreaProvider>
     );

@@ -405,7 +405,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                             </Text>
                                         </View>
                                     </View>
-                                    <Text style={{ fontSize: 12, color: "#a2a2aa", paddingTop: 10 }}>
+                                    <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase', paddingTop: 10 }}>
                                         {/* Turn on to begin session. {"\n"} */}
                                         Restart switch if you cannot join.
                                     </Text>
@@ -490,7 +490,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                     {PreferredLanguageText("enterClassroom")}
                                 </Text>
                             </TouchableOpacity>
-                            <Text style={{ fontSize: 12, color: "#a2a2aa", marginBottom: 10 }}>
+                            <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase', marginBottom: 10 }}>
                                 Enabled only when classroom in session.
                             </Text>
                         </View>
@@ -527,7 +527,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                     {PreferredLanguageText("viewAttendance")}
                                 </Text>
                             </TouchableOpacity>
-                            <Text style={{ fontSize: 12, color: "#a2a2aa", marginBottom: 20 }}>
+                            <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase', marginBottom: 20 }}>
                                 Attendances will only be captured for scheduled lectures.
                             </Text>
                         </View>

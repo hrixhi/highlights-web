@@ -825,7 +825,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 <Ionicons name='add-circle-outline' color='#a2a2aa' size={20} />
                             </TouchableOpacity>
                             <View style={{ minWidth: '40%', flex: 1, paddingVertical: 5, justifyContent: 'center', }}>
-                                <Text style={{ flex: 1, fontSize: 12, color: '#a2a2aa' }}>
+                                <Text style={{ flex: 1, fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
                                     ^ → Superscript, _ → Subscript, int → Integral, sum → Summation, prod → Product, sqrt → Square root, bar → Bar over letter, alpha, beta, ... omega → Small Greek letter, Alpha, Beta, ... Omega → Capital Greek letter
                                 </Text>
                             </View>
@@ -1014,7 +1014,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             <View style={{ display: 'flex', flexDirection: width < 768 ? 'column' : 'row', overflow: 'visible' }}>
                                 <View style={{ width: width < 768 ? '100%' : '33.33%', borderRightWidth: 0, borderColor: '#f4f4f6' }}>
                                     <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                        <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
+                                        <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
                                             {/* {PreferredLanguageText('channel')} */}
                                             Share with
                                             {/* <Ionicons
@@ -1155,7 +1155,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     channelId !== '' ?
                                         <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
                                             <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                                <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
+                                                <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
                                                     {PreferredLanguageText('submissionRequired')}
                                                 </Text>
                                             </View>
@@ -1249,7 +1249,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     submission ?
                                         <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
                                             <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                                <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
+                                                <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
                                                     Grade Weight 
                                                 </Text>
                                             </View>
@@ -1300,7 +1300,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             <View style={{ width: width < 768 ? '100%' : '33.33%', borderRightWidth: 0, borderColor: '#f4f4f6' }}>
                                 <View style={{ width: '100%', backgroundColor: 'white' }}>
                                     <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                        <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
+                                        <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
                                             {PreferredLanguageText('category')}
                                         </Text>
                                     </View>
@@ -1368,7 +1368,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             </View>
                             <View style={{ width: width < 768 ? '100%' : '33.33%', borderRightWidth: 0, borderColor: '#f4f4f6' }}>
                                 <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                    <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
+                                    <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
                                         {PreferredLanguageText('priority')}
                                     </Text>
                                 </View>
@@ -1400,7 +1400,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         <View style={{ width: '100%', paddingTop: 15, flexDirection: width < 768 ? 'column' : 'row' }}>
                             <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
                                 <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                    <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
+                                    <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
                                         Reminder
                                     </Text>
                                 </View>
@@ -1436,7 +1436,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 notify ?
                                     <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
                                         <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                            <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
+                                            <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
                                                 Recurring
                                             </Text>
                                         </View>
@@ -1516,7 +1516,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 notify && !shuffle ?
                                     <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
                                         <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                            <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
+                                            <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
                                                 Indefinite
                                             </Text>
                                         </View>
@@ -1566,7 +1566,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         {/* if Quiz then ask Shuffle */}
                         {isQuiz ?  <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
                                         <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                            <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
+                                            <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
                                                 Shuffle Questions
                                             </Text>
                                         </View>

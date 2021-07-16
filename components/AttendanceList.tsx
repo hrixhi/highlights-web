@@ -435,7 +435,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                                             return s.dateId.toString().trim() === meeting.dateId.toString().trim()
                                                         })
                                                         return <View style={styles.col} key={row.toString() + '-' + col.toString()}>
-                                                            <Text style={{ textAlign: 'center', fontSize: 12, color: '#a2a2aa' }}>
+                                                            <Text style={{ textAlign: 'center', fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
                                                                 {
                                                                     attendanceObject ? "Present" : '-'
                                                                 }

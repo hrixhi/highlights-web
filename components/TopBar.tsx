@@ -11,11 +11,8 @@ import alert from './Alert';
 const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
     const styles: any = styleObject(props.channelId)
-    const unparsedCues: any[] = JSON.parse(JSON.stringify(props.cues))
-    const [cues] = useState<any[]>(unparsedCues.reverse())
-    const [filterChoice] = useState(props.channelFilterChoice)
-    const [channelCategories, setChannelCategories] = useState([])
-    const [meetingOn, setMeetingOn] = useState(false)
+    // const [filterChoice] = useState(props.channelFilterChoice)
+    // const [meetingOn, setMeetingOn] = useState(false)
     const [isOwner, setIsOwner] = useState(false)
     const [school, setSchool] = useState<any>(null)
 
@@ -40,44 +37,34 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         if (user._id.toString().trim() === props.channelCreatedBy.toString().trim()) {
                             setIsOwner(true)
                         }
-                        server.query({
-                            query: getMeetingStatus,
-                            variables: {
-                                channelId: props.channelId
-                            }
-                        }).then(res => {
-                            if (res.data && res.data.channel && res.data.channel.getMeetingStatus) {
-                                setMeetingOn(true)
-                            } else {
-                                setMeetingOn(false)
-                            }
-                        }).catch(err => console.log(err))
+                        // server.query({
+                        //     query: getMeetingStatus,
+                        //     variables: {
+                        //         channelId: props.channelId
+                        //     }
+                        // }).then(res => {
+                        //     if (res.data && res.data.channel && res.data.channel.getMeetingStatus) {
+                        //         setMeetingOn(true)
+                        //     } else {
+                        //         setMeetingOn(false)
+                        //     }
+                        // }).catch(err => console.log(err))
                     }
                 }
             }
         )()
-        const custom: any = {}
-        const cat: any = []
-        cues.map((cue) => {
-            if (cue.customCategory && cue.customCategory !== '' && !custom[cue.customCategory]) {
-                custom[cue.customCategory] = 'category'
-            }
-        })
-        Object.keys(custom).map(key => {
-            cat.push(key)
-        })
-        setChannelCategories(cat)
-    }, [cues, props.channelCreatedBy])
+
+    }, [props.channelCreatedBy])
 
     return (
         <View style={styles.topbar} key={Math.random()}>
             <View style={{ width: '100%', height: Dimensions.get('window').height * 0.15 }}>
                 <View style={{
-                    height: '45%',
+                    // height: '45%',
                     flexDirection: 'row',
                     display: 'flex',
                     paddingHorizontal: 25,
-                    paddingTop: 5
+                    paddingTop: 10
                 }}>
                     <TouchableOpacity
                         onPress={() => Linking.openURL('http://www.cuesapp.co')}
@@ -96,7 +83,7 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         />
                     </TouchableOpacity>
                     <View
-                        key={JSON.stringify(cues)}
+                        key={JSON.stringify(props.cues)}
                         style={{
                             flex: 1, flexDirection: 'row'
                         }}>
@@ -174,7 +161,7 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         }
                     </View>
                 </View>
-                <View
+                {/* <View
                     key={JSON.stringify(cues) + JSON.stringify(filterChoice)}
                     style={{
                         width: '100%', height: '55%', flexDirection: 'column',
@@ -210,7 +197,7 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             })
                         }
                     </ScrollView>
-                </View>
+                </View> */}
             </View>
         </View>
     );
@@ -223,7 +210,7 @@ export default React.memo(TopBar, (prev, next) => {
 
 const styleObject: any = (channelId: any) => StyleSheet.create({
     topbar: {
-        height: '18%',
+        height: '14%',
         width: '100%',
         flexDirection: 'column',
         display: 'flex',

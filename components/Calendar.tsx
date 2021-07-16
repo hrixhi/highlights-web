@@ -219,7 +219,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
                 <View style={{ width: width < 768 ? "100%" : "33.33%", display: "flex" }}>
                     <View style={{ width: "100%", paddingTop: width < 768 ? 40 : 40, paddingBottom: 15, backgroundColor: "white" }}>
-                        <Text style={{ fontSize: 12, color: "#a2a2aa" }}>Lectures Only</Text>
+                        <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>Lectures Only</Text>
                     </View>
                     <View
                         style={{
@@ -583,7 +583,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
         <View style={{ flexDirection: width < 768 ? "column" : "row" }}>
             <View style={{ width: width < 768 ? "100%" : "33.33%", display: "flex" }}>
                 <View style={{ width: "100%", paddingTop: width < 768 ? 40 : 40, paddingBottom: 15, backgroundColor: "white" }}>
-                    <Text style={{ fontSize: 12, color: "#a2a2aa" }}>Recurring</Text>
+                    <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>Recurring</Text>
                 </View>
                 <View
                     style={{
@@ -606,7 +606,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
             {recurring ? <View style={{ width: width < 768 ? "100%" : "33.33%", display: "flex" }}>
                 <View style={{ width: "100%", paddingTop: width < 768 ? 20 : 40, paddingBottom: 15, backgroundColor: "white" }}>
-                    <Text style={{ fontSize: 12, color: "#a2a2aa" }}>Repeat every</Text>
+                    <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>Repeat every</Text>
                 </View>
                 <View
                     style={{
@@ -640,7 +640,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
             {recurring ? <View style={{ width: width < 768 ? "100%" : "33.33%", display: "flex" }}>
                 <View style={{ width: "100%", paddingTop: width < 768 ? 20 : 40, paddingBottom: 15, backgroundColor: "white" }}>
-                    <Text style={{ fontSize: 12, color: "#a2a2aa" }}>Repeat until</Text>
+                    <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>Repeat until</Text>
                 </View>
                 <View
                     style={{
@@ -693,7 +693,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         width: width < 768 ? "100%" : "33.33%"
                     }}>
                     <View style={{ width: "100%", paddingTop: width < 768 ? 40 : 30, paddingBottom: 15, backgroundColor: "white" }}>
-                        <Text style={{ fontSize: 12, color: "#a2a2aa", marginBottom: 5 }}>Lecture</Text>
+                        <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase', marginBottom: 5 }}>Lecture</Text>
                     </View>
 
                     <View
@@ -724,7 +724,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             width: width < 768 ? "100%" : "33.33%"
                         }}>
                         <View style={{ width: "100%", paddingTop: width < 768 ? 20 : 30, paddingBottom: 15, backgroundColor: "white" }}>
-                            <Text style={{ fontSize: 12, color: "#a2a2aa", marginBottom: 5 }}>Record Lecture</Text>
+                            <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase', marginBottom: 5 }}>Record Lecture</Text>
                         </View>
                         <Switch
                             value={recordMeeting}
@@ -1156,7 +1156,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     {renderEditChannelName()}
                                     {!editEvent && renderRecurringOptions()}
                                     {renderMeetingOptions()}
-                                    {channelId !== "" && <Text style={{ fontSize: 12, color: "#a2a2aa", paddingTop: 10 }}>
+                                    {channelId !== "" && <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase', paddingTop: 10 }}>
                                         Attendances will only be captured for scheduled lectures.
                                     </Text>}
                                     {!editEvent ? <View

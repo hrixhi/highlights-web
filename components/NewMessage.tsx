@@ -312,7 +312,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             !cueId && !parentId ?
                                 <View style={{ width: '33.33%', backgroundColor: 'white' }}>
                                     <View style={{ width: '100%', paddingTop: 40, paddingBottom: 10, backgroundColor: 'white' }}>
-                                        <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
+                                        <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
                                             {PreferredLanguageText('category')}
                                         </Text>
                                     </View>
@@ -381,7 +381,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         <View style={{ flexDirection: 'row' }}>
                             {/* <View style={{ width: '33.33%', backgroundColor: 'white' }}>
                                 <View style={{ width: '100%', paddingTop: 40, paddingBottom: 10, backgroundColor: 'white' }}>
-                                    <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
+                                    <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
                                         {PreferredLanguageText('anonymous')}
                                     </Text>
                                 </View>
@@ -402,7 +402,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                         parentId ? null :
                                             <View style={{ width: '33.33%', backgroundColor: 'white' }}>
                                                 <View style={{ width: '100%', paddingTop: 40, paddingBottom: 10, backgroundColor: 'white' }}>
-                                                    <Text style={{ fontSize: 12, color: '#a2a2aa' }}>
+                                                    <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
                                                         {PreferredLanguageText('private')}
                                                     </Text>
                                                 </View>
