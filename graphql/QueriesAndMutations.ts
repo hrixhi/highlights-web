@@ -704,6 +704,7 @@ export const getEvents = gql`
         createdBy
         recurringId
         recordMeeting
+        meeting
       }
     }
   }
