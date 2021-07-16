@@ -88,6 +88,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
     const userRemovedAlert = PreferredLanguageText('userRemoved');
     const alreadyUnsubscribedAlert = PreferredLanguageText('alreadyUnsubscribed')
 
+    console.log("Props cuee", props.cue)
     if (props.cue && props.cue.submission) {
         categories.push('Submitted')
         categories.push('Graded')
@@ -996,9 +997,12 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 }}
                                 activeThumbColor='white'
                             />
-                            <View style={{ backgroundColor: 'white', paddingTop: 3 }}>
-                                <Text style={{ fontSize: 15, color: '#a2a2aa', }}>
-                                    Visible to Students
+                            <View style={{ backgroundColor: 'white', }}>
+                                <Text style={{ color: "#a2a2aa",
+                                    fontSize: 11,
+                                    lineHeight: 25,
+                                    textTransform: 'uppercase'}}>
+                                    Release Grades
                                 </Text>
                             </View>
                         </View>
@@ -1014,7 +1018,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 exportScores()
                             }}>
                             EXPORT
-                        </Text> : null }
+                        </Text> : null}
                     </View>
                     : null
             }

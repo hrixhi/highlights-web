@@ -36,6 +36,8 @@ import moment from "moment";
 import ReactPlayer from "react-player";
 import Webview from './Webview'
 import QuizGrading from './QuizGrading';
+import Multiselect from 'multiselect-react-dropdown';
+
 
 const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const current = new Date();
@@ -233,12 +235,27 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     })
                     .then((res: any) => {
                         if (res.data && res.data.cue.getSharedWith) {
-                            setSubscribers(res.data.cue.getSharedWith);
+
+                            const format = res.data.cue.getSharedWith.map((sub: any) => {
+                                return {
+                                    id: sub.value,
+                                    name: sub.label
+                                }
+                            });
+
+                            setSubscribers(format);
                             // clear selected
                             const sel = res.data.cue.getSharedWith.filter((item: any) => {
                                 return item.isFixed;
                             });
-                            setSelected(sel);
+
+                            const formatSel = sel.map((sub: any) => {
+                                return {
+                                    id: sub.value,
+                                    name: sub.label
+                                }
+                            })
+                            setSelected(formatSel);
                         }
                     })
                     .catch((err: any) => console.log(err));
@@ -1518,7 +1535,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             padding: 5,
                             height: expandMenu ? 175 : "auto"
                         }}>
-                        <Select
+                        {/* <Select
                             isClearable={false}
                             placeholder="Share with"
                             styles={{
@@ -1576,6 +1593,48 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             classNamePrefix="select"
                             onChange={onChange}
                             options={subscribers}
+                        /> */}
+                        <Multiselect
+                            placeholder='Share with...'
+                            displayValue='name'
+                            // key={userDropdownOptions.toString()}
+                            // style={{ width: '100%', color: '#202025', 
+                            //     optionContainer: { // To change css for option container 
+                            //         zIndex: 9999
+                            //     }
+                            // }}
+                            options={subscribers} // Options to display in the dropdown
+                            selectedValues={selected} // Preselected value to persist in dropdown
+                            disabledPreselected={true}
+                            onSelect={(e, f) => {
+
+                                const server = fetchAPI("");
+                                server
+                                    .mutate({
+                                        mutation: shareCueWithMoreIds,
+                                        variables: {
+                                            cueId: props.cue._id,
+                                            userId: f.id
+                                        }
+                                    })
+                                    .then(res => {
+                                        if (res.data && res.data.cue.shareCueWithMoreIds) {
+                                            loadChannelsAndSharedWith();
+                                        }
+                                    })
+                                    .catch(err => console.log(err));
+
+                                    setSelected(e);
+                                return true
+                            }} // Function will trigger on select event
+                            onRemove={(e, f) => {
+                                const addBack = [...e];
+                                addBack.push(f)
+                                setSelected(addBack)
+
+                                Alert('Cannot un-share cue')
+                                return;
+                            }}
                         />
                     </View>
                 </View>
@@ -2324,7 +2383,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         </View>)
     }
 
-    if (props.cue.submission && props.cue.submittedAt !== null && !props.cue.releaseSubmission && !isOwner) {
+    if (isQuiz && props.cue.submission && props.cue.submittedAt !== null && !props.cue.releaseSubmission && !isOwner) {
         return (<View style={{ minHeight: Dimensions.get('window').height }}>
             <View style={{ backgroundColor: 'white', flex: 1, }}>
                 <Text style={{ width: '100%', color: '#a2a2aa', fontSize: 22, paddingTop: 200, paddingBottom: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1, textAlign: 'center' }}>

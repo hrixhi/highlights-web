@@ -27,6 +27,8 @@ import { PreferredLanguageText } from "../helpers/LanguageContext";
 import moment from 'moment';
 import ReactPlayer from 'react-player'
 import Webview from './Webview'
+import Multiselect from 'multiselect-react-dropdown';
+
 
 
 const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
@@ -255,9 +257,19 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         })
             .then((res: any) => {
                 if (res.data && res.data.cue.getSharedWith) {
-                    setSubscribers(res.data.cue.getSharedWith)
+
+                    const subscribers: any[] = res.data.cue.getSharedWith;
+
+                    const format = subscribers.map((sub: any) => {
+                        return {
+                            id: sub.value,
+                            name: sub.label
+                        }
+                    })
+                    
+                    setSubscribers(format)
                     // clear selected
-                    setSelected(res.data.cue.getSharedWith)
+                    setSelected(format)
                 }
             })
             .catch((err: any) => console.log(err))
@@ -484,7 +496,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             const userIds: any[] = []
             if (selected.length !== 0) {
                 selected.map((item) => {
-                    userIds.push(item.value)
+                    userIds.push(item.id)
                 })
             }
 
@@ -1059,7 +1071,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         channelId !== '' ?
                                             <View style={{ maxHeight: 175, flexDirection: 'column', marginTop: 25, overflow: 'scroll' }}>
                                                 <View style={{ width: '90%', padding: 5, height: expandMenu ? 175 : 'auto' }}>
-                                                    <Select
+                                                    {/* <Select
                                                         placeholder='Share with'
                                                         styles={{
                                                             menu: (provided: any, state: any) => ({
@@ -1113,8 +1125,29 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         classNamePrefix="select"
                                                         onChange={onChange}
                                                         options={subscribers}
-                                                    />
+                                                    /> */}
+                                                    <Multiselect
+                                                    placeholder='Share with...'
+                                                    displayValue='name'
+                                                    // key={userDropdownOptions.toString()}
+                                                    // style={{ width: '100%', color: '#202025', 
+                                                    //     optionContainer: { // To change css for option container 
+                                                    //         zIndex: 9999
+                                                    //     }
+                                                    // }}
+                                                    options={subscribers} // Options to display in the dropdown
+                                                    selectedValues={selected} // Preselected value to persist in dropdown
+                                                    onSelect={(e, f) => {
+                                                        setSelected(e);
+                                                        return true
+                                                    }} // Function will trigger on select event
+                                                    onRemove={(e, f) => {
+                                                        setSelected(e);
+                                                        return true
+                                                    }}
+                                                />
                                                 </View>
+                                                
                                             </View> : null
                                     }
                                 </View>

@@ -36,6 +36,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const checkConnectionAlert = PreferredLanguageText('checkConnection');
     const unableToLoadCommentsAlert = PreferredLanguageText('unableToLoadComments')
 
+    console.log("props", props);
+    
     useEffect(() => {
         if (props.cue.channelId && props.cue.channelId !== '') {
             const data1 = props.cue.original;

@@ -133,7 +133,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             color: "#a2a2aa",
                             paddingTop: width < 768 ? 15 : 5
                         }}>
-                        Filter by Channels
+                        Filter
                     </Text>
                 </View>
                 <View
@@ -219,7 +219,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
                 <View style={{ width: width < 768 ? "100%" : "33.33%", display: "flex" }}>
                     <View style={{ width: "100%", paddingTop: width < 768 ? 40 : 40, paddingBottom: 15, backgroundColor: "white" }}>
-                        <Text style={{ fontSize: 12, color: "#a2a2aa" }}>Lectures</Text>
+                        <Text style={{ fontSize: 12, color: "#a2a2aa" }}>Lectures Only</Text>
                     </View>
                     <View
                         style={{
@@ -434,7 +434,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
         }
 
         setLoading(true);
-        const server = fetchAPI("");
+        const server = fetchAPI(parsedUser._id);
         server
             .query({
                 query: getEvents,
@@ -520,6 +520,9 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
             const timeString = datesEqual(event.start, event.end) ? moment(new Date(event.start)).format("MMMM Do YYYY, h:mm a") : moment(new Date(event.start)).format("MMMM Do YYYY, h:mm a") + " to " + moment(new Date(event.end)).format("MMMM Do YYYY, h:mm a")
 
             const descriptionString = event.description ? event.description + "- " + timeString : "" + timeString
+
+            console.log(user._id);
+            console.log(event.createdBy);
 
             if (user._id === event.createdBy && new Date(event.end) > new Date() && event.eventId) {
 
@@ -771,22 +774,23 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
         const { recurringId } = editEvent;
         return (<View
             style={{
-                width: width < 768 ? "100%" : "10%",
-                flexDirection: width < 768 ? "column" : "row",
-                display: "flex",
-                marginBottom: 10,
-                alignItems: width < 768 ? "center" : "flex-start"
-                // paddingLeft: 7
-                // justifyContent: 'center'
-            }}>
+              flex: 1,
+              backgroundColor: "white",
+              justifyContent: "center",
+              display: "flex",
+              paddingTop: 30
+            }}
+          >
             <TouchableOpacity
                 style={{
                     backgroundColor: "white",
                     overflow: "hidden",
                     height: 35,
-                    marginTop: 35
-                    // marginBottom: 20
-                }}
+                    marginTop: 15,
+                    width: "100%",
+                    justifyContent: "center",
+                    flexDirection: "row"
+                  }}
                 onPress={() => handleEdit()}
                 disabled={isSubmitDisabled || isEditingEvents || isDeletingEvents}>
                 <Text
@@ -807,13 +811,15 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 </Text>
             </TouchableOpacity>
             <TouchableOpacity
-                style={{
-                    backgroundColor: "white",
-                    overflow: "hidden",
-                    height: 35,
-                    marginTop: 35,
-                    marginLeft: width < 768 ? 0 : 20
-                }}
+               style={{
+                backgroundColor: "white",
+                overflow: "hidden",
+                height: 35,
+                marginTop: 15,
+                width: "100%",
+                justifyContent: "center",
+                flexDirection: "row"
+              }}
                 onPress={() => handleDelete(false)}
                 disabled={isEditingEvents || isDeletingEvents}>
                 <Text
@@ -839,9 +845,11 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     backgroundColor: "white",
                     overflow: "hidden",
                     height: 35,
-                    marginTop: 35,
-                    marginLeft: width < 768 ? 0 : 20
-                }}
+                    marginTop: 15,
+                    width: "100%",
+                    justifyContent: "center",
+                    flexDirection: "row"
+                  }}
                 onPress={() => handleDelete(true)}
                 disabled={isEditingEvents || isDeletingEvents}>
                 <Text
