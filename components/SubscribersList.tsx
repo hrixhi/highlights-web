@@ -21,6 +21,7 @@ import moment from "moment"
 import alert from './Alert';
 import Webview from './Webview'
 import QuizGrading from './QuizGrading';
+import Annotation from 'react-image-annotation'
 
 const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -83,6 +84,25 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
     const userSubscriptionInactivatedAlert = PreferredLanguageText('userSubscriptionInactivated')
     const userRemovedAlert = PreferredLanguageText('userRemoved');
     const alreadyUnsubscribedAlert = PreferredLanguageText('alreadyUnsubscribed')
+
+    const [annotation, setAnnotation] = useState<any>({})
+    const [annotations, setAnnotations] = useState<any[]>([])
+
+    const onSubmit = useCallback((ann: any) => {
+
+        const { geometry, data }: any = ann
+
+        const updatedAnnot = annotations.concat({
+            geometry,
+            data: {
+                ...data,
+                id: Math.random()
+            }
+        })
+
+        setAnnotations(updatedAnnot)
+
+    }, [annotations])
 
     if (props.cue && props.cue.submission) {
         categories.push('Submitted')
@@ -1234,10 +1254,27 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                             key={url}
                                                                             style={{ flex: 1 }}
                                                                         >
-                                                                            <Webview
-                                                                                key={url}
-                                                                                url={url}
-                                                                            />
+                                                                            <View style={{ position: 'relative', flex: 1 }}>
+                                                                                <View style={{ position: 'absolute', zIndex: 1, flex: 1 }}>
+                                                                                    <Webview
+                                                                                        style={{ width: '100%', }}
+                                                                                        key={url}
+                                                                                        url={url}
+                                                                                        style={{ resizeMode: 'cover', flex: 1 }}
+                                                                                    />
+                                                                                </View>
+                                                                                <View style={{ position: 'absolute', zIndex: 3, flex: 1 }}>
+                                                                                    <Annotation
+                                                                                        style={{ resizeMode: 'cover' }}
+                                                                                        // src={require('./default-images/transparent.png')}
+                                                                                        annotations={annotations}
+                                                                                        // type={this.state.type}
+                                                                                        value={annotation}
+                                                                                        onChange={(e: any) => setAnnotation(e)}
+                                                                                        onSubmit={onSubmit}
+                                                                                    />
+                                                                                </View>
+                                                                            </View>
                                                                         </View> : null)
                                                                 )
                                                             }
