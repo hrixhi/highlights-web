@@ -75,6 +75,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const [showEquationEditor, setShowEquationEditor] = useState(false)
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [shuffleQuiz, setShuffleQuiz] = useState(false);
+    const [creatingQuiz,setCreatingQuiz] = useState(false)
 
     const window = Dimensions.get("window");
     const screen = Dimensions.get("screen");
@@ -135,6 +136,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     console.log("Shuffle Quiz", shuffleQuiz)
 
     const createNewQuiz = useCallback(() => {
+        setCreatingQuiz(true)
         let error = false
         if (problems.length === 0) {
             Alert(enterOneProblemAlert)
@@ -199,7 +201,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         if (error) {
             return
         }
-
+        
         const server = fetchAPI('')
         const durationMinutes = (duration.hours * 60) + (duration.minutes) + (duration.seconds / 60);
         server.mutate({
@@ -212,6 +214,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 }
             }
         }).then(res => {
+            setCreatingQuiz(false)
             if (res.data && res.data.quiz.createQuiz !== 'error') {
                 storeDraft('quizDraft', '');
                 handleCreate(res.data.quiz.createQuiz)
@@ -464,12 +467,15 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             }
 
             if (selected.length === 0) {
+                
                 Alert(noStudentSelectedAlert, selectWhoToShareAlert)
+                setIsSubmitting(false)
                 return;
             }
 
             if ((submission || isQuiz) && deadline < initiateAt) {
                 Alert("Available from time must be set before deadline", "")
+                setIsSubmitting(false)
                 return;
             }
 
@@ -1550,6 +1556,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         await handleCreate()
                                     }
                                 }}
+                                disabled={creatingQuiz}
                                 style={{
                                     borderRadius: 15,
                                     backgroundColor: 'white'
