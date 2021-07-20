@@ -109,7 +109,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
         // Filter the meetings first 
         if (filterByLectures) {
             total = total.filter((e: any) => e.meeting)
-        } 
+        }
 
         if (filterChannels.length === 0) {
             setEvents(total);
@@ -120,7 +120,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
         }
 
     }, [filterChannels, filterByLectures])
-    
+
     const renderFilterEvents = () => {
 
         return (eventChannels.length > 0 ? (
@@ -238,25 +238,26 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             activeThumbColor="white"
                         />
                     </View>
-            </View>
+                </View>
 
-            {filterChannels.length === 0 && !filterByLectures ? null : <Text style={{
-            // width: '50%',
-            color: '#a2a2aa',
-            fontSize: 11,
-            paddingTop: 5,
-            paddingRight: 25,
-            textTransform: 'uppercase'
-          }}
-            onPress={() => {
-              setFilterChannels([]);
-              setFilterByLectures(false) 
-            }}
-          >
-            RESET
-          </Text>}
+                {filterChannels.length === 0 && !filterByLectures ? null : <Text style={{
+                    // width: '50%',
+                    color: '#a2a2aa',
+                    fontSize: 11,
+                    paddingTop: 5,
+                    paddingRight: 25,
+                    textTransform: 'uppercase'
+                }}
+                    onPress={() => {
+                        setFilterChannels([]);
+                        setFilterByLectures(false)
+                    }}
+                >
+                    RESET
+                </Text>}
             </View>
-        ) : null)    }
+        ) : null)
+    }
 
 
     // use effect for edit events
@@ -292,9 +293,22 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     };
 
     const handleCreate = useCallback(async () => {
+        console.log('creating event')
         if (start < new Date()) {
             Alert("Event must be set in the future.");
             return;
+        } else if (title === "") {
+            Alert("New Event/Lecture cannot be empty.");
+            return;
+        } else if (start > end) {
+            Alert("End time must be greater than start time.");
+            return
+        }
+        if (recurring) {
+            if (start > repeatTill) {
+                Alert("Repeat until must be set in the future.");
+                return
+            }
         }
 
         setIsCreatingEvents(true);
@@ -528,7 +542,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
                 setEditEvent(event)
                 setShowAddEvent(true)
-                        
+
             } else if (user._id === event.createdBy && new Date(event.end) < new Date() && event.eventId) {
                 Alert("Delete " + event.title + "?", descriptionString, [
                     {
@@ -562,7 +576,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
             } else {
 
-                
+
                 Alert(
                     event.title,
                     descriptionString
@@ -774,13 +788,13 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
         const { recurringId } = editEvent;
         return (<View
             style={{
-              flex: 1,
-              backgroundColor: "white",
-              justifyContent: "center",
-              display: "flex",
-              paddingTop: 30
+                flex: 1,
+                backgroundColor: "white",
+                justifyContent: "center",
+                display: "flex",
+                paddingTop: 30
             }}
-          >
+        >
             <TouchableOpacity
                 style={{
                     backgroundColor: "white",
@@ -790,7 +804,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     width: "100%",
                     justifyContent: "center",
                     flexDirection: "row"
-                  }}
+                }}
                 onPress={() => handleEdit()}
                 disabled={isSubmitDisabled || isEditingEvents || isDeletingEvents}>
                 <Text
@@ -811,15 +825,15 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 </Text>
             </TouchableOpacity>
             <TouchableOpacity
-               style={{
-                backgroundColor: "white",
-                overflow: "hidden",
-                height: 35,
-                marginTop: 15,
-                width: "100%",
-                justifyContent: "center",
-                flexDirection: "row"
-              }}
+                style={{
+                    backgroundColor: "white",
+                    overflow: "hidden",
+                    height: 35,
+                    marginTop: 15,
+                    width: "100%",
+                    justifyContent: "center",
+                    flexDirection: "row"
+                }}
                 onPress={() => handleDelete(false)}
                 disabled={isEditingEvents || isDeletingEvents}>
                 <Text
@@ -849,7 +863,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     width: "100%",
                     justifyContent: "center",
                     flexDirection: "row"
-                  }}
+                }}
                 onPress={() => handleDelete(true)}
                 disabled={isEditingEvents || isDeletingEvents}>
                 <Text
@@ -1177,7 +1191,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 // marginBottom: 20
                                             }}
                                             onPress={() => handleCreate()}
-                                            disabled={isSubmitDisabled || isCreatingEvents}>
+                                            disabled={isCreatingEvents}>
                                             <Text
                                                 style={{
                                                     textAlign: "center",

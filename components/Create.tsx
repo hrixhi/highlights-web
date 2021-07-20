@@ -17,7 +17,7 @@ import {
 } from "react-native-pell-rich-editor";
 import FileUpload from './UploadFiles';
 import Alert from '../components/Alert'
-import Select from 'react-select';
+// import Select from 'react-select';
 import QuizCreate from './QuizCreate';
 import DurationPicker from 'react-duration-picker'
 import TeXToSVG from "tex-to-svg";
@@ -71,6 +71,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const [isQuiz, setIsQuiz] = useState(false)
     const [problems, setProblems] = useState<any[]>([])
     const [headers, setHeaders] = useState<any>({});
+    const [creatingQuiz, setCreatingQuiz] = useState(false)
 
     const [timer, setTimer] = useState(false)
     const [duration, setDuration] = useState({
@@ -107,7 +108,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const onDimensionsChange = useCallback(({ window, screen }: any) => {
         setDimensions({ window, screen })
     }, []);
-
+    console.log('creatingQuiz', creatingQuiz)
     useEffect(() => {
         Dimensions.addEventListener("change", onDimensionsChange);
         return () => {
@@ -138,6 +139,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     }, [cue])
 
     const createNewQuiz = useCallback(() => {
+
         let error = false
         if (problems.length === 0) {
             Alert(enterOneProblemAlert)
@@ -191,18 +193,18 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
                     keys[option.option] = 1
                 })
-                
+
                 if (!optionFound) {
                     Alert(eachOptionOneCorrectAlert)
                     error = true;
                 }
             }
-            
+
         })
         if (error) {
             return
         }
-
+        setCreatingQuiz(true)
         const server = fetchAPI('')
         const durationMinutes = (duration.hours * 60) + (duration.minutes) + (duration.seconds / 60);
         server.mutate({
@@ -217,6 +219,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 }
             }
         }).then(res => {
+            setCreatingQuiz(false)
             if (res.data && res.data.quiz.createQuiz !== 'error') {
                 storeDraft('quizDraft', '');
                 handleCreate(res.data.quiz.createQuiz)
@@ -266,7 +269,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             name: sub.label
                         }
                     })
-                    
+
                     setSubscribers(format)
                     // clear selected
                     setSelected(format)
@@ -364,7 +367,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 title
             }
             saveCue = JSON.stringify(obj)
-        } else if (isQuiz)  {
+        } else if (isQuiz) {
             const quiz = {
                 title,
                 problems,
@@ -925,27 +928,27 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         {
                             isQuiz ?
                                 (
-                                <View style={{
-                                    width: '100%',
-                                    flexDirection: 'column',
-                                }}>
-                                    <CustomTextInput
-                                        value={quizInstructions}
-                                        placeholder="Instructions"
-                                        onChangeText={val => setQuizInstructions(val)}
-                                        placeholderTextColor={"#a2a2aa"}
-                                        required={false}
-                                        hasMultipleLines={true}
-                                    />
-                                    <QuizCreate
-                                        problems={problems}
-                                        headers={headers}
-                                        setProblems={(p: any) => setProblems(p)}
-                                        setHeaders={(h: any) => 
-                                        setHeaders(h)}
-                                    />
-                                </View>
-                               )
+                                    <View style={{
+                                        width: '100%',
+                                        flexDirection: 'column',
+                                    }}>
+                                        <CustomTextInput
+                                            value={quizInstructions}
+                                            placeholder="Instructions"
+                                            onChangeText={val => setQuizInstructions(val)}
+                                            placeholderTextColor={"#a2a2aa"}
+                                            required={false}
+                                            hasMultipleLines={true}
+                                        />
+                                        <QuizCreate
+                                            problems={problems}
+                                            headers={headers}
+                                            setProblems={(p: any) => setProblems(p)}
+                                            setHeaders={(h: any) =>
+                                                setHeaders(h)}
+                                        />
+                                    </View>
+                                )
                                 : (imported ?
                                     (
                                         type === 'mp4' || type === 'mp3' || type === 'mov' || type === 'mpeg' || type === 'mp2' || type === 'wav' ?
@@ -1127,27 +1130,27 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         options={subscribers}
                                                     /> */}
                                                     <Multiselect
-                                                    placeholder='Share with...'
-                                                    displayValue='name'
-                                                    // key={userDropdownOptions.toString()}
-                                                    // style={{ width: '100%', color: '#202025', 
-                                                    //     optionContainer: { // To change css for option container 
-                                                    //         zIndex: 9999
-                                                    //     }
-                                                    // }}
-                                                    options={subscribers} // Options to display in the dropdown
-                                                    selectedValues={selected} // Preselected value to persist in dropdown
-                                                    onSelect={(e, f) => {
-                                                        setSelected(e);
-                                                        return true
-                                                    }} // Function will trigger on select event
-                                                    onRemove={(e, f) => {
-                                                        setSelected(e);
-                                                        return true
-                                                    }}
-                                                />
+                                                        placeholder='Share with...'
+                                                        displayValue='name'
+                                                        // key={userDropdownOptions.toString()}
+                                                        // style={{ width: '100%', color: '#202025', 
+                                                        //     optionContainer: { // To change css for option container 
+                                                        //         zIndex: 9999
+                                                        //     }
+                                                        // }}
+                                                        options={subscribers} // Options to display in the dropdown
+                                                        selectedValues={selected} // Preselected value to persist in dropdown
+                                                        onSelect={(e, f) => {
+                                                            setSelected(e);
+                                                            return true
+                                                        }} // Function will trigger on select event
+                                                        onRemove={(e, f) => {
+                                                            setSelected(e);
+                                                            return true
+                                                        }}
+                                                    />
                                                 </View>
-                                                
+
                                             </View> : null
                                     }
                                 </View>
@@ -1187,8 +1190,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             flexDirection: 'row',
                                                             backgroundColor: 'white',
                                                         }}>
-                                                           <Text style={styles.text}>
-                                                                Available 
+                                                            <Text style={styles.text}>
+                                                                Available
                                                             </Text>
                                                             <Datetime
                                                                 value={initiateAt}
@@ -1196,10 +1199,10 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                     const date = new Date(event)
 
                                                                     if (date < new Date()) return;
-                                                                        setInitiateAt(date)
-                                                                    }}
-                                                                    isValidDate={disablePastDt}
-                                                                />
+                                                                    setInitiateAt(date)
+                                                                }}
+                                                                isValidDate={disablePastDt}
+                                                            />
 
                                                         </View>
                                                         : null
@@ -1219,29 +1222,29 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                 backgroundColor: 'white',
                                                                 marginLeft: 50
                                                             }}>
-                                                                 <Text style={styles.text}>
-                                                                {PreferredLanguageText('deadline')}
-                                                            </Text>
-                                                            <Datetime
-                                                                value={deadline}
-                                                                onChange={(event: any) => {
-                                                                    const date = new Date(event)
+                                                                <Text style={styles.text}>
+                                                                    {PreferredLanguageText('deadline')}
+                                                                </Text>
+                                                                <Datetime
+                                                                    value={deadline}
+                                                                    onChange={(event: any) => {
+                                                                        const date = new Date(event)
 
-                                                                    if (date < new Date()) return;
+                                                                        if (date < new Date()) return;
 
-                                                                    setDeadline(date)
-                                                                }}
-                                                                isValidDate={disablePastDt}
-                                                            />
-                                                                
+                                                                        setDeadline(date)
+                                                                    }}
+                                                                    isValidDate={disablePastDt}
+                                                                />
+
 
                                                             </View>
                                                             : null
                                                     }
                                                 </View>
 
-                                            {/* Add it here */}
-                                        </View>
+                                                {/* Add it here */}
+                                            </View>
 
                                         </View> : null
                                 }
@@ -1250,7 +1253,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
                                             <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
                                                 <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
-                                                    Grade Weight 
+                                                    Grade Weight
                                                 </Text>
                                             </View>
                                             <View style={{ flexDirection: 'row' }}>
@@ -1564,31 +1567,31 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             }
                         </View>
                         {/* if Quiz then ask Shuffle */}
-                        {isQuiz ?  <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
-                                        <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                            <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
-                                                Shuffle Questions
-                                            </Text>
-                                        </View>
-                                        <View style={{ flexDirection: 'row' }}>
-                                            <View style={{
-                                                backgroundColor: 'white',
-                                                height: 40,
-                                                marginRight: 10
-                                            }}>
-                                                <Switch
-                                                    value={shuffleQuiz}
-                                                    onValueChange={() => setShuffleQuiz(!shuffleQuiz)}
-                                                    style={{ height: 20 }}
-                                                    trackColor={{
-                                                        false: '#f4f4f6',
-                                                        true: '#a2a2aa'
-                                                    }}
-                                                    activeThumbColor='white'
-                                                />
-                                            </View>
-                                        </View>
-                                    </View> : null}
+                        {isQuiz ? <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
+                            <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
+                                <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
+                                    Shuffle Questions
+                                </Text>
+                            </View>
+                            <View style={{ flexDirection: 'row' }}>
+                                <View style={{
+                                    backgroundColor: 'white',
+                                    height: 40,
+                                    marginRight: 10
+                                }}>
+                                    <Switch
+                                        value={shuffleQuiz}
+                                        onValueChange={() => setShuffleQuiz(!shuffleQuiz)}
+                                        style={{ height: 20 }}
+                                        trackColor={{
+                                            false: '#f4f4f6',
+                                            true: '#a2a2aa'
+                                        }}
+                                        activeThumbColor='white'
+                                    />
+                                </View>
+                            </View>
+                        </View> : null}
                     </View>
                     <View style={styles.footer}>
                         <View
@@ -1609,6 +1612,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         await handleCreate()
                                     }
                                 }}
+                                disabled={true}
                                 style={{
                                     borderRadius: 15,
                                     backgroundColor: 'white'

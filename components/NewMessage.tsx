@@ -31,6 +31,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
     const [title, setTitle] = useState('')
 
     const [showImportOptions, setShowImportOptions] = useState(false)
+    const [sendingThread, setSendingThread] = useState(false)
 
     const unableToPostAlert = PreferredLanguageText('unableToPost');
     const somethingWentWrongAlert = PreferredLanguageText('somethingWentWrong');
@@ -72,8 +73,14 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
     }, [channelId])
 
     const createDirectMessage = useCallback(async () => {
+        setSendingThread(true)
         const u = await AsyncStorage.getItem('user')
         if (!message || message === '' || !u) {
+            setSendingThread(false)
+            return
+        }
+        if (message.replace(/\&nbsp;/g, '').replace(/\s/g, '') === '<div></div>') {
+            setSendingThread(false)
             return
         }
         const user = JSON.parse(u)
@@ -101,18 +108,27 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 userId: user._id
             }
         }).then(res => {
+            setSendingThread(false)
             if (res.data.message.create) {
                 props.back()
             } else {
                 Alert(unableToPostAlert, checkConnectionAlert)
             }
         }).catch(err => {
+            setSendingThread(false)
             Alert(somethingWentWrongAlert, checkConnectionAlert)
         })
     }, [props.users, message, props.channelId, imported, type, title, url])
 
     const createThreadMessage = useCallback(async () => {
+        console.log('sending thread')
+        setSendingThread(true)
         if (!message || message === '') {
+            setSendingThread(false)
+            return
+        }
+        if (message.replace(/\&nbsp;/g, '').replace(/\s/g, '') === '<div></div>') {
+            setSendingThread(false)
             return
         }
         const uString: any = await AsyncStorage.getItem('user')
@@ -142,12 +158,14 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 category: customCategory
             }
         }).then(res => {
+            setSendingThread(false)
             if (res.data.thread.writeMessage) {
                 props.back()
             } else {
                 Alert(unableToPostAlert, checkConnectionAlert)
             }
         }).catch(err => {
+            setSendingThread(false)
             Alert(somethingWentWrongAlert, checkConnectionAlert)
         })
 
@@ -229,6 +247,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 {
                     showImportOptions && !imported ?
                         <FileUpload
+                            action={'message_send'}
                             back={() => setShowImportOptions(false)}
                             onUpload={(u: any, t: any) => {
                                 console.log(t)
@@ -442,6 +461,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 createThreadMessage()
                             }
                         }}
+                        disabled={sendingThread}
                         style={{
                             borderRadius: 15,
                             backgroundColor: 'white'
