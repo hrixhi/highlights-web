@@ -108,7 +108,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const onDimensionsChange = useCallback(({ window, screen }: any) => {
         setDimensions({ window, screen })
     }, []);
-    console.log('creatingQuiz', creatingQuiz)
     useEffect(() => {
         Dimensions.addEventListener("change", onDimensionsChange);
         return () => {
@@ -140,6 +139,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
     const createNewQuiz = useCallback(() => {
 
+        setIsSubmitting(true)
+        setCreatingQuiz(true)
         let error = false
         if (problems.length === 0) {
             Alert(enterOneProblemAlert)
@@ -204,7 +205,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         if (error) {
             return
         }
-        setCreatingQuiz(true)
+
         const server = fetchAPI('')
         const durationMinutes = (duration.hours * 60) + (duration.minutes) + (duration.seconds / 60);
         server.mutate({
@@ -220,7 +221,9 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             }
         }).then(res => {
             setCreatingQuiz(false)
+            setIsSubmitting(false)
             if (res.data && res.data.quiz.createQuiz !== 'error') {
+                setCreatingQuiz(false)
                 storeDraft('quizDraft', '');
                 handleCreate(res.data.quiz.createQuiz)
             }
@@ -395,7 +398,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     }, [])
 
     const handleCreate = useCallback(async (quizId?: string) => {
-
         setIsSubmitting(true)
 
         if (isSubmitting) return;
@@ -475,7 +477,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             const stringifiedCues = JSON.stringify(subCues)
             await AsyncStorage.setItem('cues', stringifiedCues)
             storeDraft('cueDraft', '')
-            setIsSubmitting(false)
+            // setIsSubmitting(false)
             props.closeModal()
         } else {
             // CHANNEL CUE
@@ -485,12 +487,15 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             }
 
             if (selected.length === 0) {
+
                 Alert(noStudentSelectedAlert, selectWhoToShareAlert)
+                setIsSubmitting(false)
                 return;
             }
 
             if ((submission || isQuiz) && deadline < initiateAt) {
                 Alert("Available from time must be set before deadline", "")
+                setIsSubmitting(false)
                 return;
             }
 
@@ -499,7 +504,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             const userIds: any[] = []
             if (selected.length !== 0) {
                 selected.map((item) => {
-                    userIds.push(item.id)
+                    userIds.push(item.value)
                 })
             }
 
@@ -1612,7 +1617,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         await handleCreate()
                                     }
                                 }}
-                                disabled={true}
+                                disabled={creatingQuiz}
                                 style={{
                                     borderRadius: 15,
                                     backgroundColor: 'white'
