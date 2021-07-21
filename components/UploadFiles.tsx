@@ -21,11 +21,12 @@ const FileUpload: React.FC<any> = (props: any) => {
         if (type === 'mpga') {
             type = 'mp3'
         }
-        if (type === 'png' || type === 'jpeg' || type === 'jpg' || type === 'gif') {
+        if ((type === 'png' || type === 'jpeg' || type === 'jpg' || type === 'gif') && props.action !== 'message_send') {
             alert('Error! Images should be directly added to the text editor using the gallery icon in the toolbar.')
             setUploading(false)
             return
         }
+
         fileUpload(file, type).then(response => {
             const { data } = response;
             if (data.status === "success") {
