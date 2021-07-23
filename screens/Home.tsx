@@ -90,6 +90,9 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   const areYouSureUnsubscribeAlert = PreferredLanguageText('areYouSureUnsubscribe')
   const keepContentAndUnsubscribeAlert = PreferredLanguageText('keepContentAndUnsubscribe')
 
+
+
+
   useEffect(() => {
     if (email && !validateEmail(email.toString().toLowerCase())) {
       setEmailValidError(enterValidEmailError);
@@ -176,6 +179,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               }
             }).then(res => {
               if (res.data.threadStatus.totalUnreadDiscussionThreads) {
+                console.log('setting in unread threads in useeffect', res.data.threadStatus.totalUnreadDiscussionThreads)
                 setUnreadDiscussionThreads(res.data.threadStatus.totalUnreadDiscussionThreads)
               }
             })
@@ -214,9 +218,12 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     if (channelId !== '') {
       const u = await AsyncStorage.getItem('user')
       if (u) {
+
         const user = JSON.parse(u)
+        console.log('updating discussions count', user._id)
         updateDiscussionNotidCounts(user._id)
       }
+
     }
 
   }, [channelId])
@@ -263,6 +270,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
       }
     }).then(res => {
       if (res.data.threadStatus.totalUnreadDiscussionThreads !== undefined && res.data.threadStatus.totalUnreadDiscussionThreads !== null) {
+        console.log('after upading discussion', res.data.threadStatus.totalUnreadDiscussionThreads)
         setUnreadDiscussionThreads(res.data.threadStatus.totalUnreadDiscussionThreads)
       }
     })
@@ -696,7 +704,14 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
       }
       // OPEN WALKTHROUGH IF FIRST TIME LOAD
       if (!init && dimensions.window.width >= 1024) {
-        openModal('Calendar')
+        let lastOpened = await AsyncStorage.getItem('lastopened')
+        if (lastOpened) {
+          openModal(lastOpened)
+        }
+        else {
+          openModal('Calendar')
+
+        }
       }
       // HANDLE PROFILE
       if (u) {
@@ -988,6 +1003,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
   const openModal = useCallback((type) => {
     setModalType(type)
+    AsyncStorage.setItem('lastopened', type)
   }, [sheetRef, cues])
 
   const openUpdate = useCallback((key, index, pageNumber, _id, by, channId) => {

@@ -15,7 +15,7 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     // const [meetingOn, setMeetingOn] = useState(false)
     const [isOwner, setIsOwner] = useState(false)
     const [school, setSchool] = useState<any>(null)
-
+    console.log('props.unreadDiscussionThreads', props.unreadDiscussionThreads)
     useEffect(() => {
         (
             async () => {

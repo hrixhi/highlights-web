@@ -293,7 +293,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     };
 
     const handleCreate = useCallback(async () => {
-        console.log('creating event')
+
         if (start < new Date()) {
             Alert("Event must be set in the future.");
             return;
