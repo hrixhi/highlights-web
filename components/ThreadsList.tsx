@@ -12,6 +12,12 @@ import ThreadReplyCard from './ThreadReplyCard';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Collapse } from 'react-collapse';
 import { PreferredLanguageText } from '../helpers/LanguageContext';
+import {
+    Menu,
+    MenuOptions,
+    MenuOption,
+    MenuTrigger,
+} from 'react-native-popup-menu';
 
 
 const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
@@ -156,8 +162,8 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
             borderTopRightRadius: props.cueId ? 0 : 30,
             borderTopLeftRadius: props.cueId ? 0 : 30,
             // marginBottom: props.cueId ? 0 : 25,
-            borderBottomColor: '#f8f8f8',
-            borderBottomWidth: props.cueId ? 0 : 1
+            // borderBottomColor: '#f4f4f6',
+            // borderBottomWidth: props.cueId ? 0 : 1
         }}>
             <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 25 }}>
                 {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
@@ -185,7 +191,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         </TouchableOpacity>
                     </View>
                     :
-                    <View style={{ backgroundColor: 'white', flexDirection: 'row', paddingBottom: 25, maxWidth: 500 }}>
+                    <View style={{ backgroundColor: 'white', flexDirection: 'row', paddingBottom: !props.cueId ? 0 : 25, maxWidth: 500 }}>
                         {
                             !props.cueId
                                 ? <Text
@@ -200,27 +206,28 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                     }}>
                                     {PreferredLanguageText('discussion')}
                                 </Text>
-                                : <TouchableOpacity
-                                    onPress={() => setShowComments(!showComments)}
-                                    style={{
-                                        flex: 1,
-                                        flexDirection: 'row',
-                                        // paddingTop: 40,
-                                        paddingBottom: 40
-                                    }}>
-                                    <Text style={{
-                                        lineHeight: 23,
-                                        marginRight: 10,
-                                        color: '#a2a2ac',
-                                        fontSize: 11,
-                                        textTransform: 'uppercase'
-                                    }}>
-                                        {PreferredLanguageText('comments')}
-                                    </Text>
-                                    <Text style={{ lineHeight: 21 }}>
-                                        <Ionicons size={14} name={showComments ? 'caret-down-outline' : 'caret-forward-outline'} color='#a2a2ac' />
-                                    </Text>
-                                </TouchableOpacity>
+                                : <View style={{ flex: 1, flexDirection: 'row' }} />
+                            // <TouchableOpacity
+                            //     onPress={() => setShowComments(!showComments)}
+                            //     style={{
+                            //         flex: 1,
+                            //         flexDirection: 'row',
+                            //         // paddingTop: 40,
+                            //         paddingBottom: 40
+                            //     }}>
+                            //     <Text style={{
+                            //         lineHeight: 23,
+                            //         marginRight: 10,
+                            //         color: '#202025',
+                            //         fontSize: 11,
+                            //         textTransform: 'uppercase'
+                            //     }}>
+                            //         {PreferredLanguageText('comments')}
+                            //     </Text>
+                            //     <Text style={{ lineHeight: 21 }}>
+                            //         <Ionicons size={14} name={showComments ? 'caret-down-outline' : 'caret-forward-outline'} color='#202025' />
+                            //     </Text>
+                            // </TouchableOpacity>
                         }
                         {
                             showComments ?
@@ -236,7 +243,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                         textAlign: 'right',
                                         lineHeight: 23,
                                         marginRight: 20,
-                                        color: '#a2a2ac',
+                                        color: '#202025',
                                         fontSize: 11,
                                     }}>
                                         NEW POST
@@ -250,7 +257,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 {
                     threads.length === 0 ?
                         <View style={{ backgroundColor: 'white', flex: 1 }}>
-                            <Text style={{ width: '100%', color: '#a2a2ac', fontSize: 22, paddingTop: 100, paddingBottom: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                            <Text style={{ width: '100%', color: '#a2a2aa', fontSize: 22, paddingTop: 100, paddingBottom: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                                 {
                                     !props.cueId ? PreferredLanguageText('noPosts') : PreferredLanguageText('noComments')
                                 }
@@ -265,7 +272,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                     flexDirection: 'column',
                                     backgroundColor: 'white'
                                 }}>
-                                    <ActivityIndicator color={'#a2a2ac'} />
+                                    <ActivityIndicator color={'#a2a2aa'} />
                                 </View> :
                                 <View style={{
                                     width: '100%',
@@ -345,49 +352,40 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                             }}>
                                                 {
                                                     props.cueId === null ?
-                                                        <ScrollView
-                                                            contentContainerStyle={{
-                                                                height: 20, width: '100%',
-                                                                paddingTop: 15
-                                                            }}
-                                                            style={{}}
-                                                            horizontal={true}
-                                                            showsHorizontalScrollIndicator={false}
-                                                        >
-                                                            {
-                                                                categories.length === 0 ? null :
-                                                                    <TouchableOpacity
-                                                                        style={filterChoice === 'All' ? styles.cusCategoryOutline : styles.cusCategory}
-                                                                        onPress={() => setFilterChoice('All')}>
-                                                                        <Text
-                                                                            style={{
-                                                                                color: '#a2a2ac',
-                                                                                lineHeight: 20,
-                                                                                fontSize: 12
-                                                                            }}
-                                                                        >
-                                                                            {PreferredLanguageText('all')}
-                                                                        </Text>
-                                                                    </TouchableOpacity>
-                                                            }
-                                                            {
-                                                                categories.map((category: string) => {
-                                                                    return <TouchableOpacity
-                                                                        key={Math.random()}
-                                                                        style={filterChoice === category ? styles.cusCategoryOutline : styles.cusCategory}
-                                                                        onPress={() => setFilterChoice(category)}>
-                                                                        <Text
-                                                                            style={{
-                                                                                color: '#a2a2ac',
-                                                                                lineHeight: 20,
-                                                                                fontSize: 12
-                                                                            }}>
-                                                                            {category}
-                                                                        </Text>
-                                                                    </TouchableOpacity>
-                                                                })
-                                                            }
-                                                        </ScrollView> : null
+                                                        <Menu
+                                                            onSelect={(cat: any) => setFilterChoice(cat)}>
+                                                            <MenuTrigger>
+                                                                <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#a2a2aa' }}>
+                                                                    {filterChoice === '' ? 'All' : filterChoice}<Ionicons name='caret-down' size={14} />
+                                                                </Text>
+                                                            </MenuTrigger>
+                                                            <MenuOptions customStyles={{
+                                                                optionsContainer: {
+                                                                    padding: 10,
+                                                                    borderRadius: 15,
+                                                                    shadowOpacity: 0,
+                                                                    borderWidth: 1,
+                                                                    borderColor: '#f4f4f6'
+                                                                }
+                                                            }}>
+                                                                <MenuOption
+                                                                    value={''}>
+                                                                    <Text>
+                                                                        All
+                                                                    </Text>
+                                                                </MenuOption>
+                                                                {
+                                                                    categories.map((category: any) => {
+                                                                        return <MenuOption
+                                                                            value={category}>
+                                                                            <Text>
+                                                                                {category}
+                                                                            </Text>
+                                                                        </MenuOption>
+                                                                    })
+                                                                }
+                                                            </MenuOptions>
+                                                        </Menu> : null
                                                 }
                                             </View>
                                     }
@@ -448,7 +446,7 @@ const styleObject = () => {
             height: 22,
             borderRadius: 10,
             borderWidth: 1,
-            borderColor: '#a2a2ac',
+            borderColor: '#a2a2aa',
             color: 'white'
         }
     })

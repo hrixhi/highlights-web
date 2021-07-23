@@ -17,7 +17,7 @@ import {
 } from "react-native-pell-rich-editor";
 import FileUpload from './UploadFiles';
 import Alert from '../components/Alert'
-import Select from 'react-select';
+// import Select from 'react-select';
 import QuizCreate from './QuizCreate';
 import DurationPicker from 'react-duration-picker'
 import TeXToSVG from "tex-to-svg";
@@ -29,6 +29,12 @@ import ReactPlayer from 'react-player'
 import Webview from './Webview'
 import Multiselect from 'multiselect-react-dropdown';
 
+import {
+    Menu,
+    MenuOptions,
+    MenuOption,
+    MenuTrigger,
+} from 'react-native-popup-menu';
 
 
 const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
@@ -71,6 +77,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const [isQuiz, setIsQuiz] = useState(false)
     const [problems, setProblems] = useState<any[]>([])
     const [headers, setHeaders] = useState<any>({});
+    const [creatingQuiz, setCreatingQuiz] = useState(false)
+    const [frequencyName, setFrequencyName] = useState('Day')
 
     const [timer, setTimer] = useState(false)
     const [duration, setDuration] = useState({
@@ -81,6 +89,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [shuffleQuiz, setShuffleQuiz] = useState(false);
     const [quizInstructions, setQuizInstructions] = useState('');
+
+    const [channelName, setChannelName] = useState('')
 
     const window = Dimensions.get("window");
     const screen = Dimensions.get("screen");
@@ -107,7 +117,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const onDimensionsChange = useCallback(({ window, screen }: any) => {
         setDimensions({ window, screen })
     }, []);
-
     useEffect(() => {
         Dimensions.addEventListener("change", onDimensionsChange);
         return () => {
@@ -138,6 +147,9 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     }, [cue])
 
     const createNewQuiz = useCallback(() => {
+
+        setIsSubmitting(true)
+        setCreatingQuiz(true)
         let error = false
         if (problems.length === 0) {
             Alert(enterOneProblemAlert)
@@ -191,13 +203,13 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
                     keys[option.option] = 1
                 })
-                
+
                 if (!optionFound) {
                     Alert(eachOptionOneCorrectAlert)
                     error = true;
                 }
             }
-            
+
         })
         if (error) {
             return
@@ -217,7 +229,10 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 }
             }
         }).then(res => {
+            setCreatingQuiz(false)
+            setIsSubmitting(false)
             if (res.data && res.data.quiz.createQuiz !== 'error') {
+                setCreatingQuiz(false)
                 storeDraft('quizDraft', '');
                 handleCreate(res.data.quiz.createQuiz)
             }
@@ -266,7 +281,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             name: sub.label
                         }
                     })
-                    
+
                     setSubscribers(format)
                     // clear selected
                     setSelected(format)
@@ -364,7 +379,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 title
             }
             saveCue = JSON.stringify(obj)
-        } else if (isQuiz)  {
+        } else if (isQuiz) {
             const quiz = {
                 title,
                 problems,
@@ -392,7 +407,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     }, [])
 
     const handleCreate = useCallback(async (quizId?: string) => {
-
         setIsSubmitting(true)
 
         if (isSubmitting) return;
@@ -472,7 +486,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             const stringifiedCues = JSON.stringify(subCues)
             await AsyncStorage.setItem('cues', stringifiedCues)
             storeDraft('cueDraft', '')
-            setIsSubmitting(false)
+            // setIsSubmitting(false)
             props.closeModal()
         } else {
             // CHANNEL CUE
@@ -482,12 +496,15 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             }
 
             if (selected.length === 0) {
+
                 Alert(noStudentSelectedAlert, selectWhoToShareAlert)
+                setIsSubmitting(false)
                 return;
             }
 
             if ((submission || isQuiz) && deadline < initiateAt) {
                 Alert("Available from time must be set before deadline", "")
+                setIsSubmitting(false)
                 return;
             }
 
@@ -496,7 +513,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             const userIds: any[] = []
             if (selected.length !== 0) {
                 selected.map((item) => {
-                    userIds.push(item.id)
+                    userIds.push(item.value)
                 })
             }
 
@@ -677,7 +694,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             // paddingRight: 25,
                             width: '100%'
                         }}>
-                            <Ionicons name='bookmark' size={34} color={starred ? '#d91d56' : '#a2a2ac'} />
+                            <Ionicons name='bookmark' size={34} color={starred ? '#d91d56' : '#a2a2aa'} />
                         </Text>
                     </TouchableOpacity>
                 </View>
@@ -703,9 +720,9 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     iconSize={12}
                                     editor={RichText}
                                     disabled={false}
-                                    iconTint={"#a2a2ac"}
-                                    selectedIconTint={"#a2a2ac"}
-                                    disabledIconTint={"#a2a2ac"}
+                                    iconTint={"#a2a2aa"}
+                                    selectedIconTint={"#a2a2aa"}
+                                    disabledIconTint={"#a2a2aa"}
                                     actions={
                                         imported || isQuiz ? [""] :
                                             [
@@ -746,7 +763,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         {
                             !isQuiz ?
                                 <Text style={{
-                                    color: '#a2a2ac',
+                                    color: '#a2a2aa',
                                     fontSize: 11,
                                     lineHeight: 30,
                                     textAlign: 'right',
@@ -763,7 +780,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         {
                             isQuiz ? null :
                                 <Text style={{
-                                    color: '#a2a2ac',
+                                    color: '#a2a2aa',
                                     fontSize: 11,
                                     lineHeight: 30,
                                     textAlign: 'right',
@@ -776,7 +793,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 </Text>
                         }
                         <Text style={{
-                            color: '#a2a2ac',
+                            color: '#a2a2aa',
                             fontSize: 11,
                             lineHeight: 30,
                             textAlign: 'right',
@@ -800,7 +817,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     showEquationEditor ?
                         <View style={{ width: '100%', flexDirection: width < 768 ? 'column' : 'row', paddingBottom: 20 }}>
                             <View style={{
-                                borderColor: '#f8f8f8',
+                                borderColor: '#f4f4f6',
                                 borderWidth: 1,
                                 borderRadius: 15,
                                 padding: 10,
@@ -822,10 +839,10 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 }}
                                 onPress={() => insertEquation()}
                             >
-                                <Ionicons name='add-circle-outline' color='#a2a2ac' size={20} />
+                                <Ionicons name='add-circle-outline' color='#a2a2aa' size={20} />
                             </TouchableOpacity>
                             <View style={{ minWidth: '40%', flex: 1, paddingVertical: 5, justifyContent: 'center', }}>
-                                <Text style={{ flex: 1, fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
+                                <Text style={{ flex: 1, fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
                                     ^ → Superscript, _ → Subscript, int → Integral, sum → Summation, prod → Product, sqrt → Square root, bar → Bar over letter, alpha, beta, ... omega → Small Greek letter, Alpha, Beta, ... Omega → Capital Greek letter
                                 </Text>
                             </View>
@@ -843,13 +860,13 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     {
                         imported || isQuiz ?
                             <View style={{ display: 'flex', flexDirection: width < 768 ? 'column' : 'row', overflow: 'visible' }}>
-                                <View style={{ width: width < 768 ? '100%' : '33.33%', borderRightWidth: 0, borderColor: '#f8f8f8', paddingRight: 15, display: 'flex', flexDirection: 'row' }}>
+                                <View style={{ width: width < 768 ? '100%' : '33.33%', borderRightWidth: 0, borderColor: '#f4f4f6', paddingRight: 15, display: 'flex', flexDirection: 'row' }}>
                                     <TextInput
                                         value={title}
                                         style={styles.input}
                                         placeholder={PreferredLanguageText('title')}
                                         onChangeText={val => setTitle(val)}
-                                        placeholderTextColor={'#a2a2ac'}
+                                        placeholderTextColor={'#a2a2aa'}
                                     />
                                     <TouchableOpacity
                                         style={{
@@ -858,11 +875,11 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         }}
                                         onPress={() => clearAll()}
                                     >
-                                        <Ionicons name="trash-outline" color="#a2a2ac" size={20} style={{ alignSelf: 'center' }} />
+                                        <Ionicons name="trash-outline" color="#a2a2aa" size={20} style={{ alignSelf: 'center' }} />
                                         <Text
                                             style={{
                                                 fontSize: 9,
-                                                color: "#a2a2ac",
+                                                color: "#a2a2aa",
                                                 textAlign: "center"
                                             }}>
                                             Remove
@@ -871,10 +888,10 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 </View>
                                 {
                                     isQuiz ?
-                                        <View style={{ width: width < 768 ? '100%' : '31.67%', borderRightWidth: 0, borderColor: '#f8f8f8', paddingTop: 10 }}>
+                                        <View style={{ width: width < 768 ? '100%' : '31.67%', borderRightWidth: 0, borderColor: '#f4f4f6', paddingTop: 10 }}>
                                             <View style={{ width: '100%', paddingBottom: 15, backgroundColor: 'white' }}>
-                                                <Text style={{ fontSize: 15, color: '#a2a2ac' }}>
-                                                    <Ionicons name='timer-outline' size={20} color={'#a2a2ac'} />
+                                                <Text style={{ fontSize: 15, color: '#a2a2aa' }}>
+                                                    <Ionicons name='timer-outline' size={20} color={'#a2a2aa'} />
                                                 </Text>
                                             </View>
                                             <View style={{
@@ -897,7 +914,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     }}
                                                     style={{ height: 20 }}
                                                     trackColor={{
-                                                        false: '#f8f8f8',
+                                                        false: '#f4f4f6',
                                                         true: '#3B64F8'
                                                     }}
                                                     activeThumbColor='white'
@@ -907,7 +924,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 }
                                 {
                                     isQuiz && timer ?
-                                        <View style={{ width: width < 768 ? '100%' : '35%', borderRightWidth: 0, borderColor: '#f8f8f8' }}>
+                                        <View style={{ width: width < 768 ? '100%' : '35%', borderRightWidth: 0, borderColor: '#f4f4f6' }}>
                                             <DurationPicker
                                                 onChange={onChangeDuration}
                                                 initialDuration={{ hours: 1, minutes: 0, seconds: 0 }}
@@ -925,27 +942,27 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         {
                             isQuiz ?
                                 (
-                                <View style={{
-                                    width: '100%',
-                                    flexDirection: 'column',
-                                }}>
-                                    <CustomTextInput
-                                        value={quizInstructions}
-                                        placeholder="Instructions"
-                                        onChangeText={val => setQuizInstructions(val)}
-                                        placeholderTextColor={"#a2a2ac"}
-                                        required={false}
-                                        hasMultipleLines={true}
-                                    />
-                                    <QuizCreate
-                                        problems={problems}
-                                        headers={headers}
-                                        setProblems={(p: any) => setProblems(p)}
-                                        setHeaders={(h: any) => 
-                                        setHeaders(h)}
-                                    />
-                                </View>
-                               )
+                                    <View style={{
+                                        width: '100%',
+                                        flexDirection: 'column',
+                                    }}>
+                                        <CustomTextInput
+                                            value={quizInstructions}
+                                            placeholder="Instructions"
+                                            onChangeText={val => setQuizInstructions(val)}
+                                            placeholderTextColor={"#a2a2aa"}
+                                            required={false}
+                                            hasMultipleLines={true}
+                                        />
+                                        <QuizCreate
+                                            problems={problems}
+                                            headers={headers}
+                                            setProblems={(p: any) => setProblems(p)}
+                                            setHeaders={(h: any) =>
+                                                setHeaders(h)}
+                                        />
+                                    </View>
+                                )
                                 : (imported ?
                                     (
                                         type === 'mp4' || type === 'mp3' || type === 'mov' || type === 'mpeg' || type === 'mp2' || type === 'wav' ?
@@ -968,7 +985,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             key={reloadEditorKey.toString()}
                             containerStyle={{
                                 height,
-                                backgroundColor: '#f8f8f8',
+                                backgroundColor: '#f4f4f6',
                                 padding: 3,
                                 paddingTop: 5,
                                 paddingBottom: 10,
@@ -978,14 +995,14 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             ref={RichText}
                             style={{
                                 width: '100%',
-                                backgroundColor: '#f8f8f8',
+                                backgroundColor: '#f4f4f6',
                                 borderRadius: 15,
                                 minHeight: 475,
                                 display: (isQuiz || imported) ? "none" : "flex"
                             }}
                             editorStyle={{
-                                backgroundColor: '#f8f8f8',
-                                placeholderColor: '#a2a2ac',
+                                backgroundColor: '#f4f4f6',
+                                placeholderColor: '#a2a2aa',
                                 color: '#202025',
                                 contentCSSText: 'font-size: 14px;',
 
@@ -1012,21 +1029,20 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     <View style={{ flex: 1, display: 'flex', flexDirection: 'column', marginHorizontal: 10 }}>
                         {channels.length !== 0 ?
                             <View style={{ display: 'flex', flexDirection: width < 768 ? 'column' : 'row', overflow: 'visible' }}>
-                                <View style={{ width: width < 768 ? '100%' : '33.33%', borderRightWidth: 0, borderColor: '#f8f8f8' }}>
+                                <View style={{ width: width < 768 ? '100%' : '33.33%', borderRightWidth: 0, borderColor: '#f4f4f6' }}>
                                     <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                        <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
+                                        <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
                                             {/* {PreferredLanguageText('channel')} */}
                                             Share with
                                             {/* <Ionicons
-                                                name='school-outline' size={20} color={'#a2a2ac'} /> */}
+                                                name='school-outline' size={20} color={'#a2a2aa'} /> */}
                                         </Text>
                                     </View>
                                     <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white' }}>
                                         <View style={{ width: '85%', backgroundColor: 'white', display: 'flex' }}>
-                                            <ScrollView style={styles.colorBar} horizontal={true} showsHorizontalScrollIndicator={false}>
-                                                <TouchableOpacity
-                                                    style={channelId === '' ? styles.allOutline : styles.allBlack}
-                                                    onPress={() => {
+                                            <Menu
+                                                onSelect={(channel: any) => {
+                                                    if (channel === '') {
                                                         setChannelId('')
                                                         setCustomCategories(localCustomCategories)
                                                         setCustomCategory('')
@@ -1038,116 +1054,78 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         setSubscribers([])
                                                         setProblems([])
                                                         setIsQuiz(false)
+                                                        setChannelName('')
                                                         setTimer(false)
-                                                    }}>
-                                                    <Text style={{ lineHeight: 20, fontSize: 12, color: channelId === '' ? '#fff' : '#202025' }}>
-                                                        {/* <Ionicons name='home-outline' size={15} /> */}
-                                                        {PreferredLanguageText('myCues')}
+                                                    } else {
+                                                        setChannelId(channel._id)
+                                                        setChannelName(channel.name)
+                                                        setAddCustomCategory(false)
+                                                        setCustomCategory('')
+                                                        setSubmission(isQuiz ? true : false)
+                                                        setGradeWeight(0)
+                                                        setGraded(false)
+                                                    }
+                                                }}>
+                                                <MenuTrigger>
+                                                    <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#202025' }}>
+                                                        {channelName === '' ? 'My Cues' : channelName}<Ionicons name='caret-down' size={14} />
                                                     </Text>
-                                                </TouchableOpacity>
-                                                {
-                                                    channels.map((channel) => {
-                                                        return <TouchableOpacity
-                                                            key={Math.random()}
-                                                            style={channelId === channel._id ? styles.allOutline : styles.allBlack}
-                                                            onPress={() => {
-                                                                setChannelId(channel._id)
-                                                                setAddCustomCategory(false)
-                                                                setCustomCategory('')
-                                                                setSubmission(isQuiz ? true : false)
-                                                                setGradeWeight(0)
-                                                                setGraded(false)
-                                                            }}>
-                                                            <Text style={{ lineHeight: 20, fontSize: 12, color: channelId === channel._id ? '#fff' : '#202025' }}>
-                                                                {channel.name}
-                                                            </Text>
-                                                        </TouchableOpacity>
-                                                    })
-                                                }
-                                            </ScrollView>
+                                                </MenuTrigger>
+                                                <MenuOptions customStyles={{
+                                                    optionsContainer: {
+                                                        padding: 10,
+                                                        borderRadius: 15,
+                                                        shadowOpacity: 0,
+                                                        borderWidth: 1,
+                                                        borderColor: '#f4f4f6'
+                                                    }
+                                                }}>
+                                                    <MenuOption
+                                                        value={''}>
+                                                        <Text>
+                                                            {PreferredLanguageText('myCues')}
+                                                        </Text>
+                                                    </MenuOption>
+                                                    {
+                                                        channels.map((channel: any) => {
+                                                            return <MenuOption
+                                                                value={channel}>
+                                                                <Text>
+                                                                    {channel.name}
+                                                                </Text>
+                                                            </MenuOption>
+                                                        })
+                                                    }
+                                                </MenuOptions>
+                                            </Menu>
                                         </View>
                                     </View>
                                     {
                                         channelId !== '' ?
                                             <View style={{ maxHeight: 175, flexDirection: 'column', marginTop: 25, overflow: 'scroll' }}>
                                                 <View style={{ width: '90%', padding: 5, height: expandMenu ? 175 : 'auto' }}>
-                                                    {/* <Select
-                                                        placeholder='Share with'
-                                                        styles={{
-                                                            menu: (provided: any, state: any) => ({
-                                                                ...provided,
-                                                                zIndex: 9999,
-                                                                overflow: 'scroll',
-                                                                height: 125,
-                                                                display: 'flex',
-                                                                margin: 5,
-                                                                width: '97%',
-                                                                boxShadow: 'none'
-                                                            }),
-                                                            option: (provided: any, state: any) => ({
-                                                                ...provided,
-                                                                fontFamily: 'overpass',
-                                                                color: '#a2a2ac',
-                                                                fontSize: 10,
-                                                                height: 25,
-                                                                width: '97%'
-                                                            }),
-                                                            input: (styles: any) => ({
-                                                                // ...styles,
-                                                                width: '100%',
-                                                                border: 'none',
-                                                                borderWidth: 0,
-                                                                fontSize: 12
-                                                            }),
-                                                            placeholder: (styles: any) => ({
-                                                                ...styles,
-                                                                fontFamily: 'overpass',
-                                                                color: '#a2a2ac',
-                                                                fontSize: 12
-                                                            }),
-                                                            multiValueLabel: (styles: any, { data }: any) => ({
-                                                                ...styles,
-                                                                color: '#202025',
-                                                                fontFamily: 'overpass'
-                                                            }),
-                                                            multiValue: (styles: any, { data }: any) => ({
-                                                                ...styles,
-                                                                backgroundColor: '#f8f8f8',
-                                                                fontFamily: 'overpass'
-                                                            })
-                                                        }}
-                                                        value={selected}
-                                                        isMulti={true}
-                                                        onMenuOpen={() => setExpandMenu(true)}
-                                                        onMenuClose={() => setExpandMenu(false)}
-                                                        name="Share with"
-                                                        className="basic-multi-select"
-                                                        classNamePrefix="select"
-                                                        onChange={onChange}
-                                                        options={subscribers}
-                                                    /> */}
                                                     <Multiselect
-                                                    placeholder='Share with...'
-                                                    displayValue='name'
-                                                    // key={userDropdownOptions.toString()}
-                                                    // style={{ width: '100%', color: '#202025', 
-                                                    //     optionContainer: { // To change css for option container 
-                                                    //         zIndex: 9999
-                                                    //     }
-                                                    // }}
-                                                    options={subscribers} // Options to display in the dropdown
-                                                    selectedValues={selected} // Preselected value to persist in dropdown
-                                                    onSelect={(e, f) => {
-                                                        setSelected(e);
-                                                        return true
-                                                    }} // Function will trigger on select event
-                                                    onRemove={(e, f) => {
-                                                        setSelected(e);
-                                                        return true
-                                                    }}
-                                                />
+                                                        placeholder='Share with...'
+                                                        displayValue='name'
+                                                        // key={userDropdownOptions.toString()}
+                                                        // style={{ width: '100%', color: '#202025', 
+                                                        //     optionContainer: { // To change css for option container 
+                                                        //         zIndex: 9999
+                                                        //     }
+                                                        // }}
+                                                        options={subscribers} // Options to display in the dropdown
+                                                        selectedValues={selected} // Preselected value to persist in dropdown
+                                                        onSelect={(e, f) => {
+                                                            setSelected(e);
+                                                            return true
+                                                        }} // Function will trigger on select event
+                                                        onRemove={(e, f) => {
+                                                            setSelected(e);
+                                                            return true
+                                                        }}
+                                                    />
                                                 </View>
-                                                
+
                                             </View> : null
                                     }
                                 </View>
@@ -1155,7 +1133,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     channelId !== '' ?
                                         <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
                                             <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                                <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
+                                                <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
                                                     {PreferredLanguageText('submissionRequired')}
                                                 </Text>
                                             </View>
@@ -1173,8 +1151,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         }}
                                                         style={{ height: 20 }}
                                                         trackColor={{
-                                                            false: '#f8f8f8',
-                                                            true: '#a2a2ac'
+                                                            false: '#f4f4f6',
+                                                            true: '#a2a2aa'
                                                         }}
                                                         activeThumbColor='white'
                                                     />
@@ -1187,8 +1165,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             flexDirection: 'row',
                                                             backgroundColor: 'white',
                                                         }}>
-                                                           <Text style={styles.text}>
-                                                                Available 
+                                                            <Text style={styles.text}>
+                                                                Available
                                                             </Text>
                                                             <Datetime
                                                                 value={initiateAt}
@@ -1196,10 +1174,10 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                     const date = new Date(event)
 
                                                                     if (date < new Date()) return;
-                                                                        setInitiateAt(date)
-                                                                    }}
-                                                                    isValidDate={disablePastDt}
-                                                                />
+                                                                    setInitiateAt(date)
+                                                                }}
+                                                                isValidDate={disablePastDt}
+                                                            />
 
                                                         </View>
                                                         : null
@@ -1219,29 +1197,29 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                 backgroundColor: 'white',
                                                                 marginLeft: 50
                                                             }}>
-                                                                 <Text style={styles.text}>
-                                                                {PreferredLanguageText('deadline')}
-                                                            </Text>
-                                                            <Datetime
-                                                                value={deadline}
-                                                                onChange={(event: any) => {
-                                                                    const date = new Date(event)
+                                                                <Text style={styles.text}>
+                                                                    {PreferredLanguageText('deadline')}
+                                                                </Text>
+                                                                <Datetime
+                                                                    value={deadline}
+                                                                    onChange={(event: any) => {
+                                                                        const date = new Date(event)
 
-                                                                    if (date < new Date()) return;
+                                                                        if (date < new Date()) return;
 
-                                                                    setDeadline(date)
-                                                                }}
-                                                                isValidDate={disablePastDt}
-                                                            />
-                                                                
+                                                                        setDeadline(date)
+                                                                    }}
+                                                                    isValidDate={disablePastDt}
+                                                                />
+
 
                                                             </View>
                                                             : null
                                                     }
                                                 </View>
 
-                                            {/* Add it here */}
-                                        </View>
+                                                {/* Add it here */}
+                                            </View>
 
                                         </View> : null
                                 }
@@ -1249,8 +1227,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     submission ?
                                         <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
                                             <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                                <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
-                                                    Grade Weight 
+                                                <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
+                                                    Grade Weight
                                                 </Text>
                                             </View>
                                             <View style={{ flexDirection: 'row' }}>
@@ -1264,8 +1242,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         onValueChange={() => setGraded(!graded)}
                                                         style={{ height: 20 }}
                                                         trackColor={{
-                                                            false: '#f8f8f8',
-                                                            true: '#a2a2ac'
+                                                            false: '#f4f4f6',
+                                                            true: '#a2a2aa'
                                                         }}
                                                         activeThumbColor='white'
                                                     />
@@ -1286,7 +1264,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                 style={styles.picker}
                                                                 placeholder={'0-100'}
                                                                 onChangeText={val => setGradeWeight(val)}
-                                                                placeholderTextColor={'#a2a2ac'}
+                                                                placeholderTextColor={'#a2a2aa'}
                                                             />
                                                         </View>
                                                         : null
@@ -1297,10 +1275,10 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             </View>
                             : null}
                         <View style={{ display: 'flex', flexDirection: width < 768 ? 'column' : 'row' }}>
-                            <View style={{ width: width < 768 ? '100%' : '33.33%', borderRightWidth: 0, borderColor: '#f8f8f8' }}>
+                            <View style={{ width: width < 768 ? '100%' : '33.33%', borderRightWidth: 0, borderColor: '#f4f4f6' }}>
                                 <View style={{ width: '100%', backgroundColor: 'white' }}>
                                     <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                        <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
+                                        <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
                                             {PreferredLanguageText('category')}
                                         </Text>
                                     </View>
@@ -1316,34 +1294,43 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             onChangeText={val => {
                                                                 setCustomCategory(val)
                                                             }}
-                                                            placeholderTextColor={'#a2a2ac'}
+                                                            placeholderTextColor={'#a2a2aa'}
                                                         />
                                                     </View> :
-                                                    <ScrollView style={styles.colorBar} horizontal={true} showsHorizontalScrollIndicator={false}>
-                                                        <TouchableOpacity
-                                                            style={customCategory === '' ? styles.allGrayOutline : styles.all}
-                                                            onPress={() => {
-                                                                setCustomCategory('')
-                                                            }}>
-                                                            <Text style={{ color: '#a2a2ac', lineHeight: 20, fontSize: 12 }}>
-                                                                {PreferredLanguageText('none')}
+                                                    <Menu
+                                                        onSelect={(cat: any) => setCustomCategory(cat)}>
+                                                        <MenuTrigger>
+                                                            <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#a2a2aa' }}>
+                                                                {customCategory === '' ? 'None' : customCategory}<Ionicons name='caret-down' size={14} />
                                                             </Text>
-                                                        </TouchableOpacity>
-                                                        {
-                                                            customCategories.map((category: string) => {
-                                                                return <TouchableOpacity
-                                                                    key={Math.random()}
-                                                                    style={customCategory === category ? styles.allGrayOutline : styles.all}
-                                                                    onPress={() => {
-                                                                        setCustomCategory(category)
-                                                                    }}>
-                                                                    <Text style={{ color: '#a2a2ac', lineHeight: 20, fontSize: 12 }}>
-                                                                        {category}
-                                                                    </Text>
-                                                                </TouchableOpacity>
-                                                            })
-                                                        }
-                                                    </ScrollView>
+                                                        </MenuTrigger>
+                                                        <MenuOptions customStyles={{
+                                                            optionsContainer: {
+                                                                padding: 10,
+                                                                borderRadius: 15,
+                                                                shadowOpacity: 0,
+                                                                borderWidth: 1,
+                                                                borderColor: '#f4f4f6'
+                                                            }
+                                                        }}>
+                                                            <MenuOption
+                                                                value={''}>
+                                                                <Text>
+                                                                    None
+                                                                </Text>
+                                                            </MenuOption>
+                                                            {
+                                                                customCategories.map((category: any) => {
+                                                                    return <MenuOption
+                                                                        value={category}>
+                                                                        <Text>
+                                                                            {category}
+                                                                        </Text>
+                                                                    </MenuOption>
+                                                                })
+                                                            }
+                                                        </MenuOptions>
+                                                    </Menu>
                                             }
                                         </View>
                                         <View style={{ width: '15%', backgroundColor: 'white' }}>
@@ -1359,16 +1346,16 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 }}
                                                 style={{ backgroundColor: 'white' }}>
                                                 <Text style={{ textAlign: 'center', lineHeight: 20, width: '100%' }}>
-                                                    <Ionicons name={addCustomCategory ? 'close' : 'add'} size={20} color={'#a2a2ac'} />
+                                                    <Ionicons name={addCustomCategory ? 'close' : 'add'} size={20} color={'#a2a2aa'} />
                                                 </Text>
                                             </TouchableOpacity>
                                         </View>
                                     </View>
                                 </View>
                             </View>
-                            <View style={{ width: width < 768 ? '100%' : '33.33%', borderRightWidth: 0, borderColor: '#f8f8f8' }}>
+                            <View style={{ width: width < 768 ? '100%' : '33.33%', borderRightWidth: 0, borderColor: '#f4f4f6' }}>
                                 <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                    <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
+                                    <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
                                         {PreferredLanguageText('priority')}
                                     </Text>
                                 </View>
@@ -1400,7 +1387,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         <View style={{ width: '100%', paddingTop: 15, flexDirection: width < 768 ? 'column' : 'row' }}>
                             <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
                                 <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                    <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
+                                    <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
                                         Reminder
                                     </Text>
                                 </View>
@@ -1425,7 +1412,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         }}
                                         style={{ height: 20 }}
                                         trackColor={{
-                                            false: '#f8f8f8',
+                                            false: '#f4f4f6',
                                             true: '#3B64F8'
                                         }}
                                         activeThumbColor='white'
@@ -1436,7 +1423,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 notify ?
                                     <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
                                         <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                            <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
+                                            <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
                                                 Recurring
                                             </Text>
                                         </View>
@@ -1451,8 +1438,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     onValueChange={() => setShuffle(!shuffle)}
                                                     style={{ height: 20 }}
                                                     trackColor={{
-                                                        false: '#f8f8f8',
-                                                        true: '#a2a2ac'
+                                                        false: '#f4f4f6',
+                                                        true: '#a2a2aa'
                                                     }}
                                                     activeThumbColor='white'
                                                 />
@@ -1467,7 +1454,44 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         <Text style={styles.text}>
                                                             {PreferredLanguageText('remindEvery')}
                                                         </Text>
-                                                        <Picker
+                                                        <Menu
+                                                            onSelect={(cat: any) => {
+                                                                setFrequency(cat.value)
+                                                                setFrequencyName(cat.label)
+                                                            }}>
+                                                            <MenuTrigger>
+                                                                <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#a2a2aa' }}>
+                                                                    {frequencyName}<Ionicons name='caret-down' size={14} />
+                                                                </Text>
+                                                            </MenuTrigger>
+                                                            <MenuOptions customStyles={{
+                                                                optionsContainer: {
+                                                                    padding: 10,
+                                                                    borderRadius: 15,
+                                                                    shadowOpacity: 0,
+                                                                    borderWidth: 1,
+                                                                    borderColor: '#f4f4f6'
+                                                                }
+                                                            }}>
+                                                                {/* <MenuOption
+                                                                    value={''}>
+                                                                    <Text>
+                                                                        None
+                                                                    </Text>
+                                                                </MenuOption> */}
+                                                                {
+                                                                    timedFrequencyOptions.map((item: any) => {
+                                                                        return <MenuOption
+                                                                            value={item}>
+                                                                            <Text>
+                                                                                {item.value === '0' && channelId !== '' ? 'Once' : item.label}
+                                                                            </Text>
+                                                                        </MenuOption>
+                                                                    })
+                                                                }
+                                                            </MenuOptions>
+                                                        </Menu>
+                                                        {/* <Picker
                                                             style={styles.picker}
                                                             itemStyle={{
                                                                 fontSize: 15
@@ -1486,7 +1510,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                     />
                                                                 })
                                                             }
-                                                        </Picker>
+                                                        </Picker> */}
                                                     </View> :
                                                     <View style={{
                                                         width: '100%',
@@ -1516,7 +1540,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 notify && !shuffle ?
                                     <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
                                         <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                            <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
+                                            <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
                                                 Indefinite
                                             </Text>
                                         </View>
@@ -1531,8 +1555,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     onValueChange={() => setPlayChannelCueIndef(!playChannelCueIndef)}
                                                     style={{ height: 20 }}
                                                     trackColor={{
-                                                        false: '#f8f8f8',
-                                                        true: '#a2a2ac'
+                                                        false: '#f4f4f6',
+                                                        true: '#a2a2aa'
                                                     }}
                                                     activeThumbColor='white'
                                                 />
@@ -1564,31 +1588,31 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             }
                         </View>
                         {/* if Quiz then ask Shuffle */}
-                        {isQuiz ?  <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
-                                        <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                            <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
-                                                Shuffle Questions
-                                            </Text>
-                                        </View>
-                                        <View style={{ flexDirection: 'row' }}>
-                                            <View style={{
-                                                backgroundColor: 'white',
-                                                height: 40,
-                                                marginRight: 10
-                                            }}>
-                                                <Switch
-                                                    value={shuffleQuiz}
-                                                    onValueChange={() => setShuffleQuiz(!shuffleQuiz)}
-                                                    style={{ height: 20 }}
-                                                    trackColor={{
-                                                        false: '#f8f8f8',
-                                                        true: '#a2a2ac'
-                                                    }}
-                                                    activeThumbColor='white'
-                                                />
-                                            </View>
-                                        </View>
-                                    </View> : null}
+                        {isQuiz ? <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
+                            <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
+                                <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
+                                    Shuffle Questions
+                                </Text>
+                            </View>
+                            <View style={{ flexDirection: 'row' }}>
+                                <View style={{
+                                    backgroundColor: 'white',
+                                    height: 40,
+                                    marginRight: 10
+                                }}>
+                                    <Switch
+                                        value={shuffleQuiz}
+                                        onValueChange={() => setShuffleQuiz(!shuffleQuiz)}
+                                        style={{ height: 20 }}
+                                        trackColor={{
+                                            false: '#f4f4f6',
+                                            true: '#a2a2aa'
+                                        }}
+                                        activeThumbColor='white'
+                                    />
+                                </View>
+                            </View>
+                        </View> : null}
                     </View>
                     <View style={styles.footer}>
                         <View
@@ -1609,6 +1633,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         await handleCreate()
                                     }
                                 }}
+                                disabled={creatingQuiz}
                                 style={{
                                     borderRadius: 15,
                                     backgroundColor: 'white'
@@ -1676,7 +1701,7 @@ const styles: any = StyleSheet.create({
     },
     cuesInput: {
         width: '100%',
-        backgroundColor: '#f8f8f8',
+        backgroundColor: '#f4f4f6',
         borderRadius: 15,
         fontSize: 21,
         padding: 20,
@@ -1711,11 +1736,11 @@ const styles: any = StyleSheet.create({
         backgroundColor: 'white',
         borderRadius: 10,
         borderWidth: 1,
-        borderColor: '#a2a2ac'
+        borderColor: '#a2a2aa'
     },
     input: {
         width: '100%',
-        borderBottomColor: '#f8f8f8',
+        borderBottomColor: '#f4f4f6',
         borderBottomWidth: 1,
         fontSize: 15,
         padding: 15,
@@ -1753,13 +1778,13 @@ const styles: any = StyleSheet.create({
     },
     text: {
         fontSize: 12,
-        color: '#a2a2ac',
+        color: '#a2a2aa',
         textAlign: 'left',
         paddingHorizontal: 10
     },
     all: {
         fontSize: 12,
-        color: '#a2a2ac',
+        color: '#a2a2aa',
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: 'white'
@@ -1783,13 +1808,13 @@ const styles: any = StyleSheet.create({
     },
     allGrayOutline: {
         fontSize: 12,
-        color: '#a2a2ac',
+        color: '#a2a2aa',
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: 'white',
         borderRadius: 10,
         borderWidth: 1,
-        borderColor: '#a2a2ac'
+        borderColor: '#a2a2aa'
     },
     color1: {
         backgroundColor: '#D11C60'
@@ -1809,6 +1834,6 @@ const styles: any = StyleSheet.create({
     outline: {
         borderRadius: 10,
         borderWidth: 1,
-        borderColor: '#a2a2ac'
+        borderColor: '#a2a2aa'
     }
 })

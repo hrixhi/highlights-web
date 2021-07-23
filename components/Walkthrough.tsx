@@ -104,15 +104,15 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                     }}
                                     style={{ height: 20 }}
                                     trackColor={{
-                                        false: '#f8f8f8',
-                                        true: '#a2a2ac'
+                                        false: '#f4f4f6',
+                                        true: '#a2a2aa'
                                     }}
                                     activeThumbColor='white'
                                 />
                             </View>
                             <Text style={{
                                 fontSize: 14,
-                                color: '#a2a2ac',
+                                color: '#a2a2aa',
                                 textAlign: 'left',
                                 paddingTop: 2
                             }}>
@@ -140,9 +140,9 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         prevPos: 'left',
                         nextPos: 'right',
                         nextTitle: '›',
-                        nextTitleStyle: { color: '#a2a2ac', fontSize: 60, fontFamily: 'overpass' },
+                        nextTitleStyle: { color: '#a2a2aa', fontSize: 60, fontFamily: 'overpass' },
                         prevTitle: '‹',
-                        prevTitleStyle: { color: '#a2a2ac', fontSize: 60, fontFamily: 'overpass' },
+                        prevTitleStyle: { color: '#a2a2aa', fontSize: 60, fontFamily: 'overpass' },
                         dotActiveStyle: { backgroundColor: '#3B64F8' }
                     }}
                 >

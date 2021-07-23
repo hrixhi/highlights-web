@@ -273,7 +273,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             onChangeText={val => {
                                 setName(val)
                             }}
-                            placeholderTextColor={'#a2a2ac'}
+                            placeholderTextColor={'#a2a2aa'}
                             required={true}
                             footerMessage={'case sensitive'}
                         />
@@ -286,7 +286,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             value={password}
                             placeholder={`(${PreferredLanguageText('optional')})`}
                             onChangeText={val => setPassword(val)}
-                            placeholderTextColor={'#a2a2ac'}
+                            placeholderTextColor={'#a2a2aa'}
                             secureTextEntry={true}
                             required={false}
                         />
@@ -423,7 +423,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         lineHeight: 35,
                                         color: '#202025',
                                         fontSize: 12,
-                                        backgroundColor: '#f8f8f8',
+                                        backgroundColor: '#f4f4f6',
                                         paddingHorizontal: 25,
                                         fontFamily: 'inter',
                                         height: 35,
@@ -454,24 +454,24 @@ const styles = StyleSheet.create({
     outline: {
         borderRadius: 10,
         borderWidth: 1,
-        borderColor: '#a2a2ac'
+        borderColor: '#a2a2aa'
     },
     all: {
         fontSize: 15,
-        color: '#a2a2ac',
+        color: '#a2a2aa',
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: 'white'
     },
     allOutline: {
         fontSize: 15,
-        color: '#a2a2ac',
+        color: '#a2a2aa',
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: 'white',
         borderRadius: 10,
         borderWidth: 1,
-        borderColor: '#a2a2ac'
+        borderColor: '#a2a2aa'
     },
     colorBar: {
         width: '100%',
@@ -483,7 +483,7 @@ const styles = StyleSheet.create({
     },
     input: {
         width: '100%',
-        borderBottomColor: '#f8f8f8',
+        borderBottomColor: '#f4f4f6',
         borderBottomWidth: 1,
         fontSize: 15,
         padding: 15,

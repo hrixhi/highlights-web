@@ -275,14 +275,14 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                         <Text style={{
                             width: '100%',
                             fontSize: 15,
-                            color: '#a2a2ac'
+                            color: '#a2a2aa'
                         }}>
                             <Ionicons name='chevron-back-outline' size={17} color={'#202025'} style={{ marginRight: 10 }} /> {renderAttendanceStatsTabs()}
                         </Text>
                 </TouchableOpacity>
                 {pastMeetings.length === 0 || channelAttendances.length === 0 ?  null : <Text
                     style={{
-                        color: "#a2a2ac",
+                        color: "#a2a2aa",
                         fontSize: 11,
                         lineHeight: 25,
                         // paddingTop: 5,
@@ -298,7 +298,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                 </Text>}
                 {(pastMeetings.length === 0 || channelAttendances.length === 0 || !props.isOwner)  ?  null : <Text
                     style={{
-                        color: "#a2a2ac",
+                        color: "#a2a2aa",
                         fontSize: 11,
                         lineHeight: 25,
                         // paddingTop: 5,
@@ -358,7 +358,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
             {
                 channelAttendances.length === 0 || pastMeetings.length === 0 ?
                     <View style={{ backgroundColor: 'white' }}>
-                        <Text style={{ width: '100%', color: '#a2a2ac', fontSize: 22, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter' }}>
+                        <Text style={{ width: '100%', color: '#a2a2aa', fontSize: 22, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter' }}>
                             {
                                 pastMeetings.length === 0  ? "No past meetings" : "No Students"
                                 // PreferredLanguageText('noGraded') : PreferredLanguageText('noStudents')
@@ -435,7 +435,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                                             return s.dateId.toString().trim() === meeting.dateId.toString().trim()
                                                         })
                                                         return <View style={styles.col} key={row.toString() + '-' + col.toString()}>
-                                                            <Text style={{ textAlign: 'center', fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
+                                                            <Text style={{ textAlign: 'center', fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
                                                                 {
                                                                     attendanceObject ? "Present" : '-'
                                                                 }
@@ -491,11 +491,11 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
 export default AttendanceList
 
 const styles = StyleSheet.create({
-    row: { height: 70, borderRadius: 15, marginBottom: 15, flexDirection: 'row', overflow: 'hidden', backgroundColor: '#f8f8f8', },
-    col: { width: 100, justifyContent: 'center', display: 'flex', flexDirection: 'column', backgroundColor: '#f8f8f8', padding: 5 },
+    row: { height: 70, borderRadius: 15, marginBottom: 15, flexDirection: 'row', overflow: 'hidden', backgroundColor: '#f4f4f6', },
+    col: { width: 100, justifyContent: 'center', display: 'flex', flexDirection: 'column', backgroundColor: '#f4f4f6', padding: 5 },
     text: {
         fontSize: 12,
-        color: "#a2a2ac",
+        color: "#a2a2aa",
         textAlign: "left",
         paddingHorizontal: 10
     },
@@ -504,23 +504,23 @@ const styles = StyleSheet.create({
         color: "#fff",
         paddingHorizontal: 10,
         borderRadius: 10,
-        backgroundColor: "#a2a2ac",
+        backgroundColor: "#a2a2aa",
         lineHeight: 20
     },
     allGrayOutline: {
         fontSize: 12,
-        color: "#a2a2ac",
+        color: "#a2a2aa",
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: "white",
         borderRadius: 10,
         borderWidth: 1,
-        borderColor: "#a2a2ac",
+        borderColor: "#a2a2aa",
         lineHeight: 20
     },
     all: {
         fontSize: 12,
-        color: "#a2a2ac",
+        color: "#a2a2aa",
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: "white",

@@ -119,7 +119,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 setHeaders(currentHeaders);
                                 props.setHeaders(currentHeaders)
                             }}
-                            placeholderTextColor={'#a2a2ac'}
+                            placeholderTextColor={'#a2a2aa'}
                             hasMultipleLines={false}
                         />
                     </View>
@@ -149,7 +149,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             // paddingLeft: 20,
                             flex: 1,
                             lineHeight: 25,
-                            // color: '#a2a2ac'
+                            // color: '#a2a2aa'
                         }}>
                         Add HEADER
                     </Text>
@@ -174,10 +174,10 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
                     const { questionType } = problem;
 
-                    return <View style={{ borderBottomColor: '#f8f8f8', borderBottomWidth: index === (problems.length - 1) ? 0 : 1, marginBottom: 25 }}>
+                    return <View style={{ borderBottomColor: '#f4f4f6', borderBottomWidth: index === (problems.length - 1) ? 0 : 1, marginBottom: 25 }}>
                         <View style={{ flexDirection: 'row' }}>
                             <View style={{ paddingTop: 15 }}>
-                                <Text style={{ color: '#a2a2ac', fontSize: 15, paddingBottom: 25, marginRight: 10 }}>
+                                <Text style={{ color: '#a2a2aa', fontSize: 15, paddingBottom: 25, marginRight: 10 }}>
                                     {index + 1}.
                             </Text>
                             </View>
@@ -199,7 +199,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                             :
                                             (problem.question && problem.question.includes("formula:") ?
                                                 <View style={{
-                                                    borderColor: '#f8f8f8',
+                                                    borderColor: '#f4f4f6',
                                                     borderWidth: 1,
                                                     borderRadius: 15,
                                                     padding: 10,
@@ -228,7 +228,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                         setProblems(newProbs)
                                                         props.setProblems(newProbs)
                                                     }}
-                                                    placeholderTextColor={'#a2a2ac'}
+                                                    placeholderTextColor={'#a2a2aa'}
                                                     hasMultipleLines={true}
                                                 />)
                                     }
@@ -257,7 +257,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                         style={{
                                                             paddingTop: problem.question && problem.question.includes("formula:")
                                                                 ? 10 : 0,
-                                                            color: '#a2a2ac',
+                                                            color: '#a2a2aa',
                                                             fontFamily: 'Overpass',
                                                             fontSize: 10
                                                         }}
@@ -288,7 +288,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 style={{
                                                     paddingTop: problem.question && (problem.question.includes("image:") || problem.question.includes("formula:"))
                                                         ? 10 : 0,
-                                                    color: '#a2a2ac',
+                                                    color: '#a2a2aa',
                                                     fontFamily: 'Overpass',
                                                     fontSize: 10
                                                 }}
@@ -316,7 +316,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                             setProblems(newProbs)
                                             props.setProblems(newProbs)
                                         }}
-                                        placeholderTextColor={'#a2a2ac'}
+                                        placeholderTextColor={'#a2a2aa'}
                                     />
                                 </View>
                                 {/* Add dropdown here */}
@@ -428,7 +428,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 :
                                                 (option.option && option.option.includes("formula:") ?
                                                     <View style={{
-                                                        borderColor: '#f8f8f8',
+                                                        borderColor: '#f4f4f6',
                                                         borderWidth: 1,
                                                         borderRadius: 15,
                                                         padding: 10,
@@ -457,7 +457,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                 setProblems(newProbs)
                                                                 props.setProblems(newProbs)
                                                             }}
-                                                            placeholderTextColor={'#a2a2ac'}
+                                                            placeholderTextColor={'#a2a2aa'}
                                                         />
                                                     </View>)
                                         }
@@ -484,7 +484,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                             style={{
                                                                 paddingTop: option.option && option.option.includes("formula:")
                                                                     ? 10 : 0,
-                                                                color: '#a2a2ac',
+                                                                color: '#a2a2aa',
                                                                 fontFamily: 'Overpass',
                                                                 fontSize: 10
                                                             }}
@@ -515,7 +515,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                     style={{
                                                         paddingTop: option.option && option.option.includes("formula:")
                                                             ? 10 : 0,
-                                                        color: '#a2a2ac',
+                                                        color: '#a2a2aa',
                                                         fontFamily: 'Overpass',
                                                         fontSize: 10
                                                     }}
@@ -566,7 +566,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     // paddingLeft: 20,
                                     flex: 1,
                                     lineHeight: 25,
-                                    // color: '#a2a2ac'
+                                    // color: '#a2a2aa'
                                 }}>
                                 Add Choice
                             </Text>
@@ -596,7 +596,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             // paddingLeft: 20,
                             flex: 1,
                             lineHeight: 25,
-                            // color: "#a2a2ac"
+                            // color: "#a2a2aa"
                         }}>
                         Add Problem
                     </Text>
@@ -613,7 +613,7 @@ export default QuizCreate;
 const styles = StyleSheet.create({
     input: {
         width: '50%',
-        borderBottomColor: '#f8f8f8',
+        borderBottomColor: '#f4f4f6',
         borderBottomWidth: 1,
         fontSize: 15,
         padding: 15,

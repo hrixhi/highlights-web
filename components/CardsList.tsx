@@ -62,7 +62,8 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     return (
         <Animated.View style={{
-            borderColor: '#f8f8f8',
+            borderColor: '#f4f4f6',
+            backgroundColor: '#202025',
             // borderBottomWidth: 2,
             // borderTopWidth: 1,
             height: ((dimensions.window.height) * 0.66),
@@ -75,6 +76,7 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 showsVerticalScrollIndicator={false}
                 horizontal={false}
                 contentContainerStyle={{
+                    backgroundColor: '#202025',
                     width: dimensions.window.width < 1024 ? dimensions.window.width - 50 : (dimensions.window.width * 0.3 - 50),
                     height: dimensions.window.width < 1024 ? '100%' : (((dimensions.window.height) * 0.7) - 2),
                 }}
@@ -83,7 +85,7 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 {/* <View style={styles.marginSmall} /> */}
                 {
                     filteredCues.map((cue: any, index: number) => {
-                        return <View style={{ height: 70, marginBottom: 15, maxWidth: 500 }} key={index}>
+                        return <View style={{ height: 70, marginBottom: 15, maxWidth: 500, backgroundColor: '#202025' }} key={index}>
                             <Card
                                 fadeAnimation={props.fadeAnimation}
                                 updateModal={() => props.openUpdate(
@@ -101,11 +103,11 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     })
                 }
                 {
-                    filteredCues.length === 0 ? <Text style={{ fontSize: 22, color: '#a2a2ac', textAlign: 'center', fontFamily: 'inter' }}>
+                    filteredCues.length === 0 ? <Text style={{ fontSize: 22, color: '#a2a2aa', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#202025' }}>
                         {PreferredLanguageText('noCuesCreated')}
                     </Text> : null
                 }
-                <View style={{ height: 15 }} />
+                <View style={{ height: 15, backgroundColor: '#202025' }} />
             </ScrollView>
         </Animated.View >
     );

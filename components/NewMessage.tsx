@@ -7,9 +7,16 @@ import { fetchAPI } from '../graphql/FetchAPI';
 import { getThreadCategories, createMessage, sendDirectMessage } from '../graphql/QueriesAndMutations';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { RichEditor } from 'react-native-pell-rich-editor';
-import FileViewer from 'react-file-viewer';
+// import FileViewer from 'react-file-viewer';
 import FileUpload from './UploadFiles';
 import { PreferredLanguageText } from '../helpers/LanguageContext';
+import {
+    Menu,
+    MenuOptions,
+    MenuOption,
+    MenuTrigger,
+} from 'react-native-popup-menu';
+
 
 const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -31,6 +38,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
     const [title, setTitle] = useState('')
 
     const [showImportOptions, setShowImportOptions] = useState(false)
+    const [sendingThread, setSendingThread] = useState(false)
 
     const unableToPostAlert = PreferredLanguageText('unableToPost');
     const somethingWentWrongAlert = PreferredLanguageText('somethingWentWrong');
@@ -72,8 +80,14 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
     }, [channelId])
 
     const createDirectMessage = useCallback(async () => {
+        setSendingThread(true)
         const u = await AsyncStorage.getItem('user')
         if (!message || message === '' || !u) {
+            setSendingThread(false)
+            return
+        }
+        if (message.replace(/\&nbsp;/g, '').replace(/\s/g, '') === '<div></div>') {
+            setSendingThread(false)
             return
         }
         const user = JSON.parse(u)
@@ -101,18 +115,27 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 userId: user._id
             }
         }).then(res => {
+            setSendingThread(false)
             if (res.data.message.create) {
                 props.back()
             } else {
                 Alert(unableToPostAlert, checkConnectionAlert)
             }
         }).catch(err => {
+            setSendingThread(false)
             Alert(somethingWentWrongAlert, checkConnectionAlert)
         })
     }, [props.users, message, props.channelId, imported, type, title, url])
 
     const createThreadMessage = useCallback(async () => {
+        console.log('sending thread')
+        setSendingThread(true)
         if (!message || message === '') {
+            setSendingThread(false)
+            return
+        }
+        if (message.replace(/\&nbsp;/g, '').replace(/\s/g, '') === '<div></div>') {
+            setSendingThread(false)
             return
         }
         const uString: any = await AsyncStorage.getItem('user')
@@ -142,12 +165,14 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 category: customCategory
             }
         }).then(res => {
+            setSendingThread(false)
             if (res.data.thread.writeMessage) {
                 props.back()
             } else {
                 Alert(unableToPostAlert, checkConnectionAlert)
             }
         }).catch(err => {
+            setSendingThread(false)
             Alert(somethingWentWrongAlert, checkConnectionAlert)
         })
 
@@ -183,20 +208,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     </View>
             }
             <View style={styles.date} onTouchStart={() => Keyboard.dismiss()}>
-                <Text style={{
-                    color: '#a2a2ac',
-                    fontSize: 11,
-                    lineHeight: 30,
-                    flex: 1
-                }}>
-                    {
-                        now.toString().split(' ')[1] +
-                        ' ' +
-                        now.toString().split(' ')[2] +
-                        ', ' +
-                        now.toString().split(' ')[3]
-                    }
-                </Text>
+
                 {
                     showImportOptions && !imported ? null :
                         <TouchableOpacity
@@ -212,7 +224,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             style={{ alignSelf: 'flex-end', flex: 1 }}
                         >
                             <Text style={{
-                                color: '#a2a2ac',
+                                color: '#a2a2aa',
                                 fontSize: 11,
                                 lineHeight: 30,
                                 textAlign: 'right',
@@ -229,6 +241,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 {
                     showImportOptions && !imported ?
                         <FileUpload
+                            action={'message_send'}
                             back={() => setShowImportOptions(false)}
                             onUpload={(u: any, t: any) => {
                                 console.log(t)
@@ -248,12 +261,12 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 style={styles.input}
                                 placeholder={'Title'}
                                 onChangeText={val => setTitle(val)}
-                                placeholderTextColor={'#a2a2ac'}
+                                placeholderTextColor={'#a2a2aa'}
                             />
                         </View>
                         <View>
-                            <Text style={{ width: '100%', color: '#a2a2ac', fontSize: 22, paddingVertical: 50, marginLeft: '10%', paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
-                                <Ionicons name='document-outline' size={50} color='#a2a2ac' />
+                            <Text style={{ width: '100%', color: '#a2a2aa', fontSize: 22, paddingVertical: 50, marginLeft: '10%', paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                <Ionicons name='document-outline' size={50} color='#a2a2aa' />
                             </Text>
                         </View>
                     </View>
@@ -267,7 +280,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         <RichEditor
                             disabled={false}
                             containerStyle={{
-                                backgroundColor: '#f8f8f8',
+                                backgroundColor: '#f4f4f6',
                                 borderRadius: 15,
                                 padding: 3,
                                 paddingTop: 5,
@@ -277,13 +290,13 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             ref={RichText}
                             style={{
                                 width: '100%',
-                                backgroundColor: '#f8f8f8',
+                                backgroundColor: '#f4f4f6',
                                 borderRadius: 15,
                                 minHeight: 100
                             }}
                             editorStyle={{
-                                backgroundColor: '#f8f8f8',
-                                placeholderColor: '#a2a2ac',
+                                backgroundColor: '#f4f4f6',
+                                placeholderColor: '#a2a2aa',
                                 color: '#202025',
                                 contentCSSText: 'font-size: 13px;'
                             }}
@@ -312,7 +325,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             !cueId && !parentId ?
                                 <View style={{ width: '33.33%', backgroundColor: 'white' }}>
                                     <View style={{ width: '100%', paddingTop: 40, paddingBottom: 10, backgroundColor: 'white' }}>
-                                        <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
+                                        <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
                                             {PreferredLanguageText('category')}
                                         </Text>
                                     </View>
@@ -328,34 +341,43 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                             onChangeText={val => {
                                                                 setCustomCategory(val)
                                                             }}
-                                                            placeholderTextColor={'#a2a2ac'}
+                                                            placeholderTextColor={'#a2a2aa'}
                                                         />
                                                     </View> :
-                                                    <ScrollView style={styles.colorBar} horizontal={true} showsHorizontalScrollIndicator={false}>
-                                                        <TouchableOpacity
-                                                            style={customCategory === '' ? styles.allOutline : styles.all}
-                                                            onPress={() => {
-                                                                setCustomCategory('')
-                                                            }}>
-                                                            <Text style={{ color: '#a2a2ac', lineHeight: 20, fontSize: 12 }}>
-                                                                {PreferredLanguageText('none')}
+                                                    <Menu
+                                                        onSelect={(cat: any) => setCustomCategory(cat)}>
+                                                        <MenuTrigger>
+                                                            <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#a2a2aa' }}>
+                                                                {customCategory === '' ? 'None' : customCategory}<Ionicons name='caret-down' size={14} />
                                                             </Text>
-                                                        </TouchableOpacity>
-                                                        {
-                                                            categories.map((category) => {
-                                                                return <TouchableOpacity
-                                                                    key={Math.random()}
-                                                                    style={category === customCategory ? styles.allOutline : styles.all}
-                                                                    onPress={() => {
-                                                                        setCustomCategory(category)
-                                                                    }}>
-                                                                    <Text style={{ color: '#a2a2ac', lineHeight: 20, fontSize: 12 }}>
-                                                                        {category}
-                                                                    </Text>
-                                                                </TouchableOpacity>
-                                                            })
-                                                        }
-                                                    </ScrollView>}
+                                                        </MenuTrigger>
+                                                        <MenuOptions customStyles={{
+                                                            optionsContainer: {
+                                                                padding: 10,
+                                                                borderRadius: 15,
+                                                                shadowOpacity: 0,
+                                                                borderWidth: 1,
+                                                                borderColor: '#f4f4f6'
+                                                            }
+                                                        }}>
+                                                            <MenuOption
+                                                                value={''}>
+                                                                <Text>
+                                                                    None
+                                                                </Text>
+                                                            </MenuOption>
+                                                            {
+                                                                categories.map((category: any) => {
+                                                                    return <MenuOption
+                                                                        value={category}>
+                                                                        <Text>
+                                                                            {category}
+                                                                        </Text>
+                                                                    </MenuOption>
+                                                                })
+                                                            }
+                                                        </MenuOptions>
+                                                    </Menu>}
                                         </View>
                                         <View style={{ width: '15%', backgroundColor: 'white' }}>
                                             <TouchableOpacity
@@ -370,7 +392,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 }}
                                                 style={{ backgroundColor: 'white' }}>
                                                 <Text style={{ textAlign: 'right', lineHeight: 20, width: '100%' }}>
-                                                    <Ionicons name={addCustomCategory ? 'close' : 'add'} size={20} color={'#a2a2ac'} />
+                                                    <Ionicons name={addCustomCategory ? 'close' : 'add'} size={20} color={'#a2a2aa'} />
                                                 </Text>
                                             </TouchableOpacity>
                                         </View>
@@ -381,7 +403,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         <View style={{ flexDirection: 'row' }}>
                             {/* <View style={{ width: '33.33%', backgroundColor: 'white' }}>
                                 <View style={{ width: '100%', paddingTop: 40, paddingBottom: 10, backgroundColor: 'white' }}>
-                                    <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
+                                    <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
                                         {PreferredLanguageText('anonymous')}
                                     </Text>
                                 </View>
@@ -389,8 +411,8 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     value={anonymous}
                                     onValueChange={() => setAnonymous(!anonymous)}
                                     trackColor={{
-                                        false: '#f8f8f8',
-                                        true: '#a2a2ac'
+                                        false: '#f4f4f6',
+                                        true: '#a2a2aa'
                                     }}
                                     activeThumbColor='white'
                                     style={{ height: 20 }}
@@ -402,7 +424,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                         parentId ? null :
                                             <View style={{ width: '33.33%', backgroundColor: 'white' }}>
                                                 <View style={{ width: '100%', paddingTop: 40, paddingBottom: 10, backgroundColor: 'white' }}>
-                                                    <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
+                                                    <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
                                                         {PreferredLanguageText('private')}
                                                     </Text>
                                                 </View>
@@ -410,8 +432,8 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                     value={isPrivate}
                                                     onValueChange={() => setIsPrivate(!isPrivate)}
                                                     trackColor={{
-                                                        false: '#f8f8f8',
-                                                        true: '#a2a2ac'
+                                                        false: '#f4f4f6',
+                                                        true: '#a2a2aa'
                                                     }}
                                                     activeThumbColor='white'
                                                     style={{ height: 20 }}
@@ -442,6 +464,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 createThreadMessage()
                             }
                         }}
+                        disabled={sendingThread}
                         style={{
                             borderRadius: 15,
                             backgroundColor: 'white'
@@ -518,12 +541,12 @@ const styles: any = StyleSheet.create({
     },
     text: {
         fontSize: 12,
-        color: '#a2a2ac',
+        color: '#a2a2aa',
         textAlign: 'left'
     },
     input: {
         width: '100%',
-        borderBottomColor: '#f8f8f8',
+        borderBottomColor: '#f4f4f6',
         borderBottomWidth: 1,
         fontSize: 12,
         padding: 15,
@@ -534,24 +557,24 @@ const styles: any = StyleSheet.create({
     },
     all: {
         fontSize: 12,
-        color: '#a2a2ac',
+        color: '#a2a2aa',
         height: 20,
         paddingHorizontal: 10,
         backgroundColor: 'white'
     },
     allOutline: {
         fontSize: 12,
-        color: '#a2a2ac',
+        color: '#a2a2aa',
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: 'white',
         borderRadius: 10,
         borderWidth: 1,
-        borderColor: '#a2a2ac'
+        borderColor: '#a2a2aa'
     },
     outline: {
         borderRadius: 10,
         borderWidth: 1,
-        borderColor: '#a2a2ac'
+        borderColor: '#a2a2aa'
     }
 })

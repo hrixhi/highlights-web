@@ -21,11 +21,12 @@ const FileUpload: React.FC<any> = (props: any) => {
         if (type === 'mpga') {
             type = 'mp3'
         }
-        if (type === 'png' || type === 'jpeg' || type === 'jpg' || type === 'gif') {
+        if ((type === 'png' || type === 'jpeg' || type === 'jpg' || type === 'gif') && props.action !== 'message_send') {
             alert('Error! Images should be directly added to the text editor using the gallery icon in the toolbar.')
             setUploading(false)
             return
         }
+
         fileUpload(file, type).then(response => {
             const { data } = response;
             if (data.status === "success") {
@@ -55,13 +56,13 @@ const FileUpload: React.FC<any> = (props: any) => {
         paddingBottom: Dimensions.get('window').width < 768 ? 5 : 0
     }}>
         {
-            uploading ? <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
+            uploading ? <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
                 Importing...
             </Text> :
                 <div style={{
                     display: 'flex', flexDirection: 'row'
                 }}>
-                    <Ionicons name="arrow-back" color="#a2a2ac" size={17} style={{ marginRight: 10 }} onPress={() => props.back()} />
+                    <Ionicons name="arrow-back" color="#a2a2aa" size={17} style={{ marginRight: 10 }} onPress={() => props.back()} />
                     <input
                         type="file"
                         name="import"
@@ -71,7 +72,7 @@ const FileUpload: React.FC<any> = (props: any) => {
                             backgroundColor: '#fff',
                             fontFamily: 'overpass',
                             fontSize: 12,
-                            color: '#a2a2ac',
+                            color: '#a2a2aa',
                             marginRight: 10,
                             width: 170
                         }}

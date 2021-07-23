@@ -283,7 +283,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
             <View style={{ width: '100%', backgroundColor: 'white' }}>
                 <View style={styles.colorBar}>
                     <Text style={{
-                        fontSize: 22, color: '#a2a2ac',
+                        fontSize: 22, color: '#a2a2aa',
                         // 
                     }}>
                         {PreferredLanguageText('internetRequired')}
@@ -316,7 +316,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         onPress={() => {
                             setOption('Subscribe')
                         }}>
-                        <Text style={{ color: '#a2a2ac', lineHeight: 20, fontSize: 12 }}>
+                        <Text style={{ color: '#a2a2aa', lineHeight: 20, fontSize: 12 }}>
                             {PreferredLanguageText('subscribe')}
                         </Text>
                     </TouchableOpacity>
@@ -328,7 +328,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 onPress={() => {
                                     setOption('Create')
                                 }}>
-                                <Text style={{ color: '#a2a2ac', lineHeight: 20, fontSize: 12 }}>
+                                <Text style={{ color: '#a2a2aa', lineHeight: 20, fontSize: 12 }}>
                                     {PreferredLanguageText('create')}
                                 </Text>
                             </TouchableOpacity>
@@ -340,7 +340,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 onPress={() => {
                                     setOption('All')
                                 }}>
-                                <Text style={{ color: '#a2a2ac', lineHeight: 20, fontSize: 12 }}>
+                                <Text style={{ color: '#a2a2aa', lineHeight: 20, fontSize: 12 }}>
                                     All Channels
                                 </Text>
                             </TouchableOpacity> : null
@@ -349,14 +349,14 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                 {
                     option === 'All' ?
                         <View style={{ backgroundColor: '#fff', flexDirection: 'row' }}>
-                            <View style={{ flex: 1, backgroundColor: '#f8f8f8', paddingLeft: 10 }}>
+                            <View style={{ flex: 1, backgroundColor: '#f4f4f6', paddingLeft: 10 }}>
                                 <Text style={{ fontSize: 12, lineHeight: 25 }} ellipsizeMode='tail'>
-                                    Name
+                                    NAME
                                 </Text>
                             </View>
-                            <View style={{ flex: 1, backgroundColor: '#f8f8f8', paddingLeft: 10 }}>
+                            <View style={{ flex: 1, backgroundColor: '#f4f4f6', paddingLeft: 10 }}>
                                 <Text style={{ fontSize: 12, lineHeight: 25 }} ellipsizeMode='tail'>
-                                    Owner
+                                    OWNER
                                 </Text>
                             </View>
                         </View> : null
@@ -385,7 +385,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         </ScrollView> :
                         <View style={{ backgroundColor: 'white' }}>
                             <View style={{ backgroundColor: 'white' }}>
-                                <Text style={{ color: '#202025', fontSize: 14, paddingBottom: 10 }}>
+                                <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
                                     {PreferredLanguageText('channel') + ' ' + PreferredLanguageText('name')}
                                 </Text>
                                 <TextInput
@@ -395,7 +395,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         setName(val)
                                         setPasswordRequired(false)
                                     }}
-                                    placeholderTextColor={'#a2a2ac'}
+                                    placeholderTextColor={'#a2a2aa'}
                                     required={true}
                                     footerMessage={'case sensitive'}
                                 />
@@ -403,14 +403,14 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             {
                                 (option === 'Subscribe' && passwordRequired) || option === 'Create' ?
                                     <View style={{ backgroundColor: 'white' }}>
-                                        <Text style={{ color: '#202025', fontSize: 14, paddingBottom: 10 }}>
+                                        <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
                                             {PreferredLanguageText('enrolmentPassword')}
                                         </Text>
                                         <TextInput
                                             value={password}
                                             placeholder={option === 'Subscribe' ? '' : `(${PreferredLanguageText('optional')})`}
                                             onChangeText={val => setPassword(val)}
-                                            placeholderTextColor={'#a2a2ac'}
+                                            placeholderTextColor={'#a2a2aa'}
                                             secureTextEntry={true}
                                             required={option === "Subscribe" ? true : false}
                                         />
@@ -435,7 +435,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 paddingBottom: 15,
                                                 backgroundColor: "white"
                                             }}>
-                                            <Text style={{ color: '#202025', fontSize: 14, paddingBottom: 10 }}>Temporary</Text>
+                                            <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>Temporary</Text>
                                         </View>
                                         <View
                                             style={{
@@ -449,13 +449,13 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 onValueChange={() => setTemporary(!temporary)}
                                                 style={{ height: 20 }}
                                                 trackColor={{
-                                                    false: "#f8f8f8",
+                                                    false: "#f4f4f6",
                                                     true: "#3B64F8"
                                                 }}
                                                 activeThumbColor="white"
                                             />
                                         </View>
-                                        <Text style={{ color: '#a2a2ac', fontSize: 12 }}>
+                                        <Text style={{ color: '#a2a2aa', fontSize: 12 }}>
                                             Channels that are not temporary can only be deleted by the school administrator.
                                         </Text>
                                     </View>
@@ -520,24 +520,24 @@ const styles = StyleSheet.create({
     outline: {
         borderRadius: 10,
         borderWidth: 1,
-        borderColor: '#a2a2ac'
+        borderColor: '#a2a2aa'
     },
     all: {
         fontSize: 15,
-        color: '#a2a2ac',
+        color: '#a2a2aa',
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: 'white'
     },
     allOutline: {
         fontSize: 15,
-        color: '#a2a2ac',
+        color: '#a2a2aa',
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: 'white',
         borderRadius: 10,
         borderWidth: 1,
-        borderColor: '#a2a2ac'
+        borderColor: '#a2a2aa'
     },
     colorBar: {
         width: '100%',
@@ -549,7 +549,7 @@ const styles = StyleSheet.create({
     },
     input: {
         width: '100%',
-        borderBottomColor: '#f8f8f8',
+        borderBottomColor: '#f4f4f6',
         borderBottomWidth: 1,
         fontSize: 15,
         padding: 15,
