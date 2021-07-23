@@ -330,19 +330,19 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     </Text>
 
                     <View style={{ flexDirection: 'row',  paddingBottom: 20}}>
-                    <Text style={{ textAlign: 'left', fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase', fontFamily: 'inter', marginRight: 10 }}>
+                    <Text style={{ textAlign: 'left', fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase', fontFamily: 'inter', marginRight: 10 }}>
                             Max: {mapCuesStatistics[cueId].max}%
                         </Text>
-                        <Text style={{ textAlign: 'left', fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase', fontFamily: 'inter', marginRight: 10 }}>
+                        <Text style={{ textAlign: 'left', fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase', fontFamily: 'inter', marginRight: 10 }}>
                             Min: {mapCuesStatistics[cueId].min}%
                         </Text>
-                        <Text style={{ textAlign: 'left', fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase', fontFamily: 'inter', marginRight: 10 }}>
+                        <Text style={{ textAlign: 'left', fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase', fontFamily: 'inter', marginRight: 10 }}>
                             Mean: {mapCuesStatistics[cueId].mean}%
                         </Text>
-                        <Text style={{ textAlign: 'left', fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase', fontFamily: 'inter', marginRight: 10 }}>
+                        <Text style={{ textAlign: 'left', fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase', fontFamily: 'inter', marginRight: 10 }}>
                             Median: {mapCuesStatistics[cueId].median}%
                         </Text>
-                        <Text style={{ textAlign: 'left', fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase', fontFamily: 'inter', marginRight: 10 }}>
+                        <Text style={{ textAlign: 'left', fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase', fontFamily: 'inter', marginRight: 10 }}>
                             Std Dev: {mapCuesStatistics[cueId].std}%
                         </Text>
                     </View>
@@ -405,7 +405,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 </Text>
                 {(scores.length === 0 || cues.length === 0 || !props.isOwner) ?  null : <Text
                     style={{
-                        color: "#a2a2aa",
+                        color: "#a2a2ac",
                         fontSize: 11,
                         lineHeight: 25,
                         // paddingTop: 5,
@@ -456,7 +456,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
             {
                 scores.length === 0 || cues.length === 0 ?
                     <View style={{ backgroundColor: 'white' }}>
-                        <Text style={{ width: '100%', color: '#a2a2aa', fontSize: 22, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter' }}>
+                        <Text style={{ width: '100%', color: '#a2a2ac', fontSize: 22, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter' }}>
                             {
                                 cues.length === 0 ? PreferredLanguageText('noGraded') : PreferredLanguageText('noStudents')
                             }
@@ -543,7 +543,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                             return s.cueId.toString().trim() === cue._id.toString().trim()
                                                         })
                                                         return <View style={styles.col} key={row.toString() + '-' + col.toString()}>
-                                                            <Text style={{ textAlign: 'center', fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
+                                                            <Text style={{ textAlign: 'center', fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
                                                                 {
                                                                     scoreObject && scoreObject.graded ? scoreObject.score : '-'
                                                                 }
@@ -554,7 +554,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 {
                                                     cues.length === 0 ? null :
                                                         <View style={styles.col} key={'total'}>
-                                                            <Text style={{ textAlign: 'center', fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
+                                                            <Text style={{ textAlign: 'center', fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
                                                                 {totalScore !== 0 ? (totalPoints / totalScore).toFixed(2) : '0'}%
                                                             </Text>
                                                         </View>
@@ -579,30 +579,30 @@ export default React.memo(GradesList, (prev, next) => {
 
 
 const styles = StyleSheet.create({
-    row: { height: 70, borderRadius: 15, marginBottom: 15, flexDirection: 'row', overflow: 'hidden', backgroundColor: '#f4f4f6', },
-    col: { width: 100, justifyContent: 'center', display: 'flex', flexDirection: 'column', backgroundColor: '#f4f4f6', padding: 7 },
+    row: { height: 70, borderRadius: 15, marginBottom: 15, flexDirection: 'row', overflow: 'hidden', backgroundColor: '#f8f8f8', },
+    col: { width: 100, justifyContent: 'center', display: 'flex', flexDirection: 'column', backgroundColor: '#f8f8f8', padding: 7 },
     allGrayFill: {
         fontSize: 12,
         color: "#fff",
         paddingHorizontal: 10,
         borderRadius: 10,
-        backgroundColor: "#a2a2aa",
+        backgroundColor: "#a2a2ac",
         lineHeight: 20
     },
     allGrayOutline: {
         fontSize: 12,
-        color: "#a2a2aa",
+        color: "#a2a2ac",
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: "white",
         borderRadius: 10,
         borderWidth: 1,
-        borderColor: "#a2a2aa",
+        borderColor: "#a2a2ac",
         lineHeight: 20
     },
     all: {
         fontSize: 12,
-        color: "#a2a2aa",
+        color: "#a2a2ac",
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: "white",

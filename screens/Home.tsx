@@ -1247,7 +1247,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 showForgotPassword ? '' : PreferredLanguageText('login')
               }
             </Text> */}
-            <Text style={{ fontSize: 18, color: '#a2a2aa', fontFamily: 'overpass', paddingBottom: 25, maxWidth: 500, textAlign: 'center' }}>
+            <Text style={{ fontSize: 18, color: '#a2a2ac', fontFamily: 'overpass', paddingBottom: 25, maxWidth: 500, textAlign: 'center' }}>
               {
                 showForgotPassword ? PreferredLanguageText('temporaryPassword') : PreferredLanguageText('continueLeftOff')
               }
@@ -1264,7 +1264,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 value={email}
                 placeholder={''}
                 onChangeText={(val: any) => setEmail(val)}
-                placeholderTextColor={'#a2a2aa'}
+                placeholderTextColor={'#a2a2ac'}
                 errorText={emailValidError}
               />
               {
@@ -1278,7 +1278,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                       value={password}
                       placeholder={''}
                       onChangeText={(val: any) => setPassword(val)}
-                      placeholderTextColor={'#a2a2aa'}
+                      placeholderTextColor={'#a2a2ac'}
                     />
                   </View>
               }
@@ -1339,7 +1339,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     lineHeight: 35,
                     color: '#202025',
                     fontSize: 12,
-                    backgroundColor: '#f4f4f6',
+                    backgroundColor: '#f8f8f8',
                     paddingHorizontal: 25,
                     fontFamily: 'inter',
                     height: 35,
@@ -1369,7 +1369,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     lineHeight: 35,
                     color: '#202025',
                     fontSize: 12,
-                    backgroundColor: '#f4f4f6',
+                    backgroundColor: '#f8f8f8',
                     paddingHorizontal: 25,
                     fontFamily: 'inter',
                     height: 35,
@@ -1421,7 +1421,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         />
         {
           reLoading ? <View style={[styles.activityContainer, styles.horizontal]}>
-            <ActivityIndicator color={'#a2a2aa'} />
+            <ActivityIndicator color={'#a2a2ac'} />
           </View>
             : <View style={[styles.activityContainer, styles.horizontal]}>
               <CardsList
@@ -1462,7 +1462,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             height: dimensions.window.height,
             // paddingHorizontal: dimensions.window.width < 1024 ? 0 : 30,
             paddingTop: 10,
-            // backgroundColor: '#f4f4f6',
+            // backgroundColor: '#f8f8f8',
             backgroundColor: '#fff',
             position: dimensions.window.width < 1024 ? 'absolute' : 'relative'
           }}
@@ -1472,7 +1472,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             height: dimensions.window.height,
             // paddingHorizontal: dimensions.window.width < 1024 ? 0 : 30,
             paddingTop: 0,
-            // backgroundColor: '#f4f4f6',
+            // backgroundColor: '#f8f8f8',
             backgroundColor: '#fff',
             position: dimensions.window.width < 1024 ? 'absolute' : 'relative'
           }}>
@@ -1483,12 +1483,12 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               dimensions.window.width < 1024 ?
                 <TouchableOpacity
                   onPress={() => closeModal()}
-                  style={{ height: 50, backgroundColor: '#fff', borderTopWidth: 1, borderColor: '#f4f4f6' }}>
+                  style={{ height: 50, backgroundColor: '#fff', borderTopWidth: 1, borderColor: '#f8f8f8' }}>
                   <Text style={{ flex: 1, textAlign: 'center', fontSize: 15, lineHeight: 15, marginTop: 15, color: '#202025' }}>
                     <Ionicons name='chevron-back-outline' size={15} /> Back
                   </Text>
                 </TouchableOpacity> :
-                <View style={{ backgroundColor: '#f4f4f6', height: 0 }} />
+                <View style={{ backgroundColor: '#f8f8f8', height: 0 }} />
             }
           </View>
       }
@@ -1517,7 +1517,7 @@ const styles = StyleSheet.create({
   },
   input: {
     width: '100%',
-    borderBottomColor: '#f4f4f6',
+    borderBottomColor: '#f8f8f8',
     borderBottomWidth: 1,
     fontSize: 15,
     padding: 15,

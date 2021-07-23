@@ -129,7 +129,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         props.setChannelCreatedBy(subscription.channelCreatedBy)
                                     }}>
                                     <MenuTrigger>
-                                        <Text style={{ fontFamily: 'inter', fontSize: 17 }}>
+                                        <Text style={{ fontFamily: 'inter', fontSize: 17, color: '#3b64f8' }}>
                                             {choice === 'All' ? 'My Cues' : choice}<Ionicons name='caret-down' size={17} />
                                         </Text>
                                     </MenuTrigger>
@@ -139,7 +139,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             borderRadius: 15,
                                             shadowOpacity: 0,
                                             borderWidth: 1,
-                                            borderColor: '#f4f4f6'
+                                            borderColor: '#f8f8f8'
                                         }
                                     }}>
                                         <MenuOption
@@ -161,7 +161,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     </MenuOptions>
                                 </Menu>
                             </View>
-                            <Text style={{ fontSize: 9, color: '#a2a2aa', paddingTop: 7, textAlign: 'center' }}>
+                            <Text style={{ fontSize: 9, color: '#a2a2ac', paddingTop: 7, textAlign: 'center' }}>
                                 Channel
                             </Text>
                         </View>
@@ -174,7 +174,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         props.setChannelFilterChoice(category)
                                     }}>
                                     <MenuTrigger>
-                                        <Text style={{ fontFamily: 'inter', fontSize: 17, color: '#a2a2aa' }}>
+                                        <Text style={{ fontFamily: 'inter', fontSize: 17, color: '#512e8a' }}>
                                             {filterChoice}<Ionicons name='caret-down' size={17} />
                                         </Text>
                                     </MenuTrigger>
@@ -184,7 +184,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             borderRadius: 15,
                                             shadowOpacity: 0,
                                             borderWidth: 1,
-                                            borderColor: '#f4f4f6'
+                                            borderColor: '#f8f8f8'
                                         }
                                     }}>
                                         <MenuOption
@@ -206,7 +206,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     </MenuOptions>
                                 </Menu>
                             </View>
-                            <Text style={{ fontSize: 9, color: '#a2a2aa', paddingTop: 7, textAlign: 'center' }}>
+                            <Text style={{ fontSize: 9, color: '#a2a2ac', paddingTop: 7, textAlign: 'center' }}>
                                 Category
                             </Text>
                         </View>
@@ -339,7 +339,7 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
     },
     cusCategory: {
         fontSize: 15,
-        color: '#a2a2aa',
+        color: '#a2a2ac',
         height: 22,
         paddingHorizontal: 10
     },

@@ -9,7 +9,7 @@ import { Ionicons } from '@expo/vector-icons';
 const ThreadCard: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
     const [loading, setLoading] = useState(true)
-    const [color, setColor] = useState('#a2a2aa');
+    const [color, setColor] = useState('#a2a2ac');
     const [subtitle, setSubtitle] = useState('')
 
     const [imported, setImported] = useState(false)
@@ -42,7 +42,7 @@ const ThreadCard: React.FunctionComponent<{ [label: string]: any }> = (props: an
             if (props.channelCreatedBy.toString().trim() === props.thread.userId.toString().trim()) {
                 setColor('#3B64F8')
             } else if (unparsedUser._id.toString().trim() === props.thread.userId.toString().trim()) {
-                setColor('#a2a2aa')
+                setColor('#a2a2ac')
             }
         }
         setLoading(false)
@@ -78,7 +78,7 @@ const ThreadCard: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         {
                             props.thread.isPrivate ?
                                 <Text style={styleObject.date}>
-                                    <Ionicons name='eye-off-outline' color={'#a2a2aa'} />
+                                    <Ionicons name='eye-off-outline' color={'#a2a2ac'} />
                                 </Text> : null
                         }
                         <Text style={{
@@ -94,17 +94,17 @@ const ThreadCard: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     </View>
                     {
                         imported ?
-                            <View style={{ backgroundColor: '#f4f4f6', flex: 1, flexDirection: 'row', paddingTop: 6 }}>
-                                <Text style={{ width: '100%', color: '#a2a2aa', fontSize: 15, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
-                                    <Ionicons name='document-outline' size={17} color='#a2a2aa' /> {title}.{type}
+                            <View style={{ backgroundColor: '#f8f8f8', flex: 1, flexDirection: 'row', paddingTop: 6 }}>
+                                <Text style={{ width: '100%', color: '#a2a2ac', fontSize: 15, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                    <Ionicons name='document-outline' size={17} color='#a2a2ac' /> {title}.{type}
                                 </Text>
                                 <Text ellipsizeMode={'tail'}
                                     numberOfLines={1}
                                     style={styleObject.titleArrow}>
-                                    <Ionicons name="chevron-forward-outline" color="#a2a2aa" size={20} style={{ marginTop: 4 }} />
+                                    <Ionicons name="chevron-forward-outline" color="#a2a2ac" size={20} style={{ marginTop: 4 }} />
                                 </Text>
                             </View>
-                            : <View style={{ backgroundColor: '#f4f4f6', width: '100%', flexDirection: 'row', display: 'flex' }}>
+                            : <View style={{ backgroundColor: '#f8f8f8', width: '100%', flexDirection: 'row', display: 'flex' }}>
                                 <Text ellipsizeMode={'tail'}
                                     numberOfLines={1}
                                     style={styleObject.title}>
@@ -129,7 +129,7 @@ const ThreadCard: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 <Text ellipsizeMode={'tail'}
                                     numberOfLines={1}
                                     style={styleObject.titleArrow}>
-                                    <Ionicons name="chevron-forward-outline" color="#a2a2aa" size={20} style={{ marginTop: 4 }} />
+                                    <Ionicons name="chevron-forward-outline" color="#a2a2ac" size={20} style={{ marginTop: 4 }} />
                                 </Text>
                             </View>
                     }
@@ -171,24 +171,24 @@ const styles: any = () => StyleSheet.create({
         width: '100%',
         borderRadius: 15,
         padding: 13,
-        backgroundColor: '#f4f4f6',
+        backgroundColor: '#f8f8f8',
     },
     text: {
         display: 'flex',
         flexDirection: 'column',
         flex: 1,
-        backgroundColor: '#f4f4f6'
+        backgroundColor: '#f8f8f8'
     },
     dateContainer: {
         fontSize: 10,
         height: '22%',
-        backgroundColor: '#f4f4f6',
+        backgroundColor: '#f8f8f8',
         display: 'flex',
         flexDirection: 'row'
     },
     date: {
         fontSize: 10,
-        color: '#a2a2aa',
+        color: '#a2a2ac',
         marginLeft: 5
     },
     title: {
@@ -208,7 +208,7 @@ const styles: any = () => StyleSheet.create({
     },
     description: {
         fontSize: 13,
-        color: '#a2a2aa',
+        color: '#a2a2ac',
         // height: '30%',
     },
     color: {

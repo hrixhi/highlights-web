@@ -156,7 +156,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
             borderTopRightRadius: props.cueId ? 0 : 30,
             borderTopLeftRadius: props.cueId ? 0 : 30,
             // marginBottom: props.cueId ? 0 : 25,
-            borderBottomColor: '#f4f4f6',
+            borderBottomColor: '#f8f8f8',
             borderBottomWidth: props.cueId ? 0 : 1
         }}>
             <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 25 }}>
@@ -211,14 +211,14 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                     <Text style={{
                                         lineHeight: 23,
                                         marginRight: 10,
-                                        color: '#a2a2aa',
+                                        color: '#a2a2ac',
                                         fontSize: 11,
                                         textTransform: 'uppercase'
                                     }}>
                                         {PreferredLanguageText('comments')}
                                     </Text>
                                     <Text style={{ lineHeight: 21 }}>
-                                        <Ionicons size={14} name={showComments ? 'caret-down-outline' : 'caret-forward-outline'} color='#a2a2aa' />
+                                        <Ionicons size={14} name={showComments ? 'caret-down-outline' : 'caret-forward-outline'} color='#a2a2ac' />
                                     </Text>
                                 </TouchableOpacity>
                         }
@@ -236,7 +236,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                         textAlign: 'right',
                                         lineHeight: 23,
                                         marginRight: 20,
-                                        color: '#a2a2aa',
+                                        color: '#a2a2ac',
                                         fontSize: 11,
                                     }}>
                                         NEW POST
@@ -250,7 +250,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 {
                     threads.length === 0 ?
                         <View style={{ backgroundColor: 'white', flex: 1 }}>
-                            <Text style={{ width: '100%', color: '#a2a2aa', fontSize: 22, paddingTop: 100, paddingBottom: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                            <Text style={{ width: '100%', color: '#a2a2ac', fontSize: 22, paddingTop: 100, paddingBottom: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                                 {
                                     !props.cueId ? PreferredLanguageText('noPosts') : PreferredLanguageText('noComments')
                                 }
@@ -265,7 +265,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                     flexDirection: 'column',
                                     backgroundColor: 'white'
                                 }}>
-                                    <ActivityIndicator color={'#a2a2aa'} />
+                                    <ActivityIndicator color={'#a2a2ac'} />
                                 </View> :
                                 <View style={{
                                     width: '100%',
@@ -361,7 +361,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                                         onPress={() => setFilterChoice('All')}>
                                                                         <Text
                                                                             style={{
-                                                                                color: '#a2a2aa',
+                                                                                color: '#a2a2ac',
                                                                                 lineHeight: 20,
                                                                                 fontSize: 12
                                                                             }}
@@ -378,7 +378,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                                         onPress={() => setFilterChoice(category)}>
                                                                         <Text
                                                                             style={{
-                                                                                color: '#a2a2aa',
+                                                                                color: '#a2a2ac',
                                                                                 lineHeight: 20,
                                                                                 fontSize: 12
                                                                             }}>
@@ -448,7 +448,7 @@ const styleObject = () => {
             height: 22,
             borderRadius: 10,
             borderWidth: 1,
-            borderColor: '#a2a2aa',
+            borderColor: '#a2a2ac',
             color: 'white'
         }
     })

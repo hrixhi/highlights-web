@@ -52,7 +52,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 <Ionicons
                                     name='share-outline'
                                     size={8}
-                                    color={props.cue.submittedAt && props.cue.submittedAt !== '' ? ('#3B64F8') : (colorScheme === 'light' ? '#a2a2aa' : '#333333')}
+                                    color={props.cue.submittedAt && props.cue.submittedAt !== '' ? ('#3B64F8') : (colorScheme === 'light' ? '#a2a2ac' : '#333333')}
                                 />
                             </Text> : null
                         }
@@ -62,7 +62,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     <Ionicons
                                         name='notifications-outline'
                                         size={8}
-                                        color={colorScheme === 'light' ? '#a2a2aa' : '#333333'}
+                                        color={colorScheme === 'light' ? '#a2a2ac' : '#333333'}
                                     />
                                 </Text> : null
                         } */}
@@ -86,7 +86,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     width: '97%',
                                     zIndex: 20
                                 }}>
-                                    <Ionicons name='bookmark' size={18} color={starred ? '#d91d56' : '#a2a2aa'} />
+                                    <Ionicons name='bookmark' size={18} color={starred ? '#d91d56' : '#a2a2ac'} />
                                 </Text>
                                 : null
                         }
@@ -99,23 +99,23 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             marginRight: 5,
                             marginTop: -5,
                             backgroundColor: colorScheme === 'light'
-                                ? (starred ? '#202025' : '#f4f4f6')
-                                : (starred ? 'white' : '#a2a2aa'),
+                                ? (starred ? '#202025' : '#f8f8f8')
+                                : (starred ? 'white' : '#a2a2ac'),
                         }}>
                             {
                                 props.cue.submission ? <Text>
-                                    <Ionicons name='share-outline' size={11} color={props.cue.submittedAt && props.cue.submittedAt !== '' ? ('#3B64F8') : (colorScheme === 'light' ? '#a2a2aa' : '#333333')} style={{ marginRight: 10 }} />
+                                    <Ionicons name='share-outline' size={11} color={props.cue.submittedAt && props.cue.submittedAt !== '' ? ('#3B64F8') : (colorScheme === 'light' ? '#a2a2ac' : '#333333')} style={{ marginRight: 10 }} />
                                 </Text> : null
                             }
                             {
                                 props.cue.frequency !== '0' ?
                                     <Text>
-                                        <Ionicons name='notifications-outline' size={11} color={colorScheme === 'light' ? '#a2a2aa' : '#333333'} />
+                                        <Ionicons name='notifications-outline' size={11} color={colorScheme === 'light' ? '#a2a2ac' : '#333333'} />
                                     </Text> : null
                             }
                         </View> */}
                     </View>
-                    <View style={{ backgroundColor: '#f4f4f6', width: '100%', flexDirection: 'row', flex: 1, height: '75%', paddingTop: 6 }}>
+                    <View style={{ backgroundColor: '#f8f8f8', width: '100%', flexDirection: 'row', flex: 1, height: '75%', paddingTop: 6 }}>
                         <Text ellipsizeMode={'tail'}
                             numberOfLines={1}
                             style={styleObject.title}>
@@ -185,35 +185,35 @@ const styles: any = (colorScheme: any, channelId: any) => StyleSheet.create({
         borderRadius: 15,
         padding: 13,
         paddingTop: 17,
-        backgroundColor: colorScheme === 'light' ? '#f4f4f6' : '#a2a2aa',
+        backgroundColor: colorScheme === 'light' ? '#f8f8f8' : '#a2a2ac'
     },
     flipCard: {
         height: '100%',
         width: '100%',
         borderRadius: 15,
         padding: 13,
-        color: '#f4f4f6',
+        color: '#f8f8f8',
         backgroundColor: colorScheme === 'light' ? '#202025' : 'white'
     },
     descriptionFlip: {
-        color: '#a2a2aa',
+        color: '#a2a2ac',
         fontSize: 13,
         // height: '30%'
     },
     text: {
         height: '100%',
-        backgroundColor: colorScheme === 'light' ? '#f4f4f6' : '#a2a2aa'
+        backgroundColor: colorScheme === 'light' ? '#f8f8f8' : '#a2a2ac'
     },
     flipText: {
         height: '100%',
-        color: '#f4f4f6',
+        color: '#f8f8f8',
         backgroundColor: colorScheme === 'light' ? '#202025' : 'white'
     },
     dateContainer: {
         fontSize: 10,
-        color: colorScheme === 'light' ? '#a2a2aa' : '#f4f4f6',
+        color: colorScheme === 'light' ? '#a2a2ac' : '#f8f8f8',
         height: '25%',
-        backgroundColor: colorScheme === 'light' ? '#f4f4f6' : '#a2a2aa',
+        backgroundColor: colorScheme === 'light' ? '#f8f8f8' : '#a2a2ac',
         display: 'flex',
         flexDirection: 'row'
     },
@@ -222,17 +222,17 @@ const styles: any = (colorScheme: any, channelId: any) => StyleSheet.create({
         height: '25%',
         display: 'flex',
         flexDirection: 'row',
-        color: '#f4f4f6',
+        color: '#f8f8f8',
         backgroundColor: colorScheme === 'light' ? '#202025' : 'white'
     },
     date: {
         fontSize: 9,
-        color: colorScheme === 'light' ? '#a2a2aa' : '#333333',
+        color: colorScheme === 'light' ? '#a2a2ac' : '#333333',
         marginLeft: 10
     },
     date2: {
         fontSize: 9,
-        color: colorScheme === 'light' ? '#a2a2aa' : '#333333',
+        color: colorScheme === 'light' ? '#a2a2ac' : '#333333',
         marginLeft: 10,
         // marginTop: -2
     },
@@ -259,7 +259,7 @@ const styles: any = (colorScheme: any, channelId: any) => StyleSheet.create({
     },
     description: {
         fontSize: 13,
-        color: colorScheme === 'light' ? '#a2a2aa' : '#333333',
+        color: colorScheme === 'light' ? '#a2a2ac' : '#333333',
         // height: '30%'
     }
 });

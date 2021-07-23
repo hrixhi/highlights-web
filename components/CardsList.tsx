@@ -62,7 +62,7 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     return (
         <Animated.View style={{
-            borderColor: '#f4f4f6',
+            borderColor: '#f8f8f8',
             // borderBottomWidth: 2,
             // borderTopWidth: 1,
             height: ((dimensions.window.height) * 0.66),
@@ -101,7 +101,7 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     })
                 }
                 {
-                    filteredCues.length === 0 ? <Text style={{ fontSize: 22, color: '#a2a2aa', textAlign: 'center', fontFamily: 'inter' }}>
+                    filteredCues.length === 0 ? <Text style={{ fontSize: 22, color: '#a2a2ac', textAlign: 'center', fontFamily: 'inter' }}>
                         {PreferredLanguageText('noCuesCreated')}
                     </Text> : null
                 }

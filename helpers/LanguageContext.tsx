@@ -54,9 +54,9 @@ const EnglishBank: { [key: string]: string } = {
     inviteByEmail: "Add by Email",
     myNotes: "Notes", // Done
     mySubmission: "Submission", // Done
-    status: "Status", // DOne
+    status: "Responses", // DOne
     noStatuses: "No Responses.",
-    unableToLoadStatuses: "Unable to load statuses.",
+    unableToLoadStatuses: "Unable to load responses.",
     noStudents: "No students.",
     update: "Update", // Done
     forward: "Forward",
@@ -659,7 +659,7 @@ export function LanguageSelect() {
                         selectedValue={language}
                         style={{
                             height: 28, borderRadius: 10,
-                            // border: "1px solid #A2A2AA",
+                            // border: "1px solid #a2a2ac",
                             fontSize: 12,
                             padding: '0px 5px'
                         }}

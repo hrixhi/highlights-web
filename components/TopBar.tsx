@@ -95,13 +95,13 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         onPress={() => props.openMeeting()}>
                                         <Text style={styles.channelText}>
                                             <Ionicons
-                                                name='videocam-outline' size={21} color={'#a2a2aa'} />
+                                                name='videocam-outline' size={21} color={'#a2a2ac'} />
                                             {
                                                 props.meetingOn ?
                                                     <View style={styles.badge} /> : null
                                             }
                                         </Text>
-                                        <Text style={{ fontSize: 9, color: '#a2a2aa', textAlign: 'center' }}>
+                                        <Text style={{ fontSize: 9, color: '#a2a2ac', textAlign: 'center' }}>
                                             Lectures
                                         </Text>
                                     </TouchableOpacity>
@@ -109,13 +109,13 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         style={{ marginRight: 15 }}
                                         onPress={() => props.openSubscribers()}>
                                         <Text style={styles.channelText}>
-                                            <Ionicons name='mail-outline' size={21} color={'#a2a2aa'} />
+                                            <Ionicons name='mail-outline' size={21} color={'#a2a2ac'} />
                                             {
                                                 props.unreadMessages !== 0 ?
                                                     <View style={styles.badge} /> : null
                                             }
                                         </Text>
-                                        <Text style={{ fontSize: 9, color: '#a2a2aa', textAlign: 'center' }}>
+                                        <Text style={{ fontSize: 9, color: '#a2a2ac', textAlign: 'center' }}>
                                             Inbox
                                         </Text>
                                     </TouchableOpacity>
@@ -123,13 +123,13 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         style={{ marginRight: 15 }}
                                         onPress={() => props.openDiscussion()}>
                                         <Text style={styles.channelText}>
-                                            <Ionicons name='chatbubble-ellipses-outline' size={20} color={'#a2a2aa'} />
+                                            <Ionicons name='chatbubble-ellipses-outline' size={20} color={'#a2a2ac'} />
                                             {
                                                 props.unreadDiscussionThreads !== 0 ?
                                                     <View style={styles.badge} /> : null
                                             }
                                         </Text>
-                                        <Text style={{ fontSize: 9, color: '#a2a2aa', textAlign: 'center' }}>
+                                        <Text style={{ fontSize: 9, color: '#a2a2ac', textAlign: 'center' }}>
                                             Discussion
                                         </Text>
                                     </TouchableOpacity>
@@ -137,9 +137,9 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         style={{ marginRight: isOwner ? 15 : 0 }}
                                         onPress={() => props.openGrades()}>
                                         <Text style={styles.channelText}>
-                                            <Ionicons name='stats-chart-outline' size={19} color={'#a2a2aa'} />
+                                            <Ionicons name='stats-chart-outline' size={19} color={'#a2a2ac'} />
                                         </Text>
-                                        <Text style={{ fontSize: 9, color: '#a2a2aa', textAlign: 'center' }}>
+                                        <Text style={{ fontSize: 9, color: '#a2a2ac', textAlign: 'center' }}>
                                             Grades
                                         </Text>
                                     </TouchableOpacity>
@@ -149,9 +149,9 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 style={{ marginRight: 0 }}
                                                 onPress={() => props.openChannelSettings()}>
                                                 <Text style={styles.channelText}>
-                                                    <Ionicons name='settings-outline' size={19} color={'#a2a2aa'} />
+                                                    <Ionicons name='settings-outline' size={19} color={'#a2a2ac'} />
                                                 </Text>
-                                                <Text style={{ fontSize: 9, color: '#a2a2aa', textAlign: 'center' }}>
+                                                <Text style={{ fontSize: 9, color: '#a2a2ac', textAlign: 'center' }}>
                                                     Settings
                                                 </Text>
                                             </TouchableOpacity> : null
@@ -178,7 +178,7 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             style={filterChoice === 'All' ? styles.subOutline : styles.sub}
                             onPress={() => props.setChannelFilterChoice('All')}>
                             <Text
-                                style={{ color: '#a2a2aa', lineHeight: 20, fontSize: 13 }}
+                                style={{ color: '#a2a2ac', lineHeight: 20, fontSize: 13 }}
                             >
                                 All
                             </Text>
@@ -190,7 +190,7 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     style={filterChoice === category ? styles.subOutline : styles.sub}
                                     onPress={() => props.setChannelFilterChoice(category)}>
                                     <Text
-                                        style={{ color: '#a2a2aa', lineHeight: 20, fontSize: 13 }}>
+                                        style={{ color: '#a2a2ac', lineHeight: 20, fontSize: 13 }}>
                                         {category}
                                     </Text>
                                 </TouchableOpacity>
@@ -239,17 +239,17 @@ const styleObject: any = (channelId: any) => StyleSheet.create({
     },
     subOutline: {
         fontSize: 15,
-        color: '#a2a2aa',
+        color: '#a2a2ac',
         height: 22,
         paddingHorizontal: 10,
         lineHeight: 20,
         borderRadius: 10,
-        borderColor: '#a2a2aa',
+        borderColor: '#a2a2ac',
         borderWidth: 1
     },
     sub: {
         fontSize: 15,
-        color: '#a2a2aa',
+        color: '#a2a2ac',
         height: 22,
         paddingHorizontal: 10,
         lineHeight: 20
