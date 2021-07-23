@@ -67,12 +67,14 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             props.handleFilterChange('All')
                                             props.setChannelFilterChoice('All')
                                             props.setChannelId('')
+                                            props.closeModal()
                                             return
                                         }
                                         props.setChannelFilterChoice('All')
                                         props.handleFilterChange(subscription.channelName)
                                         props.setChannelId(subscription.channelId)
                                         props.setChannelCreatedBy(subscription.channelCreatedBy)
+                                        props.closeModal()
                                     }}>
                                     <MenuTrigger>
                                         <Text style={{ fontFamily: 'inter', fontSize: 17, color: '#fff' }}>

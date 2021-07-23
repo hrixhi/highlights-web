@@ -735,7 +735,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         />
                     </View>
                 </View> : null}
-                {isMeeting ? (
+                {/* {isMeeting ? (
                     <View
                         style={{
                             display: "flex",
@@ -758,7 +758,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             activeThumbColor="white"
                         />
                     </View>
-                ) : null}
+                ) : null} */}
             </DefaultView>
         ) : null;
     };
@@ -955,14 +955,15 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
             <Text style={{ width: "100%", textAlign: "center", height: 15, paddingBottom: 25 }}>
                 {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
             </Text>
-            <View style={{ backgroundColor: "white", flexDirection: "row", paddingBottom: 25 }}>
+            <View style={{ backgroundColor: "white", flexDirection: "row", paddingBottom: 35 }}>
                 <Text
                     ellipsizeMode="tail"
                     style={{
-                        fontSize: 11,
+                        fontSize: 21,
                         paddingBottom: 20,
-                        textTransform: "uppercase",
-                        // paddingLeft: 20,
+                        fontFamily: 'inter',
+                        // textTransform: "uppercase",
+                        // paddingLeft: 10,
                         flex: 1,
                         lineHeight: 25
                     }}>
@@ -970,7 +971,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 </Text>
                 <Text
                     style={{
-                        color: "#a2a2aa",
+                        color: "#3B64F8",
                         fontSize: 11,
                         lineHeight: 25,
                         // paddingTop: 5,

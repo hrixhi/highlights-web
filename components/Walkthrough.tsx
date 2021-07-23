@@ -57,9 +57,10 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 <View style={{ backgroundColor: 'white', paddingTop: 10 }}>
                     <Text
                         style={{
-                            fontSize: 11,
+                            fontSize: 21,
                             paddingBottom: 20,
-                            textTransform: "uppercase",
+                            fontFamily: 'inter',
+                            // textTransform: "uppercase",
                             // paddingLeft: 10,
                             flex: 1,
                             lineHeight: 25

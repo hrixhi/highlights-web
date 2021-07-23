@@ -1438,6 +1438,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             </View>
         }
         <BottomBar
+          closeModal={() => closeModal()}
           cues={filteredCues}
           openWalkthrough={() => openModal('Walkthrough')}
           openCalendar={() => openModal('Calendar')}
@@ -1463,7 +1464,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             // paddingHorizontal: dimensions.window.width < 1024 ? 0 : 30,
             paddingTop: 10,
             // backgroundColor: '#f4f4f6',
-            backgroundColor: '#fff',
+            backgroundColor: '#202025',
             position: dimensions.window.width < 1024 ? 'absolute' : 'relative'
           }}
         /> :

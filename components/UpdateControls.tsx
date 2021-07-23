@@ -1476,7 +1476,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             style={{
                 width: "100%",
                 backgroundColor: "#f4f4f6",
-                minHeight: 475,
+                minHeight: 650,
                 borderRadius: 15
             }}
             editorStyle={{
@@ -1520,7 +1520,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             style={{
                 width: "100%",
                 backgroundColor: "#f4f4f6",
-                minHeight: 475,
+                minHeight: 650,
                 borderRadius: 15
             }}
             editorStyle={{
@@ -2924,7 +2924,7 @@ const styles: any = StyleSheet.create({
         width: "100%",
         backgroundColor: "#f4f4f6",
         borderRadius: 15,
-        fontSize: 21,
+        fontSize: 22,
         padding: 20,
         paddingTop: 20,
         paddingBottom: 20,

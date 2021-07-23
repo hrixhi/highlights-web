@@ -298,9 +298,10 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
             <View style={{ width: '100%', backgroundColor: 'white' }}>
                 <Text
                     style={{
-                        fontSize: 11,
-                        paddingBottom: 25,
-                        textTransform: "uppercase",
+                        fontSize: 21,
+                        paddingBottom: 20,
+                        fontFamily: 'inter',
+                        // textTransform: "uppercase",
                         // paddingLeft: 10,
                         flex: 1,
                         lineHeight: 25

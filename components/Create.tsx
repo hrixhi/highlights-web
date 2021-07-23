@@ -673,10 +673,13 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     <View style={{ backgroundColor: 'white', flex: 1 }}>
                         <Text
                             style={{
-                                fontSize: 11,
+                                fontSize: 21,
                                 paddingBottom: 20,
-                                textTransform: 'uppercase',
-                                // paddingLeft: 10
+                                fontFamily: 'inter',
+                                // textTransform: "uppercase",
+                                // paddingLeft: 10,
+                                flex: 1,
+                                lineHeight: 25
                             }}
                         >
                             {PreferredLanguageText('new')}
@@ -997,7 +1000,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 width: '100%',
                                 backgroundColor: '#f4f4f6',
                                 borderRadius: 15,
-                                minHeight: 475,
+                                minHeight: 575,
                                 display: (isQuiz || imported) ? "none" : "flex"
                             }}
                             editorStyle={{
@@ -1703,7 +1706,7 @@ const styles: any = StyleSheet.create({
         width: '100%',
         backgroundColor: '#f4f4f6',
         borderRadius: 15,
-        fontSize: 21,
+        fontSize: 22,
         padding: 20,
         paddingTop: 20,
         paddingBottom: 20,

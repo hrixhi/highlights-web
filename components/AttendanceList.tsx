@@ -298,7 +298,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                 </Text>}
                 {(pastMeetings.length === 0 || channelAttendances.length === 0 || !props.isOwner)  ?  null : <Text
                     style={{
-                        color: "#a2a2aa",
+                        color: "#3B64F8",
                         fontSize: 11,
                         lineHeight: 25,
                         // paddingTop: 5,

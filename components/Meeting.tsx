@@ -358,9 +358,11 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                     <Text
                         ellipsizeMode="tail"
                         style={{
-                            fontSize: 11,
+                            fontSize: 21,
                             paddingBottom: 20,
-                            textTransform: "uppercase",
+                            fontFamily: 'inter',
+                            // textTransform: "uppercase",
+                            // paddingLeft: 10,
                             flex: 1,
                             lineHeight: 25
                         }}>
