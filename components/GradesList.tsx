@@ -9,7 +9,6 @@ import * as FileSaver from 'file-saver';
 // import { PieChart } from 'react-native-svg-charts'
 import { Chart } from "react-google-charts";
 
-
 import {
     LineChart,
     BarChart,
@@ -23,8 +22,38 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
     const unparsedSubmissionStatistics: any[] = JSON.parse(JSON.stringify(props.submissionStatistics))
     const [scores] = useState<any[]>(unparsedScores)
     const [cues] = useState<any[]>(unparsedCues)
-    const [submissionStatistics] = useState<any[]>(unparsedSubmissionStatistics)
+    const [submissionStatistics, setSubmissionStatistics] = useState<any[]>(unparsedSubmissionStatistics)
     const [exportAoa, setExportAoa] = useState<any[]>()
+
+    useEffect(() => {
+
+        const filterUnreleased = submissionStatistics.filter((stat: any) => {
+            const { cueId } = stat;
+
+            const findCue = cues.find((u: any) => {
+                return u._id.toString() === cueId.toString();
+            })
+
+            const { cue, releaseSubmission } = findCue; 
+
+            if (cue[0] === '{' && cue[cue.length - 1] === '}') {
+                const parse = JSON.parse(cue);
+
+                if (parse.quizId) {
+                    if (!releaseSubmission) {
+                        return false;
+                    }
+                }
+
+            }
+
+            return true
+
+        })
+
+        setSubmissionStatistics(filterUnreleased)
+
+    }, [cues, props.submissionStatistics])
 
     // Statistics
     const [showStatistics, setShowStatistics] = useState(false);
@@ -271,7 +300,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 data={data}
                 options={{
                     // Material design options
-                    fontFamily: 'inter'
+                    fontName: 'overpass'
                 }}
             />
             {/* </ScrollView> */}
