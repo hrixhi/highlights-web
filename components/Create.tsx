@@ -738,9 +738,10 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 actions.insertLink,
                                                 actions.insertImage,
                                                 // "insertCamera",
+                                                "clear",
                                                 actions.undo,
                                                 actions.redo,
-                                                "clear"
+                                                
                                             ]}
                                     iconMap={{
                                         ["insertCamera"]: ({ tintColor }) => <Ionicons name='camera-outline' size={15} color={tintColor} />,

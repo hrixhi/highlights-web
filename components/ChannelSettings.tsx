@@ -247,7 +247,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                 <Text
                     style={{
                         fontSize: 21,
-                        paddingBottom: 20,
+                        paddingBottom: 45,
                         fontFamily: 'inter',
                         // textTransform: "uppercase",
                         // paddingLeft: 10,

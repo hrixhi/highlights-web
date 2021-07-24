@@ -1044,9 +1044,10 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             actions.insertLink,
                             actions.insertImage,
                             "insertCamera",
+                            "clear",
                             actions.undo,
                             actions.redo,
-                            "clear"
+                            
                         ]
                 }
                 iconMap={{

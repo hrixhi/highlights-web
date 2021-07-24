@@ -978,7 +978,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         textAlign: 'right',
                                         lineHeight: 23,
                                         marginRight: 20,
-                                        color: '#a2a2aa',
+                                        color: '#3B64F8',
                                         fontSize: 11,
                                     }}>
                                         NEW GROUP
@@ -1039,7 +1039,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                         </View>
                         {isQuiz ? <Text
                             style={{
-                                color: "#a2a2aa",
+                                color: "#3B64F8",
                                 fontSize: 11,
                                 lineHeight: 25,
                                 textAlign: "right",
