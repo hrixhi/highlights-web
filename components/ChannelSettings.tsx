@@ -246,13 +246,15 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
             <View style={{ width: '100%', backgroundColor: 'white', paddingTop: 10 }}>
                 <Text
                     style={{
-                        fontSize: 11,
-                        paddingBottom: 75,
-                        textTransform: "uppercase",
+                        fontSize: 21,
+                        paddingBottom: 20,
+                        fontFamily: 'inter',
+                        // textTransform: "uppercase",
+                        // paddingLeft: 10,
                         flex: 1,
                         lineHeight: 25
                     }}>
-                    SETTINGS
+                    Settings
                 </Text>
                 <ScrollView
                     onScroll={() => {
@@ -264,7 +266,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                     }}
                 >
                     <View style={{ backgroundColor: 'white' }}>
-                        <Text style={{ color: '#202025', fontSize: 14, paddingBottom: 10 }}>
+                        <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
                             {PreferredLanguageText('channel') + ' ' + PreferredLanguageText('name')}
                         </Text>
                         <TextInput
@@ -279,7 +281,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         />
                     </View>
                     <View style={{ backgroundColor: 'white' }}>
-                        <Text style={{ color: '#202025', fontSize: 14, paddingBottom: 10 }}>
+                        <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
                             {PreferredLanguageText('enrolmentPassword')}
                         </Text>
                         <TextInput
@@ -291,7 +293,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             required={false}
                         />
                     </View>
-                    <Text style={{ color: '#202025', fontSize: 14, paddingBottom: 10 }}>
+                    <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase', marginTop: 25, paddingBottom: 15 }}>
                         Subscribers
                     </Text>
                     <ScrollView
@@ -306,7 +308,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             placeholder='Select...'
                             displayValue='name'
                             // key={userDropdownOptions.toString()}
-                            style={{ 
+                            style={{
                                 multiselectContainer: { // To change css for option container 
                                     minHeight: 200
                                 }
@@ -323,7 +325,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             }}
                         />
                     </ScrollView>
-                    <Text style={{ color: '#202025', fontSize: 14, paddingBottom: 10, paddingTop: 20 }}>
+                    <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase', marginTop: 25, paddingBottom: 15 }}>
                         Moderators
                     </Text>
                     <ScrollView
@@ -343,7 +345,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             //         zIndex: 9999
                             //     }
                             // }}
-                            style={{ 
+                            style={{
                                 multiselectContainer: { // To change css for option container 
                                     minHeight: 100
                                 }

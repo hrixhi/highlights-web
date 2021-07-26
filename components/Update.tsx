@@ -30,14 +30,15 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const [submission, setSubmission] = useState(props.cue.submission ? props.cue.submission : false)
     const [showOriginal, setShowOriginal] = useState(props.cue.channelId && props.cue.channelId !== '' ? true : false)
     const [isQuiz, setIsQuiz] = useState(false)
-
+    const [showOptions, setShowOptions] = useState(false)
+    const [showComments, setShowComments] = useState(false)
 
     const unableToLoadStatusesAlert = PreferredLanguageText('unableToLoadStatuses');
     const checkConnectionAlert = PreferredLanguageText('checkConnection');
     const unableToLoadCommentsAlert = PreferredLanguageText('unableToLoadComments')
 
     console.log("props", props);
-    
+
     useEffect(() => {
         if (props.cue.channelId && props.cue.channelId !== '') {
             const data1 = props.cue.original;
@@ -188,12 +189,12 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     }, [props.cueId, props.channelId])
 
     const windowHeight = Dimensions.get('window').width < 1024 ? Dimensions.get('window').height - 30 : Dimensions.get('window').height;
-    
+
     return (
         <View style={{
             width: '100%',
             height: windowHeight,
-            backgroundColor: '#f4f4f6',
+            backgroundColor: '#fff',
             borderTopLeftRadius: 0,
             borderTopRightRadius: 0,
         }}>
@@ -221,26 +222,6 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     }}
                         key={JSON.stringify(threads)}
                     >
-                        {/* <Swiper
-                            containerStyle={{
-                                borderTopRightRadius: 0,
-                                borderTopLeftRadius: 0
-                            }}
-                            key={JSON.stringify(threads) + JSON.stringify(threads.length)}
-                            vertical={false}
-                            from={0}
-                            minDistanceForAction={0.1}
-                            controlsProps={{
-                                dotsTouchable: true,
-                                prevPos: 'left',
-                                nextPos: 'right',
-                                nextTitle: '›',
-                                nextTitleStyle: { color: '#a2a2aa', fontSize: 60, fontFamily: 'overpass' },
-                                prevTitle: '‹',
-                                prevTitleStyle: { color: '#a2a2aa', fontSize: 60, fontFamily: 'overpass' },
-                                dotActiveStyle: { backgroundColor: !Number.isNaN(Number(cueId)) || (props.channelId && !channelOwner) || (!props.channelId || props.channelId === '') ? '#fff' : '#3B64F8' }
-                            }}
-                        > */}
                         {!viewStatus ? <ScrollView
                             nestedScrollEnabled={true}
                             horizontal={false}
@@ -273,8 +254,12 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 reloadCueListAfterUpdate={() => props.reloadCueListAfterUpdate()}
                                 changeViewStatus={() => setViewStatus(true)}
                                 viewStatus={viewStatus}
+                                showOptions={showOptions}
                                 showOriginal={showOriginal}
+                                setShowOptions={(op: boolean) => setShowOptions(op)}
                                 setShowOriginal={(val: boolean) => setShowOriginal(val)}
+                                showComments={showComments}
+                                setShowComments={(s: any) => setShowComments(s)}
                             />
                             {
                                 !Number.isNaN(Number(cueId))
@@ -284,32 +269,34 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     ) ? <View
                                     style={{ flex: 1, backgroundColor: 'white' }}
                                 /> :
-                                    <ScrollView
-                                        // key={Math.random()}
-                                        ref={scroll2}
-                                        contentContainerStyle={{
-                                            width: '100%',
-                                            height: '100%'
-                                        }}
-                                        contentOffset={{ x: 0, y: 1 }}
-                                        showsVerticalScrollIndicator={false}
-                                        overScrollMode={'always'}
-                                        alwaysBounceVertical={true}
-                                        scrollEnabled={true}
-                                        scrollEventThrottle={1}
-                                        keyboardDismissMode={'on-drag'}
-                                    >
-                                        <ThreadsList
-                                            channelCreatedBy={props.channelCreatedBy}
-                                            key={JSON.stringify(threads)}
-                                            threads={threads}
-                                            cueId={cueId}
-                                            channelId={props.channelId}
-                                            channelName={props.filterChoice}
-                                            closeModal={() => props.closeModal()}
-                                            reload={() => loadThreadsAndStatuses()}
-                                        />
-                                    </ScrollView>
+                                    (
+                                        showComments ? <ScrollView
+                                            // key={Math.random()}
+                                            ref={scroll2}
+                                            contentContainerStyle={{
+                                                width: '100%',
+                                                height: '100%'
+                                            }}
+                                            contentOffset={{ x: 0, y: 1 }}
+                                            showsVerticalScrollIndicator={false}
+                                            overScrollMode={'always'}
+                                            alwaysBounceVertical={true}
+                                            scrollEnabled={true}
+                                            scrollEventThrottle={1}
+                                            keyboardDismissMode={'on-drag'}
+                                        >
+                                            <ThreadsList
+                                                channelCreatedBy={props.channelCreatedBy}
+                                                key={JSON.stringify(threads)}
+                                                threads={threads}
+                                                cueId={cueId}
+                                                channelId={props.channelId}
+                                                channelName={props.filterChoice}
+                                                closeModal={() => props.closeModal()}
+                                                reload={() => loadThreadsAndStatuses()}
+                                            />
+                                        </ScrollView> : null
+                                    )
                             }
                         </ScrollView>
                             : <Fragment>
@@ -325,10 +312,40 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         onPress={() => {
                                             setViewStatus(false)
                                             setShowOriginal(true)
-
+                                            setShowComments(false)
                                         }}>
                                         <Text style={showOriginal ? styles.allGrayFill : styles.all}>
                                             {PreferredLanguageText('viewShared')}
+                                        </Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        style={{
+                                            justifyContent: "center",
+                                            flexDirection: "column"
+                                        }}
+                                        onPress={() => {
+                                            // setShowOptions(true)
+                                            setViewStatus(false)
+                                            setShowOriginal(true);
+                                            setShowComments(false)
+                                        }}>
+                                        <Text style={styles.all}>
+                                            Details
+                                        </Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        style={{
+                                            justifyContent: "center",
+                                            flexDirection: "column"
+                                        }}
+                                        onPress={() => {
+                                            // setShowOptions(true)
+                                            setViewStatus(false)
+                                            setShowOriginal(true);
+                                            setShowComments(true)
+                                        }}>
+                                        <Text style={styles.all}>
+                                            Comments
                                         </Text>
                                     </TouchableOpacity>
                                     {
@@ -341,6 +358,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 onPress={() => {
                                                     setViewStatus(false)
                                                     setShowOriginal(false)
+                                                    setShowComments(false)
                                                 }}>
                                                 <Text style={!showOriginal && !viewStatus ? styles.allGrayFill : styles.all}>
                                                     {
@@ -360,6 +378,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 onPress={() => {
                                                     setViewStatus(true)
                                                     setShowOriginal(false)
+                                                    setShowComments(false)
                                                 }}>
                                                 <Text style={viewStatus ? styles.allGrayFill : styles.all}>
                                                     Responses

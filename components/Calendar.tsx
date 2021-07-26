@@ -15,6 +15,12 @@ import { Ionicons } from "@expo/vector-icons";
 import { PreferredLanguageText } from "../helpers/LanguageContext";
 import { Picker } from "@react-native-picker/picker";
 import { eventFrequencyOptions } from "../helpers/FrequencyOptions";
+import {
+    Menu,
+    MenuOptions,
+    MenuOption,
+    MenuTrigger,
+} from 'react-native-popup-menu';
 
 // Try New Calendar
 // import Scheduler, {SchedulerData, ViewTypes, DATE_FORMAT} from 'react-big-scheduler'
@@ -124,101 +130,101 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const renderFilterEvents = () => {
 
         return (eventChannels.length > 0 ? (
-            <View style={{ marginTop: 20 }} key={JSON.stringify(eventChannels)}>
-                <View
-                    style={{ width: "100%", paddingBottom: 20, backgroundColor: "white" }}>
-                    <Text
-                        style={{
-                            fontSize: 12,
-                            color: "#a2a2aa",
-                            paddingTop: width < 768 ? 15 : 5
-                        }}>
-                        Filter
-                    </Text>
-                </View>
-                <View
-                    style={{
-                        width: "100%",
-                        display: "flex",
-                        flexDirection: "row",
-                        backgroundColor: "white"
-                    }}>
+            <View style={{ marginTop: 20, flexDirection: 'row' }} key={JSON.stringify(eventChannels)}>
+                <View style={{ width: width < 768 ? "100%" : "33.33%" }}>
+                    <View
+                        style={{ width: "100%", paddingBottom: 20, backgroundColor: "white" }}>
+                        <Text
+                            style={{
+                                fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase',
+                                paddingTop: width < 768 ? 15 : 5
+                            }}>
+                            Filter
+                        </Text>
+                    </View>
                     <View
                         style={{
                             width: "100%",
-                            backgroundColor: "white",
-                            display: "flex"
+                            display: "flex",
+                            flexDirection: "row",
+                            backgroundColor: "white"
                         }}>
-                        <ScrollView
-                            style={styles.colorBar}
-                            horizontal={true}
-                            showsHorizontalScrollIndicator={false}>
-                            <TouchableOpacity
-                                style={
-                                    filterChannels.includes('') ? styles.allOutline : styles.allBlack
-                                }
-                                onPress={() => {
-                                    const currentFilterChannels = [...filterChannels];
-
-                                    if (currentFilterChannels.includes("")) {
-                                        const filter = currentFilterChannels.filter((channel: any) => channel !== "");
-
-                                        setFilterChannels(filter);
-                                    } else {
-                                        currentFilterChannels.push("");
-                                        setFilterChannels(currentFilterChannels);
+                        <View
+                            style={{
+                                width: "100%",
+                                backgroundColor: "white",
+                                display: "flex"
+                            }}>
+                            <ScrollView
+                                style={styles.colorBar}
+                                horizontal={true}
+                                showsHorizontalScrollIndicator={false}>
+                                <TouchableOpacity
+                                    style={
+                                        filterChannels.includes('') ? styles.allOutline : styles.allBlack
                                     }
-                                }}>
-                                <Text
-                                    style={{
-                                        lineHeight: 20,
-                                        fontSize: 12,
-                                        color: filterChannels.includes('') ? "#fff" : "#202025"
-                                    }}>
-                                    {PreferredLanguageText("myCues")}
-                                </Text>
-                            </TouchableOpacity>
-                            {eventChannels.map(channel => {
-                                return (
-                                    <TouchableOpacity
-                                        key={Math.random()}
-                                        style={
-                                            filterChannels.includes(channel)
-                                                ? styles.allOutline
-                                                : styles.allBlack
+                                    onPress={() => {
+                                        const currentFilterChannels = [...filterChannels];
+
+                                        if (currentFilterChannels.includes("")) {
+                                            const filter = currentFilterChannels.filter((channel: any) => channel !== "");
+
+                                            setFilterChannels(filter);
+                                        } else {
+                                            currentFilterChannels.push("");
+                                            setFilterChannels(currentFilterChannels);
                                         }
-                                        onPress={() => {
-                                            const currentFilterChannels = [...filterChannels]
-
-                                            if (currentFilterChannels.includes(channel)) {
-                                                const filter = currentFilterChannels.filter((channelName: any) => channelName !== channel);
-                                                setFilterChannels(filter);
-
-                                            } else {
-                                                currentFilterChannels.push(channel);
-                                                setFilterChannels(currentFilterChannels);
-                                            }
+                                    }}>
+                                    <Text
+                                        style={{
+                                            lineHeight: 20,
+                                            fontSize: 12,
+                                            color: filterChannels.includes('') ? "#fff" : "#202025"
                                         }}>
-                                        <Text
-                                            style={{
-                                                lineHeight: 20,
-                                                fontSize: 12,
-                                                color:
-                                                    filterChannels.includes(channel)
-                                                        ? "#fff"
-                                                        : "#202025"
+                                        {PreferredLanguageText("myCues")}
+                                    </Text>
+                                </TouchableOpacity>
+                                {eventChannels.map(channel => {
+                                    return (
+                                        <TouchableOpacity
+                                            key={Math.random()}
+                                            style={
+                                                filterChannels.includes(channel)
+                                                    ? styles.allOutline
+                                                    : styles.allBlack
+                                            }
+                                            onPress={() => {
+                                                const currentFilterChannels = [...filterChannels]
+
+                                                if (currentFilterChannels.includes(channel)) {
+                                                    const filter = currentFilterChannels.filter((channelName: any) => channelName !== channel);
+                                                    setFilterChannels(filter);
+
+                                                } else {
+                                                    currentFilterChannels.push(channel);
+                                                    setFilterChannels(currentFilterChannels);
+                                                }
                                             }}>
-                                            {channel}
-                                        </Text>
-                                    </TouchableOpacity>
-                                );
-                            })}
-                        </ScrollView>
+                                            <Text
+                                                style={{
+                                                    lineHeight: 20,
+                                                    fontSize: 12,
+                                                    color:
+                                                        filterChannels.includes(channel)
+                                                            ? "#fff"
+                                                            : "#202025"
+                                                }}>
+                                                {channel}
+                                            </Text>
+                                        </TouchableOpacity>
+                                    );
+                                })}
+                            </ScrollView>
+                        </View>
                     </View>
                 </View>
-
-                <View style={{ width: width < 768 ? "100%" : "33.33%", display: "flex" }}>
-                    <View style={{ width: "100%", paddingTop: width < 768 ? 40 : 40, paddingBottom: 15, backgroundColor: "white" }}>
+                <View style={{ width: width < 768 ? "100%" : "33.33%" }}>
+                    <View style={{ width: "100%", paddingTop: width < 768 ? 15 : 5, paddingBottom: 15, backgroundColor: "white" }}>
                         <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>Lectures Only</Text>
                     </View>
                     <View
@@ -239,8 +245,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         />
                     </View>
                 </View>
-
-                {filterChannels.length === 0 && !filterByLectures ? null : <Text style={{
+                {/* {filterChannels.length === 0 && !filterByLectures ? null : <Text style={{
                     // width: '50%',
                     color: '#a2a2aa',
                     fontSize: 11,
@@ -254,7 +259,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     }}
                 >
                     RESET
-                </Text>}
+                </Text>} */}
             </View>
         ) : null)
     }
@@ -730,7 +735,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         />
                     </View>
                 </View> : null}
-                {isMeeting ? (
+                {/* {isMeeting ? (
                     <View
                         style={{
                             display: "flex",
@@ -753,7 +758,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             activeThumbColor="white"
                         />
                     </View>
-                ) : null}
+                ) : null} */}
             </DefaultView>
         ) : null;
     };
@@ -950,14 +955,15 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
             <Text style={{ width: "100%", textAlign: "center", height: 15, paddingBottom: 25 }}>
                 {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
             </Text>
-            <View style={{ backgroundColor: "white", flexDirection: "row", paddingBottom: 25 }}>
+            <View style={{ backgroundColor: "white", flexDirection: "row", paddingBottom: 35 }}>
                 <Text
                     ellipsizeMode="tail"
                     style={{
-                        fontSize: 11,
+                        fontSize: 21,
                         paddingBottom: 20,
-                        textTransform: "uppercase",
-                        // paddingLeft: 20,
+                        fontFamily: 'inter',
+                        // textTransform: "uppercase",
+                        // paddingLeft: 10,
                         flex: 1,
                         lineHeight: 25
                     }}>
@@ -965,7 +971,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 </Text>
                 <Text
                     style={{
-                        color: "#a2a2aa",
+                        color: "#3B64F8",
                         fontSize: 11,
                         lineHeight: 25,
                         // paddingTop: 5,
@@ -1046,7 +1052,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
                                 </View>
                                 {/* Put time here */}
-                                <View style={{ display: 'flex', width: "100%", flexDirection: width < 768 ? "column" : "row", marginBottom: 30, }} >
+                                <View style={{ display: 'flex', width: "100%", flexDirection: width < 768 ? "column" : "row", marginBottom: 30, paddingVertical: 10 }} >
                                     <View
                                         style={{
                                             width: width < 768 ? "100%" : "30%",
@@ -1084,7 +1090,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     style={{
                                         marginBottom: 20,
                                         borderColor: "#f4f4f6",
-                                        borderBottomWidth: 1,
+                                        // borderBottomWidth: 1,
                                         paddingBottom: 20
                                     }}>
                                     {channels.length > 0 && !editEvent ? (
@@ -1092,11 +1098,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             <View
                                                 style={{ width: "100%", paddingBottom: 20, backgroundColor: "white" }}>
                                                 <Text
-                                                    style={{
-                                                        fontSize: 12,
-                                                        color: "#a2a2aa",
-                                                        paddingTop: width < 768 ? 15 : 5
-                                                    }}>
+                                                    style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
                                                     {/* {PreferredLanguageText('channel')} */}
                                                     Event For
                                                     {/* <Ionicons

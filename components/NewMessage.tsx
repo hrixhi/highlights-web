@@ -7,9 +7,16 @@ import { fetchAPI } from '../graphql/FetchAPI';
 import { getThreadCategories, createMessage, sendDirectMessage } from '../graphql/QueriesAndMutations';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { RichEditor } from 'react-native-pell-rich-editor';
-import FileViewer from 'react-file-viewer';
+// import FileViewer from 'react-file-viewer';
 import FileUpload from './UploadFiles';
 import { PreferredLanguageText } from '../helpers/LanguageContext';
+import {
+    Menu,
+    MenuOptions,
+    MenuOption,
+    MenuTrigger,
+} from 'react-native-popup-menu';
+
 
 const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -202,20 +209,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     </View>
             }
             <View style={styles.date} onTouchStart={() => Keyboard.dismiss()}>
-                <Text style={{
-                    color: '#a2a2aa',
-                    fontSize: 11,
-                    lineHeight: 30,
-                    flex: 1
-                }}>
-                    {
-                        now.toString().split(' ')[1] +
-                        ' ' +
-                        now.toString().split(' ')[2] +
-                        ', ' +
-                        now.toString().split(' ')[3]
-                    }
-                </Text>
+
                 {
                     showImportOptions && !imported ? null :
                         <TouchableOpacity
@@ -351,31 +345,40 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                             placeholderTextColor={'#a2a2aa'}
                                                         />
                                                     </View> :
-                                                    <ScrollView style={styles.colorBar} horizontal={true} showsHorizontalScrollIndicator={false}>
-                                                        <TouchableOpacity
-                                                            style={customCategory === '' ? styles.allOutline : styles.all}
-                                                            onPress={() => {
-                                                                setCustomCategory('')
-                                                            }}>
-                                                            <Text style={{ color: '#a2a2aa', lineHeight: 20, fontSize: 12 }}>
-                                                                {PreferredLanguageText('none')}
+                                                    <Menu
+                                                        onSelect={(cat: any) => setCustomCategory(cat)}>
+                                                        <MenuTrigger>
+                                                            <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#a2a2aa' }}>
+                                                                {customCategory === '' ? 'None' : customCategory}<Ionicons name='caret-down' size={14} />
                                                             </Text>
-                                                        </TouchableOpacity>
-                                                        {
-                                                            categories.map((category) => {
-                                                                return <TouchableOpacity
-                                                                    key={Math.random()}
-                                                                    style={category === customCategory ? styles.allOutline : styles.all}
-                                                                    onPress={() => {
-                                                                        setCustomCategory(category)
-                                                                    }}>
-                                                                    <Text style={{ color: '#a2a2aa', lineHeight: 20, fontSize: 12 }}>
-                                                                        {category}
-                                                                    </Text>
-                                                                </TouchableOpacity>
-                                                            })
-                                                        }
-                                                    </ScrollView>}
+                                                        </MenuTrigger>
+                                                        <MenuOptions customStyles={{
+                                                            optionsContainer: {
+                                                                padding: 10,
+                                                                borderRadius: 15,
+                                                                shadowOpacity: 0,
+                                                                borderWidth: 1,
+                                                                borderColor: '#f4f4f6'
+                                                            }
+                                                        }}>
+                                                            <MenuOption
+                                                                value={''}>
+                                                                <Text>
+                                                                    None
+                                                                </Text>
+                                                            </MenuOption>
+                                                            {
+                                                                categories.map((category: any) => {
+                                                                    return <MenuOption
+                                                                        value={category}>
+                                                                        <Text>
+                                                                            {category}
+                                                                        </Text>
+                                                                    </MenuOption>
+                                                                })
+                                                            }
+                                                        </MenuOptions>
+                                                    </Menu>}
                                         </View>
                                         <View style={{ width: '15%', backgroundColor: 'white' }}>
                                             <TouchableOpacity

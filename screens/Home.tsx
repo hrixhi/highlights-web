@@ -1408,9 +1408,9 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         width: dimensions.window.width < 1024 ? dimensions.window.width : dimensions.window.width * 0.3,
         height: dimensions.window.height,
         flexDirection: 'column',
-        backgroundColor: '#fff',
-        borderRightColor: '#eeeeee',
-        borderRightWidth: 1,
+        backgroundColor: '#202025',
+        borderRightColor: '#eeeeef',
+        borderRightWidth: 0,
       }}>
         <TopBar
           key={JSON.stringify(channelFilterChoice) + JSON.stringify(filteredCues) + JSON.stringify(modalType) + JSON.stringify(filterChoice) + JSON.stringify(unreadDiscussionThreads) + JSON.stringify(unreadMessages) + JSON.stringify(meetingOn)}
@@ -1454,6 +1454,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             </View>
         }
         <BottomBar
+          closeModal={() => closeModal()}
           cues={filteredCues}
           openWalkthrough={() => openModal('Walkthrough')}
           openCalendar={() => openModal('Calendar')}
@@ -1479,7 +1480,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             // paddingHorizontal: dimensions.window.width < 1024 ? 0 : 30,
             paddingTop: 10,
             // backgroundColor: '#f4f4f6',
-            backgroundColor: '#fff',
+            backgroundColor: '#202025',
             position: dimensions.window.width < 1024 ? 'absolute' : 'relative'
           }}
         /> :
@@ -1489,10 +1490,19 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             // paddingHorizontal: dimensions.window.width < 1024 ? 0 : 30,
             paddingTop: 0,
             // backgroundColor: '#f4f4f6',
-            backgroundColor: '#fff',
+            backgroundColor: '#202025',
             position: dimensions.window.width < 1024 ? 'absolute' : 'relative'
           }}>
-            <View style={{ flex: 1, backgroundColor: 'white', paddingHorizontal: 5 }}>
+            <View style={{
+              flex: 1,
+              backgroundColor: 'white',
+              paddingHorizontal: 5,
+              marginTop: dimensions.window.width < 1024 ? 0 : 25,
+              marginRight: dimensions.window.width < 1024 ? 0 : 25,
+              borderTopLeftRadius: dimensions.window.width < 1024 ? 0 : 20,
+              borderTopRightRadius: dimensions.window.width < 1024 ? 0 : 20,
+              overflow: 'hidden'
+            }}>
               {modalContent}
             </View>
             {
@@ -1522,10 +1532,13 @@ const styles = StyleSheet.create({
   activityContainer: {
     borderTopWidth: 0,
     borderBottomWidth: 0,
-    borderColor: '#eeeeee',
+    borderColor: '#eeeeef',
+    borderTopRightRadius: 15,
+    borderTopLeftRadius: 15,
     height: '66%',
     width: '100%',
     justifyContent: "center",
+    backgroundColor: '#202025'
   },
   horizontal: {
     flexDirection: "row",

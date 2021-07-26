@@ -9,7 +9,7 @@ import { htmlStringParser } from '../helpers/HTMLParser';
 const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
     const colorChoices: any[] = ['#d91d56', '#ED7D22', '#F8D41F', '#B8D41F', '#53BE6D'].reverse()
-    const colorScheme = useColorScheme();
+    const colorScheme = 'dark';
     const styleObject = styles(colorScheme, props.channelId)
     const starred = props.cue.starred;
     const { title, subtitle } = htmlStringParser(props.cue.channelId && props.cue.channelId !== '' ? props.cue.original : props.cue.cue)
@@ -115,7 +115,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             }
                         </View> */}
                     </View>
-                    <View style={{ backgroundColor: '#f4f4f6', width: '100%', flexDirection: 'row', flex: 1, height: '75%', paddingTop: 6 }}>
+                    <View style={{ backgroundColor: '#a2a2aa', width: '100%', flexDirection: 'row', flex: 1, height: '75%', paddingTop: 6 }}>
                         <Text ellipsizeMode={'tail'}
                             numberOfLines={1}
                             style={styleObject.title}>
@@ -185,7 +185,7 @@ const styles: any = (colorScheme: any, channelId: any) => StyleSheet.create({
         borderRadius: 15,
         padding: 13,
         paddingTop: 17,
-        backgroundColor: colorScheme === 'light' ? '#f4f4f6' : '#a2a2aa',
+        backgroundColor: colorScheme === 'light' ? '#f4f4f6' : '#a2a2aa'
     },
     flipCard: {
         height: '100%',

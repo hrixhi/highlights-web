@@ -58,22 +58,24 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
     return (
         <View style={styles.topbar} key={Math.random()}>
-            <View style={{ width: '100%', height: Dimensions.get('window').height * 0.15 }}>
+            <View style={{ width: '100%', height: Dimensions.get('window').height * 0.15, backgroundColor: '#202025' }}>
                 <View style={{
                     // height: '45%',
                     flexDirection: 'row',
                     display: 'flex',
                     paddingHorizontal: 25,
-                    paddingTop: 10
+                    paddingTop: 10,
+                    backgroundColor: '#202025'
                 }}>
                     <TouchableOpacity
                         onPress={() => Linking.openURL('http://www.cuesapp.co')}
-                        style={{ backgroundColor: 'white' }}>
+                        style={{ backgroundColor: '#202025' }}
+                    >
                         <Image
                             source={
                                 school && school.logo && school.logo !== ''
                                     ? school.logo
-                                    : require('./default-images/cues-logo-black-exclamation-hidden.jpg')
+                                    : require('./default-images/cues-logo-white-exclamation-hidden.jpg')
                             }
                             style={{
                                 width: school && school.logo && school.logo !== '' ? Dimensions.get('window').height * 0.07 : Dimensions.get('window').height * 0.07,
@@ -85,13 +87,13 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     <View
                         key={JSON.stringify(props.cues)}
                         style={{
-                            flex: 1, flexDirection: 'row'
+                            flex: 1, flexDirection: 'row', backgroundColor: '#202025'
                         }}>
                         {
                             props.channelId !== '' ?
-                                <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
+                                <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end', backgroundColor: '#202025' }}>
                                     <TouchableOpacity
-                                        style={{ marginRight: 15 }}
+                                        style={{ marginRight: 15, backgroundColor: '#202025' }}
                                         onPress={() => props.openMeeting()}>
                                         <Text style={styles.channelText}>
                                             <Ionicons
@@ -106,7 +108,7 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         </Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity
-                                        style={{ marginRight: 15 }}
+                                        style={{ marginRight: 15, backgroundColor: '#202025' }}
                                         onPress={() => props.openSubscribers()}>
                                         <Text style={styles.channelText}>
                                             <Ionicons name='mail-outline' size={21} color={'#a2a2aa'} />
@@ -120,7 +122,7 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         </Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity
-                                        style={{ marginRight: 15 }}
+                                        style={{ marginRight: 15, backgroundColor: '#202025' }}
                                         onPress={() => props.openDiscussion()}>
                                         <Text style={styles.channelText}>
                                             <Ionicons name='chatbubble-ellipses-outline' size={20} color={'#a2a2aa'} />
@@ -134,7 +136,7 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         </Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity
-                                        style={{ marginRight: isOwner ? 15 : 0 }}
+                                        style={{ marginRight: isOwner ? 15 : 0, backgroundColor: '#202025' }}
                                         onPress={() => props.openGrades()}>
                                         <Text style={styles.channelText}>
                                             <Ionicons name='stats-chart-outline' size={19} color={'#a2a2aa'} />
@@ -146,7 +148,7 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     {
                                         isOwner ?
                                             <TouchableOpacity
-                                                style={{ marginRight: 0 }}
+                                                style={{ marginRight: 0, backgroundColor: '#202025' }}
                                                 onPress={() => props.openChannelSettings()}>
                                                 <Text style={styles.channelText}>
                                                     <Ionicons name='settings-outline' size={19} color={'#a2a2aa'} />
@@ -157,7 +159,7 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             </TouchableOpacity> : null
                                     }
                                 </View> :
-                                <View style={{ height: 34 }} />
+                                <View style={{ height: 34, backgroundColor: '#202025' }} />
                         }
                     </View>
                 </View>
@@ -217,7 +219,8 @@ const styleObject: any = (channelId: any) => StyleSheet.create({
         borderTopRightRadius: 0,
         borderTopLeftRadius: 0,
         paddingTop: 25,
-        maxWidth: 550
+        maxWidth: 550,
+        backgroundColor: '#202025'
     },
     badge: {
         position: 'absolute',

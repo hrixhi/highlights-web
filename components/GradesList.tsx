@@ -14,7 +14,7 @@ import {
     LineChart,
     BarChart,
     PieChart
-  } from "react-native-chart-kit";
+} from "react-native-chart-kit";
 
 const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -85,12 +85,12 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
             userRow.push(pointsToAdd)
 
             exportAoa.push(userRow)
-        
+
         })
 
         setExportAoa(exportAoa)
 
-       
+
     }, [scores, cues])
 
     const exportGrades = () => {
@@ -98,10 +98,10 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
         const fileExtension = '.xlsx';
 
         const ws = XLSX.utils.aoa_to_sheet(exportAoa);
-		const wb = XLSX.utils.book_new();
-		XLSX.utils.book_append_sheet(wb, ws, "Grades ");
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Grades ");
         const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' })
-        const data = new Blob([excelBuffer], {type: fileType});
+        const data = new Blob([excelBuffer], { type: fileType });
         FileSaver.saveAs(data, "grades" + fileExtension);
 
     }
@@ -117,7 +117,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     setShowStatistics(false);
                 }}>
                 <Text style={!showStatistics ? styles.allGrayFill : styles.all}>
-                    Scores 
+                    Scores
                 </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -130,13 +130,13 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 }}>
                 <Text style={showStatistics ? styles.allGrayFill : styles.all}>Statistics</Text>
             </TouchableOpacity>
-    </View>)
+        </View>)
     }
 
     const screenWidth = Dimensions.get("window").width;
 
     const renderStatistics = () => {
-        
+
 
         const mapCuesData: any = {};
 
@@ -191,7 +191,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 color,
                 legendFontColor: "#7F7F7F",
                 legendFontSize: 15,
-                
+
             }
         })
 
@@ -199,7 +199,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
         const chartData = submissionStatistics.map((stat: any) => {
             const { cueId, min, max, mean, median, std } = stat;
-            
+
             const cue = cues.filter((cue: any) => {
                 return cueId === cue._id
             })
@@ -218,12 +218,12 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
             fontFamily: "inter",
             color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
             style: {
-              borderRadius: 16,
+                borderRadius: 16,
             },
-            propsForLabels:{
-                fontFamily:'overpass; Arial',
+            propsForLabels: {
+                fontFamily: 'overpass; Arial',
             },
-          }
+        }
 
 
         return (<View style={{
@@ -235,25 +235,25 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
         }}
             key={JSON.stringify(scores)}
         >
-            <Text style={{ textAlign: 'left', fontSize: 13, color: '#202025', fontFamily: 'inter', paddingBottom: 20, paddingLeft: Dimensions.get('window').width < 768 ? 0 : 150}}>
-                Grade Weightage 
-            </Text> 
+            <Text style={{ textAlign: 'left', fontSize: 13, color: '#202025', fontFamily: 'inter', paddingBottom: 20, paddingLeft: Dimensions.get('window').width < 768 ? 0 : 150 }}>
+                Grade Weightage
+            </Text>
             <PieChart
-            data={pieChartData}
-            width={Dimensions.get('window').width < 768 ? 350 : 500}
-            height={Dimensions.get('window').width < 768 ? 150 : 200}
-            chartConfig={chartConfig}
-            accessor={"gradeWeight"}
-            backgroundColor={"transparent"}
-            paddingLeft={Dimensions.get('window').width < 768 ? "10" : "50"}
-            // center={[10, 50]}
-            hasLegend={true}
+                data={pieChartData}
+                width={Dimensions.get('window').width < 768 ? 350 : 500}
+                height={Dimensions.get('window').width < 768 ? 150 : 200}
+                chartConfig={chartConfig}
+                accessor={"gradeWeight"}
+                backgroundColor={"transparent"}
+                paddingLeft={Dimensions.get('window').width < 768 ? "10" : "50"}
+                // center={[10, 50]}
+                hasLegend={true}
             />
 
 
-            <Text style={{ textAlign: 'left', fontSize: 13, color: '#202025', fontFamily: 'inter', paddingTop: 50, paddingBottom: 20, paddingLeft: Dimensions.get('window').width < 768 ? 0 : 150}}>
+            <Text style={{ textAlign: 'left', fontSize: 13, color: '#202025', fontFamily: 'inter', paddingTop: 50, paddingBottom: 20, paddingLeft: Dimensions.get('window').width < 768 ? 0 : 150 }}>
                 Submissions
-            </Text> 
+            </Text>
 
             {/* <ScrollView
                             showsHorizontalScrollIndicator={false}
@@ -394,18 +394,19 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 <Text
                     ellipsizeMode="tail"
                     style={{
-                        fontSize: 11,
+                        fontSize: 21,
                         paddingBottom: 20,
-                        textTransform: "uppercase",
-                        // paddingLeft: 20,
+                        fontFamily: 'inter',
+                        // textTransform: "uppercase",
+                        // paddingLeft: 10,
                         flex: 1,
                         lineHeight: 25
                     }}>
                     {PreferredLanguageText("grades")}
                 </Text>
-                {(scores.length === 0 || cues.length === 0 || !props.isOwner) ?  null : <Text
+                {(scores.length === 0 || cues.length === 0 || !props.isOwner) ? null : <Text
                     style={{
-                        color: "#a2a2aa",
+                        color: "#3B64F8",
                         fontSize: 11,
                         lineHeight: 25,
                         // paddingTop: 5,
@@ -488,7 +489,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 nestedScrollEnabled={true}
                             >
                                 <View>
-                            
+
                                     <View style={styles.row} key={"-"}>
                                         <View style={styles.col} key={'0,0'} />
                                         {
@@ -565,8 +566,8 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 </View>
                             </ScrollView>
                         </ScrollView>
-                    </View>:
-                    renderStatistics()
+                    </View> :
+                        renderStatistics()
                     )
             }
         </View >

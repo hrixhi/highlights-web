@@ -14,7 +14,6 @@ import Alert from './Alert';
 import NewMessage from './NewMessage';
 import MessageCard from './MessageCard';
 import { validateEmail } from '../helpers/emailCheck';
-import Select from 'react-select'
 import { PreferredLanguageText } from '../helpers/LanguageContext';
 import ReactPlayer from 'react-player'
 import moment from "moment"
@@ -25,6 +24,13 @@ import Annotation from 'react-image-annotation'
 import XLSX from "xlsx"
 import * as FileSaver from 'file-saver';
 import { htmlStringParser } from '../helpers/HTMLParser'
+import Multiselect from 'multiselect-react-dropdown';
+import {
+    Menu,
+    MenuOptions,
+    MenuOption,
+    MenuTrigger,
+} from 'react-native-popup-menu';
 
 const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -742,7 +748,6 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
             <View style={{ marginTop: '20px', display: 'flex', flexDirection: "column" }}>
                 {solutions.map((solution: any, index: number) => {
 
-
                     if (solution.selected) {
                         const answers: any[] = solution.selected;
 
@@ -762,8 +767,6 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                             Problem {index + 1} : {solution.response}
                         </Text>)
                     }
-
-
 
                 })}
             </View>
@@ -951,9 +954,10 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 <Text
                                     ellipsizeMode="tail"
                                     style={{
-                                        fontSize: 11,
+                                        fontSize: 21,
                                         paddingBottom: 20,
-                                        textTransform: "uppercase",
+                                        fontFamily: 'inter',
+                                        // textTransform: "uppercase",
                                         // paddingLeft: 10,
                                         flex: 1,
                                         lineHeight: 25
@@ -1023,10 +1027,12 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 activeThumbColor='white'
                             />
                             <View style={{ backgroundColor: 'white', }}>
-                                <Text style={{ color: "#a2a2aa",
+                                <Text style={{
+                                    color: "#a2a2aa",
                                     fontSize: 11,
                                     lineHeight: 25,
-                                    textTransform: 'uppercase'}}>
+                                    textTransform: 'uppercase'
+                                }}>
                                     Release Grades
                                 </Text>
                             </View>
@@ -1110,67 +1116,32 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                     showsVerticalScrollIndicator={false}
                                                     keyboardDismissMode={'on-drag'}
                                                     style={{ flex: 1, paddingTop: 12 }}>
-                                                    <Text
+                                                    {/* <Text
                                                         ellipsizeMode="tail"
-                                                        style={{ color: '#a2a2aa', fontSize: 15, flex: 1, lineHeight: 25 }}>
+                                                        style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
                                                         {PreferredLanguageText('newGroup')}
-                                                    </Text>
-                                                    <View style={{ maxHeight: 175, flexDirection: 'column', marginTop: 25, overflow: 'scroll', marginBottom: 25 }}>
-                                                        <View style={{ width: '90%', padding: 5, height: expandMenu ? 175 : 'auto', maxWidth: 500 }}>
-                                                            <Select
-                                                                placeholder='Share with'
-                                                                styles={{
-                                                                    menu: (provided: any, state: any) => ({
-                                                                        ...provided,
-                                                                        zIndex: 9999,
-                                                                        overflow: 'scroll',
-                                                                        height: 125,
-                                                                        display: 'flex',
-                                                                        margin: 5,
-                                                                        width: '97%',
-                                                                        boxShadow: 'none'
-                                                                    }),
-                                                                    option: (provided: any, state: any) => ({
-                                                                        ...provided,
-                                                                        fontFamily: 'overpass',
-                                                                        color: '#a2a2aa',
-                                                                        fontSize: 10,
-                                                                        height: 25,
-                                                                        width: '97%'
-                                                                    }),
-                                                                    input: (styles: any) => ({
-                                                                        // ...styles,
-                                                                        width: '100%',
-                                                                        border: 'none',
-                                                                        borderWidth: 0,
-                                                                        fontSize: 12
-                                                                    }),
-                                                                    placeholder: (styles: any) => ({
-                                                                        ...styles,
-                                                                        fontFamily: 'overpass',
-                                                                        color: '#a2a2aa',
-                                                                        fontSize: 12
-                                                                    }),
-                                                                    multiValueLabel: (styles: any, { data }: any) => ({
-                                                                        ...styles,
-                                                                        color: '#202025',
-                                                                        fontFamily: 'overpass'
-                                                                    }),
-                                                                    multiValue: (styles: any, { data }: any) => ({
-                                                                        ...styles,
-                                                                        backgroundColor: '#f4f4f6',
-                                                                        fontFamily: 'overpass'
-                                                                    })
+                                                    </Text> */}
+                                                    <View style={{ maxHeight: 200, flexDirection: 'column', marginTop: 25, overflow: 'scroll', marginBottom: 25 }}>
+                                                        <View style={{ width: '90%', padding: 5, maxWidth: 500 }}>
+                                                            <Multiselect
+                                                                placeholder='Select users'
+                                                                displayValue='label'
+                                                                // key={userDropdownOptions.toString()}
+                                                                // style={{ width: '100%', color: '#202025', 
+                                                                //     optionContainer: { // To change css for option container 
+                                                                //         zIndex: 9999
+                                                                //     }
+                                                                // }}
+                                                                options={options} // Options to display in the dropdown
+                                                                selectedValues={selected} // Preselected value to persist in dropdown
+                                                                onSelect={(e, f) => {
+                                                                    setSelected(e);
+                                                                    return true
+                                                                }} // Function will trigger on select event
+                                                                onRemove={(e, f) => {
+                                                                    setSelected(e);
+                                                                    return true
                                                                 }}
-                                                                value={selected}
-                                                                isMulti={true}
-                                                                onMenuOpen={() => setExpandMenu(true)}
-                                                                onMenuClose={() => setExpandMenu(false)}
-                                                                name="Share with"
-                                                                className="basic-multi-select"
-                                                                classNamePrefix="select"
-                                                                onChange={onChange}
-                                                                options={options}
                                                             />
                                                         </View>
                                                     </View>
@@ -1342,7 +1313,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                     </View>
                                                 </View>
                                             </View>
-                                            <Text style={{
+                                            {/* <Text style={{
                                                 fontSize: 11,
                                                 paddingBottom: 20,
                                                 textTransform: "uppercase",
@@ -1351,7 +1322,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 lineHeight: 25
                                             }}>
                                                 {PreferredLanguageText('viewSubmission')}
-                                            </Text>
+                                            </Text> */}
                                             {
                                                 imported && !isQuiz ?
                                                     <View style={{ width: '40%', alignSelf: 'flex-start' }}>
@@ -1475,32 +1446,40 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     justifyContent: 'center',
                                     flexDirection: 'column'
                                 }}>
-                                    <ScrollView
-                                        contentContainerStyle={{
-                                            height: 20, width: '100%',
-                                            paddingTop: 15
-                                        }}
-                                        style={{}}
-                                        horizontal={true}
-                                        showsHorizontalScrollIndicator={false}
-                                    >
-                                        {
-                                            unparsedSubs.length === 0 ? null : categories.map((category: string) => {
-                                                return <TouchableOpacity
-                                                    key={Math.random()}
-                                                    style={filterChoice === category ? styles.cusCategoryOutline : styles.cusCategory}
-                                                    onPress={() => setFilterChoice(category)}>
-                                                    <Text
-                                                        style={{
-                                                            color: '#a2a2aa',
-                                                            lineHeight: 20, fontSize: 12
-                                                        }}>
-                                                        {PreferredLanguageText(categoriesLanguageMap[category])}
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            })
-                                        }
-                                    </ScrollView>
+                                    <Menu
+                                        onSelect={(cat: any) => setFilterChoice(cat)}>
+                                        <MenuTrigger>
+                                            <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#a2a2aa' }}>
+                                                {filterChoice === '' ? 'All' : filterChoice}<Ionicons name='caret-down' size={14} />
+                                            </Text>
+                                        </MenuTrigger>
+                                        <MenuOptions customStyles={{
+                                            optionsContainer: {
+                                                padding: 10,
+                                                borderRadius: 15,
+                                                shadowOpacity: 0,
+                                                borderWidth: 1,
+                                                borderColor: '#f4f4f6'
+                                            }
+                                        }}>
+                                            {/* <MenuOption
+                                                value={''}>
+                                                <Text>
+                                                    All
+                                                </Text>
+                                            </MenuOption> */}
+                                            {
+                                                categories.map((category: any) => {
+                                                    return <MenuOption
+                                                        value={category}>
+                                                        <Text>
+                                                            {category}
+                                                        </Text>
+                                                    </MenuOption>
+                                                })
+                                            }
+                                        </MenuOptions>
+                                    </Menu>
                                 </View>
                         }
                     </View>) :

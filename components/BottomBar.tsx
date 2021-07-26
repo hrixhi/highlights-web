@@ -15,7 +15,7 @@ import {
 const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
     const [choice] = useState(props.filterChoice)
-    const colorScheme = useColorScheme();
+    const colorScheme = 'dark';
     const styles: any = styleObject(colorScheme)
     const [loggedIn, setLoggedIn] = useState(true)
     const [userLoaded, setUserLoaded] = useState(false)
@@ -60,79 +60,27 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
     return (
         <View style={styles.bottombar}>
             <View style={styles.colorBar}>
-                {/* <View style={{ flexDirection: 'row', width: '100%' }}> */}
-                {/* <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{ paddingHorizontal: 25 }}>
-                        <TouchableOpacity
-                            style={choice === 'All' ? styles.subOutline : styles.sub}
-                            onPress={() => {
-                                props.handleFilterChange('All')
-                                props.setChannelFilterChoice('All')
-                                props.setChannelId('')
-                            }}>
-                            <Text
-                                style={{
-                                    color: colorScheme === 'light' ? (
-                                        choice === 'All' ? 'white' : '#202025'
-                                    ) : (
-                                        choice === 'All' ? '#202025' : 'white'
-                                    ),
-                                    lineHeight: 22,
-                                    fontSize: 13
-                                }}
-                            >
-                                {PreferredLanguageText('myCues')}
-                            </Text>
-                        </TouchableOpacity>
-                        {
-                            props.subscriptions.map((subscription: any) => {
-                                return <TouchableOpacity
-                                    key={Math.random()}
-                                    style={choice === subscription.channelName ? styles.subOutline : styles.sub}
-                                    onPress={() => {
-                                        if (subscription.inactive) {
-                                            Alert("Subscription inactivated by channel creator!", "Contact channel creator to gain access.")
-                                            return;
-                                        }
-                                        props.setChannelFilterChoice('All')
-                                        props.handleFilterChange(subscription.channelName)
-                                        props.setChannelId(subscription.channelId)
-                                        props.setChannelCreatedBy(subscription.channelCreatedBy)
-                                    }}>
-                                    <Text style={{
-                                        color: colorScheme === 'light' ? (
-                                            choice === subscription.channelName ? 'white' : '#202025'
-                                        ) : (
-                                            choice === subscription.channelName ? '#202025' : 'white'
-                                        ),
-                                        lineHeight: 22,
-                                        fontFamily: 'overpass',
-                                        fontSize: 13
-                                    }}>
-                                        {subscription.channelName}
-                                    </Text>
-                                </TouchableOpacity>
-                            })
-                        }
-                    </ScrollView> */}
                 <View style={{ flexDirection: 'row', flex: 1 }}>
-                    <View style={{ width: '50%', paddingLeft: 20, flexDirection: 'row', justifyContent: 'center' }}>
-                        <View>
-                            <View style={{ flexDirection: 'row', justifyContent: 'center', display: 'flex' }}>
+                    <View style={{ width: '50%', paddingLeft: 20, flexDirection: 'row', justifyContent: 'center', backgroundColor: '#202025' }}>
+                        <View style={{ backgroundColor: '#202025' }}>
+                            <View style={{ flexDirection: 'row', justifyContent: 'center', display: 'flex', backgroundColor: '#202025' }}>
                                 <Menu
                                     onSelect={(subscription: any) => {
                                         if (subscription === 'My Cues') {
                                             props.handleFilterChange('All')
                                             props.setChannelFilterChoice('All')
                                             props.setChannelId('')
+                                            props.closeModal()
                                             return
                                         }
                                         props.setChannelFilterChoice('All')
                                         props.handleFilterChange(subscription.channelName)
                                         props.setChannelId(subscription.channelId)
                                         props.setChannelCreatedBy(subscription.channelCreatedBy)
+                                        props.closeModal()
                                     }}>
                                     <MenuTrigger>
-                                        <Text style={{ fontFamily: 'inter', fontSize: 17 }}>
+                                        <Text style={{ fontFamily: 'inter', fontSize: 17, color: '#fff' }}>
                                             {choice === 'All' ? 'My Cues' : choice}<Ionicons name='caret-down' size={17} />
                                         </Text>
                                     </MenuTrigger>
@@ -164,14 +112,14 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     </MenuOptions>
                                 </Menu>
                             </View>
-                            <Text style={{ fontSize: 9, color: '#a2a2aa', paddingTop: 7, textAlign: 'center' }}>
+                            <Text style={{ fontSize: 9, color: '#a2a2aa', paddingTop: 7, textAlign: 'center', backgroundColor: '#202025' }}>
                                 Channel
                             </Text>
                         </View>
                     </View>
-                    <View style={{ width: '50%', paddingRight: 20, flexDirection: 'row', justifyContent: 'center' }}>
-                        <View>
-                            <View style={{ flexDirection: 'row', justifyContent: 'center', display: 'flex' }}>
+                    <View style={{ width: '50%', paddingRight: 20, flexDirection: 'row', justifyContent: 'center', backgroundColor: '#202025' }}>
+                        <View style={{ backgroundColor: '#202025' }}>
+                            <View style={{ flexDirection: 'row', justifyContent: 'center', display: 'flex', backgroundColor: '#202025' }}>
                                 <Menu
                                     onSelect={(category: any) => {
                                         props.setChannelFilterChoice(category)
@@ -216,16 +164,16 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     </View>
                 </View>
             </View>
-            <View style={{ display: 'flex', flexDirection: 'row', height: '50%', paddingHorizontal: 15 }}>
+            <View style={{ display: 'flex', flexDirection: 'row', height: '50%', paddingHorizontal: 15, backgroundColor: '#202025' }}>
                 <View style={styles.icons}>
                     <TouchableOpacity
                         onPress={() => props.openChannels()}
                         style={styles.center}
                     >
                         <Text style={{ textAlign: 'center', lineHeight: 22 }}>
-                            <Ionicons name='radio-outline' size={21} color={'#202025'} />
+                            <Ionicons name='radio-outline' size={21} color={'#fff'} />
                         </Text>
-                        <Text style={{ fontSize: 9, color: '#202025' }}>
+                        <Text style={{ fontSize: 9, color: '#fff' }}>
                             Channels
                         </Text>
                     </TouchableOpacity>
@@ -236,9 +184,9 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         style={styles.center}
                     >
                         <Text style={{ textAlign: 'center', lineHeight: 20 }}>
-                            <Ionicons name='calendar-outline' size={21} color={'#202025'} />
+                            <Ionicons name='calendar-outline' size={21} color={'#fff'} />
                         </Text>
-                        <Text style={{ fontSize: 9, color: '#202025' }}>
+                        <Text style={{ fontSize: 9, color: '#fff' }}>
                             Planner
                         </Text>
                     </TouchableOpacity>
@@ -249,7 +197,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         style={styles.center}
                     >
                         <Text style={{ textAlign: 'center', lineHeight: 40, marginTop: 5 }}>
-                            <Ionicons name='add-circle' size={40} color={'#202025'} />
+                            <Ionicons name='add-circle' size={40} color={'#fff'} />
                         </Text>
                     </TouchableOpacity>
                 </View>
@@ -259,9 +207,9 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         style={styles.center}
                     >
                         <Text style={{ textAlign: 'center', lineHeight: 22 }}>
-                            <Ionicons name={loggedIn ? 'person-circle-outline' : 'cloud-upload-outline'} size={22} color={'#202025'} />
+                            <Ionicons name={loggedIn ? 'person-circle-outline' : 'cloud-upload-outline'} size={22} color={'#fff'} />
                         </Text>
-                        <Text style={{ fontSize: 9, color: '#202025' }}>
+                        <Text style={{ fontSize: 9, color: '#fff' }}>
                             {!loggedIn && userLoaded ? 'Sign Up' : 'Profile'}
                         </Text>
                     </TouchableOpacity>
@@ -272,9 +220,9 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         style={styles.center}
                     >
                         <Text style={{ textAlign: 'center', lineHeight: 22 }}>
-                            <Ionicons name='help-circle-outline' size={22} color={'#202025'} />
+                            <Ionicons name='help-circle-outline' size={22} color={'#fff'} />
                         </Text>
-                        <Text style={{ fontSize: 9, color: '#202025' }}>
+                        <Text style={{ fontSize: 9, color: '#fff' }}>
                             Help
                         </Text>
                     </TouchableOpacity>
@@ -293,14 +241,16 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
         display: 'flex',
         paddingBottom: 10,
         borderTopWidth: 1,
-        borderColor: '#eeeeee'
+        borderColor: '#333333',
+        backgroundColor: '#202025'
     },
     icons: {
         width: '20%',
         display: 'flex',
         justifyContent: 'center',
         flexDirection: 'column',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        backgroundColor: '#202025'
     },
     defaultFont: {
         fontFamily: 'system font'
@@ -309,13 +259,15 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
         width: '100%',
         justifyContent: 'center',
         display: 'flex',
-        textAlign: 'center'
+        textAlign: 'center',
+        backgroundColor: '#202025'
     },
     colorBar: {
         width: '100%',
         height: '50%',
         // flexDirection: 'row',
         paddingTop: 20,
+        backgroundColor: '#202025'
         // paddingLeft: 20
     },
     iconContainer: {

@@ -44,7 +44,7 @@
 .rdtPicker td.rdtMinute:hover,
 .rdtPicker td.rdtSecond:hover,
 .rdtPicker .rdtTimeToggle:hover {
-  background: #eeeeee;
+  background: #eeeeef;
   cursor: pointer;
 }
 .rdtPicker td.rdtOld,
@@ -129,7 +129,7 @@
   cursor: pointer;
 }
 .rdtPicker thead tr:first-of-type th:hover {
-  background: #eeeeee;
+  background: #eeeeef;
 }
 
 .rdtPicker tfoot {

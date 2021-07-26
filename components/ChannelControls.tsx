@@ -298,9 +298,10 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
             <View style={{ width: '100%', backgroundColor: 'white' }}>
                 <Text
                     style={{
-                        fontSize: 11,
-                        paddingBottom: 25,
-                        textTransform: "uppercase",
+                        fontSize: 21,
+                        paddingBottom: 20,
+                        fontFamily: 'inter',
+                        // textTransform: "uppercase",
                         // paddingLeft: 10,
                         flex: 1,
                         lineHeight: 25
@@ -351,12 +352,12 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         <View style={{ backgroundColor: '#fff', flexDirection: 'row' }}>
                             <View style={{ flex: 1, backgroundColor: '#f4f4f6', paddingLeft: 10 }}>
                                 <Text style={{ fontSize: 12, lineHeight: 25 }} ellipsizeMode='tail'>
-                                    Name
+                                    NAME
                                 </Text>
                             </View>
                             <View style={{ flex: 1, backgroundColor: '#f4f4f6', paddingLeft: 10 }}>
                                 <Text style={{ fontSize: 12, lineHeight: 25 }} ellipsizeMode='tail'>
-                                    Owner
+                                    OWNER
                                 </Text>
                             </View>
                         </View> : null
@@ -385,7 +386,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         </ScrollView> :
                         <View style={{ backgroundColor: 'white' }}>
                             <View style={{ backgroundColor: 'white' }}>
-                                <Text style={{ color: '#202025', fontSize: 14, paddingBottom: 10 }}>
+                                <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
                                     {PreferredLanguageText('channel') + ' ' + PreferredLanguageText('name')}
                                 </Text>
                                 <TextInput
@@ -403,7 +404,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             {
                                 (option === 'Subscribe' && passwordRequired) || option === 'Create' ?
                                     <View style={{ backgroundColor: 'white' }}>
-                                        <Text style={{ color: '#202025', fontSize: 14, paddingBottom: 10 }}>
+                                        <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
                                             {PreferredLanguageText('enrolmentPassword')}
                                         </Text>
                                         <TextInput
@@ -435,7 +436,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 paddingBottom: 15,
                                                 backgroundColor: "white"
                                             }}>
-                                            <Text style={{ color: '#202025', fontSize: 14, paddingBottom: 10 }}>Temporary</Text>
+                                            <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>Temporary</Text>
                                         </View>
                                         <View
                                             style={{
