@@ -1053,9 +1053,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 iconSize={12}
                 editor={RichText}
                 disabled={false}
-                iconTint={"#a2a2ac"}
-                selectedIconTint={"#a2a2ac"}
-                disabledIconTint={"#a2a2ac"}
+                iconTint={"#2f2f3c"}
+                selectedIconTint={"#2f2f3c"}
+                disabledIconTint={"#2f2f3c"}
                 actions={
                     (!props.showOriginal && submissionImported) || (imported && props.showOriginal)
                         ? ['']
@@ -1522,6 +1522,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             </View> : null
                         }
                     </View>
+                    {/* Add Submit button here if it is a submission */}
                     {renderFooter()}
                 </View>
             )}
@@ -1538,17 +1539,20 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 padding: 3,
                 paddingTop: 5,
                 paddingBottom: 10,
-                borderRadius: 15
+                //  borderRadius: 15
             }}
             ref={RichText}
             style={{
-                width: "100%",
-                backgroundColor: "#f4f4f6",
+                width: '100%',
+                backgroundColor: '#f4f4f6',
+                // borderRadius: 15,
                 minHeight: 650,
-                borderRadius: 15
+                display: (isQuiz || imported) ? "none" : "flex",
+                borderTopWidth: 1,
+                borderColor: '#a2a2ac'
             }}
             editorStyle={{
-                backgroundColor: "#f4f4f6",
+                backgroundColor: "#fff",
                 placeholderColor: "#a2a2ac",
                 color: "#2F2F3C",
                 contentCSSText: "font-size: 13px;"
@@ -1581,18 +1585,21 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 padding: 3,
                 paddingTop: 5,
                 paddingBottom: 10,
-                borderRadius: 15
+                // borderRadius: 15
             }}
             disabled={(props.cue.graded && submission) || (currentDate > deadline && submission)}
             ref={RichText}
             style={{
-                width: "100%",
-                backgroundColor: "#f4f4f6",
+                width: '100%',
+                backgroundColor: '#f4f4f6',
+                // borderRadius: 15,
                 minHeight: 650,
-                borderRadius: 15
+                display: (isQuiz || imported) ? "none" : "flex",
+                borderTopWidth: 1,
+                borderColor: '#a2a2ac'
             }}
             editorStyle={{
-                backgroundColor: "#f4f4f6",
+                backgroundColor: "#fff",
                 placeholderColor: "#a2a2ac",
                 color: "#2F2F3C",
                 contentCSSText: "font-size: 13px;"
@@ -1748,8 +1755,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             </Text>
                             {isOwner ? (
                                 <DatePicker
-                                    size={'sm'}
                                     format="YYYY-MM-DD HH:mm:ss"
+                                    size={'sm'}
                                     value={initiateAt}
                                     preventOverflow={true}
                                     onChange={(event: any) => {
@@ -1929,7 +1936,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 <TouchableOpacity style={styles.allGrayOutline} onPress={() => { }}>
                                     <Text
                                         style={{
-                                            color: "#a2a2ac",
+                                            color: "#2f2f3c",
                                             lineHeight: 20,
                                             fontSize: 12
                                         }}>
@@ -1964,7 +1971,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 <Menu
                                     onSelect={(cat: any) => setCustomCategory(cat)}>
                                     <MenuTrigger>
-                                        <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#a2a2ac' }}>
+                                        <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#2f2f3c' }}>
                                             {customCategory === '' ? 'None' : customCategory}<Ionicons name='caret-down' size={14} />
                                         </Text>
                                     </MenuTrigger>
@@ -2015,7 +2022,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         lineHeight: 20,
                                         width: "100%"
                                     }}>
-                                    <Ionicons name={addCustomCategory ? "close" : "add"} size={20} color={"#a2a2ac"} />
+                                    <Ionicons name={addCustomCategory ? "close" : "add"} size={20} color={"#2f2f3c"} />
                                 </Text>
                             </TouchableOpacity>
                         </View>
@@ -2114,7 +2121,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 }
                             }}>
                             <MenuTrigger>
-                                <Text style={{ fontFamily: 'inter', fontSize: 14, color: shareWithChannelName === '' ? '#a2a2ac' : '#2F2F3C' }}>
+                                <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#2F2F3C' }}>
                                     {shareWithChannelName === '' ? 'None' : shareWithChannelName}<Ionicons name='caret-down' size={14} />
                                 </Text>
                             </MenuTrigger>
@@ -2260,7 +2267,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             setFrequencyName(cat.label)
                                         }}>
                                         <MenuTrigger>
-                                            <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#a2a2ac' }}>
+                                            <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#2f2f3c' }}>
                                                 {frequencyName}<Ionicons name='caret-down' size={14} />
                                             </Text>
                                         </MenuTrigger>
@@ -2353,13 +2360,13 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     <Text style={styles.text}>{PreferredLanguageText("remindTill")}</Text>
                                     <DatePicker
                                         preventOverflow={true}
+                                        format="YYYY-MM-DD HH:mm:ss"
                                         onChange={(event: any) => {
                                             const date = new Date(event);
                                             if (date < new Date()) return;
 
                                             setEndPlayAt(date);
                                         }}
-                                        format="YYYY-MM-DD HH:mm:ss"
                                         value={endPlayAt}
                                         size={'sm'}
                                     // isValidDate={disablePastDt}
@@ -2652,7 +2659,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             {!props.showOriginal && !submissionImported && !props.cue.graded ? (
                                 <Text
                                     style={{
-                                        color: "#a2a2ac",
+                                        color: "#2f2f3c",
                                         fontSize: 11,
                                         lineHeight: 30,
                                         textAlign: "right",
@@ -2671,7 +2678,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 !props.cue.graded && !isQuiz ? (
                                 <Text
                                     style={{
-                                        color: "#a2a2ac",
+                                        color: "#2f2f3c",
                                         fontSize: 11,
                                         lineHeight: 30,
                                         textAlign: "right",
@@ -2692,7 +2699,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     ? null :
                                     (
                                         <Text style={{
-                                            color: '#a2a2ac',
+                                            color: '#2f2f3c',
                                             fontSize: 11,
                                             lineHeight: 30,
                                             textAlign: 'right',

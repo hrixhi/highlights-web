@@ -83,8 +83,8 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         props.closeModal()
                                     }}>
                                     <MenuTrigger>
-                                        <Text style={{ fontFamily: 'inter', fontSize: 13, color: '#fff' }}>
-                                            {choice === 'MyCues' ? 'My Cues' : choice}<Ionicons name='caret-down' size={13} />
+                                        <Text style={{ fontFamily: 'inter', fontSize: 15, color: '#fff' }}>
+                                            {choice === 'MyCues' ? 'My Cues' : choice}<Ionicons name='caret-down' size={15} />
                                         </Text>
                                     </MenuTrigger>
                                     <MenuOptions customStyles={{
@@ -134,8 +134,8 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         props.setChannelFilterChoice(category)
                                     }}>
                                     <MenuTrigger>
-                                        <Text style={{ fontFamily: 'inter', fontSize: 13, color: '#a2a2ac' }}>
-                                            {filterChoice}<Ionicons name='caret-down' size={13} />
+                                        <Text style={{ fontFamily: 'inter', fontSize: 15, color: '#a2a2ac' }}>
+                                            {filterChoice}<Ionicons name='caret-down' size={15} />
                                         </Text>
                                     </MenuTrigger>
                                     <MenuOptions customStyles={{
