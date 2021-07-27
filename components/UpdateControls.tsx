@@ -1126,7 +1126,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         paddingVertical: 5,
                         justifyContent: "center"
                     }}>
-                    <Text style={{ flex: 1, fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
+                    <Text style={{ flex: 1, fontSize: 11, color: '#a2a2ac' }}>
                         ^ → Superscript, _ → Subscript, int → Integral, sum → Summation, prod → Product, sqrt → Square root, bar →
                         Bar over letter, alpha, beta, ... omega → Small Greek letter, Alpha, Beta, ... Omega → Capital Greek letter
                     </Text>
@@ -1177,7 +1177,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         props.setShowOptions(false)
                     }}>
                     <Text style={props.showComments ? styles.allGrayFill : styles.all}>
-                        Comments
+                        FAQ
                     </Text>
                 </TouchableOpacity>
                 {(isOwner && submission) || isQuiz ? null : (
@@ -2285,7 +2285,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                     return <MenuOption
                                                         value={item}>
                                                         <Text>
-                                                            {item.value === '0' && channelId !== '' ? 'Once' : item.label}
+                                                            {item.value === '0' && props.channelId !== '' ? 'Once' : item.label}
                                                         </Text>
                                                     </MenuOption>
                                                 })
@@ -3081,7 +3081,7 @@ const styles: any = StyleSheet.create({
         color: "#fff",
         paddingHorizontal: 10,
         borderRadius: 10,
-        backgroundColor: "#a2a2ac",
+        backgroundColor: "#2f2f3c",
         lineHeight: 20
     },
     allGrayOutline: {

@@ -103,7 +103,7 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     <View style={styles.badge} /> : null
                                             }
                                         </Text>
-                                        <Text style={{ fontSize: 9, color: '#a2a2ac', textAlign: 'center' }}>
+                                        <Text style={{ fontSize: 10, color: '#a2a2ac', textAlign: 'center' }}>
                                             Lectures
                                         </Text>
                                     </TouchableOpacity>
@@ -117,7 +117,7 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     <View style={styles.badge} /> : null
                                             }
                                         </Text>
-                                        <Text style={{ fontSize: 9, color: '#a2a2ac', textAlign: 'center' }}>
+                                        <Text style={{ fontSize: 10, color: '#a2a2ac', textAlign: 'center' }}>
                                             Inbox
                                         </Text>
                                     </TouchableOpacity>
@@ -131,7 +131,7 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     <View style={styles.badge} /> : null
                                             }
                                         </Text>
-                                        <Text style={{ fontSize: 9, color: '#a2a2ac', textAlign: 'center' }}>
+                                        <Text style={{ fontSize: 10, color: '#a2a2ac', textAlign: 'center' }}>
                                             Discussion
                                         </Text>
                                     </TouchableOpacity>
@@ -141,7 +141,7 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         <Text style={styles.channelText}>
                                             <Ionicons name='stats-chart-outline' size={18} color={'#fff'} />
                                         </Text>
-                                        <Text style={{ fontSize: 9, color: '#a2a2ac', textAlign: 'center' }}>
+                                        <Text style={{ fontSize: 10, color: '#a2a2ac', textAlign: 'center' }}>
                                             Grades
                                         </Text>
                                     </TouchableOpacity>
@@ -153,7 +153,7 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 <Text style={styles.channelText}>
                                                     <Ionicons name='settings-outline' size={18} color={'#fff'} />
                                                 </Text>
-                                                <Text style={{ fontSize: 9, color: '#a2a2ac', textAlign: 'center' }}>
+                                                <Text style={{ fontSize: 10, color: '#a2a2ac', textAlign: 'center' }}>
                                                     Settings
                                                 </Text>
                                             </TouchableOpacity> : null

@@ -846,7 +846,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 <Ionicons name='add-circle-outline' color='#a2a2ac' size={20} />
                             </TouchableOpacity>
                             <View style={{ minWidth: '40%', flex: 1, paddingVertical: 5, justifyContent: 'center', }}>
-                                <Text style={{ flex: 1, fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
+                                <Text style={{ flex: 1, fontSize: 11, color: '#a2a2ac' }}>
                                     ^ → Superscript, _ → Subscript, int → Integral, sum → Summation, prod → Product, sqrt → Square root, bar → Bar over letter, alpha, beta, ... omega → Small Greek letter, Alpha, Beta, ... Omega → Capital Greek letter
                                 </Text>
                             </View>
