@@ -327,6 +327,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                         <Text style={styles.text}>{PreferredLanguageText("start")} Date</Text>
                         <DatePicker
                             size={'sm'}
+                            format="YYYY-MM-DD HH:mm:ss"
                             preventOverflow={true}
                             value={start}
                             onChange={(event: any) => {
@@ -344,6 +345,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                         }}>
                         <Text style={styles.text}>{PreferredLanguageText("end")} Date</Text>
                         <DatePicker
+                            format="YYYY-MM-DD HH:mm:ss"
                             preventOverflow={true}
                             size={'sm'}
                             value={end}

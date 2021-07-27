@@ -1175,6 +1175,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             <DatePicker
                                                                 preventOverflow={true}
                                                                 value={initiateAt}
+                                                                format="YYYY-MM-DD HH:mm:ss"
                                                                 onChange={(event: any) => {
                                                                     const date = new Date(event)
 
@@ -1209,6 +1210,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                 <DatePicker
                                                                     preventOverflow={true}
                                                                     value={deadline}
+                                                                    format="YYYY-MM-DD HH:mm:ss"
                                                                     onChange={(event: any) => {
                                                                         const date = new Date(event)
 
@@ -1532,6 +1534,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         <DatePicker
                                                             value={endPlayAt}
                                                             preventOverflow={true}
+                                                            format="YYYY-MM-DD HH:mm:ss"
                                                             onChange={(event: any) => {
                                                                 const date = new Date(event)
                                                                 if (date < new Date()) return;
@@ -1585,6 +1588,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         <DatePicker
                                                             value={endPlayAt}
                                                             preventOverflow={true}
+                                                            format="YYYY-MM-DD HH:mm:ss"
                                                             onChange={(event: any) => {
                                                                 const date = new Date(event)
                                                                 if (date < new Date()) return;

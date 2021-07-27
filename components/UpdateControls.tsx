@@ -1800,6 +1800,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             {isOwner ? (
                                 <DatePicker
                                     size={'sm'}
+                                    format="YYYY-MM-DD HH:mm:ss"
                                     value={initiateAt}
                                     preventOverflow={true}
                                     onChange={(event: any) => {
@@ -1847,6 +1848,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             <DatePicker
                                 preventOverflow={true}
                                 value={deadline}
+                                format="YYYY-MM-DD HH:mm:ss"
                                 onChange={(event: any) => {
                                     const date = new Date(event);
 
@@ -2347,6 +2349,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     <DatePicker
                                         preventOverflow={true}
                                         value={endPlayAt}
+                                        format="YYYY-MM-DD HH:mm:ss"
                                         onChange={(event: any) => {
                                             const date = new Date(event);
                                             if (date < new Date()) return;
@@ -2407,6 +2410,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
                                             setEndPlayAt(date);
                                         }}
+                                        format="YYYY-MM-DD HH:mm:ss"
                                         value={endPlayAt}
                                         size={'sm'}
                                     // isValidDate={disablePastDt}
