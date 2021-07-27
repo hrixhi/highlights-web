@@ -246,8 +246,8 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
             <View style={{ width: '100%', backgroundColor: 'white', paddingTop: 10 }}>
                 <Text
                     style={{
-                        fontSize: 21,
-                        paddingBottom: 45,
+                        fontSize: 20,
+                        paddingBottom: 20,
                         fontFamily: 'inter',
                         // textTransform: "uppercase",
                         // paddingLeft: 10,
@@ -266,7 +266,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                     }}
                 >
                     <View style={{ backgroundColor: 'white' }}>
-                        <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
+                        <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
                             {PreferredLanguageText('channel') + ' ' + PreferredLanguageText('name')}
                         </Text>
                         <TextInput
@@ -275,25 +275,25 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             onChangeText={val => {
                                 setName(val)
                             }}
-                            placeholderTextColor={'#a2a2aa'}
+                            placeholderTextColor={'#a2a2ac'}
                             required={true}
                             footerMessage={'case sensitive'}
                         />
                     </View>
                     <View style={{ backgroundColor: 'white' }}>
-                        <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
+                        <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
                             {PreferredLanguageText('enrolmentPassword')}
                         </Text>
                         <TextInput
                             value={password}
                             placeholder={`(${PreferredLanguageText('optional')})`}
                             onChangeText={val => setPassword(val)}
-                            placeholderTextColor={'#a2a2aa'}
+                            placeholderTextColor={'#a2a2ac'}
                             secureTextEntry={true}
                             required={false}
                         />
                     </View>
-                    <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase', marginTop: 25, paddingBottom: 15 }}>
+                    <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase', paddingBottom: 15 }}>
                         Subscribers
                     </Text>
                     <ScrollView
@@ -325,7 +325,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             }}
                         />
                     </ScrollView>
-                    <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase', marginTop: 25, paddingBottom: 15 }}>
+                    <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase', marginTop: 25, paddingBottom: 15 }}>
                         Moderators
                     </Text>
                     <ScrollView
@@ -340,7 +340,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             placeholder='Select...'
                             displayValue='name'
                             // key={userDropdownOptions.toString()}
-                            // style={{ width: '100%', color: '#202025', 
+                            // style={{ width: '100%', color: '#2F2F3C', 
                             //     optionContainer: { // To change css for option container 
                             //         zIndex: 9999
                             //     }
@@ -423,7 +423,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     <Text style={{
                                         textAlign: 'center',
                                         lineHeight: 35,
-                                        color: '#202025',
+                                        color: '#2F2F3C',
                                         fontSize: 12,
                                         backgroundColor: '#f4f4f6',
                                         paddingHorizontal: 25,
@@ -456,24 +456,24 @@ const styles = StyleSheet.create({
     outline: {
         borderRadius: 10,
         borderWidth: 1,
-        borderColor: '#a2a2aa'
+        borderColor: '#a2a2ac'
     },
     all: {
         fontSize: 15,
-        color: '#a2a2aa',
+        color: '#a2a2ac',
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: 'white'
     },
     allOutline: {
         fontSize: 15,
-        color: '#a2a2aa',
+        color: '#a2a2ac',
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: 'white',
         borderRadius: 10,
         borderWidth: 1,
-        borderColor: '#a2a2aa'
+        borderColor: '#a2a2ac'
     },
     colorBar: {
         width: '100%',

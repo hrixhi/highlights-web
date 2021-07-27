@@ -1,10 +1,9 @@
 import React, { useCallback, useState, useEffect } from 'react';
-import { StyleSheet, ScrollView } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import useColorScheme from '../hooks/useColorScheme';
 import { Text, View, TouchableOpacity } from '../components/Themed';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { PreferredLanguageText } from '../helpers/LanguageContext';
+import { DateRangePicker } from 'rsuite';
 import {
     Menu,
     MenuOptions,
@@ -57,14 +56,21 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
     return (
         <View style={styles.bottombar}>
             <View style={styles.colorBar}>
-                <View style={{ flexDirection: 'row', flex: 1 }}>
-                    <View style={{ width: '50%', paddingLeft: 20, flexDirection: 'row', justifyContent: 'center', backgroundColor: '#202025' }}>
-                        <View style={{ backgroundColor: '#202025' }}>
-                            <View style={{ flexDirection: 'row', justifyContent: 'center', display: 'flex', backgroundColor: '#202025' }}>
+                <View style={{ flexDirection: 'row', flex: 1, backgroundColor: '#2f2f3c' }}>
+                    <View style={{ paddingLeft: 10, flexDirection: 'row', backgroundColor: '#2F2F3C' }}>
+                        <View style={{ backgroundColor: '#2F2F3C' }}>
+                            <View style={{ flexDirection: 'row', justifyContent: 'center', display: 'flex', backgroundColor: '#2F2F3C', paddingLeft: 30 }}>
                                 <Menu
                                     onSelect={(subscription: any) => {
-                                        if (subscription === 'My Cues') {
+                                        if (subscription === 'All') {
                                             props.handleFilterChange('All')
+                                            props.setChannelFilterChoice('All')
+                                            props.setChannelId('')
+                                            props.closeModal()
+                                            return
+                                        }
+                                        if (subscription === 'My Cues') {
+                                            props.handleFilterChange('MyCues')
                                             props.setChannelFilterChoice('All')
                                             props.setChannelId('')
                                             props.closeModal()
@@ -77,8 +83,8 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         props.closeModal()
                                     }}>
                                     <MenuTrigger>
-                                        <Text style={{ fontFamily: 'inter', fontSize: 17, color: '#fff' }}>
-                                            {choice === 'All' ? 'My Cues' : choice}<Ionicons name='caret-down' size={17} />
+                                        <Text style={{ fontFamily: 'inter', fontSize: 13, color: '#fff' }}>
+                                            {choice === 'MyCues' ? 'My Cues' : choice}<Ionicons name='caret-down' size={13} />
                                         </Text>
                                     </MenuTrigger>
                                     <MenuOptions customStyles={{
@@ -90,6 +96,12 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             borderColor: '#f4f4f6'
                                         }
                                     }}>
+                                        <MenuOption
+                                            value={'All'}>
+                                            <Text>
+                                                All
+                                            </Text>
+                                        </MenuOption>
                                         <MenuOption
                                             value={'My Cues'}>
                                             <Text>
@@ -109,21 +121,21 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     </MenuOptions>
                                 </Menu>
                             </View>
-                            <Text style={{ fontSize: 9, color: '#a2a2aa', paddingTop: 7, textAlign: 'center', backgroundColor: '#202025' }}>
+                            <Text style={{ fontSize: 9, color: '#a2a2ac', paddingTop: 7, textAlign: 'center', backgroundColor: '#2F2F3C', paddingLeft: 30 }}>
                                 Channel
                             </Text>
                         </View>
                     </View>
-                    <View style={{ width: '50%', paddingRight: 20, flexDirection: 'row', justifyContent: 'center', backgroundColor: '#202025' }}>
-                        <View style={{ backgroundColor: '#202025' }}>
-                            <View style={{ flexDirection: 'row', justifyContent: 'center', display: 'flex', backgroundColor: '#202025' }}>
+                    <View style={{ paddingRight: 20, flexDirection: 'row', backgroundColor: '#2F2F3C', paddingLeft: 20 }}>
+                        <View style={{ backgroundColor: '#2F2F3C' }}>
+                            <View style={{ flexDirection: 'row', justifyContent: 'center', display: 'flex', backgroundColor: '#2F2F3C' }}>
                                 <Menu
                                     onSelect={(category: any) => {
                                         props.setChannelFilterChoice(category)
                                     }}>
                                     <MenuTrigger>
-                                        <Text style={{ fontFamily: 'inter', fontSize: 17, color: '#a2a2aa' }}>
-                                            {filterChoice}<Ionicons name='caret-down' size={17} />
+                                        <Text style={{ fontFamily: 'inter', fontSize: 13, color: '#a2a2ac' }}>
+                                            {filterChoice}<Ionicons name='caret-down' size={13} />
                                         </Text>
                                     </MenuTrigger>
                                     <MenuOptions customStyles={{
@@ -138,7 +150,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         <MenuOption
                                             value={'All'}>
                                             <Text>
-                                                {PreferredLanguageText('myCues')}
+                                                All
                                             </Text>
                                         </MenuOption>
                                         {
@@ -154,23 +166,44 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     </MenuOptions>
                                 </Menu>
                             </View>
-                            <Text style={{ fontSize: 9, color: '#a2a2aa', paddingTop: 7, textAlign: 'center' }}>
+                            <Text style={{ fontSize: 9, color: '#a2a2ac', paddingTop: 7, textAlign: 'center' }}>
                                 Category
                             </Text>
                         </View>
                     </View>
+                    <View style={{
+                        flex: 1,
+                        flexDirection: 'row',
+                        justifyContent: 'flex-end',
+                        backgroundColor: '#2f2f3c',
+                        paddingRight: 30
+                    }}>
+                        <DateRangePicker
+                            preventOverflow={true}
+                            size={'xs'}
+                            placeholder={'Select Dates'}
+                            onChange={e => {
+                                props.setFilterStart(e[0])
+                                props.setFilterEnd(e[1])
+                            }}
+                            value={[
+                                props.filterStart,
+                                props.filterEnd
+                            ]}
+                        />
+                    </View>
                 </View>
             </View>
-            <View style={{ display: 'flex', flexDirection: 'row', height: '50%', paddingHorizontal: 15, backgroundColor: '#202025' }}>
+            <View style={{ display: 'flex', flexDirection: 'row', height: '50%', paddingHorizontal: 15, backgroundColor: '#2F2F3C' }}>
                 <View style={styles.icons}>
                     <TouchableOpacity
                         onPress={() => props.openChannels()}
                         style={styles.center}
                     >
-                        <Text style={{ textAlign: 'center', lineHeight: 22 }}>
-                            <Ionicons name='radio-outline' size={21} color={'#fff'} />
+                        <Text style={{ textAlign: 'center', lineHeight: 20 }}>
+                            <Ionicons name='school-outline' size={19} color={'#fff'} />
                         </Text>
-                        <Text style={{ fontSize: 9, color: '#fff' }}>
+                        <Text style={{ fontSize: 9, color: '#a2a2ac' }}>
                             Channels
                         </Text>
                     </TouchableOpacity>
@@ -181,9 +214,9 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         style={styles.center}
                     >
                         <Text style={{ textAlign: 'center', lineHeight: 20 }}>
-                            <Ionicons name='calendar-outline' size={21} color={'#fff'} />
+                            <Ionicons name='calendar-outline' size={19} color={'#fff'} />
                         </Text>
-                        <Text style={{ fontSize: 9, color: '#fff' }}>
+                        <Text style={{ fontSize: 9, color: '#a2a2ac' }}>
                             Planner
                         </Text>
                     </TouchableOpacity>
@@ -203,10 +236,10 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         onPress={() => props.openProfile()}
                         style={styles.center}
                     >
-                        <Text style={{ textAlign: 'center', lineHeight: 22 }}>
-                            <Ionicons name={loggedIn ? 'person-circle-outline' : 'cloud-upload-outline'} size={22} color={'#fff'} />
+                        <Text style={{ textAlign: 'center', lineHeight: 20 }}>
+                            <Ionicons name={loggedIn ? 'person-circle-outline' : 'cloud-upload-outline'} size={20} color={'#fff'} />
                         </Text>
-                        <Text style={{ fontSize: 9, color: '#fff' }}>
+                        <Text style={{ fontSize: 9, color: '#a2a2ac' }}>
                             {!loggedIn && userLoaded ? 'Sign Up' : 'Profile'}
                         </Text>
                     </TouchableOpacity>
@@ -216,10 +249,10 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         onPress={() => props.openWalkthrough()}
                         style={styles.center}
                     >
-                        <Text style={{ textAlign: 'center', lineHeight: 22 }}>
-                            <Ionicons name='help-circle-outline' size={22} color={'#fff'} />
+                        <Text style={{ textAlign: 'center', lineHeight: 20 }}>
+                            <Ionicons name='help-circle-outline' size={20} color={'#fff'} />
                         </Text>
-                        <Text style={{ fontSize: 9, color: '#fff' }}>
+                        <Text style={{ fontSize: 9, color: '#a2a2ac' }}>
                             Help
                         </Text>
                     </TouchableOpacity>
@@ -233,13 +266,13 @@ export default BottomBar
 
 const styleObject: any = (colorScheme: any) => StyleSheet.create({
     bottombar: {
-        height: '20%',
+        height: '21%',
         width: '100%',
         display: 'flex',
         paddingBottom: 10,
         borderTopWidth: 1,
-        borderColor: '#333333',
-        backgroundColor: '#202025'
+        borderColor: '#a2a2ac',
+        backgroundColor: '#2F2F3C'
     },
     icons: {
         width: '20%',
@@ -247,7 +280,7 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
         justifyContent: 'center',
         flexDirection: 'column',
         overflow: 'hidden',
-        backgroundColor: '#202025'
+        backgroundColor: '#2F2F3C'
     },
     defaultFont: {
         fontFamily: 'system font'
@@ -257,14 +290,14 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
         justifyContent: 'center',
         display: 'flex',
         textAlign: 'center',
-        backgroundColor: '#202025'
+        backgroundColor: '#2F2F3C'
     },
     colorBar: {
         width: '100%',
         height: '50%',
         // flexDirection: 'row',
         paddingTop: 20,
-        backgroundColor: '#202025'
+        backgroundColor: '#2F2F3C'
         // paddingLeft: 20
     },
     iconContainer: {
@@ -286,27 +319,27 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
     },
     outline: {
         borderRadius: 10,
-        backgroundColor: colorScheme === 'light' ? '#202025' : 'white',
-        color: colorScheme === 'light' ? 'white' : '#202025'
+        backgroundColor: colorScheme === 'light' ? '#2F2F3C' : 'white',
+        color: colorScheme === 'light' ? 'white' : '#2F2F3C'
     },
     cusCategory: {
         fontSize: 15,
-        color: '#a2a2aa',
+        color: '#a2a2ac',
         height: 22,
         paddingHorizontal: 10
     },
     sub: {
         fontSize: 15,
-        color: colorScheme === 'light' ? '#202025' : 'white',
+        color: colorScheme === 'light' ? '#2F2F3C' : 'white',
         height: 22,
         paddingHorizontal: 10
     },
     subOutline: {
         fontSize: 15,
-        color: colorScheme === 'light' ? '#202025' : 'white',
+        color: colorScheme === 'light' ? '#2F2F3C' : 'white',
         height: 22,
         paddingHorizontal: 10,
         borderRadius: 10,
-        backgroundColor: colorScheme === 'light' ? '#202025' : 'white',
+        backgroundColor: colorScheme === 'light' ? '#2F2F3C' : 'white',
     }
 });

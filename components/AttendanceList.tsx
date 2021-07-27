@@ -9,8 +9,9 @@ import Datetime from "react-datetime";
 import XLSX from "xlsx";
 import {
     LineChart,
-  } from "react-native-chart-kit";
+} from "react-native-chart-kit";
 import * as FileSaver from 'file-saver';
+import { DatePicker } from 'rsuite';
 
 
 const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
@@ -18,12 +19,12 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
     const unparsedPastMeetings: any[] = JSON.parse(JSON.stringify(props.pastMeetings))
     const unparsedChannelAttendances: any[] = JSON.parse(JSON.stringify(props.channelAttendances))
     const [pastMeetings, setPastMeetings] = useState<any[]>(unparsedPastMeetings)
-    const [channelAttendances, setChannelAttendances] = useState<any[]>(unparsedChannelAttendances)   
-    
+    const [channelAttendances, setChannelAttendances] = useState<any[]>(unparsedChannelAttendances)
+
     const [enableFilter, setEnableFilter] = useState(false);
     const [end, setEnd] = useState(new Date());
     const [start, setStart] = useState(new Date(end.getTime() - (2630000 * 60 * 10)));
-    
+
     const [attendanceTotalMap, setAttendanceTotalMap] = useState<any>({});
 
     const [showAttendanceStats, setShowAttendanceStats] = useState(false);
@@ -52,12 +53,12 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
 
             })
 
-            studentTotalMap[att.userId] = count; 
-        
+            studentTotalMap[att.userId] = count;
+
         })
 
         setAttendanceTotalMap(studentTotalMap)
-        
+
         const exportAoa = [];
 
         // Add row 1 with past meetings and total
@@ -94,12 +95,12 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
             userRow.push(`${studentTotalMap[att.userId]} / ${pastMeetings.length}`)
 
             exportAoa.push(userRow)
-        
+
         })
 
         setExportAoa(exportAoa)
 
-       
+
     }, [channelAttendances, pastMeetings])
 
     // Update past meetings to consider
@@ -107,11 +108,11 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
         if (enableFilter) {
 
             const filteredPastMeetings = unparsedPastMeetings.filter(meeting => {
-                return (new Date(meeting.start) > start && new Date(meeting.end) < end) 
+                return (new Date(meeting.start) > start && new Date(meeting.end) < end)
             })
 
             setPastMeetings(filteredPastMeetings);
-            
+
         } else {
 
             setPastMeetings(unparsedPastMeetings)
@@ -124,11 +125,11 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
         const fileExtension = '.xlsx';
 
         const ws = XLSX.utils.aoa_to_sheet(exportAoa);
-		const wb = XLSX.utils.book_new();
-		XLSX.utils.book_append_sheet(wb, ws, "Attendance ");
-		/* generate XLSX file and send to client */
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Attendance ");
+        /* generate XLSX file and send to client */
         const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' })
-        const data = new Blob([excelBuffer], {type: fileType});
+        const data = new Blob([excelBuffer], { type: fileType });
         FileSaver.saveAs(data, "attendances" + fileExtension);
     }
 
@@ -158,7 +159,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                 }}>
                 <Text style={showAttendanceStats ? styles.allGrayFill : styles.all}>Lectures</Text>
             </TouchableOpacity>
-    </View>)
+        </View>)
     }
 
     const renderAttendanceChart = () => {
@@ -167,7 +168,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
 
         const meetingLabels: any[] = [];
 
-        const attendanceCounts:any[] = [];
+        const attendanceCounts: any[] = [];
 
         pastMeetings.map((meeting: any) => {
 
@@ -184,23 +185,23 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                 if (filteredDateId.length > 0) count++;
             })
 
-            let percentage = (count/studentCount) * 100
+            let percentage = (count / studentCount) * 100
 
             attendanceCounts.push(percentage)
-            
+
         })
 
         const data = {
             labels: meetingLabels,
             datasets: [
-              {
-                data: attendanceCounts,
-                color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // optional
-                strokeWidth: 2 // optional
-              }
+                {
+                    data: attendanceCounts,
+                    color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // optional
+                    strokeWidth: 2 // optional
+                }
             ],
             // legend: ["Rainy Days"] // optional
-          };
+        };
 
 
 
@@ -211,41 +212,41 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
         }}
             key={JSON.stringify(pastMeetings)}
         >
-            {/* <Text style={{ textAlign: 'left', fontSize: 13, color: '#202025', fontFamily: 'inter', paddingBottom: 20 }}>
+            {/* <Text style={{ textAlign: 'left', fontSize: 13, color: '#2F2F3C', fontFamily: 'inter', paddingBottom: 20 }}>
                         Attendance By Lectures
             </Text> */}
             <ScrollView
-                            showsHorizontalScrollIndicator={false}
-                            horizontal={true}
-                            contentContainerStyle={{
-                                height: '100%'
-                            }}
-                            nestedScrollEnabled={true}
-                        >
-                    <LineChart 
-                        data={data}
-                        width={width - 100}
-                        height={500}
-                        // chartConfig={chartConfig}
-                        // xAxisLabel="Lectures"
-                        chartConfig={{
-                            backgroundGradientFrom: "#fff",
-                            backgroundGradientFromOpacity: 0,
-                            backgroundGradientTo: "#fff",
-                            backgroundGradientToOpacity: 0,
-                            color: (opacity = 1) => `rgba(1, 122, 205, 1)`,
-                            labelColor: (opacity = 1) => `rgba(0, 0, 0, 1)`,
-                            strokeWidth: 2, // optional, default 3
-                            barPercentage: 0.5,
-                            useShadowColorFromDataset: false, // optional
-                            propsForBackgroundLines: {
-                                strokeWidth: 1,
-                                stroke: '#efefef',
-                                strokeDasharray: '0',
-                              },
-                          }}
-                    />
-                </ScrollView>
+                showsHorizontalScrollIndicator={false}
+                horizontal={true}
+                contentContainerStyle={{
+                    height: '100%'
+                }}
+                nestedScrollEnabled={true}
+            >
+                <LineChart
+                    data={data}
+                    width={width - 100}
+                    height={500}
+                    // chartConfig={chartConfig}
+                    // xAxisLabel="Lectures"
+                    chartConfig={{
+                        backgroundGradientFrom: "#fff",
+                        backgroundGradientFromOpacity: 0,
+                        backgroundGradientTo: "#fff",
+                        backgroundGradientToOpacity: 0,
+                        color: (opacity = 1) => `rgba(1, 122, 205, 1)`,
+                        labelColor: (opacity = 1) => `rgba(0, 0, 0, 1)`,
+                        strokeWidth: 2, // optional, default 3
+                        barPercentage: 0.5,
+                        useShadowColorFromDataset: false, // optional
+                        propsForBackgroundLines: {
+                            strokeWidth: 1,
+                            stroke: '#efefef',
+                            strokeDasharray: '0',
+                        },
+                    }}
+                />
+            </ScrollView>
         </View>)
     }
 
@@ -270,19 +271,19 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                         backgroundColor: 'white'
                     }}
                     onPress={() => {
-                        props.hideChannelAttendance()                  
+                        props.hideChannelAttendance()
                     }}>
-                        <Text style={{
-                            width: '100%',
-                            fontSize: 15,
-                            color: '#a2a2aa'
-                        }}>
-                            <Ionicons name='chevron-back-outline' size={17} color={'#202025'} style={{ marginRight: 10 }} /> {renderAttendanceStatsTabs()}
-                        </Text>
+                    <Text style={{
+                        width: '100%',
+                        fontSize: 15,
+                        color: '#a2a2ac'
+                    }}>
+                        <Ionicons name='chevron-back-outline' size={17} color={'#2F2F3C'} style={{ marginRight: 10 }} /> {renderAttendanceStatsTabs()}
+                    </Text>
                 </TouchableOpacity>
-                {pastMeetings.length === 0 || channelAttendances.length === 0 ?  null : <Text
+                {pastMeetings.length === 0 || channelAttendances.length === 0 ? null : <Text
                     style={{
-                        color: "#a2a2aa",
+                        color: "#a2a2ac",
                         fontSize: 11,
                         lineHeight: 25,
                         // paddingTop: 5,
@@ -296,7 +297,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                     }}>
                     {!enableFilter ? "FILTER" : "HIDE"}
                 </Text>}
-                {(pastMeetings.length === 0 || channelAttendances.length === 0 || !props.isOwner)  ?  null : <Text
+                {(pastMeetings.length === 0 || channelAttendances.length === 0 || !props.isOwner) ? null : <Text
                     style={{
                         color: "#3B64F8",
                         fontSize: 11,
@@ -312,55 +313,55 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                     EXPORT
                 </Text>}
             </View>
-            
+
             {/* Filters */}
-
-            {unparsedPastMeetings.length === 0 || channelAttendances.length === 0 ?  null : <View style={{ paddingTop: 30 }}>
-
-            <View style={{ display: 'flex', width: "100%", flexDirection: width < 768 ? "column" : "row", marginBottom: 30, }} >
-
-
-                                    {!enableFilter ? null : <View
-                                        style={{
-                                            width: width < 768 ? "100%" : "30%",
-                                            flexDirection: "row",
-                                            marginTop: 12,
-                                            marginLeft: 0
-                                        }}>
-                                        <Text style={styles.text}>{PreferredLanguageText("start")} Date</Text>
-                                        <Datetime
-                                            value={start}
-                                            onChange={(event: any) => {
-                                                const date = new Date(event);
-                                                setStart(date);
-                                            }}
-                                        />
-                                    </View>}
-                                    {!enableFilter ? null : <View
-                                        style={{
-                                            width: width < 768 ? "100%" : "30%",
-                                            flexDirection: "row",
-                                            marginTop: 12,
-                                            marginLeft: width < 768 ? 0 : 10
-                                        }}>
-                                        <Text style={styles.text}>{PreferredLanguageText("end")} Date</Text>
-                                        <Datetime
-                                            value={end}
-                                            onChange={(event: any) => {
-                                                const date = new Date(event);
-                                                setEnd(date);
-                                            }}
-                                        />
-                                    </View>}
-                                </View>
+            {unparsedPastMeetings.length === 0 || channelAttendances.length === 0 ? null : <View style={{ paddingTop: 30 }}>
+                <View style={{ display: 'flex', width: "100%", flexDirection: width < 768 ? "column" : "row", marginBottom: 30, }} >
+                    {!enableFilter ? null : <View
+                        style={{
+                            width: width < 768 ? "100%" : "30%",
+                            flexDirection: "row",
+                            marginTop: 12,
+                            marginLeft: 0
+                        }}>
+                        <Text style={styles.text}>{PreferredLanguageText("start")} Date</Text>
+                        <DatePicker
+                            size={'sm'}
+                            preventOverflow={true}
+                            value={start}
+                            onChange={(event: any) => {
+                                const date = new Date(event);
+                                setStart(date);
+                            }}
+                        />
+                    </View>}
+                    {!enableFilter ? null : <View
+                        style={{
+                            width: width < 768 ? "100%" : "30%",
+                            flexDirection: "row",
+                            marginTop: 12,
+                            marginLeft: width < 768 ? 0 : 10
+                        }}>
+                        <Text style={styles.text}>{PreferredLanguageText("end")} Date</Text>
+                        <DatePicker
+                            preventOverflow={true}
+                            size={'sm'}
+                            value={end}
+                            onChange={(event: any) => {
+                                const date = new Date(event);
+                                setEnd(date);
+                            }}
+                        />
+                    </View>}
+                </View>
 
             </View>}
             {
                 channelAttendances.length === 0 || pastMeetings.length === 0 ?
                     <View style={{ backgroundColor: 'white' }}>
-                        <Text style={{ width: '100%', color: '#a2a2aa', fontSize: 22, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter' }}>
+                        <Text style={{ width: '100%', color: '#a2a2ac', fontSize: 20, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter' }}>
                             {
-                                pastMeetings.length === 0  ? "No past meetings" : "No Students"
+                                pastMeetings.length === 0 ? "No past meetings" : "No Students"
                                 // PreferredLanguageText('noGraded') : PreferredLanguageText('noStudents')
                             }
                         </Text>
@@ -374,7 +375,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                     }}
                         key={JSON.stringify(channelAttendances)}
                     >
-                        
+
                         <ScrollView
                             showsHorizontalScrollIndicator={true}
                             horizontal={true}
@@ -395,7 +396,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                     <View style={styles.row} key={"-"}>
                                         <View style={styles.col} key={'0,0'} />
                                         <View style={styles.col} key={'0,0'} >
-                                            <Text style={{ fontSize: 13, color: '#202025', fontFamily: 'inter' }}>
+                                            <Text style={{ fontSize: 13, color: '#2F2F3C', fontFamily: 'inter' }}>
                                                 Total
                                             </Text>
                                         </View>
@@ -403,10 +404,10 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                             pastMeetings.map((meeting: any, col: number) => {
                                                 const { title, start } = meeting
                                                 return <View style={styles.col} key={col.toString()}>
-                                                    <Text style={{ textAlign: 'center', fontSize: 13, color: '#202025', fontFamily: 'inter' }}>
+                                                    <Text style={{ textAlign: 'center', fontSize: 13, color: '#2F2F3C', fontFamily: 'inter' }}>
                                                         {title}
                                                     </Text>
-                                                    <Text style={{ textAlign: 'center', fontSize: 12, color: '#202025' }}>
+                                                    <Text style={{ textAlign: 'center', fontSize: 12, color: '#2F2F3C' }}>
                                                         {moment(new Date(start)).format('MMMM Do YYYY, h:mm a')}
                                                     </Text>
                                                 </View>
@@ -420,12 +421,12 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
 
                                             return <View style={styles.row} key={row}>
                                                 <View style={styles.col} >
-                                                    <Text style={{ textAlign: 'left', fontSize: 13, color: '#202025', fontFamily: 'inter' }}>
+                                                    <Text style={{ textAlign: 'left', fontSize: 13, color: '#2F2F3C', fontFamily: 'inter' }}>
                                                         {channelAttendance.fullName}
                                                     </Text>
                                                 </View>
                                                 <View style={styles.col} >
-                                                    <Text style={{ textAlign: 'left', fontSize: 13, color: '#202025', fontFamily: 'inter' }}>
+                                                    <Text style={{ textAlign: 'left', fontSize: 13, color: '#2F2F3C', fontFamily: 'inter' }}>
                                                         {studentCount} / {pastMeetings.length}
                                                     </Text>
                                                 </View>
@@ -435,19 +436,19 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                                             return s.dateId.toString().trim() === meeting.dateId.toString().trim()
                                                         })
                                                         return <View style={styles.col} key={row.toString() + '-' + col.toString()}>
-                                                            <Text style={{ textAlign: 'center', fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
+                                                            <Text style={{ textAlign: 'center', fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
                                                                 {
                                                                     attendanceObject ? "Present" : '-'
                                                                 }
                                                             </Text>
-                                                            {attendanceObject ? <Text style={{ textAlign: 'left', fontSize: 12, color: '#202025' }}>
+                                                            {attendanceObject ? <Text style={{ textAlign: 'left', fontSize: 12, color: '#2F2F3C' }}>
                                                                 {PreferredLanguageText('joinedAt') + ' ' + moment(new Date(attendanceObject.joinedAt)).format('h:mm a')}
                                                             </Text> : null}
-                                                            
+
                                                         </View>
                                                     })
                                                 }
-                                                
+
                                             </View>
                                         })
                                     }
@@ -462,7 +463,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                 
                                 <View style={styles.row} >
                                    <View style={styles.col} >
-                                        <Text style={{ textAlign: 'center', fontSize: 12, color: '#202025' }}>
+                                        <Text style={{ textAlign: 'center', fontSize: 12, color: '#2F2F3C' }}>
                                             Total
                                         </Text>                    
                                     </View>
@@ -474,7 +475,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                             return (
                                             <View style={styles.row} >
                                                 <View style={styles.col} >
-                                                    <Text style={{ textAlign: 'center', fontSize: 12, color: '#202025' }}>
+                                                    <Text style={{ textAlign: 'center', fontSize: 12, color: '#2F2F3C' }}>
                                                         {studentCount} / {pastMeetings.length}
                                                     </Text>                    
                                                 </View>
@@ -495,7 +496,7 @@ const styles = StyleSheet.create({
     col: { width: 100, justifyContent: 'center', display: 'flex', flexDirection: 'column', backgroundColor: '#f4f4f6', padding: 5 },
     text: {
         fontSize: 12,
-        color: "#a2a2aa",
+        color: "#a2a2ac",
         textAlign: "left",
         paddingHorizontal: 10
     },
@@ -504,23 +505,23 @@ const styles = StyleSheet.create({
         color: "#fff",
         paddingHorizontal: 10,
         borderRadius: 10,
-        backgroundColor: "#a2a2aa",
+        backgroundColor: "#a2a2ac",
         lineHeight: 20
     },
     allGrayOutline: {
         fontSize: 12,
-        color: "#a2a2aa",
+        color: "#a2a2ac",
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: "white",
         borderRadius: 10,
         borderWidth: 1,
-        borderColor: "#a2a2aa",
+        borderColor: "#a2a2ac",
         lineHeight: 20
     },
     all: {
         fontSize: 12,
-        color: "#a2a2aa",
+        color: "#a2a2ac",
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: "white",

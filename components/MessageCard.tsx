@@ -45,7 +45,7 @@ const MessageCard: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     <Text style={{
                         fontSize: 11,
                         fontWeight: 'bold',
-                        color: props.user.displayName === props.message.displayName ? '#333333' : '#a2a2aa',
+                        color: props.user.displayName === props.message.displayName ? '#333333' : '#a2a2ac',
                         marginRight: 5,
                         flex: 1,
                         textAlign: 'right'
@@ -57,12 +57,12 @@ const MessageCard: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     imported ?
                         <a download={true} href={url} style={{ textDecoration: 'none' }}>
                             <View style={{ backgroundColor: '#f4f4f6', flex: 1 }}>
-                                <Text style={{ width: '100%', color: '#a2a2aa', fontSize: 15, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
-                                    <Ionicons name='document-outline' size={17} color='#a2a2aa' /> {title}.{type}
+                                <Text style={{ width: '100%', color: '#a2a2ac', fontSize: 15, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                    <Ionicons name='document-outline' size={17} color='#a2a2ac' /> {title}.{type}
                                 </Text>
                             </View>
                         </a>
-                        : <div dangerouslySetInnerHTML={{ __html: props.message.message }} style={{ fontFamily: 'overpass', color: '#202025', fontSize: 14 }} />
+                        : <div dangerouslySetInnerHTML={{ __html: props.message.message }} style={{ fontFamily: 'overpass', color: '#2F2F3C', fontSize: 14 }} />
 
                 }
             </View>
@@ -92,7 +92,7 @@ const styles: any = () => StyleSheet.create({
     },
     dateContainer: {
         fontSize: 10,
-        color: '#a2a2aa',
+        color: '#a2a2ac',
         backgroundColor: '#f4f4f6',
         display: 'flex',
         flexDirection: 'row',
@@ -100,7 +100,7 @@ const styles: any = () => StyleSheet.create({
     },
     date: {
         fontSize: 10,
-        color: '#a2a2aa',
+        color: '#a2a2ac',
         marginLeft: 5
     }
 });
