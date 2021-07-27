@@ -31,17 +31,6 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const clickPlusAndSelectAlert = PreferredLanguageText('clickPlusAndSelect');
 
     const noChannelCuesAlert = useCallback(async () => {
-        if (props.channelId && props.channelId !== '') {
-            const u = await AsyncStorage.getItem("user")
-            if (u) {
-                const user = JSON.parse(u)
-                if (user._id.toString().trim() === props.createdBy.toString().trim()) {
-                    if (cues.length === 0) {
-                        Alert(clickPlusAndSelectAlert)
-                    }
-                }
-            }
-        }
     }, [props.channelId, props.createdBy, cues])
 
     const onDimensionsChange = useCallback(({ window, screen }: any) => {

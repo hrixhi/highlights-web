@@ -699,9 +699,9 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         }).start();
       }
       // OPEN WALKTHROUGH IF FIRST TIME LOAD
-      // if (!init && dimensions.window.width >= 1024) {
-      //   openModal('Calendar')
-      // }
+      if (!init && dimensions.window.width >= 1024) {
+        openModal('Create')
+      }
       // HANDLE PROFILE
       if (u) {
         const parsedUser = JSON.parse(u)
