@@ -715,9 +715,9 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         }).start();
       }
       // OPEN WALKTHROUGH IF FIRST TIME LOAD
-      // if (!init && dimensions.window.width >= 1024) {
-      //   openModal('Calendar')
-      // }
+      if (!init && dimensions.window.width >= 1024) {
+        openModal('Create')
+      }
       // HANDLE PROFILE
       if (u) {
         const parsedUser = JSON.parse(u)
@@ -1036,6 +1036,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
       })
       if (sub) {
         setFilterChoice(sub.channelName)
+        setChannelCreatedBy(sub.channelCreatedBy)
       }
     }
     setCreatedBy(by)
@@ -1528,7 +1529,14 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             backgroundColor: '#2F2F3C',
             position: dimensions.window.width < 1024 ? 'absolute' : 'relative'
           }}
-        /> :
+        >
+          <View style={{ flexDirection: 'column', flex: 1, width: '100%', justifyContent: 'center', backgroundColor: '#2f2f3c' }}>
+            <Text style={{ fontSize: 20, color: '#a2a2ac', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#2F2F3C' }}>
+              Select Cue to view.
+            </Text>
+          </View>
+        </View>
+          :
           <View style={{
             width: dimensions.window.width < 1024 ? '100%' : dimensions.window.width * 0.7,
             height: dimensions.window.height,

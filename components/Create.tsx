@@ -727,9 +727,9 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     iconSize={12}
                                     editor={RichText}
                                     disabled={false}
-                                    iconTint={"#a2a2ac"}
-                                    selectedIconTint={"#a2a2ac"}
-                                    disabledIconTint={"#a2a2ac"}
+                                    iconTint={"#2f2f3c"}
+                                    selectedIconTint={"#2f2f3c"}
+                                    disabledIconTint={"#2f2f3c"}
                                     actions={
                                         imported || isQuiz ? [""] :
                                             [
@@ -770,7 +770,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         {
                             !isQuiz ?
                                 <Text style={{
-                                    color: '#a2a2ac',
+                                    color: '#2f2f3c',
                                     fontSize: 11,
                                     lineHeight: 30,
                                     textAlign: 'right',
@@ -787,7 +787,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         {
                             isQuiz ? null :
                                 <Text style={{
-                                    color: '#a2a2ac',
+                                    color: '#2f2f3c',
                                     fontSize: 11,
                                     lineHeight: 30,
                                     textAlign: 'right',
@@ -800,7 +800,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 </Text>
                         }
                         <Text style={{
-                            color: '#a2a2ac',
+                            color: '#2f2f3c',
                             fontSize: 11,
                             lineHeight: 30,
                             textAlign: 'right',
@@ -849,7 +849,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 <Ionicons name='add-circle-outline' color='#a2a2ac' size={20} />
                             </TouchableOpacity>
                             <View style={{ minWidth: '40%', flex: 1, paddingVertical: 5, justifyContent: 'center', }}>
-                                <Text style={{ flex: 1, fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
+                                <Text style={{ flex: 1, fontSize: 11, color: '#a2a2ac' }}>
                                     ^ → Superscript, _ → Subscript, int → Integral, sum → Summation, prod → Product, sqrt → Square root, bar → Bar over letter, alpha, beta, ... omega → Small Greek letter, Alpha, Beta, ... Omega → Capital Greek letter
                                 </Text>
                             </View>
@@ -992,23 +992,25 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             key={reloadEditorKey.toString()}
                             containerStyle={{
                                 height,
-                                backgroundColor: '#f4f4f6',
+                                backgroundColor: '#fff',
                                 padding: 3,
                                 paddingTop: 5,
                                 paddingBottom: 10,
-                                borderRadius: 15,
+                                // borderRadius: 15,
                                 display: (isQuiz || imported) ? "none" : "flex"
                             }}
                             ref={RichText}
                             style={{
                                 width: '100%',
-                                backgroundColor: '#f4f4f6',
-                                borderRadius: 15,
+                                backgroundColor: '#fff',
+                                // borderRadius: 15,
                                 minHeight: 650,
-                                display: (isQuiz || imported) ? "none" : "flex"
+                                display: (isQuiz || imported) ? "none" : "flex",
+                                borderTopWidth: 1,
+                                borderColor: '#a2a2ac'
                             }}
                             editorStyle={{
-                                backgroundColor: '#f4f4f6',
+                                backgroundColor: '#fff',
                                 placeholderColor: '#a2a2ac',
                                 color: '#2F2F3C',
                                 contentCSSText: 'font-size: 14px;',
@@ -1107,6 +1109,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             </Menu>
                                         </View>
                                     </View>
+
                                 </View>
 
                                 {
@@ -1149,6 +1152,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                 Available
                                                             </Text>
                                                             <DatePicker
+                                                                format="YYYY-MM-DD HH:mm:ss"
                                                                 preventOverflow={true}
                                                                 value={initiateAt}
                                                                 onChange={(event: any) => {
@@ -1183,6 +1187,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                     {PreferredLanguageText('deadline')}
                                                                 </Text>
                                                                 <DatePicker
+                                                                    format="YYYY-MM-DD HH:mm:ss"
                                                                     preventOverflow={true}
                                                                     value={deadline}
                                                                     onChange={(event: any) => {
@@ -1259,36 +1264,36 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             </View>
                             : null}
 
-                            <View style={{ width: width < 768 ? '100%' : '33.3%', borderRightWidth: 0, borderColor: '#f4f4f6' }}>
-                                {
-                                        channelId !== '' ?
-                                            <View style={{ flexDirection: 'column', marginTop: 25, overflow: 'scroll' }}>
-                                                <View style={{ width: '90%', padding: 5, height: 'auto' }}>
-                                                    <Multiselect
-                                                        placeholder='Share with...'
-                                                        displayValue='name'
-                                                        // key={userDropdownOptions.toString()}
-                                                        // style={{ width: '100%', color: '#202025', 
-                                                        //     optionContainer: { // To change css for option container 
-                                                        //         zIndex: 9999
-                                                        //     }
-                                                        // }}
-                                                        options={subscribers} // Options to display in the dropdown
-                                                        selectedValues={selected} // Preselected value to persist in dropdown
-                                                        onSelect={(e, f) => {
-                                                            setSelected(e);
-                                                            return true
-                                                        }} // Function will trigger on select event
-                                                        onRemove={(e, f) => {
-                                                            setSelected(e);
-                                                            return true
-                                                        }}
-                                                    />
-                                                </View>
+                        <View style={{ width: width < 768 ? '100%' : '33.3%', borderRightWidth: 0, borderColor: '#f4f4f6' }}>
+                            {
+                                channelId !== '' ?
+                                    <View style={{ flexDirection: 'column', marginTop: 25, overflow: 'scroll' }}>
+                                        <View style={{ width: '90%', padding: 5, height: 'auto' }}>
+                                            <Multiselect
+                                                placeholder='Share with...'
+                                                displayValue='name'
+                                                // key={userDropdownOptions.toString()}
+                                                // style={{ width: '100%', color: '#2f2f3c', 
+                                                //     optionContainer: { // To change css for option container 
+                                                //         zIndex: 9999
+                                                //     }
+                                                // }}
+                                                options={subscribers} // Options to display in the dropdown
+                                                selectedValues={selected} // Preselected value to persist in dropdown
+                                                onSelect={(e, f) => {
+                                                    setSelected(e);
+                                                    return true
+                                                }} // Function will trigger on select event
+                                                onRemove={(e, f) => {
+                                                    setSelected(e);
+                                                    return true
+                                                }}
+                                            />
+                                        </View>
 
-                                            </View> : null
-                                    }
-                            </View>
+                                    </View> : null
+                            }
+                        </View>
                         <View style={{ display: 'flex', flexDirection: width < 768 ? 'column' : 'row' }}>
                             <View style={{ width: width < 768 ? '100%' : '33.33%', borderRightWidth: 0, borderColor: '#f4f4f6' }}>
                                 <View style={{ width: '100%', backgroundColor: 'white' }}>
@@ -1315,7 +1320,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     <Menu
                                                         onSelect={(cat: any) => setCustomCategory(cat)}>
                                                         <MenuTrigger>
-                                                            <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#a2a2ac' }}>
+                                                            <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#2f2f3c' }}>
                                                                 {customCategory === '' ? 'None' : customCategory}<Ionicons name='caret-down' size={14} />
                                                             </Text>
                                                         </MenuTrigger>
@@ -1361,7 +1366,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 }}
                                                 style={{ backgroundColor: 'white' }}>
                                                 <Text style={{ textAlign: 'center', lineHeight: 20, width: '100%' }}>
-                                                    <Ionicons name={addCustomCategory ? 'close' : 'add'} size={20} color={'#a2a2ac'} />
+                                                    <Ionicons name={addCustomCategory ? 'close' : 'add'} size={20} color={'#2f2f3c'} />
                                                 </Text>
                                             </TouchableOpacity>
                                         </View>
@@ -1475,7 +1480,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                 setFrequencyName(cat.label)
                                                             }}>
                                                             <MenuTrigger>
-                                                                <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#a2a2ac' }}>
+                                                                <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#2f2f3c' }}>
                                                                     {frequencyName}<Ionicons name='caret-down' size={14} />
                                                                 </Text>
                                                             </MenuTrigger>
@@ -1537,6 +1542,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             {PreferredLanguageText('RemindOn')}
                                                         </Text>
                                                         <DatePicker
+                                                            format="YYYY-MM-DD HH:mm:ss"
                                                             value={endPlayAt}
                                                             preventOverflow={true}
                                                             onChange={(event: any) => {
@@ -1590,6 +1596,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             {PreferredLanguageText('remindTill')}
                                                         </Text>
                                                         <DatePicker
+                                                            format="YYYY-MM-DD HH:mm:ss"
                                                             value={endPlayAt}
                                                             preventOverflow={true}
                                                             onChange={(event: any) => {

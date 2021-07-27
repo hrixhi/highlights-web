@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { Dimensions, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet } from 'react-native';
 import { Text, View, TouchableOpacity } from '../components/Themed';
-import useColorScheme from '../hooks/useColorScheme';
 import { Ionicons } from '@expo/vector-icons';
 import _ from 'lodash'
 import { htmlStringParser } from '../helpers/HTMLParser';
@@ -9,8 +8,8 @@ import { htmlStringParser } from '../helpers/HTMLParser';
 const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
     const colorChoices: any[] = ['#d91d56', '#ED7D22', '#F8D41F', '#B8D41F', '#53BE6D'].reverse()
-    const colorScheme = 'dark';
-    const styleObject = styles(colorScheme, props.channelId)
+    const colorScheme = 'dark'
+    const styleObject = styles(colorScheme, props.channelId, colorChoices[props.cue.color])
     const starred = props.cue.starred;
     const { title, subtitle } = htmlStringParser(props.cue.channelId && props.cue.channelId !== '' ? props.cue.original : props.cue.cue)
     const [showScore, setShowScore] = useState(false);
@@ -20,6 +19,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         if (props.cue && props.cue.original) {
 
             // Hide scores if it's a quiz and !releaseSubmission
+
             if (props.cue.graded && !props.cue.releaseSubmission) {
                 setShowScore(false)
             } else {
@@ -34,6 +34,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
         if (matchSubscription && matchSubscription !== undefined) {
             setColorCode(matchSubscription.colorCode)
+
         }
     }, [props.cue])
 
@@ -48,18 +49,15 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 <View style={styleObject.text}>
                     <View style={styleObject.dateContainer}>
                         <View style={{
-                            width: 8,
-                            height: 8,
+                            width: 9,
+                            height: 9,
                             borderRadius: 10,
-                            marginTop: 1,
-                            backgroundColor: colorChoices[props.cue.color]
+                            // marginTop: 1,
+                            backgroundColor: '#3b64f8'
                         }} />
+
                         <Text style={styleObject.date}>
-                            {
-                                (new Date(props.cue.date)).toString().split(' ')[1] +
-                                ' ' +
-                                (new Date(props.cue.date)).toString().split(' ')[2]
-                            }
+                            {props.cue.channelName ? props.cue.channelName : 'My Cues'}
                         </Text>
                         {/* {
                             props.cue.channelName ?
@@ -72,25 +70,17 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         </Text> */}
                         {/* {
                             props.cue.submission ? <Text style={styleObject.date}>
-                                <Ionicons
-                                    name='share-outline'
-                                    size={8}
-                                    color={props.cue.submittedAt && props.cue.submittedAt !== '' ? ('#3B64F8') : (colorScheme === 'light' ? '#a2a2ac' : '#333333')}
-                                />
+                                <Ionicons name='share-outline' size={9} color={props.cue.submittedAt && props.cue.submittedAt !== '' ? ('#3B64F8') : (colorScheme === 'light' ? '#fff' : '#333333')} style={{ marginRight: 10 }} />
                             </Text> : null
                         }
                         {
                             props.cue.frequency !== '0' ?
                                 <Text style={styleObject.date}>
-                                    <Ionicons
-                                        name='notifications-outline'
-                                        size={8}
-                                        color={colorScheme === 'light' ? '#a2a2ac' : '#333333'}
-                                    />
+                                    <Ionicons name='notifications-outline' size={9} color={colorScheme === 'light' ? '#fff' : '#333333'} />
                                 </Text> : null
                         } */}
                         {
-                        props.cue.graded && showScore ? <Text style={{
+                            props.cue.graded && showScore ? <Text style={{
                                 fontSize: 9,
                                 color: '#3B64F8',
                                 marginLeft: 10
@@ -103,13 +93,13 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 <Text style={{
                                     textAlign: 'right',
                                     lineHeight: 30,
-                                    marginTop: -23,
+                                    marginTop: -28,
                                     paddingRight: 30,
                                     position: 'absolute',
                                     width: '97%',
                                     zIndex: 20
                                 }}>
-                                    <Ionicons name='bookmark' size={18} color={starred ? '#d91d56' : '#a2a2ac'} />
+                                    <Ionicons name='bookmark' size={18} color={starred ? '#d91d56' : '#fff'} />
                                 </Text>
                                 : null
                         }
@@ -122,24 +112,35 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             marginRight: 5,
                             marginTop: -5,
                             backgroundColor: colorScheme === 'light'
-                                ? (starred ? '#2F2F3C' : '#f4f4f6')
-                                : (starred ? 'white' : '#a2a2ac'),
+                                ? (starred ? '#2f2f3c' : '#fff')
+                                : (starred ? 'white' : '#fff'),
                         }}>
                             {
                                 props.cue.submission ? <Text>
-                                    <Ionicons name='share-outline' size={11} color={props.cue.submittedAt && props.cue.submittedAt !== '' ? ('#3B64F8') : (colorScheme === 'light' ? '#a2a2ac' : '#333333')} style={{ marginRight: 10 }} />
+                                    <Ionicons name='share-outline' size={11} color={props.cue.submittedAt && props.cue.submittedAt !== '' ? ('#3B64F8') : (colorScheme === 'light' ? '#fff' : '#333333')} style={{ marginRight: 10 }} />
                                 </Text> : null
                             }
                             {
                                 props.cue.frequency !== '0' ?
                                     <Text>
-                                        <Ionicons name='notifications-outline' size={11} color={colorScheme === 'light' ? '#a2a2ac' : '#333333'} />
+                                        <Ionicons name='notifications-outline' size={11} color={colorScheme === 'light' ? '#fff' : '#333333'} />
                                     </Text> : null
                             }
                         </View> */}
+                        <Text style={styleObject.date2}>
+                            {
+                                (new Date(props.cue.date)).toString().split(' ')[1] +
+                                ' ' +
+                                (new Date(props.cue.date)).toString().split(' ')[2]
+                            }
+                        </Text>
                     </View>
-                    <View style={{ backgroundColor: '#a2a2ac', width: '100%', flexDirection: 'row', flex: 1, height: '75%', paddingTop: 6 }}>
-                        <Text ellipsizeMode={'tail'}
+                    <View style={{
+                        backgroundColor: colorScheme === 'light' ? '#fff' : '#fff',
+                        width: '100%', flexDirection: 'row', flex: 1, height: '75%', paddingTop: 6
+                    }}>
+                        <Text
+                            ellipsizeMode={'tail'}
                             numberOfLines={1}
                             style={styleObject.title}>
                             {title}
@@ -151,6 +152,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     width: 20,
                                     height: 20,
                                     borderRadius: 10,
+                                    overflow: 'hidden',
                                     backgroundColor: '#3B64F8',
                                     textAlign: 'center',
                                     zIndex: 150,
@@ -168,6 +170,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     width: 20,
                                     height: 20,
                                     borderRadius: 10,
+                                    overflow: 'hidden',
                                     backgroundColor: '#d91d56',
                                     textAlign: 'center',
                                     zIndex: 150,
@@ -195,7 +198,7 @@ export default React.memo(Card, (prev, next) => {
     return _.isEqual({ ...prev.cue }, { ...next.cue })
 })
 
-const styles: any = (colorScheme: any, channelId: any) => StyleSheet.create({
+const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.create({
     swiper: {
         height: '100%',
         borderRadius: 15,
@@ -207,36 +210,36 @@ const styles: any = (colorScheme: any, channelId: any) => StyleSheet.create({
         height: '100%',
         borderRadius: 15,
         padding: 13,
-        paddingTop: 17,
-        backgroundColor: colorScheme === 'light' ? '#f4f4f6' : '#a2a2ac'
+        paddingTop: 20,
+        backgroundColor: colorScheme === 'light' ? '#fff' : '#fff',
     },
     flipCard: {
         height: '100%',
         width: '100%',
         borderRadius: 15,
         padding: 13,
-        color: '#f4f4f6',
-        backgroundColor: colorScheme === 'light' ? '#2F2F3C' : 'white'
+        color: '#fff',
+        backgroundColor: colorScheme === 'light' ? '#2f2f3c' : 'white'
     },
     descriptionFlip: {
-        color: '#a2a2ac',
+        color: '#fff',
         fontSize: 13,
-        // height: '30%'
+        // height: '25%',
     },
     text: {
         height: '100%',
-        backgroundColor: colorScheme === 'light' ? '#f4f4f6' : '#a2a2ac'
+        backgroundColor: colorScheme === 'light' ? '#fff' : '#fff'
     },
     flipText: {
         height: '100%',
-        color: '#f4f4f6',
-        backgroundColor: colorScheme === 'light' ? '#2F2F3C' : 'white'
+        color: '#fff',
+        backgroundColor: colorScheme === 'light' ? '#2f2f3c' : 'white'
     },
     dateContainer: {
         fontSize: 10,
-        color: colorScheme === 'light' ? '#a2a2ac' : '#f4f4f6',
+        color: colorScheme === 'light' ? '#fff' : '#fff',
         height: '25%',
-        backgroundColor: colorScheme === 'light' ? '#f4f4f6' : '#a2a2ac',
+        backgroundColor: colorScheme === 'light' ? '#fff' : '#fff',
         display: 'flex',
         flexDirection: 'row'
     },
@@ -245,44 +248,48 @@ const styles: any = (colorScheme: any, channelId: any) => StyleSheet.create({
         height: '25%',
         display: 'flex',
         flexDirection: 'row',
-        color: '#f4f4f6',
-        backgroundColor: colorScheme === 'light' ? '#2F2F3C' : 'white'
+        color: '#fff',
+        backgroundColor: colorScheme === 'light' ? '#2f2f3c' : 'white'
     },
     date: {
         fontSize: 9,
-        color: colorScheme === 'light' ? '#a2a2ac' : '#333333',
-        marginLeft: 10
+        color: colorScheme === 'light' ? '#fff' : '#333333',
+        marginLeft: 10,
+        lineHeight: 10
     },
     date2: {
         fontSize: 9,
-        color: colorScheme === 'light' ? '#a2a2ac' : '#333333',
+        color: colorScheme === 'light' ? '#fff' : '#333333',
         marginLeft: 10,
-        // marginTop: -2
+        lineHeight: 10,
+        textAlign: 'right',
+        flex: 1
     },
     title: {
         fontFamily: 'inter',
-        fontSize: 13,
+        fontSize: 14,
         lineHeight: 20,
         // height: '75%',
         // width: '100%',
         flex: 1,
-        // borderWidth: 1,
-        // paddingTop: 12,
-        color: colorScheme === 'light' ? '#2F2F3C' : 'white'
+        color: col,
+        // textOu
+        // textDecorationColor: col,
+        // textDecorationLine: 'underline'
     },
     titleFlip: {
-        color: colorScheme === 'light' ? '#fff' : '#2F2F3C',
-        backgroundColor: colorScheme === 'light' ? '#2F2F3C' : '#fff',
+        color: colorScheme === 'light' ? '#fff' : '#2f2f3c',
+        backgroundColor: colorScheme === 'light' ? '#2f2f3c' : '#fff',
         fontFamily: 'inter',
         fontSize: 13,
         // ,
         height: '75%',
         width: '100%',
-        paddingTop: 12,
+        paddingTop: 5,
     },
     description: {
         fontSize: 13,
-        color: colorScheme === 'light' ? '#a2a2ac' : '#333333',
+        color: colorScheme === 'light' ? '#fff' : '#333333',
         // height: '30%'
     }
 });

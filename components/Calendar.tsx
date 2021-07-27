@@ -679,6 +679,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     <DatePicker
                         preventOverflow={true}
                         value={repeatTill}
+                        format="YYYY-MM-DD HH:mm:ss"
                         onChange={(event: any) => {
                             const date = new Date(event);
                             if (date < new Date()) return;
@@ -1074,6 +1075,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         <DatePicker
                                             preventOverflow={true}
                                             value={start}
+                                            format="YYYY-MM-DD HH:mm:ss"
                                             onChange={(event: any) => {
                                                 const date = new Date(event);
                                                 setStart(date);
@@ -1092,6 +1094,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         <DatePicker
                                             preventOverflow={true}
                                             value={end}
+                                            format="YYYY-MM-DD HH:mm:ss"
                                             onChange={(event: any) => {
                                                 const date = new Date(event);
                                                 setEnd(date);

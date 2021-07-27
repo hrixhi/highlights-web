@@ -83,8 +83,8 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         props.closeModal()
                                     }}>
                                     <MenuTrigger>
-                                        <Text style={{ fontFamily: 'inter', fontSize: 13, color: '#fff' }}>
-                                            {choice === 'MyCues' ? 'My Cues' : choice}<Ionicons name='caret-down' size={13} />
+                                        <Text style={{ fontFamily: 'inter', fontSize: 15, color: '#fff' }}>
+                                            {choice === 'MyCues' ? 'My Cues' : choice}<Ionicons name='caret-down' size={15} />
                                         </Text>
                                     </MenuTrigger>
                                     <MenuOptions customStyles={{
@@ -148,7 +148,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     </MenuOptions>
                                 </Menu>
                             </View>
-                            <Text style={{ fontSize: 9, color: '#a2a2ac', paddingTop: 7, textAlign: 'center', backgroundColor: '#2F2F3C', paddingLeft: 30 }}>
+                            <Text style={{ fontSize: 10, color: '#a2a2ac', paddingTop: 7, textAlign: 'center', backgroundColor: '#2F2F3C', paddingLeft: 30 }}>
                                 Channel
                             </Text>
                         </View>
@@ -161,8 +161,8 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         props.setChannelFilterChoice(category)
                                     }}>
                                     <MenuTrigger>
-                                        <Text style={{ fontFamily: 'inter', fontSize: 13, color: '#a2a2ac' }}>
-                                            {filterChoice}<Ionicons name='caret-down' size={13} />
+                                        <Text style={{ fontFamily: 'inter', fontSize: 15, color: '#a2a2ac' }}>
+                                            {filterChoice}<Ionicons name='caret-down' size={15} />
                                         </Text>
                                     </MenuTrigger>
                                     <MenuOptions customStyles={{
@@ -193,7 +193,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     </MenuOptions>
                                 </Menu>
                             </View>
-                            <Text style={{ fontSize: 9, color: '#a2a2ac', paddingTop: 7, textAlign: 'center' }}>
+                            <Text style={{ fontSize: 10, color: '#a2a2ac', paddingTop: 7, textAlign: 'center' }}>
                                 Category
                             </Text>
                         </View>
@@ -230,7 +230,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         <Text style={{ textAlign: 'center', lineHeight: 20 }}>
                             <Ionicons name='school-outline' size={19} color={'#fff'} />
                         </Text>
-                        <Text style={{ fontSize: 9, color: '#a2a2ac' }}>
+                        <Text style={{ fontSize: 10, color: '#a2a2ac' }}>
                             Channels
                         </Text>
                     </TouchableOpacity>
@@ -241,9 +241,9 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         style={styles.center}
                     >
                         <Text style={{ textAlign: 'center', lineHeight: 20 }}>
-                            <Ionicons name='calendar-outline' size={19} color={'#fff'} />
+                            <Ionicons name='calendar-outline' size={18} color={'#fff'} />
                         </Text>
-                        <Text style={{ fontSize: 9, color: '#a2a2ac' }}>
+                        <Text style={{ fontSize: 10, color: '#a2a2ac' }}>
                             Planner
                         </Text>
                     </TouchableOpacity>
@@ -266,7 +266,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         <Text style={{ textAlign: 'center', lineHeight: 20 }}>
                             <Ionicons name={loggedIn ? 'person-circle-outline' : 'cloud-upload-outline'} size={20} color={'#fff'} />
                         </Text>
-                        <Text style={{ fontSize: 9, color: '#a2a2ac' }}>
+                        <Text style={{ fontSize: 10, color: '#a2a2ac' }}>
                             {!loggedIn && userLoaded ? 'Sign Up' : 'Profile'}
                         </Text>
                     </TouchableOpacity>
@@ -279,7 +279,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         <Text style={{ textAlign: 'center', lineHeight: 20 }}>
                             <Ionicons name='help-circle-outline' size={20} color={'#fff'} />
                         </Text>
-                        <Text style={{ fontSize: 9, color: '#a2a2ac' }}>
+                        <Text style={{ fontSize: 10, color: '#a2a2ac' }}>
                             Help
                         </Text>
                     </TouchableOpacity>
