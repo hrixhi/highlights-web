@@ -1535,7 +1535,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             disabled={!isOwner}
             containerStyle={{
                 height: height,
-                backgroundColor: "#f4f4f6",
+                backgroundColor: "#fff",
                 padding: 3,
                 paddingTop: 5,
                 paddingBottom: 10,
@@ -1544,7 +1544,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             ref={RichText}
             style={{
                 width: '100%',
-                backgroundColor: '#f4f4f6',
+                backgroundColor: '#fff',
                 // borderRadius: 15,
                 minHeight: 650,
                 display: (isQuiz || imported) ? "none" : "flex",
@@ -1581,7 +1581,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             key={props.showOriginal.toString() + reloadEditorKey.toString()}
             containerStyle={{
                 height: height,
-                backgroundColor: "#f4f4f6",
+                backgroundColor: "#fff",
                 padding: 3,
                 paddingTop: 5,
                 paddingBottom: 10,
@@ -1591,7 +1591,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             ref={RichText}
             style={{
                 width: '100%',
-                backgroundColor: '#f4f4f6',
+                backgroundColor: '#fff',
                 // borderRadius: 15,
                 minHeight: 650,
                 display: (isQuiz || imported) ? "none" : "flex",

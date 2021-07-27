@@ -999,7 +999,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             ref={RichText}
                             style={{
                                 width: '100%',
-                                backgroundColor: '#f4f4f6',
+                                backgroundColor: '#fff',
                                 // borderRadius: 15,
                                 minHeight: 650,
                                 display: (isQuiz || imported) ? "none" : "flex",
