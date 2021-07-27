@@ -205,7 +205,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
     return (
         <View style={{
-            width: '100%', height: '100%', backgroundColor: 'white',
+            width: '100%', backgroundColor: 'white',
             borderTopLeftRadius: 0,
             borderTopRightRadius: 0,
             paddingTop: 15,

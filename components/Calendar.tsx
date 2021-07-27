@@ -57,9 +57,9 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     // Used for filtering by channels
     const [eventChannels, setEventChannels] = useState<any[]>([]);
-    const [filterChannels, setFilterChannels] = useState<any[]>([]);
     const [allEvents, setAllEvents] = useState<any[]>([]);
     const [filterByLectures, setFilterByLectures] = useState(false);
+    const [filterByChannel, setFilterByChannel] = useState("All");
 
     // const [viewModel, setViewModel] = useState<any>(new SchedulerData(new moment().format(DATE_FORMAT), ViewTypes.Week))
 
@@ -118,15 +118,15 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
             total = total.filter((e: any) => e.meeting)
         }
 
-        if (filterChannels.length === 0) {
+        if (filterByChannel === "All") {
             setEvents(total);
         } else {
             const all = [...total];
-            const filter = all.filter((e: any) => filterChannels.includes(e.channelName));
+            const filter = all.filter((e: any) => filterByChannel === (e.channelName));
             setEvents(filter)
         }
 
-    }, [filterChannels, filterByLectures])
+    }, [filterByChannel, filterByLectures])
 
     const renderFilterEvents = () => {
 
@@ -143,84 +143,50 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             Filter
                         </Text>
                     </View>
-                    <View
-                        style={{
-                            width: "100%",
-                            display: "flex",
-                            flexDirection: "row",
-                            backgroundColor: "white"
-                        }}>
-                        <View
-                            style={{
-                                width: "100%",
-                                backgroundColor: "white",
-                                display: "flex"
-                            }}>
-                            <ScrollView
-                                style={styles.colorBar}
-                                horizontal={true}
-                                showsHorizontalScrollIndicator={false}>
-                                <TouchableOpacity
-                                    style={
-                                        filterChannels.includes('') ? styles.allOutline : styles.allBlack
-                                    }
-                                    onPress={() => {
-                                        const currentFilterChannels = [...filterChannels];
-
-                                        if (currentFilterChannels.includes("")) {
-                                            const filter = currentFilterChannels.filter((channel: any) => channel !== "");
-
-                                            setFilterChannels(filter);
-                                        } else {
-                                            currentFilterChannels.push("");
-                                            setFilterChannels(currentFilterChannels);
-                                        }
-                                    }}>
-                                    <Text
-                                        style={{
-                                            lineHeight: 20,
-                                            fontSize: 12,
-                                            color: filterChannels.includes('') ? "#fff" : "#2F2F3C"
-                                        }}>
-                                        {PreferredLanguageText("myCues")}
+                    <View style={{ backgroundColor: '#fff' }}>
+                        <View style={{ flexDirection: 'row', display: 'flex', backgroundColor: '#fff' }}>
+                            <Menu
+                                onSelect={(channel: any) => {
+                                    setFilterByChannel(channel);
+                                }}>
+                                <MenuTrigger>
+                                    <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#202025' }}>
+                                        {filterByChannel}<Ionicons name='caret-down' size={14} />
                                     </Text>
-                                </TouchableOpacity>
-                                {eventChannels.map(channel => {
-                                    return (
-                                        <TouchableOpacity
-                                            key={Math.random()}
-                                            style={
-                                                filterChannels.includes(channel)
-                                                    ? styles.allOutline
-                                                    : styles.allBlack
-                                            }
-                                            onPress={() => {
-                                                const currentFilterChannels = [...filterChannels]
-
-                                                if (currentFilterChannels.includes(channel)) {
-                                                    const filter = currentFilterChannels.filter((channelName: any) => channelName !== channel);
-                                                    setFilterChannels(filter);
-
-                                                } else {
-                                                    currentFilterChannels.push(channel);
-                                                    setFilterChannels(currentFilterChannels);
-                                                }
-                                            }}>
-                                            <Text
-                                                style={{
-                                                    lineHeight: 20,
-                                                    fontSize: 12,
-                                                    color:
-                                                        filterChannels.includes(channel)
-                                                            ? "#fff"
-                                                            : "#2F2F3C"
-                                                }}>
-                                                {channel}
-                                            </Text>
-                                        </TouchableOpacity>
-                                    );
-                                })}
-                            </ScrollView>
+                                </MenuTrigger>
+                                <MenuOptions customStyles={{
+                                    optionsContainer: {
+                                        padding: 10,
+                                        borderRadius: 15,
+                                        shadowOpacity: 0,
+                                        borderWidth: 1,
+                                        borderColor: '#f4f4f6'
+                                    }
+                                }}>
+                                    <MenuOption
+                                        value={'All'}>
+                                        <Text>
+                                            All
+                                        </Text>
+                                    </MenuOption>
+                                    <MenuOption
+                                        value={'My Cues'}>
+                                        <Text>
+                                            My Cues
+                                        </Text>
+                                    </MenuOption>
+                                    {
+                                        eventChannels.map((channel: any) => {
+                                            return <MenuOption
+                                                value={channel}>
+                                                <Text>
+                                                    {channel}
+                                                </Text>
+                                            </MenuOption>
+                                        })
+                                    }
+                                </MenuOptions>
+                            </Menu>
                         </View>
                     </View>
                 </View>
