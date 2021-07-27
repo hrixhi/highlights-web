@@ -262,6 +262,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                     }}
                     contentContainerStyle={{
                         maxHeight: Dimensions.get('window').height - 150,
+                        // height: 'auto',
                         minHeight: 100
                     }}
                 >
@@ -293,75 +294,66 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             required={false}
                         />
                     </View>
-                    <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase', marginTop: 25, paddingBottom: 15 }}>
+                    <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase', marginTop: 25, }}>
                         Subscribers
                     </Text>
-                    <ScrollView
-                        onScroll={() => {
-                            Keyboard.dismiss()
-                        }}
-                        contentContainerStyle={{
-                            maxHeight: 250
-                        }}
-                    >
-                        <Multiselect
-                            placeholder='Select...'
-                            displayValue='name'
-                            // key={userDropdownOptions.toString()}
-                            style={{
-                                multiselectContainer: { // To change css for option container 
-                                    minHeight: 200
-                                }
-                            }}
-                            options={options} // Options to display in the dropdown
-                            selectedValues={selected} // Preselected value to persist in dropdown
-                            onSelect={(e, f) => {
-                                setSelected(e);
-                                return true
-                            }} // Function will trigger on select event
-                            onRemove={(e, f) => {
-                                setSelected(e);
-                                return true
-                            }}
-                        />
-                    </ScrollView>
-                    <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase', marginTop: 25, paddingBottom: 15 }}>
+                    
+                    <View style={{ flexDirection: 'column', marginTop: 25, overflow: 'scroll' }}>
+                        <View style={{ width: '90%', height: 'auto' }}>
+                            <Multiselect
+                                placeholder='Select...'
+                                displayValue='name'
+                                // key={userDropdownOptions.toString()}
+                                style={{
+                                    multiselectContainer: { // To change css for option container 
+                                        minHeight: 200
+                                    }
+                                }}
+                                options={options} // Options to display in the dropdown
+                                selectedValues={selected} // Preselected value to persist in dropdown
+                                onSelect={(e, f) => {
+                                    setSelected(e);
+                                    return true
+                                }} // Function will trigger on select event
+                                onRemove={(e, f) => {
+                                    setSelected(e);
+                                    return true
+                                }}
+                            />
+                        </View>
+                    </View>
+                    <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase', marginTop: 25, }}>
                         Moderators
                     </Text>
-                    <ScrollView
-                        onScroll={() => {
-                            Keyboard.dismiss()
-                        }}
-                        contentContainerStyle={{
-                            maxHeight: 250
-                        }}
-                    >
-                        <Multiselect
-                            placeholder='Select...'
-                            displayValue='name'
-                            // key={userDropdownOptions.toString()}
-                            // style={{ width: '100%', color: '#202025', 
-                            //     optionContainer: { // To change css for option container 
-                            //         zIndex: 9999
-                            //     }
-                            // }}
-                            style={{
-                                multiselectContainer: { // To change css for option container 
-                                    minHeight: 100
-                                }
-                            }}
-                            options={options} // Options to display in the dropdown
-                            selectedValues={owners} // Preselected value to persist in dropdown
-                            onSelect={(e, f) => {
-                                setOwners(e);
-                                return true
-                            }} // Function will trigger on select event
-                            onRemove={(e, f) => {
-                                setOwners(e);
-                                return true
-                            }}
-                        />
-                    </ScrollView>
+                    <View style={{ flexDirection: 'column', marginTop: 25, overflow: 'scroll' }}>
+                        <View style={{ width: '90%', height: 'auto' }}>
+                            <Multiselect
+                                placeholder='Select...'
+                                displayValue='name'
+                                // key={userDropdownOptions.toString()}
+                                // style={{ width: '100%', color: '#202025', 
+                                //     optionContainer: { // To change css for option container 
+                                //         zIndex: 9999
+                                //     }
+                                // }}
+                                style={{
+                                    multiselectContainer: { // To change css for option container 
+                                        minHeight: 100
+                                    }
+                                }}
+                                options={options} // Options to display in the dropdown
+                                selectedValues={owners} // Preselected value to persist in dropdown
+                                onSelect={(e, f) => {
+                                    setOwners(e);
+                                    return true
+                                }} // Function will trigger on select event
+                                onRemove={(e, f) => {
+                                    setOwners(e);
+                                    return true
+                                }}
+                            />
+                        </View>
+                    </View>
                     <View
                         style={{
                             flex: 1,

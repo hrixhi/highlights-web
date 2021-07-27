@@ -14,6 +14,7 @@ import Alert from "../components/Alert";
 import { TextInput } from "./CustomTextInput";
 import { PreferredLanguageText } from "../helpers/LanguageContext";
 import OneSignal from "react-onesignal";
+import { LanguageSelect } from '../helpers/LanguageContext';
 
 const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
   props: any
@@ -556,7 +557,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
               width: "100%",
               justifyContent: "center",
               flexDirection: "row",
-              marginBottom: 100
+             
             }}
           >
             <Text
@@ -577,6 +578,9 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
               {loggedIn ? PreferredLanguageText('logout') : PreferredLanguageText('login')}
             </Text>
           </TouchableOpacity>
+          <View style={{ flexDirection: 'row', justifyContent: 'center', paddingBottom: 20, width: '100%', marginTop: 30,  marginBottom: 100 }}>
+            <LanguageSelect />
+          </View>
         </View>
       </ScrollView>
     </View>

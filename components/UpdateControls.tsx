@@ -1357,18 +1357,21 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             {!props.showOriginal ? null : isQuiz ? (
                 isQuizTimed && !isOwner ? (
                     initiatedAt ? (
-                        <Quiz
-                            // disable quiz if graded or deadline has passed
-                            submitted={isQuiz && props.cue.submittedAt && props.cue.submittedAt !== "" ? true : false}
-                            graded={props.cue.graded}
-                            hasEnded={currentDate >= deadline}
-                            solutions={solutions}
-                            problems={problems}
-                            setSolutions={(s: any) => setSolutions(s)}
-                            shuffleQuiz={shuffleQuiz}
-                            instructions={instructions}
-                            headers={headers}
-                        />
+                        <View style={{ width: '100%', paddingBottom: 50 }}>
+                            <Quiz
+                                // disable quiz if graded or deadline has passed
+                                submitted={isQuiz && props.cue.submittedAt && props.cue.submittedAt !== "" ? true : false}
+                                graded={props.cue.graded}
+                                hasEnded={currentDate >= deadline}
+                                solutions={solutions}
+                                problems={problems}
+                                setSolutions={(s: any) => setSolutions(s)}
+                                shuffleQuiz={shuffleQuiz}
+                                instructions={instructions}
+                                headers={headers}
+                            />
+                            {renderFooter()}
+                        </View>
                     ) : (
                         <View>
                             <View>
@@ -1404,17 +1407,20 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         </View>
                     )
                 ) : (
-                    <Quiz
-                        isOwner={isOwner}
-                        submitted={isQuiz && props.cue.submittedAt && props.cue.submittedAt !== "" ? true : false}
-                        graded={props.cue.graded || currentDate >= deadline}
-                        solutions={solutions}
-                        problems={problems}
-                        setSolutions={(s: any) => setSolutions(s)}
-                        shuffleQuiz={shuffleQuiz}
-                        instructions={instructions}
-                        headers={headers}
-                    />
+                    <View style={{ width: '100%', paddingBottom: 50 }}>
+                        <Quiz
+                            isOwner={isOwner}
+                            submitted={isQuiz && props.cue.submittedAt && props.cue.submittedAt !== "" ? true : false}
+                            graded={props.cue.graded || currentDate >= deadline}
+                            solutions={solutions}
+                            problems={problems}
+                            setSolutions={(s: any) => setSolutions(s)}
+                            shuffleQuiz={shuffleQuiz}
+                            instructions={instructions}
+                            headers={headers}
+                        />
+                        {renderFooter()}
+                    </View>
                 )
             ) : imported ? (
                 type === "mp4" || type === "mp3" || type === "mov" || type === "mpeg" || type === "mp2" || type === "wav" ? (
@@ -1456,7 +1462,12 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     </View>
                 )
             ) : (
-                renderRichEditorModified()
+                <View style={{ width: '100%', paddingBottom: 50 }}>
+                    {renderRichEditorModified()}
+                    {/* Add Submit button here if it is a submission */}
+                    {renderFooter()}
+                </View>
+               
             )}
         </View>
     );
@@ -1565,7 +1576,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 </View>
                 <View
                     style={{
-                        maxHeight: 175,
                         flexDirection: "column",
                         overflow: "scroll"
                     }}>
@@ -1573,67 +1583,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         style={{
                             width: "90%",
                             padding: 5,
-                            height: expandMenu ? 175 : "auto"
+                            height: "auto"
                         }}>
-                        {/* <Select
-                            isClearable={false}
-                            placeholder="Share with"
-                            styles={{
-                                menu: (provided: any, state: any) => ({
-                                    ...provided,
-                                    zIndex: 9999,
-                                    overflow: "scroll",
-                                    height: 125,
-                                    display: "flex",
-                                    margin: 5,
-                                    width: "97%",
-                                    boxShadow: "none"
-                                }),
-                                option: (provided: any, state: any) => ({
-                                    ...provided,
-                                    fontFamily: "overpass",
-                                    color: "#a2a2aa",
-                                    fontSize: 10,
-                                    height: 25,
-                                    width: "97%"
-                                }),
-                                input: (styles: any) => ({
-                                    // ...styles,
-                                    width: "100%",
-                                    border: "none",
-                                    borderWidth: 0,
-                                    fontSize: 12
-                                }),
-                                placeholder: (styles: any) => ({
-                                    ...styles,
-                                    fontFamily: "overpass",
-                                    color: "#a2a2aa",
-                                    fontSize: 12
-                                }),
-                                multiValueLabel: (styles: any, { data }: any) => ({
-                                    ...styles,
-                                    color: "#202025",
-                                    fontFamily: "overpass"
-                                }),
-                                multiValue: (styles: any, { data }: any) => ({
-                                    ...styles,
-                                    backgroundColor: "#f4f4f6",
-                                    fontFamily: "overpass"
-                                }),
-                                multiValueRemove: (base: any, state: any) => {
-                                    return state.data.isFixed ? { ...base, display: "none" } : base;
-                                }
-                            }}
-                            value={selected}
-                            isMulti={true}
-                            onMenuOpen={() => setExpandMenu(true)}
-                            onMenuClose={() => setExpandMenu(false)}
-                            name="Share with"
-                            className="basic-multi-select"
-                            classNamePrefix="select"
-                            onChange={onChange}
-                            options={subscribers}
-                        /> */}
                         <Multiselect
                             placeholder='Share with...'
                             displayValue='name'
@@ -2902,7 +2853,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 </View>
                             </View>
                         </View> : null}
-                        {renderFooter()}
                     </Collapse>
                 </View>
             </Animated.View>

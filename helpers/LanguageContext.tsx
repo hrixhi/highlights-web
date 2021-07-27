@@ -652,7 +652,7 @@ export function LanguageSelect() {
                 display: "flex",
                 backgroundColor: 'white',
                 width: "100%",
-                justifyContent: ''
+                justifyContent: 'center'
             }}>
                 {showLanguageDropdown ? <DefaultView style={styles.languageSelectContainer}>
                     <Picker
@@ -679,7 +679,7 @@ export function LanguageSelect() {
                 </DefaultView>
                     :
                     (
-                        <DefaultView style={{ width: '100%', flexDirection: 'row', justifyContent: '', backgroundColor: 'white' }}>
+                        <DefaultView style={{ width: '100%', flexDirection: 'row', justifyContent: 'center', backgroundColor: 'white' }}>
                             <Ionicons name='language-outline' size={30} color={color} style={{ marginRight: 5 }} onPress={() => setShowLanguageDropdown(true)} />
                         </DefaultView>
                     )}
@@ -694,9 +694,9 @@ export default LanguageContext;
 
 const styles = StyleSheet.create({
     languageSelectContainer: {
-        width: "140px",
+        // width: "140px",
         display: "flex",
-        // justifyContent: "center",
+        justifyContent: "center",
         alignContent: 'center',
         flexDirection: "row",
     },

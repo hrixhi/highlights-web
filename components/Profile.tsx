@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Animated, Dimensions, Keyboard } from 'react-native';
 import { Text, View } from './Themed';
 import ProfileControls from './ProfileControls';
-import { LanguageSelect } from '../helpers/LanguageContext';
 
 const Profile: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -41,9 +40,6 @@ const Profile: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                     closeModal={() => props.closeModal()}
                     reloadData={() => props.reloadData()}
                 />
-                <View style={{ flexDirection: 'row', justifyContent: 'center', paddingBottom: 20 }}>
-                    <LanguageSelect />
-                </View>
             </Animated.View>
         </View >
     );
