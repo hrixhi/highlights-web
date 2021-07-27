@@ -1104,35 +1104,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             </Menu>
                                         </View>
                                     </View>
-                                    {
-                                        channelId !== '' ?
-                                            <View style={{ maxHeight: 175, flexDirection: 'column', marginTop: 25, overflow: 'scroll' }}>
-                                                <View style={{ width: '90%', padding: 5, height: expandMenu ? 175 : 'auto' }}>
-                                                    <Multiselect
-                                                        placeholder='Share with...'
-                                                        displayValue='name'
-                                                        // key={userDropdownOptions.toString()}
-                                                        // style={{ width: '100%', color: '#2F2F3C', 
-                                                        //     optionContainer: { // To change css for option container 
-                                                        //         zIndex: 9999
-                                                        //     }
-                                                        // }}
-                                                        options={subscribers} // Options to display in the dropdown
-                                                        selectedValues={selected} // Preselected value to persist in dropdown
-                                                        onSelect={(e, f) => {
-                                                            setSelected(e);
-                                                            return true
-                                                        }} // Function will trigger on select event
-                                                        onRemove={(e, f) => {
-                                                            setSelected(e);
-                                                            return true
-                                                        }}
-                                                    />
-                                                </View>
-
-                                            </View> : null
-                                    }
                                 </View>
+
                                 {
                                     channelId !== '' ?
                                         <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
@@ -1282,6 +1255,37 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 }
                             </View>
                             : null}
+
+                            <View style={{ width: width < 768 ? '100%' : '33.3%', borderRightWidth: 0, borderColor: '#f4f4f6' }}>
+                                {
+                                        channelId !== '' ?
+                                            <View style={{ flexDirection: 'column', marginTop: 25, overflow: 'scroll' }}>
+                                                <View style={{ width: '90%', padding: 5, height: 'auto' }}>
+                                                    <Multiselect
+                                                        placeholder='Share with...'
+                                                        displayValue='name'
+                                                        // key={userDropdownOptions.toString()}
+                                                        // style={{ width: '100%', color: '#202025', 
+                                                        //     optionContainer: { // To change css for option container 
+                                                        //         zIndex: 9999
+                                                        //     }
+                                                        // }}
+                                                        options={subscribers} // Options to display in the dropdown
+                                                        selectedValues={selected} // Preselected value to persist in dropdown
+                                                        onSelect={(e, f) => {
+                                                            setSelected(e);
+                                                            return true
+                                                        }} // Function will trigger on select event
+                                                        onRemove={(e, f) => {
+                                                            setSelected(e);
+                                                            return true
+                                                        }}
+                                                    />
+                                                </View>
+
+                                            </View> : null
+                                    }
+                            </View>
                         <View style={{ display: 'flex', flexDirection: width < 768 ? 'column' : 'row' }}>
                             <View style={{ width: width < 768 ? '100%' : '33.33%', borderRightWidth: 0, borderColor: '#f4f4f6' }}>
                                 <View style={{ width: '100%', backgroundColor: 'white' }}>
