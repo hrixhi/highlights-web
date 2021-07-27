@@ -36,15 +36,8 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
             const { cue, releaseSubmission } = findCue; 
 
-            if (cue[0] === '{' && cue[cue.length - 1] === '}') {
-                const parse = JSON.parse(cue);
-
-                if (parse.quizId) {
-                    if (!releaseSubmission) {
-                        return false;
-                    }
-                }
-
+            if (!releaseSubmission) {
+                return false;
             }
 
             return true
@@ -118,7 +111,6 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
         })
 
         setExportAoa(exportAoa)
-
 
     }, [scores, cues])
 
@@ -279,129 +271,24 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 hasLegend={true}
             />
 
-
-            <Text style={{ textAlign: 'left', fontSize: 13, color: '#2F2F3C', fontFamily: 'inter', paddingTop: 50, paddingBottom: 20, paddingLeft: Dimensions.get('window').width < 768 ? 0 : 150 }}>
-                Submissions
-            </Text>
-
-            {/* <ScrollView
-                            showsHorizontalScrollIndicator={false}
-                            horizontal={true}
-                            contentContainerStyle={{
-                                height: '100%'
-                            }}
-                            nestedScrollEnabled={true}
-                        > */}
-            <Chart
-                width={Dimensions.get('window').width < 768 ? '350px' : '600px'}
-                height={Dimensions.get('window').width < 768 ? '300px' : '400px'}
-                chartType="Bar"
-                loader={<div>Loading Chart</div>}
-                data={data}
-                options={{
-                    // Material design options
-                    fontName: 'overpass'
-                }}
-            />
-            {/* </ScrollView> */}
+            {submissionStatistics.length > 0 ? <View style={{ width: '100%'}}>
+                <Text style={{ textAlign: 'left', fontSize: 13, color: '#2F2F3C', fontFamily: 'inter', paddingTop: 50, paddingBottom: 20, paddingLeft: Dimensions.get('window').width < 768 ? 0 : 150 }}>
+                    Submissions
+                </Text>
+                <Chart
+                    width={Dimensions.get('window').width < 768 ? '350px' : '600px'}
+                    height={Dimensions.get('window').width < 768 ? '300px' : '400px'}
+                    chartType="Bar"
+                    loader={<div>Loading Chart</div>}
+                    data={data}
+                    options={{
+                        // Material design options
+                        fontName: 'overpass'
+                    }}
+                />
+            </View> : null}
 
             <View style={{ height: 20 }} />
-            {/* {Object.keys(mapCuesData).map((cueId: any) => {
-            
-                // Get name of cue from id
-
-                
-                const filteredCue = cues.filter((cue: any) => cue._id === cueId); 
-
-                const { title } = htmlStringParser(filteredCue[0].cue)
-
-                const data = {
-                    labels: statisticsLabels,
-                    datasets: [
-                      {
-                        data: mapCuesData[cueId],
-                        color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // optional
-                        strokeWidth: 2 // optional
-                      }
-                    ],
-                    // legend: ["Rainy Days"] // optional
-                  };
-
-                  const chartConfig = {
-                    backgroundGradientFrom: '#Ffffff',
-                    backgroundGradientTo: '#ffffff',
-                    barPercentage: 1.3,
-                    decimalPlaces: 0, // optional, defaults to 2dp
-                    color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`,
-                    labelColor: (opacity = 1) => `rgba(0, 0, 0, 1)`,
-                    propsForDots: {
-                        r: "6",
-                        strokeWidth: "2",
-                        stroke: "#fff",
-                    },
-                    style: {
-                      borderRadius: 16,
-                      fontFamily: 'Bogle-Regular',
-                    },
-                    propsForBackgroundLines: {
-                      strokeWidth: '0',
-                      stroke: '#fff',
-                      strokeDasharray: '0',
-                    },
-                    propsForLabels: {
-                      fontFamily: 'Bogle-Regular',
-                    },
-                  };
-
-                return (<View style={{ flexDirection: 'column', alignItems: 'center', paddingTop :30, width: Dimensions.get("window").width < 768 ? "100%" : 400}}>
-                    <Text style={{ textAlign: 'left', fontSize: 13, color: '#2F2F3C', fontFamily: 'inter', paddingBottom: 20,}}>
-                        {title}
-                    </Text>
-
-                    <View style={{ flexDirection: 'row',  paddingBottom: 20}}>
-                    <Text style={{ textAlign: 'left', fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase', fontFamily: 'inter', marginRight: 10 }}>
-                            Max: {mapCuesStatistics[cueId].max}%
-                        </Text>
-                        <Text style={{ textAlign: 'left', fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase', fontFamily: 'inter', marginRight: 10 }}>
-                            Min: {mapCuesStatistics[cueId].min}%
-                        </Text>
-                        <Text style={{ textAlign: 'left', fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase', fontFamily: 'inter', marginRight: 10 }}>
-                            Mean: {mapCuesStatistics[cueId].mean}%
-                        </Text>
-                        <Text style={{ textAlign: 'left', fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase', fontFamily: 'inter', marginRight: 10 }}>
-                            Median: {mapCuesStatistics[cueId].median}%
-                        </Text>
-                        <Text style={{ textAlign: 'left', fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase', fontFamily: 'inter', marginRight: 10 }}>
-                            Std Dev: {mapCuesStatistics[cueId].std}%
-                        </Text>
-                    </View>
-                    
-
-                    <LineChart 
-                        data={data}
-                        width={Dimensions.get("window").width < 768 ? 300 : 400 }
-                        height={300}
-                        // chartConfig={chartConfig}
-                        chartConfig={{
-                            backgroundGradientFrom: "#fff",
-                            backgroundGradientFromOpacity: 0,
-                            backgroundGradientTo: "#fff",
-                            backgroundGradientToOpacity: 0,
-                            color: (opacity = 1) => `rgba(1, 122, 205, 1)`,
-                            labelColor: (opacity = 1) => `rgba(0, 0, 0, 1)`,
-                            strokeWidth: 2, // optional, default 3
-                            barPercentage: 0.5,
-                            useShadowColorFromDataset: false, // optional
-                            propsForBackgroundLines: {
-                                strokeWidth: 1,
-                                stroke: '#efefef',
-                                strokeDasharray: '0',
-                              },
-                          }}
-                    />
-                </View>)
-            })
-        }         */}
         </View>)
 
 

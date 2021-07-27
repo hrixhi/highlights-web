@@ -31,7 +31,7 @@ import { PreferredLanguageText, LanguageSelect } from '../helpers/LanguageContex
 import logo from '../components/default-images/cues-logo-black-exclamation-hidden.jpg'
 
 // Web Notification
-// import OneSignal, { useOneSignalSetup } from 'react-onesignal';
+import OneSignal, { useOneSignalSetup } from 'react-onesignal';
 
 const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -93,6 +93,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
   const [filterStart, setFilterStart] = useState<any>(null)
   const [filterEnd, setFilterEnd] = useState<any>(null)
+
+  console.log("Subscriptions", subscriptions)
 
   useEffect(() => {
     if (email && !validateEmail(email.toString().toLowerCase())) {
@@ -434,33 +436,33 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     }
   }, [])
 
-  // useOneSignalSetup(async () => {
+  useOneSignalSetup(async () => {
 
-  //   const permissions = OneSignal.notificationPermission;
+    const permissions = OneSignal.notificationPermission;
 
-  //   // Check current permission state
-  //   const currentState = await OneSignal.getNotificationPermission();
+    // Check current permission state
+    const currentState = await OneSignal.getNotificationPermission();
 
-  //   if (currentState !== "granted") {
-  //     OneSignal.registerForPushNotifications();
-  //   } else {
+    if (currentState !== "granted") {
+      OneSignal.registerForPushNotifications();
+    } else {
 
-  //     // If permission granted and logged in then ensure user external id is added
+      // If permission granted and logged in then ensure user external id is added
 
-  //     const externalUserId = await OneSignal.getExternalUserId();
+      const externalUserId = await OneSignal.getExternalUserId();
 
-  //     if (!externalUserId) {
-  //       let user = await AsyncStorage.getItem('user')
+      if (!externalUserId) {
+        let user = await AsyncStorage.getItem('user')
 
-  //       if (user) {
-  //         const parsedUser = JSON.parse(user);
-  //         if (parsedUser.email) {
-  //           await OneSignal.setExternalUserId(parsedUser._id)
-  //         }
-  //       }
-  //     }
-  //   }
-  // });
+        if (user) {
+          const parsedUser = JSON.parse(user);
+          if (parsedUser.email) {
+            await OneSignal.setExternalUserId(parsedUser._id)
+          }
+        }
+      }
+    }
+  });
 
   const unsubscribeChannel = useCallback(() => {
     Alert(
@@ -648,8 +650,22 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           })
             .then(async res => {
               if (res.data.subscription.findByUserId) {
-                setSubscriptions(res.data.subscription.findByUserId)
-                const stringSub = JSON.stringify(res.data.subscription.findByUserId)
+
+                // Add color Codes for Subscriptions that don't have one
+
+                const colorChoices: any[] = ['#d91d56', '#ED7D22', '#F8D41F', '#B8D41F', '#53BE6D']
+
+                const updateColorCodes = res.data.subscription.findByUserId.map((sub: any) => {
+                  if (sub.colorCode === "") {
+                    const randomColor = colorChoices[Math.floor(Math.random() * colorChoices.length)];
+                    sub.colorCode = randomColor;
+                    
+                  } 
+                  return sub;
+                })
+
+                setSubscriptions(updateColorCodes)
+                const stringSub = JSON.stringify(updateColorCodes)
                 await AsyncStorage.setItem('subscriptions', stringSub)
               } else {
                 setSubscriptions(parsedSubscriptions)
@@ -745,7 +761,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
         const userId = u._id;
 
-        // OneSignal.setExternalUserId(userId);
+        OneSignal.setExternalUserId(userId);
 
         const sU = JSON.stringify(u)
         await AsyncStorage.setItem('user', sU)
@@ -835,8 +851,23 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
       })
         .then(async res => {
           if (res.data.subscription.findByUserId) {
-            setSubscriptions(res.data.subscription.findByUserId)
-            const stringSub = JSON.stringify(res.data.subscription.findByUserId)
+
+            // Add color Codes for Subscriptions that don't have one
+
+            const colorChoices: any[] = ['#d91d56', '#ED7D22', '#F8D41F', '#B8D41F', '#53BE6D']
+
+            const updateColorCodes = res.data.subscription.findByUserId.map((sub: any) => {
+              if (sub.colorCode === "") {
+                const randomColor = colorChoices[Math.floor(Math.random() * colorChoices.length)];
+                sub.colorCode = randomColor;
+                
+              } 
+              return sub;
+            })
+
+            setSubscriptions(updateColorCodes)
+            const stringSub = JSON.stringify(updateColorCodes)
+
             await AsyncStorage.setItem('subscriptions', stringSub)
           }
         })
@@ -968,12 +999,12 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
   useEffect(() => {
 
-    // OneSignal.initialize("51db5230-f2f3-491a-a5b9-e4fba0f23c76", {
-    //   notifyButton: {
-    //     enable: false,
-    //   },
-    //   allowLocalhostAsSecureOrigin: true,
-    // });
+    OneSignal.initialize("51db5230-f2f3-491a-a5b9-e4fba0f23c76", {
+      notifyButton: {
+        enable: false,
+      },
+      allowLocalhostAsSecureOrigin: true,
+    });
 
     // Called when component is loaded
     loadData()
@@ -1152,7 +1183,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             filterChoice={filterChoice}
                           />
                             : (
-                              modalType === 'Calendar' ? <Calendar cues={cues} />
+                              modalType === 'Calendar' ? <Calendar cues={cues} subscriptions={subscriptions} />
                                 : (
                                   modalType === 'Meeting' ? <Meeting
                                     channelId={channelId}
@@ -1459,6 +1490,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 filterChoice={filterChoice}
                 openUpdate={(index: any, key: any, pageNumber: any, _id: any, by: any, cId: any) => openUpdate(index, key, pageNumber, _id, by, cId)}
                 channelFilterChoice={channelFilterChoice}
+                subscriptions={subscriptions}
               />
             </View>
         }

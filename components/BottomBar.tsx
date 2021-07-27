@@ -98,23 +98,50 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     }}>
                                         <MenuOption
                                             value={'All'}>
-                                            <Text>
-                                                All
-                                            </Text>
+                                            <View style={{ display: 'flex', flexDirection: 'row',  }}>
+                                                <View style={{
+                                                    width: 8,
+                                                    height: 8,
+                                                    borderRadius: 10,
+                                                    marginTop: 1,
+                                                    backgroundColor: "#fff"
+                                                }} />
+                                                <Text style={{ marginLeft: 5 }}>
+                                                    All
+                                                </Text>
+                                            </View>
                                         </MenuOption>
                                         <MenuOption
                                             value={'My Cues'}>
-                                            <Text>
-                                                My Cues
-                                            </Text>
+                                            <View style={{ display: 'flex', flexDirection: 'row',  }}>
+                                                <View style={{
+                                                    width: 8,
+                                                    height: 8,
+                                                    borderRadius: 10,
+                                                    marginTop: 1,
+                                                    backgroundColor: "#000"
+                                                }} />
+                                                <Text style={{ marginLeft: 5 }}>
+                                                    My Cues
+                                                </Text>
+                                            </View>
                                         </MenuOption>
                                         {
                                             props.subscriptions.map((subscription: any) => {
                                                 return <MenuOption
                                                     value={subscription}>
-                                                    <Text>
-                                                        {subscription.channelName}
-                                                    </Text>
+                                                    <View style={{ display: 'flex', flexDirection: 'row',  }}>
+                                                        <View style={{
+                                                            width: 8,
+                                                            height: 8,
+                                                            borderRadius: 10,
+                                                            marginTop: 1,
+                                                            backgroundColor: subscription.colorCode
+                                                        }} />
+                                                        <Text style={{ marginLeft: 5 }}>
+                                                            {subscription.channelName}
+                                                        </Text>
+                                                    </View>
                                                 </MenuOption>
                                             })
                                         }

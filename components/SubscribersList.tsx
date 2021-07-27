@@ -1008,11 +1008,10 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                     </View>
             }
             {
-                !showAddUsers && !showSubmission && props.cue && props.cue.submission && isQuiz ?
+                !showAddUsers && !showSubmission && props.cue && props.cue.submission ?
                     <View style={{ backgroundColor: 'white', flexDirection: 'row', height: 40, width: '500px', justifyContent: 'space-between' }}>
                         <View style={{
                             backgroundColor: 'white',
-                            // marginTop: 20,
                             flexDirection: 'row'
                         }}>
                             <Switch

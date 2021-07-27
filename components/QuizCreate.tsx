@@ -17,6 +17,10 @@ const questionTypeOptions = [
         label: "Free response",
         value: "freeResponse"
     },
+    {
+        label: "True/False",
+        value: "trueFalse"
+    }
 ]
 
 const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
@@ -339,9 +343,20 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 updatedProblems[index].questionType = questionType;
 
                                                 // Clear Options 
-                                                if (questionType !== "") {
+                                                if (questionType === "freeResponse") {
                                                     updatedProblems[index].options = []
+                                                } else if (questionType === "trueFalse") {
+                                                    updatedProblems[index].options = []
+                                                    updatedProblems[index].options.push({
+                                                        option: 'True',
+                                                        isCorrect: false
+                                                    })
+                                                    updatedProblems[index].options.push({
+                                                        option: 'False',
+                                                        isCorrect: false
+                                                    })
                                                 }
+
                                                 setProblems(updatedProblems)
                                                 props.setProblems(updatedProblems)
                                             }}>
@@ -406,6 +421,10 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                             checked={option.isCorrect}
                                             onChange={(e) => {
                                                 const updatedProblems = [...problems]
+                                                if (questionType === "trueFalse") {
+                                                    updatedProblems[index].options[0].isCorrect = false;
+                                                    updatedProblems[index].options[1].isCorrect = false;
+                                                }
                                                 updatedProblems[index].options[i].isCorrect = !updatedProblems[index].options[i].isCorrect;
                                                 setProblems(updatedProblems)
                                                 props.setProblems(updatedProblems)
@@ -457,13 +476,14 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                 setProblems(newProbs)
                                                                 props.setProblems(newProbs)
                                                             }}
+                                                            editable={questionType === "trueFalse" ? false : true}
                                                             placeholderTextColor={'#a2a2ac'}
                                                         />
                                                     </View>)
                                         }
                                         <View style={{ flexDirection: 'row' }}>
                                             {
-                                                option.option && option.option.includes("image:") ? null :
+                                                (option.option && option.option.includes("image:")) || questionType === "trueFalse" ? null :
                                                     <TouchableOpacity
                                                         style={{ backgroundColor: '#fff' }}
                                                         onPress={() => {
@@ -496,7 +516,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                         </Text>
                                                     </TouchableOpacity>
                                             }
-                                            <TouchableOpacity
+                                            {questionType === "trueFalse" ? null : <TouchableOpacity
                                                 style={{
                                                     backgroundColor: '#fff', paddingLeft: 10
                                                 }}
@@ -525,10 +545,10 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                             ? "Remove Image" : "Add Image"
                                                     }
                                                 </Text>
-                                            </TouchableOpacity>
+                                            </TouchableOpacity>}
                                         </View>
                                     </View>
-                                    <View style={{ paddingTop: 15, paddingLeft: 10 }}>
+                                    {questionType === "trueFalse" ? null : <View style={{ paddingTop: 15, paddingLeft: 10 }}>
                                         <Ionicons
                                             name='close-outline'
                                             onPress={() => {
@@ -538,7 +558,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 props.setProblems(updatedProblems)
                                             }}
                                         />
-                                    </View>
+                                    </View>}
                                 </View>
                             })
                         }

@@ -65,6 +65,24 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     const localizer = momentLocalizer(moment);
 
+    const EventComponent = (eventProps: any) => {
+
+        const { event } = eventProps;
+
+        let colorCode = "#202025";
+
+        const matchSubscription = props.subscriptions.find((sub: any) => {
+            return sub.channelName === event.channelName
+        })
+
+        if (matchSubscription && matchSubscription !== undefined) {
+            colorCode = matchSubscription.colorCode
+        }
+
+        return <span style={{ color: colorCode }}>{event.title}</span>
+
+    }
+
     const loadChannels = useCallback(async () => {
         const uString: any = await AsyncStorage.getItem("user");
         if (uString) {
@@ -164,27 +182,54 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     }
                                 }}>
                                     <MenuOption
-                                        value={'All'}>
-                                        <Text>
-                                            All
-                                        </Text>
-                                    </MenuOption>
-                                    <MenuOption
-                                        value={'My Cues'}>
-                                        <Text>
-                                            My Cues
-                                        </Text>
-                                    </MenuOption>
-                                    {
-                                        eventChannels.map((channel: any) => {
-                                            return <MenuOption
-                                                value={channel}>
-                                                <Text>
-                                                    {channel}
-                                                </Text>
-                                            </MenuOption>
-                                        })
-                                    }
+                                            value={'All'}>
+                                            <View style={{ display: 'flex', flexDirection: 'row',  }}>
+                                                        <View style={{
+                                                            width: 8,
+                                                            height: 8,
+                                                            borderRadius: 10,
+                                                            marginTop: 1,
+                                                            backgroundColor: "#fff"
+                                                        }} />
+                                                        <Text style={{ marginLeft: 5 }}>
+                                                          All
+                                                        </Text>
+                                                    </View>
+                                        </MenuOption>
+                                        <MenuOption
+                                            value={'My Cues'}>
+                                            <View style={{ display: 'flex', flexDirection: 'row',  }}>
+                                                        <View style={{
+                                                            width: 8,
+                                                            height: 8,
+                                                            borderRadius: 10,
+                                                            marginTop: 1,
+                                                            backgroundColor: "#000"
+                                                        }} />
+                                                        <Text style={{ marginLeft: 5 }}>
+                                                           My Cues
+                                                        </Text>
+                                                    </View>
+                                        </MenuOption>
+                                        {
+                                            props.subscriptions.map((subscription: any) => {
+                                                return <MenuOption
+                                                    value={subscription}>
+                                                    <View style={{ display: 'flex', flexDirection: 'row',  }}>
+                                                        <View style={{
+                                                            width: 8,
+                                                            height: 8,
+                                                            borderRadius: 10,
+                                                            marginTop: 1,
+                                                            backgroundColor: subscription.colorCode
+                                                        }} />
+                                                        <Text style={{ marginLeft: 5 }}>
+                                                            {subscription.channelName}
+                                                        </Text>
+                                                    </View>
+                                                </MenuOption>
+                                            })
+                                        }
                                 </MenuOptions>
                             </Menu>
                         </View>
@@ -506,9 +551,6 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
             const timeString = datesEqual(event.start, event.end) ? moment(new Date(event.start)).format("MMMM Do YYYY, h:mm a") : moment(new Date(event.start)).format("MMMM Do YYYY, h:mm a") + " to " + moment(new Date(event.end)).format("MMMM Do YYYY, h:mm a")
 
             const descriptionString = event.description ? event.description + "- " + timeString : "" + timeString
-
-            console.log(user._id);
-            console.log(event.createdBy);
 
             if (user._id === event.createdBy && new Date(event.end) > new Date() && event.eventId) {
 
@@ -1196,6 +1238,9 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             startAccessor="start"
                             endAccessor="end"
                             style={{ height: 525, fontFamily: "overpass", color: "#2F2F3C" }}
+                            components={{
+                                event: EventComponent
+                            }}
                         /> : null}
 
                         {!showAddEvent ? renderFilterEvents() : null}
