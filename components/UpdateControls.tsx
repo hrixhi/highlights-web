@@ -707,7 +707,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             const problem = problems[i];
             const solution = solutions[i];
 
-            if ((!problem.questionType || problem.questionType === "") && problem.required) {
+            if ((!problem.questionType || problem.questionType === "" || problem.questionType === "trueFalser") && problem.required) {
                 // Check completeness for MCQs
 
                 const { selected } = solution;
@@ -1502,10 +1502,11 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     </View>
                 )
             ) : (
-                <View style={{ width: '100%', paddingBottom: 50 }}>
+                <View style={{ width: '100%', paddingBottom: 50, display: 'flex', flexDirection: 'column' }}>
                     <View style={{ position: 'relative', flex: 1, width: '100%' }}>
                         <View style={{ position: 'absolute', zIndex: 1, width: 800, height: 50000 }}>
                             {renderRichEditorModified()}
+                            {renderFooter()}
                         </View>
                         {
                             props.cue.graded && props.cue.comment ? <View style={{ position: 'absolute', zIndex: 1, flex: 1, width: 800, height: 50000, backgroundColor: 'rgb(0,0,0,0)' }}>
@@ -1522,8 +1523,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             </View> : null
                         }
                     </View>
-                    {/* Add Submit button here if it is a submission */}
-                    {renderFooter()}
                 </View>
             )}
         </View>
@@ -2489,7 +2488,16 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         </View>)
     }
 
-
+    // If normal submission and deadline has past then check if submission released
+    if ((props.cue.submission && props.cue.submittedAt !== null && !props.cue.releaseSubmission && !isOwner && currentDate > deadline) || (props.cue.graded && !props.cue.releaseSubmission)) {
+        return (<View style={{ minHeight: Dimensions.get('window').height }}>
+            <View style={{ backgroundColor: 'white', flex: 1, }}>
+                <Text style={{ width: '100%', color: '#a2a2ac', fontSize: 20, paddingTop: 200, paddingBottom: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1, textAlign: 'center' }}>
+                    Your instructor has not made this submission  available.
+                </Text>
+            </View>
+        </View>)
+    }
 
     // MAIN RETURN
     return (

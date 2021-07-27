@@ -8,9 +8,10 @@ import { fetchAPI } from '../graphql/FetchAPI';
 import Multiselect from 'multiselect-react-dropdown';
 import {
     doesChannelNameExist, findChannelById, getOrganisation, getSubscribers,
-    getUserCount, subscribe, unsubscribe, updateChannel
+    getUserCount, subscribe, unsubscribe, updateChannel, getChannelColorCode
 } from '../graphql/QueriesAndMutations';
 import { ScrollView } from 'react-native-gesture-handler';
+import { CirclePicker } from "react-color";
 
 const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -24,6 +25,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
     const [selected, setSelected] = useState<any[]>([])
     const [owner, setOwner] = useState<any>({})
     const [owners, setOwners] = useState<any[]>([])
+    const [colorCode, setColorCode] = useState("")
 
     const handleSubmit = useCallback(() => {
         if (name.toString().trim() === '') {
@@ -59,7 +61,8 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         owners: owners.map((item) => {
                             return item.id
                         }),
-                        unsubscribe: unsub
+                        unsubscribe: unsub,
+                        colorCode
                     }
                 }).then(res2 => {
                     console.log(res2)
@@ -113,7 +116,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
             alert("Something went wrong.")
         })
     }, [name, password, props.channelId, options, originalSubs, owners,
-        temporary, selected, originalName])
+        temporary, selected, originalName, colorCode])
 
     const handleDelete = useCallback(() => {
         const server = fetchAPI('')
@@ -235,6 +238,17 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             setSelected(tempUsers)
                         }
                     })
+
+                    server.query({
+                        query: getChannelColorCode,
+                        variables: {
+                            channelId: props.channelId
+                        }
+                    }).then(res => {
+                        if (res.data && res.data.channel.getChannelColorCode) {
+                            setColorCode(res.data.channel.getChannelColorCode)
+                        }
+                    })
                 }
             }
         )()
@@ -293,6 +307,20 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             secureTextEntry={true}
                             required={false}
                         />
+                    </View>
+
+                    <View style={{ backgroundColor: 'white' }}>
+                        <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
+                            Channel Color
+                        </Text>
+                        <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white', marginTop: 20 }}>
+                            <View style={{ width: '100%', backgroundColor: 'white' }}>
+                                <CirclePicker
+                                    color={colorCode}
+                                    onChangeComplete={(color: any) => setColorCode(color.hex) }
+                                />
+                            </View>
+                        </View>
                     </View>
                   
                     <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase', marginTop: 25, }}>
@@ -487,5 +515,26 @@ const styles = StyleSheet.create({
         paddingBottom: 13,
         marginTop: 5,
         marginBottom: 20
-    }
+    },
+    colorContainer: {
+        lineHeight: 20,
+        justifyContent: 'center',
+        display: 'flex',
+        flexDirection: 'column',
+        marginLeft: 7,
+        paddingHorizontal: 4,
+        backgroundColor: 'white'
+    },
+    colorContainerOutline: {
+        lineHeight: 22,
+        justifyContent: 'center',
+        display: 'flex',
+        flexDirection: 'column',
+        marginLeft: 7,
+        paddingHorizontal: 4,
+        backgroundColor: 'white',
+        borderRadius: 10,
+        borderWidth: 1,
+        borderColor: '#a2a2ac'
+    },
 });

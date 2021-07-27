@@ -63,6 +63,7 @@
     "react-big-calendar": "^0.33.2",
     "react-big-scheduler": "0.2.6",
     "react-collapse": "^5.1.0",
+    "react-color": "^2.19.3",
     "react-countdown-circle-timer": "^2.5.1",
     "react-datetime": "^3.0.4",
     "react-dnd": "^14.0.2",

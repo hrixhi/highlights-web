@@ -87,6 +87,7 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 )}
                                 cue={filteredCues[index]}
                                 channelId={props.channelId}
+                                subscriptions={props.subscriptions}
                             />
                         </View>
                     })

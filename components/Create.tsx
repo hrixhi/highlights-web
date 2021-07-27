@@ -183,8 +183,9 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 error = true;
             }
 
+            
             // If MCQ, check if any options repeat:
-            if (!problem.questionType) {
+            if (!problem.questionType || problem.questionType === "trueFalse") {
                 const keys: any = {};
 
                 problem.options.map((option: any) => {
@@ -213,6 +214,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
         })
         if (error) {
+            setIsSubmitting(false)
+            setCreatingQuiz(false)
             return
         }
 

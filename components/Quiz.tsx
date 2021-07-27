@@ -29,7 +29,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             const solutionInit: any = []
             problems.map((problem: any) => {
 
-                if (!problem.questionType) {
+                if (!problem.questionType || problem.questionType === "trueFalse") {
                     const arr: any = []
 
                     problem.options.map((i: any) => {
@@ -183,7 +183,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         props.setSolutions(updatedSolution)
 
     }
-      
 
     if (problems.length !== solutions.length) {
         return null
@@ -324,17 +323,16 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     </Text>)
                         }
                         {
-                            !problem.questionType && problem.options.map((option: any, i: any) => {
+                            (!problem.questionType || problem.questionType === "trueFalse")  && problem.options.map((option: any, i: any) => {
 
                                 let color = '#2F2F3C'
                                 if (props.isOwner && option.isCorrect) {
                                     color = '#3B64F8'
-                                } else if (props.submitted && option.isCorrect ) {
+                                } else if (props.submitted && option.isCorrect) {
                                     color = '#3B64F8'
                                 } else if (props.submitted && !option.isCorrect && solutions[problemIndex].selected[i].isSelected)  {
                                     color = '#D91D56'
                                 }
-
 
                                 return <View style={{ flexDirection: 'row' }} key={solutions.toString() + i.toString()}>
                                     <View style={{ paddingTop: 15 }}>
