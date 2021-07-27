@@ -818,7 +818,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     width: '100%',
                                     lineHeight: 23,
                                 }}>
-                                    <Ionicons name='chevron-back-outline' size={23} color={'#202025'} />
+                                    <Ionicons name='chevron-back-outline' size={23} color={'#2f2f3c'} />
                                 </Text>
                             </TouchableOpacity>
                             {
@@ -837,7 +837,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         onPress={() => handleSubStatusChange()}
                                     >
                                         <Text style={{
-                                            color: '#a2a2aa',
+                                            color: '#a2a2ac',
                                             fontSize: 11,
                                             lineHeight: 30,
                                             textAlign: 'right',
@@ -853,7 +853,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         onPress={() => handleDelete()}
                                     >
                                         <Text style={{
-                                            color: '#a2a2aa',
+                                            color: '#a2a2ac',
                                             fontSize: 11,
                                             lineHeight: 30,
                                             textAlign: 'right',
@@ -894,12 +894,12 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                         activeThumbColor='white'
                                                     />
                                                     <View style={{ width: '100%', backgroundColor: 'white', paddingTop: 3 }}>
-                                                        <Text style={{ fontSize: 15, color: '#a2a2aa', }}>
+                                                        <Text style={{ fontSize: 15, color: '#a2a2ac', }}>
                                                             Meeting
                                                         </Text>
                                                     </View>
                                                 </View>
-                                                <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase', paddingTop: 10 }}>
+                                                <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase', paddingTop: 10 }}>
                                                     {/* Turn on to begin private meeting. {'\n'} */}
                                                     Restart switch if you cannot join.
                                                 </Text>
@@ -925,7 +925,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         <Text style={{
                                             textAlign: 'center',
                                             lineHeight: 35,
-                                            color: meetingOn ? '#fff' : '#202025',
+                                            color: meetingOn ? '#fff' : '#2f2f3c',
                                             fontSize: 12,
                                             backgroundColor: meetingOn ? '#3B64F8' : '#f4f4f6',
                                             paddingHorizontal: 25,
@@ -938,7 +938,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             Join Meeting
                                         </Text>
                                     </TouchableOpacity>
-                                    <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase', marginBottom: 10 }}>
+                                    <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase', marginBottom: 10 }}>
                                         Enabled only when meeting in session.
                                     </Text>
                                 </View>
@@ -954,7 +954,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 <Text
                                     ellipsizeMode="tail"
                                     style={{
-                                        fontSize: 21,
+                                        fontSize: 20,
                                         paddingBottom: 20,
                                         fontFamily: 'inter',
                                         // textTransform: "uppercase",
@@ -998,7 +998,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         textAlign: 'right',
                                         lineHeight: 23,
                                         marginRight: 20,
-                                        color: '#a2a2aa',
+                                        color: '#a2a2ac',
                                         fontSize: 11,
                                     }}>
                                         ADD USERS
@@ -1027,7 +1027,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                             />
                             <View style={{ backgroundColor: 'white', }}>
                                 <Text style={{
-                                    color: "#a2a2aa",
+                                    color: "#a2a2ac",
                                     fontSize: 11,
                                     lineHeight: 25,
                                     textTransform: 'uppercase'
@@ -1055,7 +1055,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
             {
                 !showAddUsers ? (subscribers.length === 0 ?
                     <View style={{ backgroundColor: 'white', flex: 1 }}>
-                        <Text style={{ width: '100%', color: '#a2a2aa', fontSize: 22, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                        <Text style={{ width: '100%', color: '#a2a2ac', fontSize: 22, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                             {
                                 props.cueId ? PreferredLanguageText('noStatuses') : PreferredLanguageText('noStudents')
                             }
@@ -1078,7 +1078,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             style={{ flex: 1, paddingTop: 12 }}>
                                             {
                                                 messages.length === 0 ?
-                                                    <Text style={{ width: '100%', color: '#a2a2aa', fontSize: 22, paddingVertical: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                                    <Text style={{ width: '100%', color: '#a2a2ac', fontSize: 22, paddingVertical: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                                                         {PreferredLanguageText('noMessages')}
                                                     </Text>
                                                     : null
@@ -1117,7 +1117,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                     style={{ flex: 1, paddingTop: 12 }}>
                                                     {/* <Text
                                                         ellipsizeMode="tail"
-                                                        style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
+                                                        style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
                                                         {PreferredLanguageText('newGroup')}
                                                     </Text> */}
                                                     <View style={{ maxHeight: 200, flexDirection: 'column', marginTop: 25, overflow: 'scroll', marginBottom: 25 }}>
@@ -1126,7 +1126,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                 placeholder='Select users'
                                                                 displayValue='label'
                                                                 // key={userDropdownOptions.toString()}
-                                                                // style={{ width: '100%', color: '#202025', 
+                                                                // style={{ width: '100%', color: '#2f2f3c', 
                                                                 //     optionContainer: { // To change css for option container 
                                                                 //         zIndex: 9999
                                                                 //     }
@@ -1195,7 +1195,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                             />
                                                                         </View>
                                                                     })) : <View style={{ backgroundColor: 'white', flex: 1 }}>
-                                                                        <Text style={{ width: '100%', color: '#a2a2aa', fontSize: 22, paddingHorizontal: 50, paddingBottom: 100, paddingTop: 50, fontFamily: 'inter', flex: 1 }}>
+                                                                        <Text style={{ width: '100%', color: '#a2a2ac', fontSize: 22, paddingHorizontal: 50, paddingBottom: 100, paddingTop: 50, fontFamily: 'inter', flex: 1 }}>
                                                                             {PreferredLanguageText('noGroups')}
                                                                         </Text>
                                                                     </View>
@@ -1266,7 +1266,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 <View style={{
                                                     width: '40%'
                                                 }}>
-                                                    <Text style={{ color: '#202025', fontSize: 14, paddingBottom: 10 }}>
+                                                    <Text style={{ color: '#2f2f3c', fontSize: 14, paddingBottom: 10 }}>
                                                         {PreferredLanguageText('score')}
                                                     </Text>
                                                     <TextInput
@@ -1274,7 +1274,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                         style={styles.input}
                                                         placeholder={'0-100'}
                                                         onChangeText={val => setScore(val)}
-                                                        placeholderTextColor={'#a2a2aa'}
+                                                        placeholderTextColor={'#a2a2ac'}
                                                     />
                                                 </View>
                                                 <View style={{ width: '60%' }}>
@@ -1331,7 +1331,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                             style={styles.input}
                                                             placeholder={'Title'}
                                                             onChangeText={val => setTitle(val)}
-                                                            placeholderTextColor={'#a2a2aa'}
+                                                            placeholderTextColor={'#a2a2ac'}
                                                         />
                                                     </View> : null
                                             }
@@ -1362,8 +1362,8 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                 }}
                                                                 editorStyle={{
                                                                     backgroundColor: '#f4f4f6',
-                                                                    placeholderColor: '#a2a2aa',
-                                                                    color: '#202025',
+                                                                    placeholderColor: '#a2a2ac',
+                                                                    color: '#2f2f3c',
                                                                     contentCSSText: 'font-size: 13px;'
                                                                 }}
                                                                 initialContentHTML={submission}
@@ -1448,7 +1448,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     <Menu
                                         onSelect={(cat: any) => setFilterChoice(cat)}>
                                         <MenuTrigger>
-                                            <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#a2a2aa' }}>
+                                            <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#a2a2ac' }}>
                                                 {filterChoice === '' ? 'All' : filterChoice}<Ionicons name='caret-down' size={14} />
                                             </Text>
                                         </MenuTrigger>
@@ -1483,7 +1483,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                         }
                     </View>) :
                     <View style={{ width: 500, maxWidth: '100%' }}>
-                        <Text style={{ color: '#202025', fontSize: 14, paddingBottom: 10 }}>
+                        <Text style={{ color: '#2f2f3c', fontSize: 14, paddingBottom: 10 }}>
                             {PreferredLanguageText('inviteByEmail')}
                         </Text>
                         <TextInput
@@ -1501,7 +1501,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                             }}
                             placeholder={'Enter one email per line.'}
                             onChangeText={val => setEmails(val)}
-                            placeholderTextColor={'#a2a2aa'}
+                            placeholderTextColor={'#a2a2ac'}
                             multiline={true}
                         />
                         <TouchableOpacity
@@ -1518,7 +1518,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                             <Text style={{
                                 textAlign: 'center',
                                 lineHeight: 35,
-                                color: '#202025s',
+                                color: '#2f2f3cs',
                                 fontSize: 12,
                                 backgroundColor: '#f4f4f6',
                                 paddingHorizontal: 25,
@@ -1535,7 +1535,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                         <Text style={{
                             textAlign: 'center',
                             lineHeight: 35,
-                            color: '#202025s',
+                            color: '#2f2f3cs',
                             fontSize: 12,
                             paddingHorizontal: 25,
                             width: "100%",
@@ -1621,7 +1621,7 @@ const styleObject = () => {
         outline: {
             borderRadius: 10,
             borderWidth: 1,
-            borderColor: '#a2a2aa',
+            borderColor: '#a2a2ac',
             color: 'white'
         },
         cusCategory: {
@@ -1637,7 +1637,7 @@ const styleObject = () => {
             height: 22,
             borderRadius: 10,
             borderWidth: 1,
-            borderColor: '#a2a2aa',
+            borderColor: '#a2a2ac',
             color: 'white'
         }
     })

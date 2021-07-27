@@ -75,7 +75,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 <Ionicons
                                     name='share-outline'
                                     size={8}
-                                    color={props.cue.submittedAt && props.cue.submittedAt !== '' ? ('#3B64F8') : (colorScheme === 'light' ? '#a2a2aa' : '#333333')}
+                                    color={props.cue.submittedAt && props.cue.submittedAt !== '' ? ('#3B64F8') : (colorScheme === 'light' ? '#a2a2ac' : '#333333')}
                                 />
                             </Text> : null
                         }
@@ -85,7 +85,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     <Ionicons
                                         name='notifications-outline'
                                         size={8}
-                                        color={colorScheme === 'light' ? '#a2a2aa' : '#333333'}
+                                        color={colorScheme === 'light' ? '#a2a2ac' : '#333333'}
                                     />
                                 </Text> : null
                         } */}
@@ -109,7 +109,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     width: '97%',
                                     zIndex: 20
                                 }}>
-                                    <Ionicons name='bookmark' size={18} color={starred ? '#d91d56' : '#a2a2aa'} />
+                                    <Ionicons name='bookmark' size={18} color={starred ? '#d91d56' : '#a2a2ac'} />
                                 </Text>
                                 : null
                         }
@@ -122,23 +122,23 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             marginRight: 5,
                             marginTop: -5,
                             backgroundColor: colorScheme === 'light'
-                                ? (starred ? '#202025' : '#f4f4f6')
-                                : (starred ? 'white' : '#a2a2aa'),
+                                ? (starred ? '#2F2F3C' : '#f4f4f6')
+                                : (starred ? 'white' : '#a2a2ac'),
                         }}>
                             {
                                 props.cue.submission ? <Text>
-                                    <Ionicons name='share-outline' size={11} color={props.cue.submittedAt && props.cue.submittedAt !== '' ? ('#3B64F8') : (colorScheme === 'light' ? '#a2a2aa' : '#333333')} style={{ marginRight: 10 }} />
+                                    <Ionicons name='share-outline' size={11} color={props.cue.submittedAt && props.cue.submittedAt !== '' ? ('#3B64F8') : (colorScheme === 'light' ? '#a2a2ac' : '#333333')} style={{ marginRight: 10 }} />
                                 </Text> : null
                             }
                             {
                                 props.cue.frequency !== '0' ?
                                     <Text>
-                                        <Ionicons name='notifications-outline' size={11} color={colorScheme === 'light' ? '#a2a2aa' : '#333333'} />
+                                        <Ionicons name='notifications-outline' size={11} color={colorScheme === 'light' ? '#a2a2ac' : '#333333'} />
                                     </Text> : null
                             }
                         </View> */}
                     </View>
-                    <View style={{ backgroundColor: '#a2a2aa', width: '100%', flexDirection: 'row', flex: 1, height: '75%', paddingTop: 6 }}>
+                    <View style={{ backgroundColor: '#a2a2ac', width: '100%', flexDirection: 'row', flex: 1, height: '75%', paddingTop: 6 }}>
                         <Text ellipsizeMode={'tail'}
                             numberOfLines={1}
                             style={styleObject.title}>
@@ -208,7 +208,7 @@ const styles: any = (colorScheme: any, channelId: any) => StyleSheet.create({
         borderRadius: 15,
         padding: 13,
         paddingTop: 17,
-        backgroundColor: colorScheme === 'light' ? '#f4f4f6' : '#a2a2aa'
+        backgroundColor: colorScheme === 'light' ? '#f4f4f6' : '#a2a2ac'
     },
     flipCard: {
         height: '100%',
@@ -216,27 +216,27 @@ const styles: any = (colorScheme: any, channelId: any) => StyleSheet.create({
         borderRadius: 15,
         padding: 13,
         color: '#f4f4f6',
-        backgroundColor: colorScheme === 'light' ? '#202025' : 'white'
+        backgroundColor: colorScheme === 'light' ? '#2F2F3C' : 'white'
     },
     descriptionFlip: {
-        color: '#a2a2aa',
+        color: '#a2a2ac',
         fontSize: 13,
         // height: '30%'
     },
     text: {
         height: '100%',
-        backgroundColor: colorScheme === 'light' ? '#f4f4f6' : '#a2a2aa'
+        backgroundColor: colorScheme === 'light' ? '#f4f4f6' : '#a2a2ac'
     },
     flipText: {
         height: '100%',
         color: '#f4f4f6',
-        backgroundColor: colorScheme === 'light' ? '#202025' : 'white'
+        backgroundColor: colorScheme === 'light' ? '#2F2F3C' : 'white'
     },
     dateContainer: {
         fontSize: 10,
-        color: colorScheme === 'light' ? '#a2a2aa' : '#f4f4f6',
+        color: colorScheme === 'light' ? '#a2a2ac' : '#f4f4f6',
         height: '25%',
-        backgroundColor: colorScheme === 'light' ? '#f4f4f6' : '#a2a2aa',
+        backgroundColor: colorScheme === 'light' ? '#f4f4f6' : '#a2a2ac',
         display: 'flex',
         flexDirection: 'row'
     },
@@ -246,16 +246,16 @@ const styles: any = (colorScheme: any, channelId: any) => StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         color: '#f4f4f6',
-        backgroundColor: colorScheme === 'light' ? '#202025' : 'white'
+        backgroundColor: colorScheme === 'light' ? '#2F2F3C' : 'white'
     },
     date: {
         fontSize: 9,
-        color: colorScheme === 'light' ? '#a2a2aa' : '#333333',
+        color: colorScheme === 'light' ? '#a2a2ac' : '#333333',
         marginLeft: 10
     },
     date2: {
         fontSize: 9,
-        color: colorScheme === 'light' ? '#a2a2aa' : '#333333',
+        color: colorScheme === 'light' ? '#a2a2ac' : '#333333',
         marginLeft: 10,
         // marginTop: -2
     },
@@ -268,11 +268,11 @@ const styles: any = (colorScheme: any, channelId: any) => StyleSheet.create({
         flex: 1,
         // borderWidth: 1,
         // paddingTop: 12,
-        color: colorScheme === 'light' ? '#202025' : 'white'
+        color: colorScheme === 'light' ? '#2F2F3C' : 'white'
     },
     titleFlip: {
-        color: colorScheme === 'light' ? '#fff' : '#202025',
-        backgroundColor: colorScheme === 'light' ? '#202025' : '#fff',
+        color: colorScheme === 'light' ? '#fff' : '#2F2F3C',
+        backgroundColor: colorScheme === 'light' ? '#2F2F3C' : '#fff',
         fontFamily: 'inter',
         fontSize: 13,
         // ,
@@ -282,7 +282,7 @@ const styles: any = (colorScheme: any, channelId: any) => StyleSheet.create({
     },
     description: {
         fontSize: 13,
-        color: colorScheme === 'light' ? '#a2a2aa' : '#333333',
+        color: colorScheme === 'light' ? '#a2a2ac' : '#333333',
         // height: '30%'
     }
 });

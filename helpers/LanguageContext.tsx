@@ -123,16 +123,16 @@ const EnglishBank: { [key: string]: string } = {
     internetRequired: 'Internet connection required to initialise.',
     removeFromChannel: "REMOVE FROM CHANNEL", //
     inbox: 'Inbox',
-    noCuesCreated: 'No content in channel.',
+    noCuesCreated: 'No content.',
     present: 'Present',
     addChoice: 'Add Choice',
     addProblem: 'Add Problem',
     problem: 'Problem',
     enterPoints: 'Enter points',
     no: 'No',
-    noContent: 'No Content',
+    noContent: 'No content',
     existingUsers: 'Existing Users',
-    noExistingUsers: 'No Existing Users',
+    noExistingUsers: 'No existing users',
     sharing: 'Sharing...',
     meeting: "Lecture",
 
@@ -639,7 +639,7 @@ export function LanguageSelect() {
 
     const [showLanguageDropdown, setShowLanguageDropdown] = useState(false);
     const colorScheme = useColorScheme();
-    const color = colorScheme === 'light' ? '#202025' : '#fff'
+    const color = colorScheme === 'light' ? '#2f2f3c' : '#fff'
 
     return <LanguageContext.Consumer>
         {context => {
@@ -659,7 +659,7 @@ export function LanguageSelect() {
                         selectedValue={language}
                         style={{
                             height: 28, borderRadius: 10,
-                            // border: "1px solid #a2a2aa",
+                            // border: "1px solid #a2a2ac",
                             fontSize: 12,
                             padding: '0px 5px'
                         }}

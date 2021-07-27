@@ -56,13 +56,13 @@ const FileUpload: React.FC<any> = (props: any) => {
         paddingBottom: Dimensions.get('window').width < 768 ? 5 : 0
     }}>
         {
-            uploading ? <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
+            uploading ? <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
                 Importing...
             </Text> :
                 <div style={{
                     display: 'flex', flexDirection: 'row'
                 }}>
-                    <Ionicons name="arrow-back" color="#a2a2aa" size={17} style={{ marginRight: 10 }} onPress={() => props.back()} />
+                    <Ionicons name="arrow-back" color="#a2a2ac" size={17} style={{ marginRight: 10 }} onPress={() => props.back()} />
                     <input
                         type="file"
                         name="import"
@@ -72,7 +72,7 @@ const FileUpload: React.FC<any> = (props: any) => {
                             backgroundColor: '#fff',
                             fontFamily: 'overpass',
                             fontSize: 12,
-                            color: '#a2a2aa',
+                            color: '#a2a2ac',
                             marginRight: 10,
                             width: 170
                         }}
