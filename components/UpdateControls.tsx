@@ -707,7 +707,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             const problem = problems[i];
             const solution = solutions[i];
 
-            if ((!problem.questionType || problem.questionType === "" || problem.questionType === "trueFalser") && problem.required) {
+            if ((!problem.questionType || problem.questionType === "" || problem.questionType === "trueFalse") && problem.required) {
                 // Check completeness for MCQs
 
                 const { selected } = solution;
