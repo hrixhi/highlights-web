@@ -185,7 +185,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 error = true;
             }
 
-            
+
             // If MCQ, check if any options repeat:
             if (!problem.questionType || problem.questionType === "trueFalse") {
                 const keys: any = {};
@@ -448,6 +448,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             }
             if (timer) {
                 obj.initiatedAt = null
+
             }
             saveCue = JSON.stringify(obj)
         } else if (imported) {
