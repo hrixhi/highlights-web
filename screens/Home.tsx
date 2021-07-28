@@ -28,6 +28,7 @@ import Grades from '../components/Grades';
 import Calendar from '../components/Calendar';
 import Meeting from '../components/Meeting';
 import { PreferredLanguageText, LanguageSelect } from '../helpers/LanguageContext';
+import logo from '../components/default-images/cues-logo-black-exclamation-hidden.jpg'
 
 // Web Notification
 import OneSignal, { useOneSignalSetup } from 'react-onesignal';
@@ -90,8 +91,10 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   const areYouSureUnsubscribeAlert = PreferredLanguageText('areYouSureUnsubscribe')
   const keepContentAndUnsubscribeAlert = PreferredLanguageText('keepContentAndUnsubscribe')
 
+  const [filterStart, setFilterStart] = useState<any>(null)
+  const [filterEnd, setFilterEnd] = useState<any>(null)
 
-
+  console.log("Subscriptions", subscriptions)
 
   useEffect(() => {
     if (email && !validateEmail(email.toString().toLowerCase())) {
@@ -650,8 +653,22 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           })
             .then(async res => {
               if (res.data.subscription.findByUserId) {
-                setSubscriptions(res.data.subscription.findByUserId)
-                const stringSub = JSON.stringify(res.data.subscription.findByUserId)
+
+                // Add color Codes for Subscriptions that don't have one
+
+                const colorChoices: any[] = ['#d91d56', '#ED7D22', '#F8D41F', '#B8D41F', '#53BE6D']
+
+                const updateColorCodes = res.data.subscription.findByUserId.map((sub: any) => {
+                  if (sub.colorCode === "") {
+                    const randomColor = colorChoices[Math.floor(Math.random() * colorChoices.length)];
+                    sub.colorCode = randomColor;
+
+                  }
+                  return sub;
+                })
+
+                setSubscriptions(updateColorCodes)
+                const stringSub = JSON.stringify(updateColorCodes)
                 await AsyncStorage.setItem('subscriptions', stringSub)
               } else {
                 setSubscriptions(parsedSubscriptions)
@@ -702,14 +719,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
       }
       // OPEN WALKTHROUGH IF FIRST TIME LOAD
       if (!init && dimensions.window.width >= 1024) {
-        let lastOpened = await AsyncStorage.getItem('lastopened')
-        if (lastOpened) {
-          openModal(lastOpened)
-        }
-        else {
-          openModal('Calendar')
-
-        }
+        openModal('Create')
       }
       // HANDLE PROFILE
       if (u) {
@@ -844,8 +854,23 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
       })
         .then(async res => {
           if (res.data.subscription.findByUserId) {
-            setSubscriptions(res.data.subscription.findByUserId)
-            const stringSub = JSON.stringify(res.data.subscription.findByUserId)
+
+            // Add color Codes for Subscriptions that don't have one
+
+            const colorChoices: any[] = ['#d91d56', '#ED7D22', '#F8D41F', '#B8D41F', '#53BE6D']
+
+            const updateColorCodes = res.data.subscription.findByUserId.map((sub: any) => {
+              if (sub.colorCode === "") {
+                const randomColor = colorChoices[Math.floor(Math.random() * colorChoices.length)];
+                sub.colorCode = randomColor;
+
+              }
+              return sub;
+            })
+
+            setSubscriptions(updateColorCodes)
+            const stringSub = JSON.stringify(updateColorCodes)
+
             await AsyncStorage.setItem('subscriptions', stringSub)
           }
         })
@@ -1010,10 +1035,19 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     setUpdateModalIndex(index)
     setPageNumber(pageNumber)
     setChannelId(channId)
+    if (channId !== '') {
+      const sub = subscriptions.find((item: any) => {
+        return item.channelId === channId
+      })
+      if (sub) {
+        setFilterChoice(sub.channelName)
+        setChannelCreatedBy(sub.channelCreatedBy)
+      }
+    }
     setCreatedBy(by)
     setCueId(_id)
     openModal('Update')
-  }, [])
+  }, [subscriptions])
 
   const reloadCueListAfterUpdate = useCallback(async () => {
     const unparsedCues = await AsyncStorage.getItem('cues')
@@ -1155,7 +1189,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             filterChoice={filterChoice}
                           />
                             : (
-                              modalType === 'Calendar' ? <Calendar cues={cues} />
+                              modalType === 'Calendar' ? <Calendar cues={cues} subscriptions={subscriptions} />
                                 : (
                                   modalType === 'Meeting' ? <Meeting
                                     channelId={channelId}
@@ -1199,6 +1233,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   })
 
   if (filterChoice === 'All') {
+    filteredCues = cuesCopy
+  } else if (filterChoice === 'MyCues') {
     filteredCues = cuesCopy.filter((item) => {
       return !item.channelId || item.channelId === ''
     })
@@ -1214,6 +1250,17 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     filteredCues = cuesCopy.filter((item) => {
       return item.customCategory === filterChoice
     })
+  }
+
+  let dateFilteredCues: any[] = []
+  if (filterStart && filterEnd) {
+    dateFilteredCues = filteredCues.filter((item) => {
+      const date = new Date(item.date)
+      return date >= filterStart && date <= filterEnd
+    })
+    console.log(dateFilteredCues)
+  } else {
+    dateFilteredCues = filteredCues
   }
 
   if (!init) {
@@ -1241,15 +1288,15 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             alignSelf: 'center',
             justifyContent: 'center',
             backgroundColor: 'white',
-            width: dimensions.window.width < 768 ? '100%' : 480,
-            height: dimensions.window.width < 768 ? '100%' : 'auto',
-            borderRadius: dimensions.window.width < 768 ? 0 : 20,
-            marginTop: dimensions.window.width < 768 ? 0 : 75,
+            width: dimensions.window.width < 1024 ? '100%' : 480,
+            height: dimensions.window.width < 1024 ? '100%' : 'auto',
+            borderRadius: dimensions.window.width < 1024 ? 0 : 20,
+            marginTop: dimensions.window.width < 1024 ? 0 : 75,
             padding: 40
           }}>
             <View style={{ flexDirection: 'row', justifyContent: 'center', display: 'flex', paddingBottom: 50 }}>
               <Image
-                source={require('../components/default-images/cues-logo-black-exclamation-hidden.jpg')}
+                source={logo}
                 style={{
                   width: dimensions.window.height * 0.16 * 0.53456,
                   height: dimensions.window.height * 0.16 * 0.2
@@ -1257,12 +1304,12 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 resizeMode={'contain'}
               />
             </View>
-            {/* <Text style={{ fontSize: 22, color: '#202025', fontFamily: 'inter', paddingBottom: 15, maxWidth: 500, textAlign: 'center' }}>
+            {/* <Text style={{ fontSize: 20, color: '#2F2F3C', fontFamily: 'inter', paddingBottom: 15, maxWidth: 500, textAlign: 'center' }}>
               {
                 showForgotPassword ? '' : PreferredLanguageText('login')
               }
             </Text> */}
-            <Text style={{ fontSize: 18, color: '#a2a2aa', fontFamily: 'overpass', paddingBottom: 25, maxWidth: 500, textAlign: 'center' }}>
+            <Text style={{ fontSize: 18, color: '#a2a2ac', fontFamily: 'overpass', paddingBottom: 25, maxWidth: 500, textAlign: 'center' }}>
               {
                 showForgotPassword ? PreferredLanguageText('temporaryPassword') : PreferredLanguageText('continueLeftOff')
               }
@@ -1272,20 +1319,20 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               backgroundColor: 'white',
               justifyContent: 'center'
             }}>
-              <Text style={{ color: '#202025', fontSize: 14, paddingBottom: 5, paddingTop: 10 }}>
+              <Text style={{ color: '#2F2F3C', fontSize: 14, paddingBottom: 5, paddingTop: 10 }}>
                 {PreferredLanguageText('email')}
               </Text>
               <TextInput
                 value={email}
                 placeholder={''}
                 onChangeText={(val: any) => setEmail(val)}
-                placeholderTextColor={'#a2a2aa'}
+                placeholderTextColor={'#a2a2ac'}
                 errorText={emailValidError}
               />
               {
                 showForgotPassword ? null :
                   <View>
-                    <Text style={{ color: '#202025', fontSize: 14, paddingBottom: 5 }}>
+                    <Text style={{ color: '#2F2F3C', fontSize: 14, paddingBottom: 5 }}>
                       {PreferredLanguageText('password')}
                     </Text>
                     <TextInput
@@ -1293,7 +1340,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                       value={password}
                       placeholder={''}
                       onChangeText={(val: any) => setPassword(val)}
-                      placeholderTextColor={'#a2a2aa'}
+                      placeholderTextColor={'#a2a2ac'}
                     />
                   </View>
               }
@@ -1352,7 +1399,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                   <Text style={{
                     textAlign: 'center',
                     lineHeight: 35,
-                    color: '#202025',
+                    color: '#2F2F3C',
                     fontSize: 12,
                     backgroundColor: '#f4f4f6',
                     paddingHorizontal: 25,
@@ -1382,7 +1429,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                   <Text style={{
                     textAlign: 'center',
                     lineHeight: 35,
-                    color: '#202025',
+                    color: '#2F2F3C',
                     fontSize: 12,
                     backgroundColor: '#f4f4f6',
                     paddingHorizontal: 25,
@@ -1407,14 +1454,14 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         width: dimensions.window.width < 1024 ? dimensions.window.width : dimensions.window.width * 0.3,
         height: dimensions.window.height,
         flexDirection: 'column',
-        backgroundColor: '#202025',
+        backgroundColor: '#2F2F3C',
         borderRightColor: '#eeeeef',
         borderRightWidth: 0,
       }}>
         <TopBar
-          key={JSON.stringify(channelFilterChoice) + JSON.stringify(filteredCues) + JSON.stringify(modalType) + JSON.stringify(filterChoice) + JSON.stringify(unreadDiscussionThreads) + JSON.stringify(unreadMessages) + JSON.stringify(meetingOn)}
+          key={JSON.stringify(channelFilterChoice) + JSON.stringify(dateFilteredCues) + JSON.stringify(modalType) + JSON.stringify(filterChoice) + JSON.stringify(unreadDiscussionThreads) + JSON.stringify(unreadMessages) + JSON.stringify(meetingOn)}
           openChannels={() => openModal('Channels')}
-          cues={filteredCues}
+          cues={dateFilteredCues}
           filterChoice={filterChoice}
           channelId={channelId}
           channelFilterChoice={channelFilterChoice}
@@ -1436,30 +1483,31 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         />
         {
           reLoading ? <View style={[styles.activityContainer, styles.horizontal]}>
-            <ActivityIndicator color={'#a2a2aa'} />
+            <ActivityIndicator color={'#a2a2ac'} />
           </View>
             : <View style={[styles.activityContainer, styles.horizontal]}>
               <CardsList
                 pageNumber={pageNumber}
                 fadeAnimation={fadeAnimation}
-                key={JSON.stringify(filterChoice) + JSON.stringify(channelId) + JSON.stringify(filteredCues) + JSON.stringify(channelFilterChoice)}
-                cues={filteredCues}
+                key={JSON.stringify(filterChoice) + JSON.stringify(channelId) + JSON.stringify(dateFilteredCues) + JSON.stringify(channelFilterChoice)}
+                cues={dateFilteredCues}
                 channelId={channelId}
                 createdBy={channelCreatedBy}
                 filterChoice={filterChoice}
                 openUpdate={(index: any, key: any, pageNumber: any, _id: any, by: any, cId: any) => openUpdate(index, key, pageNumber, _id, by, cId)}
                 channelFilterChoice={channelFilterChoice}
+                subscriptions={subscriptions}
               />
             </View>
         }
         <BottomBar
-          closeModal={() => closeModal()}
-          cues={filteredCues}
+          cues={dateFilteredCues}
           openWalkthrough={() => openModal('Walkthrough')}
           openCalendar={() => openModal('Calendar')}
           openCreate={() => openModal('Create')}
           openChannels={() => openModal('Channels')}
           openProfile={() => openModal('Profile')}
+          closeModal={() => closeModal()}
           filterChoice={filterChoice}
           handleFilterChange={(choice: any) => handleFilterChange(choice)}
           key={Math.random()}
@@ -1469,6 +1517,10 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           setChannelCreatedBy={(id: any) => setChannelCreatedBy(id)}
           setChannelFilterChoice={(choice: string) => setChannelFilterChoice(choice)}
           channelFilterChoice={channelFilterChoice}
+          filterStart={filterStart}
+          filterEnd={filterEnd}
+          setFilterStart={(s: any) => setFilterStart(s)}
+          setFilterEnd={(e: any) => setFilterEnd(e)}
         />
       </View >
       {
@@ -1479,17 +1531,26 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             // paddingHorizontal: dimensions.window.width < 1024 ? 0 : 30,
             paddingTop: 10,
             // backgroundColor: '#f4f4f6',
-            backgroundColor: '#202025',
+            backgroundColor: '#2F2F3C',
             position: dimensions.window.width < 1024 ? 'absolute' : 'relative'
           }}
-        /> :
+        >
+          {
+            dimensions.window.width < 1024 ? null : <View style={{ flexDirection: 'column', flex: 1, width: '100%', justifyContent: 'center', backgroundColor: '#2f2f3c' }}>
+              <Text style={{ fontSize: 20, color: '#a2a2ac', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#2F2F3C' }}>
+                Select Cue to view.
+              </Text>
+            </View>
+          }
+        </View>
+          :
           <View style={{
             width: dimensions.window.width < 1024 ? '100%' : dimensions.window.width * 0.7,
             height: dimensions.window.height,
             // paddingHorizontal: dimensions.window.width < 1024 ? 0 : 30,
             paddingTop: 0,
             // backgroundColor: '#f4f4f6',
-            backgroundColor: '#202025',
+            backgroundColor: '#2F2F3C',
             position: dimensions.window.width < 1024 ? 'absolute' : 'relative'
           }}>
             <View style={{
@@ -1509,7 +1570,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 <TouchableOpacity
                   onPress={() => closeModal()}
                   style={{ height: 50, backgroundColor: '#fff', borderTopWidth: 1, borderColor: '#f4f4f6' }}>
-                  <Text style={{ flex: 1, textAlign: 'center', fontSize: 15, lineHeight: 15, marginTop: 15, color: '#202025' }}>
+                  <Text style={{ flex: 1, textAlign: 'center', fontSize: 15, lineHeight: 15, marginTop: 15, color: '#2F2F3C' }}>
                     <Ionicons name='chevron-back-outline' size={15} /> Back
                   </Text>
                 </TouchableOpacity> :
@@ -1537,7 +1598,7 @@ const styles = StyleSheet.create({
     height: '66%',
     width: '100%',
     justifyContent: "center",
-    backgroundColor: '#202025'
+    backgroundColor: '#2F2F3C'
   },
   horizontal: {
     flexDirection: "row",

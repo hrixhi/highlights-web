@@ -210,7 +210,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         borderTopLeftRadius: 0,
                         borderTopRightRadius: 0,
                     }}>
-                        <ActivityIndicator color={'#a2a2aa'} />
+                        <ActivityIndicator color={'#a2a2ac'} />
                     </View>
                     :
                     <Animated.View style={{
@@ -345,7 +345,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             setShowComments(true)
                                         }}>
                                         <Text style={styles.all}>
-                                            Comments
+                                            FAQ
                                         </Text>
                                     </TouchableOpacity>
                                     {
@@ -369,7 +369,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     }
                                     {/* Add Status button here */}
                                     {
-                                        !isOwner ? null :
+                                        !isOwner || !channelOwner ? null :
                                             <TouchableOpacity
                                                 style={{
                                                     justifyContent: 'center',
@@ -411,9 +411,9 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             <Text style={{
                                                 width: '100%',
                                                 fontSize: 16,
-                                                color: '#a2a2aa'
+                                                color: '#a2a2ac'
                                             }}>
-                                                <Ionicons name='chevron-back-outline' size={17} color={'#202025'} style={{ marginRight: 10 }} /> Cue
+                                                <Ionicons name='chevron-back-outline' size={17} color={'#2f2f3c'} style={{ marginRight: 10 }} /> Cue
                                             </Text>
                                     </TouchableOpacity>
                                     </View> */}
@@ -466,7 +466,7 @@ export default Update
 const styles: any = StyleSheet.create({
     all: {
         fontSize: 12,
-        color: '#a2a2aa',
+        color: '#a2a2ac',
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: 'white',
@@ -477,7 +477,7 @@ const styles: any = StyleSheet.create({
         color: '#fff',
         paddingHorizontal: 10,
         borderRadius: 10,
-        backgroundColor: '#a2a2aa',
+        backgroundColor: '#2f2f3c',
         lineHeight: 20
     },
 })

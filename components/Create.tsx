@@ -10,6 +10,7 @@ import { fetchAPI } from '../graphql/FetchAPI';
 import { createCue, createQuiz, getChannelCategories, getChannels, getSharedWith } from '../graphql/QueriesAndMutations';
 import Datetime from 'react-datetime';
 import * as ImagePicker from 'expo-image-picker';
+import { DatePicker } from 'rsuite';
 import {
     actions,
     RichEditor,
@@ -184,8 +185,9 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 error = true;
             }
 
+            
             // If MCQ, check if any options repeat:
-            if (!problem.questionType) {
+            if (!problem.questionType || problem.questionType === "trueFalse") {
                 const keys: any = {};
 
                 problem.options.map((option: any) => {
@@ -217,6 +219,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
         })
         if (error) {
+            setIsSubmitting(false)
+            setCreatingQuiz(false)
             return
         }
 
@@ -683,7 +687,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     <View style={{ backgroundColor: 'white', flex: 1 }}>
                         <Text
                             style={{
-                                fontSize: 21,
+                                fontSize: 20,
                                 paddingBottom: 20,
                                 fontFamily: 'inter',
                                 // textTransform: "uppercase",
@@ -707,7 +711,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             // paddingRight: 25,
                             width: '100%'
                         }}>
-                            <Ionicons name='bookmark' size={34} color={starred ? '#d91d56' : '#a2a2aa'} />
+                            <Ionicons name='bookmark' size={34} color={starred ? '#d91d56' : '#a2a2ac'} />
                         </Text>
                     </TouchableOpacity>
                 </View>
@@ -733,9 +737,9 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     iconSize={12}
                                     editor={RichText}
                                     disabled={false}
-                                    iconTint={"#a2a2aa"}
-                                    selectedIconTint={"#a2a2aa"}
-                                    disabledIconTint={"#a2a2aa"}
+                                    iconTint={"#2f2f3c"}
+                                    selectedIconTint={"#2f2f3c"}
+                                    disabledIconTint={"#2f2f3c"}
                                     actions={
                                         imported || isQuiz ? [""] :
                                             [
@@ -776,7 +780,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         {
                             !isQuiz ?
                                 <Text style={{
-                                    color: '#a2a2aa',
+                                    color: '#2f2f3c',
                                     fontSize: 11,
                                     lineHeight: 30,
                                     textAlign: 'right',
@@ -793,7 +797,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         {
                             isQuiz ? null :
                                 <Text style={{
-                                    color: '#a2a2aa',
+                                    color: '#2f2f3c',
                                     fontSize: 11,
                                     lineHeight: 30,
                                     textAlign: 'right',
@@ -806,7 +810,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 </Text>
                         }
                         <Text style={{
-                            color: '#a2a2aa',
+                            color: '#2f2f3c',
                             fontSize: 11,
                             lineHeight: 30,
                             textAlign: 'right',
@@ -852,10 +856,10 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 }}
                                 onPress={() => insertEquation()}
                             >
-                                <Ionicons name='add-circle-outline' color='#a2a2aa' size={20} />
+                                <Ionicons name='add-circle-outline' color='#a2a2ac' size={20} />
                             </TouchableOpacity>
                             <View style={{ minWidth: '40%', flex: 1, paddingVertical: 5, justifyContent: 'center', }}>
-                                <Text style={{ flex: 1, fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
+                                <Text style={{ flex: 1, fontSize: 11, color: '#a2a2ac' }}>
                                     ^ → Superscript, _ → Subscript, int → Integral, sum → Summation, prod → Product, sqrt → Square root, bar → Bar over letter, alpha, beta, ... omega → Small Greek letter, Alpha, Beta, ... Omega → Capital Greek letter
                                 </Text>
                             </View>
@@ -879,7 +883,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         style={styles.input}
                                         placeholder={PreferredLanguageText('title')}
                                         onChangeText={val => setTitle(val)}
-                                        placeholderTextColor={'#a2a2aa'}
+                                        placeholderTextColor={'#a2a2ac'}
                                     />
                                     <TouchableOpacity
                                         style={{
@@ -888,11 +892,11 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         }}
                                         onPress={() => clearAll()}
                                     >
-                                        <Ionicons name="trash-outline" color="#a2a2aa" size={20} style={{ alignSelf: 'center' }} />
+                                        <Ionicons name="trash-outline" color="#a2a2ac" size={20} style={{ alignSelf: 'center' }} />
                                         <Text
                                             style={{
                                                 fontSize: 9,
-                                                color: "#a2a2aa",
+                                                color: "#a2a2ac",
                                                 textAlign: "center"
                                             }}>
                                             Remove
@@ -903,8 +907,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     isQuiz ?
                                         <View style={{ width: width < 768 ? '100%' : '31.67%', borderRightWidth: 0, borderColor: '#f4f4f6', paddingTop: 10 }}>
                                             <View style={{ width: '100%', paddingBottom: 15, backgroundColor: 'white' }}>
-                                                <Text style={{ fontSize: 15, color: '#a2a2aa' }}>
-                                                    <Ionicons name='timer-outline' size={20} color={'#a2a2aa'} />
+                                                <Text style={{ fontSize: 15, color: '#a2a2ac' }}>
+                                                    <Ionicons name='timer-outline' size={20} color={'#a2a2ac'} />
                                                 </Text>
                                             </View>
                                             <View style={{
@@ -963,7 +967,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             value={quizInstructions}
                                             placeholder="Instructions"
                                             onChangeText={val => setQuizInstructions(val)}
-                                            placeholderTextColor={"#a2a2aa"}
+                                            placeholderTextColor={"#a2a2ac"}
                                             required={false}
                                             hasMultipleLines={true}
                                         />
@@ -998,25 +1002,27 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             key={reloadEditorKey.toString()}
                             containerStyle={{
                                 height,
-                                backgroundColor: '#f4f4f6',
+                                backgroundColor: '#fff',
                                 padding: 3,
                                 paddingTop: 5,
                                 paddingBottom: 10,
-                                borderRadius: 15,
+                                // borderRadius: 15,
                                 display: (isQuiz || imported) ? "none" : "flex"
                             }}
                             ref={RichText}
                             style={{
                                 width: '100%',
-                                backgroundColor: '#f4f4f6',
-                                borderRadius: 15,
-                                minHeight: 575,
-                                display: (isQuiz || imported) ? "none" : "flex"
+                                backgroundColor: '#fff',
+                                // borderRadius: 15,
+                                minHeight: 650,
+                                display: (isQuiz || imported) ? "none" : "flex",
+                                borderTopWidth: 1,
+                                borderColor: '#a2a2ac'
                             }}
                             editorStyle={{
-                                backgroundColor: '#f4f4f6',
-                                placeholderColor: '#a2a2aa',
-                                color: '#202025',
+                                backgroundColor: '#fff',
+                                placeholderColor: '#a2a2ac',
+                                color: '#2F2F3C',
                                 contentCSSText: 'font-size: 14px;',
 
                             }}
@@ -1044,11 +1050,11 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             <View style={{ display: 'flex', flexDirection: width < 768 ? 'column' : 'row', overflow: 'visible' }}>
                                 <View style={{ width: width < 768 ? '100%' : '33.33%', borderRightWidth: 0, borderColor: '#f4f4f6' }}>
                                     <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                        <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
+                                        <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
                                             {/* {PreferredLanguageText('channel')} */}
                                             Share with
                                             {/* <Ionicons
-                                                name='school-outline' size={20} color={'#a2a2aa'} /> */}
+                                                name='school-outline' size={20} color={'#a2a2ac'} /> */}
                                         </Text>
                                     </View>
                                     <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white' }}>
@@ -1080,7 +1086,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     }
                                                 }}>
                                                 <MenuTrigger>
-                                                    <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#202025' }}>
+                                                    <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#2F2F3C' }}>
                                                         {channelName === '' ? 'My Cues' : channelName}<Ionicons name='caret-down' size={14} />
                                                     </Text>
                                                 </MenuTrigger>
@@ -1113,40 +1119,14 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             </Menu>
                                         </View>
                                     </View>
-                                    {
-                                        channelId !== '' ?
-                                            <View style={{ maxHeight: 175, flexDirection: 'column', marginTop: 25, overflow: 'scroll' }}>
-                                                <View style={{ width: '90%', padding: 5, height: expandMenu ? 175 : 'auto' }}>
-                                                    <Multiselect
-                                                        placeholder='Share with...'
-                                                        displayValue='name'
-                                                        // key={userDropdownOptions.toString()}
-                                                        // style={{ width: '100%', color: '#202025', 
-                                                        //     optionContainer: { // To change css for option container 
-                                                        //         zIndex: 9999
-                                                        //     }
-                                                        // }}
-                                                        options={subscribers} // Options to display in the dropdown
-                                                        selectedValues={selected} // Preselected value to persist in dropdown
-                                                        onSelect={(e, f) => {
-                                                            setSelected(e);
-                                                            return true
-                                                        }} // Function will trigger on select event
-                                                        onRemove={(e, f) => {
-                                                            setSelected(e);
-                                                            return true
-                                                        }}
-                                                    />
-                                                </View>
 
-                                            </View> : null
-                                    }
                                 </View>
+
                                 {
                                     channelId !== '' ?
                                         <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
                                             <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                                <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
+                                                <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
                                                     {PreferredLanguageText('submissionRequired')}
                                                 </Text>
                                             </View>
@@ -1165,7 +1145,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         style={{ height: 20 }}
                                                         trackColor={{
                                                             false: '#f4f4f6',
-                                                            true: '#a2a2aa'
+                                                            true: '#a2a2ac'
                                                         }}
                                                         activeThumbColor='white'
                                                     />
@@ -1181,7 +1161,9 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             <Text style={styles.text}>
                                                                 Available
                                                             </Text>
-                                                            <Datetime
+                                                            <DatePicker
+                                                                format="YYYY-MM-DD HH:mm:ss"
+                                                                preventOverflow={true}
                                                                 value={initiateAt}
                                                                 onChange={(event: any) => {
                                                                     const date = new Date(event)
@@ -1189,7 +1171,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                     if (date < new Date()) return;
                                                                     setInitiateAt(date)
                                                                 }}
-                                                                isValidDate={disablePastDt}
+                                                                size={'sm'}
+                                                            // isValidDate={disablePastDt}
                                                             />
 
                                                         </View>
@@ -1213,7 +1196,9 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                 <Text style={styles.text}>
                                                                     {PreferredLanguageText('deadline')}
                                                                 </Text>
-                                                                <Datetime
+                                                                <DatePicker
+                                                                    format="YYYY-MM-DD HH:mm:ss"
+                                                                    preventOverflow={true}
                                                                     value={deadline}
                                                                     onChange={(event: any) => {
                                                                         const date = new Date(event)
@@ -1222,7 +1207,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
                                                                         setDeadline(date)
                                                                     }}
-                                                                    isValidDate={disablePastDt}
+                                                                    size={'sm'}
+                                                                // isValidDate={disablePastDt}
                                                                 />
 
 
@@ -1240,7 +1226,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     submission ?
                                         <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
                                             <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                                <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
+                                                <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
                                                     Grade Weight
                                                 </Text>
                                             </View>
@@ -1256,7 +1242,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         style={{ height: 20 }}
                                                         trackColor={{
                                                             false: '#f4f4f6',
-                                                            true: '#a2a2aa'
+                                                            true: '#a2a2ac'
                                                         }}
                                                         activeThumbColor='white'
                                                     />
@@ -1277,7 +1263,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                 style={styles.picker}
                                                                 placeholder={'0-100'}
                                                                 onChangeText={val => setGradeWeight(val)}
-                                                                placeholderTextColor={'#a2a2aa'}
+                                                                placeholderTextColor={'#a2a2ac'}
                                                             />
                                                         </View>
                                                         : null
@@ -1287,11 +1273,42 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 }
                             </View>
                             : null}
+
+                        <View style={{ width: width < 768 ? '100%' : '33.3%', borderRightWidth: 0, borderColor: '#f4f4f6' }}>
+                            {
+                                channelId !== '' ?
+                                    <View style={{ flexDirection: 'column', marginTop: 25, overflow: 'scroll' }}>
+                                        <View style={{ width: '90%', padding: 5, height: 'auto' }}>
+                                            <Multiselect
+                                                placeholder='Share with...'
+                                                displayValue='name'
+                                                // key={userDropdownOptions.toString()}
+                                                // style={{ width: '100%', color: '#2f2f3c', 
+                                                //     optionContainer: { // To change css for option container 
+                                                //         zIndex: 9999
+                                                //     }
+                                                // }}
+                                                options={subscribers} // Options to display in the dropdown
+                                                selectedValues={selected} // Preselected value to persist in dropdown
+                                                onSelect={(e, f) => {
+                                                    setSelected(e);
+                                                    return true
+                                                }} // Function will trigger on select event
+                                                onRemove={(e, f) => {
+                                                    setSelected(e);
+                                                    return true
+                                                }}
+                                            />
+                                        </View>
+
+                                    </View> : null
+                            }
+                        </View>
                         <View style={{ display: 'flex', flexDirection: width < 768 ? 'column' : 'row' }}>
                             <View style={{ width: width < 768 ? '100%' : '33.33%', borderRightWidth: 0, borderColor: '#f4f4f6' }}>
                                 <View style={{ width: '100%', backgroundColor: 'white' }}>
                                     <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                        <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
+                                        <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
                                             {PreferredLanguageText('category')}
                                         </Text>
                                     </View>
@@ -1307,13 +1324,13 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             onChangeText={val => {
                                                                 setCustomCategory(val)
                                                             }}
-                                                            placeholderTextColor={'#a2a2aa'}
+                                                            placeholderTextColor={'#a2a2ac'}
                                                         />
                                                     </View> :
                                                     <Menu
                                                         onSelect={(cat: any) => setCustomCategory(cat)}>
                                                         <MenuTrigger>
-                                                            <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#a2a2aa' }}>
+                                                            <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#2f2f3c' }}>
                                                                 {customCategory === '' ? 'None' : customCategory}<Ionicons name='caret-down' size={14} />
                                                             </Text>
                                                         </MenuTrigger>
@@ -1359,7 +1376,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 }}
                                                 style={{ backgroundColor: 'white' }}>
                                                 <Text style={{ textAlign: 'center', lineHeight: 20, width: '100%' }}>
-                                                    <Ionicons name={addCustomCategory ? 'close' : 'add'} size={20} color={'#a2a2aa'} />
+                                                    <Ionicons name={addCustomCategory ? 'close' : 'add'} size={20} color={'#2f2f3c'} />
                                                 </Text>
                                             </TouchableOpacity>
                                         </View>
@@ -1368,7 +1385,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             </View>
                             <View style={{ width: width < 768 ? '100%' : '33.33%', borderRightWidth: 0, borderColor: '#f4f4f6' }}>
                                 <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                    <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
+                                    <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
                                         {PreferredLanguageText('priority')}
                                     </Text>
                                 </View>
@@ -1400,7 +1417,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         <View style={{ width: '100%', paddingTop: 15, flexDirection: width < 768 ? 'column' : 'row' }}>
                             <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
                                 <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                    <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
+                                    <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
                                         Reminder
                                     </Text>
                                 </View>
@@ -1436,7 +1453,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 notify ?
                                     <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
                                         <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                            <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
+                                            <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
                                                 Recurring
                                             </Text>
                                         </View>
@@ -1452,7 +1469,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     style={{ height: 20 }}
                                                     trackColor={{
                                                         false: '#f4f4f6',
-                                                        true: '#a2a2aa'
+                                                        true: '#a2a2ac'
                                                     }}
                                                     activeThumbColor='white'
                                                 />
@@ -1473,7 +1490,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                 setFrequencyName(cat.label)
                                                             }}>
                                                             <MenuTrigger>
-                                                                <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#a2a2aa' }}>
+                                                                <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#2f2f3c' }}>
                                                                     {frequencyName}<Ionicons name='caret-down' size={14} />
                                                                 </Text>
                                                             </MenuTrigger>
@@ -1516,7 +1533,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             {
                                                                 timedFrequencyOptions.map((item: any, index: number) => {
                                                                     return <Picker.Item
-                                                                        color={frequency === item.value ? '#3B64F8' : "#202025"}
+                                                                        color={frequency === item.value ? '#3B64F8' : "#2F2F3C"}
                                                                         label={item.value === '0' && channelId !== '' ? 'Once' : item.label}
                                                                         value={item.value}
                                                                         key={index}
@@ -1534,15 +1551,18 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         <Text style={styles.text}>
                                                             {PreferredLanguageText('RemindOn')}
                                                         </Text>
-                                                        <Datetime
+                                                        <DatePicker
+                                                            format="YYYY-MM-DD HH:mm:ss"
                                                             value={endPlayAt}
+                                                            preventOverflow={true}
                                                             onChange={(event: any) => {
                                                                 const date = new Date(event)
                                                                 if (date < new Date()) return;
 
                                                                 setEndPlayAt(date)
                                                             }}
-                                                            isValidDate={disablePastDt}
+                                                            // isValidDate={disablePastDt}
+                                                            size={'sm'}
                                                         />
                                                     </View>
                                             }
@@ -1553,7 +1573,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 notify && !shuffle ?
                                     <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
                                         <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                            <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
+                                            <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
                                                 Indefinite
                                             </Text>
                                         </View>
@@ -1569,7 +1589,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     style={{ height: 20 }}
                                                     trackColor={{
                                                         false: '#f4f4f6',
-                                                        true: '#a2a2aa'
+                                                        true: '#a2a2ac'
                                                     }}
                                                     activeThumbColor='white'
                                                 />
@@ -1585,14 +1605,17 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                         <Text style={styles.text}>
                                                             {PreferredLanguageText('remindTill')}
                                                         </Text>
-                                                        <Datetime
+                                                        <DatePicker
+                                                            format="YYYY-MM-DD HH:mm:ss"
                                                             value={endPlayAt}
+                                                            preventOverflow={true}
                                                             onChange={(event: any) => {
                                                                 const date = new Date(event)
                                                                 if (date < new Date()) return;
                                                                 setEndPlayAt(date)
                                                             }}
-                                                            isValidDate={disablePastDt}
+                                                            // isValidDate={disablePastDt}\
+                                                            size={'sm'}
                                                         />
                                                     </View>
                                             }
@@ -1603,7 +1626,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         {/* if Quiz then ask Shuffle */}
                         {isQuiz ? <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
                             <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
+                                <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
                                     Shuffle Questions
                                 </Text>
                             </View>
@@ -1619,7 +1642,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         style={{ height: 20 }}
                                         trackColor={{
                                             false: '#f4f4f6',
-                                            true: '#a2a2aa'
+                                            true: '#a2a2ac'
                                         }}
                                         activeThumbColor='white'
                                     />
@@ -1701,7 +1724,7 @@ const styles: any = StyleSheet.create({
         width: 125,
         fontSize: 15,
         height: 45,
-        color: '#202025',
+        color: '#2F2F3C',
         borderRadius: 10,
         marginLeft: 10
     },
@@ -1716,7 +1739,7 @@ const styles: any = StyleSheet.create({
         width: '100%',
         backgroundColor: '#f4f4f6',
         borderRadius: 15,
-        fontSize: 22,
+        fontSize: 20,
         padding: 20,
         paddingTop: 20,
         paddingBottom: 20,
@@ -1749,7 +1772,7 @@ const styles: any = StyleSheet.create({
         backgroundColor: 'white',
         borderRadius: 10,
         borderWidth: 1,
-        borderColor: '#a2a2aa'
+        borderColor: '#a2a2ac'
     },
     input: {
         width: '100%',
@@ -1791,20 +1814,20 @@ const styles: any = StyleSheet.create({
     },
     text: {
         fontSize: 12,
-        color: '#a2a2aa',
+        color: '#a2a2ac',
         textAlign: 'left',
         paddingHorizontal: 10
     },
     all: {
         fontSize: 12,
-        color: '#a2a2aa',
+        color: '#a2a2ac',
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: 'white'
     },
     allBlack: {
         fontSize: 12,
-        color: '#202025',
+        color: '#2F2F3C',
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: 'white',
@@ -1816,18 +1839,18 @@ const styles: any = StyleSheet.create({
         height: 22,
         paddingHorizontal: 10,
         borderRadius: 10,
-        backgroundColor: '#202025',
+        backgroundColor: '#2F2F3C',
         marginBottom: 20
     },
     allGrayOutline: {
         fontSize: 12,
-        color: '#a2a2aa',
+        color: '#a2a2ac',
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: 'white',
         borderRadius: 10,
         borderWidth: 1,
-        borderColor: '#a2a2aa'
+        borderColor: '#a2a2ac'
     },
     color1: {
         backgroundColor: '#D11C60'
@@ -1847,6 +1870,6 @@ const styles: any = StyleSheet.create({
     outline: {
         borderRadius: 10,
         borderWidth: 1,
-        borderColor: '#a2a2aa'
+        borderColor: '#a2a2ac'
     }
 })

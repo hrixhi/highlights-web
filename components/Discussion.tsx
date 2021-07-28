@@ -114,7 +114,7 @@ const Discussion: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             flexDirection: 'column',
                             backgroundColor: 'white'
                         }}>
-                            <ActivityIndicator color={'#a2a2aa'} />
+                            <ActivityIndicator color={'#a2a2ac'} />
                         </View>
                         :
                         <ThreadsList

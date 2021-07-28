@@ -8,9 +8,10 @@ import { fetchAPI } from '../graphql/FetchAPI';
 import Multiselect from 'multiselect-react-dropdown';
 import {
     doesChannelNameExist, findChannelById, getOrganisation, getSubscribers,
-    getUserCount, subscribe, unsubscribe, updateChannel
+    getUserCount, subscribe, unsubscribe, updateChannel, getChannelColorCode
 } from '../graphql/QueriesAndMutations';
 import { ScrollView } from 'react-native-gesture-handler';
+import { CirclePicker } from "react-color";
 
 const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -24,6 +25,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
     const [selected, setSelected] = useState<any[]>([])
     const [owner, setOwner] = useState<any>({})
     const [owners, setOwners] = useState<any[]>([])
+    const [colorCode, setColorCode] = useState("")
 
     const handleSubmit = useCallback(() => {
         if (name.toString().trim() === '') {
@@ -59,7 +61,8 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         owners: owners.map((item) => {
                             return item.id
                         }),
-                        unsubscribe: unsub
+                        unsubscribe: unsub,
+                        colorCode
                     }
                 }).then(res2 => {
                     console.log(res2)
@@ -113,7 +116,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
             alert("Something went wrong.")
         })
     }, [name, password, props.channelId, options, originalSubs, owners,
-        temporary, selected, originalName])
+        temporary, selected, originalName, colorCode])
 
     const handleDelete = useCallback(() => {
         const server = fetchAPI('')
@@ -235,6 +238,17 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             setSelected(tempUsers)
                         }
                     })
+
+                    server.query({
+                        query: getChannelColorCode,
+                        variables: {
+                            channelId: props.channelId
+                        }
+                    }).then(res => {
+                        if (res.data && res.data.channel.getChannelColorCode) {
+                            setColorCode(res.data.channel.getChannelColorCode)
+                        }
+                    })
                 }
             }
         )()
@@ -246,7 +260,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
             <View style={{ width: '100%', backgroundColor: 'white', paddingTop: 10 }}>
                 <Text
                     style={{
-                        fontSize: 21,
+                        fontSize: 20,
                         paddingBottom: 20,
                         fontFamily: 'inter',
                         // textTransform: "uppercase",
@@ -262,11 +276,12 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                     }}
                     contentContainerStyle={{
                         maxHeight: Dimensions.get('window').height - 150,
+                        // height: 'auto',
                         minHeight: 100
                     }}
                 >
                     <View style={{ backgroundColor: 'white' }}>
-                        <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
+                        <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
                             {PreferredLanguageText('channel') + ' ' + PreferredLanguageText('name')}
                         </Text>
                         <TextInput
@@ -275,93 +290,100 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             onChangeText={val => {
                                 setName(val)
                             }}
-                            placeholderTextColor={'#a2a2aa'}
+                            placeholderTextColor={'#a2a2ac'}
                             required={true}
                             footerMessage={'case sensitive'}
                         />
                     </View>
                     <View style={{ backgroundColor: 'white' }}>
-                        <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
+                        <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
                             {PreferredLanguageText('enrolmentPassword')}
                         </Text>
                         <TextInput
                             value={password}
                             placeholder={`(${PreferredLanguageText('optional')})`}
                             onChangeText={val => setPassword(val)}
-                            placeholderTextColor={'#a2a2aa'}
+                            placeholderTextColor={'#a2a2ac'}
                             secureTextEntry={true}
                             required={false}
                         />
                     </View>
-                    <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase', marginTop: 25, paddingBottom: 15 }}>
+
+                    <View style={{ backgroundColor: 'white' }}>
+                        <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
+                            Channel Color
+                        </Text>
+                        <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white', marginTop: 20 }}>
+                            <View style={{ width: '100%', backgroundColor: 'white' }}>
+                                <CirclePicker
+                                    color={colorCode}
+                                    onChangeComplete={(color: any) => setColorCode(color.hex) }
+                                />
+                            </View>
+                        </View>
+                    </View>
+                  
+                    <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase', marginTop: 25, }}>
                         Subscribers
                     </Text>
-                    <ScrollView
-                        onScroll={() => {
-                            Keyboard.dismiss()
-                        }}
-                        contentContainerStyle={{
-                            maxHeight: 250
-                        }}
-                    >
-                        <Multiselect
-                            placeholder='Select...'
-                            displayValue='name'
-                            // key={userDropdownOptions.toString()}
-                            style={{
-                                multiselectContainer: { // To change css for option container 
-                                    minHeight: 200
-                                }
-                            }}
-                            options={options} // Options to display in the dropdown
-                            selectedValues={selected} // Preselected value to persist in dropdown
-                            onSelect={(e, f) => {
-                                setSelected(e);
-                                return true
-                            }} // Function will trigger on select event
-                            onRemove={(e, f) => {
-                                setSelected(e);
-                                return true
-                            }}
-                        />
-                    </ScrollView>
-                    <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase', marginTop: 25, paddingBottom: 15 }}>
+                    
+                    <View style={{ flexDirection: 'column', marginTop: 25, overflow: 'scroll' }}>
+                        <View style={{ width: '90%', height: 'auto' }}>
+                            <Multiselect
+                                placeholder='Select...'
+                                displayValue='name'
+                                // key={userDropdownOptions.toString()}
+                                style={{
+                                    multiselectContainer: { // To change css for option container 
+                                        minHeight: 200
+                                    }
+                                }}
+                                options={options} // Options to display in the dropdown
+                                selectedValues={selected} // Preselected value to persist in dropdown
+                                onSelect={(e, f) => {
+                                    setSelected(e);
+                                    return true
+                                }} // Function will trigger on select event
+                                onRemove={(e, f) => {
+                                    setSelected(e);
+                                    return true
+                                }}
+                            />
+                        </View>
+                    </View>
+                    <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase', marginTop: 25, }}>
                         Moderators
                     </Text>
-                    <ScrollView
-                        onScroll={() => {
-                            Keyboard.dismiss()
-                        }}
-                        contentContainerStyle={{
-                            maxHeight: 250
-                        }}
-                    >
-                        <Multiselect
-                            placeholder='Select...'
-                            displayValue='name'
-                            // key={userDropdownOptions.toString()}
-                            // style={{ width: '100%', color: '#202025', 
-                            //     optionContainer: { // To change css for option container 
-                            //         zIndex: 9999
-                            //     }
-                            // }}
-                            style={{
-                                multiselectContainer: { // To change css for option container 
-                                    minHeight: 100
-                                }
-                            }}
-                            options={options} // Options to display in the dropdown
-                            selectedValues={owners} // Preselected value to persist in dropdown
-                            onSelect={(e, f) => {
-                                setOwners(e);
-                                return true
-                            }} // Function will trigger on select event
-                            onRemove={(e, f) => {
-                                setOwners(e);
-                                return true
-                            }}
-                        />
-                    </ScrollView>
+                    <View style={{ flexDirection: 'column', marginTop: 25, overflow: 'scroll' }}>
+                        <View style={{ width: '90%', height: 'auto' }}>
+                            <Multiselect
+                                placeholder='Select...'
+                                displayValue='name'
+                                // key={userDropdownOptions.toString()}
+                                // style={{ width: '100%', color: '#202025', 
+                                //     optionContainer: { // To change css for option container 
+                                //         zIndex: 9999
+                                //     }
+                                // }}
+                                style={{
+                                    multiselectContainer: { // To change css for option container 
+                                        minHeight: 100
+                                    }
+                                }}
+                                options={options} // Options to display in the dropdown
+                                selectedValues={owners} // Preselected value to persist in dropdown
+                                onSelect={(e, f) => {
+                                    setOwners(e);
+                                    return true
+                                }} // Function will trigger on select event
+                                onRemove={(e, f) => {
+                                    setOwners(e);
+                                    return true
+                                }}
+                            />
+                        </View>
+                    </View>
+
                     <View
                         style={{
                             flex: 1,
@@ -423,7 +445,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     <Text style={{
                                         textAlign: 'center',
                                         lineHeight: 35,
-                                        color: '#202025',
+                                        color: '#2F2F3C',
                                         fontSize: 12,
                                         backgroundColor: '#f4f4f6',
                                         paddingHorizontal: 25,
@@ -456,24 +478,24 @@ const styles = StyleSheet.create({
     outline: {
         borderRadius: 10,
         borderWidth: 1,
-        borderColor: '#a2a2aa'
+        borderColor: '#a2a2ac'
     },
     all: {
         fontSize: 15,
-        color: '#a2a2aa',
+        color: '#a2a2ac',
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: 'white'
     },
     allOutline: {
         fontSize: 15,
-        color: '#a2a2aa',
+        color: '#a2a2ac',
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: 'white',
         borderRadius: 10,
         borderWidth: 1,
-        borderColor: '#a2a2aa'
+        borderColor: '#a2a2ac'
     },
     colorBar: {
         width: '100%',
@@ -493,5 +515,26 @@ const styles = StyleSheet.create({
         paddingBottom: 13,
         marginTop: 5,
         marginBottom: 20
-    }
+    },
+    colorContainer: {
+        lineHeight: 20,
+        justifyContent: 'center',
+        display: 'flex',
+        flexDirection: 'column',
+        marginLeft: 7,
+        paddingHorizontal: 4,
+        backgroundColor: 'white'
+    },
+    colorContainerOutline: {
+        lineHeight: 22,
+        justifyContent: 'center',
+        display: 'flex',
+        flexDirection: 'column',
+        marginLeft: 7,
+        paddingHorizontal: 4,
+        backgroundColor: 'white',
+        borderRadius: 10,
+        borderWidth: 1,
+        borderColor: '#a2a2ac'
+    },
 });

@@ -9,7 +9,6 @@ import * as FileSaver from 'file-saver';
 // import { PieChart } from 'react-native-svg-charts'
 import { Chart } from "react-google-charts";
 
-
 import {
     LineChart,
     BarChart,
@@ -23,8 +22,31 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
     const unparsedSubmissionStatistics: any[] = JSON.parse(JSON.stringify(props.submissionStatistics))
     const [scores] = useState<any[]>(unparsedScores)
     const [cues] = useState<any[]>(unparsedCues)
-    const [submissionStatistics] = useState<any[]>(unparsedSubmissionStatistics)
+    const [submissionStatistics, setSubmissionStatistics] = useState<any[]>(unparsedSubmissionStatistics)
     const [exportAoa, setExportAoa] = useState<any[]>()
+
+    useEffect(() => {
+
+        const filterUnreleased = submissionStatistics.filter((stat: any) => {
+            const { cueId } = stat;
+
+            const findCue = cues.find((u: any) => {
+                return u._id.toString() === cueId.toString();
+            })
+
+            const { cue, releaseSubmission } = findCue; 
+
+            if (!releaseSubmission) {
+                return false;
+            }
+
+            return true
+
+        })
+
+        setSubmissionStatistics(filterUnreleased)
+
+    }, [cues, props.submissionStatistics])
 
     // Statistics
     const [showStatistics, setShowStatistics] = useState(false);
@@ -89,7 +111,6 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
         })
 
         setExportAoa(exportAoa)
-
 
     }, [scores, cues])
 
@@ -235,7 +256,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
         }}
             key={JSON.stringify(scores)}
         >
-            <Text style={{ textAlign: 'left', fontSize: 13, color: '#202025', fontFamily: 'inter', paddingBottom: 20, paddingLeft: Dimensions.get('window').width < 768 ? 0 : 150 }}>
+            <Text style={{ textAlign: 'left', fontSize: 13, color: '#2F2F3C', fontFamily: 'inter', paddingBottom: 20, paddingLeft: Dimensions.get('window').width < 768 ? 0 : 150 }}>
                 Grade Weightage
             </Text>
             <PieChart
@@ -250,129 +271,24 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 hasLegend={true}
             />
 
-
-            <Text style={{ textAlign: 'left', fontSize: 13, color: '#202025', fontFamily: 'inter', paddingTop: 50, paddingBottom: 20, paddingLeft: Dimensions.get('window').width < 768 ? 0 : 150 }}>
-                Submissions
-            </Text>
-
-            {/* <ScrollView
-                            showsHorizontalScrollIndicator={false}
-                            horizontal={true}
-                            contentContainerStyle={{
-                                height: '100%'
-                            }}
-                            nestedScrollEnabled={true}
-                        > */}
-            <Chart
-                width={Dimensions.get('window').width < 768 ? '350px' : '600px'}
-                height={Dimensions.get('window').width < 768 ? '300px' : '400px'}
-                chartType="Bar"
-                loader={<div>Loading Chart</div>}
-                data={data}
-                options={{
-                    // Material design options
-                    fontFamily: 'inter'
-                }}
-            />
-            {/* </ScrollView> */}
+            {submissionStatistics.length > 0 ? <View style={{ width: '100%'}}>
+                <Text style={{ textAlign: 'left', fontSize: 13, color: '#2F2F3C', fontFamily: 'inter', paddingTop: 50, paddingBottom: 20, paddingLeft: Dimensions.get('window').width < 768 ? 0 : 150 }}>
+                    Submissions
+                </Text>
+                <Chart
+                    width={Dimensions.get('window').width < 768 ? '350px' : '600px'}
+                    height={Dimensions.get('window').width < 768 ? '300px' : '400px'}
+                    chartType="Bar"
+                    loader={<div>Loading Chart</div>}
+                    data={data}
+                    options={{
+                        // Material design options
+                        fontName: 'overpass'
+                    }}
+                />
+            </View> : null}
 
             <View style={{ height: 20 }} />
-            {/* {Object.keys(mapCuesData).map((cueId: any) => {
-            
-                // Get name of cue from id
-
-                
-                const filteredCue = cues.filter((cue: any) => cue._id === cueId); 
-
-                const { title } = htmlStringParser(filteredCue[0].cue)
-
-                const data = {
-                    labels: statisticsLabels,
-                    datasets: [
-                      {
-                        data: mapCuesData[cueId],
-                        color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // optional
-                        strokeWidth: 2 // optional
-                      }
-                    ],
-                    // legend: ["Rainy Days"] // optional
-                  };
-
-                  const chartConfig = {
-                    backgroundGradientFrom: '#Ffffff',
-                    backgroundGradientTo: '#ffffff',
-                    barPercentage: 1.3,
-                    decimalPlaces: 0, // optional, defaults to 2dp
-                    color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`,
-                    labelColor: (opacity = 1) => `rgba(0, 0, 0, 1)`,
-                    propsForDots: {
-                        r: "6",
-                        strokeWidth: "2",
-                        stroke: "#fff",
-                    },
-                    style: {
-                      borderRadius: 16,
-                      fontFamily: 'Bogle-Regular',
-                    },
-                    propsForBackgroundLines: {
-                      strokeWidth: '0',
-                      stroke: '#fff',
-                      strokeDasharray: '0',
-                    },
-                    propsForLabels: {
-                      fontFamily: 'Bogle-Regular',
-                    },
-                  };
-
-                return (<View style={{ flexDirection: 'column', alignItems: 'center', paddingTop :30, width: Dimensions.get("window").width < 768 ? "100%" : 400}}>
-                    <Text style={{ textAlign: 'left', fontSize: 13, color: '#202025', fontFamily: 'inter', paddingBottom: 20,}}>
-                        {title}
-                    </Text>
-
-                    <View style={{ flexDirection: 'row',  paddingBottom: 20}}>
-                    <Text style={{ textAlign: 'left', fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase', fontFamily: 'inter', marginRight: 10 }}>
-                            Max: {mapCuesStatistics[cueId].max}%
-                        </Text>
-                        <Text style={{ textAlign: 'left', fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase', fontFamily: 'inter', marginRight: 10 }}>
-                            Min: {mapCuesStatistics[cueId].min}%
-                        </Text>
-                        <Text style={{ textAlign: 'left', fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase', fontFamily: 'inter', marginRight: 10 }}>
-                            Mean: {mapCuesStatistics[cueId].mean}%
-                        </Text>
-                        <Text style={{ textAlign: 'left', fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase', fontFamily: 'inter', marginRight: 10 }}>
-                            Median: {mapCuesStatistics[cueId].median}%
-                        </Text>
-                        <Text style={{ textAlign: 'left', fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase', fontFamily: 'inter', marginRight: 10 }}>
-                            Std Dev: {mapCuesStatistics[cueId].std}%
-                        </Text>
-                    </View>
-                    
-
-                    <LineChart 
-                        data={data}
-                        width={Dimensions.get("window").width < 768 ? 300 : 400 }
-                        height={300}
-                        // chartConfig={chartConfig}
-                        chartConfig={{
-                            backgroundGradientFrom: "#fff",
-                            backgroundGradientFromOpacity: 0,
-                            backgroundGradientTo: "#fff",
-                            backgroundGradientToOpacity: 0,
-                            color: (opacity = 1) => `rgba(1, 122, 205, 1)`,
-                            labelColor: (opacity = 1) => `rgba(0, 0, 0, 1)`,
-                            strokeWidth: 2, // optional, default 3
-                            barPercentage: 0.5,
-                            useShadowColorFromDataset: false, // optional
-                            propsForBackgroundLines: {
-                                strokeWidth: 1,
-                                stroke: '#efefef',
-                                strokeDasharray: '0',
-                              },
-                          }}
-                    />
-                </View>)
-            })
-        }         */}
         </View>)
 
 
@@ -394,7 +310,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 <Text
                     ellipsizeMode="tail"
                     style={{
-                        fontSize: 21,
+                        fontSize: 20,
                         paddingBottom: 20,
                         fontFamily: 'inter',
                         // textTransform: "uppercase",
@@ -457,7 +373,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
             {
                 scores.length === 0 || cues.length === 0 ?
                     <View style={{ backgroundColor: 'white' }}>
-                        <Text style={{ width: '100%', color: '#a2a2aa', fontSize: 22, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter' }}>
+                        <Text style={{ width: '100%', color: '#a2a2ac', fontSize: 20, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter' }}>
                             {
                                 cues.length === 0 ? PreferredLanguageText('noGraded') : PreferredLanguageText('noStudents')
                             }
@@ -496,10 +412,10 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                             cues.map((cue: any, col: number) => {
                                                 const { title } = htmlStringParser(cue.cue)
                                                 return <TouchableOpacity style={styles.col} key={col.toString()}>
-                                                    <Text style={{ textAlign: 'center', fontSize: 12, color: '#202025', fontFamily: 'inter' }}>
+                                                    <Text style={{ textAlign: 'center', fontSize: 12, color: '#2F2F3C', fontFamily: 'inter' }}>
                                                         {title}
                                                     </Text>
-                                                    <Text style={{ textAlign: 'center', fontSize: 12, color: '#202025' }}>
+                                                    <Text style={{ textAlign: 'center', fontSize: 12, color: '#2F2F3C' }}>
                                                         {cue.gradeWeight}%
                                                     </Text>
                                                 </TouchableOpacity>
@@ -508,10 +424,10 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                         {
                                             cues.length === 0 ? null :
                                                 <View style={styles.col} key={'total'}>
-                                                    <Text style={{ textAlign: 'center', fontSize: 12, color: '#202025', fontFamily: 'inter' }}>
+                                                    <Text style={{ textAlign: 'center', fontSize: 12, color: '#2F2F3C', fontFamily: 'inter' }}>
                                                         {PreferredLanguageText('total')}
                                                     </Text>
-                                                    <Text style={{ textAlign: 'center', fontSize: 12, color: '#202025' }}>
+                                                    <Text style={{ textAlign: 'center', fontSize: 12, color: '#2F2F3C' }}>
                                                         100%
                                                     </Text>
                                                 </View>
@@ -531,10 +447,10 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
                                             return <View style={styles.row} key={row}>
                                                 <View style={styles.col} >
-                                                    <Text style={{ textAlign: 'left', fontSize: 12, color: '#202025', fontFamily: 'inter' }}>
+                                                    <Text style={{ textAlign: 'left', fontSize: 12, color: '#2F2F3C', fontFamily: 'inter' }}>
                                                         {score.fullName}
                                                     </Text>
-                                                    {/* <Text style={{ textAlign: 'left', fontSize: 12, color: '#202025' }}>
+                                                    {/* <Text style={{ textAlign: 'left', fontSize: 12, color: '#2F2F3C' }}>
                                                         {score.displayName}
                                                     </Text> */}
                                                 </View>
@@ -544,7 +460,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                             return s.cueId.toString().trim() === cue._id.toString().trim()
                                                         })
                                                         return <View style={styles.col} key={row.toString() + '-' + col.toString()}>
-                                                            <Text style={{ textAlign: 'center', fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
+                                                            <Text style={{ textAlign: 'center', fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
                                                                 {
                                                                     scoreObject && scoreObject.graded ? scoreObject.score : '-'
                                                                 }
@@ -555,7 +471,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 {
                                                     cues.length === 0 ? null :
                                                         <View style={styles.col} key={'total'}>
-                                                            <Text style={{ textAlign: 'center', fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase' }}>
+                                                            <Text style={{ textAlign: 'center', fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
                                                                 {totalScore !== 0 ? (totalPoints / totalScore).toFixed(2) : '0'}%
                                                             </Text>
                                                         </View>
@@ -587,23 +503,23 @@ const styles = StyleSheet.create({
         color: "#fff",
         paddingHorizontal: 10,
         borderRadius: 10,
-        backgroundColor: "#a2a2aa",
+        backgroundColor: "#a2a2ac",
         lineHeight: 20
     },
     allGrayOutline: {
         fontSize: 12,
-        color: "#a2a2aa",
+        color: "#a2a2ac",
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: "white",
         borderRadius: 10,
         borderWidth: 1,
-        borderColor: "#a2a2aa",
+        borderColor: "#a2a2ac",
         lineHeight: 20
     },
     all: {
         fontSize: 12,
-        color: "#a2a2aa",
+        color: "#a2a2ac",
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: "white",

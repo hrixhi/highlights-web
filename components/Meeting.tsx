@@ -250,7 +250,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
     const renderPastMeetings = () => {
         return (pastMeetings.length === 0 ?
             <View style={{ backgroundColor: 'white', flex: 1 }}>
-                <Text style={{ width: '100%', color: '#a2a2aa', fontSize: 22, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                <Text style={{ width: '100%', color: '#a2a2ac', fontSize: 20, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                     {PreferredLanguageText('noPastMeetings')}
                 </Text>
             </View>
@@ -320,7 +320,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                             ]);
                                         }}
                                     >
-                                        <Text style={{ width: '100%', color: '#a2a2aa', fontSize: 15, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                        <Text style={{ width: '100%', color: '#a2a2ac', fontSize: 15, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                                             <Ionicons name='trash-outline' size={17} color="#d91d56" />
                                         </Text>
                                     </TouchableOpacity>
@@ -358,7 +358,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                     <Text
                         ellipsizeMode="tail"
                         style={{
-                            fontSize: 21,
+                            fontSize: 20,
                             paddingBottom: 20,
                             fontFamily: 'inter',
                             // textTransform: "uppercase",
@@ -402,30 +402,30 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                             activeThumbColor="white"
                                         />
                                         <View style={{ width: "100%", backgroundColor: "white", paddingTop: 3 }}>
-                                            <Text style={{ fontSize: 15, color: "#a2a2aa" }}>
+                                            <Text style={{ fontSize: 15, color: "#a2a2ac" }}>
                                                 {PreferredLanguageText("initiateMeeting")}
                                             </Text>
                                         </View>
                                     </View>
-                                    <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase', paddingTop: 10 }}>
+                                    <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase', paddingTop: 10 }}>
                                         {/* Turn on to begin session. {"\n"} */}
                                         Restart switch if you cannot join.
                                     </Text>
                                     {
                                         isOwner && meetingOn ?
                                             <View>
-                                                <a href={instructorLink} style={{ textDecorationColor: '#a2a2aa' }}>
+                                                <a href={instructorLink} style={{ textDecorationColor: '#a2a2ac' }}>
                                                     <Text style={{
                                                         fontSize: 12,
-                                                        color: '#a2a2aa'
+                                                        color: '#a2a2ac'
                                                     }}>
                                                         Sharable Instructor Link
                                                     </Text>
                                                 </a>
-                                                <a href={guestLink} style={{ textDecorationColor: '#a2a2aa' }}>
+                                                <a href={guestLink} style={{ textDecorationColor: '#a2a2ac' }}>
                                                     <Text style={{
                                                         fontSize: 12,
-                                                        color: '#a2a2aa'
+                                                        color: '#a2a2ac'
                                                     }}>
                                                         Sharable Guest Link
                                                     </Text>
@@ -479,7 +479,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                     style={{
                                         textAlign: "center",
                                         lineHeight: 35,
-                                        color: meetingOn ? "#fff" : "#202025",
+                                        color: meetingOn ? "#fff" : "#2F2F3C",
                                         fontSize: 12,
                                         backgroundColor: meetingOn ? "#3B64F8" : "#f4f4f6",
                                         paddingHorizontal: 25,
@@ -492,7 +492,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                     {PreferredLanguageText("enterClassroom")}
                                 </Text>
                             </TouchableOpacity>
-                            <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase', marginBottom: 10 }}>
+                            <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase', marginBottom: 10 }}>
                                 Enabled only when classroom in session.
                             </Text>
                         </View>
@@ -516,7 +516,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                     style={{
                                         textAlign: "center",
                                         lineHeight: 35,
-                                        color: "#202025",
+                                        color: "#2F2F3C",
                                         fontSize: 12,
                                         backgroundColor: "#f4f4f6",
                                         paddingHorizontal: 25,
@@ -529,7 +529,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                     {PreferredLanguageText("viewAttendance")}
                                 </Text>
                             </TouchableOpacity>
-                            <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase', marginBottom: 20 }}>
+                            <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase', marginBottom: 20 }}>
                                 Attendances will only be captured for scheduled lectures.
                             </Text>
                         </View>
@@ -551,14 +551,14 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                 <Text style={{
                                     lineHeight: 23,
                                     marginRight: 10,
-                                    color: '#a2a2aa',
+                                    color: '#a2a2ac',
                                     fontSize: 11,
                                     textTransform: 'uppercase'
                                 }}>
                                     RECORDINGS
                                 </Text>
                                 <Text style={{ lineHeight: 21 }}>
-                                    <Ionicons size={14} name={showPastMeetings ? 'caret-down-outline' : 'caret-forward-outline'} color='#a2a2aa' />
+                                    <Ionicons size={14} name={showPastMeetings ? 'caret-down-outline' : 'caret-forward-outline'} color='#a2a2ac' />
                                 </Text>
                             </TouchableOpacity>
                             {
@@ -568,7 +568,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                         {
                                             attendances.length === 0 ?
                                                 <View style={{ backgroundColor: 'white', flex: 1 }}>
-                                                    <Text style={{ width: '100%', color: '#a2a2aa', fontSize: 22, paddingVertical: 50, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                                    <Text style={{ width: '100%', color: '#a2a2ac', fontSize: 20, paddingVertical: 50, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                                                         {PreferredLanguageText('noAttendances')}
                                                     </Text>
                                                 </View>
@@ -637,7 +637,7 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 12,
-        color: "#a2a2aa",
+        color: "#a2a2ac",
         textAlign: "left",
         paddingHorizontal: 10,
         paddingTop: 5
@@ -677,11 +677,11 @@ const styles = StyleSheet.create({
         fontSize: 13,
         width: '100%',
         paddingTop: 5,
-        color: '#202025'
+        color: '#2F2F3C'
     },
     description: {
         fontSize: 13,
-        color: '#a2a2aa',
+        color: '#a2a2ac',
     }
 
 });

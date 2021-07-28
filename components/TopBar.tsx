@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { StyleSheet, Image, ScrollView, Dimensions, Linking } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, Image, Dimensions, Linking } from 'react-native';
 import { View, Text, TouchableOpacity } from '../components/Themed';
 import { Ionicons } from '@expo/vector-icons';
 import _ from 'lodash'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { fetchAPI } from '../graphql/FetchAPI';
-import { doesChannelNameExist, getMeetingStatus, getOrganisation, isChannelTemporary, totalUnreadDiscussionThreads, totalUnreadMessages, updateChannel } from '../graphql/QueriesAndMutations';
-import alert from './Alert';
+import { getOrganisation } from '../graphql/QueriesAndMutations';
+import logo from './default-images/cues-logo-white-exclamation-hidden.jpg'
 
 const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -60,24 +60,24 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
     return (
         <View style={styles.topbar} key={Math.random()}>
-            <View style={{ width: '100%', height: Dimensions.get('window').height * 0.15, backgroundColor: '#202025' }}>
+            <View style={{ width: '100%', height: Dimensions.get('window').height * 0.15, backgroundColor: '#2F2F3C' }}>
                 <View style={{
                     // height: '45%',
                     flexDirection: 'row',
                     display: 'flex',
                     paddingHorizontal: 25,
                     paddingTop: 10,
-                    backgroundColor: '#202025'
+                    backgroundColor: '#2F2F3C'
                 }}>
                     <TouchableOpacity
                         onPress={() => Linking.openURL('http://www.cuesapp.co')}
-                        style={{ backgroundColor: '#202025' }}
+                        style={{ backgroundColor: '#2F2F3C' }}
                     >
                         <Image
                             source={
                                 school && school.logo && school.logo !== ''
                                     ? school.logo
-                                    : require('./default-images/cues-logo-white-exclamation-hidden.jpg')
+                                    : logo
                             }
                             style={{
                                 width: school && school.logo && school.logo !== '' ? Dimensions.get('window').height * 0.07 : Dimensions.get('window').height * 0.07,
@@ -89,79 +89,79 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     <View
                         key={JSON.stringify(props.cues)}
                         style={{
-                            flex: 1, flexDirection: 'row', backgroundColor: '#202025'
+                            flex: 1, flexDirection: 'row', backgroundColor: '#2F2F3C'
                         }}>
                         {
                             props.channelId !== '' ?
-                                <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end', backgroundColor: '#202025' }}>
+                                <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end', backgroundColor: '#2F2F3C' }}>
                                     <TouchableOpacity
-                                        style={{ marginRight: 15, backgroundColor: '#202025' }}
+                                        style={{ marginRight: 15, backgroundColor: '#2F2F3C' }}
                                         onPress={() => props.openMeeting()}>
                                         <Text style={styles.channelText}>
                                             <Ionicons
-                                                name='videocam-outline' size={21} color={'#a2a2aa'} />
+                                                name='videocam-outline' size={19} color={'#fff'} />
                                             {
                                                 props.meetingOn ?
                                                     <View style={styles.badge} /> : null
                                             }
                                         </Text>
-                                        <Text style={{ fontSize: 9, color: '#a2a2aa', textAlign: 'center' }}>
+                                        <Text style={{ fontSize: 10, color: '#a2a2ac', textAlign: 'center' }}>
                                             Lectures
                                         </Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity
-                                        style={{ marginRight: 15, backgroundColor: '#202025' }}
+                                        style={{ marginRight: 15, backgroundColor: '#2F2F3C' }}
                                         onPress={() => props.openSubscribers()}>
                                         <Text style={styles.channelText}>
-                                            <Ionicons name='mail-outline' size={21} color={'#a2a2aa'} />
+                                            <Ionicons name='mail-outline' size={19} color={'#fff'} />
                                             {
                                                 props.unreadMessages !== 0 ?
                                                     <View style={styles.badge} /> : null
                                             }
                                         </Text>
-                                        <Text style={{ fontSize: 9, color: '#a2a2aa', textAlign: 'center' }}>
+                                        <Text style={{ fontSize: 10, color: '#a2a2ac', textAlign: 'center' }}>
                                             Inbox
                                         </Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity
-                                        style={{ marginRight: 15, backgroundColor: '#202025' }}
+                                        style={{ marginRight: 15, backgroundColor: '#2F2F3C' }}
                                         onPress={() => props.openDiscussion()}>
                                         <Text style={styles.channelText}>
-                                            <Ionicons name='chatbubble-ellipses-outline' size={20} color={'#a2a2aa'} />
+                                            <Ionicons name='chatbubble-ellipses-outline' size={19} color={'#fff'} />
                                             {
                                                 props.unreadDiscussionThreads !== 0 ?
                                                     <View style={styles.badge} /> : null
                                             }
                                         </Text>
-                                        <Text style={{ fontSize: 9, color: '#a2a2aa', textAlign: 'center' }}>
+                                        <Text style={{ fontSize: 10, color: '#a2a2ac', textAlign: 'center' }}>
                                             Discussion
                                         </Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity
-                                        style={{ marginRight: isOwner ? 15 : 0, backgroundColor: '#202025' }}
+                                        style={{ marginRight: isOwner ? 15 : 0, backgroundColor: '#2F2F3C' }}
                                         onPress={() => props.openGrades()}>
                                         <Text style={styles.channelText}>
-                                            <Ionicons name='stats-chart-outline' size={19} color={'#a2a2aa'} />
+                                            <Ionicons name='stats-chart-outline' size={18} color={'#fff'} />
                                         </Text>
-                                        <Text style={{ fontSize: 9, color: '#a2a2aa', textAlign: 'center' }}>
+                                        <Text style={{ fontSize: 10, color: '#a2a2ac', textAlign: 'center' }}>
                                             Grades
                                         </Text>
                                     </TouchableOpacity>
                                     {
                                         isOwner ?
                                             <TouchableOpacity
-                                                style={{ marginRight: 0, backgroundColor: '#202025' }}
+                                                style={{ marginRight: 0, backgroundColor: '#2F2F3C' }}
                                                 onPress={() => props.openChannelSettings()}>
                                                 <Text style={styles.channelText}>
-                                                    <Ionicons name='settings-outline' size={19} color={'#a2a2aa'} />
+                                                    <Ionicons name='settings-outline' size={18} color={'#fff'} />
                                                 </Text>
-                                                <Text style={{ fontSize: 9, color: '#a2a2aa', textAlign: 'center' }}>
+                                                <Text style={{ fontSize: 10, color: '#a2a2ac', textAlign: 'center' }}>
                                                     Settings
                                                 </Text>
                                             </TouchableOpacity> : null
                                     }
                                 </View> :
-                                <View style={{ height: 34, backgroundColor: '#202025' }} />
+                                <View style={{ height: 34, backgroundColor: '#2F2F3C' }} />
                         }
                     </View>
                 </View>
@@ -182,7 +182,7 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             style={filterChoice === 'All' ? styles.subOutline : styles.sub}
                             onPress={() => props.setChannelFilterChoice('All')}>
                             <Text
-                                style={{ color: '#a2a2aa', lineHeight: 20, fontSize: 13 }}
+                                style={{ color: '#a2a2ac', lineHeight: 20, fontSize: 13 }}
                             >
                                 All
                             </Text>
@@ -194,7 +194,7 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     style={filterChoice === category ? styles.subOutline : styles.sub}
                                     onPress={() => props.setChannelFilterChoice(category)}>
                                     <Text
-                                        style={{ color: '#a2a2aa', lineHeight: 20, fontSize: 13 }}>
+                                        style={{ color: '#a2a2ac', lineHeight: 20, fontSize: 13 }}>
                                         {category}
                                     </Text>
                                 </TouchableOpacity>
@@ -214,7 +214,7 @@ export default React.memo(TopBar, (prev, next) => {
 
 const styleObject: any = (channelId: any) => StyleSheet.create({
     topbar: {
-        height: '14%',
+        height: '13%',
         width: '100%',
         flexDirection: 'column',
         display: 'flex',
@@ -222,7 +222,8 @@ const styleObject: any = (channelId: any) => StyleSheet.create({
         borderTopLeftRadius: 0,
         paddingTop: 25,
         maxWidth: 550,
-        backgroundColor: '#202025'
+        alignSelf: 'center',
+        backgroundColor: '#2F2F3C'
     },
     badge: {
         position: 'absolute',
@@ -238,23 +239,23 @@ const styleObject: any = (channelId: any) => StyleSheet.create({
     },
     text: {
         textAlign: 'right',
-        color: '#202025',
+        color: '#2F2F3C',
         fontSize: 15,
         paddingRight: 15
     },
     subOutline: {
         fontSize: 15,
-        color: '#a2a2aa',
+        color: '#a2a2ac',
         height: 22,
         paddingHorizontal: 10,
         lineHeight: 20,
         borderRadius: 10,
-        borderColor: '#a2a2aa',
+        borderColor: '#a2a2ac',
         borderWidth: 1
     },
     sub: {
         fontSize: 15,
-        color: '#a2a2aa',
+        color: '#a2a2ac',
         height: 22,
         paddingHorizontal: 10,
         lineHeight: 20

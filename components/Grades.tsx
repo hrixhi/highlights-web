@@ -68,6 +68,34 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         const score = res2.data.channel.getGrades.find((u: any) => {
                                             return u.userId.toString().trim() === user._id.toString().trim()
                                         })
+
+                                        // if it is a quiz and not release submission then set Graded to false
+                                       
+                                            const { scores } = score;
+
+                                            const updateScores = scores.map((x: any) => {
+
+                                                const { cueId, gradeWeight, graded, } = x;
+                                                const findCue = res.data.channel.getSubmissionCues.find((u: any) => {
+                                                    return u._id.toString() === cueId.toString()
+                                                });
+
+                                                const { cue, releaseSubmission } = findCue;
+
+                                                if (!releaseSubmission) {
+                                                    return {
+                                                            cueId,
+                                                            gradeWeight,
+                                                            graded: false,
+                                                            score: ""
+                                                        }
+                                                } else {
+                                                    return x
+                                                }
+                                            })
+
+                                            score.scores = updateScores;
+
                                         const singleScoreArray = [{ ...score }]
                                         setScores(singleScoreArray)
                                     }
@@ -102,6 +130,7 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     }
                 })
                 .catch((err) => {
+                    console.log(err);
                     Alert(couldNotLoadSubscribersAlert, checkConnectionAlert);
                     setLoading(false)
                     modalAnimation.setValue(0)
@@ -183,7 +212,7 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             borderTopRightRadius: 0,
                             borderTopLeftRadius: 0
                         }}>
-                            <ActivityIndicator color={'#a2a2aa'} />
+                            <ActivityIndicator color={'#a2a2ac'} />
                         </View>
                         :
                         <GradesList

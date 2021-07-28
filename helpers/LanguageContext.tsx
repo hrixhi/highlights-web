@@ -97,7 +97,7 @@ const EnglishBank: { [key: string]: string } = {
     options: 'Details', // Done
     option: 'Option', // Done
     comments: 'Comments', // Done
-    noComments: 'No comments.', // Done
+    noComments: 'No posts.', // Done
     noPosts: 'No posts.', // Done
     delete: 'DELETE', // Done
     deleteForEveryone: 'DELETE FOR ALL', // Done
@@ -123,16 +123,16 @@ const EnglishBank: { [key: string]: string } = {
     internetRequired: 'Internet connection required to initialise.',
     removeFromChannel: "REMOVE FROM CHANNEL", //
     inbox: 'Inbox',
-    noCuesCreated: 'No content in channel.',
+    noCuesCreated: 'No content.',
     present: 'Present',
     addChoice: 'Add Choice',
     addProblem: 'Add Problem',
     problem: 'Problem',
     enterPoints: 'Enter points',
     no: 'No',
-    noContent: 'No Content',
+    noContent: 'No content',
     existingUsers: 'Existing Users',
-    noExistingUsers: 'No Existing Users',
+    noExistingUsers: 'No existing users',
     sharing: 'Sharing...',
     meeting: "Lecture",
 
@@ -639,7 +639,7 @@ export function LanguageSelect() {
 
     const [showLanguageDropdown, setShowLanguageDropdown] = useState(false);
     const colorScheme = useColorScheme();
-    const color = colorScheme === 'light' ? '#202025' : '#fff'
+    const color = colorScheme === 'light' ? '#2f2f3c' : '#fff'
 
     return <LanguageContext.Consumer>
         {context => {
@@ -652,14 +652,14 @@ export function LanguageSelect() {
                 display: "flex",
                 backgroundColor: 'white',
                 width: "100%",
-                justifyContent: ''
+                justifyContent: 'center'
             }}>
                 {showLanguageDropdown ? <DefaultView style={styles.languageSelectContainer}>
                     <Picker
                         selectedValue={language}
                         style={{
                             height: 28, borderRadius: 10,
-                            // border: "1px solid #a2a2aa",
+                            // border: "1px solid #a2a2ac",
                             fontSize: 12,
                             padding: '0px 5px'
                         }}
@@ -679,7 +679,7 @@ export function LanguageSelect() {
                 </DefaultView>
                     :
                     (
-                        <DefaultView style={{ width: '100%', flexDirection: 'row', justifyContent: '', backgroundColor: 'white' }}>
+                        <DefaultView style={{ width: '100%', flexDirection: 'row', justifyContent: 'center', backgroundColor: 'white' }}>
                             <Ionicons name='language-outline' size={30} color={color} style={{ marginRight: 5 }} onPress={() => setShowLanguageDropdown(true)} />
                         </DefaultView>
                     )}
@@ -694,9 +694,9 @@ export default LanguageContext;
 
 const styles = StyleSheet.create({
     languageSelectContainer: {
-        width: "140px",
+        // width: "140px",
         display: "flex",
-        // justifyContent: "center",
+        justifyContent: "center",
         alignContent: 'center',
         flexDirection: "row",
     },

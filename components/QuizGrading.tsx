@@ -24,7 +24,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
     }, [props.headers])
 
-    
+
     useEffect(() => {
         let currentScore = 0;
         props.solutions.problemScores.forEach((score: any) => {
@@ -61,7 +61,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
         if (totalPossible === 0) return;
 
-        setPercentage(((currentScore/totalPossible)*100).toFixed(2))
+        setPercentage(((currentScore / totalPossible) * 100).toFixed(2))
 
     }, [problemScores, totalPossible])
 
@@ -71,7 +71,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             return (<Text style={{ width: '100%', marginBottom: 30, marginTop: 70, fontSize: 15, fontWeight: "600" }}>
                 {headers[index]}
             </Text>)
-        } 
+        }
 
         return null;
     }
@@ -85,7 +85,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             flexDirection: "column",
             backgroundColor: "white"
         }}>
-        <ActivityIndicator color={"#a2a2aa"} />
+        <ActivityIndicator color={"#a2a2ac"} />
     </View>)
 
     return (
@@ -99,10 +99,10 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         }}
         >
             <View style={{ width: '100%', flexDirection: 'row' }}>
-                <Text style={{ width: '25%', fontSize: 15, color: "#202025", marginBottom: 10  }}>
-                    {props.partiallyGraded ? "Finish Grading" : "" }
+                <Text style={{ width: '25%', fontSize: 15, color: "#2F2F3C", marginBottom: 10 }}>
+                    {props.partiallyGraded ? "Finish Grading" : ""}
                 </Text>
-                <View style={{ width: '80%', flexDirection: 'row', justifyContent: 'flex-end', marginBottom: 10  }}>
+                <View style={{ width: '80%', flexDirection: 'row', justifyContent: 'flex-end', marginBottom: 10 }}>
                     <Text
                         style={{
                             fontSize: 12,
@@ -134,20 +134,20 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         {currentScore}/{totalPossible}
                     </Text>
                 </View>
-                
+
             </View>
-            
+
             {
                 props.problems.map((problem: any, index: any) => {
 
-                    
+
                     let onlyOneCorrect = true;
 
                     if (!problem.questionType) {
                         let noOfCorrect = 0;
 
                         problem.options.map((option: any) => {
-                            if (option.isCorrect) noOfCorrect++;    
+                            if (option.isCorrect) noOfCorrect++;
                         })
 
                         if (noOfCorrect > 1) onlyOneCorrect = false;
@@ -158,7 +158,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         {renderHeader(index)}
                         <View style={{ flexDirection: 'row' }}>
                             <View style={{ paddingTop: 15 }}>
-                                <Text style={{ color: '#a2a2aa', fontSize: 15, paddingBottom: 25, marginRight: 10 }}>
+                                <Text style={{ color: '#a2a2ac', fontSize: 15, paddingBottom: 25, marginRight: 10 }}>
                                     {index + 1}.
                                 </Text>
                             </View>
@@ -196,7 +196,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 value={problem.question}
                                                 style={styles.input}
                                                 placeholder={'Problem ' + (index + 1).toString()}
-                                                placeholderTextColor={'#a2a2aa'}
+                                                placeholderTextColor={'#a2a2ac'}
                                             />
                                     )
                             }
@@ -221,7 +221,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     marginBottom: 20
                                 }}
                                 placeholder={'Enter points'}
-                                placeholderTextColor={'#a2a2aa'}
+                                placeholderTextColor={'#a2a2ac'}
                             />}
                             {!props.isOwner ? null : <TextInput
                                 editable={false}
@@ -236,8 +236,8 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     marginBottom: 20
                                 }}
                                 placeholder={'Enter points'}
-                                placeholderTextColor={'#a2a2aa'}
-                            />} 
+                                placeholderTextColor={'#a2a2ac'}
+                            />}
                             {
                                 !props.isOwner ? <Text style={{ fontSize: 15, width: '50%', marginTop: 5, marginBottom: 20, paddingTop: 12, paddingRight: 30, textAlign: 'right' }}>
 
@@ -247,29 +247,29 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         </View>
 
                         {
-                            !problem.questionType && !onlyOneCorrect ? 
-                                (<Text style={{ fontSize: 11, color: '#a2a2aa', marginBottom: 20, textAlign: 'right', paddingRight: 30 }}>
+                            !problem.questionType && !onlyOneCorrect ?
+                                (<Text style={{ fontSize: 11, color: '#a2a2ac', marginBottom: 20, textAlign: 'right', paddingRight: 30 }}>
                                     more than one correct answer
                                 </Text>)
                                 : null
                         }
                         {
-                            !problem.required ? 
-                                (<Text style={{ fontSize: 11, color: '#a2a2aa', marginBottom: 20, textAlign: 'right', paddingRight: 30 }}>
+                            !problem.required ?
+                                (<Text style={{ fontSize: 11, color: '#a2a2ac', marginBottom: 20, textAlign: 'right', paddingRight: 30 }}>
                                     optional
                                 </Text>)
-                                : (<Text style={{ fontSize: 11, color: '#a2a2aa', marginBottom: 20, textAlign: 'right', paddingRight: 30  }}>
+                                : (<Text style={{ fontSize: 11, color: '#a2a2ac', marginBottom: 20, textAlign: 'right', paddingRight: 30 }}>
                                     required
-                                    </Text>)
+                                </Text>)
                         }
 
                         {
-                            !problem.questionType && problem.options.map((option: any, i: any) => {
+                            (!problem.questionType || problem.questionType === "trueFalse") && problem.options.map((option: any, i: any) => {
 
-                                let color = '#202025'
+                                let color = '#2F2F3C'
                                 if (option.isCorrect) {
                                     color = '#3B64F8'
-                                } else if (!option.isCorrect && solutions[index].selected[i].isSelected)  {
+                                } else if (!option.isCorrect && solutions[index].selected[i].isSelected) {
                                     color = '#D91D56'
                                 }
 
@@ -282,12 +282,12 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             type='checkbox'
                                             // value={props.isOwner ? String(option.isCorrect) : String(solutions[index].selected[i].isSelected)}
                                             checked={solutions[index].selected[i].isSelected}
-                                            // onChange={(e) => {
-                                            //     const updatedSolution = [...solutions]
-                                            //     updatedSolution[index].selected[i].isSelected = !updatedSolution[index].selected[i].isSelected;
-                                            //     setSolutions(updatedSolution)
-                                            //     props.setSolutions(updatedSolution)
-                                            // }}
+                                        // onChange={(e) => {
+                                        //     const updatedSolution = [...solutions]
+                                        //     updatedSolution[index].selected[i].isSelected = !updatedSolution[index].selected[i].isSelected;
+                                        //     setSolutions(updatedSolution)
+                                        //     props.setSolutions(updatedSolution)
+                                        // }}
                                         />
                                     </View>
                                     {
@@ -332,7 +332,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                             color
                                                         }}
                                                         placeholder={'Option ' + (i + 1).toString()}
-                                                        placeholderTextColor={'#a2a2aa'}
+                                                        placeholderTextColor={'#a2a2ac'}
                                                     />
                                             )
                                     }
@@ -340,24 +340,24 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             })
                         }
                         {
-                            problem.questionType === "freeResponse" ? 
+                            problem.questionType === "freeResponse" ?
 
-                            <View style={{ width: '80%',  }}>
-                                <CustomTextInput 
-                                    editable={false}
-                                    value={solutions[index].response}
-                                    placeholder='Answer'
-                                    hasMultipleLines={true}
+                                <View style={{ width: '80%', }}>
+                                    <CustomTextInput
+                                        editable={false}
+                                        value={solutions[index].response}
+                                        placeholder='Answer'
+                                        hasMultipleLines={true}
 
-                                />
-                            
-                            </View>
-                            :
-                            null
+                                    />
+
+                                </View>
+                                :
+                                null
                         }
 
-                        {!props.isOwner && problemComments[index] === '' ? null : <View style={{ width: '80%'}}>
-                            {props.isOwner ? <CustomTextInput 
+                        {!props.isOwner && problemComments[index] === '' ? null : <View style={{ width: '80%' }}>
+                            {props.isOwner ? <CustomTextInput
                                 editable={props.isOwner ? true : false}
                                 value={problemComments[index]}
                                 placeholder='Instructor Remarks'
@@ -367,35 +367,35 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     updateProblemComments[index] = val;
                                     setProblemComments(updateProblemComments)
                                 }}
-                            /> : 
-                            <View style={{ flexDirection: 'row', width: '100%', marginTop: 20, marginBottom: 40 }}> 
-                                <Text style={{ color: '#a2a2aa',  fontSize: 13,   }}>
-                                   Remark: {" "}
-                                </Text>
-                                <Text style={{ color: '#3b64f8',  fontSize: 13,  }}>
-                                    {problemComments[index]}
-                                </Text>
-                            </View>}
+                            /> :
+                                <View style={{ flexDirection: 'row', width: '100%', marginTop: 20, marginBottom: 40 }}>
+                                    <Text style={{ color: '#a2a2ac', fontSize: 13, }}>
+                                        Remark: {" "}
+                                    </Text>
+                                    <Text style={{ color: '#3b64f8', fontSize: 13, }}>
+                                        {problemComments[index]}
+                                    </Text>
+                                </View>}
                         </View>}
                     </View>
                 })
             }
 
             {!props.isOwner && !comment ? null : <View style={{ width: '100%', alignItems: 'center', marginVertical: 50 }}>
-                <Text style={{ width: '100%', textAlign: 'center'}}>
+                <Text style={{ width: '100%', textAlign: 'center' }}>
                     Overall Remarks
                 </Text>
-                {props.isOwner ?  <View style={{ width: '80%'}}>
-                    <CustomTextInput 
+                {props.isOwner ? <View style={{ width: '80%' }}>
+                    <CustomTextInput
                         editable={props.isOwner ? true : false}
                         value={comment}
                         onChangeText={(val: any) => setComment(val)}
                         hasMultipleLines={true}
-                    /> 
+                    />
                 </View> :
-                <Text style={{ color: '#3b64f8',  fontSize: 15, width: '100%', textAlign: 'center', marginTop: 40  }}>
-                    {comment}
-                </Text>
+                    <Text style={{ color: '#3b64f8', fontSize: 15, width: '100%', textAlign: 'center', marginTop: 40 }}>
+                        {comment}
+                    </Text>
                 }
             </View>}
 
@@ -428,7 +428,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         fontFamily: 'inter',
                         height: 35,
                     }}>
-                        SUBMIT 
+                        SUBMIT
                     </Text>
                 </TouchableOpacity>
             </View> : null}
