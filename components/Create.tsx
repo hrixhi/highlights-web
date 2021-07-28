@@ -917,11 +917,11 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     value={timer}
                                                     onValueChange={() => {
                                                         if (timer) {
-                                                            // setDuration({
-                                                            //     hours: 1,
-                                                            //     minutes: 0,
-                                                            //     seconds: 0
-                                                            // })
+                                                            setDuration({
+                                                                hours: 1,
+                                                                minutes: 0,
+                                                                seconds: 0
+                                                            })
                                                         }
                                                         setTimer(!timer)
                                                     }}
@@ -940,7 +940,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         <View style={{ width: width < 768 ? '100%' : '35%', borderRightWidth: 0, borderColor: '#f4f4f6' }}>
                                             <DurationPicker
                                                 onChange={onChangeDuration}
-                                                initialDuration={initialDuration ? initialDuration : { hours: 0, minutes: 0, seconds: 0 }}
+                                                initialDuration={initialDuration ? initialDuration : { hours: 1, minutes: 0, seconds: 0 }}
                                                 maxHours={6}
                                             />
                                         </View> : null

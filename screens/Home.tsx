@@ -218,9 +218,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     if (channelId !== '') {
       const u = await AsyncStorage.getItem('user')
       if (u) {
-
         const user = JSON.parse(u)
-        console.log('updating discussions count', user._id)
         updateDiscussionNotidCounts(user._id)
       }
 
@@ -1002,6 +1000,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   }, [fadeAnimation])
 
   const openModal = useCallback((type) => {
+    console.log('setModalType', type)
     setModalType(type)
     AsyncStorage.setItem('lastopened', type)
   }, [sheetRef, cues])
