@@ -213,6 +213,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 props.setFilterStart(e[0])
                                 props.setFilterEnd(e[1])
                             }}
+                            showOneCalendar={true}
                             value={[
                                 props.filterStart,
                                 props.filterEnd

@@ -291,6 +291,8 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                 setStart(e[0])
                                 setEnd(e[1])
                             }}
+                            cleanable={false}
+                            showOneCalendar={true}
                             value={[
                                 start,
                                 end

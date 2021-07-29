@@ -685,7 +685,6 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         onChange={(event: any) => {
                             const date = new Date(event);
                             if (date < new Date()) return;
-
                             setRepeatTill(date);
                         }}
                         size={'xs'}
@@ -1081,6 +1080,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 start,
                                                 end
                                             ]}
+                                            cleanable={false}
+                                            showOneCalendar={true}
                                         />
                                     </View>
                                     {/* <View
