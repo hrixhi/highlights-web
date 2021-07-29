@@ -56,6 +56,8 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
     }, [props.channelCreatedBy])
 
+
+
     return (
         <View style={styles.topbar} key={Math.random()}>
             <View style={{ width: '100%', height: Dimensions.get('window').height * 0.15, backgroundColor: '#2F2F3C' }}>

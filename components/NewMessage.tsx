@@ -80,6 +80,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
     }, [channelId])
 
     const createDirectMessage = useCallback(async () => {
+
         setSendingThread(true)
         const u = await AsyncStorage.getItem('user')
         if (!message || message === '' || !u) {
@@ -128,7 +129,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
     }, [props.users, message, props.channelId, imported, type, title, url])
 
     const createThreadMessage = useCallback(async () => {
-        console.log('sending thread')
+        console.log('creating thread message')
         setSendingThread(true)
         if (!message || message === '') {
             setSendingThread(false)

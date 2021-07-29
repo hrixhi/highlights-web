@@ -1432,6 +1432,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     )
                 ) : (
                     <View style={{ width: '100%', paddingBottom: 50 }}>
+
                         <Quiz
                             isOwner={isOwner}
                             submitted={isQuiz && props.cue.submittedAt && props.cue.submittedAt !== "" ? true : false}
