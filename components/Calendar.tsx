@@ -686,7 +686,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
                             setRepeatTill(date);
                         }}
-                        size={'sm'}
+                        size={'xs'}
                     // isValidDate={disablePastDt}
                     />
                 </View>
@@ -1080,7 +1080,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 const date = new Date(event);
                                                 setStart(date);
                                             }}
-                                            size={'sm'}
+                                            size={'xs'}
                                         />
                                     </View>
                                     <View
@@ -1099,7 +1099,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 const date = new Date(event);
                                                 setEnd(date);
                                             }}
-                                            size={'sm'}
+                                            size={'xs'}
                                         />
                                     </View>
                                 </View>

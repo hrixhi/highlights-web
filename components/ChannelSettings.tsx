@@ -311,7 +311,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
 
                     <View style={{ backgroundColor: 'white' }}>
                         <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
-                            Channel Color
+                            color
                         </Text>
                         <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white', marginTop: 20 }}>
                             <View style={{ width: '100%', backgroundColor: 'white' }}>

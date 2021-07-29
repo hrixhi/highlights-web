@@ -8,7 +8,7 @@ import {
     RichEditor
 } from "react-native-pell-rich-editor";
 import { fetchAPI } from '../graphql/FetchAPI';
-import { editPersonalMeeting, findUserById, getMessages, getPersonalMeetingLink, getPersonalMeetingLinkStatus, inviteByEmail, isSubInactive, makeSubActive, makeSubInactive, markMessagesAsRead, submitGrade, unsubscribe, getQuiz, gradeQuiz, editReleaseSubmission } from '../graphql/QueriesAndMutations';
+import { editPersonalMeeting, findUserById, getMessages, getPersonalMeetingLink, getPersonalMeetingLinkStatus, inviteByEmail, isSubInactive, makeSubActive, makeSubInactive, markMessagesAsRead, submitGrade, unsubscribe, getQuiz, gradeQuiz, editReleaseSubmission, personalMeetingRequest } from '../graphql/QueriesAndMutations';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Alert from './Alert';
 import NewMessage from './NewMessage';
@@ -94,7 +94,6 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
     const userSubscriptionInactivatedAlert = PreferredLanguageText('userSubscriptionInactivated')
     const userRemovedAlert = PreferredLanguageText('userRemoved');
     const alreadyUnsubscribedAlert = PreferredLanguageText('alreadyUnsubscribed')
-
 
     const [annotation, setAnnotation] = useState<any>({})
     const [annotations, setAnnotations] = useState<any[]>([])
@@ -666,6 +665,27 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
 
     }, [isLoadedUserInactive, loadedChatWithUser, props.channelId])
 
+    const handleEnterMeeting = useCallback(() => {
+        const server = fetchAPI('')
+        server.mutate({
+            mutation: personalMeetingRequest,
+            variables: {
+                userId: user._id,
+                channelId: props.channelId,
+                users
+            }
+        }).then(res => {
+            console.log(res)
+            if (res.data && res.data.channel.personalMeetingRequest !== 'error') {
+                window.open(res.data.channel.personalMeetingRequest, "_blank");
+            } else {
+                Alert("Classroom not in session. Waiting for instructor.")
+            }
+        }).catch(err => {
+            Alert("Something went wrong.")
+        })
+    }, [users, userId, props.channelId, user])
+
     const onGradeQuiz = (problemScores: string[], problemComments: string[], score: number, comment: string) => {
         const server = fetchAPI("");
         server
@@ -867,54 +887,10 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 : null
                         } */}
                         {
-                            showChat ? <View style={{ flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row', flex: 1, paddingLeft: 43 }}>
-                                {
-                                    isOwner ?
-                                        <View style={{
-                                            marginBottom: 25,
-                                            backgroundColor: 'white',
-                                            minWidth: '40%,'
-                                        }}>
-
-                                            <View>
-                                                <View style={{
-                                                    backgroundColor: 'white',
-                                                    height: 40,
-                                                    marginTop: 20,
-                                                    flexDirection: 'row'
-                                                }}>
-                                                    <Switch
-                                                        value={meetingOn}
-                                                        onValueChange={() => updateMeetingStatus()}
-                                                        style={{ height: 20, marginRight: 20 }}
-                                                        trackColor={{
-                                                            false: '#f4f4f6',
-                                                            true: '#3B64F8'
-                                                        }}
-                                                        activeThumbColor='white'
-                                                    />
-                                                    <View style={{ width: '100%', backgroundColor: 'white', paddingTop: 3 }}>
-                                                        <Text style={{ fontSize: 15, color: '#a2a2ac', }}>
-                                                            Meeting
-                                                        </Text>
-                                                    </View>
-                                                </View>
-                                                <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase', paddingTop: 10 }}>
-                                                    {/* Turn on to begin private meeting. {'\n'} */}
-                                                    Restart switch if you cannot join.
-                                                </Text>
-                                            </View>
-                                        </View> : null
-                                }
+                            showChat ? <View style={{ flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row', flex: 1 }}>
                                 <View style={{ backgroundColor: 'white' }}>
                                     <TouchableOpacity
-                                        onPress={() => {
-                                            if (meetingOn) {
-                                                window.open(meetingLink, '_blank');
-                                            } else {
-                                                showError()
-                                            }
-                                        }}
+                                        onPress={handleEnterMeeting}
                                         style={{
                                             backgroundColor: 'white',
                                             overflow: 'hidden',
@@ -925,9 +901,9 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         <Text style={{
                                             textAlign: 'center',
                                             lineHeight: 35,
-                                            color: meetingOn ? '#fff' : '#2f2f3c',
+                                            color: '#fff',
                                             fontSize: 12,
-                                            backgroundColor: meetingOn ? '#3B64F8' : '#f4f4f6',
+                                            backgroundColor: '#3B64F8',
                                             paddingHorizontal: 25,
                                             fontFamily: 'inter',
                                             height: 35,
@@ -938,9 +914,6 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             Join Meeting
                                         </Text>
                                     </TouchableOpacity>
-                                    <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase', marginBottom: 10 }}>
-                                        Enabled only when meeting in session.
-                                    </Text>
                                 </View>
                             </View>
                                 : null
@@ -1012,6 +985,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                     <View style={{ backgroundColor: 'white', flexDirection: 'row', height: 40, width: '500px', justifyContent: 'space-between' }}>
                         <View style={{
                             backgroundColor: 'white',
+                            // marginTop: 20,
                             flexDirection: 'row'
                         }}>
                             <Switch

@@ -55,7 +55,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const [channelId, setChannelId] = useState<any>('')
     const [endPlayAt, setEndPlayAt] = useState(new Date(current.getTime() + 1000 * 60 * 60))
     const [playChannelCueIndef, setPlayChannelCueIndef] = useState(true)
-    const colorChoices: any[] = ['#d91d56', '#ED7D22', '#F8D41F', '#B8D41F', '#53BE6D'].reverse()
+    const colorChoices: any[] = ['#d91d56', '#ED7D22', '#FFBA10', '#B8D41F', '#53BE6D'].reverse()
     const [modalAnimation] = useState(new Animated.Value(0))
     const [reloadEditorKey, setReloadEditorKey] = useState(Math.random())
     let RichText: any = useRef()
@@ -1161,7 +1161,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                     if (date < new Date()) return;
                                                                     setInitiateAt(date)
                                                                 }}
-                                                                size={'sm'}
+                                                                size={'xs'}
                                                             // isValidDate={disablePastDt}
                                                             />
 
@@ -1197,7 +1197,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
                                                                         setDeadline(date)
                                                                     }}
-                                                                    size={'sm'}
+                                                                    size={'xs'}
                                                                 // isValidDate={disablePastDt}
                                                                 />
 
@@ -1552,7 +1552,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                 setEndPlayAt(date)
                                                             }}
                                                             // isValidDate={disablePastDt}
-                                                            size={'sm'}
+                                                            size={'xs'}
                                                         />
                                                     </View>
                                             }
@@ -1605,7 +1605,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                 setEndPlayAt(date)
                                                             }}
                                                             // isValidDate={disablePastDt}\
-                                                            size={'sm'}
+                                                            size={'xs'}
                                                         />
                                                     </View>
                                             }
