@@ -200,7 +200,6 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             }
                                         }
                                     })
-
                                     setOptions(tempUsers)
                                 })
                             }
