@@ -11,7 +11,7 @@ import {
     LineChart,
 } from "react-native-chart-kit";
 import * as FileSaver from 'file-saver';
-import { DatePicker } from 'rsuite';
+import { DatePicker, DateRangePicker } from 'rsuite';
 
 
 const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
@@ -281,22 +281,26 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                         <Ionicons name='chevron-back-outline' size={17} color={'#2F2F3C'} style={{ marginRight: 10 }} /> {renderAttendanceStatsTabs()}
                     </Text>
                 </TouchableOpacity>
-                {pastMeetings.length === 0 || channelAttendances.length === 0 ? null : <Text
-                    style={{
-                        color: "#a2a2ac",
-                        fontSize: 11,
-                        lineHeight: 25,
-                        // paddingTop: 5,
-                        textAlign: "right",
-                        // paddingRight: 20,
-                        textTransform: "uppercase",
-                        marginRight: 20
-                    }}
-                    onPress={() => {
-                        setEnableFilter(!enableFilter)
-                    }}>
-                    {!enableFilter ? "FILTER" : "HIDE"}
-                </Text>}
+                {unparsedPastMeetings.length === 0 || channelAttendances.length === 0 ? null : <View style={{ paddingRight: 20 }}>
+                    <View style={{ display: 'flex', width: "100%", flexDirection: "row", marginBottom: 30, }} >
+                        <DateRangePicker
+                            preventOverflow={true}
+                            size={'xs'}
+                            placeholder={'Select Dates'}
+                            onChange={e => {
+                                setStart(e[0])
+                                setEnd(e[1])
+                            }}
+                            cleanable={false}
+                            showOneCalendar={true}
+                            value={[
+                                start,
+                                end
+                            ]}
+                        />
+                    </View>
+                </View>
+                }
                 {(pastMeetings.length === 0 || channelAttendances.length === 0 || !props.isOwner) ? null : <Text
                     style={{
                         color: "#3B64F8",
@@ -314,50 +318,6 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                 </Text>}
             </View>
 
-            {/* Filters */}
-            {unparsedPastMeetings.length === 0 || channelAttendances.length === 0 ? null : <View style={{ paddingTop: 30 }}>
-                <View style={{ display: 'flex', width: "100%", flexDirection: width < 768 ? "column" : "row", marginBottom: 30, }} >
-                    {!enableFilter ? null : <View
-                        style={{
-                            width: width < 768 ? "100%" : "30%",
-                            flexDirection: "row",
-                            marginTop: 12,
-                            marginLeft: 0
-                        }}>
-                        <Text style={styles.text}>{PreferredLanguageText("start")} Date</Text>
-                        <DatePicker
-                            size={'sm'}
-                            format="YYYY-MM-DD HH:mm:ss"
-                            preventOverflow={true}
-                            value={start}
-                            onChange={(event: any) => {
-                                const date = new Date(event);
-                                setStart(date);
-                            }}
-                        />
-                    </View>}
-                    {!enableFilter ? null : <View
-                        style={{
-                            width: width < 768 ? "100%" : "30%",
-                            flexDirection: "row",
-                            marginTop: 12,
-                            marginLeft: width < 768 ? 0 : 10
-                        }}>
-                        <Text style={styles.text}>{PreferredLanguageText("end")} Date</Text>
-                        <DatePicker
-                            format="YYYY-MM-DD HH:mm:ss"
-                            preventOverflow={true}
-                            size={'sm'}
-                            value={end}
-                            onChange={(event: any) => {
-                                const date = new Date(event);
-                                setEnd(date);
-                            }}
-                        />
-                    </View>}
-                </View>
-
-            </View>}
             {
                 channelAttendances.length === 0 || pastMeetings.length === 0 ?
                     <View style={{ backgroundColor: 'white' }}>
