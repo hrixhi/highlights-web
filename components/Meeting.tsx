@@ -363,7 +363,6 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                         }}>
                         <View
                             style={{
-                                width: Dimensions.get("window").width < 768 ? "100%" : "33.33%",
                                 backgroundColor: "white"
                             }}>
                             <TouchableOpacity
@@ -397,7 +396,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                             isOwner ? (
                                 <View
                                     style={{
-                                        width: Dimensions.get("window").width < 768 ? "100%" : "33.33%",
+                                        paddingLeft: 30,
                                         marginBottom: 25,
                                         backgroundColor: "white"
                                     }}>
@@ -440,7 +439,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                             isOwner ? (
                                 <View
                                     style={{
-                                        width: Dimensions.get("window").width < 768 ? "100%" : "33.33%",
+                                        paddingLeft: 30,
                                         marginBottom: 25,
                                         backgroundColor: "white"
                                     }}>
@@ -481,7 +480,6 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                         }
                     </View>
                     {
-
                         <View style={{ borderTopColor: '#f4f4f6', borderTopWidth: 1, marginTop: 25 }}>
                             <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 25 }}>
                             </Text>

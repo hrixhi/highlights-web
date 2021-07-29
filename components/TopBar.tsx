@@ -105,7 +105,7 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             }
                                         </Text>
                                         <Text style={{ fontSize: 10, color: '#fff', textAlign: 'center' }}>
-                                            Lectures
+                                            Classroom
                                         </Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity

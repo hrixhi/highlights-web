@@ -15,7 +15,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { PreferredLanguageText } from "../helpers/LanguageContext";
 import { Picker } from "@react-native-picker/picker";
 import { eventFrequencyOptions } from "../helpers/FrequencyOptions";
-import { DatePicker } from 'rsuite';
+import { DatePicker, DateRangePicker } from 'rsuite';
 import {
     Menu,
     MenuOptions,
@@ -82,6 +82,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
         return <span style={{ color: colorCode }}>{event.title}</span>
 
     }
+
 
     const loadChannels = useCallback(async () => {
         const uString: any = await AsyncStorage.getItem("user");
@@ -161,6 +162,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             Filter
                         </Text>
                     </View>
+
                     <View style={{ backgroundColor: '#fff' }}>
                         <View style={{ flexDirection: 'row', display: 'flex', backgroundColor: '#fff' }}>
                             <Menu
@@ -168,7 +170,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     setFilterByChannel(channel);
                                 }}>
                                 <MenuTrigger>
-                                    <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#202025' }}>
+                                    <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#2f2f3c' }}>
                                         {filterByChannel}<Ionicons name='caret-down' size={14} />
                                     </Text>
                                 </MenuTrigger>
@@ -182,54 +184,54 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     }
                                 }}>
                                     <MenuOption
-                                            value={'All'}>
-                                            <View style={{ display: 'flex', flexDirection: 'row',  }}>
-                                                        <View style={{
-                                                            width: 8,
-                                                            height: 8,
-                                                            borderRadius: 10,
-                                                            marginTop: 1,
-                                                            backgroundColor: "#fff"
-                                                        }} />
-                                                        <Text style={{ marginLeft: 5 }}>
-                                                          All
-                                                        </Text>
-                                                    </View>
-                                        </MenuOption>
-                                        <MenuOption
-                                            value={'My Cues'}>
-                                            <View style={{ display: 'flex', flexDirection: 'row',  }}>
-                                                        <View style={{
-                                                            width: 8,
-                                                            height: 8,
-                                                            borderRadius: 10,
-                                                            marginTop: 1,
-                                                            backgroundColor: "#000"
-                                                        }} />
-                                                        <Text style={{ marginLeft: 5 }}>
-                                                           My Cues
-                                                        </Text>
-                                                    </View>
-                                        </MenuOption>
-                                        {
-                                            props.subscriptions.map((subscription: any) => {
-                                                return <MenuOption
-                                                    value={subscription}>
-                                                    <View style={{ display: 'flex', flexDirection: 'row',  }}>
-                                                        <View style={{
-                                                            width: 8,
-                                                            height: 8,
-                                                            borderRadius: 10,
-                                                            marginTop: 1,
-                                                            backgroundColor: subscription.colorCode
-                                                        }} />
-                                                        <Text style={{ marginLeft: 5 }}>
-                                                            {subscription.channelName}
-                                                        </Text>
-                                                    </View>
-                                                </MenuOption>
-                                            })
-                                        }
+                                        value={'All'}>
+                                        <View style={{ display: 'flex', flexDirection: 'row', }}>
+                                            <View style={{
+                                                width: 8,
+                                                height: 8,
+                                                borderRadius: 10,
+                                                marginTop: 1,
+                                                backgroundColor: "#fff"
+                                            }} />
+                                            <Text style={{ marginLeft: 5 }}>
+                                                All
+                                            </Text>
+                                        </View>
+                                    </MenuOption>
+                                    <MenuOption
+                                        value={'My Cues'}>
+                                        <View style={{ display: 'flex', flexDirection: 'row', }}>
+                                            <View style={{
+                                                width: 8,
+                                                height: 8,
+                                                borderRadius: 10,
+                                                marginTop: 1,
+                                                backgroundColor: "#000"
+                                            }} />
+                                            <Text style={{ marginLeft: 5 }}>
+                                                My Cues
+                                            </Text>
+                                        </View>
+                                    </MenuOption>
+                                    {
+                                        props.subscriptions.map((subscription: any) => {
+                                            return <MenuOption
+                                                value={subscription}>
+                                                <View style={{ display: 'flex', flexDirection: 'row', }}>
+                                                    <View style={{
+                                                        width: 8,
+                                                        height: 8,
+                                                        borderRadius: 10,
+                                                        marginTop: 1,
+                                                        backgroundColor: subscription.colorCode
+                                                    }} />
+                                                    <Text style={{ marginLeft: 5 }}>
+                                                        {subscription.channelName}
+                                                    </Text>
+                                                </View>
+                                            </MenuOption>
+                                        })
+                                    }
                                 </MenuOptions>
                             </Menu>
                         </View>
@@ -677,9 +679,9 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         marginLeft: 0
                     }}>
                     <DatePicker
+                        format="YYYY-MM-DD HH:mm:ss"
                         preventOverflow={true}
                         value={repeatTill}
-                        format="YYYY-MM-DD HH:mm:ss"
                         onChange={(event: any) => {
                             const date = new Date(event);
                             if (date < new Date()) return;
@@ -982,7 +984,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 </Text>
                 <Text
                     style={{
-                        color: "#3b64f8",
+                        color: "#3B64F8",
                         fontSize: 11,
                         lineHeight: 25,
                         // paddingTop: 5,
@@ -1043,7 +1045,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         <TextInput
                                             value={title}
                                             placeholder={
-                                                PreferredLanguageText("new") + " " + PreferredLanguageText("event") + "/" + PreferredLanguageText("meeting")
+                                                'Event'
                                             }
                                             onChangeText={val => setTitle(val)}
                                             placeholderTextColor={"#a2a2ac"}
@@ -1059,31 +1061,29 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             placeholderTextColor={"#a2a2ac"}
                                         />
                                     </View>
-
-
                                 </View>
                                 {/* Put time here */}
                                 <View style={{ display: 'flex', width: "100%", flexDirection: width < 768 ? "column" : "row", marginBottom: 30, paddingVertical: 10 }} >
                                     <View
                                         style={{
-                                            width: width < 768 ? "100%" : "30%",
-                                            flexDirection: "row",
                                             marginTop: 12,
                                             marginLeft: 0
                                         }}>
-                                        <Text style={styles.text}>{PreferredLanguageText("start")}</Text>
-                                        <DatePicker
+                                        <DateRangePicker
                                             preventOverflow={true}
-                                            value={start}
-                                            format="YYYY-MM-DD HH:mm:ss"
-                                            onChange={(event: any) => {
-                                                const date = new Date(event);
-                                                setStart(date);
-                                            }}
                                             size={'xs'}
+                                            placeholder={'Select Dates'}
+                                            onChange={e => {
+                                                setStart(e[0])
+                                                setEnd(e[1])
+                                            }}
+                                            value={[
+                                                start,
+                                                end
+                                            ]}
                                         />
                                     </View>
-                                    <View
+                                    {/* <View
                                         style={{
                                             width: width < 768 ? "100%" : "30%",
                                             flexDirection: "row",
@@ -1092,16 +1092,16 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         }}>
                                         <Text style={styles.text}>{PreferredLanguageText("end")}</Text>
                                         <DatePicker
+                                            format="YYYY-MM-DD HH:mm:ss"
                                             preventOverflow={true}
                                             value={end}
-                                            format="YYYY-MM-DD HH:mm:ss"
                                             onChange={(event: any) => {
                                                 const date = new Date(event);
                                                 setEnd(date);
                                             }}
                                             size={'xs'}
                                         />
-                                    </View>
+                                    </View> */}
                                 </View>
                                 <View
                                     style={{
@@ -1225,7 +1225,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     borderRadius: 15,
                                                     textTransform: "uppercase"
                                                 }}>
-                                                {isCreatingEvents ? "SAVING..." : "SAVE"}
+                                                {isCreatingEvents ? "ADDING..." : "ADD"}
                                             </Text>
                                         </TouchableOpacity>
                                     </View> : null}

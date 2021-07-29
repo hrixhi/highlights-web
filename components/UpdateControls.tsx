@@ -1881,7 +1881,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             {isOwner ? (
                                 <TextInput
                                     value={gradeWeight}
-                                    style={styles.picker}
+                                    style={styles.input}
                                     placeholder={"0-100"}
                                     onChangeText={val => setGradeWeight(val)}
                                     placeholderTextColor={"#a2a2ac"}
@@ -3002,7 +3002,7 @@ const styles: any = StyleSheet.create({
         padding: 15,
         paddingTop: 12,
         paddingBottom: 12,
-        marginTop: 5,
+        // marginTop: 5,
         marginBottom: 20
     },
     date: {

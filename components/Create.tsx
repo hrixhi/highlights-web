@@ -1250,7 +1250,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             </Text>
                                                             <TextInput
                                                                 value={gradeWeight}
-                                                                style={styles.picker}
+                                                                style={styles.input}
                                                                 placeholder={'0-100'}
                                                                 onChangeText={val => setGradeWeight(val)}
                                                                 placeholderTextColor={'#a2a2ac'}
@@ -1772,7 +1772,7 @@ const styles: any = StyleSheet.create({
         padding: 15,
         paddingTop: 12,
         paddingBottom: 12,
-        marginTop: 5,
+        marginTop: 0,
         marginBottom: 20
     },
     date: {
