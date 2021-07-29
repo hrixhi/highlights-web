@@ -16,7 +16,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const [choice] = useState(props.filterChoice)
     const colorScheme = 'dark';
     const styles: any = styleObject(colorScheme)
-    const [loggedIn, setLoggedIn] = useState(false)
+    const [loggedIn, setLoggedIn] = useState(true)
     const [userLoaded, setUserLoaded] = useState(false)
 
     const unparsedCues: any[] = JSON.parse(JSON.stringify(props.cues))
@@ -30,6 +30,9 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
             const parsedUser = JSON.parse(u)
             if (parsedUser.email) {
                 setLoggedIn(true)
+            }
+            else {
+                setLoggedIn(false)
             }
         }
         setUserLoaded(true)

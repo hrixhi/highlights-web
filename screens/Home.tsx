@@ -182,6 +182,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               }
             }).then(res => {
               if (res.data.threadStatus.totalUnreadDiscussionThreads) {
+                console.log('setting in unread threads in useeffect', res.data.threadStatus.totalUnreadDiscussionThreads)
                 setUnreadDiscussionThreads(res.data.threadStatus.totalUnreadDiscussionThreads)
               }
             })
@@ -223,6 +224,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         const user = JSON.parse(u)
         updateDiscussionNotidCounts(user._id)
       }
+
     }
 
   }, [channelId])
@@ -269,6 +271,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
       }
     }).then(res => {
       if (res.data.threadStatus.totalUnreadDiscussionThreads !== undefined && res.data.threadStatus.totalUnreadDiscussionThreads !== null) {
+        console.log('after upading discussion', res.data.threadStatus.totalUnreadDiscussionThreads)
         setUnreadDiscussionThreads(res.data.threadStatus.totalUnreadDiscussionThreads)
       }
     })
@@ -659,8 +662,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                   if (sub.colorCode === "") {
                     const randomColor = colorChoices[Math.floor(Math.random() * colorChoices.length)];
                     sub.colorCode = randomColor;
-                    
-                  } 
+
+                  }
                   return sub;
                 })
 
@@ -860,8 +863,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               if (sub.colorCode === "") {
                 const randomColor = colorChoices[Math.floor(Math.random() * colorChoices.length)];
                 sub.colorCode = randomColor;
-                
-              } 
+
+              }
               return sub;
             })
 
@@ -1022,7 +1025,9 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   }, [fadeAnimation])
 
   const openModal = useCallback((type) => {
+    console.log('setModalType', type)
     setModalType(type)
+    AsyncStorage.setItem('lastopened', type)
   }, [sheetRef, cues])
 
   const openUpdate = useCallback((key, index, pageNumber, _id, by, channId) => {
