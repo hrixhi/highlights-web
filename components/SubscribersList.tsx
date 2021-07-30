@@ -1217,30 +1217,30 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 ) :
                                 // is Quiz then show the Quiz Grading Component and new version with problemScores
                                 isQuiz && !isV0Quiz ?
-                                <View style={{ width: '100%', paddingBottom: 100}}>
-                                    {
-                                        submittedAt !== "" && deadline !== "" && submittedAt >= deadline ?
-                                            <View style={{ width: '100%',}}>
-                                                <View style={{ borderRadius: 10, padding: 5, borderWidth: 1, borderColor: '#D91D56', marginVertical: 10, width: 150, marginLeft: 'auto' }}>
-                                                    <Text style={{ color: '#D91D56',  fontSize: 13, textAlign: 'center' }}>
-                                                        LATE SUBMISSION
-                                                    </Text>
+                                    <View style={{ width: '100%', paddingBottom: 100 }}>
+                                        {
+                                            submittedAt !== "" && deadline !== "" && submittedAt >= deadline ?
+                                                <View style={{ width: '100%', }}>
+                                                    <View style={{ borderRadius: 10, padding: 5, borderWidth: 1, borderColor: '#D91D56', marginVertical: 10, width: 150, marginLeft: 'auto' }}>
+                                                        <Text style={{ color: '#D91D56', fontSize: 13, textAlign: 'center' }}>
+                                                            LATE SUBMISSION
+                                                        </Text>
+                                                    </View>
                                                 </View>
-                                            </View>
-                                            :
-                                            null
-                                    }
-                                    <QuizGrading
-                                        loading={loading}
-                                        problems={problems}
-                                        solutions={quizSolutions}
-                                        partiallyGraded={!graded}
-                                        onGradeQuiz={onGradeQuiz}
-                                        comment={comment}
-                                        headers={headers}
-                                        isOwner={true}
-                                    />
-                                </View>
+                                                :
+                                                null
+                                        }
+                                        <QuizGrading
+                                            loading={loading}
+                                            problems={problems}
+                                            solutions={quizSolutions}
+                                            partiallyGraded={!graded}
+                                            onGradeQuiz={onGradeQuiz}
+                                            comment={comment}
+                                            headers={headers}
+                                            isOwner={true}
+                                        />
+                                    </View>
                                     :
                                     <View>
                                         <ScrollView
@@ -1252,15 +1252,15 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             style={{ flex: 1, paddingTop: 12 }}>
                                             {
                                                 submittedAt !== "" && deadline !== "" && submittedAt >= deadline ?
-                                                <View style={{ width: '100%', maxWidth: 800, marginBottom: 30 }}>
-                                                    <View style={{ borderRadius: 10, padding: 5, borderWidth: 1, borderColor: '#D91D56', marginVertical: 10, width: 150, marginLeft: 'auto' }}>
-                                                        <Text style={{ color: '#D91D56',  fontSize: 13, textAlign: 'center' }}>
-                                                            LATE SUBMISSION
-                                                        </Text>
+                                                    <View style={{ width: '100%', maxWidth: 800, marginBottom: 30 }}>
+                                                        <View style={{ borderRadius: 10, padding: 5, borderWidth: 1, borderColor: '#D91D56', marginVertical: 10, width: 150, marginLeft: 'auto' }}>
+                                                            <Text style={{ color: '#D91D56', fontSize: 13, textAlign: 'center' }}>
+                                                                LATE SUBMISSION
+                                                            </Text>
+                                                        </View>
                                                     </View>
-                                                </View>
-                                                :
-                                                null
+                                                    :
+                                                    null
                                             }
                                             <View style={{ flexDirection: 'row', maxWidth: 800 }}>
                                                 <View style={{
@@ -1312,16 +1312,6 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                     </View>
                                                 </View>
                                             </View>
-                                            {/* <Text style={{
-                                                fontSize: 11,
-                                                paddingBottom: 20,
-                                                textTransform: "uppercase",
-                                                // paddingLeft: 20,
-                                                // flex: 1,
-                                                lineHeight: 25
-                                            }}>
-                                                {PreferredLanguageText('viewSubmission')}
-                                            </Text> */}
                                             {
                                                 imported && !isQuiz ?
                                                     <View style={{ width: '40%', alignSelf: 'flex-start' }}>
@@ -1333,6 +1323,9 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                             onChangeText={val => setTitle(val)}
                                                             placeholderTextColor={'#a2a2ac'}
                                                         />
+                                                        <Text style={{ color: '#a2a2ac', height: 25 }}>
+                                                            Click and drag over submission to enter remarks.
+                                                        </Text>
                                                     </View> : null
                                             }
                                             {

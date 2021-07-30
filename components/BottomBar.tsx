@@ -257,8 +257,8 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         onPress={() => props.openCreate()}
                         style={styles.center}
                     >
-                        <Text style={{ textAlign: 'center', lineHeight: 40, marginTop: 5 }}>
-                            <Ionicons name='add-circle' size={40} color={'#fff'} />
+                        <Text style={{ textAlign: 'center', lineHeight: 50, marginTop: 15 }}>
+                            <Ionicons name='add-circle' size={50} color={'#fff'} />
                         </Text>
                     </TouchableOpacity>
                 </View>
