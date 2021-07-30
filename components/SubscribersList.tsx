@@ -1326,7 +1326,12 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                         <Text style={{ color: '#a2a2ac', height: 25 }}>
                                                             Click and drag over submission to enter remarks.
                                                         </Text>
-                                                    </View> : null
+                                                    </View> : (
+                                                        !isQuiz ?
+                                                            <Text style={{ color: '#a2a2ac', height: 25 }}>
+                                                                Click and drag over submission to enter remarks.
+                                                            </Text> : null
+                                                    )
                                             }
                                             {
                                                 isQuiz && Object.keys(quizSolutions).length > 0 ?
