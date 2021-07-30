@@ -114,7 +114,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         graded: status.graded,
                                         userId: status.userId,
                                         submittedAt: status.submittedAt,
-                                        releaseSubmission: status.releaseSubmission
+                                        deadline: status.deadline,
+                                        releaseSubmission: status.releaseSubmission,
                                     })
                                 })
                                 setSubscribers(subs)
@@ -345,7 +346,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             setShowComments(true)
                                         }}>
                                         <Text style={styles.all}>
-                                            FAQ
+                                            Q&A
                                         </Text>
                                     </TouchableOpacity>
                                     {

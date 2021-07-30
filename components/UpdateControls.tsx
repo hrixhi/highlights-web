@@ -19,7 +19,8 @@ import {
     markAsRead,
     shareCueWithMoreIds,
     start,
-    submit
+    submit,
+    modifyQuiz
 } from "../graphql/QueriesAndMutations";
 import * as ImagePicker from "expo-image-picker";
 import { actions, RichEditor, RichToolbar } from "react-native-pell-rich-editor";
@@ -137,6 +138,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const [cueGraded, setCueGraded] = useState(props.cue.graded);
     const [quizSolutions, setQuizSolutions] = useState<any>({});
     const [isV0Quiz, setIsV0Quiz] = useState(false);
+    const [loadingAfterModifyingQuiz, setLoadingAfterModifyingQuiz] = useState(false);
 
     const insertEquation = useCallback(() => {
         const SVGEquation = TeXToSVG(equation, { width: 100 }); // returns svg in html format
@@ -561,7 +563,15 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 title
             }
             tempOriginal = JSON.stringify(obj)
-        } else {
+        } else if (isQuiz) {
+            const parse = JSON.parse(original)
+            const obj = {
+                quizId: parse.quizId,
+                title
+            }
+            tempOriginal = JSON.stringify(obj)
+        } 
+        else {
             tempOriginal = original
         }
 
@@ -690,8 +700,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         ]);
     }, [props.cueIndex, props.closeModal, props.cueKey, props.cue, isOwner]);
 
-    console.log('is Quiz', isQuiz)
-
     // Handle Submit for Submissions and Quizzes
     const handleSubmit = useCallback(async () => {
         if (!isQuiz && submissionImported && submissionTitle === "") {
@@ -741,7 +749,11 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             return;
         }
 
-        Alert("Submit?", "", [
+        let now = new Date();
+        // one minute of extra time to submit            
+        now.setMinutes(now.getMinutes() - 1)
+
+        Alert(now >= deadline ? "Submit Late?" : "Submit?", now >= deadline ? "The deadline for this submission has already passed" : "", [
             {
                 text: "Cancel",
                 style: "cancel",
@@ -753,22 +765,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 text: "Okay",
                 onPress: async () => {
                     const u: any = await AsyncStorage.getItem("user");
-                    let now = new Date();
-                    // one minute of extra time to submit
-                    now.setMinutes(now.getMinutes() - 1);
-                    if (isQuiz) {
-                        if (now >= deadline) {
-                            Alert(submissionFailedAlert, ifYouStartTimedQuizAlert);
-                            return;
-                        }
-                        // over here check that all options have been selected
-                        // TO DO
-                    } else {
-                        if (now >= deadline) {
-                            Alert(submissionFailedAlert, deadlineHasPassedAlert);
-                            return;
-                        }
-                    }
                     if (u) {
                         const parsedUser = JSON.parse(u);
                         if (!parsedUser.email || parsedUser.email === "") {
@@ -985,6 +981,81 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         props.cue
     ]);
 
+    const updateQuiz = (instructions: string, problems: any, headers: any) => {
+        Alert("Update Quiz?", "", [
+            {
+                text: "Cancel",
+                style: "cancel",
+                onPress: () => {
+                    return;
+                }
+            },
+            {
+                text: "Okay",
+                onPress: async () => {
+                    setLoadingAfterModifyingQuiz(true)
+                    const server = fetchAPI("");
+
+                    // Points should be a string not a number
+                
+                    const sanitizeProblems = problems.map((prob: any) => {
+                        const { options } = prob;
+                        const sanitizeOptions = options.map((option: any) => {
+                            const clone = option;
+
+                            delete (clone.__typename)
+
+                            return clone;
+                        })
+
+                        delete (prob.__typename)
+                        delete (prob.problemIndex)
+                        return {
+                            ...prob,
+                            points: prob.points.toString(),
+                            options: sanitizeOptions
+                        }
+                    })
+                        server
+                        .mutate({
+                            mutation: modifyQuiz,
+                            variables: {
+                                cueId: props.cue._id,
+                                quiz: {
+                                    instructions,
+                                    problems: sanitizeProblems,
+                                    headers: JSON.stringify(headers)
+                                }
+                            }
+                        })
+                        .then((res: any) => {
+                            if (res.data && res.data.quiz.modifyQuiz) {
+                                const server = fetchAPI("");
+                                server
+                                    .query({
+                                        query: getQuiz,
+                                        variables: {
+                                            quizId
+                                        }
+                                    })
+                                    .then(res => {
+                                        if (res.data && res.data.quiz.getQuiz) {
+                                            setProblems(res.data.quiz.getQuiz.problems);
+                                            setInstructions(res.data.quiz.getQuiz.instructions ? res.data.quiz.getQuiz.instructions : '')
+                                            setHeaders(res.data.quiz.getQuiz.headers ? JSON.parse(res.data.quiz.getQuiz.headers) : {})
+                                            setLoadingAfterModifyingQuiz(false);
+                                            alert('Quiz updated successfully')
+                                        }
+                                    });
+
+                            }
+                        })
+                        .catch(err => console.log(err));
+                }
+            }
+        ]);
+    }
+
     const onChange = useCallback(
         (value, { action, option, removedValue }) => {
             switch (action) {
@@ -1031,7 +1102,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
     const width = Dimensions.get("window").width;
 
-    if (loading) {
+    if (loading || loadingAfterModifyingQuiz) {
         return null;
     }
 
@@ -1039,7 +1110,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const renderRichToolbar = () => {
         return (props.cue.channelId && props.cue.channelId !== '' && !isOwner && props.showOriginal) || (props.showOriginal && showImportOptions) || isQuiz ? (
             <View style={{ height: 0, backgroundColor: "#fff" }} />
-        ) : (((props.cue.graded && submission && !isOwner) || (currentDate > deadline && submission)) && !props.showOriginal) || (!props.showOriginal && showImportOptions) ? (
+        ) : ((props.cue.graded && submission && !isOwner) && !props.showOriginal) || (!props.showOriginal && showImportOptions) ? (
             <View style={{ height: 0, backgroundColor: "#fff" }} />
         ) : (
             <RichToolbar
@@ -1177,7 +1248,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         props.setShowOptions(false)
                     }}>
                     <Text style={props.showComments ? styles.allGrayFill : styles.all}>
-                        FAQ
+                        Q&A
                     </Text>
                 </TouchableOpacity>
                 {(isOwner && submission) || isQuiz ? null : (
@@ -1383,7 +1454,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     initiatedAt ? (
                         <View style={{ width: '100%', paddingBottom: 50 }}>
                             <Quiz
-                                // disable quiz if graded or deadline has passed
                                 submitted={isQuiz && props.cue.submittedAt && props.cue.submittedAt !== "" ? true : false}
                                 graded={props.cue.graded}
                                 hasEnded={currentDate >= deadline}
@@ -1393,6 +1463,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 shuffleQuiz={shuffleQuiz}
                                 instructions={instructions}
                                 headers={headers}
+                                modifyQuiz={updateQuiz}
                             />
                             {renderFooter()}
                         </View>
@@ -1443,6 +1514,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             shuffleQuiz={shuffleQuiz}
                             instructions={instructions}
                             headers={headers}
+                            modifyQuiz={updateQuiz}
                         />
                         {renderFooter()}
                     </View>
@@ -1587,7 +1659,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 paddingBottom: 10,
                 // borderRadius: 15
             }}
-            disabled={(props.cue.graded && submission) || (currentDate > deadline && submission)}
+            disabled={(props.cue.graded && submission)}
             ref={RichText}
             style={{
                 width: '100%',
@@ -2393,37 +2465,13 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         height: 50,
                         paddingTop: 10
                     }}>
-                    {isOwner || !props.cue.channelId || props.cue.channelId === "" ? (
-                        <TouchableOpacity onPress={() => handleDelete()} style={{ backgroundColor: "white", borderRadius: 15 }}>
-                            <Text
-                                style={{
-                                    textAlign: "center",
-                                    lineHeight: 35,
-                                    color: "white",
-                                    fontSize: 12,
-                                    backgroundColor: "#3B64F8",
-                                    borderRadius: 15,
-                                    paddingHorizontal: 25,
-                                    fontFamily: "inter",
-                                    overflow: "hidden",
-                                    height: 35,
-                                    textTransform: "uppercase"
-                                }}>
-                                {isOwner
-                                    ? props.cue.channelId && props.cue.channelId !== ""
-                                        ? PreferredLanguageText("deleteForEveryone")
-                                        : PreferredLanguageText("delete")
-                                    : PreferredLanguageText("delete")}
-                            </Text>
-                        </TouchableOpacity>
-                    ) : null}
                     {!isOwner && props.cue.channelId && props.cue.channelId !== "" && submission ? (
                         <TouchableOpacity
                             disabled={
                                 // if user has not signed up
                                 !userSetupComplete ||
                                 // deadline has passed & its not an initiated timed quiz
-                                (currentDate >= deadline && !(isQuiz && isQuizTimed && initiatedAt)) ||
+                                // (currentDate >= deadline && !(isQuiz && isQuizTimed && initiatedAt)) ||
                                 // graded
                                 props.cue.graded ||
                                 // if timed quiz not initiated
@@ -2453,16 +2501,55 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             ? PreferredLanguageText("graded")
                                             : isQuiz
                                                 ? PreferredLanguageText("submitted")
-                                                : currentDate < deadline
-                                                    ? PreferredLanguageText("resubmit")
-                                                    : PreferredLanguageText("submissionEnded")
-                                        : currentDate < deadline
-                                            ? PreferredLanguageText("submit")
-                                            : PreferredLanguageText("submissionEnded")
+                                                : PreferredLanguageText("submit")
+                                        : PreferredLanguageText("submit")
                                     : PreferredLanguageText("signupToSubmit")}
                             </Text>
                         </TouchableOpacity>
                     ) : null}
+                </View>
+            </View>
+        );
+    };
+
+    const renderDeleteButtons = () => {
+        return (
+            <View style={styles.footer}>
+                <View
+                    style={{
+                        flex: 1,
+                        backgroundColor: "white",
+                        justifyContent: "center",
+                        display: "flex",
+                        flexDirection: "row",
+                        height: 50,
+                        paddingTop: 10
+                    }}>
+                    {isOwner || !props.cue.channelId || props.cue.channelId === "" ? (
+                        <TouchableOpacity onPress={() => handleDelete()} style={{ backgroundColor: "white", borderRadius: 15 }}>
+                            <Text
+                                style={{
+                                    textAlign: "center",
+                                    lineHeight: 35,
+                                    color: "white",
+                                    fontSize: 12,
+                                    backgroundColor: "#3B64F8",
+                                    borderRadius: 15,
+                                    paddingHorizontal: 25,
+                                    fontFamily: "inter",
+                                    overflow: "hidden",
+                                    height: 35,
+                                    textTransform: "uppercase"
+                                }}>
+                                {isOwner
+                                    ? props.cue.channelId && props.cue.channelId !== ""
+                                        ? PreferredLanguageText("deleteForEveryone")
+                                        : PreferredLanguageText("delete")
+                                    : PreferredLanguageText("delete")}
+                            </Text>
+                        </TouchableOpacity>
+                    ) : null}
+
                 </View>
             </View>
         );
@@ -2555,6 +2642,16 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 {props.cue.score}%
                             </Text>
                         ) : null}
+                        {
+                            props.cue.submittedAt !== "" && (new Date(props.cue.submittedAt) >= deadline) ?
+                                <View style={{ borderRadius: 10, padding: 5, borderWidth: 1, borderColor: '#D91D56', marginLeft: 15,  }}>
+                                    <Text style={{ color: '#D91D56',  fontSize: 12, textAlign: 'center' }}>
+                                        LATE 
+                                    </Text>
+                                </View>
+                                :
+                                null
+                        }
                         <TouchableOpacity
                             onPress={() => setStarred(!starred)}
                             style={{
@@ -2938,6 +3035,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 </View>
                             </View>
                         </View> : null}
+                        {renderDeleteButtons()}
                     </Collapse>
                 </View>
             </Animated.View>
