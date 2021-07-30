@@ -1182,7 +1182,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
                                             {/* Add it here */}
 
-                                            <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
+                                            <View style={{ width: '100%' }}>
                                                 <View style={{ flexDirection: 'row' }}>
                                                     {
                                                         submission ?
