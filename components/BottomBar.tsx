@@ -210,7 +210,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     }}>
                         <DateRangePicker
                             preventOverflow={true}
-                            size={'xs'}
+                            size={'sm'}
                             placeholder={'Select Dates'}
                             onChange={e => {
                                 props.setFilterStart(e[0])
