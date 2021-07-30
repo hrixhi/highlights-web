@@ -75,7 +75,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const now = new Date(props.cue.date);
     const RichText: any = useRef();
     const [height, setHeight] = useState(100);
-    const colorChoices: any[] = ["#d91d56", "#ED7D22", "#F8D41F", "#B8D41F", "#53BE6D"].reverse();
+    const colorChoices: any[] = ["#d91d56", "#ED7D22", "#FFBA10", "#B8D41F", "#53BE6D"].reverse();
     const [submission, setSubmission] = useState(props.cue.submission ? props.cue.submission : false);
     const [frequencyName, setFrequencyName] = useState('Day')
     const dead =
@@ -1503,6 +1503,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     )
                 ) : (
                     <View style={{ width: '100%', paddingBottom: 50 }}>
+
                         <Quiz
                             isOwner={isOwner}
                             submitted={isQuiz && props.cue.submittedAt && props.cue.submittedAt !== "" ? true : false}
@@ -1827,7 +1828,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             {isOwner ? (
                                 <DatePicker
                                     format="YYYY-MM-DD HH:mm:ss"
-                                    size={'sm'}
+                                    size={'xs'}
                                     value={initiateAt}
                                     preventOverflow={true}
                                     onChange={(event: any) => {
@@ -1882,7 +1883,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     if (date < new Date()) return;
                                     setDeadline(date);
                                 }}
-                                size={'sm'}
+                                size={'xs'}
                             // isValidDate={disablePastDt}
                             />
                         ) : (
@@ -1953,7 +1954,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             {isOwner ? (
                                 <TextInput
                                     value={gradeWeight}
-                                    style={styles.picker}
+                                    style={styles.input}
                                     placeholder={"0-100"}
                                     onChangeText={val => setGradeWeight(val)}
                                     placeholderTextColor={"#a2a2ac"}
@@ -2384,7 +2385,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             setEndPlayAt(date);
                                         }}
                                         // isValidDate={disablePastDt}
-                                        size={'sm'}
+                                        size={'xs'}
                                     />
                                 </View>
                             )}
@@ -2439,7 +2440,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             setEndPlayAt(date);
                                         }}
                                         value={endPlayAt}
-                                        size={'sm'}
+                                        size={'xs'}
                                     // isValidDate={disablePastDt}
                                     />
                                 </View>
@@ -3100,7 +3101,7 @@ const styles: any = StyleSheet.create({
         padding: 15,
         paddingTop: 12,
         paddingBottom: 12,
-        marginTop: 5,
+        // marginTop: 5,
         marginBottom: 20
     },
     date: {
@@ -3208,7 +3209,7 @@ const styles: any = StyleSheet.create({
         backgroundColor: "#ED7D22"
     },
     color3: {
-        backgroundColor: "#F8D41F"
+        backgroundColor: "#FFBA10"
     },
     color4: {
         backgroundColor: "#B8D41F"

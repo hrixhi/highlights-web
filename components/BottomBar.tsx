@@ -16,7 +16,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const [choice] = useState(props.filterChoice)
     const colorScheme = 'dark';
     const styles: any = styleObject(colorScheme)
-    const [loggedIn, setLoggedIn] = useState(false)
+    const [loggedIn, setLoggedIn] = useState(true)
     const [userLoaded, setUserLoaded] = useState(false)
 
     const unparsedCues: any[] = JSON.parse(JSON.stringify(props.cues))
@@ -30,6 +30,9 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
             const parsedUser = JSON.parse(u)
             if (parsedUser.email) {
                 setLoggedIn(true)
+            }
+            else {
+                setLoggedIn(false)
             }
         }
         setUserLoaded(true)
@@ -148,7 +151,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     </MenuOptions>
                                 </Menu>
                             </View>
-                            <Text style={{ fontSize: 10, color: '#a2a2ac', paddingTop: 7, textAlign: 'center', backgroundColor: '#2F2F3C', paddingLeft: 30 }}>
+                            <Text style={{ fontSize: 10, color: '#fff', paddingTop: 7, textAlign: 'center', backgroundColor: '#2F2F3C', paddingLeft: 20 }}>
                                 Channel
                             </Text>
                         </View>
@@ -161,7 +164,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         props.setChannelFilterChoice(category)
                                     }}>
                                     <MenuTrigger>
-                                        <Text style={{ fontFamily: 'inter', fontSize: 15, color: '#a2a2ac' }}>
+                                        <Text style={{ fontFamily: 'inter', fontSize: 15, color: '#a2a2ac', paddingLeft: 10 }}>
                                             {filterChoice}<Ionicons name='caret-down' size={15} />
                                         </Text>
                                     </MenuTrigger>
@@ -213,6 +216,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 props.setFilterStart(e[0])
                                 props.setFilterEnd(e[1])
                             }}
+                            showOneCalendar={true}
                             value={[
                                 props.filterStart,
                                 props.filterEnd
@@ -227,10 +231,10 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         onPress={() => props.openChannels()}
                         style={styles.center}
                     >
-                        <Text style={{ textAlign: 'center', lineHeight: 20 }}>
-                            <Ionicons name='school-outline' size={19} color={'#fff'} />
+                        <Text style={{ textAlign: 'center', lineHeight: 24 }}>
+                            <Ionicons name='school-outline' size={24} color={'#fff'} />
                         </Text>
-                        <Text style={{ fontSize: 10, color: '#a2a2ac' }}>
+                        <Text style={{ fontSize: 10, color: '#fff' }}>
                             Channels
                         </Text>
                     </TouchableOpacity>
@@ -240,10 +244,10 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         onPress={() => props.openCalendar()}
                         style={styles.center}
                     >
-                        <Text style={{ textAlign: 'center', lineHeight: 20 }}>
-                            <Ionicons name='calendar-outline' size={18} color={'#fff'} />
+                        <Text style={{ textAlign: 'center', lineHeight: 24 }}>
+                            <Ionicons name='calendar-outline' size={24} color={'#fff'} />
                         </Text>
-                        <Text style={{ fontSize: 10, color: '#a2a2ac' }}>
+                        <Text style={{ fontSize: 10, color: '#fff' }}>
                             Planner
                         </Text>
                     </TouchableOpacity>
@@ -263,10 +267,10 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         onPress={() => props.openProfile()}
                         style={styles.center}
                     >
-                        <Text style={{ textAlign: 'center', lineHeight: 20 }}>
-                            <Ionicons name={loggedIn ? 'person-circle-outline' : 'cloud-upload-outline'} size={20} color={'#fff'} />
+                        <Text style={{ textAlign: 'center', lineHeight: 26 }}>
+                            <Ionicons name={loggedIn ? 'person-circle-outline' : 'cloud-upload-outline'} size={26} color={'#fff'} />
                         </Text>
-                        <Text style={{ fontSize: 10, color: '#a2a2ac' }}>
+                        <Text style={{ fontSize: 10, color: '#fff' }}>
                             {!loggedIn && userLoaded ? 'Sign Up' : 'Profile'}
                         </Text>
                     </TouchableOpacity>
@@ -276,10 +280,10 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         onPress={() => props.openWalkthrough()}
                         style={styles.center}
                     >
-                        <Text style={{ textAlign: 'center', lineHeight: 20 }}>
-                            <Ionicons name='help-circle-outline' size={20} color={'#fff'} />
+                        <Text style={{ textAlign: 'center', lineHeight: 26 }}>
+                            <Ionicons name='help-circle-outline' size={26} color={'#fff'} />
                         </Text>
-                        <Text style={{ fontSize: 10, color: '#a2a2ac' }}>
+                        <Text style={{ fontSize: 10, color: '#fff' }}>
                             Help
                         </Text>
                     </TouchableOpacity>

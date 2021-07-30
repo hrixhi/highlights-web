@@ -182,6 +182,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               }
             }).then(res => {
               if (res.data.threadStatus.totalUnreadDiscussionThreads) {
+                console.log('setting in unread threads in useeffect', res.data.threadStatus.totalUnreadDiscussionThreads)
                 setUnreadDiscussionThreads(res.data.threadStatus.totalUnreadDiscussionThreads)
               }
             })
@@ -223,6 +224,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         const user = JSON.parse(u)
         updateDiscussionNotidCounts(user._id)
       }
+
     }
 
   }, [channelId])
@@ -269,6 +271,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
       }
     }).then(res => {
       if (res.data.threadStatus.totalUnreadDiscussionThreads !== undefined && res.data.threadStatus.totalUnreadDiscussionThreads !== null) {
+        console.log('after upading discussion', res.data.threadStatus.totalUnreadDiscussionThreads)
         setUnreadDiscussionThreads(res.data.threadStatus.totalUnreadDiscussionThreads)
       }
     })
@@ -653,14 +656,14 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
                 // Add color Codes for Subscriptions that don't have one
 
-                const colorChoices: any[] = ['#d91d56', '#ED7D22', '#F8D41F', '#B8D41F', '#53BE6D']
+                const colorChoices: any[] = ['#d91d56', '#ED7D22', '#FFBA10', '#B8D41F', '#53BE6D']
 
                 const updateColorCodes = res.data.subscription.findByUserId.map((sub: any) => {
                   if (sub.colorCode === "") {
                     const randomColor = colorChoices[Math.floor(Math.random() * colorChoices.length)];
                     sub.colorCode = randomColor;
-                    
-                  } 
+
+                  }
                   return sub;
                 })
 
@@ -854,14 +857,14 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
             // Add color Codes for Subscriptions that don't have one
 
-            const colorChoices: any[] = ['#d91d56', '#ED7D22', '#F8D41F', '#B8D41F', '#53BE6D']
+            const colorChoices: any[] = ['#d91d56', '#ED7D22', '#FFBA10', '#B8D41F', '#53BE6D']
 
             const updateColorCodes = res.data.subscription.findByUserId.map((sub: any) => {
               if (sub.colorCode === "") {
                 const randomColor = colorChoices[Math.floor(Math.random() * colorChoices.length)];
                 sub.colorCode = randomColor;
-                
-              } 
+
+              }
               return sub;
             })
 
@@ -1022,7 +1025,9 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   }, [fadeAnimation])
 
   const openModal = useCallback((type) => {
+    console.log('setModalType', type)
     setModalType(type)
+    AsyncStorage.setItem('lastopened', type)
   }, [sheetRef, cues])
 
   const openUpdate = useCallback((key, index, pageNumber, _id, by, channId) => {
@@ -1533,7 +1538,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           {
             dimensions.window.width < 1024 ? null : <View style={{ flexDirection: 'column', flex: 1, width: '100%', justifyContent: 'center', backgroundColor: '#2f2f3c' }}>
               <Text style={{ fontSize: 20, color: '#a2a2ac', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#2F2F3C' }}>
-                Select Cue to view.
+                Select cue to view.
               </Text>
             </View>
           }
@@ -1564,8 +1569,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               dimensions.window.width < 1024 ?
                 <TouchableOpacity
                   onPress={() => closeModal()}
-                  style={{ height: 50, backgroundColor: '#fff', borderTopWidth: 1, borderColor: '#f4f4f6' }}>
-                  <Text style={{ flex: 1, textAlign: 'center', fontSize: 15, lineHeight: 15, marginTop: 15, color: '#2F2F3C' }}>
+                  style={{ height: 50, backgroundColor: '#fff', borderTopWidth: 1, borderColor: '#a2a2ac' }}>
+                  <Text style={{ flex: 1, textAlign: 'center', fontSize: 15, lineHeight: 15, marginTop: 15, color: '#2F2F3C', fontWeight: 'bold' }}>
                     <Ionicons name='chevron-back-outline' size={15} /> Back
                   </Text>
                 </TouchableOpacity> :

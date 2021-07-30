@@ -414,6 +414,20 @@ mutation($recordID: String!) {
   }
 }
 `
+export const meetingRequest = gql`
+mutation($userId: String!, $isOwner: Boolean!, $channelId: String!) {
+  channel {
+    meetingRequest(userId: $userId, isOwner: $isOwner, channelId: $channelId)
+  }
+}
+`
+export const personalMeetingRequest = gql`
+mutation($userId: String!, $users: [String!]!, $channelId: String!) {
+  channel {
+    personalMeetingRequest(userId: $userId, users: $users, channelId: $channelId)
+  }
+}
+`
 /**
  * ALL
  * QUERIES
@@ -959,14 +973,13 @@ export const getUserCount = gql`
      }
  }
  `
-
 export const getChannelColorCode = gql`
-query($channelId: String!) {
-    channel {
-      getChannelColorCode(channelId: $channelId)
-    }
-}
-` 
+ query($channelId: String!) {
+     channel {
+       getChannelColorCode(channelId: $channelId)
+     }
+ }
+`
 
 export const findBySchoolId = gql`
  query($schoolId: String!) {

@@ -55,7 +55,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const [channelId, setChannelId] = useState<any>('')
     const [endPlayAt, setEndPlayAt] = useState(new Date(current.getTime() + 1000 * 60 * 60))
     const [playChannelCueIndef, setPlayChannelCueIndef] = useState(true)
-    const colorChoices: any[] = ['#d91d56', '#ED7D22', '#F8D41F', '#B8D41F', '#53BE6D'].reverse()
+    const colorChoices: any[] = ['#d91d56', '#ED7D22', '#FFBA10', '#B8D41F', '#53BE6D'].reverse()
     const [modalAnimation] = useState(new Animated.Value(0))
     const [reloadEditorKey, setReloadEditorKey] = useState(Math.random())
     let RichText: any = useRef()
@@ -90,6 +90,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [shuffleQuiz, setShuffleQuiz] = useState(false);
     const [quizInstructions, setQuizInstructions] = useState('');
+    const [initialDuration, setInitialDuration] = useState(null)
 
     const [channelName, setChannelName] = useState('')
 
@@ -180,6 +181,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             // If MCQ then > 2 options
             if (!problem.questionType && problem.options.length < 2) {
                 Alert("Problem must have at least 2 options")
+                setIsSubmitting(false)
                 error = true;
             }
 
@@ -191,11 +193,13 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 problem.options.map((option: any) => {
                     if (option.option === '' || option.option === 'formula:') {
                         Alert(fillMissingOptionsAlert)
+                        setIsSubmitting(false)
                         error = true;
                     }
 
                     if (option.option in keys) {
                         Alert("Option repeated in a question");
+                        setIsSubmitting(false)
                         error = true
                     }
 
@@ -208,6 +212,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
                 if (!optionFound) {
                     Alert(eachOptionOneCorrectAlert)
+                    setIsSubmitting(false)
                     error = true;
                 }
             }
@@ -404,7 +409,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         } else {
             storeDraft('cueDraft', '')
         }
-    }, [cue, init, type, imported, url, title, isQuiz, problems, timer, duration, headers, quizInstructions])
+    }, [cue, init, type, imported, url, title, problems, timer, duration, headers, quizInstructions])
 
     const storeDraft = useCallback(async (type, value) => {
         await AsyncStorage.setItem(type, value)
@@ -412,6 +417,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
     const handleCreate = useCallback(async (quizId?: string) => {
         setIsSubmitting(true)
+        console.log('creating cue')
 
         if (isSubmitting) return;
 
@@ -560,7 +566,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     Alert(somethingWentWrongAlert, checkConnectionAlert)
                 })
         }
-        setIsSubmitting(false)
+
 
     }, [cue, modalAnimation, customCategory, props.saveDataInCloud, isQuiz, timer, duration,
         gradeWeight, deadline, initiateAt, submission, imported, selected, subscribers,
@@ -577,8 +583,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 const quizDraft = await AsyncStorage.getItem('quizDraft')
                 if (quizDraft !== null) {
                     const { duration, timer, problems, title, headers, quizInstructions } = JSON.parse(quizDraft);
-
                     setDuration(duration);
+                    setInitialDuration(duration)
                     setTimer(timer);
                     setProblems(problems);
                     setTitle(title);
@@ -642,10 +648,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         setSelected(value)
     }, [subscribers])
 
-    const onChangeDuration = useCallback((duration: any) => {
-        const { hours, minutes, seconds } = duration;
-        setDuration({ hours, minutes, seconds });
-    }, [])
+
 
     const yesterday = moment().subtract(1, 'day');
     const disablePastDt = (current: any) => {
@@ -654,6 +657,13 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
     const quizAlert = PreferredLanguageText('quizzesCanOnly')
     const width = dimensions.window.width;
+
+
+    const onChangeDuration = useCallback((duration: any) => {
+        const { hours, minutes, seconds } = duration;
+        setDuration({ hours, minutes, seconds });
+    }, [])
+
     return (
         <View style={{
             width: '100%',
@@ -934,7 +944,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         <View style={{ width: width < 768 ? '100%' : '35%', borderRightWidth: 0, borderColor: '#f4f4f6' }}>
                                             <DurationPicker
                                                 onChange={onChangeDuration}
-                                                initialDuration={{ hours: 1, minutes: 0, seconds: 0 }}
+                                                initialDuration={initialDuration ? initialDuration : { hours: 1, minutes: 0, seconds: 0 }}
                                                 maxHours={6}
                                             />
                                         </View> : null
@@ -1250,7 +1260,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                             </Text>
                                                             <TextInput
                                                                 value={gradeWeight}
-                                                                style={styles.picker}
+                                                                style={styles.input}
                                                                 placeholder={'0-100'}
                                                                 onChangeText={val => setGradeWeight(val)}
                                                                 placeholderTextColor={'#a2a2ac'}
@@ -1552,7 +1562,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                 setEndPlayAt(date)
                                                             }}
                                                             // isValidDate={disablePastDt}
-                                                            size={'sm'}
+                                                            size={'xs'}
                                                         />
                                                     </View>
                                             }
@@ -1605,7 +1615,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                 setEndPlayAt(date)
                                                             }}
                                                             // isValidDate={disablePastDt}\
-                                                            size={'sm'}
+                                                            size={'xs'}
                                                         />
                                                     </View>
                                             }
@@ -1659,7 +1669,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         await handleCreate()
                                     }
                                 }}
-                                disabled={creatingQuiz}
+                                disabled={isSubmitting}
                                 style={{
                                     borderRadius: 15,
                                     backgroundColor: 'white'
@@ -1772,7 +1782,7 @@ const styles: any = StyleSheet.create({
         padding: 15,
         paddingTop: 12,
         paddingBottom: 12,
-        marginTop: 5,
+        marginTop: 0,
         marginBottom: 20
     },
     date: {

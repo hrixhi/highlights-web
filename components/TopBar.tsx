@@ -56,6 +56,8 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
     }, [props.channelCreatedBy])
 
+
+
     return (
         <View style={styles.topbar} key={Math.random()}>
             <View style={{ width: '100%', height: Dimensions.get('window').height * 0.15, backgroundColor: '#2F2F3C' }}>
@@ -68,14 +70,15 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     backgroundColor: '#2F2F3C'
                 }}>
                     <TouchableOpacity
-                        onPress={() => Linking.openURL('http://www.cuesapp.co')}
+                        disabled={true}
+                        // onPress={() => Linking.openURL('http://www.cuesapp.co')}
                         style={{ backgroundColor: '#2F2F3C' }}
                     >
                         <Image
                             source={
                                 school && school.logo && school.logo !== ''
                                     ? school.logo
-                                    : logo
+                                    : 'https://cues-files.s3.amazonaws.com/logo/cues-logo-white-exclamation-hidden.jpg'
                             }
                             style={{
                                 width: school && school.logo && school.logo !== '' ? Dimensions.get('window').height * 0.07 : Dimensions.get('window').height * 0.07,
@@ -103,8 +106,8 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     <View style={styles.badge} /> : null
                                             }
                                         </Text>
-                                        <Text style={{ fontSize: 10, color: '#a2a2ac', textAlign: 'center' }}>
-                                            Lectures
+                                        <Text style={{ fontSize: 10, color: '#fff', textAlign: 'center' }}>
+                                            Classroom
                                         </Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity
@@ -117,7 +120,7 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     <View style={styles.badge} /> : null
                                             }
                                         </Text>
-                                        <Text style={{ fontSize: 10, color: '#a2a2ac', textAlign: 'center' }}>
+                                        <Text style={{ fontSize: 10, color: '#fff', textAlign: 'center' }}>
                                             Inbox
                                         </Text>
                                     </TouchableOpacity>
@@ -131,7 +134,7 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     <View style={styles.badge} /> : null
                                             }
                                         </Text>
-                                        <Text style={{ fontSize: 10, color: '#a2a2ac', textAlign: 'center' }}>
+                                        <Text style={{ fontSize: 10, color: '#fff', textAlign: 'center' }}>
                                             Discussion
                                         </Text>
                                     </TouchableOpacity>
@@ -141,7 +144,7 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         <Text style={styles.channelText}>
                                             <Ionicons name='stats-chart-outline' size={18} color={'#fff'} />
                                         </Text>
-                                        <Text style={{ fontSize: 10, color: '#a2a2ac', textAlign: 'center' }}>
+                                        <Text style={{ fontSize: 10, color: '#fff', textAlign: 'center' }}>
                                             Grades
                                         </Text>
                                     </TouchableOpacity>
@@ -153,13 +156,25 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 <Text style={styles.channelText}>
                                                     <Ionicons name='settings-outline' size={18} color={'#fff'} />
                                                 </Text>
-                                                <Text style={{ fontSize: 10, color: '#a2a2ac', textAlign: 'center' }}>
+                                                <Text style={{ fontSize: 10, color: '#fff', textAlign: 'center' }}>
                                                     Settings
                                                 </Text>
                                             </TouchableOpacity> : null
                                     }
                                 </View> :
-                                <View style={{ height: 34, backgroundColor: '#2F2F3C' }} />
+                                (
+                                    props.filterChoice === 'All' ?
+                                        <View style={{ flexDirection: 'column', flex: 1, width: '100%', justifyContent: 'center', backgroundColor: '#2f2f3c' }}>
+                                            <Text style={{ fontSize: 10, color: '#a2a2ac', textAlign: 'right' }}>
+                                                Select channel to view options.
+                                            </Text>
+                                        </View> :
+                                        <View style={{ flexDirection: 'column', flex: 1, width: '100%', justifyContent: 'center', backgroundColor: '#2f2f3c' }}>
+                                            <Text style={{ fontSize: 10, color: '#a2a2ac', textAlign: 'right' }}>
+                                                Your personal space.
+                                            </Text>
+                                        </View>
+                                )
                         }
                     </View>
                 </View>

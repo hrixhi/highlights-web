@@ -110,15 +110,15 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
     const renderHeaderOption = (index: number) => {
         return <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'center' }} >
-                { index in headers
-                ? 
+            {index in headers
+                ?
                 <View style={{ flexDirection: 'row', width: '100%', marginTop: 50 }}>
-                    <View style={{ width: '50%'}}>
+                    <View style={{ width: '50%' }}>
                         <TextInput
                             value={headers[index]}
                             placeholder={'Header'}
                             onChangeText={val => {
-                                const currentHeaders = JSON.parse(JSON.stringify(headers)) 
+                                const currentHeaders = JSON.parse(JSON.stringify(headers))
                                 currentHeaders[index] = val
                                 setHeaders(currentHeaders);
                                 props.setHeaders(currentHeaders)
@@ -132,15 +132,15 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         <Ionicons
                             name='close-outline'
                             onPress={() => {
-                               removeHeader(index)
+                                removeHeader(index)
                             }}
                         />
                     </View>
                 </View>
-                : 
-                
-                <TouchableOpacity 
-                    style={{ width: 100, flexDirection: 'row', }} 
+                :
+
+                <TouchableOpacity
+                    style={{ width: 100, flexDirection: 'row', }}
                     onPress={() => addHeader(index)}
                 >
                     {/* <Ionicons name='add-circle' size={19} color={"#2F2F3C"} /> */}
@@ -158,7 +158,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         Add HEADER
                     </Text>
                 </TouchableOpacity>}
-            </View>
+        </View>
     }
 
     return (
@@ -183,7 +183,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             <View style={{ paddingTop: 15 }}>
                                 <Text style={{ color: '#a2a2ac', fontSize: 15, paddingBottom: 25, marginRight: 10 }}>
                                     {index + 1}.
-                            </Text>
+                                </Text>
                             </View>
                             <View style={{ flexDirection: 'row', width: '95%' }}>
                                 <View style={{ width: '50%' }}>
@@ -225,7 +225,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 <TextInput
                                                     value={problem.question}
                                                     // style={styles.input}
-                                                    placeholder={PreferredLanguageText('problem') +  " " + (index + 1).toString()}
+                                                    placeholder={PreferredLanguageText('problem') + " " + (index + 1).toString()}
                                                     onChangeText={val => {
                                                         const newProbs = [...problems];
                                                         newProbs[index].question = val;
@@ -236,7 +236,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                     hasMultipleLines={true}
                                                 />)
                                     }
-                                    <View style={{ flexDirection: 'row',}}>
+                                    <View style={{ flexDirection: 'row', }}>
                                         {
                                             problem.question && problem.question.includes("image:") ? null :
                                                 <TouchableOpacity
@@ -306,10 +306,12 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     </View>
                                 </View>
                                 {/* <View style={{ flex: 1 }} /> */}
-                                <View style={{ width: '25%',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        flexDirection: 'row' }}>
+                                <View style={{
+                                    width: '25%',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    flexDirection: 'row'
+                                }}>
                                     <TextInput
                                         value={problem.points}
                                         // style={styles.input}
@@ -324,7 +326,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     />
                                 </View>
                                 {/* Add dropdown here */}
-                                <View style={{ width: '25%', justifyContent: 'center'}}>
+                                <View style={{ width: '25%', justifyContent: 'center' }}>
 
                                     <View
                                         style={{
@@ -375,7 +377,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
                                     <View style={{ paddingTop: 15, flexDirection: 'row', alignItems: 'center', }}>
                                         <input
-                                            style={{ paddingRight: 20}}
+                                            style={{ paddingRight: 20 }}
                                             type='checkbox'
                                             checked={problem.required}
                                             onChange={(e) => {
@@ -385,12 +387,12 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 props.setProblems(updatedProblems)
                                             }}
                                         />
-                                        <Text style={{ fontSize: 10, textTransform: 'uppercase', marginLeft: 10  }}>
+                                        <Text style={{ fontSize: 10, textTransform: 'uppercase', marginLeft: 10 }}>
                                             Required
                                         </Text>
                                     </View>
                                 </View>
-                                
+
                             </View>
                             <View style={{ paddingTop: 15, paddingLeft: 10 }}>
                                 <Ionicons
@@ -408,9 +410,9 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             </View>
                         </View>
 
-                         {/* Add is requied Checkbox */}
+                        {/* Add is requied Checkbox */}
 
-                        
+
                         {
                             problem.options.map((option: any, i: any) => {
                                 return <View style={{ flexDirection: 'row', marginTop: 10 }}>
@@ -431,7 +433,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                             }}
                                         />
                                     </View>
-                                    <View style={{ width: '50%'}}>
+                                    <View style={{ width: '50%' }}>
                                         {
                                             option.option && option.option.includes("image:") ?
                                                 <Image
@@ -465,7 +467,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                             autoOperatorNames="sin cos tan arccos arcsin arctan"
                                                         />
                                                     </View> :
-                                                     <View style={{ width: '100%' }}>
+                                                    <View style={{ width: '100%' }}>
                                                         <TextInput
                                                             value={option.option}
                                                             // style={styles.input}
@@ -590,22 +592,22 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 }}>
                                 Add Choice
                             </Text>
-                        </TouchableOpacity> :  <View style={{ height: 100 }} /> }
-                           
+                        </TouchableOpacity> : <View style={{ height: 100 }} />}
+
                         {renderHeaderOption(index + 1)}
-                        
+
                     </View>
                 })
             }
-            <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'center'}}>
+            <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'center' }}>
                 <TouchableOpacity
                     onPress={() => {
                         const updatedProblems = [...problems, { question: '', options: [], points: '', questionType: '', required: true }]
                         setProblems(updatedProblems)
                         props.setProblems(updatedProblems)
                     }}
-                    style={{ width: 100, flexDirection: 'row', }} 
-                    >
+                    style={{ width: 100, flexDirection: 'row', }}
+                >
                     {/* <Ionicons name='add-circle' size={19} color={"#2F2F3C"} /> */}
                     <Text
                         style={{
