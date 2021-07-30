@@ -1161,7 +1161,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                                     if (date < new Date()) return;
                                                                     setInitiateAt(date)
                                                                 }}
-                                                                size={'sm'}
+                                                                size={'xs'}
                                                             // isValidDate={disablePastDt}
                                                             />
 
@@ -1172,7 +1172,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
                                             {/* Add it here */}
 
-                                            <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
+                                            <View style={{ width: '100%' }}>
                                                 <View style={{ flexDirection: 'row' }}>
                                                     {
                                                         submission ?
@@ -1197,7 +1197,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
                                                                         setDeadline(date)
                                                                     }}
-                                                                    size={'sm'}
+                                                                    size={'xs'}
                                                                 // isValidDate={disablePastDt}
                                                                 />
 
