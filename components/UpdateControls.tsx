@@ -570,8 +570,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 title
             }
             tempOriginal = JSON.stringify(obj)
-        } 
-        else {
+        } else {
             tempOriginal = original
         }
 
@@ -717,6 +716,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
             if ((!problem.questionType || problem.questionType === "" || problem.questionType === "trueFalse") && problem.required) {
                 // Check completeness for MCQs
+
 
                 const { selected } = solution;
 
@@ -997,7 +997,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     const server = fetchAPI("");
 
                     // Points should be a string not a number
-                
+
                     const sanitizeProblems = problems.map((prob: any) => {
                         const { options } = prob;
                         const sanitizeOptions = options.map((option: any) => {
@@ -1016,7 +1016,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             options: sanitizeOptions
                         }
                     })
-                        server
+                    server
                         .mutate({
                             mutation: modifyQuiz,
                             variables: {
@@ -1454,6 +1454,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     initiatedAt ? (
                         <View style={{ width: '100%', paddingBottom: 50 }}>
                             <Quiz
+                                // disable quiz if graded or deadline has passed
                                 submitted={isQuiz && props.cue.submittedAt && props.cue.submittedAt !== "" ? true : false}
                                 graded={props.cue.graded}
                                 hasEnded={currentDate >= deadline}
@@ -1503,7 +1504,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     )
                 ) : (
                     <View style={{ width: '100%', paddingBottom: 50 }}>
-
                         <Quiz
                             isOwner={isOwner}
                             submitted={isQuiz && props.cue.submittedAt && props.cue.submittedAt !== "" ? true : false}
@@ -1550,39 +1550,47 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     submissionType === "wav" ? (
                     <ReactPlayer url={submissionUrl} controls={true} />
                 ) : (
-                    <View style={{ position: 'relative', flex: 1 }}>
-                        <View style={{ position: 'absolute', zIndex: 1, width: 800, height: 50000 }}>
+
+                    props.cue.graded && props.cue.comment ?
+                        <View style={{ position: 'relative', flex: 1 }}>
+                            <View style={{ position: 'absolute', zIndex: 1, width: 800, height: 50000 }}>
+                                <Webview
+                                    key={submissionUrl}
+                                    url={submissionUrl}
+                                    fullScreen={true}
+                                />
+                            </View>
+                            <View style={{ position: 'absolute', zIndex: 1, flex: 1, width: 800, height: 50000, backgroundColor: 'rgb(0,0,0,0)' }}>
+                                <Annotation
+                                    disableAnnotation={true}
+                                    style={{ resizeMode: 'cover', width: '100%', height: '100%', backgroundColor: 'rgb(0,0,0,0)', background: 'none', border: 'none' }}
+                                    src={require('./default-images/transparent.png')}
+                                    annotations={annotations}
+                                    // type={this.state.type}
+                                    value={annotation}
+                                    onChange={(e: any) => setAnnotation(e)}
+                                    onSubmit={onSubmit}
+                                />
+                            </View>
+                        </View>
+                        : <View style={{ width: 800, height: 50000 }}>
                             <Webview
                                 key={submissionUrl}
                                 url={submissionUrl}
                                 fullScreen={true}
                             />
                         </View>
-                        {
-                            props.cue.graded && props.cue.comment ? <View style={{ position: 'absolute', zIndex: 1, flex: 1, width: 800, height: 50000, backgroundColor: 'rgb(0,0,0,0)' }}>
-                                <Annotation
-                                    disableAnnotation={true}
-                                    style={{ resizeMode: 'cover', width: '100%', height: '100%', backgroundColor: 'rgb(0,0,0,0)', background: 'none', border: 'none' }}
-                                    src={require('./default-images/transparent.png')}
-                                    annotations={annotations}
-                                    // type={this.state.type}
-                                    value={annotation}
-                                    onChange={(e: any) => setAnnotation(e)}
-                                    onSubmit={onSubmit}
-                                />
-                            </View> : null
-                        }
-                    </View>
+
                 )
             ) : (
-                <View style={{ width: '100%', paddingBottom: 50, display: 'flex', flexDirection: 'column' }}>
-                    <View style={{ position: 'relative', flex: 1, width: '100%' }}>
-                        <View style={{ position: 'absolute', zIndex: 1, width: 800, height: 50000 }}>
-                            {renderRichEditorModified()}
-                            {renderFooter()}
-                        </View>
-                        {
-                            props.cue.graded && props.cue.comment ? <View style={{ position: 'absolute', zIndex: 1, flex: 1, width: 800, height: 50000, backgroundColor: 'rgb(0,0,0,0)' }}>
+                props.cue.graded && props.cue.comment ?
+                    <View style={{ width: '100%', paddingBottom: 50, display: 'flex', flexDirection: 'column' }}>
+                        <View style={{ position: 'relative', flex: 1, width: '100%' }}>
+                            <View style={{ position: 'absolute', zIndex: 1, width: 800, height: 50000 }}>
+                                {renderRichEditorModified()}
+                                {renderFooter()}
+                            </View>
+                            <View style={{ position: 'absolute', zIndex: 1, flex: 1, width: 800, height: 50000, backgroundColor: 'rgb(0,0,0,0)' }}>
                                 <Annotation
                                     disableAnnotation={true}
                                     style={{ resizeMode: 'cover', width: '100%', height: '100%', backgroundColor: 'rgb(0,0,0,0)', background: 'none', border: 'none' }}
@@ -1593,10 +1601,17 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     onChange={(e: any) => setAnnotation(e)}
                                     onSubmit={onSubmit}
                                 />
-                            </View> : null
-                        }
+                            </View>
+                        </View>
                     </View>
-                </View>
+                    : (
+                        <View style={{ width: '100%', paddingBottom: 50, display: 'flex', flexDirection: 'column', height: 50000 }}>
+                            <View style={{ width: 800, height: 50000 }}>
+                                {renderRichEditorModified()}
+                                {renderFooter()}
+                            </View>
+                        </View>
+                    )
             )}
         </View>
     );
@@ -1611,7 +1626,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 padding: 3,
                 paddingTop: 5,
                 paddingBottom: 10,
-                //  borderRadius: 15
+                borderRadius: 15
             }}
             ref={RichText}
             style={{
@@ -1657,16 +1672,14 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 padding: 3,
                 paddingTop: 5,
                 paddingBottom: 10,
-                // borderRadius: 15
             }}
             disabled={(props.cue.graded && submission)}
             ref={RichText}
             style={{
                 width: '100%',
                 backgroundColor: '#fff',
-                // borderRadius: 15,
                 minHeight: 650,
-                display: (isQuiz || imported) ? "none" : "flex",
+                display: (isQuiz || submissionImported) ? "none" : "flex",
                 borderTopWidth: 1,
                 borderColor: '#a2a2ac'
             }}
@@ -2587,6 +2600,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         </View>)
     }
 
+
     // MAIN RETURN
     return (
         <View
@@ -2644,9 +2658,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         ) : null}
                         {
                             props.cue.submittedAt !== "" && (new Date(props.cue.submittedAt) >= deadline) ?
-                                <View style={{ borderRadius: 10, padding: 5, borderWidth: 1, borderColor: '#D91D56', marginLeft: 15,  }}>
-                                    <Text style={{ color: '#D91D56',  fontSize: 12, textAlign: 'center' }}>
-                                        LATE 
+                                <View style={{ borderRadius: 10, padding: 5, borderWidth: 1, borderColor: '#D91D56', marginLeft: 15, }}>
+                                    <Text style={{ color: '#D91D56', fontSize: 12, textAlign: 'center' }}>
+                                        LATE
                                     </Text>
                                 </View>
                                 :
