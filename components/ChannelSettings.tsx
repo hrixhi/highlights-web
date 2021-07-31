@@ -26,6 +26,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
     const [owner, setOwner] = useState<any>({})
     const [owners, setOwners] = useState<any[]>([])
     const [colorCode, setColorCode] = useState("")
+    const colorChoices = ["#f44336", "#e91e63", "#9c27b0", "#673ab7", "#3f51b5", "#2196f3", "#03a9f4", "#00bcd4", "#009688", "#4caf50", "#8bc34a", "#cddc39", "#0d5d35", "#ffc107", "#ff9800", "#ff5722", "#795548", "#607db8"]
 
     const handleSubmit = useCallback(() => {
         if (name.toString().trim() === '') {
@@ -315,6 +316,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white', marginTop: 20 }}>
                             <View style={{ width: '100%', backgroundColor: 'white' }}>
                                 <CirclePicker
+                                    colors={colorChoices}
                                     color={colorCode}
                                     onChangeComplete={(color: any) => setColorCode(color.hex) }
                                 />
