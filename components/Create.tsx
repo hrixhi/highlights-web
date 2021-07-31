@@ -64,6 +64,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const [submission, setSubmission] = useState(false)
     const [deadline, setDeadline] = useState(new Date(current.getTime() + 1000 * 60 * 60 * 24))
     const [initiateAt, setInitiateAt] = useState(new Date(current.getTime()))
+    console.log('initiateAt', initiateAt)
     const [gradeWeight, setGradeWeight] = useState<any>(0)
     const [graded, setGraded] = useState(false)
     const [imported, setImported] = useState(false)

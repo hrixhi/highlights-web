@@ -23,6 +23,9 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const [cues] = useState<any[]>(unparsedCues.reverse())
     const [channelCategories, setChannelCategories] = useState([])
     const [filterChoice] = useState(props.channelFilterChoice)
+    const current = new Date()
+    const [deadline, setDeadline] = useState(new Date(current.getTime() + 1000 * 60 * 60 * 24))
+    const [initialDate, setInitialDate] = useState<Date>(new Date(current.getTime()))
 
     const getUser = useCallback(async () => {
         const u = await AsyncStorage.getItem('user')
@@ -101,7 +104,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     }}>
                                         <MenuOption
                                             value={'All'}>
-                                            <View style={{ display: 'flex', flexDirection: 'row',  }}>
+                                            <View style={{ display: 'flex', flexDirection: 'row', }}>
                                                 <View style={{
                                                     width: 8,
                                                     height: 8,
@@ -116,7 +119,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         </MenuOption>
                                         <MenuOption
                                             value={'My Cues'}>
-                                            <View style={{ display: 'flex', flexDirection: 'row',  }}>
+                                            <View style={{ display: 'flex', flexDirection: 'row', }}>
                                                 <View style={{
                                                     width: 8,
                                                     height: 8,
@@ -133,7 +136,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             props.subscriptions.map((subscription: any) => {
                                                 return <MenuOption
                                                     value={subscription}>
-                                                    <View style={{ display: 'flex', flexDirection: 'row',  }}>
+                                                    <View style={{ display: 'flex', flexDirection: 'row', }}>
                                                         <View style={{
                                                             width: 8,
                                                             height: 8,
@@ -216,6 +219,8 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 props.setFilterStart(e[0])
                                 props.setFilterEnd(e[1])
                             }}
+                            defaultShow={true}
+
                             showOneCalendar={true}
                             value={[
                                 props.filterStart,
