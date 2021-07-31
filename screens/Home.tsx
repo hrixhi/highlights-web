@@ -92,13 +92,10 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   const keepContentAndUnsubscribeAlert = PreferredLanguageText('keepContentAndUnsubscribe')
 
   const [filterStart, setFilterStart] = useState<any>(new Date())
-  
+
   const [filterEnd, setFilterEnd] = useState<any>(null)
-<<<<<<< Updated upstream
-=======
 
 
->>>>>>> Stashed changes
   useEffect(() => {
     if (email && !validateEmail(email.toString().toLowerCase())) {
       setEmailValidError(enterValidEmailError);
@@ -1260,11 +1257,11 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
       const date = new Date(item.date)
       return date >= filterStart && date <= filterEnd
     })
-    
+
   } else {
     dateFilteredCues = filteredCues
   }
-  console.log('dateFilteredCues',dateFilteredCues)
+  console.log('dateFilteredCues', dateFilteredCues)
   if (!init) {
     return null;
   }
@@ -1500,7 +1497,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 channelFilterChoice={channelFilterChoice}
                 subscriptions={subscriptions}
                 updateDiscussionNotidCounts={updateDiscussionNotidCounts}
-                
+
               />
             </View>
         }
