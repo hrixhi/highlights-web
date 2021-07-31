@@ -1903,66 +1903,484 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                         activeThumbColor="white"
                       />
                     </View>
-                    {!shuffle ? (
-                      <View
-                        style={{
-                          display: "flex",
-                          flexDirection: "row",
-                          backgroundColor: "white",
-                        }}
-                      >
-                        <Text style={styles.text}>
-                          {PreferredLanguageText("remindEvery")}
-                        </Text>
-                        <Menu
-                          onSelect={(cat: any) => {
-                            setFrequency(cat.value);
-                            setFrequencyName(cat.label);
-                          }}
-                        >
-                          <MenuTrigger>
-                            <Text
-                              style={{
-                                fontFamily: "inter",
-                                fontSize: 14,
-                                color: "#2f2f3c",
-                              }}
-                            >
-                              {frequencyName}
-                              <Ionicons name="caret-down" size={14} />
+                    <View style={{ flex: 1, display: 'flex', flexDirection: 'column', marginHorizontal: 10 }}>
+                      {channels.length !== 0 ?
+                        <View style={{ display: 'flex', flexDirection: width < 768 ? 'column' : 'row', overflow: 'visible' }}>
+                          <View style={{ width: width < 768 ? '100%' : '33.33%', borderRightWidth: 0, borderColor: '#f4f4f6' }}>
+                            <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
+                              <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
+                                {/* {PreferredLanguageText('channel')} */}
+                                Share with
+                                {/* <Ionicons
+                                                name='school-outline' size={20} color={'#a2a2ac'} /> */}
+                              </Text>
+                            </View>
+                            <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white' }}>
+                              <View style={{ width: '85%', backgroundColor: 'white', display: 'flex' }}>
+                                <Menu
+                                  onSelect={(channel: any) => {
+                                    if (channel === '') {
+                                      setChannelId('')
+                                      setCustomCategories(localCustomCategories)
+                                      setCustomCategory('')
+                                      setAddCustomCategory(false)
+                                      setSubmission(false)
+                                      setGradeWeight(0)
+                                      setGraded(false)
+                                      setSelected([])
+                                      setSubscribers([])
+                                      setProblems([])
+                                      setIsQuiz(false)
+                                      setChannelName('')
+                                      setTimer(false)
+                                    } else {
+                                      setChannelId(channel._id)
+                                      setChannelName(channel.name)
+                                      setAddCustomCategory(false)
+                                      setCustomCategory('')
+                                      setSubmission(isQuiz ? true : false)
+                                      setGradeWeight(0)
+                                      setGraded(false)
+                                    }
+                                  }}>
+                                  <MenuTrigger>
+                                    <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#2F2F3C' }}>
+                                      {channelName === '' ? 'My Cues' : channelName}<Ionicons name='caret-down' size={14} />
+                                    </Text>
+                                  </MenuTrigger>
+                                  <MenuOptions customStyles={{
+                                    optionsContainer: {
+                                      padding: 10,
+                                      borderRadius: 15,
+                                      shadowOpacity: 0,
+                                      borderWidth: 1,
+                                      borderColor: '#f4f4f6'
+                                    }
+                                  }}>
+                                    <MenuOption
+                                      value={''}>
+                                      <Text>
+                                        {PreferredLanguageText('myCues')}
+                                      </Text>
+                                    </MenuOption>
+                                    {
+                                      channels.map((channel: any) => {
+                                        return <MenuOption
+                                          value={channel}>
+                                          <Text>
+                                            {channel.name}
+                                          </Text>
+                                        </MenuOption>
+                                      })
+                                    }
+                                  </MenuOptions>
+                                </Menu>
+                              </View>
+                            </View>
+
+                          </View>
+
+                          {
+                            channelId !== '' ?
+                              <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
+                                <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
+                                  <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
+                                    {PreferredLanguageText('submissionRequired')}
+                                  </Text>
+                                </View>
+                                <View style={{ flexDirection: 'row' }}>
+                                  <View style={{
+                                    backgroundColor: 'white',
+                                    height: 40,
+                                    marginRight: 10
+                                  }}>
+                                    <Switch
+                                      disabled={isQuiz}
+                                      value={submission}
+                                      onValueChange={() => {
+                                        setSubmission(!submission)
+                                      }}
+                                      style={{ height: 20 }}
+                                      trackColor={{
+                                        false: '#f4f4f6',
+                                        true: '#a2a2ac'
+                                      }}
+                                      activeThumbColor='white'
+                                    />
+                                  </View>
+                                  {
+                                    submission ?
+                                      <View style={{
+                                        width: '100%',
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        backgroundColor: 'white',
+                                      }}>
+                                        <Text style={styles.text}>
+                                          Available
+                                        </Text>
+                                        <DatePicker
+                                          format="YYYY-MM-DD HH:mm:ss"
+                                          preventOverflow={true}
+                                          value={initiateAt}
+                                          onChange={(event: any) => {
+                                            const date = new Date(event)
+
+                                            if (date < new Date()) return;
+                                            setInitiateAt(date)
+                                          }}
+                                          size={'xs'}
+                                        // isValidDate={disablePastDt}
+                                        />
+
+                                      </View>
+                                      : null
+                                  }
+                                </View>
+
+                                {/* Add it here */}
+
+                                <View style={{ width: '100%' }}>
+                                  <View style={{ flexDirection: 'row' }}>
+                                    {
+                                      submission ?
+                                        <View style={{
+                                          width: '100%',
+                                          display: 'flex',
+                                          flexDirection: 'row',
+                                          backgroundColor: 'white',
+                                          marginLeft: 50
+                                        }}>
+                                          <Text style={styles.text}>
+                                            {PreferredLanguageText('deadline')}
+                                          </Text>
+                                          <DatePicker
+                                            format="YYYY-MM-DD HH:mm:ss"
+                                            preventOverflow={true}
+                                            value={deadline}
+                                            onChange={(event: any) => {
+                                              const date = new Date(event)
+
+                                              if (date < new Date()) return;
+
+                                              setDeadline(date)
+                                            }}
+                                            size={'xs'}
+                                          // isValidDate={disablePastDt}
+                                          />
+
+
+                                        </View>
+                                        : null
+                                    }
+                                  </View>
+
+                                  {/* Add it here */}
+                                </View>
+
+                              </View> : null
+                          }
+                          {
+                            submission ?
+                              <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
+                                <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
+                                  <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
+                                    Grade Weight
+                                  </Text>
+                                </View>
+                                <View style={{ flexDirection: 'row' }}>
+                                  <View style={{
+                                    backgroundColor: 'white',
+                                    height: 40,
+                                    marginRight: 10
+                                  }}>
+                                    <Switch
+                                      value={graded}
+                                      onValueChange={() => setGraded(!graded)}
+                                      style={{ height: 20 }}
+                                      trackColor={{
+                                        false: '#f4f4f6',
+                                        true: '#a2a2ac'
+                                      }}
+                                      activeThumbColor='white'
+                                    />
+                                  </View>
+                                  {
+                                    graded ?
+                                      <View style={{
+                                        width: '100%',
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        backgroundColor: 'white'
+                                      }}>
+                                        <Text style={styles.text}>
+                                          {PreferredLanguageText('percentageOverall')}
+                                        </Text>
+                                        <TextInput
+                                          value={gradeWeight}
+                                          style={styles.input}
+                                          placeholder={'0-100'}
+                                          onChangeText={val => setGradeWeight(val)}
+                                          placeholderTextColor={'#a2a2ac'}
+                                        />
+                                      </View>
+                                      : null
+                                  }
+                                </View>
+                              </View> : null
+                          }
+                        </View>
+                        : null}
+
+                      <View style={{ width: width < 768 ? '100%' : '33.3%', borderRightWidth: 0, borderColor: '#f4f4f6' }}>
+                        {
+                          channelId !== '' ?
+                            <View style={{ flexDirection: 'column', marginTop: 25, overflow: 'scroll' }}>
+                              <View style={{ width: '90%', padding: 5, height: 'auto' }}>
+                                <Multiselect
+                                  placeholder='Share with...'
+                                  displayValue='name'
+                                  // key={userDropdownOptions.toString()}
+                                  // style={{ width: '100%', color: '#2f2f3c', 
+                                  //     optionContainer: { // To change css for option container 
+                                  //         zIndex: 9999
+                                  //     }
+                                  // }}
+                                  options={subscribers} // Options to display in the dropdown
+                                  selectedValues={selected} // Preselected value to persist in dropdown
+                                  onSelect={(e, f) => {
+                                    setSelected(e);
+                                    return true
+                                  }} // Function will trigger on select event
+                                  onRemove={(e, f) => {
+                                    setSelected(e);
+                                    return true
+                                  }}
+                                />
+                              </View>
+
+                            </View> : null
+                        }
+                      </View>
+                      <View style={{ display: 'flex', flexDirection: width < 768 ? 'column' : 'row' }}>
+                        <View style={{ width: width < 768 ? '100%' : '33.33%', borderRightWidth: 0, borderColor: '#f4f4f6' }}>
+                          <View style={{ width: '100%', backgroundColor: 'white' }}>
+                            <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
+                              <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
+                                {PreferredLanguageText('category')}
+                              </Text>
+                            </View>
+                            <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white' }}>
+                              <View style={{ width: '85%', backgroundColor: 'white' }}>
+                                {
+                                  addCustomCategory ?
+                                    <View style={styles.colorBar}>
+                                      <TextInput
+                                        value={customCategory}
+                                        style={styles.allGrayOutline}
+                                        placeholder={'Enter Category'}
+                                        onChangeText={val => {
+                                          setCustomCategory(val)
+                                        }}
+                                        placeholderTextColor={'#a2a2ac'}
+                                      />
+                                    </View> :
+                                    <Menu
+                                      onSelect={(cat: any) => setCustomCategory(cat)}>
+                                      <MenuTrigger>
+                                        <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#2f2f3c' }}>
+                                          {customCategory === '' ? 'None' : customCategory}<Ionicons name='caret-down' size={14} />
+                                        </Text>
+                                      </MenuTrigger>
+                                      <MenuOptions customStyles={{
+                                        optionsContainer: {
+                                          padding: 10,
+                                          borderRadius: 15,
+                                          shadowOpacity: 0,
+                                          borderWidth: 1,
+                                          borderColor: '#f4f4f6'
+                                        }
+                                      }}>
+                                        <MenuOption
+                                          value={''}>
+                                          <Text>
+                                            None
+                                          </Text>
+                                        </MenuOption>
+                                        {
+                                          customCategories.map((category: any) => {
+                                            return <MenuOption
+                                              value={category}>
+                                              <Text>
+                                                {category}
+                                              </Text>
+                                            </MenuOption>
+                                          })
+                                        }
+                                      </MenuOptions>
+                                    </Menu>
+                                }
+                              </View>
+                              <View style={{ width: '15%', backgroundColor: 'white' }}>
+                                <TouchableOpacity
+                                  onPress={() => {
+                                    if (addCustomCategory) {
+                                      setCustomCategory('')
+                                      setAddCustomCategory(false)
+                                    } else {
+                                      setCustomCategory('')
+                                      setAddCustomCategory(true)
+                                    }
+                                  }}
+                                  style={{ backgroundColor: 'white' }}>
+                                  <Text style={{ textAlign: 'center', lineHeight: 20, width: '100%' }}>
+                                    <Ionicons name={addCustomCategory ? 'close' : 'add'} size={20} color={'#2f2f3c'} />
+                                  </Text>
+                                </TouchableOpacity>
+                              </View>
+                            </View>
+                          </View>
+                        </View>
+                        <View style={{ width: width < 768 ? '100%' : '33.33%', borderRightWidth: 0, borderColor: '#f4f4f6' }}>
+                          <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
+                            <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
+                              {PreferredLanguageText('priority')}
                             </Text>
-                          </MenuTrigger>
-                          <MenuOptions
-                            customStyles={{
-                              optionsContainer: {
-                                padding: 10,
-                                borderRadius: 15,
-                                shadowOpacity: 0,
-                                borderWidth: 1,
-                                borderColor: "#f4f4f6",
-                              },
-                            }}
-                          >
-                            {/* <MenuOption
+                          </View>
+                          <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white' }}>
+                            <View style={{ width: '100%', backgroundColor: 'white' }}>
+                              <ScrollView style={{ ...styles.colorBar, height: 20 }} horizontal={true} showsHorizontalScrollIndicator={false}>
+                                {
+                                  colorChoices.map((c: string, i: number) => {
+                                    return <View style={color === i ? styles.colorContainerOutline : styles.colorContainer} key={Math.random()}>
+                                      <TouchableOpacity
+                                        style={{
+                                          width: 12,
+                                          height: 12,
+                                          borderRadius: 6,
+                                          backgroundColor: colorChoices[i]
+                                        }}
+                                        onPress={() => {
+                                          setColor(i)
+                                        }}
+                                      />
+                                    </View>
+                                  })
+                                }
+                              </ScrollView>
+                            </View>
+                          </View>
+                        </View>
+                      </View>
+                      <View style={{ width: '100%', paddingTop: 15, flexDirection: width < 768 ? 'column' : 'row' }}>
+                        <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
+                          <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
+                            <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
+                              Reminder
+                            </Text>
+                          </View>
+                          <View style={{
+                            backgroundColor: 'white',
+                            width: '100%',
+                            height: 40,
+                            marginRight: 10
+                          }}>
+                            <Switch
+                              value={notify}
+                              onValueChange={() => {
+                                if (notify) {
+                                  // setShuffle(false)
+                                  setFrequency("0")
+                                } else {
+                                  // setShuffle(true)
+                                  setFrequency("1-D")
+                                }
+                                setPlayChannelCueIndef(true)
+                                setNotify(!notify)
+                              }}
+                              style={{ height: 20 }}
+                              trackColor={{
+                                false: '#f4f4f6',
+                                true: '#3B64F8'
+                              }}
+                              activeThumbColor='white'
+                            />
+                          </View>
+                        </View>
+                        {
+                          notify ?
+                            <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
+                              <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
+                                <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
+                                  Recurring
+                                </Text>
+                              </View>
+                              <View style={{ flexDirection: 'row', }}>
+                                <View style={{
+                                  backgroundColor: 'white',
+                                  height: 40,
+                                  marginRight: 10
+                                }}>
+                                  <Switch
+                                    value={!shuffle}
+                                    onValueChange={() => setShuffle(!shuffle)}
+                                    style={{ height: 20 }}
+                                    trackColor={{
+                                      false: '#f4f4f6',
+                                      true: '#a2a2ac'
+                                    }}
+                                    activeThumbColor='white'
+                                  />
+                                </View>
+                                {
+                                  !shuffle ?
+                                    <View style={{
+                                      display: 'flex',
+                                      flexDirection: 'row',
+                                      backgroundColor: 'white'
+                                    }}>
+                                      <Text style={styles.text}>
+                                        {PreferredLanguageText('remindEvery')}
+                                      </Text>
+                                      <Menu
+                                        onSelect={(cat: any) => {
+                                          setFrequency(cat.value)
+                                          setFrequencyName(cat.label)
+                                        }}>
+                                        <MenuTrigger>
+                                          <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#2f2f3c' }}>
+                                            {frequencyName}<Ionicons name='caret-down' size={14} />
+                                          </Text>
+                                        </MenuTrigger>
+                                        <MenuOptions customStyles={{
+                                          optionsContainer: {
+                                            padding: 10,
+                                            borderRadius: 15,
+                                            shadowOpacity: 0,
+                                            borderWidth: 1,
+                                            borderColor: '#f4f4f6'
+                                          }
+                                        }}>
+                                          {/* <MenuOption
                                                                     value={''}>
                                                                     <Text>
                                                                         None
                                                                     </Text>
                                                                 </MenuOption> */}
-                            {timedFrequencyOptions.map((item: any) => {
-                              return (
-                                <MenuOption value={item}>
-                                  <Text>
-                                    {item.value === "0" && channelId !== ""
-                                      ? "Once"
-                                      : item.label}
-                                  </Text>
-                                </MenuOption>
-                              );
-                            })}
-                          </MenuOptions>
-                        </Menu>
-                        {/* <Picker
+                                          {timedFrequencyOptions.map((item: any) => {
+                                            return (
+                                              <MenuOption value={item}>
+                                                <Text>
+                                                  {item.value === "0" && channelId !== ""
+                                                    ? "Once"
+                                                    : item.label}
+                                                </Text>
+                                              </MenuOption>
+                                            );
+                                          })}
+                                        </MenuOptions>
+                                      </Menu>
+                                      {/* <Picker
                                                             style={styles.picker}
                                                             itemStyle={{
                                                                 fontSize: 15
@@ -1982,382 +2400,382 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                                                 })
                                                             }
                                                         </Picker> */}
-                      </View>
+                                    </View>
                     ) : (
-                      <View
-                        style={{
-                          width: "100%",
-                          display: "flex",
-                          flexDirection: "row",
-                          backgroundColor: "white",
-                        }}
-                      >
-                        <Text style={styles.text}>
-                          {PreferredLanguageText("RemindOn")}
-                        </Text>
-                        <DatePicker
-                          format="YYYY-MM-DD HH:mm:ss"
-                          value={endPlayAt}
-                          preventOverflow={true}
-                          onChange={(event: any) => {
-                            const date = new Date(event);
-                            if (date < new Date()) return;
+                                <View
+                                  style={{
+                                    width: "100%",
+                                    display: "flex",
+                                    flexDirection: "row",
+                                    backgroundColor: "white",
+                                  }}
+                                >
+                                  <Text style={styles.text}>
+                                    {PreferredLanguageText("RemindOn")}
+                                  </Text>
+                                  <DatePicker
+                                    format="YYYY-MM-DD HH:mm:ss"
+                                    value={endPlayAt}
+                                    preventOverflow={true}
+                                    onChange={(event: any) => {
+                                      const date = new Date(event);
+                                      if (date < new Date()) return;
 
-                            setEndPlayAt(date);
-                          }}
-                          // isValidDate={disablePastDt}
-                          size={"xs"}
-                        />
-                      </View>
+                                      setEndPlayAt(date);
+                                    }}
+                                    // isValidDate={disablePastDt}
+                                    size={"xs"}
+                                  />
+                                </View>
                     )}
-                  </View>
-                </View>
+                              </View>
+                            </View>
               ) : null}
-              {notify && !shuffle ? (
-                <View style={{ width: width < 768 ? "100%" : "33.33%" }}>
-                  <View
-                    style={{
-                      width: "100%",
-                      paddingTop: 40,
-                      paddingBottom: 15,
-                      backgroundColor: "white",
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontSize: 11,
-                        color: "#a2a2ac",
-                        textTransform: "uppercase",
-                      }}
-                    >
-                      Indefinite
-                    </Text>
-                  </View>
-                  <View style={{ flexDirection: "row" }}>
-                    <View
-                      style={{
-                        backgroundColor: "white",
-                        height: 40,
-                        marginRight: 10,
-                      }}
-                    >
-                      <Switch
-                        value={playChannelCueIndef}
-                        onValueChange={() =>
-                          setPlayChannelCueIndef(!playChannelCueIndef)
-                        }
-                        style={{ height: 20 }}
-                        trackColor={{
-                          false: "#f4f4f6",
-                          true: "#a2a2ac",
-                        }}
-                        activeThumbColor="white"
-                      />
+                        {notify && !shuffle ? (
+                          <View style={{ width: width < 768 ? "100%" : "33.33%" }}>
+                            <View
+                              style={{
+                                width: "100%",
+                                paddingTop: 40,
+                                paddingBottom: 15,
+                                backgroundColor: "white",
+                              }}
+                            >
+                              <Text
+                                style={{
+                                  fontSize: 11,
+                                  color: "#a2a2ac",
+                                  textTransform: "uppercase",
+                                }}
+                              >
+                                Indefinite
+                              </Text>
+                            </View>
+                            <View style={{ flexDirection: "row" }}>
+                              <View
+                                style={{
+                                  backgroundColor: "white",
+                                  height: 40,
+                                  marginRight: 10,
+                                }}
+                              >
+                                <Switch
+                                  value={playChannelCueIndef}
+                                  onValueChange={() =>
+                                    setPlayChannelCueIndef(!playChannelCueIndef)
+                                  }
+                                  style={{ height: 20 }}
+                                  trackColor={{
+                                    false: "#f4f4f6",
+                                    true: "#a2a2ac",
+                                  }}
+                                  activeThumbColor="white"
+                                />
+                              </View>
+                              {playChannelCueIndef ? null : (
+                                <View
+                                  style={{
+                                    width: "100%",
+                                    display: "flex",
+                                    flexDirection: "row",
+                                    backgroundColor: "white",
+                                  }}
+                                >
+                                  <Text style={styles.text}>
+                                    {PreferredLanguageText("remindTill")}
+                                  </Text>
+                                  <DatePicker
+                                    format="YYYY-MM-DD HH:mm:ss"
+                                    value={endPlayAt}
+                                    preventOverflow={true}
+                                    onChange={(event: any) => {
+                                      const date = new Date(event);
+                                      if (date < new Date()) return;
+                                      setEndPlayAt(date);
+                                    }}
+                                    // isValidDate={disablePastDt}\
+                                    size={"xs"}
+                                  />
+                                </View>
+                              )}
+                            </View>
+                          </View>
+                        ) : null}
+                      </View>
+                      {/* if Quiz then ask Shuffle */}
+                      {isQuiz ? (
+                        <View style={{ width: width < 768 ? "100%" : "33.33%" }}>
+                          <View
+                            style={{
+                              width: "100%",
+                              paddingTop: 40,
+                              paddingBottom: 15,
+                              backgroundColor: "white",
+                            }}
+                          >
+                            <Text
+                              style={{
+                                fontSize: 11,
+                                color: "#a2a2ac",
+                                textTransform: "uppercase",
+                              }}
+                            >
+                              Shuffle Questions
+                            </Text>
+                          </View>
+                          <View style={{ flexDirection: "row" }}>
+                            <View
+                              style={{
+                                backgroundColor: "white",
+                                height: 40,
+                                marginRight: 10,
+                              }}
+                            >
+                              <Switch
+                                value={shuffleQuiz}
+                                onValueChange={() => setShuffleQuiz(!shuffleQuiz)}
+                                style={{ height: 20 }}
+                                trackColor={{
+                                  false: "#f4f4f6",
+                                  true: "#a2a2ac",
+                                }}
+                                activeThumbColor="white"
+                              />
+                            </View>
+                          </View>
+                        </View>
+                      ) : null}
                     </View>
-                    {playChannelCueIndef ? null : (
+                    <View style={styles.footer}>
                       <View
                         style={{
-                          width: "100%",
+                          flex: 1,
+                          backgroundColor: "white",
+                          justifyContent: "center",
                           display: "flex",
                           flexDirection: "row",
-                          backgroundColor: "white",
+                          height: 50,
+                          paddingTop: 10,
                         }}
                       >
-                        <Text style={styles.text}>
-                          {PreferredLanguageText("remindTill")}
-                        </Text>
-                        <DatePicker
-                          format="YYYY-MM-DD HH:mm:ss"
-                          value={endPlayAt}
-                          preventOverflow={true}
-                          onChange={(event: any) => {
-                            const date = new Date(event);
-                            if (date < new Date()) return;
-                            setEndPlayAt(date);
+                        <TouchableOpacity
+                          onPress={async () => {
+                            if (isQuiz) {
+                              createNewQuiz();
+                            } else {
+                              await handleCreate();
+                            }
                           }}
-                          // isValidDate={disablePastDt}\
-                          size={"xs"}
-                        />
+                          disabled={isSubmitting}
+                          style={{
+                            borderRadius: 15,
+                            backgroundColor: "white",
+                          }}
+                        >
+                          {channelId === "" ? (
+                            <Text
+                              style={{
+                                textAlign: "center",
+                                lineHeight: 35,
+                                color: "white",
+                                fontSize: 12,
+                                backgroundColor: "#3B64F8",
+                                borderRadius: 15,
+                                paddingHorizontal: 25,
+                                fontFamily: "inter",
+                                overflow: "hidden",
+                                height: 35,
+                                textTransform: "uppercase",
+                              }}
+                            >
+                              {isSubmitting
+                                ? PreferredLanguageText("sharing")
+                                : PreferredLanguageText("save")}
+                            </Text>
+                          ) : (
+                            <Text
+                              style={{
+                                textAlign: "center",
+                                lineHeight: 35,
+                                color: "white",
+                                fontSize: 12,
+                                backgroundColor: "#3B64F8",
+                                borderRadius: 15,
+                                paddingHorizontal: 25,
+                                fontFamily: "inter",
+                                overflow: "hidden",
+                                height: 35,
+                                textTransform: "uppercase",
+                              }}
+                            >
+                              {isSubmitting
+                                ? PreferredLanguageText("sharing")
+                                : PreferredLanguageText("share")}
+                            </Text>
+                          )}
+                        </TouchableOpacity>
                       </View>
-                    )}
-                  </View>
-                </View>
-              ) : null}
-            </View>
-            {/* if Quiz then ask Shuffle */}
-            {isQuiz ? (
-              <View style={{ width: width < 768 ? "100%" : "33.33%" }}>
-                <View
-                  style={{
-                    width: "100%",
-                    paddingTop: 40,
-                    paddingBottom: 15,
-                    backgroundColor: "white",
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontSize: 11,
-                      color: "#a2a2ac",
-                      textTransform: "uppercase",
-                    }}
-                  >
-                    Shuffle Questions
-                  </Text>
-                </View>
-                <View style={{ flexDirection: "row" }}>
-                  <View
-                    style={{
-                      backgroundColor: "white",
-                      height: 40,
-                      marginRight: 10,
-                    }}
-                  >
-                    <Switch
-                      value={shuffleQuiz}
-                      onValueChange={() => setShuffleQuiz(!shuffleQuiz)}
-                      style={{ height: 20 }}
-                      trackColor={{
-                        false: "#f4f4f6",
-                        true: "#a2a2ac",
-                      }}
-                      activeThumbColor="white"
-                    />
-                  </View>
-                </View>
-              </View>
-            ) : null}
-          </View>
-          <View style={styles.footer}>
-            <View
-              style={{
-                flex: 1,
-                backgroundColor: "white",
-                justifyContent: "center",
-                display: "flex",
-                flexDirection: "row",
-                height: 50,
-                paddingTop: 10,
-              }}
-            >
-              <TouchableOpacity
-                onPress={async () => {
-                  if (isQuiz) {
-                    createNewQuiz();
-                  } else {
-                    await handleCreate();
-                  }
-                }}
-                disabled={isSubmitting}
-                style={{
-                  borderRadius: 15,
-                  backgroundColor: "white",
-                }}
-              >
-                {channelId === "" ? (
-                  <Text
-                    style={{
-                      textAlign: "center",
-                      lineHeight: 35,
-                      color: "white",
-                      fontSize: 12,
-                      backgroundColor: "#3B64F8",
-                      borderRadius: 15,
-                      paddingHorizontal: 25,
-                      fontFamily: "inter",
-                      overflow: "hidden",
-                      height: 35,
-                      textTransform: "uppercase",
-                    }}
-                  >
-                    {isSubmitting
-                      ? PreferredLanguageText("sharing")
-                      : PreferredLanguageText("save")}
-                  </Text>
-                ) : (
-                  <Text
-                    style={{
-                      textAlign: "center",
-                      lineHeight: 35,
-                      color: "white",
-                      fontSize: 12,
-                      backgroundColor: "#3B64F8",
-                      borderRadius: 15,
-                      paddingHorizontal: 25,
-                      fontFamily: "inter",
-                      overflow: "hidden",
-                      height: 35,
-                      textTransform: "uppercase",
-                    }}
-                  >
-                    {isSubmitting
-                      ? PreferredLanguageText("sharing")
-                      : PreferredLanguageText("share")}
-                  </Text>
-                )}
-              </TouchableOpacity>
-            </View>
-          </View>
-          {/* Collapsible ends here */}
+                    </View>
+                    {/* Collapsible ends here */}
         </ScrollView>
       </Animated.View>
     </View>
-  );
+            );
 };
 
-export default Create;
+            export default Create;
 
-const styles: any = StyleSheet.create({
-  timePicker: {
-    width: 125,
-    fontSize: 15,
-    height: 45,
-    color: "#2F2F3C",
-    borderRadius: 10,
-    marginLeft: 10,
+            const styles: any = StyleSheet.create({
+              timePicker: {
+              width: 125,
+            fontSize: 15,
+            height: 45,
+            color: "#2F2F3C",
+            borderRadius: 10,
+            marginLeft: 10,
   },
-  backgroundVideo: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    bottom: 0,
-    right: 0,
+            backgroundVideo: {
+              position: "absolute",
+            top: 0,
+            left: 0,
+            bottom: 0,
+            right: 0,
   },
-  cuesInput: {
-    width: "100%",
-    backgroundColor: "#f4f4f6",
-    borderRadius: 15,
-    fontSize: 20,
-    padding: 20,
-    paddingTop: 20,
-    paddingBottom: 20,
-    marginBottom: "4%",
+            cuesInput: {
+              width: "100%",
+            backgroundColor: "#f4f4f6",
+            borderRadius: 15,
+            fontSize: 20,
+            padding: 20,
+            paddingTop: 20,
+            paddingBottom: 20,
+            marginBottom: "4%",
   },
-  footer: {
-    width: "100%",
-    backgroundColor: "white",
-    display: "flex",
-    flexDirection: "row",
-    marginTop: 80,
-    lineHeight: 18,
+            footer: {
+              width: "100%",
+            backgroundColor: "white",
+            display: "flex",
+            flexDirection: "row",
+            marginTop: 80,
+            lineHeight: 18,
   },
-  colorContainer: {
-    lineHeight: 20,
-    justifyContent: "center",
-    display: "flex",
-    flexDirection: "column",
-    marginLeft: 7,
-    paddingHorizontal: 4,
-    backgroundColor: "white",
+            colorContainer: {
+              lineHeight: 20,
+            justifyContent: "center",
+            display: "flex",
+            flexDirection: "column",
+            marginLeft: 7,
+            paddingHorizontal: 4,
+            backgroundColor: "white",
   },
-  colorContainerOutline: {
-    lineHeight: 22,
-    justifyContent: "center",
-    display: "flex",
-    flexDirection: "column",
-    marginLeft: 7,
-    paddingHorizontal: 4,
-    backgroundColor: "white",
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: "#a2a2ac",
+            colorContainerOutline: {
+              lineHeight: 22,
+            justifyContent: "center",
+            display: "flex",
+            flexDirection: "column",
+            marginLeft: 7,
+            paddingHorizontal: 4,
+            backgroundColor: "white",
+            borderRadius: 10,
+            borderWidth: 1,
+            borderColor: "#a2a2ac",
   },
-  input: {
-    width: "100%",
-    borderBottomColor: "#f4f4f6",
-    borderBottomWidth: 1,
-    fontSize: 15,
-    padding: 15,
-    paddingTop: 12,
-    paddingBottom: 12,
-    marginTop: 0,
-    marginBottom: 20,
+            input: {
+              width: "100%",
+            borderBottomColor: "#f4f4f6",
+            borderBottomWidth: 1,
+            fontSize: 15,
+            padding: 15,
+            paddingTop: 12,
+            paddingBottom: 12,
+            marginTop: 0,
+            marginBottom: 20,
   },
-  date: {
-    width: "100%",
-    display: "flex",
-    flexDirection: "row",
-    paddingBottom: 4,
-    backgroundColor: "white",
+            date: {
+              width: "100%",
+            display: "flex",
+            flexDirection: "row",
+            paddingBottom: 4,
+            backgroundColor: "white",
   },
-  colorBar: {
-    width: "100%",
-    flexDirection: "row",
-    backgroundColor: "white",
-    lineHeight: 20,
+            colorBar: {
+              width: "100%",
+            flexDirection: "row",
+            backgroundColor: "white",
+            lineHeight: 20,
   },
-  picker: {
-    display: "flex",
-    justifyContent: "center",
-    backgroundColor: "white",
-    overflow: "hidden",
-    fontSize: 12,
-    textAlign: "center",
-    borderWidth: 1,
-    width: 100,
-    height: 20,
-    alignSelf: "center",
-    marginTop: -20,
-    borderRadius: 3,
+            picker: {
+              display: "flex",
+            justifyContent: "center",
+            backgroundColor: "white",
+            overflow: "hidden",
+            fontSize: 12,
+            textAlign: "center",
+            borderWidth: 1,
+            width: 100,
+            height: 20,
+            alignSelf: "center",
+            marginTop: -20,
+            borderRadius: 3,
   },
-  text: {
-    fontSize: 12,
-    color: "#a2a2ac",
-    textAlign: "left",
-    paddingHorizontal: 10,
+            text: {
+              fontSize: 12,
+            color: "#a2a2ac",
+            textAlign: "left",
+            paddingHorizontal: 10,
   },
-  all: {
-    fontSize: 12,
-    color: "#a2a2ac",
-    height: 22,
-    paddingHorizontal: 10,
-    backgroundColor: "white",
+            all: {
+              fontSize: 12,
+            color: "#a2a2ac",
+            height: 22,
+            paddingHorizontal: 10,
+            backgroundColor: "white",
   },
-  allBlack: {
-    fontSize: 12,
-    color: "#2F2F3C",
-    height: 22,
-    paddingHorizontal: 10,
-    backgroundColor: "white",
-    marginBottom: 20,
+            allBlack: {
+              fontSize: 12,
+            color: "#2F2F3C",
+            height: 22,
+            paddingHorizontal: 10,
+            backgroundColor: "white",
+            marginBottom: 20,
   },
-  allOutline: {
-    fontSize: 12,
-    color: "#FFF",
-    height: 22,
-    paddingHorizontal: 10,
-    borderRadius: 10,
-    backgroundColor: "#2F2F3C",
-    marginBottom: 20,
+            allOutline: {
+              fontSize: 12,
+            color: "#FFF",
+            height: 22,
+            paddingHorizontal: 10,
+            borderRadius: 10,
+            backgroundColor: "#2F2F3C",
+            marginBottom: 20,
   },
-  allGrayOutline: {
-    fontSize: 12,
-    color: "#a2a2ac",
-    height: 22,
-    paddingHorizontal: 10,
-    backgroundColor: "white",
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: "#a2a2ac",
+            allGrayOutline: {
+              fontSize: 12,
+            color: "#a2a2ac",
+            height: 22,
+            paddingHorizontal: 10,
+            backgroundColor: "white",
+            borderRadius: 10,
+            borderWidth: 1,
+            borderColor: "#a2a2ac",
   },
-  color1: {
-    backgroundColor: "#D11C60",
+            color1: {
+              backgroundColor: "#D11C60",
   },
-  color2: {
-    backgroundColor: "#EF5B24",
+            color2: {
+              backgroundColor: "#EF5B24",
   },
-  color3: {
-    backgroundColor: "#E0D41F",
+            color3: {
+              backgroundColor: "#E0D41F",
   },
-  color4: {
-    backgroundColor: "#B8D41F",
+            color4: {
+              backgroundColor: "#B8D41F",
   },
-  color5: {
-    backgroundColor: "#7FB1D3",
+            color5: {
+              backgroundColor: "#7FB1D3",
   },
-  outline: {
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: "#a2a2ac",
+            outline: {
+              borderRadius: 10,
+            borderWidth: 1,
+            borderColor: "#a2a2ac",
   },
 });

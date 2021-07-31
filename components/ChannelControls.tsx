@@ -9,6 +9,7 @@ import Alert from '../components/Alert'
 import { uniqueNamesGenerator, colors } from 'unique-names-generator'
 import { PreferredLanguageText } from '../helpers/LanguageContext';
 import { ScrollView, Switch } from 'react-native-gesture-handler';
+import { CirclePicker } from "react-color";
 
 const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -22,10 +23,12 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
     const [userFound, setUserFound] = useState(false)
     const [school, setSchool] = useState<any>(null)
     const [role, setRole] = useState('')
+    const [colorCode, setColorCode] = useState("")
 
     const [channels, setChannels] = useState<any[]>([])
 
     const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
+    const colorChoices = ["#f44336", "#e91e63", "#9c27b0", "#673ab7", "#3f51b5", "#2196f3", "#03a9f4", "#00bcd4", "#009688", "#4caf50", "#8bc34a", "#cddc39", "#0d5d35", "#ffc107", "#ff9800", "#ff5722", "#795548", "#607db8"]
 
     // Alert messages
     const incorrectPasswordAlert = PreferredLanguageText('incorrectPassword');
@@ -48,7 +51,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
             }
 
         } else {
-            if (name) {
+            if (name && colorCode !== "") {
                 setIsSubmitDisabled(false)
                 return;
             }
@@ -57,7 +60,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
 
         setIsSubmitDisabled(true);
 
-    }, [name, password, passwordRequired, option])
+    }, [name, password, passwordRequired, option, colorCode])
 
     const handleSubscribe = useCallback(async () => {
 
@@ -156,7 +159,8 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                     name,
                     password,
                     createdBy: user._id,
-                    temporary
+                    temporary,
+                    colorCode
                 }
             })
                 .then(res => {
@@ -459,6 +463,32 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         <Text style={{ color: '#a2a2ac', fontSize: 12 }}>
                                             Channels that are not temporary can only be deleted by the school administrator.
                                         </Text>
+                                    </View>
+                                    : null
+                            }
+                            {
+                                option === "Create" ? 
+                                <View
+                                        style={{
+                                            width: "100%",
+                                            paddingVertical: 15,
+                                        }}>
+                                        <View
+                                            style={{
+                                                width: "100%",
+                                                paddingTop: 20,
+                                                paddingBottom: 15,
+                                                backgroundColor: "white"
+                                            }}>
+                                            <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>Color</Text>
+                                        </View>
+                                        <View style={{ width: '100%', backgroundColor: 'white' }}>
+                                            <CirclePicker
+                                                colors={colorChoices}
+                                                color={colorCode}
+                                                onChangeComplete={(color: any) => setColorCode(color.hex) }
+                                            />
+                                        </View>
                                     </View>
                                     : null
                             }

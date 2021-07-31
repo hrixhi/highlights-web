@@ -1,6 +1,6 @@
 import EquationEditor from 'equation-editor-react';
 import React, { useEffect, useState } from 'react';
-import { Image, StyleSheet, TextInput, ActivityIndicator } from 'react-native';
+import { Image, StyleSheet, TextInput, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { TextInput as CustomTextInput } from './CustomTextInput'
 import { Text, View } from './Themed';
 
@@ -147,6 +147,28 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     const renderHeader = (index: number) => {
 
         if (index in headers) {
+
+            return (<TextInput
+                editable={props.isOwner}
+                value={headers[index]}
+                style={{
+                    marginBottom: 30, 
+                    marginTop: 50,
+                    fontSize: 15,
+                    paddingTop: 12,
+                    paddingBottom: 12,
+                    fontWeight: "600",
+                    width: '100%'
+                }}
+                onChangeText={(val: string) => {
+                    const currentHeaders =  JSON.parse(JSON.stringify(headers)) 
+                    currentHeaders[index] = val
+                    setHeaders(currentHeaders);
+                }}
+                placeholder={'Header'}
+                placeholderTextColor={'#a2a2ac'}
+            />)
+
             return (<Text style={{ width: '100%', marginBottom: 30, marginTop: 50, fontSize: 15, fontWeight: "600" }}>
                 {headers[index]}
             </Text>)
@@ -214,9 +236,25 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             key={solutions.toString() + updateKey.toString()}
         >
 
-           {instructions !== "" ? <Text style={{ width: '100%', marginTop: 20, marginBottom: 50, fontSize: 15 }}>
-                {instructions}
-            </Text> : null}
+           {instructions !== "" ? 
+                <TextInput
+                    editable={props.isOwner}
+                    value={instructions}
+                    multiline={true}
+                    numberOfLines={3}
+                    style={{
+                        marginTop: 20, 
+                        marginBottom: 20, 
+                        fontSize: 15,
+                        paddingTop: 12,
+                        paddingBottom: 12,
+                        width: '100%'
+                    }}
+                    onChangeText={(val: string) => setInstructions(val)}
+                    placeholder={'Instructions'}
+                    placeholderTextColor={'#a2a2ac'}
+                />
+                : null}
             {
                 displayProblems.map((problem: any, index: any) => {
 
@@ -274,7 +312,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             </View>
                                         ) :
                                             <TextInput
-                                                editable={false}
+                                                editable={props.isOwner}
                                                 value={problem.question}
                                                 style={{
                                                     fontSize: 15,
@@ -284,6 +322,11 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                     marginTop: 5,
                                                     marginBottom: 20,
                                                     width: '80%'
+                                                }}
+                                                onChangeText={(val: string) => {
+                                                    const newProbs = [...problems];
+                                                    newProbs[problemIndex].question = val;
+                                                    setProblems(newProbs)
                                                 }}
                                                 placeholder={'Problem ' + (index + 1).toString()}
                                                 placeholderTextColor={'#a2a2ac'}
@@ -376,7 +419,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                         />
                                                     </View> :
                                                     <TextInput
-                                                        editable={false}
+                                                        editable={props.isOwner && problem.questionType !== "trueFalse"}
                                                         value={option.option}
                                                         style={{
                                                             width: '50%',
@@ -387,6 +430,11 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                             marginTop: 5,
                                                             marginBottom: 20,
                                                             color
+                                                        }}
+                                                        onChangeText={(val: string) => {
+                                                            const newProbs = [...problems];
+                                                                newProbs[problemIndex].options[i].option = val;
+                                                                setProblems(newProbs)
                                                         }}
                                                         placeholder={'Option ' + (i + 1).toString()}
                                                         placeholderTextColor={'#a2a2ac'}
@@ -424,9 +472,38 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
                 
             }
-            
 
-            {/* Add Submit button here */}
+            {/* Add Save Changes button here */}
+            {
+                props.isOwner ? 
+                <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'center'}}>
+                <TouchableOpacity
+                    onPress={() => {
+                        props.modifyQuiz(instructions, problems, headers);
+                    }}
+                    style={{ backgroundColor: "white", borderRadius: 15, width: 150 }}>
+                    <Text
+                        style={{
+                            textAlign: "center",
+                            lineHeight: 35,
+                            color: "white",
+                            fontSize: 12,
+                            backgroundColor: "#3B64F8",
+                            borderRadius: 15,
+                            paddingHorizontal: 25,
+                            fontFamily: "inter",
+                            overflow: "hidden",
+                            height: 35,
+                            textTransform: 'uppercase'
+                        }}>
+                        Save Changes
+                    </Text>
+                </TouchableOpacity>
+                </View>
+                : 
+                null
+            }
+
         </View >
     );
 }

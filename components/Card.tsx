@@ -12,21 +12,20 @@ console.log('props.cue.unreadThreads',props.cue.unreadThreads)
     const colorScheme = 'dark'
     const styleObject = styles(colorScheme, props.channelId, colorChoices[props.cue.color])
     const starred = props.cue.starred;
-    const { title, subtitle } = htmlStringParser(props.cue.channelId && props.cue.channelId !== '' ? props.cue.original : props.cue.cue)
+    const { title } = htmlStringParser(props.cue.channelId && props.cue.channelId !== '' ? props.cue.original : props.cue.cue)
     const [showScore, setShowScore] = useState(false);
-    const [colorCode, setColorCode] = useState('#202025');
+    const [colorCode, setColorCode] = useState('#2f2f3c');
 
     useEffect(() => {
         if (props.cue && props.cue.original) {
 
             // Hide scores if it's a quiz and !releaseSubmission
-
             if (props.cue.graded && !props.cue.releaseSubmission) {
                 setShowScore(false)
             } else {
                 setShowScore(true);
             }
-        } 
+        }
 
         // Set color code
         const matchSubscription = props.subscriptions.find((sub: any) => {
@@ -35,7 +34,6 @@ console.log('props.cue.unreadThreads',props.cue.unreadThreads)
 
         if (matchSubscription && matchSubscription !== undefined) {
             setColorCode(matchSubscription.colorCode)
-
         }
     }, [props.cue])
     useEffect(()=>{
@@ -150,7 +148,7 @@ const getUserAndLoad=async()=>{
                         </Text>
                     </View>
                     <View style={{
-                        backgroundColor: colorScheme === 'light' ? '#fff' : '#fff',
+                        backgroundColor: '#fff',
                         width: '100%', flexDirection: 'row', flex: 1, height: '75%', paddingTop: 6
                     }}>
                         <Text
@@ -196,12 +194,6 @@ const getUserAndLoad=async()=>{
                                 </Text> : <Text style={{ width: 25 }} />
                         }
                     </View>
-                    {/* <Text
-                        ellipsizeMode={'tail'}
-                        numberOfLines={1}
-                        style={starred ? styleObject.descriptionFlip : styleObject.description}>
-                        {subtitle && subtitle !== '' ? subtitle : '-'}
-                    </Text> */}
                 </View>
             </TouchableOpacity>
         </View>
@@ -225,7 +217,7 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
         borderRadius: 15,
         padding: 13,
         paddingTop: 20,
-        backgroundColor: colorScheme === 'light' ? '#fff' : '#fff',
+        backgroundColor: '#fff',
     },
     flipCard: {
         height: '100%',
@@ -242,7 +234,7 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
     },
     text: {
         height: '100%',
-        backgroundColor: colorScheme === 'light' ? '#fff' : '#fff'
+        backgroundColor: '#fff'
     },
     flipText: {
         height: '100%',
@@ -251,9 +243,9 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
     },
     dateContainer: {
         fontSize: 10,
-        color: colorScheme === 'light' ? '#fff' : '#fff',
-        height: '25%',
-        backgroundColor: colorScheme === 'light' ? '#fff' : '#fff',
+        color: '#fff',
+        height: '32%',
+        backgroundColor: '#fff',
         display: 'flex',
         flexDirection: 'row'
     },
@@ -281,15 +273,10 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
     },
     title: {
         fontFamily: 'inter',
-        fontSize: 14,
+        fontSize: 17,
         lineHeight: 20,
-        // height: '75%',
-        // width: '100%',
         flex: 1,
-        color: col,
-        // textOu
-        // textDecorationColor: col,
-        // textDecorationLine: 'underline'
+        color: col
     },
     titleFlip: {
         color: colorScheme === 'light' ? '#fff' : '#2f2f3c',
