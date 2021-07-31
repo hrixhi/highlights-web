@@ -94,6 +94,11 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   const [filterStart, setFilterStart] = useState<any>(new Date())
   
   const [filterEnd, setFilterEnd] = useState<any>(null)
+<<<<<<< Updated upstream
+=======
+
+
+>>>>>>> Stashed changes
   useEffect(() => {
     if (email && !validateEmail(email.toString().toLowerCase())) {
       setEmailValidError(enterValidEmailError);
@@ -180,7 +185,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               }
             }).then(res => {
               if (res.data.threadStatus.totalUnreadDiscussionThreads) {
-                console.log('setting in unread threads in useeffect', res.data.threadStatus.totalUnreadDiscussionThreads)
                 setUnreadDiscussionThreads(res.data.threadStatus.totalUnreadDiscussionThreads)
               }
             })
@@ -270,7 +274,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
       }
     }).then(res => {
       if (res.data.threadStatus.totalUnreadDiscussionThreads !== undefined && res.data.threadStatus.totalUnreadDiscussionThreads !== null) {
-        console.log('after upading discussion', res.data.threadStatus.totalUnreadDiscussionThreads)
         setUnreadDiscussionThreads(res.data.threadStatus.totalUnreadDiscussionThreads)
       }
     })
