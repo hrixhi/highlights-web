@@ -4,9 +4,10 @@ import { Text, View, TouchableOpacity } from '../components/Themed';
 import { Ionicons } from '@expo/vector-icons';
 import _ from 'lodash'
 import { htmlStringParser } from '../helpers/HTMLParser';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
-
+console.log('props.cue.unreadThreads',props.cue.unreadThreads)
     const colorChoices: any[] = ['#d91d56', '#ED7D22', '#FFBA10', '#B8D41F', '#53BE6D'].reverse()
     const colorScheme = 'dark'
     const styleObject = styles(colorScheme, props.channelId, colorChoices[props.cue.color])
@@ -35,7 +36,20 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             setColorCode(matchSubscription.colorCode)
         }
     }, [props.cue])
-
+    useEffect(()=>{
+        
+        
+        
+//props.updateMessageNotifCounts()
+getUserAndLoad()
+    },[])
+const getUserAndLoad=async()=>{
+    console.log('function called')
+    const uString: any = await AsyncStorage.getItem("user");
+    const parsedUser = JSON.parse(uString)
+    
+    props.updateDiscussionNotidCounts(parsedUser._id)
+}
     return (
         <View
             style={styleObject.swiper}

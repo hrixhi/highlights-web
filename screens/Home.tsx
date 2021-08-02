@@ -91,10 +91,10 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   const areYouSureUnsubscribeAlert = PreferredLanguageText('areYouSureUnsubscribe')
   const keepContentAndUnsubscribeAlert = PreferredLanguageText('keepContentAndUnsubscribe')
 
-  const [filterStart, setFilterStart] = useState<any>(null)
+  const [filterStart, setFilterStart] = useState<any>(new Date())
+
   const [filterEnd, setFilterEnd] = useState<any>(null)
 
-  console.log("Subscriptions", subscriptions)
 
   useEffect(() => {
     if (email && !validateEmail(email.toString().toLowerCase())) {
@@ -182,7 +182,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               }
             }).then(res => {
               if (res.data.threadStatus.totalUnreadDiscussionThreads) {
-                console.log('setting in unread threads in useeffect', res.data.threadStatus.totalUnreadDiscussionThreads)
                 setUnreadDiscussionThreads(res.data.threadStatus.totalUnreadDiscussionThreads)
               }
             })
@@ -262,6 +261,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
 
   const updateDiscussionNotidCounts = useCallback((userId) => {
+    console.log('functiona called')
     const server = fetchAPI('')
     server.query({
       query: totalUnreadDiscussionThreads,
@@ -271,7 +271,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
       }
     }).then(res => {
       if (res.data.threadStatus.totalUnreadDiscussionThreads !== undefined && res.data.threadStatus.totalUnreadDiscussionThreads !== null) {
-        console.log('after upading discussion', res.data.threadStatus.totalUnreadDiscussionThreads)
         setUnreadDiscussionThreads(res.data.threadStatus.totalUnreadDiscussionThreads)
       }
     })
@@ -1258,11 +1257,11 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
       const date = new Date(item.date)
       return date >= filterStart && date <= filterEnd
     })
-    console.log(dateFilteredCues)
+
   } else {
     dateFilteredCues = filteredCues
   }
-
+  console.log('dateFilteredCues', dateFilteredCues)
   if (!init) {
     return null;
   }
@@ -1497,6 +1496,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 openUpdate={(index: any, key: any, pageNumber: any, _id: any, by: any, cId: any) => openUpdate(index, key, pageNumber, _id, by, cId)}
                 channelFilterChoice={channelFilterChoice}
                 subscriptions={subscriptions}
+                updateDiscussionNotidCounts={updateDiscussionNotidCounts}
+
               />
             </View>
         }

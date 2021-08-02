@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Text, View, TouchableOpacity } from '../components/Themed';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { DateRangePicker } from 'rsuite';
+import Alert from '../components/Alert'
 import {
     Menu,
     MenuOptions,
@@ -23,6 +24,9 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const [cues] = useState<any[]>(unparsedCues.reverse())
     const [channelCategories, setChannelCategories] = useState([])
     const [filterChoice] = useState(props.channelFilterChoice)
+    const current = new Date()
+    const [deadline, setDeadline] = useState(new Date(current.getTime() + 1000 * 60 * 60 * 24))
+    const [initialDate, setInitialDate] = useState<Date>(new Date(current.getTime()))
 
     const getUser = useCallback(async () => {
         const u = await AsyncStorage.getItem('user')
@@ -101,7 +105,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     }}>
                                         <MenuOption
                                             value={'All'}>
-                                            <View style={{ display: 'flex', flexDirection: 'row',  }}>
+                                            <View style={{ display: 'flex', flexDirection: 'row', }}>
                                                 <View style={{
                                                     width: 8,
                                                     height: 8,
@@ -116,7 +120,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         </MenuOption>
                                         <MenuOption
                                             value={'My Cues'}>
-                                            <View style={{ display: 'flex', flexDirection: 'row',  }}>
+                                            <View style={{ display: 'flex', flexDirection: 'row', }}>
                                                 <View style={{
                                                     width: 8,
                                                     height: 8,
@@ -133,7 +137,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             props.subscriptions.map((subscription: any) => {
                                                 return <MenuOption
                                                     value={subscription}>
-                                                    <View style={{ display: 'flex', flexDirection: 'row',  }}>
+                                                    <View style={{ display: 'flex', flexDirection: 'row', }}>
                                                         <View style={{
                                                             width: 8,
                                                             height: 8,
@@ -213,9 +217,14 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             size={'sm'}
                             placeholder={'Select Dates'}
                             onChange={e => {
-                                props.setFilterStart(e[0])
-                                props.setFilterEnd(e[1])
+                                console.log('start date', e[0])
+                                console.log('end date', e[1])
+                                if (e[0] > e[1]) {
+                                    alert('End date must be greater')
+                                }
                             }}
+                            defaultShow={true}
+
                             showOneCalendar={true}
                             value={[
                                 props.filterStart,
