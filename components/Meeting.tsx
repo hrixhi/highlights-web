@@ -11,8 +11,8 @@ import {
     getRecordings,
     deleteRecording,
     getSharableLink,
-    modifyAttendance,
     meetingRequest,
+    modifyAttendance
 } from "../graphql/QueriesAndMutations";
 import { Ionicons } from "@expo/vector-icons";
 import SubscriberCard from "./SubscriberCard";
@@ -173,6 +173,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
 
 
     }
+
 
     useEffect(() => {
         (async () => {
@@ -524,7 +525,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                 lineHeight: 23,
                                 marginRight: 10,
                                 paddingBottom: 40,
-                                color: '#a2a2ac',
+                                color: '#2f2f3c',
                                 fontSize: 11,
                                 textTransform: 'uppercase'
                             }}>

@@ -80,7 +80,6 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
     }, [channelId])
 
     const createDirectMessage = useCallback(async () => {
-
         setSendingThread(true)
         const u = await AsyncStorage.getItem('user')
         if (!message || message === '' || !u) {
@@ -129,7 +128,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
     }, [props.users, message, props.channelId, imported, type, title, url])
 
     const createThreadMessage = useCallback(async () => {
-        console.log('creating thread message')
+        console.log('sending thread')
         setSendingThread(true)
         if (!message || message === '') {
             setSendingThread(false)
@@ -326,7 +325,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             !cueId && !parentId ?
                                 <View style={{ width: '33.33%', backgroundColor: 'white' }}>
                                     <View style={{ width: '100%', paddingTop: 40, paddingBottom: 10, backgroundColor: 'white' }}>
-                                        <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
+                                        <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>
                                             {PreferredLanguageText('category')}
                                         </Text>
                                     </View>
@@ -425,7 +424,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                         parentId ? null :
                                             <View style={{ width: '33.33%', backgroundColor: 'white' }}>
                                                 <View style={{ width: '100%', paddingTop: 40, paddingBottom: 10, backgroundColor: 'white' }}>
-                                                    <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
+                                                    <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>
                                                         {PreferredLanguageText('private')}
                                                     </Text>
                                                 </View>

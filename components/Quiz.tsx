@@ -496,7 +496,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             height: 35,
                             textTransform: 'uppercase'
                         }}>
-                        Save Changes
+                        Save
                     </Text>
                 </TouchableOpacity>
                 </View>
