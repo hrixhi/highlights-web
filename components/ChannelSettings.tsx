@@ -85,7 +85,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
     }, [activeRole, activeGrade, activeSection])
 
     const renderSubscriberFilters = () => {
-        return (<View style={{ width: '100%', flexDirection: 'row', backgroundColor: 'white', marginTop: 50 }}>
+        return (<View style={{ width: '100%', flexDirection: 'row', backgroundColor: 'white', marginTop: 15 }}>
             <View style={{ backgroundColor: 'white', }}>
                             <View style={{ flexDirection: 'row', justifyContent: 'center', display: 'flex', backgroundColor: 'white', paddingLeft: 10 }}>
                                 <Menu
@@ -552,11 +552,13 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         </View>
                     </View>
                   
-                    {renderSubscriberFilters()}
+                    
 
-                    <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase', marginTop: 25, }}>
+                    <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase', marginTop: 40, }}>
                         Subscribers
                     </Text>
+
+                    {renderSubscriberFilters()}
                     
                     <View style={{ flexDirection: 'column', marginTop: 25, overflow: 'scroll' }}>
                         <View style={{ width: '90%', height: 'auto' }}>

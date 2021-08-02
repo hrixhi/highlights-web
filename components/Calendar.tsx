@@ -909,55 +909,18 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
             }
         </View>)
     }
+    
+    let eventForChannelName = ''
+    
+    if (channelId === "") {
+        eventForChannelName = "My Cues"
+    } else {
+        const filter = channels.filter((channel: any) => {
+            return channel._id === channelId
+        })
 
-    // const onUpdateSelectedDate = (date: any) => {
-    //     setCurrentMonth(moment(date.dateString).format("MMMM YYYY"));
-    //   };
-
-
-    // const prevClick = (schedulerData: any)=> {
-    //     console.log(schedulerData)
-    //     console.log("Prev clicked")
-    //     schedulerData.prev();
-    //     schedulerData.setEvents(events);
-    //     setViewModel(schedulerData)
-    //     // this.setState({
-    //     //     viewModel: schedulerData
-    //     // })
-    // }
-
-    // const nextClick = (schedulerData: any)=> {
-    //     console.log(schedulerData)
-    //     console.log("Next clicked")
-    //     schedulerData.next();
-    //     schedulerData.setEvents(events);
-    //     setViewModel(schedulerData)
-    //     // schedulerData.setEvents(DemoData.events);
-    //     // this.setState({
-    //     //     viewModel: schedulerData
-    //     // })
-    // }
-
-    // const onViewChange = (schedulerData: any, view: any) => {
-    //     schedulerData.setViewType(view.viewType, view.showAgenda, view.isEventPerspective);
-    //     schedulerData.setEvents(events);
-    //     setViewModel(schedulerData)
-    //     // this.setState({
-    //     //     viewModel: schedulerData
-    //     // })
-    // }
-
-    // const onSelectDate = (schedulerData: any, date: any) => {
-    //     schedulerData.setDate(date);
-    //     schedulerData.setEvents(events);
-    //     setViewModel(events)
-    // }
-
-    // const eventClicked = (schedulerData: any, event: any) => {
-    //     alert(`You just clicked an event: {id: ${event.id}, title: ${event.title}}`);
-    // };
-
-    // console.log("View Model",viewModel);
+        eventForChannelName = filter[0].name
+    }
 
     return (
         <Animated.View
@@ -1068,39 +1031,37 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     </View>
                                 </View>
                                 {/* Put time here */}
-                                <View style={{ display: 'flex', width: "100%", flexDirection: width < 768 ? "column" : "row", marginBottom: 30, paddingVertical: 10 }} >
+                                <View style={{ display: 'flex', width: "100%", flexDirection: width < 768 ? "column" : "row", marginBottom: 30, paddingVertical: 10,}} >
                                     <View
-                                        style={{
-                                            marginTop: 12,
-                                            marginLeft: 0
-                                        }}>
-                                        <DateRangePicker
-                                            preventOverflow={true}
-                                            size={'xs'}
-                                            placeholder={'Select Dates'}
-                                            onChange={e => {
-                                                
-                                                setStart(e[0])
-                                                setEnd(e[1])
-                                            }}
-                                            value={[
-                                                start,
-                                                end
-                                            ]}
-                                            cleanable={false}
-                                            showOneCalendar={true}
-                                        />
-                                    </View>
-                                    {/* <View
                                         style={{
                                             width: width < 768 ? "100%" : "30%",
                                             flexDirection: "row",
                                             marginTop: 12,
-                                            marginLeft: width < 768 ? 0 : 10
+                                            alignItems: 'center' 
+                                        }}>
+                                        <Text style={styles.text}>{PreferredLanguageText("start")}</Text>
+                                        <DatePicker
+                                            format="YYYY-MM-DD HH:mm"
+                                            preventOverflow={true}
+                                            value={start}
+                                            onChange={(event: any) => {
+                                                const date = new Date(event);
+                                                setStart(date);
+                                            }}
+                                            size={'xs'}
+                                        />
+                                    </View>
+                                    <View
+                                        style={{
+                                            width: width < 768 ? "100%" : "30%",
+                                            flexDirection: "row",
+                                            marginTop: 12,
+                                            alignItems: 'center',
+                                            marginLeft: width < 768 ? 0 : 30
                                         }}>
                                         <Text style={styles.text}>{PreferredLanguageText("end")}</Text>
                                         <DatePicker
-                                            format="YYYY-MM-DD HH:mm:ss"
+                                            format="YYYY-MM-DD HH:mm"
                                             preventOverflow={true}
                                             value={end}
                                             onChange={(event: any) => {
@@ -1109,7 +1070,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             }}
                                             size={'xs'}
                                         />
-                                    </View> */}
+                                    </View>
                                 </View>
                                 <View
                                     style={{
@@ -1124,73 +1085,52 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 style={{ width: "100%", paddingBottom: 20, backgroundColor: "white" }}>
                                                 <Text
                                                     style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
-                                                    {/* {PreferredLanguageText('channel')} */}
                                                     Event For
-                                                    {/* <Ionicons
-                                                name='school-outline' size={20} color={'#a2a2ac'} /> */}
                                                 </Text>
                                             </View>
-                                            <View
-                                                style={{
-                                                    width: "100%",
-                                                    display: "flex",
-                                                    flexDirection: "row",
-                                                    backgroundColor: "white"
-                                                }}>
-                                                <View
-                                                    style={{
-                                                        width: "100%",
-                                                        backgroundColor: "white",
-                                                        display: "flex"
+                                            
+                                            <View style={{ flexDirection: 'row', display: 'flex', backgroundColor: '#fff' }}>
+                                                <Menu
+                                                    onSelect={(channelId: any) => {
+                                                        setChannelId(channelId)
+                                                        
                                                     }}>
-                                                    <ScrollView
-                                                        style={styles.colorBar}
-                                                        horizontal={true}
-                                                        showsHorizontalScrollIndicator={false}>
-                                                        <TouchableOpacity
-                                                            style={
-                                                                channelId === "" ? styles.allOutline : styles.allBlack
-                                                            }
-                                                            onPress={() => {
-                                                                setChannelId("");
-                                                            }}>
-                                                            <Text
-                                                                style={{
-                                                                    lineHeight: 20,
-                                                                    fontSize: 12,
-                                                                    color: channelId === "" ? "#fff" : "#2F2F3C"
-                                                                }}>
-                                                                {PreferredLanguageText("myCues")}
-                                                            </Text>
-                                                        </TouchableOpacity>
-                                                        {channels.map(channel => {
-                                                            return (
-                                                                <TouchableOpacity
-                                                                    key={Math.random()}
-                                                                    style={
-                                                                        channelId === channel._id
-                                                                            ? styles.allOutline
-                                                                            : styles.allBlack
-                                                                    }
-                                                                    onPress={() => {
-                                                                        setChannelId(channel._id);
-                                                                    }}>
-                                                                    <Text
-                                                                        style={{
-                                                                            lineHeight: 20,
-                                                                            fontSize: 12,
-                                                                            color:
-                                                                                channelId === channel._id
-                                                                                    ? "#fff"
-                                                                                    : "#2F2F3C"
-                                                                        }}>
-                                                                        {channel.name}
-                                                                    </Text>
-                                                                </TouchableOpacity>
-                                                            );
-                                                        })}
-                                                    </ScrollView>
-                                                </View>
+                                                    <MenuTrigger>
+                                                        <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#2f2f3c' }}>
+                                                            {eventForChannelName}<Ionicons name='caret-down' size={14} />
+                                                        </Text>
+                                                    </MenuTrigger>
+                                                    <MenuOptions customStyles={{
+                                                        optionsContainer: {
+                                                            padding: 10,
+                                                            borderRadius: 15,
+                                                            shadowOpacity: 0,
+                                                            borderWidth: 1,
+                                                            borderColor: '#f4f4f6'
+                                                        }
+                                                    }}>
+                                                        <MenuOption
+                                                            value={''}>
+                                                            <View style={{ display: 'flex', flexDirection: 'row', }}>
+                                                                <Text style={{ marginLeft: 5 }}>
+                                                                    My Cues
+                                                                </Text>
+                                                            </View>
+                                                        </MenuOption>
+                                                        {
+                                                            channels.map((channel: any) => {
+                                                                return <MenuOption
+                                                                    value={channel._id}>
+                                                                    <View style={{ display: 'flex', flexDirection: 'row', }}>
+                                                                        <Text style={{ marginLeft: 5 }}>
+                                                                            {channel.name}
+                                                                        </Text>
+                                                                    </View>
+                                                                </MenuOption>
+                                                            })
+                                                        }
+                                                    </MenuOptions>
+                                                </Menu>
                                             </View>
                                         </View>
                                     ) : null}
@@ -1280,7 +1220,7 @@ const styles: any = StyleSheet.create({
         fontSize: 12,
         color: "#a2a2ac",
         textAlign: "left",
-        paddingHorizontal: 10
+        paddingRight: 10
     },
     allBlack: {
         fontSize: 12,
