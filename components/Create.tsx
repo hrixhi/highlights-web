@@ -90,7 +90,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [shuffleQuiz, setShuffleQuiz] = useState(false);
     const [quizInstructions, setQuizInstructions] = useState('');
-    const [initialDuration, setInitialDuration] = useState(null)
 
     const [channelName, setChannelName] = useState('')
 
@@ -181,11 +180,9 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             // If MCQ then > 2 options
             if (!problem.questionType && problem.options.length < 2) {
                 Alert("Problem must have at least 2 options")
-                setIsSubmitting(false)
                 error = true;
             }
 
-            
             // If MCQ, check if any options repeat:
             if (!problem.questionType || problem.questionType === "trueFalse") {
                 const keys: any = {};
@@ -193,13 +190,11 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 problem.options.map((option: any) => {
                     if (option.option === '' || option.option === 'formula:') {
                         Alert(fillMissingOptionsAlert)
-                        setIsSubmitting(false)
                         error = true;
                     }
 
                     if (option.option in keys) {
                         Alert("Option repeated in a question");
-                        setIsSubmitting(false)
                         error = true
                     }
 
@@ -212,7 +207,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
                 if (!optionFound) {
                     Alert(eachOptionOneCorrectAlert)
-                    setIsSubmitting(false)
                     error = true;
                 }
             }
@@ -409,7 +403,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         } else {
             storeDraft('cueDraft', '')
         }
-    }, [cue, init, type, imported, url, title, problems, timer, duration, headers, quizInstructions])
+    }, [cue, init, type, imported, url, title, isQuiz, problems, timer, duration, headers, quizInstructions])
 
     const storeDraft = useCallback(async (type, value) => {
         await AsyncStorage.setItem(type, value)
@@ -417,7 +411,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
     const handleCreate = useCallback(async (quizId?: string) => {
         setIsSubmitting(true)
-        console.log('creating cue')
 
         if (isSubmitting) return;
 
@@ -566,7 +559,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     Alert(somethingWentWrongAlert, checkConnectionAlert)
                 })
         }
-
+        setIsSubmitting(false)
 
     }, [cue, modalAnimation, customCategory, props.saveDataInCloud, isQuiz, timer, duration,
         gradeWeight, deadline, initiateAt, submission, imported, selected, subscribers,
@@ -583,8 +576,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 const quizDraft = await AsyncStorage.getItem('quizDraft')
                 if (quizDraft !== null) {
                     const { duration, timer, problems, title, headers, quizInstructions } = JSON.parse(quizDraft);
+
                     setDuration(duration);
-                    setInitialDuration(duration)
                     setTimer(timer);
                     setProblems(problems);
                     setTitle(title);
@@ -648,7 +641,10 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         setSelected(value)
     }, [subscribers])
 
-
+    const onChangeDuration = useCallback((duration: any) => {
+        const { hours, minutes, seconds } = duration;
+        setDuration({ hours, minutes, seconds });
+    }, [])
 
     const yesterday = moment().subtract(1, 'day');
     const disablePastDt = (current: any) => {
@@ -657,13 +653,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
     const quizAlert = PreferredLanguageText('quizzesCanOnly')
     const width = dimensions.window.width;
-
-
-    const onChangeDuration = useCallback((duration: any) => {
-        const { hours, minutes, seconds } = duration;
-        setDuration({ hours, minutes, seconds });
-    }, [])
-
     return (
         <View style={{
             width: '100%',
@@ -944,7 +933,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         <View style={{ width: width < 768 ? '100%' : '35%', borderRightWidth: 0, borderColor: '#f4f4f6' }}>
                                             <DurationPicker
                                                 onChange={onChangeDuration}
-                                                initialDuration={initialDuration ? initialDuration : { hours: 1, minutes: 0, seconds: 0 }}
+                                                initialDuration={{ hours: 1, minutes: 0, seconds: 0 }}
                                                 maxHours={6}
                                             />
                                         </View> : null
@@ -1050,7 +1039,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             <View style={{ display: 'flex', flexDirection: width < 768 ? 'column' : 'row', overflow: 'visible' }}>
                                 <View style={{ width: width < 768 ? '100%' : '33.33%', borderRightWidth: 0, borderColor: '#f4f4f6' }}>
                                     <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                        <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
+                                        <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>
                                             {/* {PreferredLanguageText('channel')} */}
                                             Share with
                                             {/* <Ionicons
@@ -1126,7 +1115,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     channelId !== '' ?
                                         <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
                                             <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                                <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
+                                                <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>
                                                     {PreferredLanguageText('submissionRequired')}
                                                 </Text>
                                             </View>
@@ -1226,7 +1215,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     submission ?
                                         <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
                                             <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                                <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
+                                                <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>
                                                     Grade Weight
                                                 </Text>
                                             </View>
@@ -1308,7 +1297,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             <View style={{ width: width < 768 ? '100%' : '33.33%', borderRightWidth: 0, borderColor: '#f4f4f6' }}>
                                 <View style={{ width: '100%', backgroundColor: 'white' }}>
                                     <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                        <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
+                                        <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>
                                             {PreferredLanguageText('category')}
                                         </Text>
                                     </View>
@@ -1385,7 +1374,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             </View>
                             <View style={{ width: width < 768 ? '100%' : '33.33%', borderRightWidth: 0, borderColor: '#f4f4f6' }}>
                                 <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                    <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
+                                    <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>
                                         {PreferredLanguageText('priority')}
                                     </Text>
                                 </View>
@@ -1417,7 +1406,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         <View style={{ width: '100%', paddingTop: 15, flexDirection: width < 768 ? 'column' : 'row' }}>
                             <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
                                 <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                    <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
+                                    <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>
                                         Reminder
                                     </Text>
                                 </View>
@@ -1453,7 +1442,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 notify ?
                                     <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
                                         <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                            <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
+                                            <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>
                                                 Recurring
                                             </Text>
                                         </View>
@@ -1573,7 +1562,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 notify && !shuffle ?
                                     <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
                                         <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                            <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
+                                            <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>
                                                 Indefinite
                                             </Text>
                                         </View>
@@ -1626,7 +1615,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         {/* if Quiz then ask Shuffle */}
                         {isQuiz ? <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
                             <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
+                                <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>
                                     Shuffle Questions
                                 </Text>
                             </View>
@@ -1669,7 +1658,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         await handleCreate()
                                     }
                                 }}
-                                disabled={isSubmitting}
+                                disabled={creatingQuiz}
                                 style={{
                                     borderRadius: 15,
                                     backgroundColor: 'white'
@@ -1782,7 +1771,7 @@ const styles: any = StyleSheet.create({
         padding: 15,
         paddingTop: 12,
         paddingBottom: 12,
-        marginTop: 0,
+        // marginTop: 5,
         marginBottom: 20
     },
     date: {

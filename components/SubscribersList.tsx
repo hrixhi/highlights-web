@@ -1001,7 +1001,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                             />
                             <View style={{ backgroundColor: 'white', }}>
                                 <Text style={{
-                                    color: "#a2a2ac",
+                                    color: "#2f2f3c",
                                     fontSize: 11,
                                     lineHeight: 25,
                                     textTransform: 'uppercase'
@@ -1195,6 +1195,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                                 setScore(subscriber.score ? subscriber.score.toString() : '0')
                                                                                 setGraded(subscriber.graded)
                                                                                 setComment(subscriber.comment)
+                                                                                console.log(subscriber.comment)
                                                                                 try {
                                                                                     const comm = JSON.parse(subscriber.comment)
                                                                                     setAnnotation(comm.annotation)
@@ -1516,7 +1517,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                             <Text style={{
                                 textAlign: 'center',
                                 lineHeight: 35,
-                                color: '#2f2f3cs',
+                                color: '#2f2f3c',
                                 fontSize: 12,
                                 backgroundColor: '#f4f4f6',
                                 paddingHorizontal: 25,
@@ -1533,7 +1534,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                         <Text style={{
                             textAlign: 'center',
                             lineHeight: 35,
-                            color: '#2f2f3cs',
+                            color: '#2f2f3c',
                             fontSize: 12,
                             paddingHorizontal: 25,
                             width: "100%",

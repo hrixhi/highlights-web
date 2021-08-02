@@ -1718,7 +1718,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         paddingBottom: 15,
                         backgroundColor: "white"
                     }}>
-                    <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
+                    <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>
                         {props.cue.channelId && props.cue.channelId !== "" ? "Shared with" : "Saved in"}
                     </Text>
                 </View>
@@ -1791,7 +1791,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         paddingBottom: 15,
                         backgroundColor: "white"
                     }}>
-                    <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>{PreferredLanguageText("submissionRequired")}</Text>
+                    <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>{PreferredLanguageText("submissionRequired")}</Text>
                 </View>
                 <View style={{ flexDirection: "row", width: '100%' }}>
                     {isOwner ? (
@@ -1817,7 +1817,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         </View>
                     ) : (
                         <View style={{ flex: 1, backgroundColor: "#fff" }}>
-                            <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>{!submission ? PreferredLanguageText("no") : null}</Text>
+                            <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>{!submission ? PreferredLanguageText("no") : null}</Text>
                         </View>
                     )}
                     {submission ? (
@@ -1925,7 +1925,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         paddingBottom: 15,
                         backgroundColor: "white"
                     }}>
-                    <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>Grade Weight</Text>
+                    <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>Grade Weight</Text>
                 </View>
                 <View style={{ flexDirection: "row" }}>
                     <View
@@ -2006,7 +2006,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         paddingBottom: 15,
                         backgroundColor: "white"
                     }}>
-                    <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>{PreferredLanguageText("category")}</Text>
+                    <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>{PreferredLanguageText("category")}</Text>
                 </View>
                 {props.cue.channelId && !props.channelOwner ? (
                     <View
@@ -2132,7 +2132,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         paddingBottom: 15,
                         backgroundColor: "white"
                     }}>
-                    <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>{PreferredLanguageText("priority")}</Text>
+                    <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>{PreferredLanguageText("priority")}</Text>
                 </View>
                 <View
                     style={{
@@ -2185,7 +2185,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         paddingBottom: 15,
                         backgroundColor: "white"
                     }}>
-                    <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>Forward</Text>
+                    <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>Forward</Text>
                 </View>
                 <View
                     style={{
@@ -2278,7 +2278,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             paddingBottom: 15,
                             backgroundColor: "white"
                         }}>
-                        <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>Reminder</Text>
+                        <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>Reminder</Text>
                     </View>
                     <View
                         style={{
@@ -2318,7 +2318,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 paddingBottom: 15,
                                 backgroundColor: "white"
                             }}>
-                            <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>Recurring</Text>
+                            <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>Recurring</Text>
                         </View>
                         <View style={{ flexDirection: "row" }}>
                             <View
@@ -2414,7 +2414,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 paddingBottom: 15,
                                 backgroundColor: "white"
                             }}>
-                            <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>Indefinite</Text>
+                            <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>Indefinite</Text>
                         </View>
                         <View style={{ flexDirection: "row" }}>
                             <View
@@ -2583,13 +2583,11 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         return (<View style={{ minHeight: Dimensions.get('window').height }}>
             <View style={{ backgroundColor: 'white', flex: 1, }}>
                 <Text style={{ width: '100%', color: '#a2a2ac', fontSize: 20, paddingTop: 200, paddingBottom: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1, textAlign: 'center' }}>
-                    Quiz submitted. You will be notified when scores are released.
+                    Quiz submitted. You will be notified when scores are released.                
                 </Text>
             </View>
         </View>)
     }
-
-
 
     // MAIN RETURN
     return (
@@ -3015,7 +3013,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         {renderReminderOptions()}
                         {isQuiz && isOwner ? <View style={{ width: width < 768 ? '100%' : '33.33%' }}>
                             <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
+                                <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>
                                     Shuffle Questions
                                 </Text>
                             </View>
