@@ -217,10 +217,14 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             size={'sm'}
                             placeholder={'Select Dates'}
                             onChange={e => {
-                                console.log('start date', e[0])
-                                console.log('end date', e[1])
                                 if (e[0] > e[1]) {
-                                    alert('End date must be greater')
+                                    Alert('End date must be greater')
+                                    return
+                                }
+                                else {
+
+                                    props.setFilterStart(e[0])
+                                    props.setFilterEnd(e[1])
                                 }
                             }}
                             defaultShow={true}

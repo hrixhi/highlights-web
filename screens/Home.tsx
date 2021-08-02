@@ -261,7 +261,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
 
   const updateDiscussionNotidCounts = useCallback((userId) => {
-    console.log('functiona called')
+
     const server = fetchAPI('')
     server.query({
       query: totalUnreadDiscussionThreads,
@@ -1024,7 +1024,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   }, [fadeAnimation])
 
   const openModal = useCallback((type) => {
-    console.log('setModalType', type)
     setModalType(type)
     AsyncStorage.setItem('lastopened', type)
   }, [sheetRef, cues])
@@ -1261,7 +1260,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   } else {
     dateFilteredCues = filteredCues
   }
-  console.log('dateFilteredCues', dateFilteredCues)
+
   if (!init) {
     return null;
   }

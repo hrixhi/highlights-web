@@ -17,10 +17,10 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     const unparsedCues: any[] = JSON.parse(JSON.stringify(props.cues))
     const [cues] = useState<any[]>(unparsedCues.reverse())
-    console.log('cues',cues)
+
     const [filterChoice] = useState(props.channelFilterChoice)
     let filteredCues: any[] = []
-    console.log('filter choice',filteredCues)
+
     if (filterChoice === 'All') {
         filteredCues = cues
     } else {
