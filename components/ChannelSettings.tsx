@@ -554,7 +554,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                   
                     
 
-                    <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase', marginTop: 40, }}>
+                    <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase', marginTop: 40, }}>
                         Subscribers
                     </Text>
 
