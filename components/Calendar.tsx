@@ -1073,6 +1073,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             size={'xs'}
                                             placeholder={'Select Dates'}
                                             onChange={e => {
+                                                
                                                 setStart(e[0])
                                                 setEnd(e[1])
                                             }}
