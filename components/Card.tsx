@@ -46,9 +46,11 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     const getUserAndLoad = async () => {
 
         const uString: any = await AsyncStorage.getItem("user");
-        const parsedUser = JSON.parse(uString)
+        if (uString) {
+            const parsedUser = JSON.parse(uString)
+            props.updateDiscussionNotidCounts(parsedUser._id)
+        }
 
-        props.updateDiscussionNotidCounts(parsedUser._id)
     }
     return (
         <View

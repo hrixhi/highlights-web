@@ -595,6 +595,22 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
         if (!uString) {
           return;
         }
+        const userName = await JSON.parse(uString)
+        let ownerarray: any = selected
+        const userSubscriptions = await AsyncStorage.getItem('subscriptions')
+        if (userSubscriptions) {
+          const list = JSON.parse(userSubscriptions)
+          list.map((i: any) => {
+            if (i.channelId === channelId) {
+              ownerarray.push({
+                id: i.channelCreatedBy,
+                name: userName.fullName
+              })
+            }
+          })
+          setSelected(ownerarray)
+        }
+
 
         if (selected.length === 0) {
           Alert(noStudentSelectedAlert, selectWhoToShareAlert);
@@ -788,6 +804,13 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
     setDuration({ hours, minutes, seconds });
   }, []);
 
+  const roundSeconds = (time: Date) => {
+    console.log('value recieved', time)
+    time.setMinutes(time.getMinutes() + Math.round(time.getSeconds() / 60));
+    time.setSeconds(0, 0)
+    console.log('value returning', time)
+    return time
+  }
   return (
     <View
       style={{
@@ -1468,9 +1491,9 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                               value={initiateAt}
                               onChange={(event: any) => {
                                 const date = new Date(event);
-
+                                const roundValue = roundSeconds(date)
                                 if (date < new Date()) return;
-                                setInitiateAt(date);
+                                setInitiateAt(roundValue);
                               }}
                               size={"xs"}
                             // isValidDate={disablePastDt}
@@ -1504,10 +1527,9 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                               value={deadline}
                               onChange={(event: any) => {
                                 const date = new Date(event);
-
                                 if (date < new Date()) return;
-
-                                setDeadline(date);
+                                const roundValue = roundSeconds(date)
+                                setDeadline(roundValue);
                               }}
                               size={"xs"}
                             // isValidDate={disablePastDt}
@@ -1625,6 +1647,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                       options={subscribers} // Options to display in the dropdown
                       selectedValues={selected} // Preselected value to persist in dropdown
                       onSelect={(e, f) => {
+                        console.log('on select values', e)
                         setSelected(e);
                         return true;
                       }} // Function will trigger on select event

@@ -318,6 +318,11 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const disablePastDt = (current: any) => {
         return current.isAfter(yesterday);
     };
+    const roundSeconds = (time: Date) => {
+        time.setMinutes(time.getMinutes() + Math.round(time.getSeconds() / 60));
+        time.setSeconds(0, 0)
+        return time
+    }
 
     const handleCreate = useCallback(async () => {
         console.log('creating event')
@@ -687,14 +692,14 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         marginLeft: 0
                     }}>
                     <DatePicker
-                        format="YYYY-MM-DD HH:mm:ss"
+                        format="YYYY-MM-DD HH:mm"
                         preventOverflow={true}
                         value={repeatTill}
                         onChange={(event: any) => {
                             const date = new Date(event);
                             if (date < new Date()) return;
-
-                            setRepeatTill(date);
+                            const roundOffDate = roundSeconds(date)
+                            setRepeatTill(roundOffDate);
                         }}
                         size={'xs'}
                     // isValidDate={disablePastDt}
@@ -912,9 +917,9 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
             }
         </View>)
     }
-    
+
     let eventForChannelName = ''
-    
+
     if (channelId === "") {
         eventForChannelName = "My Cues"
     } else {
@@ -1034,13 +1039,13 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     </View>
                                 </View>
                                 {/* Put time here */}
-                                <View style={{ display: 'flex', width: "100%", flexDirection: width < 768 ? "column" : "row", marginBottom: 30, paddingVertical: 10,}} >
+                                <View style={{ display: 'flex', width: "100%", flexDirection: width < 768 ? "column" : "row", marginBottom: 30, paddingVertical: 10, }} >
                                     <View
                                         style={{
                                             width: width < 768 ? "100%" : "30%",
                                             flexDirection: "row",
                                             marginTop: 12,
-                                            alignItems: 'center' 
+                                            alignItems: 'center'
                                         }}>
                                         <Text style={styles.text}>{PreferredLanguageText("start")}</Text>
                                         <DatePicker
@@ -1049,7 +1054,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             value={start}
                                             onChange={(event: any) => {
                                                 const date = new Date(event);
-                                                setStart(date);
+                                                const roundOffDate = roundSeconds(date)
+                                                setStart(roundOffDate);
                                             }}
                                             size={'xs'}
                                         />
@@ -1069,7 +1075,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             value={end}
                                             onChange={(event: any) => {
                                                 const date = new Date(event);
-                                                setEnd(date);
+                                                const roundOffDate = roundSeconds(date)
+                                                setEnd(roundOffDate);
                                             }}
                                             size={'xs'}
                                         />
@@ -1091,12 +1098,12 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     Event For
                                                 </Text>
                                             </View>
-                                            
+
                                             <View style={{ flexDirection: 'row', display: 'flex', backgroundColor: '#fff' }}>
                                                 <Menu
                                                     onSelect={(channelId: any) => {
                                                         setChannelId(channelId)
-                                                        
+
                                                     }}>
                                                     <MenuTrigger>
                                                         <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#2f2f3c' }}>

@@ -348,7 +348,14 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 }
                             });
 
-                            setSubscribers(format);
+                            const subscriberwithoutOwner: any = [];
+                            subscriberwithoutOwner.map((i: any) => {
+                                if (user._id !== i.id) {
+                                    subscriberwithoutOwner.push(i);
+                                }
+                            });
+
+                            setSubscribers(subscriberwithoutOwner);
                             // clear selected
                             const sel = res.data.cue.getSharedWith.filter((item: any) => {
                                 return item.isFixed;
@@ -360,7 +367,14 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     name: sub.label
                                 }
                             })
-                            setSelected(formatSel);
+
+                            const withoutOwner: any = [];
+                            formatSel.map((i: any) => {
+                                if (user._id !== i.id) {
+                                    withoutOwner.push(i);
+                                }
+                            });
+                            setSelected(withoutOwner);
                         }
                     })
                     .catch((err: any) => console.log(err));
@@ -1830,6 +1844,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     })
                                     .then(res => {
                                         if (res.data && res.data.cue.shareCueWithMoreIds) {
+
                                             loadChannelsAndSharedWith();
                                         }
                                     })
@@ -1894,51 +1909,51 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     )}
                 </View>
                 {submission ? (
-                        <View
+                    <View
+                        style={{
+                            width: "100%",
+                            display: "flex",
+                            flexDirection: "row",
+                            backgroundColor: "white",
+                            marginBottom: 10,
+                            alignItems: 'center'
+                        }}>
+                        <Text
                             style={{
-                                width: "100%",
-                                display: "flex",
-                                flexDirection: "row",
-                                backgroundColor: "white",
-                                marginBottom: 10,
-                                alignItems: 'center'
+                                fontSize: 12,
+                                color: "#a2a2ac",
+                                textAlign: "left",
+                                paddingRight: 10
                             }}>
+                            Available
+                        </Text>
+                        {isOwner ? (
+                            <DatePicker
+                                format="YYYY-MM-DD HH:mm"
+                                size={'xs'}
+                                value={initiateAt}
+                                preventOverflow={true}
+                                onChange={(event: any) => {
+
+                                    const date = new Date(event);
+
+                                    if (date < new Date()) return;
+                                    setInitiateAt(date);
+                                }}
+                            // isValidDate={disablePastDt}
+                            />
+                        ) : (
                             <Text
                                 style={{
                                     fontSize: 12,
                                     color: "#a2a2ac",
-                                    textAlign: "left",
-                                    paddingRight: 10
+                                    textAlign: "left"
                                 }}>
-                                Available
+                                {initiateAt.toLocaleString()}
                             </Text>
-                            {isOwner ? (
-                                <DatePicker
-                                    format="YYYY-MM-DD HH:mm"
-                                    size={'xs'}
-                                    value={initiateAt}
-                                    preventOverflow={true}
-                                    onChange={(event: any) => {
-
-                                        const date = new Date(event);
-
-                                        if (date < new Date()) return;
-                                        setInitiateAt(date);
-                                    }}
-                                // isValidDate={disablePastDt}
-                                />
-                            ) : (
-                                <Text
-                                    style={{
-                                        fontSize: 12,
-                                        color: "#a2a2ac",
-                                        textAlign: "left"
-                                    }}>
-                                    {initiateAt.toLocaleString()}
-                                </Text>
-                            )}
-                        </View>
-                    ) : null}    
+                        )}
+                    </View>
+                ) : null}
                 {submission ? (
                     <View
                         style={{
@@ -2020,52 +2035,52 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     </View>
                 </View>
                 {graded ? (
-                        <View
+                    <View
+                        style={{
+                            width: "100%",
+                            display: "flex",
+                            flexDirection: "row",
+                            backgroundColor: "white",
+                            alignItems: 'center'
+                        }}>
+                        <Text
                             style={{
-                                width: "100%",
-                                display: "flex",
-                                flexDirection: "row",
-                                backgroundColor: "white",
-                                alignItems: 'center'
+                                fontSize: 12,
+                                color: "#a2a2ac",
+                                textAlign: "left",
+                                paddingRight: 10,
+                                paddingLeft: 10,
                             }}>
+                            {PreferredLanguageText("percentageOverall")}
+                        </Text>
+                        {isOwner ? (
+                            <TextInput
+                                value={gradeWeight}
+                                style={{
+                                    width: "25%",
+                                    borderBottomColor: "#f4f4f6",
+                                    borderBottomWidth: 1,
+                                    fontSize: 15,
+                                    padding: 15,
+                                    paddingVertical: 12,
+                                    marginTop: 0,
+                                }}
+                                placeholder={"0-100"}
+                                onChangeText={val => setGradeWeight(val)}
+                                placeholderTextColor={"#a2a2ac"}
+                            />
+                        ) : (
                             <Text
                                 style={{
-                                    fontSize: 12,
                                     color: "#a2a2ac",
                                     textAlign: "left",
-                                    paddingRight: 10,
-                                    paddingLeft: 10,
+                                    fontSize: 12
                                 }}>
-                                {PreferredLanguageText("percentageOverall")}
+                                {gradeWeight}
                             </Text>
-                            {isOwner ? (
-                                <TextInput
-                                    value={gradeWeight}
-                                    style={{
-                                        width: "25%",
-                                        borderBottomColor: "#f4f4f6",
-                                        borderBottomWidth: 1,
-                                        fontSize: 15,
-                                        padding: 15,
-                                        paddingVertical: 12,
-                                        marginTop: 0,
-                                      }}
-                                    placeholder={"0-100"}
-                                    onChangeText={val => setGradeWeight(val)}
-                                    placeholderTextColor={"#a2a2ac"}
-                                />
-                            ) : (
-                                <Text
-                                    style={{
-                                        color: "#a2a2ac",
-                                        textAlign: "left",
-                                        fontSize: 12
-                                    }}>
-                                    {gradeWeight}
-                                </Text>
-                            )}
-                        </View>
-                    ) : null}
+                        )}
+                    </View>
+                ) : null}
             </View>
         ) : null;
     };
