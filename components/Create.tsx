@@ -1384,6 +1384,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                               shadowOpacity: 0,
                               borderWidth: 1,
                               borderColor: "#f4f4f6",
+                              overflow: 'scroll',
+                              maxHeight: '100%'
                             },
                           }}
                         >
@@ -1692,6 +1694,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                 shadowOpacity: 0,
                                 borderWidth: 1,
                                 borderColor: "#f4f4f6",
+                                overflow: 'scroll',
+                                maxHeight: '100%'
                               },
                             }}
                           >
@@ -1940,6 +1944,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                 shadowOpacity: 0,
                                 borderWidth: 1,
                                 borderColor: "#f4f4f6",
+                                overflow: 'scroll',
+                                maxHeight: '100%'
                               },
                             }}
                           >

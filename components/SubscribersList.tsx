@@ -1457,7 +1457,9 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 borderRadius: 15,
                                                 shadowOpacity: 0,
                                                 borderWidth: 1,
-                                                borderColor: '#f4f4f6'
+                                                borderColor: '#f4f4f6',
+                                                overflow: 'scroll',
+                                                maxHeight: '100%'
                                             }
                                         }}>
                                             {/* <MenuOption

@@ -45,13 +45,13 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
     useEffect(() => {
 
         let filteredUsers = [...allUsers];
-        
+
         // First filter by role
 
         if (activeRole !== "All") {
             const filterRoles = filteredUsers.filter((user: any) => {
                 return user.role === activeRole
-            }) 
+            })
 
             filteredUsers = filterRoles;
         }
@@ -61,7 +61,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                 return user.grade === activeGrade
             })
 
-            filteredUsers  = filterGrades
+            filteredUsers = filterGrades
         }
 
         if (activeSection !== "All") {
@@ -69,7 +69,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                 return user.section === activeSection
             })
 
-            filteredUsers  = filterSections 
+            filteredUsers = filterSections
         }
 
         let filteredOptions = filteredUsers.map((user: any) => {
@@ -81,175 +81,181 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
 
         setOptions(filteredOptions)
 
-        
+
     }, [activeRole, activeGrade, activeSection])
 
     const renderSubscriberFilters = () => {
-        return (<View style={{ width: '100%', flexDirection: 'row', backgroundColor: 'white', marginTop: 50 }}>
+        return (<View style={{ width: '100%', flexDirection: 'row', backgroundColor: 'white', marginTop: 25 }}>
             <View style={{ backgroundColor: 'white', }}>
-                            <View style={{ flexDirection: 'row', justifyContent: 'center', display: 'flex', backgroundColor: 'white', paddingLeft: 10 }}>
-                                <Menu
-                                    onSelect={(role: any) => {
-                                        setActiveRole(role)
-                                    }}>
-                                    <MenuTrigger>
-                                        <Text style={{ fontFamily: 'inter', fontSize: 15, color: '#2f2f3c' }}>
-                                            {activeRole}<Ionicons name='caret-down' size={15} />
-                                        </Text>
-                                    </MenuTrigger>
-                                    <MenuOptions customStyles={{
-                                        optionsContainer: {
-                                            padding: 10,
-                                            borderRadius: 15,
-                                            shadowOpacity: 0,
-                                            borderWidth: 1,
-                                            borderColor: '#f4f4f6'
-                                        }
-                                    }}>
-                                        <MenuOption
-                                            value={'All'}>
-                                            <View style={{ display: 'flex', flexDirection: 'row',  }}>
-                                                <View style={{
-                                                    width: 8,
-                                                    height: 8,
-                                                    borderRadius: 10,
-                                                    marginTop: 1,
-                                                    backgroundColor: "#fff"
-                                                }} />
-                                                <Text style={{ marginLeft: 5 }}>
-                                                    All
-                                                </Text>
-                                            </View>
-                                        </MenuOption>
-                                        {
-                                            roles.map((role: any) => {
-                                                return <MenuOption
-                                                    value={role}>
-                                                    <View style={{ display: 'flex', flexDirection: 'row',  }}>
-                                                        <Text style={{ marginLeft: 5 }}>
-                                                            {role}
-                                                        </Text>
-                                                    </View>
-                                                </MenuOption>
-                                            })
-                                        }
-                                    </MenuOptions>
-                                </Menu>
-                            </View>
-                            <Text style={{ fontSize: 10, color: '#2f2f3c', paddingTop: 7, textAlign: 'center', backgroundColor: 'white' }}>
-                                Roles
+                <View style={{ flexDirection: 'row', justifyContent: 'center', display: 'flex', backgroundColor: 'white', paddingLeft: 10 }}>
+                    <Menu
+                        onSelect={(role: any) => {
+                            setActiveRole(role)
+                        }}>
+                        <MenuTrigger>
+                            <Text style={{ fontFamily: 'inter', fontSize: 15, color: '#2f2f3c' }}>
+                                {activeRole}<Ionicons name='caret-down' size={15} />
                             </Text>
-                        </View>
+                        </MenuTrigger>
+                        <MenuOptions customStyles={{
+                            optionsContainer: {
+                                padding: 10,
+                                borderRadius: 15,
+                                shadowOpacity: 0,
+                                borderWidth: 1,
+                                borderColor: '#f4f4f6',
+                                overflow: 'scroll',
+                                maxHeight: '100%'
+                            }
+                        }}>
+                            <MenuOption
+                                value={'All'}>
+                                <View style={{ display: 'flex', flexDirection: 'row', }}>
+                                    <View style={{
+                                        width: 8,
+                                        height: 8,
+                                        borderRadius: 10,
+                                        marginTop: 1,
+                                        backgroundColor: "#fff"
+                                    }} />
+                                    <Text style={{ marginLeft: 5 }}>
+                                        All
+                                    </Text>
+                                </View>
+                            </MenuOption>
+                            {
+                                roles.map((role: any) => {
+                                    return <MenuOption
+                                        value={role}>
+                                        <View style={{ display: 'flex', flexDirection: 'row', }}>
+                                            <Text style={{ marginLeft: 5 }}>
+                                                {role}
+                                            </Text>
+                                        </View>
+                                    </MenuOption>
+                                })
+                            }
+                        </MenuOptions>
+                    </Menu>
+                </View>
+                <Text style={{ fontSize: 10, color: '#2f2f3c', paddingTop: 7, textAlign: 'center', backgroundColor: 'white' }}>
+                    Roles
+                </Text>
+            </View>
 
-                        <View style={{ backgroundColor: 'white', }}>
-                            <View style={{ flexDirection: 'row', justifyContent: 'center', display: 'flex', backgroundColor: 'white', paddingLeft: 30 }}>
-                                <Menu
-                                    onSelect={(grade: any) => {
-                                        setActiveGrade(grade)
-                                    }}>
-                                    <MenuTrigger>
-                                        <Text style={{ fontFamily: 'inter', fontSize: 15, color: '#2f2f3c' }}>
-                                            {activeGrade}<Ionicons name='caret-down' size={15} />
-                                        </Text>
-                                    </MenuTrigger>
-                                    <MenuOptions customStyles={{
-                                        optionsContainer: {
-                                            padding: 10,
-                                            borderRadius: 15,
-                                            shadowOpacity: 0,
-                                            borderWidth: 1,
-                                            borderColor: '#f4f4f6'
-                                        }
-                                    }}>
-                                        <MenuOption
-                                            value={'All'}>
-                                            <View style={{ display: 'flex', flexDirection: 'row',  }}>
-                                                <View style={{
-                                                    width: 8,
-                                                    height: 8,
-                                                    borderRadius: 10,
-                                                    marginTop: 1,
-                                                    backgroundColor: "#fff"
-                                                }} />
-                                                <Text style={{ marginLeft: 5 }}>
-                                                    All
-                                                </Text>
-                                            </View>
-                                        </MenuOption>
-                                        {
-                                            grades.map((role: any) => {
-                                                return <MenuOption
-                                                    value={role}>
-                                                    <View style={{ display: 'flex', flexDirection: 'row',  }}>
-                                                        <Text style={{ marginLeft: 5 }}>
-                                                            {role}
-                                                        </Text>
-                                                    </View>
-                                                </MenuOption>
-                                            })
-                                        }
-                                    </MenuOptions>
-                                </Menu>
-                            </View>
-                            <Text style={{ fontSize: 10, color: '#2f2f3c', paddingTop: 7, textAlign: 'center', backgroundColor: 'white', paddingLeft: 20 }}>
-                                Grades
+            <View style={{ backgroundColor: 'white', }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'center', display: 'flex', backgroundColor: 'white', paddingLeft: 30 }}>
+                    <Menu
+                        onSelect={(grade: any) => {
+                            setActiveGrade(grade)
+                        }}>
+                        <MenuTrigger>
+                            <Text style={{ fontFamily: 'inter', fontSize: 15, color: '#2f2f3c' }}>
+                                {activeGrade}<Ionicons name='caret-down' size={15} />
                             </Text>
-                        </View>
+                        </MenuTrigger>
+                        <MenuOptions customStyles={{
+                            optionsContainer: {
+                                padding: 10,
+                                borderRadius: 15,
+                                shadowOpacity: 0,
+                                borderWidth: 1,
+                                borderColor: '#f4f4f6',
+                                overflow: 'scroll',
+                                maxHeight: '100%'
+                            }
+                        }}>
+                            <MenuOption
+                                value={'All'}>
+                                <View style={{ display: 'flex', flexDirection: 'row', }}>
+                                    <View style={{
+                                        width: 8,
+                                        height: 8,
+                                        borderRadius: 10,
+                                        marginTop: 1,
+                                        backgroundColor: "#fff"
+                                    }} />
+                                    <Text style={{ marginLeft: 5 }}>
+                                        All
+                                    </Text>
+                                </View>
+                            </MenuOption>
+                            {
+                                grades.map((role: any) => {
+                                    return <MenuOption
+                                        value={role}>
+                                        <View style={{ display: 'flex', flexDirection: 'row', }}>
+                                            <Text style={{ marginLeft: 5 }}>
+                                                {role}
+                                            </Text>
+                                        </View>
+                                    </MenuOption>
+                                })
+                            }
+                        </MenuOptions>
+                    </Menu>
+                </View>
+                <Text style={{ fontSize: 10, color: '#2f2f3c', paddingTop: 7, textAlign: 'center', backgroundColor: 'white', paddingLeft: 20 }}>
+                    Grades
+                </Text>
+            </View>
 
-                        <View style={{ backgroundColor: 'white', }}>
-                            <View style={{ flexDirection: 'row', justifyContent: 'center', display: 'flex', backgroundColor: 'white', paddingLeft: 30 }}>
-                                <Menu
-                                    onSelect={(grade: any) => {
-                                        setActiveSection(grade)
-                                    }}>
-                                    <MenuTrigger>
-                                        <Text style={{ fontFamily: 'inter', fontSize: 15, color: '#2f2f3c' }}>
-                                            {activeSection}<Ionicons name='caret-down' size={15} />
-                                        </Text>
-                                    </MenuTrigger>
-                                    <MenuOptions customStyles={{
-                                        optionsContainer: {
-                                            padding: 10,
-                                            borderRadius: 15,
-                                            shadowOpacity: 0,
-                                            borderWidth: 1,
-                                            borderColor: '#f4f4f6'
-                                        }
-                                    }}>
-                                        <MenuOption
-                                            value={'All'}>
-                                            <View style={{ display: 'flex', flexDirection: 'row',  }}>
-                                                <View style={{
-                                                    width: 8,
-                                                    height: 8,
-                                                    borderRadius: 10,
-                                                    marginTop: 1,
-                                                    backgroundColor: "#fff"
-                                                }} />
-                                                <Text style={{ marginLeft: 5 }}>
-                                                    All
-                                                </Text>
-                                            </View>
-                                        </MenuOption>
-                                        {
-                                            sections.map((section: any) => {
-                                                return <MenuOption
-                                                    value={section}>
-                                                    <View style={{ display: 'flex', flexDirection: 'row',  }}>
-                                                        <Text style={{ marginLeft: 5 }}>
-                                                            {section}
-                                                        </Text>
-                                                    </View>
-                                                </MenuOption>
-                                            })
-                                        }
-                                    </MenuOptions>
-                                </Menu>
-                            </View>
-                            <Text style={{ fontSize: 10, color: '#2f2f3c', paddingTop: 7, textAlign: 'center', paddingLeft: 20 }}>
-                                Sections
+            <View style={{ backgroundColor: 'white', }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'center', display: 'flex', backgroundColor: 'white', paddingLeft: 30 }}>
+                    <Menu
+                        onSelect={(grade: any) => {
+                            setActiveSection(grade)
+                        }}>
+                        <MenuTrigger>
+                            <Text style={{ fontFamily: 'inter', fontSize: 15, color: '#2f2f3c' }}>
+                                {activeSection}<Ionicons name='caret-down' size={15} />
                             </Text>
-                        </View>
+                        </MenuTrigger>
+                        <MenuOptions customStyles={{
+                            optionsContainer: {
+                                padding: 10,
+                                borderRadius: 15,
+                                shadowOpacity: 0,
+                                borderWidth: 1,
+                                borderColor: '#f4f4f6',
+                                overflow: 'scroll',
+                                maxHeight: '100%'
+                            }
+                        }}>
+                            <MenuOption
+                                value={'All'}>
+                                <View style={{ display: 'flex', flexDirection: 'row', }}>
+                                    <View style={{
+                                        width: 8,
+                                        height: 8,
+                                        borderRadius: 10,
+                                        marginTop: 1,
+                                        backgroundColor: "#fff"
+                                    }} />
+                                    <Text style={{ marginLeft: 5 }}>
+                                        All
+                                    </Text>
+                                </View>
+                            </MenuOption>
+                            {
+                                sections.map((section: any) => {
+                                    return <MenuOption
+                                        value={section}>
+                                        <View style={{ display: 'flex', flexDirection: 'row', }}>
+                                            <Text style={{ marginLeft: 5 }}>
+                                                {section}
+                                            </Text>
+                                        </View>
+                                    </MenuOption>
+                                })
+                            }
+                        </MenuOptions>
+                    </Menu>
+                </View>
+                <Text style={{ fontSize: 10, color: '#2f2f3c', paddingTop: 7, textAlign: 'center', paddingLeft: 20 }}>
+                    Sections
+                </Text>
+            </View>
         </View>)
     }
 
@@ -503,7 +509,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         Keyboard.dismiss()
                     }}
                     contentContainerStyle={{
-                        maxHeight: Dimensions.get('window').height - 150,
+                        maxHeight: Dimensions.get('window').height - 95,
                         // height: 'auto',
                         minHeight: 100
                     }}
@@ -546,18 +552,18 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 <CirclePicker
                                     colors={colorChoices}
                                     color={colorCode}
-                                    onChangeComplete={(color: any) => setColorCode(color.hex) }
+                                    onChangeComplete={(color: any) => setColorCode(color.hex)}
                                 />
                             </View>
                         </View>
                     </View>
-                  
-                    {renderSubscriberFilters()}
 
                     <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase', marginTop: 25, }}>
                         Subscribers
                     </Text>
-                    
+
+                    {renderSubscriberFilters()}
+
                     <View style={{ flexDirection: 'column', marginTop: 25, overflow: 'scroll' }}>
                         <View style={{ width: '90%', height: 'auto' }}>
                             <Multiselect
@@ -614,7 +620,6 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             />
                         </View>
                     </View>
-
                     <View
                         style={{
                             flex: 1,
@@ -623,7 +628,8 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             display: 'flex',
                             flexDirection: 'row',
                             // height: 50,
-                            paddingTop: 45
+                            paddingTop: 25,
+                            marginBottom: 50
                         }}>
                         <TouchableOpacity
                             onPress={() => handleSubmit()}
@@ -689,6 +695,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 </TouchableOpacity>
                             </View> : null
                     }
+                    <View style={{ height: 50, backgroundColor: '#fff' }} />
                 </ScrollView>
             </View>
         </View>
