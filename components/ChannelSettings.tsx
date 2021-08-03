@@ -563,7 +563,6 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                     </Text>
 
                     {renderSubscriberFilters()}
-
                     <View style={{ flexDirection: 'column', marginTop: 25, overflow: 'scroll' }}>
                         <View style={{ width: '90%', height: 'auto' }}>
                             <Multiselect

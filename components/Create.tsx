@@ -1447,36 +1447,9 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           activeThumbColor="white"
                         />
                       </View>
-                      {submission ? (
-                        <View
-                          style={{
-                            width: "100%",
-                            display: "flex",
-                            flexDirection: "row",
-                            backgroundColor: "white",
-                          }}
-                        >
-                          <Text style={styles.text}>Available</Text>
-                          <DatePicker
-                            format="YYYY-MM-DD HH:mm:ss"
-                            preventOverflow={true}
-                            value={initiateAt}
-                            onChange={(event: any) => {
-                              const date = new Date(event);
-
-                              if (date < new Date()) return;
-                              setInitiateAt(date);
-                            }}
-                            size={"xs"}
-                          // isValidDate={disablePastDt}
-                          />
-                        </View>
-                      ) : null}
                     </View>
 
-                    {/* Add it here */}
-
-                    <View style={{ width: width < 768 ? "100%" : "33.33%" }}>
+                    <View style={{ width: "100%", marginBottom: 15 }}>
                       <View style={{ flexDirection: "row" }}>
                         {submission ? (
                           <View
@@ -1485,14 +1458,48 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                               display: "flex",
                               flexDirection: "row",
                               backgroundColor: "white",
-                              marginLeft: 50,
+                              alignItems: 'center'
+                            }}
+                          >
+                            <Text style={styles.text}>Available</Text>
+                            <DatePicker
+                              format="YYYY-MM-DD HH:mm"
+                              preventOverflow={true}
+                              value={initiateAt}
+                              onChange={(event: any) => {
+                                const date = new Date(event);
+
+                                if (date < new Date()) return;
+                                setInitiateAt(date);
+                              }}
+                              size={"xs"}
+                            // isValidDate={disablePastDt}
+                            />
+                          </View>
+                        ) : null}
+                      </View>
+                    </View>
+
+                    {/* Add it here */}
+
+                    <View style={{ width: "100%" }}>
+                      <View style={{ flexDirection: "row" }}>
+                        {submission ? (
+                          <View
+                            style={{
+                              width: "100%",
+                              display: "flex",
+                              flexDirection: "row",
+                              backgroundColor: "white",
+                              alignItems: 'center'
+                              // marginLeft: 50,
                             }}
                           >
                             <Text style={styles.text}>
                               {PreferredLanguageText("deadline")}
                             </Text>
                             <DatePicker
-                              format="YYYY-MM-DD HH:mm:ss"
+                              format="YYYY-MM-DD HH:mm"
                               preventOverflow={true}
                               value={deadline}
                               onChange={(event: any) => {
@@ -1552,6 +1559,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           activeThumbColor="white"
                         />
                       </View>
+                    </View>
+                    <View>
                       {graded ? (
                         <View
                           style={{
@@ -1559,6 +1568,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                             display: "flex",
                             flexDirection: "row",
                             backgroundColor: "white",
+                            alignItems: 'center'
                           }}
                         >
                           <Text style={styles.text}>
@@ -1566,7 +1576,15 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           </Text>
                           <TextInput
                             value={gradeWeight}
-                            style={styles.input}
+                            style={{
+                              width: "25%",
+                              borderBottomColor: "#f4f4f6",
+                              borderBottomWidth: 1,
+                              fontSize: 15,
+                              padding: 15,
+                              paddingVertical: 12,
+                              marginTop: 0,
+                            }}
                             placeholder={"0-100"}
                             onChangeText={(val) => setGradeWeight(val)}
                             placeholderTextColor={"#a2a2ac"}
@@ -2002,7 +2020,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           {PreferredLanguageText("RemindOn")}
                         </Text>
                         <DatePicker
-                          format="YYYY-MM-DD HH:mm:ss"
+                          format="YYYY-MM-DD HH:mm"
                           value={endPlayAt}
                           preventOverflow={true}
                           onChange={(event: any) => {
@@ -2073,7 +2091,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           {PreferredLanguageText("remindTill")}
                         </Text>
                         <DatePicker
-                          format="YYYY-MM-DD HH:mm:ss"
+                          format="YYYY-MM-DD HH:mm"
                           value={endPlayAt}
                           preventOverflow={true}
                           onChange={(event: any) => {

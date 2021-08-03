@@ -1892,14 +1892,16 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>{!submission ? PreferredLanguageText("no") : null}</Text>
                         </View>
                     )}
-                    {submission ? (
+                </View>
+                {submission ? (
                         <View
                             style={{
                                 width: "100%",
                                 display: "flex",
                                 flexDirection: "row",
                                 backgroundColor: "white",
-                                marginBottom: 10
+                                marginBottom: 10,
+                                alignItems: 'center'
                             }}>
                             <Text
                                 style={{
@@ -1912,7 +1914,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             </Text>
                             {isOwner ? (
                                 <DatePicker
-                                    format="YYYY-MM-DD HH:mm:ss"
+                                    format="YYYY-MM-DD HH:mm"
                                     size={'xs'}
                                     value={initiateAt}
                                     preventOverflow={true}
@@ -1936,9 +1938,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 </Text>
                             )}
                         </View>
-                    ) : null}
-
-                </View>
+                    ) : null}    
                 {submission ? (
                     <View
                         style={{
@@ -1946,7 +1946,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             display: "flex",
                             flexDirection: "row",
                             backgroundColor: "white",
-                            marginLeft: isOwner ? 50 : 0
+                            alignItems: 'center'
                         }}>
                         <Text
                             style={{
@@ -1961,7 +1961,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             <DatePicker
                                 preventOverflow={true}
                                 value={deadline}
-                                format="YYYY-MM-DD HH:mm:ss"
+                                format="YYYY-MM-DD HH:mm"
                                 onChange={(event: any) => {
                                     const date = new Date(event);
 
@@ -2018,13 +2018,15 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             activeThumbColor="white"
                         />
                     </View>
-                    {graded ? (
+                </View>
+                {graded ? (
                         <View
                             style={{
                                 width: "100%",
                                 display: "flex",
                                 flexDirection: "row",
-                                backgroundColor: "white"
+                                backgroundColor: "white",
+                                alignItems: 'center'
                             }}>
                             <Text
                                 style={{
@@ -2039,7 +2041,15 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             {isOwner ? (
                                 <TextInput
                                     value={gradeWeight}
-                                    style={styles.input}
+                                    style={{
+                                        width: "25%",
+                                        borderBottomColor: "#f4f4f6",
+                                        borderBottomWidth: 1,
+                                        fontSize: 15,
+                                        padding: 15,
+                                        paddingVertical: 12,
+                                        marginTop: 0,
+                                      }}
                                     placeholder={"0-100"}
                                     onChangeText={val => setGradeWeight(val)}
                                     placeholderTextColor={"#a2a2ac"}
@@ -2056,7 +2066,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             )}
                         </View>
                     ) : null}
-                </View>
             </View>
         ) : null;
     };
@@ -2545,7 +2554,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     <DatePicker
                                         preventOverflow={true}
                                         value={endPlayAt}
-                                        format="YYYY-MM-DD HH:mm:ss"
+                                        format="YYYY-MM-DD HH:mm"
                                         onChange={(event: any) => {
                                             const date = new Date(event);
                                             if (date < new Date()) return;
@@ -2600,7 +2609,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     <Text style={styles.text}>{PreferredLanguageText("remindTill")}</Text>
                                     <DatePicker
                                         preventOverflow={true}
-                                        format="YYYY-MM-DD HH:mm:ss"
+                                        format="YYYY-MM-DD HH:mm"
                                         onChange={(event: any) => {
                                             const date = new Date(event);
                                             if (date < new Date()) return;
