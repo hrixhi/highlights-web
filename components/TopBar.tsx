@@ -6,7 +6,6 @@ import _ from 'lodash'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { fetchAPI } from '../graphql/FetchAPI';
 import { getOrganisation } from '../graphql/QueriesAndMutations';
-import logo from './default-images/cues-logo-white-exclamation-hidden.jpg'
 
 const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 

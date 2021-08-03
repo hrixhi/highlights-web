@@ -31,7 +31,6 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
     const [activeScore, setActiveScore] = useState("");
     const [studentSearch, setStudentSearch] = useState("");
 
-
     useEffect(() => {
         if (studentSearch === "") {
             setScores(JSON.parse(JSON.stringify(props.scores)))
@@ -134,6 +133,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
         })
 
         setExportAoa(exportAoa)
+
 
     }, [scores, cues])
 
@@ -301,6 +301,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 hasLegend={true}
             />
 
+
             {submissionStatistics.length > 0 ? <View style={{ width: '100%'}}>
                 <Text style={{ textAlign: 'left', fontSize: 13, color: '#2F2F3C', fontFamily: 'inter', paddingTop: 50, paddingBottom: 20, paddingLeft: Dimensions.get('window').width < 768 ? 0 : 150 }}>
                     Submissions
@@ -333,7 +334,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
             borderTopRightRadius: 0,
             borderTopLeftRadius: 0
         }}>
-            <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 25 }}>
+            <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 10 }}>
                 {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
             </Text>
             <View style={{ backgroundColor: "white", flexDirection: "row", paddingBottom: 25 }}>
@@ -591,7 +592,7 @@ const styles = StyleSheet.create({
         color: "#fff",
         paddingHorizontal: 10,
         borderRadius: 10,
-        backgroundColor: "#a2a2ac",
+        backgroundColor: "#2f2f3c",
         lineHeight: 20
     },
     allGrayOutline: {

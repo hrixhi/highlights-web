@@ -478,7 +478,7 @@ const styles = StyleSheet.create({
         color: "#fff",
         paddingHorizontal: 10,
         borderRadius: 10,
-        backgroundColor: "#a2a2ac",
+        backgroundColor: "#2f2f3c",
         lineHeight: 20
     },
     allGrayOutline: {

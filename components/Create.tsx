@@ -1312,7 +1312,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                     <Text
                       style={{
                         fontSize: 11,
-                        color: "#a2a2ac",
+                        color: "#2f2f3c",
                         textTransform: "uppercase",
                       }}
                     >
@@ -1416,7 +1416,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                       <Text
                         style={{
                           fontSize: 11,
-                          color: "#a2a2ac",
+                          color: "#2f2f3c",
                           textTransform: "uppercase",
                         }}
                       >
@@ -1524,7 +1524,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                       <Text
                         style={{
                           fontSize: 11,
-                          color: "#a2a2ac",
+                          color: "#2f2f3c",
                           textTransform: "uppercase",
                         }}
                       >
@@ -1642,7 +1642,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                     <Text
                       style={{
                         fontSize: 11,
-                        color: "#a2a2ac",
+                        color: "#2f2f3c",
                         textTransform: "uppercase",
                       }}
                     >
@@ -1758,7 +1758,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   <Text
                     style={{
                       fontSize: 11,
-                      color: "#a2a2ac",
+                      color: "#2f2f3c",
                       textTransform: "uppercase",
                     }}
                   >
@@ -1827,7 +1827,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   <Text
                     style={{
                       fontSize: 11,
-                      color: "#a2a2ac",
+                      color: "#2f2f3c",
                       textTransform: "uppercase",
                     }}
                   >
@@ -1877,7 +1877,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                     <Text
                       style={{
                         fontSize: 11,
-                        color: "#a2a2ac",
+                        color: "#2f2f3c",
                         textTransform: "uppercase",
                       }}
                     >
@@ -2026,7 +2026,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                     <Text
                       style={{
                         fontSize: 11,
-                        color: "#a2a2ac",
+                        color: "#2f2f3c",
                         textTransform: "uppercase",
                       }}
                     >
@@ -2098,7 +2098,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   <Text
                     style={{
                       fontSize: 11,
-                      color: "#a2a2ac",
+                      color: "#2f2f3c",
                       textTransform: "uppercase",
                     }}
                   >

@@ -509,7 +509,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                     }}
                 >
                     <View style={{ backgroundColor: 'white' }}>
-                        <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
+                        <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>
                             {PreferredLanguageText('channel') + ' ' + PreferredLanguageText('name')}
                         </Text>
                         <TextInput
@@ -524,7 +524,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         />
                     </View>
                     <View style={{ backgroundColor: 'white' }}>
-                        <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
+                        <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>
                             {PreferredLanguageText('enrolmentPassword')}
                         </Text>
                         <TextInput
@@ -538,7 +538,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                     </View>
 
                     <View style={{ backgroundColor: 'white' }}>
-                        <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
+                        <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>
                             color
                         </Text>
                         <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white', marginTop: 20 }}>
@@ -554,7 +554,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                   
                     {renderSubscriberFilters()}
 
-                    <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase', marginTop: 25, }}>
+                    <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase', marginTop: 25, }}>
                         Subscribers
                     </Text>
                     
@@ -582,7 +582,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             />
                         </View>
                     </View>
-                    <Text style={{ fontSize: 11, color: '#a2a2aa', textTransform: 'uppercase', marginTop: 25, }}>
+                    <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase', marginTop: 25, }}>
                         Moderators
                     </Text>
                     <View style={{ flexDirection: 'column', marginTop: 25, overflow: 'scroll' }}>

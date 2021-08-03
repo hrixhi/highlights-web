@@ -28,7 +28,6 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
     const [channels, setChannels] = useState<any[]>([])
 
     const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
-    const colorChoices = ["#f44336", "#e91e63", "#9c27b0", "#673ab7", "#3f51b5", "#2196f3", "#03a9f4", "#00bcd4", "#009688", "#4caf50", "#8bc34a", "#cddc39", "#0d5d35", "#ffc107", "#ff9800", "#ff5722", "#795548", "#607db8"]
 
     // Alert messages
     const incorrectPasswordAlert = PreferredLanguageText('incorrectPassword');
@@ -321,7 +320,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         onPress={() => {
                             setOption('Subscribe')
                         }}>
-                        <Text style={{ color: '#a2a2ac', lineHeight: 20, fontSize: 12 }}>
+                        <Text style={{ color: option === 'Subscribe' ? '#fff' : '#a2a2ac', lineHeight: 20, fontSize: 12 }}>
                             {PreferredLanguageText('subscribe')}
                         </Text>
                     </TouchableOpacity>
@@ -333,7 +332,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 onPress={() => {
                                     setOption('Create')
                                 }}>
-                                <Text style={{ color: '#a2a2ac', lineHeight: 20, fontSize: 12 }}>
+                                <Text style={{ color: option === 'Create' ? '#fff' : '#a2a2ac', lineHeight: 20, fontSize: 12 }}>
                                     {PreferredLanguageText('create')}
                                 </Text>
                             </TouchableOpacity>
@@ -345,7 +344,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 onPress={() => {
                                     setOption('All')
                                 }}>
-                                <Text style={{ color: '#a2a2ac', lineHeight: 20, fontSize: 12 }}>
+                                <Text style={{ color: option === 'All' ? '#fff' : '#a2a2ac', lineHeight: 20, fontSize: 12 }}>
                                     All Channels
                                 </Text>
                             </TouchableOpacity> : null
@@ -390,7 +389,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         </ScrollView> :
                         <View style={{ backgroundColor: 'white' }}>
                             <View style={{ backgroundColor: 'white' }}>
-                                <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
+                                <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>
                                     {PreferredLanguageText('channel') + ' ' + PreferredLanguageText('name')}
                                 </Text>
                                 <TextInput
@@ -408,7 +407,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             {
                                 (option === 'Subscribe' && passwordRequired) || option === 'Create' ?
                                     <View style={{ backgroundColor: 'white' }}>
-                                        <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
+                                        <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>
                                             {PreferredLanguageText('enrolmentPassword')}
                                         </Text>
                                         <TextInput
@@ -440,7 +439,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 paddingBottom: 15,
                                                 backgroundColor: "white"
                                             }}>
-                                            <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>Temporary</Text>
+                                            <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>Temporary</Text>
                                         </View>
                                         <View
                                             style={{
@@ -467,8 +466,8 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     : null
                             }
                             {
-                                option === "Create" ? 
-                                <View
+                                option === "Create" ?
+                                    <View
                                         style={{
                                             width: "100%",
                                             paddingVertical: 15,
@@ -480,13 +479,12 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 paddingBottom: 15,
                                                 backgroundColor: "white"
                                             }}>
-                                            <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>Color</Text>
+                                            <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>Color</Text>
                                         </View>
                                         <View style={{ width: '100%', backgroundColor: 'white' }}>
                                             <CirclePicker
-                                                colors={colorChoices}
                                                 color={colorCode}
-                                                onChangeComplete={(color: any) => setColorCode(color.hex) }
+                                                onChangeComplete={(color: any) => setColorCode(color.hex)}
                                             />
                                         </View>
                                     </View>
@@ -562,13 +560,11 @@ const styles = StyleSheet.create({
     },
     allOutline: {
         fontSize: 15,
-        color: '#a2a2ac',
+        color: '#fff',
         height: 22,
         paddingHorizontal: 10,
-        backgroundColor: 'white',
+        backgroundColor: '#2f2f3c',
         borderRadius: 10,
-        borderWidth: 1,
-        borderColor: '#a2a2ac'
     },
     colorBar: {
         width: '100%',
