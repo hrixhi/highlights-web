@@ -162,7 +162,6 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             Filter
                         </Text>
                     </View>
-
                     <View style={{ backgroundColor: '#fff' }}>
                         <View style={{ flexDirection: 'row', display: 'flex', backgroundColor: '#fff' }}>
                             <Menu
@@ -186,7 +185,9 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         borderRadius: 15,
                                         shadowOpacity: 0,
                                         borderWidth: 1,
-                                        borderColor: '#f4f4f6'
+                                        borderColor: '#f4f4f6',
+                                        overflow: 'scroll',
+                                        maxHeight: '100%'
                                     }
                                 }}>
                                     <MenuOption
@@ -1212,7 +1213,6 @@ const styles: any = StyleSheet.create({
         borderBottomColor: "#f4f4f6",
         borderBottomWidth: 1,
         fontSize: 15,
-        padding: 15,
         paddingTop: 12,
         paddingBottom: 12,
         marginBottom: 20

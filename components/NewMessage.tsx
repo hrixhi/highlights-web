@@ -357,7 +357,9 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                 borderRadius: 15,
                                                                 shadowOpacity: 0,
                                                                 borderWidth: 1,
-                                                                borderColor: '#f4f4f6'
+                                                                borderColor: '#f4f4f6',
+                                                                overflow: 'scroll',
+                                                                maxHeight: '100%'
                                                             }
                                                         }}>
                                                             <MenuOption
@@ -549,7 +551,6 @@ const styles: any = StyleSheet.create({
         borderBottomColor: '#f4f4f6',
         borderBottomWidth: 1,
         fontSize: 12,
-        padding: 15,
         paddingTop: 12,
         paddingBottom: 12,
         marginTop: 5,

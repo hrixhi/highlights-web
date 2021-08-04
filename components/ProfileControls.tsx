@@ -316,7 +316,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
   return (
     <View style={styles.screen} key={1}>
       <ScrollView
-        style={{ width: "100%", backgroundColor: "white" }}
+        style={{ width: "100%", backgroundColor: "white", height: Dimensions.get('window').height - 100 }}
         showsVerticalScrollIndicator={false}
       >
         <Text
@@ -326,7 +326,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
             fontFamily: 'inter',
             // textTransform: "uppercase",
             // paddingLeft: 10,
-            flex: 1,
+            // flex: 1,
             lineHeight: 25
           }}>
           {!loggedIn ? PreferredLanguageText('backUp') : PreferredLanguageText('profile')}
@@ -576,7 +576,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
               {loggedIn ? PreferredLanguageText('logout') : PreferredLanguageText('login')}
             </Text>
           </TouchableOpacity>
-          <View style={{ flexDirection: 'row', justifyContent: 'center', paddingBottom: 20, width: '100%', marginTop: 30,  marginBottom: 100 }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'center', paddingBottom: 20, width: '100%', marginTop: 30, marginBottom: 100 }}>
             <LanguageSelect />
           </View>
         </View>

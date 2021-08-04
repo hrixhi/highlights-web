@@ -194,7 +194,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
 
         row1.push("Submission Date")
 
-        row1.push("Overall Remarks")
+        row1.push("Feedback")
 
         exportAoa.push(row1);
 
@@ -818,6 +818,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 key={Math.random()}
                                 style={{
                                     backgroundColor: 'white',
+                                    marginLeft: showSubmission ? -7 : 0
                                 }}
                                 onPress={() => {
                                     if (showChat) {
@@ -1457,7 +1458,9 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 borderRadius: 15,
                                                 shadowOpacity: 0,
                                                 borderWidth: 1,
-                                                borderColor: '#f4f4f6'
+                                                borderColor: '#f4f4f6',
+                                                overflow: 'scroll',
+                                                maxHeight: '100%'
                                             }
                                         }}>
                                             {/* <MenuOption
@@ -1611,7 +1614,6 @@ const styleObject = () => {
             borderBottomColor: '#f4f4f6',
             borderBottomWidth: 1,
             fontSize: 15,
-            padding: 15,
             paddingTop: 13,
             paddingBottom: 13,
             marginTop: 5,
