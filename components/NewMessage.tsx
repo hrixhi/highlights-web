@@ -551,7 +551,6 @@ const styles: any = StyleSheet.create({
         borderBottomColor: '#f4f4f6',
         borderBottomWidth: 1,
         fontSize: 12,
-        padding: 15,
         paddingTop: 12,
         paddingBottom: 12,
         marginTop: 5,

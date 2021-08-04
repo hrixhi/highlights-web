@@ -267,6 +267,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
     // Used to detect ongoing quiz and
     useEffect(() => {
+        console.log(duration)
         if (!isQuizTimed || initiatedAt === null || initiatedAt === "" || isOwner) {
             // not a timed quiz or its not been initiated
             return;
@@ -481,6 +482,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         cue,
         shuffle,
         frequency,
+        gradeWeight,
         starred,
         color,
         props.cueIndex,
@@ -706,6 +708,10 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         initiateAt,
         title, original, imported, type, url
     ]);
+
+    console.log(isQuizTimed)
+    console.log(initDuration)
+    console.log(initiateAt)
 
     // Handle Delete Cue
     const handleDelete = useCallback(async () => {
@@ -1362,6 +1368,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
     // QUIZ TIMER OR DOWNLOAD/REFRESH IF UPLOADED
     const renderQuizTimerOrUploadOptions = () => {
+        console.log(props.cue.graded)
+        console.log(props.cue.submittedAt)
         return props.showOriginal && (imported || isQuiz) ? (
             <View style={{ flexDirection: "row", marginRight: 0, marginLeft: 0 }}>
                 <View style={{ width: "40%", alignSelf: "flex-start" }}>
@@ -1375,8 +1383,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     />
                 </View>
                 {isQuiz && !props.cue.graded ? (
-                    isQuizTimed && (!props.cue.submittedAt || props.cue.submittedAt !== "") ? (
-                        initiatedAt && initDuration !== 0 && props.cue.submittedAt === "" ? (
+                    isQuizTimed && (!props.cue.submittedAt || props.cue.submittedAt === "") ? (
+                        initiatedAt && initDuration !== 0 ? (
                             <View
                                 style={{
                                     flex: 1,
@@ -1894,51 +1902,51 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     )}
                 </View>
                 {submission ? (
-                        <View
+                    <View
+                        style={{
+                            width: "100%",
+                            display: "flex",
+                            flexDirection: "row",
+                            backgroundColor: "white",
+                            marginBottom: 10,
+                            alignItems: 'center'
+                        }}>
+                        <Text
                             style={{
-                                width: "100%",
-                                display: "flex",
-                                flexDirection: "row",
-                                backgroundColor: "white",
-                                marginBottom: 10,
-                                alignItems: 'center'
+                                fontSize: 12,
+                                color: "#a2a2ac",
+                                textAlign: "left",
+                                paddingRight: 10
                             }}>
+                            Available
+                        </Text>
+                        {isOwner ? (
+                            <DatePicker
+                                format="YYYY-MM-DD HH:mm"
+                                size={'xs'}
+                                value={initiateAt}
+                                preventOverflow={true}
+                                onChange={(event: any) => {
+
+                                    const date = new Date(event);
+
+                                    if (date < new Date()) return;
+                                    setInitiateAt(date);
+                                }}
+                            // isValidDate={disablePastDt}
+                            />
+                        ) : (
                             <Text
                                 style={{
                                     fontSize: 12,
                                     color: "#a2a2ac",
-                                    textAlign: "left",
-                                    paddingRight: 10
+                                    textAlign: "left"
                                 }}>
-                                Available
+                                {initiateAt.toLocaleString()}
                             </Text>
-                            {isOwner ? (
-                                <DatePicker
-                                    format="YYYY-MM-DD HH:mm"
-                                    size={'xs'}
-                                    value={initiateAt}
-                                    preventOverflow={true}
-                                    onChange={(event: any) => {
-
-                                        const date = new Date(event);
-
-                                        if (date < new Date()) return;
-                                        setInitiateAt(date);
-                                    }}
-                                // isValidDate={disablePastDt}
-                                />
-                            ) : (
-                                <Text
-                                    style={{
-                                        fontSize: 12,
-                                        color: "#a2a2ac",
-                                        textAlign: "left"
-                                    }}>
-                                    {initiateAt.toLocaleString()}
-                                </Text>
-                            )}
-                        </View>
-                    ) : null}    
+                        )}
+                    </View>
+                ) : null}
                 {submission ? (
                     <View
                         style={{
@@ -2020,52 +2028,52 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     </View>
                 </View>
                 {graded ? (
-                        <View
+                    <View
+                        style={{
+                            width: "100%",
+                            display: "flex",
+                            flexDirection: "row",
+                            backgroundColor: "white",
+                            alignItems: 'center'
+                        }}>
+                        <Text
                             style={{
-                                width: "100%",
-                                display: "flex",
-                                flexDirection: "row",
-                                backgroundColor: "white",
-                                alignItems: 'center'
+                                fontSize: 12,
+                                color: "#a2a2ac",
+                                textAlign: "left",
+                                paddingRight: 10,
+                                paddingLeft: 10,
                             }}>
+                            {PreferredLanguageText("percentageOverall")}
+                        </Text>
+                        {isOwner ? (
+                            <TextInput
+                                value={gradeWeight}
+                                style={{
+                                    width: "25%",
+                                    borderBottomColor: "#f4f4f6",
+                                    borderBottomWidth: 1,
+                                    fontSize: 15,
+                                    padding: 15,
+                                    paddingVertical: 12,
+                                    marginTop: 0,
+                                }}
+                                placeholder={"0-100"}
+                                onChangeText={val => setGradeWeight(val)}
+                                placeholderTextColor={"#a2a2ac"}
+                            />
+                        ) : (
                             <Text
                                 style={{
-                                    fontSize: 12,
                                     color: "#a2a2ac",
                                     textAlign: "left",
-                                    paddingRight: 10,
-                                    paddingLeft: 10,
+                                    fontSize: 12
                                 }}>
-                                {PreferredLanguageText("percentageOverall")}
+                                {gradeWeight}
                             </Text>
-                            {isOwner ? (
-                                <TextInput
-                                    value={gradeWeight}
-                                    style={{
-                                        width: "25%",
-                                        borderBottomColor: "#f4f4f6",
-                                        borderBottomWidth: 1,
-                                        fontSize: 15,
-                                        padding: 15,
-                                        paddingVertical: 12,
-                                        marginTop: 0,
-                                      }}
-                                    placeholder={"0-100"}
-                                    onChangeText={val => setGradeWeight(val)}
-                                    placeholderTextColor={"#a2a2ac"}
-                                />
-                            ) : (
-                                <Text
-                                    style={{
-                                        color: "#a2a2ac",
-                                        textAlign: "left",
-                                        fontSize: 12
-                                    }}>
-                                    {gradeWeight}
-                                </Text>
-                            )}
-                        </View>
-                    ) : null}
+                        )}
+                    </View>
+                ) : null}
             </View>
         ) : null;
     };
@@ -2928,62 +2936,65 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     />
                                 ) : null}
                             </View>
-                            {!props.showOriginal && !submissionImported && !props.cue.graded ? (
-                                <Text
-                                    style={{
-                                        color: "#2f2f3c",
-                                        fontSize: 11,
-                                        lineHeight: 30,
-                                        textAlign: "right",
-                                        paddingRight: 20,
-                                        textTransform: "uppercase"
-                                    }}
-                                    onPress={() => setShowEquationEditor(!showEquationEditor)}>
-                                    {showEquationEditor ? PreferredLanguageText("hide") : PreferredLanguageText("formula")}
-                                </Text>
-                            ) : null}
-                            {!props.showOriginal &&
-                                props.cue.submission &&
-                                currentDate < deadline &&
-                                !submissionImported &&
-                                !showImportOptions &&
-                                !props.cue.graded && !isQuiz ? (
-                                <Text
-                                    style={{
-                                        color: "#2f2f3c",
-                                        fontSize: 11,
-                                        lineHeight: 30,
-                                        textAlign: "right",
-                                        // paddingRight: 10,
-                                        textTransform: "uppercase"
-                                    }}
-                                    onPress={() => setShowImportOptions(true)}>
-                                    {PreferredLanguageText("import")} {Dimensions.get("window").width < 768 ? "" : "   "}
-                                </Text>
-                            ) : (
-
-                                (props.showOriginal && !isOwner) || // viewing import as non import
-                                    (props.showOriginal && isOwner && imported) ||  // viewing import as owner
-                                    (!props.showOriginal && isOwner && (props.cue.channelId && props.cue.channelId !== '')) || // no submission as owner
-                                    (!props.showOriginal && submissionImported && !isOwner) ||  // submitted as non owner
-                                    (!props.showOriginal && !submission && (props.cue.channelId && props.cue.channelId !== '')) ||  // my notes
-                                    isQuiz
-                                    ? null :
-                                    (
-                                        <Text style={{
-                                            color: '#2f2f3c',
+                            <View style={{ backgroundColor: '#fff', flexDirection: 'row' }}>
+                                {(!props.showOriginal && !submissionImported && !props.cue.graded)
+                                    || (props.showOriginal && isOwner && !imported && !isQuiz)
+                                    ? (
+                                        <Text
+                                            style={{
+                                                color: "#2f2f3c",
+                                                fontSize: 11,
+                                                lineHeight: 30,
+                                                textAlign: "right",
+                                                paddingRight: 20,
+                                                textTransform: "uppercase"
+                                            }}
+                                            onPress={() => setShowEquationEditor(!showEquationEditor)}>
+                                            {showEquationEditor ? PreferredLanguageText("hide") : PreferredLanguageText("formula")}
+                                        </Text>
+                                    ) : null}
+                                {!props.showOriginal &&
+                                    props.cue.submission &&
+                                    currentDate < deadline &&
+                                    !submissionImported &&
+                                    !showImportOptions &&
+                                    !props.cue.graded && !isQuiz ? (
+                                    <Text
+                                        style={{
+                                            color: "#2f2f3c",
                                             fontSize: 11,
                                             lineHeight: 30,
-                                            textAlign: 'right',
+                                            textAlign: "right",
                                             // paddingRight: 10,
-                                            textTransform: 'uppercase'
+                                            textTransform: "uppercase"
                                         }}
-                                            onPress={() => setShowImportOptions(true)}
-                                        >
-                                            {PreferredLanguageText('import')}     {Dimensions.get('window').width < 768 ? '' : '   '}
-                                        </Text>
-                                    )
-                            )}
+                                        onPress={() => setShowImportOptions(true)}>
+                                        {PreferredLanguageText("import")} {Dimensions.get("window").width < 768 ? "" : "   "}
+                                    </Text>
+                                ) : (
+                                    (props.showOriginal && !isOwner) || // viewing import as non import
+                                        (props.showOriginal && isOwner && imported) ||  // viewing import as owner
+                                        (!props.showOriginal && isOwner && (props.cue.channelId && props.cue.channelId !== '')) || // no submission as owner
+                                        (!props.showOriginal && submissionImported && !isOwner) ||  // submitted as non owner
+                                        (!props.showOriginal && !submission && (props.cue.channelId && props.cue.channelId !== '')) ||  // my notes
+                                        isQuiz
+                                        ? null :
+                                        (
+                                            <Text style={{
+                                                color: '#2f2f3c',
+                                                fontSize: 11,
+                                                lineHeight: 30,
+                                                textAlign: 'right',
+                                                // paddingRight: 10,
+                                                textTransform: 'uppercase'
+                                            }}
+                                                onPress={() => setShowImportOptions(true)}
+                                            >
+                                                {PreferredLanguageText('import')} {Dimensions.get('window').width < 768 ? '' : '   '}
+                                            </Text>
+                                        )
+                                )}
+                            </View>
                         </View>
                 }
                 {renderEquationEditor()}
@@ -3264,7 +3275,6 @@ const styles: any = StyleSheet.create({
         borderBottomColor: "#f4f4f6",
         borderBottomWidth: 1,
         fontSize: 15,
-        padding: 15,
         paddingTop: 12,
         paddingBottom: 12,
         // marginTop: 5,

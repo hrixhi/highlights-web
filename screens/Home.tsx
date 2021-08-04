@@ -1571,8 +1571,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 <TouchableOpacity
                   onPress={() => closeModal()}
                   style={{ height: 50, backgroundColor: '#fff', borderTopWidth: 1, borderColor: '#a2a2ac' }}>
-                  <Text style={{ flex: 1, textAlign: 'center', fontSize: 15, lineHeight: 15, marginTop: 15, color: '#2F2F3C', fontWeight: 'bold' }}>
-                    <Ionicons name='chevron-back-outline' size={15} /> Back
+                  <Text style={{ flex: 1, textAlign: 'center', fontSize: 16, lineHeight: 16, marginTop: 15, color: '#2F2F3C', fontFamily: 'inter', fontWeight: 'bold' }}>
+                    <Ionicons name='chevron-back-outline' size={16} /> BACK
                   </Text>
                 </TouchableOpacity> :
                 <View style={{ backgroundColor: '#f4f4f6', height: 0 }} />
@@ -1610,7 +1610,6 @@ const styles = StyleSheet.create({
     borderBottomColor: '#f4f4f6',
     borderBottomWidth: 1,
     fontSize: 15,
-    padding: 15,
     paddingTop: 13,
     paddingBottom: 13,
     marginTop: 5,
