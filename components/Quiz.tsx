@@ -455,7 +455,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         {
                             problem.questionType === "freeResponse" ?
 
-                                <View style={{ width: '80%', }}>
+                                <View style={{ width: '100%', paddingHorizontal: 40 }}>
                                     <CustomTextInput
                                         editable={!props.submitted && !props.graded && !props.isOwner && !props.hasEnded}
                                         value={solutions[problemIndex].response}
