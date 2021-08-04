@@ -27,19 +27,40 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
     const [password, setPassword] = useState('')
     const [temporary, setTemporary] = useState(false)
 
+
+    // Use to subscribe and unsubscribe users
     const [originalSubs, setOriginalSubs] = useState<any[]>([])
+
+    // Dropdown options for subscribers
     const [options, setOptions] = useState<any[]>([])
+
+    // Selected Subscribers
     const [selected, setSelected] = useState<any[]>([])
+
     const [owner, setOwner] = useState<any>({})
+
+    // Selected Moderators
     const [owners, setOwners] = useState<any[]>([])
+
+    // The Main channel owner (Hide from all lists)
+    const [channelCreator, setChannelCreator] = useState('')
+
+    // Channel color
     const [colorCode, setColorCode] = useState("")
     const colorChoices = ["#f44336", "#e91e63", "#9c27b0", "#673ab7", "#3f51b5", "#2196f3", "#03a9f4", "#00bcd4", "#009688", "#4caf50", "#8bc34a", "#cddc39", "#0d5d35", "#ffc107", "#ff9800", "#ff5722", "#795548", "#607db8"]
+    
+    // Filters
     const grades = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
     const sections = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",]
     const roles = ['student', 'instructor']
     const [activeRole, setActiveRole] = useState('All');
     const [activeGrade, setActiveGrade] = useState('All');
     const [activeSection, setActiveSection] = useState('All');
+
+    // Used to find out if any moderators are removed
+    const [originalOwners, setOriginalOwners] = useState<any[]>([]);
+
+    // Used to keep all users to filter
     const [allUsers, setAllUsers] = useState([]);
 
     useEffect(() => {
@@ -72,6 +93,14 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
             filteredUsers = filterSections
         }
 
+        if (channelCreator !== "") {
+            const filterOutMainOwner = filteredUsers.filter((user: any) => {
+                return user._id !== channelCreator
+            })
+
+            filteredUsers = filterOutMainOwner
+        }
+
         let filteredOptions = filteredUsers.map((user: any) => {
             return {
                 name: (user.fullName + ', ' + user.displayName),
@@ -81,8 +110,20 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
 
         setOptions(filteredOptions)
 
+    }, [activeRole, activeGrade, activeSection, channelCreator])
 
-    }, [activeRole, activeGrade, activeSection])
+    useEffect(() => {
+        if (channelCreator !== "") {
+            const subscribers = [...selected]
+
+            const filterOutMainOwner = subscribers.filter((sub: any) => {
+              return sub.id !== channelCreator  
+            })
+
+            setSelected(filterOutMainOwner)
+        }
+    }, [channelCreator])
+
 
     const renderSubscriberFilters = () => {
         return (<View style={{ width: '100%', flexDirection: 'row', backgroundColor: 'white', marginTop: 25 }}>
@@ -265,23 +306,31 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
             return
         }
 
-        if (selected.length === 0) {
-            alert('Select subscribers.')
-            return
+        let moderatorsPresentAsSubscribers = true;
+
+        owners.map((owner: any) => {
+            const presentInSubscriber = selected.find((sub: any) => {
+                return owner.id === sub.id;
+            })
+
+            if (!presentInSubscriber) {
+                moderatorsPresentAsSubscribers = false
+            }
+        })
+
+        if (!moderatorsPresentAsSubscribers) {
+            alert("A moderator must be a subscriber");
+            return;
         }
+
         const server = fetchAPI('')
         server.query({
             query: doesChannelNameExist,
             variables: {
                 name: name.trim()
             }
-        }).then(res => {
+        }).then(async res => {
             if (res.data && (res.data.channel.doesChannelNameExist !== true || name.trim() === originalName.trim())) {
-
-                let unsub = false
-                if (confirm('Unsubscribe removed moderators?')) {
-                    unsub = true
-                }
 
                 server.mutate({
                     mutation: updateChannel,
@@ -293,11 +342,9 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         owners: owners.map((item) => {
                             return item.id
                         }),
-                        unsubscribe: unsub,
                         colorCode
                     }
                 }).then(res2 => {
-                    console.log(res2)
                     if (res2.data && res2.data.channel.update) {
                         // added subs
                         selected.map((sub: any) => {
@@ -317,9 +364,13 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         })
                         // removed subs
                         originalSubs.map((o: any) => {
+
+                            if (o.id === channelCreator) return;
+
                             const og = selected.find((sub: any) => {
                                 return o.id === sub.id
                             })
+
                             if (!og) {
                                 server.mutate({
                                     mutation: unsubscribe,
@@ -421,6 +472,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             setOriginalName(res.data.channel.findById.name)
                                             setPassword(res.data.channel.findById.password ? res.data.channel.findById.password : '')
                                             setTemporary(res.data.channel.findById.temporary ? true : false)
+                                            setChannelCreator(res.data.channel.findById.channelCreator)
                                             if (res.data.channel.findById.owners) {
                                                 const ownerOptions: any[] = []
                                                 tempUsers.map((item: any) => {
@@ -431,10 +483,20 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                         ownerOptions.push(item)
                                                     }
                                                 })
-                                                setOwners(ownerOptions)
+
+                                                // Filter out the main channel creator from the moderators list
+
+                                                const filterOutMainOwner = ownerOptions.filter((user: any) => {
+                                                    return user.id !== res.data.channel.findById.channelCreator
+                                                })
+
+                                                setOriginalOwners(filterOutMainOwner)
+
+                                                setOwners(filterOutMainOwner)
                                             }
                                         }
                                     })
+
                                     setOptions(tempUsers)
                                 })
                             }
@@ -452,20 +514,13 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             const tempUsers: any[] = []
                             res.data.user.findByChannelId.map((item: any, index: any) => {
                                 const x = { ...item, selected: false, index }
-                                console.log(user._id)
-                                console.log(item._id)
-                                if (item._id.toString().trim() === user._id.toString().trim()) {
-                                    setOwner({
-                                        name: (item.fullName + ', ' + item.displayName),
-                                        id: item._id
-                                    })
-                                } else {
-                                    delete x.__typename
-                                    tempUsers.push({
-                                        name: (item.fullName + ', ' + item.displayName),
-                                        id: item._id
-                                    })
-                                }
+                                
+                                delete x.__typename
+                                tempUsers.push({
+                                    name: (item.fullName + ', ' + item.displayName),
+                                    id: item._id
+                                })
+
                                 // add the user always 
                             })
                             setOriginalSubs(tempUsers)
@@ -581,6 +636,16 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     return true
                                 }} // Function will trigger on select event
                                 onRemove={(e, f) => {
+                                    // If remove as subscriber and user is part of moderators, then remove from moderators
+
+                                    const currModerators = [...owners];
+
+                                    const filterOutRemovedSubscriber = currModerators.filter((user: any) => {
+                                        return user.id !== f.id
+                                    })
+
+                                    setOwners(filterOutRemovedSubscriber)
+
                                     setSelected(e);
                                     return true
                                 }}
@@ -606,7 +671,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         minHeight: 100
                                     }
                                 }}
-                                options={options} // Options to display in the dropdown
+                                options={selected} // Options to display in the dropdown
                                 selectedValues={owners} // Preselected value to persist in dropdown
                                 onSelect={(e, f) => {
                                     setOwners(e);

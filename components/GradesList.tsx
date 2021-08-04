@@ -511,7 +511,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                             return s.cueId.toString().trim() === cue._id.toString().trim()
                                                         })
 
-                                                        if (activeCueId === scoreObject.cueId && activeUserId === score.userId) {
+                                                        if (scoreObject && activeCueId === scoreObject.cueId && activeUserId === score.userId) {
                                                             return <View style={styles.col}>
                                                                 <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
                                                                     <TextInput 
@@ -541,12 +541,15 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                         }
 
                                                         return <TouchableOpacity disabled={!props.isOwner} style={styles.col} key={row.toString() + '-' + col.toString()} onPress={() => { 
+
+                                                                if (!scoreObject) return;
+                                                                
                                                                 setActiveCueId(scoreObject.cueId);
                                                                 setActiveUserId(score.userId);
                                                                 setActiveScore(scoreObject.score);
                                                             }}>
-                                                            {!scoreObject.submittedAt ? <Text style={{ textAlign: 'center', fontSize: 11, color: '#D91D56',  }}>
-                                                                { scoreObject && scoreObject.graded ? scoreObject.score : "Missing" }
+                                                            {!scoreObject || !scoreObject.submittedAt ? <Text style={{ textAlign: 'center', fontSize: 11, color: '#D91D56',  }}>
+                                                                { scoreObject && scoreObject.graded ? scoreObject.score :  (!scoreObject || !scoreObject.cueId ? "N/A" : "Missing" )}
                                                             </Text> 
                                                             : 
                                                             <Text style={{ textAlign: 'center', fontSize: 11, color: scoreObject && new Date(parseInt(scoreObject.submittedAt)) >= (new Date(cue.deadline)) ? '#ED7D22' : '#2f2f3c', }}>
