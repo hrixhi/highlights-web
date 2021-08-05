@@ -26,7 +26,6 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const scroll3: any = useRef()
     const [channelOwner, setChannelOwner] = useState(false)
     const [viewStatus, setViewStatus] = useState(false);
-    const [isOwner, setIsOwner] = useState(false)
     const [submission, setSubmission] = useState(props.cue.submission ? props.cue.submission : false)
     const [showOriginal, setShowOriginal] = useState(props.cue.channelId && props.cue.channelId !== '' ? true : false)
     const [isQuiz, setIsQuiz] = useState(false)
@@ -36,8 +35,6 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const unableToLoadStatusesAlert = PreferredLanguageText('unableToLoadStatuses');
     const checkConnectionAlert = PreferredLanguageText('checkConnection');
     const unableToLoadCommentsAlert = PreferredLanguageText('unableToLoadComments')
-
-    console.log("props", props);
 
     useEffect(() => {
         if (props.cue.channelId && props.cue.channelId !== '') {
@@ -49,20 +46,6 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 }
             }
         }
-    }, [props.cue])
-
-    useEffect(() => {
-        (
-            async () => {
-                const u = await AsyncStorage.getItem('user')
-                if (u && props.cue.createdBy) {
-                    const parsedUser = JSON.parse(u)
-                    if (parsedUser._id.toString().trim() === props.cue.createdBy.toString().trim()) {
-                        setIsOwner(true)
-                    }
-                }
-            }
-        )()
     }, [props.cue])
 
     const loadThreadsAndStatuses = useCallback(async () => {
@@ -264,10 +247,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             />
                             {
                                 !Number.isNaN(Number(cueId))
-                                    || !props.channelId
-                                    || (
-                                        props.cue.original && props.cue.original.includes("quizId")
-                                    ) ? <View
+                                    || !props.channelId ? <View
                                     style={{ flex: 1, backgroundColor: 'white' }}
                                 /> :
                                     (
@@ -350,7 +330,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         </Text>
                                     </TouchableOpacity>
                                     {
-                                        (isOwner && submission) || isQuiz ? null :
+                                        (channelOwner && submission) || isQuiz ? null :
                                             <TouchableOpacity
                                                 style={{
                                                     justifyContent: 'center',
@@ -370,7 +350,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     }
                                     {/* Add Status button here */}
                                     {
-                                        !isOwner || !channelOwner ? null :
+                                        !channelOwner ? null :
                                             <TouchableOpacity
                                                 style={{
                                                     justifyContent: 'center',

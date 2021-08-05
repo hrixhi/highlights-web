@@ -652,22 +652,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           })
             .then(async res => {
               if (res.data.subscription.findByUserId) {
-
-                // Add color Codes for Subscriptions that don't have one
-
-                const colorChoices: any[] = ['#d91d56', '#ED7D22', '#FFBA10', '#B8D41F', '#53BE6D']
-
-                const updateColorCodes = res.data.subscription.findByUserId.map((sub: any) => {
-                  if (sub.colorCode === "") {
-                    const randomColor = colorChoices[Math.floor(Math.random() * colorChoices.length)];
-                    sub.colorCode = randomColor;
-
-                  }
-                  return sub;
-                })
-
-                setSubscriptions(updateColorCodes)
-                const stringSub = JSON.stringify(updateColorCodes)
+                setSubscriptions(res.data.subscription.findByUserId)
+                const stringSub = JSON.stringify(res.data.subscription.findByUserId)
                 await AsyncStorage.setItem('subscriptions', stringSub)
               } else {
                 setSubscriptions(parsedSubscriptions)
@@ -1220,7 +1206,13 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
       })
     })
   }
-  const cuesCopy = cuesArray.sort((a: any, b: any) => {
+
+  // Filter if cues are inactive
+  const removeInactiveCues = cuesArray.filter((cue: any) => {
+    return cue.active
+  })
+
+  const cuesCopy = removeInactiveCues.sort((a: any, b: any) => {
     if (a.color < b.color) {
       return -1;
     }
@@ -1495,8 +1487,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 openUpdate={(index: any, key: any, pageNumber: any, _id: any, by: any, cId: any) => openUpdate(index, key, pageNumber, _id, by, cId)}
                 channelFilterChoice={channelFilterChoice}
                 subscriptions={subscriptions}
-                updateDiscussionNotidCounts={updateDiscussionNotidCounts}
-
               />
             </View>
         }
@@ -1570,8 +1560,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 <TouchableOpacity
                   onPress={() => closeModal()}
                   style={{ height: 50, backgroundColor: '#fff', borderTopWidth: 1, borderColor: '#a2a2ac' }}>
-                  <Text style={{ flex: 1, textAlign: 'center', fontSize: 15, lineHeight: 15, marginTop: 15, color: '#2F2F3C', fontWeight: 'bold' }}>
-                    <Ionicons name='chevron-back-outline' size={15} /> Back
+                  <Text style={{ flex: 1, textAlign: 'center', fontSize: 16, lineHeight: 16, marginTop: 15, color: '#2F2F3C', fontFamily: 'inter', fontWeight: 'bold' }}>
+                    <Ionicons name='chevron-back-outline' size={16} /> BACK
                   </Text>
                 </TouchableOpacity> :
                 <View style={{ backgroundColor: '#f4f4f6', height: 0 }} />
@@ -1609,7 +1599,6 @@ const styles = StyleSheet.create({
     borderBottomColor: '#f4f4f6',
     borderBottomWidth: 1,
     fontSize: 15,
-    padding: 15,
     paddingTop: 13,
     paddingBottom: 13,
     marginTop: 5,

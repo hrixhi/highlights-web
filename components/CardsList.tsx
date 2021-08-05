@@ -18,8 +18,10 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const unparsedCues: any[] = JSON.parse(JSON.stringify(props.cues))
     const [cues] = useState<any[]>(unparsedCues.reverse())
 
+
     const [filterChoice] = useState(props.channelFilterChoice)
     let filteredCues: any[] = []
+
 
     if (filterChoice === 'All') {
         filteredCues = cues
@@ -90,7 +92,6 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 cue={filteredCues[index]}
                                 channelId={props.channelId}
                                 subscriptions={props.subscriptions}
-                                updateDiscussionNotidCounts={props.updateDiscussionNotidCounts}
                             />
                         </View>
                     })

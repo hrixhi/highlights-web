@@ -267,6 +267,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
     // Used to detect ongoing quiz and
     useEffect(() => {
+        console.log(duration)
         if (!isQuizTimed || initiatedAt === null || initiatedAt === "" || isOwner) {
             // not a timed quiz or its not been initiated
             return;
@@ -328,7 +329,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     }
                 })
                 .catch(err => { });
-            if (user._id.toString().trim() === props.cue.createdBy && props.cue.channelId && props.cue.channelId !== "") {
+            if (props.channelOwner && props.cue.channelId && props.cue.channelId !== "") {
                 // owner
                 server
                     .query({
@@ -495,6 +496,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         cue,
         shuffle,
         frequency,
+        gradeWeight,
         starred,
         color,
         props.cueIndex,
@@ -721,6 +723,10 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         title, original, imported, type, url
     ]);
 
+    console.log(isQuizTimed)
+    console.log(initDuration)
+    console.log(initiateAt)
+
     // Handle Delete Cue
     const handleDelete = useCallback(async () => {
         Alert("Delete cue?", "", [
@@ -930,15 +936,16 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             const u = await AsyncStorage.getItem("user");
             if (u && props.cue.createdBy) {
                 const parsedUser = JSON.parse(u);
-                if (parsedUser._id.toString().trim() === props.cue.createdBy.toString().trim()) {
-                    setIsOwner(true);
-                }
                 if (parsedUser.email && parsedUser.email !== "") {
                     setUserSetupComplete(true);
                 }
             }
         })();
     }, [props.cue]);
+
+    useEffect(() => {
+        setIsOwner(props.channelOwner)
+    }, [props.channelOwner])
 
     const updateStatusAsRead = useCallback(async () => {
         if (props.cue.status && props.cue.status !== "read" && !markedAsRead) {
@@ -1376,6 +1383,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
     // QUIZ TIMER OR DOWNLOAD/REFRESH IF UPLOADED
     const renderQuizTimerOrUploadOptions = () => {
+        console.log(props.cue.graded)
+        console.log(props.cue.submittedAt)
         return props.showOriginal && (imported || isQuiz) ? (
             <View style={{ flexDirection: "row", marginRight: 0, marginLeft: 0 }}>
                 <View style={{ width: "40%", alignSelf: "flex-start" }}>
@@ -1389,8 +1398,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     />
                 </View>
                 {isQuiz && !props.cue.graded ? (
-                    isQuizTimed && (!props.cue.submittedAt || props.cue.submittedAt !== "") ? (
-                        initiatedAt && initDuration !== 0 && props.cue.submittedAt === "" ? (
+                    isQuizTimed && (!props.cue.submittedAt || props.cue.submittedAt === "") ? (
+                        initiatedAt && initDuration !== 0 ? (
                             <View
                                 style={{
                                     flex: 1,
@@ -2807,7 +2816,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             marginBottom: 5
                         }}>
                         {renderCueTabs()}
-                        {props.cue.graded && props.cue.score !== undefined && props.cue.score !== null && !isQuiz && props.cue.releaseSubmission ? (
+                        {!isOwner && props.cue.graded && props.cue.score !== undefined && props.cue.score !== null && !isQuiz && props.cue.releaseSubmission ? (
                             <Text
                                 style={{
                                     fontSize: 12,
@@ -2824,7 +2833,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             </Text>
                         ) : null}
                         {
-                            props.cue.submittedAt !== "" && (new Date(props.cue.submittedAt) >= deadline) ?
+                            !isOwner && props.cue.submittedAt !== "" && (new Date(props.cue.submittedAt) >= deadline) ?
                                 <View style={{ borderRadius: 10, padding: 5, borderWidth: 1, borderColor: '#D91D56', marginLeft: 15, }}>
                                     <Text style={{ color: '#D91D56', fontSize: 12, textAlign: 'center' }}>
                                         LATE
@@ -2943,62 +2952,65 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     />
                                 ) : null}
                             </View>
-                            {!props.showOriginal && !submissionImported && !props.cue.graded ? (
-                                <Text
-                                    style={{
-                                        color: "#2f2f3c",
-                                        fontSize: 11,
-                                        lineHeight: 30,
-                                        textAlign: "right",
-                                        paddingRight: 20,
-                                        textTransform: "uppercase"
-                                    }}
-                                    onPress={() => setShowEquationEditor(!showEquationEditor)}>
-                                    {showEquationEditor ? PreferredLanguageText("hide") : PreferredLanguageText("formula")}
-                                </Text>
-                            ) : null}
-                            {!props.showOriginal &&
-                                props.cue.submission &&
-                                currentDate < deadline &&
-                                !submissionImported &&
-                                !showImportOptions &&
-                                !props.cue.graded && !isQuiz ? (
-                                <Text
-                                    style={{
-                                        color: "#2f2f3c",
-                                        fontSize: 11,
-                                        lineHeight: 30,
-                                        textAlign: "right",
-                                        // paddingRight: 10,
-                                        textTransform: "uppercase"
-                                    }}
-                                    onPress={() => setShowImportOptions(true)}>
-                                    {PreferredLanguageText("import")} {Dimensions.get("window").width < 768 ? "" : "   "}
-                                </Text>
-                            ) : (
-
-                                (props.showOriginal && !isOwner) || // viewing import as non import
-                                    (props.showOriginal && isOwner && imported) ||  // viewing import as owner
-                                    (!props.showOriginal && isOwner && (props.cue.channelId && props.cue.channelId !== '')) || // no submission as owner
-                                    (!props.showOriginal && submissionImported && !isOwner) ||  // submitted as non owner
-                                    (!props.showOriginal && !submission && (props.cue.channelId && props.cue.channelId !== '')) ||  // my notes
-                                    isQuiz
-                                    ? null :
-                                    (
-                                        <Text style={{
-                                            color: '#2f2f3c',
+                            <View style={{ backgroundColor: '#fff', flexDirection: 'row' }}>
+                                {(!props.showOriginal && !submissionImported && !props.cue.graded)
+                                    || (props.showOriginal && isOwner && !imported && !isQuiz)
+                                    ? (
+                                        <Text
+                                            style={{
+                                                color: "#2f2f3c",
+                                                fontSize: 11,
+                                                lineHeight: 30,
+                                                textAlign: "right",
+                                                paddingRight: 20,
+                                                textTransform: "uppercase"
+                                            }}
+                                            onPress={() => setShowEquationEditor(!showEquationEditor)}>
+                                            {showEquationEditor ? PreferredLanguageText("hide") : PreferredLanguageText("formula")}
+                                        </Text>
+                                    ) : null}
+                                {!props.showOriginal &&
+                                    props.cue.submission &&
+                                    currentDate < deadline &&
+                                    !submissionImported &&
+                                    !showImportOptions &&
+                                    !props.cue.graded && !isQuiz ? (
+                                    <Text
+                                        style={{
+                                            color: "#2f2f3c",
                                             fontSize: 11,
                                             lineHeight: 30,
-                                            textAlign: 'right',
+                                            textAlign: "right",
                                             // paddingRight: 10,
-                                            textTransform: 'uppercase'
+                                            textTransform: "uppercase"
                                         }}
-                                            onPress={() => setShowImportOptions(true)}
-                                        >
-                                            {PreferredLanguageText('import')}     {Dimensions.get('window').width < 768 ? '' : '   '}
-                                        </Text>
-                                    )
-                            )}
+                                        onPress={() => setShowImportOptions(true)}>
+                                        {PreferredLanguageText("import")} {Dimensions.get("window").width < 768 ? "" : "   "}
+                                    </Text>
+                                ) : (
+                                    (props.showOriginal && !isOwner) || // viewing import as non import
+                                        (props.showOriginal && isOwner && imported) ||  // viewing import as owner
+                                        (!props.showOriginal && isOwner && (props.cue.channelId && props.cue.channelId !== '')) || // no submission as owner
+                                        (!props.showOriginal && submissionImported && !isOwner) ||  // submitted as non owner
+                                        (!props.showOriginal && !submission && (props.cue.channelId && props.cue.channelId !== '')) ||  // my notes
+                                        isQuiz
+                                        ? null :
+                                        (
+                                            <Text style={{
+                                                color: '#2f2f3c',
+                                                fontSize: 11,
+                                                lineHeight: 30,
+                                                textAlign: 'right',
+                                                // paddingRight: 10,
+                                                textTransform: 'uppercase'
+                                            }}
+                                                onPress={() => setShowImportOptions(true)}
+                                            >
+                                                {PreferredLanguageText('import')} {Dimensions.get('window').width < 768 ? '' : '   '}
+                                            </Text>
+                                        )
+                                )}
+                            </View>
                         </View>
                 }
                 {renderEquationEditor()}
@@ -3279,7 +3291,6 @@ const styles: any = StyleSheet.create({
         borderBottomColor: "#f4f4f6",
         borderBottomWidth: 1,
         fontSize: 15,
-        padding: 15,
         paddingTop: 12,
         paddingBottom: 12,
         // marginTop: 5,

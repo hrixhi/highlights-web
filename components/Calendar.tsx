@@ -162,7 +162,6 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             Filter
                         </Text>
                     </View>
-
                     <View style={{ backgroundColor: '#fff' }}>
                         <View style={{ flexDirection: 'row', display: 'flex', backgroundColor: '#fff' }}>
                             <Menu
@@ -1221,7 +1220,6 @@ const styles: any = StyleSheet.create({
         borderBottomColor: "#f4f4f6",
         borderBottomWidth: 1,
         fontSize: 15,
-        padding: 15,
         paddingTop: 12,
         paddingBottom: 12,
         marginBottom: 20

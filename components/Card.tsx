@@ -7,7 +7,7 @@ import { htmlStringParser } from '../helpers/HTMLParser';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
-    console.log('props.cue.unreadThreads', props.cue.unreadThreads)
+
     const colorChoices: any[] = ['#d91d56', '#ED7D22', '#FFBA10', '#B8D41F', '#53BE6D'].reverse()
     const colorScheme = 'dark'
     const styleObject = styles(colorScheme, props.channelId, colorChoices[props.cue.color])
@@ -15,6 +15,21 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     const { title } = htmlStringParser(props.cue.channelId && props.cue.channelId !== '' ? props.cue.original : props.cue.cue)
     const [showScore, setShowScore] = useState(false);
     const [colorCode, setColorCode] = useState('#2f2f3c');
+    const [isOwner, setIsOwner] = useState(false)
+
+    useEffect(() => {
+        (
+            async () => {
+                const u = await AsyncStorage.getItem('user')
+                if (u && props.cue.createdBy) {
+                    const parsedUser = JSON.parse(u)
+                    if (parsedUser._id.toString().trim() === props.cue.createdBy.toString().trim()) {
+                        setIsOwner(true)
+                    }
+                }
+            }
+        )()
+    }, [props.cue])
 
     useEffect(() => {
         if (props.cue && props.cue.original) {
@@ -36,22 +51,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             setColorCode(matchSubscription.colorCode)
         }
     }, [props.cue])
-    useEffect(() => {
 
-
-
-        //props.updateMessageNotifCounts()
-        getUserAndLoad()
-    }, [])
-    const getUserAndLoad = async () => {
-
-        const uString: any = await AsyncStorage.getItem("user");
-        if (uString) {
-            const parsedUser = JSON.parse(uString)
-            props.updateDiscussionNotidCounts(parsedUser._id)
-        }
-
-    }
     return (
         <View
             style={styleObject.swiper}
@@ -94,7 +94,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 </Text> : null
                         } */}
                         {
-                            props.cue.graded && showScore ? <Text style={{
+                            props.cue.graded && showScore && !isOwner ? <Text style={{
                                 fontSize: 9,
                                 color: '#3B64F8',
                                 marginLeft: 10

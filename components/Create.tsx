@@ -11,7 +11,6 @@ import {
 import { TextInput as CustomTextInput } from "./CustomTextInput";
 import { Text, View, TouchableOpacity } from "../components/Themed";
 import { Ionicons } from "@expo/vector-icons";
-import { Picker } from "@react-native-picker/picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { timedFrequencyOptions } from "../helpers/FrequencyOptions";
 import { fetchAPI } from "../graphql/FetchAPI";
@@ -146,6 +145,12 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
   const checkConnectionAlert = PreferredLanguageText("checkConnection");
   const enterContentAlert = PreferredLanguageText("enterContent");
   const enterTitleAlert = PreferredLanguageText("enterTitle");
+
+  const onChangeDuration = useCallback((duration: any) => {
+    const { hours, minutes, seconds } = duration;
+    setDuration({ hours, minutes, seconds });
+  }, []);
+
 
   const onDimensionsChange = useCallback(({ window, screen }: any) => {
     setDimensions({ window, screen });
@@ -799,10 +804,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
   const quizAlert = PreferredLanguageText("quizzesCanOnly");
   const width = dimensions.window.width;
 
-  const onChangeDuration = useCallback((duration: any) => {
-    const { hours, minutes, seconds } = duration;
-    setDuration({ hours, minutes, seconds });
-  }, []);
+  const hours: any[] = [0, 1, 2, 3, 4, 5, 6]
+  const minutes: any[] = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55]
 
   const roundSeconds = (time: Date) => {
     console.log('value recieved', time)
@@ -1009,6 +1012,10 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 textTransform: "uppercase",
               }}
               onPress={() => {
+                if (isQuiz) {
+                  clearAll()
+                  return
+                }
                 if (channelId !== "") {
                   setIsQuiz(true);
                   setSubmission(true);
@@ -1017,7 +1024,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 }
               }}
             >
-              {PreferredLanguageText("quiz")}
+              {isQuiz ? 'CANCEL' : PreferredLanguageText("quiz")}
             </Text>
           </View>
         </View>
@@ -1085,18 +1092,20 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
           {imported || isQuiz ? (
             <View
               style={{
-                display: "flex",
+                // display: "flex",
                 flexDirection: width < 768 ? "column" : "row",
                 overflow: "visible",
               }}
             >
               <View
                 style={{
-                  width: width < 768 ? "100%" : "33.33%",
+                  width: width < 768 ? "100%" : "50%",
+                  maxWidth: 400,
                   borderRightWidth: 0,
                   borderColor: "#f4f4f6",
-                  paddingRight: 15,
-                  display: "flex",
+                  // paddingRight: 15,
+                  // display: "flex",
+                  paddingLeft: isQuiz ? 20 : 0,
                   flexDirection: "row",
                 }}
               >
@@ -1107,37 +1116,43 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   onChangeText={(val) => setTitle(val)}
                   placeholderTextColor={"#a2a2ac"}
                 />
-                <TouchableOpacity
-                  style={{
-                    marginLeft: 15,
-                    paddingTop: 15,
-                  }}
-                  onPress={() => clearAll()}
-                >
-                  <Ionicons
-                    name="trash-outline"
-                    color="#a2a2ac"
-                    size={20}
-                    style={{ alignSelf: "center" }}
-                  />
-                  <Text
-                    style={{
-                      fontSize: 9,
-                      color: "#a2a2ac",
-                      textAlign: "center",
-                    }}
-                  >
-                    Remove
-                  </Text>
-                </TouchableOpacity>
+                {
+                  !isQuiz ?
+                    <TouchableOpacity
+                      style={{
+                        marginLeft: 15,
+                        paddingTop: 15,
+                      }}
+                      onPress={() => clearAll()}
+                    >
+                      <Ionicons
+                        name="trash-outline"
+                        color="#a2a2ac"
+                        size={20}
+                        style={{ alignSelf: "center" }}
+                      />
+                      <Text
+                        style={{
+                          fontSize: 9,
+                          color: "#a2a2ac",
+                          textAlign: "center",
+                        }}
+                      >
+                        Remove
+                      </Text>
+                    </TouchableOpacity> : null
+                }
               </View>
               {isQuiz ? (
                 <View
                   style={{
-                    width: width < 768 ? "100%" : "31.67%",
+                    width: width < 768 ? "100%" : "50%",
                     borderRightWidth: 0,
+                    flex: 1,
+                    paddingLeft: 20,
                     borderColor: "#f4f4f6",
                     paddingTop: 10,
+                    paddingRight: 25
                   }}
                 >
                   <View
@@ -1145,14 +1160,19 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                       width: "100%",
                       paddingBottom: 15,
                       backgroundColor: "white",
+                      flexDirection: 'row',
+                      justifyContent: 'flex-start'
                     }}
                   >
-                    <Text style={{ fontSize: 15, color: "#a2a2ac" }}>
-                      <Ionicons
-                        name="timer-outline"
-                        size={20}
-                        color={"#a2a2ac"}
-                      />
+                    <Text style={{
+                      color: "#2f2f3c",
+                      fontSize: 11,
+                      lineHeight: 30,
+                      // paddingRight: 20,
+                      paddingTop: 20,
+                      textTransform: "uppercase",
+                    }}>
+                      TIMED
                     </Text>
                   </View>
                   <View
@@ -1161,6 +1181,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                       width: "100%",
                       height: 40,
                       marginRight: 10,
+                      flexDirection: 'row',
+                      justifyContent: 'flex-start'
                     }}
                   >
                     <Switch
@@ -1183,25 +1205,106 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                       activeThumbColor="white"
                     />
                   </View>
-                </View>
-              ) : null}
-              {isQuiz && timer ? (
-                <View
-                  style={{
-                    width: width < 768 ? "100%" : "35%",
-                    borderRightWidth: 0,
-                    borderColor: "#f4f4f6",
-                  }}
-                >
-                  <DurationPicker
-                    onChange={onChangeDuration}
-                    initialDuration={
-                      initialDuration
-                        ? initialDuration
-                        : { hours: 1, minutes: 0, seconds: 0 }
-                    }
-                    maxHours={6}
-                  />
+                  {timer ? (
+                    <View
+                      style={{
+                        borderRightWidth: 0,
+                        paddingTop: 0,
+                        borderColor: "#f4f4f6",
+                        flexDirection: 'row'
+                      }}
+                    >
+                      <View>
+                        <Menu onSelect={(hour: any) => setDuration({
+                          ...duration,
+                          hours: hour
+                        })}>
+                          <MenuTrigger>
+                            <Text
+                              style={{
+                                fontFamily: "inter",
+                                fontSize: 14,
+                                color: "#2f2f3c",
+                              }}
+                            >
+                              {duration.hours} H <Ionicons name="caret-down" size={14} /> &nbsp;&nbsp;:&nbsp;&nbsp;
+                            </Text>
+                          </MenuTrigger>
+                          <MenuOptions
+                            customStyles={{
+                              optionsContainer: {
+                                padding: 10,
+                                borderRadius: 15,
+                                shadowOpacity: 0,
+                                borderWidth: 1,
+                                borderColor: "#f4f4f6",
+                                overflow: 'scroll',
+                                maxHeight: '100%'
+                              },
+                            }}
+                          >
+                            {hours.map((hour: any) => {
+                              return (
+                                <MenuOption value={hour}>
+                                  <Text>{hour}</Text>
+                                </MenuOption>
+                              );
+                            })}
+                          </MenuOptions>
+                        </Menu>
+                      </View>
+                      <View>
+                        <Menu onSelect={(min: any) => setDuration({
+                          ...duration,
+                          minutes: min
+                        })}>
+                          <MenuTrigger>
+                            <Text
+                              style={{
+                                fontFamily: "inter",
+                                fontSize: 14,
+                                color: "#2f2f3c",
+                              }}
+                            >
+                              {duration.minutes}  m  <Ionicons name="caret-down" size={14} />
+                            </Text>
+                          </MenuTrigger>
+                          <MenuOptions
+                            customStyles={{
+                              optionsContainer: {
+                                padding: 10,
+                                borderRadius: 15,
+                                shadowOpacity: 0,
+                                borderWidth: 1,
+                                borderColor: "#f4f4f6",
+                                overflow: 'scroll',
+                                maxHeight: '100%'
+                              },
+                            }}
+                          >
+                            {minutes.map((min: any) => {
+                              return (
+                                <MenuOption value={min}>
+                                  <Text>{min}</Text>
+                                </MenuOption>
+                              );
+                            })}
+                          </MenuOptions>
+                        </Menu>
+                      </View>
+                      {/* <DurationPicker
+                                                // key={Math.random()}
+                                                onChange={(d) => onChangeDuration(d)}
+                                                initialDuration={
+                                                    initialDuration
+                                                        ? initialDuration
+                                                        : { hours: 1, minutes: 0, seconds: 0 }
+                                                }
+                                                // style={{ color: 'blue' }}
+                                                maxHours={6}
+                                            /> */}
+                    </View>
+                  ) : null}
                 </View>
               ) : null}
             </View>
@@ -1220,14 +1323,23 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   flexDirection: "column",
                 }}
               >
-                <CustomTextInput
-                  value={quizInstructions}
-                  placeholder="Instructions"
-                  onChangeText={(val) => setQuizInstructions(val)}
-                  placeholderTextColor={"#a2a2ac"}
-                  required={false}
-                  hasMultipleLines={true}
-                />
+                <View style={{
+                  backgroundColor: '#fff',
+                  paddingLeft: 20,
+                  flexDirection: 'row',
+                  width: '100%'
+                }}>
+                  <View style={{ width: '100%', maxWidth: 400, paddingRight: 15 }}>
+                    <CustomTextInput
+                      value={quizInstructions}
+                      placeholder="Instructions"
+                      onChangeText={(val) => setQuizInstructions(val)}
+                      placeholderTextColor={"#a2a2ac"}
+                      required={false}
+                      hasMultipleLines={true}
+                    />
+                  </View>
+                </View>
                 <QuizCreate
                   problems={problems}
                   headers={headers}
@@ -1272,7 +1384,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 width: "100%",
                 backgroundColor: "#fff",
                 // borderRadius: 15,
-                minHeight: 650,
+                minHeight: 550,
                 display: isQuiz || imported ? "none" : "flex",
                 borderTopWidth: 1,
                 borderColor: "#a2a2ac",
@@ -2311,10 +2423,9 @@ const styles: any = StyleSheet.create({
   },
   input: {
     width: "100%",
-    borderBottomColor: "#f4f4f6",
+    borderBottomColor: "#cccccc",
     borderBottomWidth: 1,
     fontSize: 15,
-    padding: 15,
     paddingTop: 12,
     paddingBottom: 12,
     marginTop: 0,
