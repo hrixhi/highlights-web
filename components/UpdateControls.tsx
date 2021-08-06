@@ -329,7 +329,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     }
                 })
                 .catch(err => { });
-            if (user._id.toString().trim() === props.cue.createdBy && props.cue.channelId && props.cue.channelId !== "") {
+            if (props.channelOwner && props.cue.channelId && props.cue.channelId !== "") {
                 // owner
                 server
                     .query({
@@ -922,15 +922,16 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             const u = await AsyncStorage.getItem("user");
             if (u && props.cue.createdBy) {
                 const parsedUser = JSON.parse(u);
-                if (parsedUser._id.toString().trim() === props.cue.createdBy.toString().trim()) {
-                    setIsOwner(true);
-                }
                 if (parsedUser.email && parsedUser.email !== "") {
                     setUserSetupComplete(true);
                 }
             }
         })();
     }, [props.cue]);
+
+    useEffect(() => {
+        setIsOwner(props.channelOwner)
+    }, [props.channelOwner])
 
     const updateStatusAsRead = useCallback(async () => {
         if (props.cue.status && props.cue.status !== "read" && !markedAsRead) {
@@ -1942,7 +1943,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     color: "#a2a2ac",
                                     textAlign: "left"
                                 }}>
-                                {initiateAt.toLocaleString()}
+                                {moment(new Date(initiateAt)).format('MMMM Do, h:mm a')}
                             </Text>
                         )}
                     </View>
@@ -1986,7 +1987,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     color: "#a2a2ac",
                                     textAlign: "left"
                                 }}>
-                                {deadline.toLocaleString()}
+                                {moment(new Date(deadline)).format('MMMM Do, h:mm a')}
                             </Text>
                         )}
                     </View>
@@ -2800,7 +2801,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             marginBottom: 5
                         }}>
                         {renderCueTabs()}
-                        {props.cue.graded && props.cue.score !== undefined && props.cue.score !== null && !isQuiz && props.cue.releaseSubmission ? (
+                        {!isOwner && props.cue.graded && props.cue.score !== undefined && props.cue.score !== null && !isQuiz && props.cue.releaseSubmission ? (
                             <Text
                                 style={{
                                     fontSize: 12,
@@ -2817,7 +2818,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             </Text>
                         ) : null}
                         {
-                            props.cue.submittedAt !== "" && (new Date(props.cue.submittedAt) >= deadline) ?
+                            !isOwner && props.cue.submittedAt !== "" && (new Date(props.cue.submittedAt) >= deadline) ?
                                 <View style={{ borderRadius: 10, padding: 5, borderWidth: 1, borderColor: '#D91D56', marginLeft: 15, }}>
                                     <Text style={{ color: '#D91D56', fontSize: 12, textAlign: 'center' }}>
                                         LATE

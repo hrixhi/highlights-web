@@ -4,7 +4,7 @@ import { TextInput } from "./CustomTextInput";
 import Alert from "./Alert";
 import { Text, View, TouchableOpacity } from "./Themed";
 import { fetchAPI } from "../graphql/FetchAPI";
-import { createDate, deleteDate, getChannels, getEvents, createDateV1, editDateV1, deleteDateV1 } from "../graphql/QueriesAndMutations";
+import { createDate, deleteDate, getChannels, getEvents, createDateV1, editDateV1, deleteDateV1, meetingRequest, markAttendance } from "../graphql/QueriesAndMutations";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import Datetime from "react-datetime";
@@ -319,7 +319,6 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     };
 
     const handleCreate = useCallback(async () => {
-        console.log('creating event')
         if (start < new Date()) {
             Alert("Event must be set in the future.");
             return;
@@ -505,7 +504,9 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             channelName: e.channelName,
                             recurringId: e.recurringId,
                             recordMeeting: e.recordMeeting ? true : false,
-                            meeting: e.meeting
+                            meeting: e.meeting,
+                            channelId: e.channelId,
+                            cueId: e.cueId
                         });
                     });
                     setEventChannels(Array.from(channelsSet))
@@ -599,11 +600,65 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
             } else {
 
+                const date = new Date();
 
-                Alert(
-                    event.title,
-                    descriptionString
-                );
+                if (date > new Date(event.start) && date < new Date(event.end) && event.meeting) {
+                    Alert(
+                        event.title,
+                        "Enter classroom?",
+                        [
+                            {
+                                text: "No",
+                                style: "cancel",
+                                onPress: () => {
+                                    return;
+                                }
+                            },
+                            {
+                                text: "Yes",
+                                onPress: async () => {
+                                    const uString: any = await AsyncStorage.getItem("user");
+
+                                    const user = JSON.parse(uString)
+
+                                    const server = fetchAPI('')
+                                    server.mutate({
+                                        mutation: meetingRequest,
+                                        variables: {
+                                            userId: user._id,
+                                            channelId: event.channelId,
+                                            isOwner: false
+                                        }
+                                    }).then(res => {
+                                        if (res.data && res.data.channel.meetingRequest !== 'error') {
+                                            server
+                                                .mutate({
+                                                    mutation: markAttendance,
+                                                    variables: {
+                                                        userId: user._id,
+                                                        channelId: event.channelId
+                                                    }
+                                                })
+                                            window.open(res.data.channel.meetingRequest, "_blank");
+                                        } else {
+                                            Alert("Classroom not in session. Waiting for instructor.")
+                                        }
+                                    }).catch(err => {
+                                        Alert("Something went wrong.")
+                                    })
+                                }
+                            }
+                        ]
+                    );
+                } else if (event.cueId !== "") {
+                    props.openCueFromCalendar(event.channelId, event.cueId, event.createdBy)
+                } else {
+                    Alert(
+                        event.title,
+                        descriptionString
+                    );
+                }
+                
             }
 
         }
@@ -681,12 +736,12 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 </View>
                 <View
                     style={{
-                        width: width < 768 ? "100%" : "30%",
+                        width: "100%",
                         flexDirection: "row",
                         marginLeft: 0
                     }}>
                     <DatePicker
-                        format="YYYY-MM-DD HH:mm:ss"
+                        format="YYYY-MM-DD HH:mm"
                         preventOverflow={true}
                         value={repeatTill}
                         onChange={(event: any) => {
@@ -810,7 +865,10 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     const renderEditEventOptions = () => {
 
-        const { recurringId } = editEvent;
+        const { recurringId, start, end, channelId } = editEvent;
+
+        const date = new Date();
+
         return (<View
             style={{
                 flex: 1,
@@ -820,6 +878,61 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 paddingTop: 30
             }}
         >
+            {
+                (date > new Date(start) && date < new Date(end)) ?
+                    <TouchableOpacity
+                        style={{
+                            backgroundColor: "white",
+                            overflow: "hidden",
+                            height: 35,
+                            marginTop: 15,
+                            width: "100%",
+                            justifyContent: "center",
+                            flexDirection: "row"
+                        }}
+                        onPress={async () => {
+
+                            const uString: any = await AsyncStorage.getItem("user");
+
+                            const user = JSON.parse(uString)
+
+                            const server = fetchAPI('')
+                            server.mutate({
+                                mutation: meetingRequest,
+                                variables: {
+                                    userId: user._id,
+                                    channelId,
+                                    isOwner: true
+                                }
+                            }).then(res => {
+                                if (res.data && res.data.channel.meetingRequest !== 'error') {
+                                    window.open(res.data.channel.meetingRequest, "_blank");
+                                } else {
+                                    Alert("Classroom not in session. Waiting for instructor.")
+                                }
+                            }).catch(err => {
+                                Alert("Something went wrong.")
+                            })
+                        }}>
+                        <Text
+                            style={{
+                                textAlign: "center",
+                                lineHeight: 35,
+                                color: 'white',
+                                fontSize: 12,
+                                backgroundColor: '#3B64F8',
+                                paddingHorizontal: 25,
+                                fontFamily: "inter",
+                                height: 35,
+                                width: 200,
+                                borderRadius: 15,
+                                textTransform: "uppercase"
+                            }}>
+                            Enter Classroom
+                        </Text>
+                    </TouchableOpacity>
+                    : null
+            }
             <TouchableOpacity
                 style={{
                     backgroundColor: "white",
