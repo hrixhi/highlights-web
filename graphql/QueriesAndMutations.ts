@@ -742,6 +742,8 @@ export const getEvents = gql`
         recurringId
         recordMeeting
         meeting
+        channelId
+        cueId
       }
     }
   }

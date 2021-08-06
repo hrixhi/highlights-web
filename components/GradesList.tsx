@@ -286,38 +286,49 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
         }}
             key={JSON.stringify(props.scores)}
         >
-            <Text style={{ textAlign: 'left', fontSize: 13, color: '#2F2F3C', fontFamily: 'inter', paddingBottom: 20, paddingLeft: Dimensions.get('window').width < 768 ? 0 : 150 }}>
-                Grade Weightage
-            </Text>
-            <PieChart
-                data={pieChartData}
-                width={Dimensions.get('window').width < 768 ? 350 : 500}
-                height={Dimensions.get('window').width < 768 ? 150 : 200}
-                chartConfig={chartConfig}
-                accessor={"gradeWeight"}
-                backgroundColor={"transparent"}
-                paddingLeft={Dimensions.get('window').width < 768 ? "10" : "50"}
-                // center={[10, 50]}
-                hasLegend={true}
-            />
-
-
-            {submissionStatistics.length > 0 ? <View style={{ width: '100%'}}>
-                <Text style={{ textAlign: 'left', fontSize: 13, color: '#2F2F3C', fontFamily: 'inter', paddingTop: 50, paddingBottom: 20, paddingLeft: Dimensions.get('window').width < 768 ? 0 : 150 }}>
-                    Submissions
-                </Text>
-                <Chart
-                    width={Dimensions.get('window').width < 768 ? '350px' : '600px'}
-                    height={Dimensions.get('window').width < 768 ? '300px' : '400px'}
-                    chartType="Bar"
-                    loader={<div>Loading Chart</div>}
-                    data={data}
-                    options={{
-                        // Material design options
-                        fontName: 'overpass'
-                    }}
-                />
-            </View> : null}
+             <ScrollView
+                showsHorizontalScrollIndicator={false}
+                horizontal={true}
+                contentContainerStyle={{
+                    height: '100%',
+                    flexDirection: 'column'
+                }}
+                nestedScrollEnabled={true}
+            >
+                <View style={{ width: '100%'}}>
+                    <Text style={{ textAlign: 'left', fontSize: 13, color: '#2F2F3C', fontFamily: 'inter', paddingBottom: 20, paddingLeft: Dimensions.get('window').width < 768 ? 0 : 150 }}>
+                        Grade Weightage
+                    </Text>
+                    <PieChart
+                        data={pieChartData}
+                        width={Dimensions.get('window').width < 768 ? 350 : 500}
+                        height={Dimensions.get('window').width < 768 ? 150 : 200}
+                        chartConfig={chartConfig}
+                        accessor={"gradeWeight"}
+                        backgroundColor={"transparent"}
+                        paddingLeft={Dimensions.get('window').width < 768 ? "10" : "50"}
+                        // center={[10, 50]}
+                        hasLegend={true}
+                    />
+                </View>
+            
+                {submissionStatistics.length > 0 ? <View style={{ width: '100%'}}>
+                    <Text style={{ textAlign: 'left', fontSize: 13, color: '#2F2F3C', fontFamily: 'inter', paddingTop: 50, paddingBottom: 20, paddingLeft: Dimensions.get('window').width < 768 ? 0 : 150 }}>
+                        Submissions
+                    </Text>
+                    <Chart
+                        width={Dimensions.get('window').width < 768 ? '350px' : '600px'}
+                        height={Dimensions.get('window').width < 768 ? '300px' : '400px'}
+                        chartType="Bar"
+                        loader={<div>Loading Chart</div>}
+                        data={data}
+                        options={{
+                            // Material design options
+                            fontName: 'overpass'
+                        }}
+                    />
+                </View> : null}
+            </ScrollView>
 
             <View style={{ height: 20 }} />
         </View>)

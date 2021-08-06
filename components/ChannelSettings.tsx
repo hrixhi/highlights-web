@@ -384,6 +384,9 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         })
                         alert("Channel updated!")
                         setOriginalSubs([])
+
+                        // need to refresh channel subscriptions since name will be updated
+                        
                         props.closeModal()
                     } else {
                         alert("Something went wrong.")
