@@ -48,6 +48,37 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         }
     }, [props.cue])
 
+    const updateCueWithReleaseSubmission = async (releaseSubmission: boolean) => {
+
+        // Release Submission
+
+        let subCues: any = {};
+        try {
+            const value = await AsyncStorage.getItem("cues");
+            if (value) {
+                subCues = JSON.parse(value);
+            }
+        } catch (e) { }
+        if (subCues[props.cueKey].length === 0) {
+            return;
+        }
+
+        const currCue = subCues[props.cueKey][props.cueIndex]
+
+        const saveCue = {
+            ...currCue,
+            releaseSubmission
+        }
+
+        subCues[props.cueKey][props.cueIndex] = saveCue
+
+        const stringifiedCues = JSON.stringify(subCues);
+        await AsyncStorage.setItem("cues", stringifiedCues);
+
+        props.reloadCueListAfterUpdate();
+
+    }
+
     const loadThreadsAndStatuses = useCallback(async () => {
         const u = await AsyncStorage.getItem('user')
         let parsedUser: any = {}
@@ -428,6 +459,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     }}
                                                     reload={() => loadThreadsAndStatuses()}
                                                     cue={props.cue}
+                                                    updateCueWithReleaseSubmission={updateCueWithReleaseSubmission}
                                                 />
                                             </ScrollView>
                                         </View>
