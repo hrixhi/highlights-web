@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { StyleSheet, ScrollView, TextInput, Dimensions, Button, Switch } from 'react-native';
+import { StyleSheet, ScrollView, TextInput, Dimensions, Switch } from 'react-native';
 import { View, Text, TouchableOpacity } from './Themed';
 import _ from 'lodash'
 import { Ionicons } from '@expo/vector-icons';
@@ -1219,7 +1219,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 ) :
                                 // is Quiz then show the Quiz Grading Component and new version with problemScores
                                 isQuiz && !isV0Quiz ?
-                                    <View style={{ width: '100%', paddingBottom: 100 }}>
+                                    <View style={{ width: '100%', paddingBottom: 0 }}>
                                         {
                                             submittedAt !== "" && deadline !== "" && submittedAt >= deadline ?
                                                 <View style={{ width: '100%', }}>

@@ -718,7 +718,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
       }
       // OPEN WALKTHROUGH IF FIRST TIME LOAD
       if (!init && dimensions.window.width >= 1024) {
-        openModal('Create')
+        openModal('Calendar')
       }
       // HANDLE PROFILE
       if (u) {
