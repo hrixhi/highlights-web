@@ -12,35 +12,61 @@ const FileUpload: React.FC<any> = (props: any) => {
     const onChange = useCallback((e) => {
         setUploading(true)
         e.preventDefault();
-        const file = e.target.files[0]
-        if (file.size > 26214400) {
-            alert('File size must be less than 25 mb')
-            setUploading(false)
-            return
-        }
-        if (file === null) {
-            setUploading(false)
-            return;
-        }
-        let type = mime.extension(file.type);
-        if (type === 'mpga') {
-            type = 'mp3'
-        }
-        if ((type === 'png' || type === 'jpeg' || type === 'jpg' || type === 'gif') && props.action !== 'message_send') {
-            alert('Error! Images should be directly added to the text editor using the gallery icon in the toolbar.')
-            setUploading(false)
-            return
-        }
-
-        fileUpload(file, type).then(response => {
-            const { data } = response;
-            if (data.status === "success") {
-                props.onUpload(data.url, type);
+        const file = e.target.files
+        console.log('file', typeof file)
+        for (var i = 0; i < file.length; i++) {
+            if (file[i].size > 26214400) {
+                alert('File size must be less than 25 mb')
                 setUploading(false)
-            } else {
-                setUploading(false)
+                return
             }
-        });
+            if (file[i] === null) {
+                setUploading(false)
+                return;
+            }
+            let type = mime.extension(file[i].type);
+            if (type === 'mpga') {
+                type = 'mp3'
+            }
+            if ((type === 'png' || type === 'jpeg' || type === 'jpg' || type === 'gif') && props.action !== 'message_send') {
+                alert('Error! Images should be directly added to the text editor using the gallery icon in the toolbar.')
+                setUploading(false)
+                return
+            }
+
+
+        }
+        // fileUpload(file[i], type).then(response => {
+        //     const { data } = response;
+        //     if (data.status === "success") {
+        //         console.log('response is', data)
+        //         props.onUpload(data.url, type);
+        //         setUploading(false)
+        //     } else {
+        //         setUploading(false)
+        //     }
+        // });
+
+        // if (file.size > 26214400) {
+        //     alert('File size must be less than 25 mb')
+        //     setUploading(false)
+        //     return
+        // }
+        // if (file === null) {
+        //     setUploading(false)
+        //     return;
+        // }
+        // let type = mime.extension(file.type);
+        // if (type === 'mpga') {
+        //     type = 'mp3'
+        // }
+        // if ((type === 'png' || type === 'jpeg' || type === 'jpg' || type === 'gif') && props.action !== 'message_send') {
+        //     alert('Error! Images should be directly added to the text editor using the gallery icon in the toolbar.')
+        //     setUploading(false)
+        //     return
+        // }
+
+
     }, [])
 
     const fileUpload = useCallback((file, type) => {
@@ -81,6 +107,7 @@ const FileUpload: React.FC<any> = (props: any) => {
                             marginRight: 10,
                             width: 170
                         }}
+                        multiple
                     />
                 </div>
         }

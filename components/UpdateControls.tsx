@@ -1925,7 +1925,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 textAlign: "left",
                                 paddingRight: 10
                             }}>
-                            Available
+                            Availables
                         </Text>
                         {isOwner ? (
                             <DatePicker

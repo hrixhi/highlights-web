@@ -805,12 +805,84 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
   }, []);
 
   const roundSeconds = (time: Date) => {
-    console.log('value recieved', time)
+
     time.setMinutes(time.getMinutes() + Math.round(time.getSeconds() / 60));
     time.setSeconds(0, 0)
-    console.log('value returning', time)
     return time
   }
+
+
+  // const urlify = (text: any) => {
+  //   console.log('recieved text', text)
+  //   var urlRegex = /(https?:\/\/[^\s]+)/g;
+  //   text.replace(urlRegex, function (url: any) {
+  //     console.log('url is', '<a href="' + url + '">' + url + '</a>')
+  //     // RichText.current.insertHTML('<a href="' + url + '">' + url + '</a>');
+  //   })
+  //   // setCue(text)
+  //   // or alternatively
+  //   // return text.replace(urlRegex, '<a href="$1">$1</a>')
+  // }
+
+  // useEffect(() => {
+  //   // if (cue !== '') {
+  //   //   console.log('cue is', cue)
+  //   //   var urlRegex = /(https?:\/\/[^\s]+)/g;
+  //   //   cue.replace(urlRegex, function () {
+  //   //     console.log('found link')
+  //   //     RichText.current.insertHTML("<iframe src='https://www.youtube.com/embed/tgbNymZ7vqY' title='iframe Example 1' width='400' height='300'></iframe>");
+  //   //   })
+  //   // }
+
+
+  //   // return (match && match[2].length === 11)
+  //   //   ? match[2]
+  //   //   : null;
+
+
+  //   // const videoId = getId('http://www.youtube.com/watch?v=zbYf5_S7oJo');
+  //   // const iframeMarkup = '<iframe width="560" height="315" src="//www.youtube.com/embed/' 
+  //   //     + videoId + '" frameborder="0" allowfullscreen></iframe>';
+
+  //   // console.log('Video ID:', videoId)
+  // }, [])
+
+
+
+  // useEffect(() => {
+  //   if (cue !== '') {
+  //     var urlRegex = /(https?:\/\/[^\s]+)/g;
+  //     cue.replace(urlRegex, function (url: any) {
+  //       let newUrl = url.split("</div>")
+  //       console.log('newUrl', newUrl)
+  //       var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|\?v=)([^#\&\?]*).*/;
+  //       var match = newUrl[0].match(regExp);
+  //       console.log('match', match)
+  //     })
+  //   }
+  // }, [cue])
+
+
+  // const findUrl = () => {
+  //   var videoId = 'https://www.youtube.com/watch?v=c-e90iRb0Ng'
+  //   var myId = getId(videoId);
+  //   let src = `//www.youtube.com/embed/${myId}`
+  //   console.log('src', src)
+  //   if (cue != '') {
+  //     RichText.current.insertHTML(`<iframe src=${src} title='iframe Example 1' width='400' height='300'></iframe>`);
+  //   }
+  // }
+  // function getId(url: any) {
+  //   var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+  //   var match = url.match(regExp);
+
+  //   if (match && match[2].length == 11) {
+
+  //     return match[2];
+  //   } else {
+  //     return 'error';
+  //   }
+  // }
   return (
     <View
       style={{
@@ -960,6 +1032,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 back={() => setShowImportOptions(false)}
                 onUpload={(u: any, t: any) => {
                   const obj = { url: u, type: t, title };
+                  console.log('adding files to cue', obj)
                   setCue(JSON.stringify(obj));
                   setShowImportOptions(false);
                 }}
@@ -1041,7 +1114,10 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
             >
               <EquationEditor
                 value={equation}
-                onChange={setEquation}
+                onChange={() => {
+                  console.log('edio')
+                  setEquation
+                }}
                 autoCommands="pi theta sqrt sum prod alpha beta gamma rho int"
                 autoOperatorNames="sin cos tan arccos arcsin arctan"
               />
@@ -1288,6 +1364,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
               placeholder={PreferredLanguageText("title")}
               onChange={(text) => {
                 const modifedText = text.split("&amp;").join("&");
+
                 setCue(modifedText);
               }}
               onHeightChange={handleHeightChange}
@@ -1492,6 +1569,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                               onChange={(event: any) => {
                                 const date = new Date(event);
                                 const roundValue = roundSeconds(date)
+                                console.log('roundValue', roundValue)
                                 if (date < new Date()) return;
                                 setInitiateAt(roundValue);
                               }}
