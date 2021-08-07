@@ -7,6 +7,7 @@ import { htmlStringParser } from '../helpers/HTMLParser';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
+
     const colorChoices: any[] = ['#d91d56', '#ED7D22', '#FFBA10', '#B8D41F', '#53BE6D'].reverse()
     const colorScheme = 'dark'
     const styleObject = styles(colorScheme, props.channelId, colorChoices[props.cue.color])

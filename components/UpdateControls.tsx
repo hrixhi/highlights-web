@@ -349,7 +349,14 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 }
                             });
 
-                            setSubscribers(format);
+                            const subscriberwithoutOwner: any = [];
+                            subscriberwithoutOwner.map((i: any) => {
+                                if (user._id !== i.id) {
+                                    subscriberwithoutOwner.push(i);
+                                }
+                            });
+
+                            setSubscribers(subscriberwithoutOwner);
                             // clear selected
                             const sel = res.data.cue.getSharedWith.filter((item: any) => {
                                 return item.isFixed;
@@ -361,7 +368,14 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     name: sub.label
                                 }
                             })
-                            setSelected(formatSel);
+
+                            const withoutOwner: any = [];
+                            formatSel.map((i: any) => {
+                                if (user._id !== i.id) {
+                                    withoutOwner.push(i);
+                                }
+                            });
+                            setSelected(withoutOwner);
                         }
                     })
                     .catch((err: any) => console.log(err));
@@ -1839,6 +1853,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     })
                                     .then(res => {
                                         if (res.data && res.data.cue.shareCueWithMoreIds) {
+
                                             loadChannelsAndSharedWith();
                                         }
                                     })

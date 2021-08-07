@@ -13,6 +13,11 @@ const FileUpload: React.FC<any> = (props: any) => {
         setUploading(true)
         e.preventDefault();
         const file = e.target.files[0]
+        if (file.size > 26214400) {
+            alert('File size must be less than 25 mb')
+            setUploading(false)
+            return
+        }
         if (file === null) {
             setUploading(false)
             return;
