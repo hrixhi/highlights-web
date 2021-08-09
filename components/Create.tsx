@@ -50,6 +50,7 @@ import {
   MenuTrigger,
 } from "react-native-popup-menu";
 
+import urlRegex from 'url-regex'
 const Create: React.FunctionComponent<{ [label: string]: any }> = (
   props: any
 ) => {
@@ -808,11 +809,25 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
   const minutes: any[] = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55]
 
   const roundSeconds = (time: Date) => {
-    console.log('value recieved', time)
     time.setMinutes(time.getMinutes() + Math.round(time.getSeconds() / 60));
     time.setSeconds(0, 0)
-    console.log('value returning', time)
     return time
+  }
+
+
+
+  const findLink = (text: any) => {
+    var urlRegex = /(https?:\/\/[^\s]+)/g;
+    text.replace(urlRegex, function (urls: any) {
+      const url = urls.replace(/<[^>]*>/g, "")
+      var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|\?v=)([^#\&\?]*).*/;
+      var match = url.match(regExp);
+      if (match && match[2].length == 11) {
+        const iframeMarkup = '<iframe width="560" height="315" src="//www.youtube.com/embed/'
+          + match[2] + '" frameborder="0" allowfullscreen></iframe>';
+        RichText.current.insertHTML(iframeMarkup);
+      }
+    })
   }
   return (
     <View
@@ -1399,7 +1414,9 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
               onScroll={() => Keyboard.dismiss()}
               placeholder={PreferredLanguageText("title")}
               onChange={(text) => {
+                console.log('text', text)
                 const modifedText = text.split("&amp;").join("&");
+                findLink(modifedText)
                 setCue(modifedText);
               }}
               onHeightChange={handleHeightChange}
