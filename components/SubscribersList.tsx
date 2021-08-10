@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { StyleSheet, ScrollView, TextInput, Dimensions, Button, Switch } from 'react-native';
+import { StyleSheet, ScrollView, TextInput, Dimensions, Switch } from 'react-native';
 import { View, Text, TouchableOpacity } from './Themed';
 import _ from 'lodash'
 import { Ionicons } from '@expo/vector-icons';
@@ -733,24 +733,41 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
 
 
     const updateReleaseSubmission = useCallback(() => {
-        const server = fetchAPI('')
-        server.mutate({
-            mutation: editReleaseSubmission,
-            variables: {
-                cueId: props.cueId,
-                releaseSubmission: !releaseSubmission,
+
+        Alert(releaseSubmission ? "Hide scores?" : "Release Scores?", "", [
+            {
+                text: "Cancel",
+                style: "cancel",
+                onPress: () => {
+                    return;
+                }
+            },
+            {
+                text: "Yes",
+                onPress: async () => {
+                    const server = fetchAPI("");
+                    server.mutate({
+                        mutation: editReleaseSubmission,
+                        variables: {
+                            cueId: props.cueId,
+                            releaseSubmission: !releaseSubmission,
+                        }
+                    }).then((res: any) => {
+                        if (res.data && res.data.cue.editReleaseSubmission) {
+                            props.updateCueWithReleaseSubmission(!releaseSubmission)
+                            setReleaseSubmission(!releaseSubmission)
+                        } else {
+                            alert('Something went wrong')
+                        }
+                    }).catch(err => {
+                        console.log(err)
+                        alert('Something went wrong')
+                    })
+                }
             }
-        }).then((res: any) => {
-            if (res.data && res.data.cue.editReleaseSubmission) {
-                setReleaseSubmission(!releaseSubmission)
-            } else {
-                console.log(res)
-                alert('Something went wrong')
-            }
-        }).catch(err => {
-            console.log(err)
-            alert('Something went wrong')
-        })
+        ])
+
+        
     }, [releaseSubmission, props.cueId])
 
     const renderQuizSubmissions = () => {
@@ -1219,7 +1236,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 ) :
                                 // is Quiz then show the Quiz Grading Component and new version with problemScores
                                 isQuiz && !isV0Quiz ?
-                                    <View style={{ width: '100%', paddingBottom: 100 }}>
+                                    <View style={{ width: '100%', paddingBottom: 0 }}>
                                         {
                                             submittedAt !== "" && deadline !== "" && submittedAt >= deadline ?
                                                 <View style={{ width: '100%', }}>

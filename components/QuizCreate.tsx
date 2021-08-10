@@ -667,7 +667,6 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     </Text>
                 </TouchableOpacity>
             </View>
-
         </View >
     );
 }
