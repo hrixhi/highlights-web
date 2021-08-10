@@ -1341,7 +1341,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         props.setShowOptions(false)
                     }}>
                     <Text style={props.showComments ? styles.allGrayFill : styles.all}>
-                        Q&As
+                        Q&A
                     </Text>
                 </TouchableOpacity>
                 {(isOwner && submission) || isQuiz ? null : (

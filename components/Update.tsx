@@ -235,7 +235,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         borderTopLeftRadius: 0,
                         borderTopRightRadius: 0,
                     }}
-                        key={JSON.stringify(threads)} hi
+                        key={JSON.stringify(threads)}
                     >
                         {!viewStatus ? <ScrollView
                             nestedScrollEnabled={true}

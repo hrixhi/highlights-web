@@ -50,7 +50,6 @@ import {
   MenuTrigger,
 } from "react-native-popup-menu";
 
-import urlRegex from 'url-regex'
 const Create: React.FunctionComponent<{ [label: string]: any }> = (
   props: any
 ) => {
