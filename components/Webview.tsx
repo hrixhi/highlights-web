@@ -3,6 +3,7 @@ import { WebView } from "react-native-webview";
 
 const Webview: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
+const urls = props.url
     const ref: any = useRef()
     const [intervalKey, setIntervalKey] = useState(0)
     const [key, setKey] = useState(Math.random())
@@ -22,28 +23,34 @@ const Webview: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
     }, [])
 
     return (
-        <WebView
-            key={key}
-            onLoad={(syntheticEvent) => {
-                clearInterval(intervalKey)
-
-            }}
-            ref={ref}
-            onMessage={onWebViewMessage}
-            style={props.fullScreen ? { flex: 1 } : { flex: 1 }}
-            scrollEnabled={props.fullScreen ? false : true}
-            javaScriptEnabled={true}
-            domStorageEnabled={true}
-            automaticallyAdjustContentInsets={props.fullScreen ? false : true}
-            startInLoadingState={true}
-            allowsFullscreenVideo={true}
-            allowFileAccessFromFileURLs={true}
-            allowUniversalAccessFromFileURLs={true}
-            // injectedJavaScript='window.ReactNativeWebView.postMessage(document.body.scrollHeight)'
-            source={{
-                uri: 'https://docs.google.com/viewer?url=' + encodeURI(props.url) + '&embedded=true'
-            }}
-        />
+        <>
+        {urls&& urls.map((item:any)=>{
+             return(<WebView
+                key={key}
+                onLoad={(syntheticEvent) => {
+                    clearInterval(intervalKey)
+    
+                }}
+                ref={ref}
+                onMessage={onWebViewMessage}
+                style={props.fullScreen ? { flex: 1 } : { flex: 1 }}
+                scrollEnabled={props.fullScreen ? false : true}
+                javaScriptEnabled={true}
+                domStorageEnabled={true}
+                automaticallyAdjustContentInsets={props.fullScreen ? false : true}
+                startInLoadingState={true}
+                allowsFullscreenVideo={true}
+                allowFileAccessFromFileURLs={true}
+                allowUniversalAccessFromFileURLs={true}
+                // injectedJavaScript='window.ReactNativeWebView.postMessage(document.body.scrollHeight)'
+                source={{
+                    uri: 'https://docs.google.com/viewer?url=' + encodeURI(item.url) + '&embedded=true'
+                }}
+            />)}
+            
+        )}
+        
+        </>
     );
 }
 

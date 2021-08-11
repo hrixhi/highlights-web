@@ -12,39 +12,60 @@ const FileUpload: React.FC<any> = (props: any) => {
     const onChange = useCallback((e) => {
         setUploading(true)
         e.preventDefault();
-        const file = e.target.files[0]
-        if (file.size > 26214400) {
-            alert('File size must be less than 25 mb')
-            setUploading(false)
-            return
-        }
-        if (file === null) {
-            setUploading(false)
-            return;
-        }
-        let type = mime.extension(file.type);
-        if (type === 'mpga') {
-            type = 'mp3'
-        }
-        if ((type === 'png' || type === 'jpeg' || type === 'jpg' || type === 'gif') && props.action !== 'message_send') {
-            alert('Error! Images should be directly added to the text editor using the gallery icon in the toolbar.')
-            setUploading(false)
-            return
-        }
-
-        fileUpload(file, type).then(response => {
-            const { data } = response;
-            if (data.status === "success") {
-                props.onUpload(data.url, type);
-                setUploading(false)
-            } else {
-                setUploading(false)
+        if(e.target.files.length > 0){
+             let fileListData:any[] = new Array();
+             let fileTypeData:any[] = new Array();
+            for(var fileItem of e.target.files){
+                fileListData.push(fileItem);
+                fileTypeData.push(mime.extension(fileItem.type))
             }
-        });
+            multiFileUpload(fileListData).then((response) => {
+                const { data } = response;
+                if (data.status === "success") {
+                    console.log(data)
+                     props.onUpload(data.url,fileTypeData);
+                    setUploading(false);
+                } else {
+                    setUploading(false);
+                }
+            });
+        }
+        else {
+            const file = e.target.files[0]
+         
+            if (file.size > 26214400) {
+                alert('File size must be less than 25 mb')
+                setUploading(false)
+                return
+            }
+            if (file === null) {
+                setUploading(false)
+                return;
+            }
+            let type = mime.extension(file.type);
+            if (type === 'mpga') {
+                type = 'mp3'
+            }
+            if ((type === 'png' || type === 'jpeg' || type === 'jpg' || type === 'gif') && props.action !== 'message_send') {
+                alert('Error! Images should be directly added to the text editor using the gallery icon in the toolbar.')
+                setUploading(false)
+                return
+            }
+            fileUpload(file, type).then(response => {
+                const { data } = response;
+                if (data.status === "success") {
+                    props.onUploadOther(data.url, type);
+                    setUploading(false)
+                } else {
+                    setUploading(false)
+                }
+            });
+        }
     }, [])
 
     const fileUpload = useCallback((file, type) => {
-        const url = "https://api.cuesapp.co/api/upload";
+        const url = "http://localhost:8081/api/upload";
+        
         const formData = new FormData();
         formData.append("attachment", file);
         formData.append("typeOfUpload", type);
@@ -55,6 +76,20 @@ const FileUpload: React.FC<any> = (props: any) => {
         };
         return axios.post(url, formData, config);
     }, [])
+    const multiFileUpload = useCallback(async(files) => {
+        const url = "http://localhost:8081/api/multiupload";
+        const formData = new FormData();
+        for (let i = 0; i < files.length; i++) {
+            await formData.append('attachment['+i+']', files[i]);
+        }
+       // formData.append('attachment', files);
+        const config = {
+            headers: {
+                "content-type": "multipart/form-data",
+            },
+        };
+        return axios.post(url, formData, config);
+    }, []);
 
     return <View style={{
         paddingTop: 3.5,
@@ -78,9 +113,10 @@ const FileUpload: React.FC<any> = (props: any) => {
                             fontFamily: 'overpass',
                             fontSize: 12,
                             color: '#a2a2ac',
-                            marginRight: 10,
+                            marginRight: 10,    
                             width: 170
                         }}
+                        multiple
                     />
                 </div>
         }

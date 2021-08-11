@@ -42,6 +42,7 @@ import moment from "moment";
 import ReactPlayer from "react-player";
 import Webview from "./Webview";
 import Multiselect from "multiselect-react-dropdown";
+import mime from 'mime-types';
 
 import {
   Menu,
@@ -92,8 +93,9 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
   const [gradeWeight, setGradeWeight] = useState<any>(0);
   const [graded, setGraded] = useState(false);
   const [imported, setImported] = useState(false);
-  const [url, setUrl] = useState("");
+  const [url, setUrl] = useState('');
   const [type, setType] = useState("");
+  const [typearray,setTypeArray] = useState([])
   const [title, setTitle] = useState("");
   const [showImportOptions, setShowImportOptions] = useState(false);
   const [selected, setSelected] = useState<any[]>([]);
@@ -171,17 +173,22 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
   }, [equation, RichText, RichText.current, cue]);
 
   useEffect(() => {
-    if (cue[0] === "{" && cue[cue.length - 1] === "}") {
-      const obj = JSON.parse(cue);
-      setImported(true);
-      setUrl(obj.url);
-      setType(obj.type);
-    } else {
-      setImported(false);
-      setUrl("");
-      setType("");
-      setTitle("");
+    const init=async()=>{
+      if (cue[0] === "[" && cue[cue.length - 1] === "]") {
+        const obj =await JSON.parse(cue);
+        console.log('obj',obj)       
+        setImported(true);
+        setUrl(obj);
+        setType('pdf');
+      } else {
+        setImported(false);
+        setUrl("");
+        setType("");
+        setTitle("");
+      }
     }
+
+    init()
   }, [cue]);
 
   const createNewQuiz = useCallback(() => {
@@ -978,11 +985,21 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
             {imported || !showImportOptions ? null : (
               <FileUpload
                 back={() => setShowImportOptions(false)}
-                onUpload={(u: any, t: any) => {
-                  const obj = { url: u, type: t, title };
+                onUpload={(f: any,t:any) => {
+                  let obj:any[]= [];
+                  setTypeArray(t)
+                  if(typeof f=='object'){
+                   f.forEach((k:any,i:any)=>{
+                      obj.push({url: k, type: mime.lookup(k), title:title});
+                    })
+                  }
+                     
+                  console.log('obj',obj)            
                   setCue(JSON.stringify(obj));
                   setShowImportOptions(false);
                 }}
+
+                
               />
             )}
           </View>
@@ -1365,6 +1382,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 />
               </View>
             ) : imported ? (
+              
               type === "mp4" ||
                 type === "mp3" ||
                 type === "mov" ||
@@ -1379,9 +1397,11 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                     file: { attributes: { controlsList: "nodownload" } },
                   }}
                 />
-              ) : (
+              ) : ( 
                 <View key={url} style={{ flex: 1 }}>
-                  <Webview key={url} url={url} />
+
+                    <Webview key={url} url={url} />
+
                 </View>
               )
             ) : null}
