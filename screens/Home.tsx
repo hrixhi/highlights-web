@@ -703,7 +703,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
       }
       // OPEN WALKTHROUGH IF FIRST TIME LOAD
       if (!init && dimensions.window.width >= 1024) {
-        openModal('Calendar')
+        openModal('Create')
       }
       // HANDLE PROFILE
       if (u) {
@@ -843,7 +843,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             const stringSub = JSON.stringify(res.data.subscription.findByUserId)
 
             await AsyncStorage.setItem('subscriptions', stringSub)
-            
+
           }
         })
         .catch(err => console.log(err))
@@ -1003,7 +1003,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   }, [sheetRef, cues])
 
   const openCueFromCalendar = useCallback((channelId, _id, by) => {
-    
+
     let cueKey = '';
     let cueIndex = 0;
 
@@ -1568,10 +1568,14 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               flex: 1,
               backgroundColor: 'white',
               paddingHorizontal: 5,
-              marginTop: dimensions.window.width < 1024 ? 0 : 25,
-              marginRight: dimensions.window.width < 1024 ? 0 : 25,
-              borderTopLeftRadius: dimensions.window.width < 1024 ? 0 : 20,
-              borderTopRightRadius: dimensions.window.width < 1024 ? 0 : 20,
+              marginTop: 0,
+              // dimensions.window.width < 1024 ? 0 : 25,
+              marginRight: 0,
+              // dimensions.window.width < 1024 ? 0 : 25,
+              borderTopLeftRadius: 0,
+              // dimensions.window.width < 1024 ? 0 : 20,
+              borderTopRightRadius: 0,
+              // dimensions.window.width < 1024 ? 0 : 20,
               overflow: 'hidden'
             }}>
               {modalContent}
