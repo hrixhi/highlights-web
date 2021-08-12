@@ -107,7 +107,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 <Text style={{
                                     textAlign: 'right',
                                     lineHeight: 30,
-                                    marginTop: -19,
+                                    marginTop: -20,
                                     paddingRight: 30,
                                     position: 'absolute',
                                     width: '97%',
