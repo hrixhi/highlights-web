@@ -13,16 +13,19 @@ const FileUpload: React.FC<any> = (props: any) => {
         setUploading(true)
         e.preventDefault();
         if(e.target.files.length > 0){
+           if(!validateFiles(e.target.files)){
+             
+               return
+           } 
              let fileListData:any[] = new Array();
              let fileTypeData:any[] = new Array();
             for(var fileItem of e.target.files){
                 fileListData.push(fileItem);
                 fileTypeData.push(mime.extension(fileItem.type))
             }
-            multiFileUpload(fileListData).then((response) => {
+            multiFileUpload(fileListData).then((response) => {  
                 const { data } = response;
                 if (data.status === "success") {
-                    console.log(data)
                      props.onUpload(data.url,fileTypeData);
                     setUploading(false);
                 } else {
@@ -30,37 +33,37 @@ const FileUpload: React.FC<any> = (props: any) => {
                 }
             });
         }
-        else {
-            const file = e.target.files[0]
+        // else {
+        //     const file = e.target.files[0]
          
-            if (file.size > 26214400) {
-                alert('File size must be less than 25 mb')
-                setUploading(false)
-                return
-            }
-            if (file === null) {
-                setUploading(false)
-                return;
-            }
-            let type = mime.extension(file.type);
-            if (type === 'mpga') {
-                type = 'mp3'
-            }
-            if ((type === 'png' || type === 'jpeg' || type === 'jpg' || type === 'gif') && props.action !== 'message_send') {
-                alert('Error! Images should be directly added to the text editor using the gallery icon in the toolbar.')
-                setUploading(false)
-                return
-            }
-            fileUpload(file, type).then(response => {
-                const { data } = response;
-                if (data.status === "success") {
-                    props.onUploadOther(data.url, type);
-                    setUploading(false)
-                } else {
-                    setUploading(false)
-                }
-            });
-        }
+        //     if (file.size > 26214400) {
+        //         alert('File size must be less than 25 mb')
+        //         setUploading(false)
+        //         return
+        //     }
+        //     if (file === null) {
+        //         setUploading(false)
+        //         return;
+        //     }
+        //     let type = mime.extension(file.type);
+        //     if (type === 'mpga') {
+        //         type = 'mp3'
+        //     }
+        //     if ((type === 'png' || type === 'jpeg' || type === 'jpg' || type === 'gif') && props.action !== 'message_send') {
+        //         alert('Error! Images should be directly added to the text editor using the gallery icon in the toolbar.')
+        //         setUploading(false)
+        //         return
+        //     }
+        //     fileUpload(file, type).then(response => {
+        //         const { data } = response;
+        //         if (data.status === "success") {
+        //             props.onUploadOther(data.url, type);
+        //             setUploading(false)
+        //         } else {
+        //             setUploading(false)
+        //         }
+        //     });
+        // }
     }, [])
 
     const fileUpload = useCallback((file, type) => {
@@ -85,11 +88,42 @@ const FileUpload: React.FC<any> = (props: any) => {
        // formData.append('attachment', files);
         const config = {
             headers: {
-                "content-type": "multipart/form-data",
+                "content-type": "multipart/form-data",       
             },
         };
         return axios.post(url, formData, config);
     }, []);
+
+
+const validateFiles=(files:any)=>{
+
+if(files){
+    for(var file of files){
+        
+           if (file === null) {
+            setUploading(false)
+            return false 
+           }
+    
+          if (file.size > 26214400) {
+                alert('File size must be less than 25 mb')
+                setUploading(false)
+                return false
+            }
+            
+            let type = mime.extension(file.type);
+            if (type === 'mpga') {
+                type = 'mp3'
+            }
+            if ((type === 'png' || type === 'jpeg' || type === 'jpg' || type === 'gif') && props.action !== 'message_send') {
+                alert('Error! Images should be directly added to the text editor using the gallery icon in the toolbar.')
+                setUploading(false)
+                return false
+            }
+            return true
+    }
+}
+}
 
     return <View style={{
         paddingTop: 3.5,

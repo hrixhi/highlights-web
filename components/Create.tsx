@@ -93,7 +93,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
   const [gradeWeight, setGradeWeight] = useState<any>(0);
   const [graded, setGraded] = useState(false);
   const [imported, setImported] = useState(false);
-  const [url, setUrl] = useState('');
+  const [url, setUrl] = useState([]);
   const [type, setType] = useState("");
   const [typearray,setTypeArray] = useState([])
   const [title, setTitle] = useState("");
@@ -174,15 +174,19 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
 
   useEffect(() => {
     const init=async()=>{
-      if (cue[0] === "[" && cue[cue.length - 1] === "]") {
+      if ((cue[0] === "[" || cue[0] === "{") && (cue[cue.length - 1] === "]" || cue[cue.length - 1] === "}")) {
         const obj =await JSON.parse(cue);
-        console.log('obj',obj)       
+        if(cue[0] === "{"){
+          setUrl(obj.url);
+        }
+        else{
+          setUrl(obj);
+        }
         setImported(true);
-        setUrl(obj);
         setType('pdf');
       } else {
         setImported(false);
-        setUrl("");
+        setUrl([]);
         setType("");
         setTitle("");
       }
@@ -766,7 +770,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
         onPress: () => {
           setCue("");
           setImported(false);
-          setUrl("");
+          setUrl([]);
           setType("");
           setTitle("");
           setProblems([]);
@@ -778,6 +782,36 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
         },
       },
     ]);
+  }, []);
+
+  const removeItem = useCallback(async() => {
+console.log('cue',cue)
+    
+    // Alert(clearQuestionAlert, cannotUndoAlert, [
+    //   {
+    //     text: "Cancel",
+    //     style: "cancel",
+    //   },
+    //   {
+    //     text: "Clear",
+    //     onPress: () => {
+    //       console.log('cue',cue)
+    //       console.log('url',url)
+    //       // setCue("");
+    //       // setImported(false);
+    //       // setUrl([]);
+    //       // setType("");
+    //       // setTitle("");
+    //       // setProblems([]);
+    //       // setIsQuiz(false);
+    //       // setTimer(false);
+    //       // setShowEquationEditor(false);
+    //       // setEquation("");
+    //       // setReloadEditorKey(Math.random());
+    //       console.log('cleared item')
+    //     },
+    //   },
+    // ]);
   }, []);
 
   useEffect(() => {
@@ -838,6 +872,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
       }
     })
   }
+
+  
   return (
     <View
       style={{
@@ -1382,28 +1418,45 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 />
               </View>
             ) : imported ? (
-              
-              type === "mp4" ||
-                type === "mp3" ||
-                type === "mov" ||
-                type === "mpeg" ||
-                type === "mp2" ||
-                type === "wav" ? (
-                <ReactPlayer
-                  url={url}
-                  controls={true}
-                  onContextMenu={(e: any) => e.preventDefault()}
-                  config={{
-                    file: { attributes: { controlsList: "nodownload" } },
-                  }}
-                />
-              ) : ( 
-                <View key={url} style={{ flex: 1 }}>
-
-                    <Webview key={url} url={url} />
-
+              url.map((value:any,key:any)=>(
+                mime.extension(value.type) ==="mp4" ||
+                mime.extension(value.type)==='mp3' ||
+                mime.extension(value.type)==='mov' ||
+                mime.extension(value.type)==='mpeg' ||
+                mime.extension(value.type)==='mp2' ||
+                mime.extension(value.type)==='wav'?<ReactPlayer
+                url={value.url}
+                controls={true}
+                onContextMenu={(e: any) => e.preventDefault()}
+                config={{
+                  file: { attributes: { controlsList: "nodownload" } },
+                }}
+              />:
+              <View key={value.url} style={{ flex: 1 }}>
+                    <Webview key={value.url} url={value.url} showDelete={true} removeItem={removeItem}/>
                 </View>
-              )
+              ))
+              // type === "mp4" ||
+              //   type === "mp3" ||
+              //   type === "mov" ||
+              //   type === "mpeg" ||
+              //   type === "mp2" ||
+              //   type === "wav" ? (
+              //   <ReactPlayer
+              //     url={url}
+              //     controls={true}
+              //     onContextMenu={(e: any) => e.preventDefault()}
+              //     config={{
+              //       file: { attributes: { controlsList: "nodownload" } },
+              //     }}
+              //   />
+              // ) : ( 
+              //   <View key={url} style={{ flex: 1 }}>
+
+              //       <Webview key={url} url={url} />
+
+              //   </View>
+              // )
             ) : null}
             <RichEditor
               key={reloadEditorKey.toString()}

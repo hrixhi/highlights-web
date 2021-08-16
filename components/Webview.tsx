@@ -4,10 +4,12 @@ import { WebView } from "react-native-webview";
 const Webview: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
 const urls = props.url
+
     const ref: any = useRef()
     const [intervalKey, setIntervalKey] = useState(0)
     const [key, setKey] = useState(Math.random())
     const [height, setHeight] = useState(0)
+    const [showDelete,setShowDelete] = useState(false)
 
     useEffect(() => {
         const id = setInterval(() => {
@@ -16,16 +18,23 @@ const urls = props.url
         setIntervalKey(id)
     }, [])
 
+    useEffect(()=>{
+       if(props.showDelete){
+       setShowDelete(true)
+      }
+   },[])
+
     const onWebViewMessage = useCallback((event: any) => {
         if (props.fullScreen) {
             setHeight(Number(event.nativeEvent.data))
         }
     }, [])
 
+    
     return (
-        <>
-        {urls&& urls.map((item:any)=>{
-             return(<WebView
+        <>  
+       
+           <WebView
                 key={key}
                 onLoad={(syntheticEvent) => {
                     clearInterval(intervalKey)
@@ -44,11 +53,10 @@ const urls = props.url
                 allowUniversalAccessFromFileURLs={true}
                 // injectedJavaScript='window.ReactNativeWebView.postMessage(document.body.scrollHeight)'
                 source={{
-                    uri: 'https://docs.google.com/viewer?url=' + encodeURI(item.url) + '&embedded=true'
+                    uri: 'https://docs.google.com/viewer?url=' + encodeURI(urls) + '&embedded=true'
                 }}
-            />)}
+            />
             
-        )}
         
         </>
     );
