@@ -107,7 +107,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 <Text style={{
                                     textAlign: 'right',
                                     lineHeight: 30,
-                                    marginTop: -28,
+                                    marginTop: -20,
                                     paddingRight: 30,
                                     position: 'absolute',
                                     width: '97%',
@@ -151,7 +151,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     </View>
                     <View style={{
                         backgroundColor: '#fff',
-                        width: '100%', flexDirection: 'row', flex: 1, height: '75%', paddingTop: 6
+                        width: '100%', flexDirection: 'row', flex: 1, height: '75%'
                     }}>
                         <Text
                             ellipsizeMode={'tail'}
@@ -171,7 +171,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     textAlign: 'center',
                                     zIndex: 150,
                                     marginLeft: 10,
-                                    marginTop: -3,
+                                    marginTop: 12,
                                     color: 'white', lineHeight: 20, fontSize: 10
                                 }}>
                                     !
@@ -189,7 +189,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     textAlign: 'center',
                                     zIndex: 150,
                                     marginLeft: 5,
-                                    marginTop: -3,
+                                    marginTop: 12,
                                     color: 'white', lineHeight: 20, fontSize: 10
                                 }}>
                                     {props.cue.unreadThreads}
@@ -217,8 +217,8 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
         maxWidth: 500,
         height: '100%',
         borderRadius: 15,
-        padding: 13,
-        paddingTop: 20,
+        padding: 12,
+        paddingHorizontal: 15,
         backgroundColor: '#fff',
     },
     flipCard: {
@@ -246,7 +246,7 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
     dateContainer: {
         fontSize: 10,
         color: '#fff',
-        height: '32%',
+        height: '25%',
         backgroundColor: '#fff',
         display: 'flex',
         flexDirection: 'row'
@@ -275,9 +275,10 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
     },
     title: {
         fontFamily: 'inter',
-        fontSize: 17,
+        fontSize: 20,
         lineHeight: 20,
         flex: 1,
+        marginTop: 15,
         color: col
     },
     titleFlip: {
