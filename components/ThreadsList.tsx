@@ -86,9 +86,11 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     threadId: tId
                 }
             }).then(res => {
-                props.refreshUnreadDiscussionCount()
+                if (props.refreshUnreadDiscussionCount) {
+                    props.refreshUnreadDiscussionCount()
+                }  
             })
-                .catch(e => console.log(e))
+            .catch(e => console.log(e))
         }
 
     }, [])
@@ -178,6 +180,9 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 backgroundColor: 'white'
                             }}
                             onPress={() => {
+                                if (props.cueId !== null) {
+                                    props.updateQAUnreadCount()
+                                }
                                 props.reload()
                                 setThreadWithReplies([])
                                 setShowThreadCues(false)

@@ -450,9 +450,10 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     </View>
                                     {
                                         cues.map((cue: any, col: number) => {
+                                            console.log("Cue from gradesList", cue);
                                             const { title } = htmlStringParser(cue.cue)
                                             // console.log("CUE", cue)
-                                            return <TouchableOpacity style={styles.col} key={col.toString()}>
+                                            return <TouchableOpacity style={styles.col} key={col.toString()} onPress={() => props.openCueFromGrades(cue._id)}> 
                                                 <Text style={{ textAlign: 'center', fontSize: 10, color: '#2f2f3c', marginBottom: 5 }}>
                                                     {
                                                         (new Date(cue.deadline)).toString().split(' ')[1] +

@@ -6,7 +6,7 @@ import Swiper from 'react-native-web-swiper'
 import UpdateControls from './UpdateControls';
 import { ScrollView } from 'react-native-gesture-handler'
 import { fetchAPI } from '../graphql/FetchAPI';
-import { getCueThreads, getStatuses } from '../graphql/QueriesAndMutations';
+import { getCueThreads, getStatuses, getUnreadQACount } from '../graphql/QueriesAndMutations';
 import ThreadsList from './ThreadsList';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SubscribersList from './SubscribersList';
@@ -76,6 +76,85 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         await AsyncStorage.setItem("cues", stringifiedCues);
 
         props.reloadCueListAfterUpdate();
+
+    }
+
+    const updateQAUnreadCount = async () => {
+        const u = await AsyncStorage.getItem('user')
+        let parsedUser: any = {}
+        if (u) {
+            parsedUser = JSON.parse(u)
+        }
+        
+        if (Number.isNaN(Number(cueId))) {
+            const server = fetchAPI(parsedUser._id)
+
+            server.query({
+                query: getUnreadQACount,
+                variables: {
+                    userId: parsedUser._id,
+                    cueId,
+                }
+            }).then(async res => {
+
+                // Update cue locally with the new Unread count so that the Unread count reflects in real time
+
+                if (res.data.threadStatus.getUnreadQACount === null || res.data.threadStatus.getUnreadQACount === undefined) {
+                    return null
+                } 
+
+
+                let subCues: any = {};
+                try {
+                    const value = await AsyncStorage.getItem("cues");
+                    if (value) {
+                        subCues = JSON.parse(value);
+                    }
+                } catch (e) { }
+                if (subCues[props.cueKey].length === 0) {
+                    return;
+                }
+
+                const currCue = subCues[props.cueKey][props.cueIndex]
+
+                const saveCue = {
+                    ...currCue,
+                    unreadThreads: res.data.threadStatus.getUnreadQACount
+                }
+
+                subCues[props.cueKey][props.cueIndex] = saveCue
+
+                const stringifiedCues = JSON.stringify(subCues);
+                await AsyncStorage.setItem("cues", stringifiedCues);
+
+                props.reloadCueListAfterUpdate();
+
+            })
+
+
+            server.query({
+                query: getCueThreads,
+                variables: {
+                    cueId
+                }
+            }).then(async res => {
+                const u = await AsyncStorage.getItem('user')
+                if (u) {
+                    const parsedUser = JSON.parse(u)
+                    let filteredThreads: any[] = []
+                    if (parsedUser._id.toString().trim() === channelCreatedBy.toString().trim()) {
+                        filteredThreads = res.data.thread.findByCueId;
+                    } else {
+                        filteredThreads = res.data.thread.findByCueId.filter((thread: any) => {
+                            return !thread.isPrivate || (thread.userId === parsedUser._id)
+                        })
+                    }
+                    setThreads(filteredThreads)
+                }
+            })
+
+            
+        }
 
     }
 
@@ -306,6 +385,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 channelName={props.filterChoice}
                                                 closeModal={() => props.closeModal()}
                                                 reload={() => loadThreadsAndStatuses()}
+                                                updateQAUnreadCount={() => updateQAUnreadCount()}
                                             />
                                         </ScrollView> : null
                                     )
@@ -358,6 +438,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         }}>
                                         <Text style={styles.all}>
                                             Q&A
+                                            {props.cue.unreadThreads > 0 ? <View style={styles.badge} /> : null}
                                         </Text>
                                     </TouchableOpacity>
                                     {
@@ -492,5 +573,17 @@ const styles: any = StyleSheet.create({
         borderRadius: 10,
         backgroundColor: '#2f2f3c',
         lineHeight: 20
+    },
+    badge: {
+        position: 'absolute',
+        alignSelf: 'flex-end',
+        width: 7,
+        height: 7,
+        marginRight: -2,
+        marginTop: 0,
+        borderRadius: 15,
+        backgroundColor: '#d91d56',
+        textAlign: 'center',
+        zIndex: 50
     },
 })

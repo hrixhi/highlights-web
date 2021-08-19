@@ -1052,7 +1052,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
               <EquationEditor
                 value={equation}
                 onChange={setEquation}
-                autoCommands="pi theta sqrt sum prod alpha beta gamma rho int"
+                autoCommands="bar overline sqrt sum prod int alpha beta gamma delta epsilon zeta eta theta iota kappa lambda mu nu xi omikron pi rho sigma tau upsilon phi chi psi omega Alpha Beta Gamma Aelta Epsilon Zeta Eta Theta Iota Kappa Lambda Mu Nu Xi Omikron Pi Rho Sigma Tau Upsilon Phi Chi Psi Omega"
                 autoOperatorNames="sin cos tan arccos arcsin arctan"
               />
             </View>
@@ -1064,7 +1064,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
               }}
               onPress={() => insertEquation()}
             >
-              <Ionicons name="add-circle-outline" color="#a2a2ac" size={20} />
+              <Ionicons name="add-circle-outline" color="#2F2F3C" size={20} />
             </TouchableOpacity>
             <View
               style={{
@@ -1074,11 +1074,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 justifyContent: "center",
               }}
             >
-              <Text style={{ flex: 1, fontSize: 11, color: "#a2a2ac" }}>
-                ^ → Superscript, _ → Subscript, int → Integral, sum → Summation,
-                prod → Product, sqrt → Square root, bar → Bar over letter,
-                alpha, beta, ... omega → Small Greek letter, Alpha, Beta, ...
-                Omega → Capital Greek letter
+              <Text style={{ flex: 1, fontSize: 12, color: "#2F2F3C", lineHeight: "1.5" }}>
+                ^ → Superscript,  _ → Subscript,  int → Integral,  sum → Summation,  prod → Product,  sqrt → Square root,  bar → Bar over letter;  alpha, beta, ... omega → Small Greek letter;  Alpha, Beta, ... Omega → Capital Greek letter
               </Text>
             </View>
           </View>
