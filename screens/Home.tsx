@@ -1193,6 +1193,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             channelId={channelId}
                             channelCreatedBy={channelCreatedBy}
                             filterChoice={filterChoice}
+                            openCueFromGrades={(cueId: string) => openCueFromCalendar(channelId, cueId, channelCreatedBy)}
                           />
                             : (
                               modalType === 'Calendar' ? <Calendar cues={cues} subscriptions={subscriptions} openCueFromCalendar={openCueFromCalendar} />

@@ -1270,7 +1270,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     <EquationEditor
                         value={equation}
                         onChange={setEquation}
-                        autoCommands="pi theta sqrt sum prod alpha beta gamma rho int"
+                        autoCommands="bar overline sqrt sum prod int alpha beta gamma delta epsilon zeta eta theta iota kappa lambda mu nu xi omikron pi rho sigma tau upsilon phi chi psi omega Alpha Beta Gamma Aelta Epsilon Zeta Eta Theta Iota Kappa Lambda Mu Nu Xi Omikron Pi Rho Sigma Tau Upsilon Phi Chi Psi Omega"
                         autoOperatorNames="sin cos tan arccos arcsin arctan"
                     />
                 </View>
@@ -1281,7 +1281,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         maxWidth: "10%"
                     }}
                     onPress={() => insertEquation()}>
-                    <Ionicons name="add-circle-outline" color="#a2a2ac" size={20} />
+                    <Ionicons name="add-circle-outline" color="#2F2F3C" size={20} />
                 </TouchableOpacity>
                 <View
                     style={{
@@ -1290,9 +1290,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         paddingVertical: 5,
                         justifyContent: "center"
                     }}>
-                    <Text style={{ flex: 1, fontSize: 11, color: '#a2a2ac' }}>
-                        ^ → Superscript, _ → Subscript, int → Integral, sum → Summation, prod → Product, sqrt → Square root, bar →
-                        Bar over letter, alpha, beta, ... omega → Small Greek letter, Alpha, Beta, ... Omega → Capital Greek letter
+                    <Text style={{ flex: 1, fontSize: 12, color: "#2F2F3C", lineHeight: "1.5" }}>
+                        ^ → Superscript,  _ → Subscript,  int → Integral,  sum → Summation,  prod → Product,  sqrt → Square root,  bar → Bar over letter;  alpha, beta, ... omega → Small Greek letter;  Alpha, Beta, ... Omega → Capital Greek letter
                     </Text>
                 </View>
             </View>
@@ -1342,6 +1341,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     }}>
                     <Text style={props.showComments ? styles.allGrayFill : styles.all}>
                         Q&A
+                        {props.cue.unreadThreads > 0 ? <View style={styles.badge} /> : null}
                     </Text>
                 </TouchableOpacity>
                 {(isOwner && submission) || isQuiz ? null : (
@@ -2023,7 +2023,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     }}>
                     <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>Grade Weight</Text>
                 </View>
-                <View style={{ flexDirection: "row" }}>
+                {isOwner ? <View style={{ flexDirection: "row" }}>
                     <View
                         style={{
                             backgroundColor: "white",
@@ -2042,7 +2042,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             activeThumbColor="white"
                         />
                     </View>
-                </View>
+                </View> : null }
                 {graded ? (
                     <View
                         style={{
@@ -2058,9 +2058,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 color: "#a2a2ac",
                                 textAlign: "left",
                                 paddingRight: 10,
-                                paddingLeft: 10,
                             }}>
-                            {PreferredLanguageText("percentageOverall")}
+                            {!isOwner ? gradeWeight : null} {PreferredLanguageText("percentageOverall")}
                         </Text>
                         {isOwner ? (
                             <TextInput
@@ -2078,16 +2077,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 onChangeText={val => setGradeWeight(val)}
                                 placeholderTextColor={"#a2a2ac"}
                             />
-                        ) : (
-                            <Text
-                                style={{
-                                    color: "#a2a2ac",
-                                    textAlign: "left",
-                                    fontSize: 12
-                                }}>
-                                {gradeWeight}
-                            </Text>
-                        )}
+                        ) : null}
                     </View>
                 ) : null}
             </View>
@@ -3413,5 +3403,17 @@ const styles: any = StyleSheet.create({
         borderRadius: 10,
         borderWidth: 1,
         borderColor: "#a2a2ac"
-    }
+    },
+    badge: {
+        position: 'absolute',
+        alignSelf: 'flex-end',
+        width: 7,
+        height: 7,
+        marginRight: -2,
+        marginTop: 0,
+        borderRadius: 15,
+        backgroundColor: '#d91d56',
+        textAlign: 'center',
+        zIndex: 50
+    },
 });
