@@ -1805,7 +1805,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
     const renderShareWithOptions = () => {
         return props.cue.channelId !== "" && isOwner ? (
-            <View style={{ width: width < 768 ? "100%" : "33.33%" }}>
+            <View style={{ width: width < 768 ? "100%" : "33.33%", paddingRight: 20 }}>
                 <View
                     style={{
                         width: "100%",
@@ -2134,7 +2134,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             flexDirection: "row",
                             backgroundColor: "white"
                         }}>
-                        <View style={{ width: "85%", backgroundColor: "white" }}>
+                        <View style={{ width: "80%", backgroundColor: "white" }}>
                             {addCustomCategory ? (
                                 <View style={styles.colorBar}>
                                     <TextInput
@@ -2186,7 +2186,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 </Menu>
                             )}
                         </View>
-                        <View style={{ width: "15%", backgroundColor: "white" }}>
+                        <View style={{ width: "20%", backgroundColor: "white",  paddingRight: 20 }}>
                             <TouchableOpacity
                                 onPress={() => {
                                     if (addCustomCategory) {
@@ -2301,9 +2301,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             <MenuTrigger>
                                 <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#2F2F3C' }}>
                                     {
-                                        selectedChannelOwner === undefined ? 'All' :
+                                        selectedChannelOwner === undefined ? 'All channels' :
                                             (selectedChannelOwner !== null ? (selectedChannelOwner.name)
-                                                : 'Your Channels')
+                                                : 'Your channels')
                                     }< Ionicons name='caret-down' size={14} />
                                 </Text>
                             </MenuTrigger>
@@ -2358,7 +2358,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     setShareWithChannelName(channel.name)
                                 }
                                 if (selectedChannelOwner === undefined) {
-                                    if (userId.toString().trim() !== channel.createdBy.toString().trim()) {
+                                    if (userId !== undefined && channel.createdBy !== undefined && userId.toString().trim() !== channel.createdBy.toString().trim()) {
                                         setSelectedChannelOwner({
                                             id: channel.createdBy,
                                             name: channel.createdByUsername
@@ -2370,7 +2370,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             }}>
                             <MenuTrigger>
                                 <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#2F2F3C' }}>
-                                    {shareWithChannelName === '' ? 'None' : shareWithChannelName}<Ionicons name='caret-down' size={14} />
+                                    {shareWithChannelName === '' ? 'Select channel' : shareWithChannelName}<Ionicons name='caret-down' size={14} />
                                 </Text>
                             </MenuTrigger>
                             <MenuOptions customStyles={{
@@ -2387,7 +2387,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 <MenuOption
                                     value={''}>
                                     <Text>
-                                        None
+                                        Select Channel
                                     </Text>
                                 </MenuOption>
                                 {
@@ -3174,7 +3174,10 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 <View
                                     style={{
                                         display: "flex",
-                                        flexDirection: width < 768 ? "column" : "row"
+                                        flexDirection: width < 768 ? "column" : "row",
+                                        borderBottomWidth: 1,
+                                        borderBottomColor: "#f4f4f6",
+                                        paddingBottom: 40
                                     }}>
                                     {renderShareWithOptions()}
                                     {renderSubmissionRequiredOptions()}
@@ -3184,7 +3187,10 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             <View
                                 style={{
                                     display: "flex",
-                                    flexDirection: width < 768 ? "column" : "row"
+                                    flexDirection: width < 768 ? "column" : "row",
+                                    borderBottomWidth: 1,
+                                    borderBottomColor: "#f4f4f6",
+                                    paddingBottom: 40
                                 }}>
                                 {renderCategoryOptions()}
                                 {renderPriorityOptions()}

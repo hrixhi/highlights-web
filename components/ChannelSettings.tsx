@@ -103,7 +103,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
 
         let filteredOptions = filteredUsers.map((user: any) => {
             return {
-                name: (user.fullName + ', ' + user.displayName),
+                name: user.fullName,
                 id: user._id
             }
         })
@@ -457,7 +457,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         const x = { ...item, selected: false, index }
                                         delete x.__typename
                                         tempUsers.push({
-                                            name: (item.fullName + ', ' + item.displayName),
+                                            name: item.fullName,
                                             id: item._id
                                         })
                                         return x
@@ -520,7 +520,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 
                                 delete x.__typename
                                 tempUsers.push({
-                                    name: (item.fullName + ', ' + item.displayName),
+                                    name: item.fullName,
                                     id: item._id
                                 })
 
