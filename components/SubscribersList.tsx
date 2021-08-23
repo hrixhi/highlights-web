@@ -162,7 +162,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
     const key = JSON.stringify(filteredSubscribers)
     let options = filteredSubscribers.map((sub: any) => {
         return {
-            value: sub._id, label: sub.displayName
+            value: sub._id, label: sub.fullName
         }
     })
     const group = selected.map(s => {
@@ -263,7 +263,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
 
             })
 
-            subscriberRow.push(moment(new Date(submittedAt)).format("MMMM Do YYYY, h:mm a"))
+            subscriberRow.push(moment(new Date(Number(submittedAt))).format("MMMM Do YYYY, h:mm a"))
 
             subscriberRow.push(comment)
 
@@ -864,7 +864,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 loadedChatWithUser && loadedChatWithUser !== {} && !showNewGroup && !showAddUsers && users.length < 3 && !showSubmission ?
                                     <View style={{ marginHorizontal: 20, paddingTop: 5 }}>
                                         <Text>
-                                            {loadedChatWithUser.displayName}, {loadedChatWithUser.fullName} {loadedChatWithUser.email ? ("(" + loadedChatWithUser.email + ")") : ''}
+                                            {loadedChatWithUser.fullName} {loadedChatWithUser.email ? ("(" + loadedChatWithUser.email + ")") : ''}
                                         </Text>
                                     </View> : null
                             }
@@ -1575,7 +1575,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         marginBottom: 10
                                     }}>
                                         <Text>
-                                            {sub.displayName}
+                                            {sub.fullName}
                                         </Text>
                                         <Text>
                                             {sub.email}

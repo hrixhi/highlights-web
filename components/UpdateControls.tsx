@@ -1355,7 +1355,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             props.setShowOptions(false)
                             props.setShowComments(false)
                         }}>
-                        <Text style={!props.showOriginal && !props.viewStatus ? styles.allGrayFill : styles.all}>
+                        <Text style={!props.showOriginal && !props.viewStatus && !props.showComments && !props.showOptions ? styles.allGrayFill : styles.all}>
                             {submission ? PreferredLanguageText("mySubmission") : PreferredLanguageText("myNotes")}
                         </Text>
                     </TouchableOpacity>
