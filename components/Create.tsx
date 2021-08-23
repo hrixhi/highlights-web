@@ -7,6 +7,7 @@ import {
   ScrollView,
   Animated,
   Dimensions,
+  ListView,
 } from "react-native";
 import { TextInput as CustomTextInput } from "./CustomTextInput";
 import { Text, View, TouchableOpacity } from "../components/Themed";
@@ -42,7 +43,7 @@ import moment from "moment";
 import ReactPlayer from "react-player";
 import Webview from "./Webview";
 import Multiselect from "multiselect-react-dropdown";
-import mime from 'mime-types';
+import mime from "mime-types";
 
 import {
   Menu,
@@ -93,9 +94,10 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
   const [gradeWeight, setGradeWeight] = useState<any>(0);
   const [graded, setGraded] = useState(false);
   const [imported, setImported] = useState(false);
-  const [url, setUrl] = useState([]);
+  const [url, setUrl] = useState<any>({});
   const [type, setType] = useState("");
-  const [typearray,setTypeArray] = useState([])
+  const [files, setFiles] = useState([]);
+  const [fileIndex, setFileIndex] = useState(0);
   const [title, setTitle] = useState("");
   const [showImportOptions, setShowImportOptions] = useState(false);
   const [selected, setSelected] = useState<any[]>([]);
@@ -110,6 +112,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
   const [frequencyName, setFrequencyName] = useState("Day");
 
   const [timer, setTimer] = useState(false);
+  const [isDraft, setIsDraft] = useState(false);
   const [duration, setDuration] = useState({
     hours: 1,
     minutes: 0,
@@ -121,6 +124,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
   const [shuffleQuiz, setShuffleQuiz] = useState(false);
   const [quizInstructions, setQuizInstructions] = useState("");
   const [initialDuration, setInitialDuration] = useState(null);
+  const [filesData, setFilesData] = useState<any>([]);
 
   const [channelName, setChannelName] = useState("");
 
@@ -153,7 +157,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
     setDuration({ hours, minutes, seconds });
   }, []);
 
-
   const onDimensionsChange = useCallback(({ window, screen }: any) => {
     setDimensions({ window, screen });
   }, []);
@@ -173,27 +176,102 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
   }, [equation, RichText, RichText.current, cue]);
 
   useEffect(() => {
-    const init=async()=>{
-      if ((cue[0] === "[" || cue[0] === "{") && (cue[cue.length - 1] === "]" || cue[cue.length - 1] === "}")) {
-        const obj =await JSON.parse(cue);
-        if(cue[0] === "{"){
-          setUrl(obj.url);
-        }
-        else{
-          setUrl(obj);
+    const init = async () => {
+      if (
+        (cue[0] === "[" || cue[0] === "{") &&
+        (cue[cue.length - 1] === "]" || cue[cue.length - 1] === "}")
+      ) {
+        const obj = await JSON.parse(cue);
+        let filesArray: any = [];
+      
+        let tempObj = [];
+
+        if (cue[0] === "{") {
+          console.log("1", obj);
+          setType(obj.type);
+          setIsDraft(true);
+          for (var i = 0; i < obj.url.length; i++) {
+            let firstSplit = obj.url[i].url.split("_");
+            let secondSplit = decodeURI(firstSplit[1]);
+        
+
+            tempObj.push({
+              name: secondSplit,
+              type: secondSplit.split(".").pop(),
+              url: obj.url[i].url,
+              status: obj.url[i].status,
+            });
+          }
+          setFilesData(tempObj)
+           setUrl(tempObj);
+        } else {
+          setIsDraft(false);
+          for (var i = 0; i < obj.length; i++) {
+            let firstSplit = obj[i].url.split("_");
+            let secondSplit = decodeURI(firstSplit[1]);
+            tempObj.push({
+              name: secondSplit,
+              type: secondSplit.split(".").pop(),
+              url: obj[i].url,
+              status: i === 0 ? "active" : "inactive",
+            });
+          }
+          
+
+          setUrl(tempObj);
         }
         setImported(true);
-        setType('pdf');
+        setFiles(filesArray);
       } else {
         setImported(false);
-        setUrl([]);
+        setUrl({});
         setType("");
         setTitle("");
       }
-    }
+    };
 
-    init()
+    init();
   }, [cue]);
+
+  // useEffect(()=>{
+  //   const init=async ()=>{
+  //     if ((cue[0] === "[" || cue[0] === "{") && (cue[cue.length - 1] === "]" || cue[cue.length - 1] === "}")) {
+  //       const obj = await JSON.parse(cue);
+  //       if(cue[0] === "{"){
+  //         console.log('url obj1',obj.url[fileIndex])
+  //         setUrl(obj.url[fileIndex]);
+  //       }
+  //       else{
+  //         console.log('url obj',obj[fileIndex])
+  //         setUrl(obj[fileIndex]);
+  //       }
+  //       setImported(true);
+  //       setType('pdf');
+  //     }
+  //   }
+  //   init()
+
+  // },[fileIndex])
+
+ 
+  const setAllFiles = (filesData: any) => {
+  
+    if (filesData && filesData.length > 0) {
+      let filesArray = [];
+      for (var i = 0; i < filesData.length; i++) {
+        let firstSplit = filesData[i].url.split("_");
+        let secondSplit = decodeURI(firstSplit[1]);
+
+        filesArray.push({
+          url: filesData[i].url,
+          name: secondSplit,
+          type:secondSplit.split('.').pop(),
+          status: i === 0 ? "active" : "inactive",
+        });
+      }
+      setFilesData(filesArray);
+    }
+  };
 
   const createNewQuiz = useCallback(() => {
     setIsSubmitting(true);
@@ -352,7 +430,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
           setCustomCategories(res.data.channel.getChannelCategories);
         }
       })
-      .catch((err) => { });
+      .catch((err) => {});
     // get subscribers
     server
       .query({
@@ -460,7 +538,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
             setChannels(res.data.channel.findByUserId);
           }
         })
-        .catch((err) => { });
+        .catch((err) => {});
     }
     setInit(true);
   }, []);
@@ -482,6 +560,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
         title,
       };
       saveCue = JSON.stringify(obj);
+    
     } else if (isQuiz) {
       const quiz = {
         title,
@@ -574,7 +653,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
           if (value) {
             subCues = JSON.parse(value);
           }
-        } catch (e) { }
+        } catch (e) {}
         let _id = subCues["local"].length;
         while (true) {
           const duplicateId = subCues["local"].findIndex((item: any) => {
@@ -611,22 +690,21 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
         if (!uString) {
           return;
         }
-        const userName = await JSON.parse(uString)
-        let ownerarray: any = selected
-        const userSubscriptions = await AsyncStorage.getItem('subscriptions')
+        const userName = await JSON.parse(uString);
+        let ownerarray: any = selected;
+        const userSubscriptions = await AsyncStorage.getItem("subscriptions");
         if (userSubscriptions) {
-          const list = JSON.parse(userSubscriptions)
+          const list = JSON.parse(userSubscriptions);
           list.map((i: any) => {
             if (i.channelId === channelId) {
               ownerarray.push({
                 id: i.channelCreatedBy,
-                name: userName.fullName
-              })
+                name: userName.fullName,
+              });
             }
-          })
-          setSelected(ownerarray)
+          });
+          setSelected(ownerarray);
         }
-
 
         if (selected.length === 0) {
           Alert(noStudentSelectedAlert, selectWhoToShareAlert);
@@ -727,6 +805,34 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
     ]
   );
 
+  const onClickFile = async (item: any) => {
+    let tempObj = [];
+    const obj = await JSON.parse(cue);
+    if(!isDraft){
+      for (var i = 0; i < obj.length; i++) {
+        let firstSplit = obj[i].url.split("_")
+        let secondSplit = decodeURI(firstSplit[1]);
+        if (item.url === obj[i].url && !isDraft) {
+          tempObj.push({ name: secondSplit,type:secondSplit.split('.').pop(), url: obj[i].url, status: "active" });
+        } else {
+          tempObj.push({ name: secondSplit,type:secondSplit.split('.').pop(), url: obj[i].url, status: "inactive" });
+        }
+      }
+    }
+    else{
+      for (var i = 0; i < obj.url.length; i++) {
+        let firstSplit = obj.url[i].url.split("_");
+        let secondSplit = decodeURI(firstSplit[1]);
+         if(item.url === obj.url[i].url && isDraft){
+          tempObj.push({ name: secondSplit,type:secondSplit.split('.').pop(), url: obj.url[i].url, status: "active" });
+        } else {
+          tempObj.push({ name: secondSplit,type:secondSplit.split('.').pop(), url: obj.url[i].url, status: "inactive" });
+        }
+      }
+    }
+    
+    setUrl(tempObj);
+  };
   useEffect(() => {
     const getData = async () => {
       try {
@@ -784,36 +890,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
     ]);
   }, []);
 
-  const removeItem = useCallback(async() => {
-console.log('cue',cue)
-    
-    // Alert(clearQuestionAlert, cannotUndoAlert, [
-    //   {
-    //     text: "Cancel",
-    //     style: "cancel",
-    //   },
-    //   {
-    //     text: "Clear",
-    //     onPress: () => {
-    //       console.log('cue',cue)
-    //       console.log('url',url)
-    //       // setCue("");
-    //       // setImported(false);
-    //       // setUrl([]);
-    //       // setType("");
-    //       // setTitle("");
-    //       // setProblems([]);
-    //       // setIsQuiz(false);
-    //       // setTimer(false);
-    //       // setShowEquationEditor(false);
-    //       // setEquation("");
-    //       // setReloadEditorKey(Math.random());
-    //       console.log('cleared item')
-    //     },
-    //   },
-    // ]);
-  }, []);
-
   useEffect(() => {
     Animated.timing(modalAnimation, {
       toValue: 1,
@@ -848,32 +924,32 @@ console.log('cue',cue)
   const quizAlert = PreferredLanguageText("quizzesCanOnly");
   const width = dimensions.window.width;
 
-  const hours: any[] = [0, 1, 2, 3, 4, 5, 6]
-  const minutes: any[] = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55]
+  const hours: any[] = [0, 1, 2, 3, 4, 5, 6];
+  const minutes: any[] = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55];
 
   const roundSeconds = (time: Date) => {
     time.setMinutes(time.getMinutes() + Math.round(time.getSeconds() / 60));
-    time.setSeconds(0, 0)
-    return time
-  }
-
-
+    time.setSeconds(0, 0);
+    return time;
+  };
 
   const findLink = (text: any) => {
     var urlRegex = /(https?:\/\/[^\s]+)/g;
     text.replace(urlRegex, function (urls: any) {
-      const url = urls.replace(/<[^>]*>/g, "")
-      var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|\?v=)([^#\&\?]*).*/;
+      const url = urls.replace(/<[^>]*>/g, "");
+      var regExp =
+        /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|\?v=)([^#\&\?]*).*/;
       var match = url.match(regExp);
       if (match && match[2].length == 11) {
-        const iframeMarkup = '<iframe width="560" height="315" src="//www.youtube.com/embed/'
-          + match[2] + '" frameborder="0" allowfullscreen></iframe>';
+        const iframeMarkup =
+          '<iframe width="560" height="315" src="//www.youtube.com/embed/' +
+          match[2] +
+          '" frameborder="0" allowfullscreen></iframe>';
         RichText.current.insertHTML(iframeMarkup);
       }
-    })
-  }
+    });
+  };
 
-  
   return (
     <View
       style={{
@@ -983,19 +1059,19 @@ console.log('cue',cue)
                   imported || isQuiz
                     ? [""]
                     : [
-                      actions.setBold,
-                      actions.setItalic,
-                      actions.setUnderline,
-                      actions.insertBulletsList,
-                      actions.insertOrderedList,
-                      actions.checkboxList,
-                      actions.insertLink,
-                      actions.insertImage,
-                      // "insertCamera",
-                      actions.undo,
-                      actions.redo,
-                      "clear",
-                    ]
+                        actions.setBold,
+                        actions.setItalic,
+                        actions.setUnderline,
+                        actions.insertBulletsList,
+                        actions.insertOrderedList,
+                        actions.checkboxList,
+                        actions.insertLink,
+                        actions.insertImage,
+                        // "insertCamera",
+                        actions.undo,
+                        actions.redo,
+                        "clear",
+                      ]
                 }
                 iconMap={{
                   ["insertCamera"]: ({ tintColor }) => (
@@ -1021,21 +1097,21 @@ console.log('cue',cue)
             {imported || !showImportOptions ? null : (
               <FileUpload
                 back={() => setShowImportOptions(false)}
-                onUpload={(f: any,t:any) => {
-                  let obj:any[]= [];
-                  setTypeArray(t)
-                  if(typeof f=='object'){
-                   f.forEach((k:any,i:any)=>{
-                      obj.push({url: k, type: mime.lookup(k), title:title});
-                    })
+                onUpload={(f: any, t: any) => {
+                  let obj: any[] = [];
+
+                  if (typeof f == "object") {
+                    f.forEach((k: any, i: any) => {
+                      obj.push({ url: k, type: mime.lookup(k), title: title });
+                    });
                   }
-                     
-                  console.log('obj',obj)            
+
+                  setAllFiles(obj);
+
                   setCue(JSON.stringify(obj));
                   setShowImportOptions(false);
                 }}
-
-                
+                type={"cue"}
               />
             )}
           </View>
@@ -1083,8 +1159,8 @@ console.log('cue',cue)
               }}
               onPress={() => {
                 if (isQuiz) {
-                  clearAll()
-                  return
+                  clearAll();
+                  return;
                 }
                 if (channelId !== "") {
                   setIsQuiz(true);
@@ -1094,7 +1170,7 @@ console.log('cue',cue)
                 }
               }}
             >
-              {isQuiz ? 'CANCEL' : PreferredLanguageText("quiz")}
+              {isQuiz ? "CANCEL" : PreferredLanguageText("quiz")}
             </Text>
           </View>
         </View>
@@ -1186,32 +1262,56 @@ console.log('cue',cue)
                   onChangeText={(val) => setTitle(val)}
                   placeholderTextColor={"#a2a2ac"}
                 />
-                {
-                  !isQuiz ?
-                    <TouchableOpacity
+
+                <View>
+                  {filesData.length > 0
+                    ? filesData.map((item: any, key: number) => (
+                        <>
+                          <TouchableOpacity
+                            style={{
+                              maxWidth: 400,
+                              borderRightWidth: 0,
+                              borderColor: "#f4f4f6",
+                              // paddingRight: 15,
+                              // display: "flex",
+                              paddingLeft: 20,
+                            }}
+                            onPress={() => {
+                              onClickFile(item);
+                            }}
+                            key={key}
+                          >
+                            {key + 1 + ". " + item.name}
+                          </TouchableOpacity>
+                        </>
+                      ))
+                    : ""}
+                </View>
+                {!isQuiz ? (
+                  <TouchableOpacity
+                    style={{
+                      marginLeft: 15,
+                      paddingTop: 15,
+                    }}
+                    onPress={() => clearAll()}
+                  >
+                    <Ionicons
+                      name="trash-outline"
+                      color="#a2a2ac"
+                      size={20}
+                      style={{ alignSelf: "center" }}
+                    />
+                    <Text
                       style={{
-                        marginLeft: 15,
-                        paddingTop: 15,
+                        fontSize: 9,
+                        color: "#a2a2ac",
+                        textAlign: "center",
                       }}
-                      onPress={() => clearAll()}
                     >
-                      <Ionicons
-                        name="trash-outline"
-                        color="#a2a2ac"
-                        size={20}
-                        style={{ alignSelf: "center" }}
-                      />
-                      <Text
-                        style={{
-                          fontSize: 9,
-                          color: "#a2a2ac",
-                          textAlign: "center",
-                        }}
-                      >
-                        Remove
-                      </Text>
-                    </TouchableOpacity> : null
-                }
+                      Remove
+                    </Text>
+                  </TouchableOpacity>
+                ) : null}
               </View>
               {isQuiz ? (
                 <View
@@ -1222,7 +1322,7 @@ console.log('cue',cue)
                     paddingLeft: 20,
                     borderColor: "#f4f4f6",
                     paddingTop: 10,
-                    paddingRight: 25
+                    paddingRight: 25,
                   }}
                 >
                   <View
@@ -1230,18 +1330,20 @@ console.log('cue',cue)
                       width: "100%",
                       paddingBottom: 15,
                       backgroundColor: "white",
-                      flexDirection: 'row',
-                      justifyContent: 'flex-start'
+                      flexDirection: "row",
+                      justifyContent: "flex-start",
                     }}
                   >
-                    <Text style={{
-                      color: "#2f2f3c",
-                      fontSize: 11,
-                      lineHeight: 30,
-                      // paddingRight: 20,
-                      paddingTop: 20,
-                      textTransform: "uppercase",
-                    }}>
+                    <Text
+                      style={{
+                        color: "#2f2f3c",
+                        fontSize: 11,
+                        lineHeight: 30,
+                        // paddingRight: 20,
+                        paddingTop: 20,
+                        textTransform: "uppercase",
+                      }}
+                    >
                       TIMED
                     </Text>
                   </View>
@@ -1251,8 +1353,8 @@ console.log('cue',cue)
                       width: "100%",
                       height: 40,
                       marginRight: 10,
-                      flexDirection: 'row',
-                      justifyContent: 'flex-start'
+                      flexDirection: "row",
+                      justifyContent: "flex-start",
                     }}
                   >
                     <Switch
@@ -1281,14 +1383,18 @@ console.log('cue',cue)
                         borderRightWidth: 0,
                         paddingTop: 0,
                         borderColor: "#f4f4f6",
-                        flexDirection: 'row'
+                        flexDirection: "row",
                       }}
                     >
                       <View>
-                        <Menu onSelect={(hour: any) => setDuration({
-                          ...duration,
-                          hours: hour
-                        })}>
+                        <Menu
+                          onSelect={(hour: any) =>
+                            setDuration({
+                              ...duration,
+                              hours: hour,
+                            })
+                          }
+                        >
                           <MenuTrigger>
                             <Text
                               style={{
@@ -1297,7 +1403,9 @@ console.log('cue',cue)
                                 color: "#2f2f3c",
                               }}
                             >
-                              {duration.hours} H <Ionicons name="caret-down" size={14} /> &nbsp;&nbsp;:&nbsp;&nbsp;
+                              {duration.hours} H{" "}
+                              <Ionicons name="caret-down" size={14} />{" "}
+                              &nbsp;&nbsp;:&nbsp;&nbsp;
                             </Text>
                           </MenuTrigger>
                           <MenuOptions
@@ -1308,8 +1416,8 @@ console.log('cue',cue)
                                 shadowOpacity: 0,
                                 borderWidth: 1,
                                 borderColor: "#f4f4f6",
-                                overflow: 'scroll',
-                                maxHeight: '100%'
+                                overflow: "scroll",
+                                maxHeight: "100%",
                               },
                             }}
                           >
@@ -1324,10 +1432,14 @@ console.log('cue',cue)
                         </Menu>
                       </View>
                       <View>
-                        <Menu onSelect={(min: any) => setDuration({
-                          ...duration,
-                          minutes: min
-                        })}>
+                        <Menu
+                          onSelect={(min: any) =>
+                            setDuration({
+                              ...duration,
+                              minutes: min,
+                            })
+                          }
+                        >
                           <MenuTrigger>
                             <Text
                               style={{
@@ -1336,7 +1448,8 @@ console.log('cue',cue)
                                 color: "#2f2f3c",
                               }}
                             >
-                              {duration.minutes}  m  <Ionicons name="caret-down" size={14} />
+                              {duration.minutes} m{" "}
+                              <Ionicons name="caret-down" size={14} />
                             </Text>
                           </MenuTrigger>
                           <MenuOptions
@@ -1347,8 +1460,8 @@ console.log('cue',cue)
                                 shadowOpacity: 0,
                                 borderWidth: 1,
                                 borderColor: "#f4f4f6",
-                                overflow: 'scroll',
-                                maxHeight: '100%'
+                                overflow: "scroll",
+                                maxHeight: "100%",
                               },
                             }}
                           >
@@ -1386,78 +1499,141 @@ console.log('cue',cue)
               backgroundColor: "white",
             }}
           >
-            {isQuiz ? (
-              <View
-                style={{
-                  width: "100%",
-                  flexDirection: "column",
-                }}
-              >
-                <View style={{
-                  backgroundColor: '#fff',
-                  paddingLeft: 20,
-                  flexDirection: 'row',
-                  width: '100%'
-                }}>
-                  <View style={{ width: '100%', maxWidth: 400, paddingRight: 15 }}>
-                    <CustomTextInput
-                      value={quizInstructions}
-                      placeholder="Instructions"
-                      onChangeText={(val) => setQuizInstructions(val)}
-                      placeholderTextColor={"#a2a2ac"}
-                      required={false}
-                      hasMultipleLines={true}
-                    />
+            {
+              isQuiz ? (
+                <View
+                  style={{
+                    width: "100%",
+                    flexDirection: "column",
+                  }}
+                >
+                  <View
+                    style={{
+                      backgroundColor: "#fff",
+                      paddingLeft: 20,
+                      flexDirection: "row",
+                      width: "100%",
+                    }}
+                  >
+                    <View
+                      style={{ width: "100%", maxWidth: 400, paddingRight: 15 }}
+                    >
+                      <CustomTextInput
+                        value={quizInstructions}
+                        placeholder="Instructions"
+                        onChangeText={(val) => setQuizInstructions(val)}
+                        placeholderTextColor={"#a2a2ac"}
+                        required={false}
+                        hasMultipleLines={true}
+                      />
+                    </View>
                   </View>
+                  <QuizCreate
+                    problems={problems}
+                    headers={headers}
+                    setProblems={(p: any) => setProblems(p)}
+                    setHeaders={(h: any) => setHeaders(h)}
+                  />
                 </View>
-                <QuizCreate
-                  problems={problems}
-                  headers={headers}
-                  setProblems={(p: any) => setProblems(p)}
-                  setHeaders={(h: any) => setHeaders(h)}
-                />
-              </View>
-            ) : imported ? (
-              url.map((value:any,key:any)=>(
-                mime.extension(value.type) ==="mp4" ||
-                mime.extension(value.type)==='mp3' ||
-                mime.extension(value.type)==='mov' ||
-                mime.extension(value.type)==='mpeg' ||
-                mime.extension(value.type)==='mp2' ||
-                mime.extension(value.type)==='wav'?<ReactPlayer
-                url={value.url}
-                controls={true}
-                onContextMenu={(e: any) => e.preventDefault()}
-                config={{
-                  file: { attributes: { controlsList: "nodownload" } },
-                }}
-              />:
-              <View key={value.url} style={{ flex: 1 }}>
-                    <Webview key={value.url} url={value.url} showDelete={true} removeItem={removeItem}/>
+              ) : imported && url.length > 0 ? (
+                <View key={url} style={{ flex: 1 }}>
+                  {url
+                    .filter((p: any) => p.status === "active")
+                    .map((u: any) =>
+                      u.type === "mp4" ||
+                      u.type === "mp3" ||
+                      u.type === "mov" ||
+                      u.type === "mpeg" ||
+                      u.type === "mp2" ||
+                      u.type === "wav" ? (
+                        <ReactPlayer
+                          url={u.url}
+                          controls={true}
+                          onContextMenu={(e: any) => e.preventDefault()}
+                          config={{
+                            file: {
+                              attributes: { controlsList: "nodownload" },
+                            },
+                          }}
+                        />
+                      ) : (
+                        <Webview key={u.url} url={u.url} showDelete={true} />
+                      )
+                    )}
                 </View>
-              ))
-              // type === "mp4" ||
-              //   type === "mp3" ||
-              //   type === "mov" ||
-              //   type === "mpeg" ||
-              //   type === "mp2" ||
-              //   type === "wav" ? (
+              ) : null
+              // <View key={url} style={{ flex: 1 }}>
+              //   {url.filter((u:any)=>u.status==='active').map((u:any)=>(
+              //     <Webview key={url} url={u.url} showDelete={true}/>
+              //   ))}
+              // (
+              //   isDraft
+              //   ?
+              //   type==="mp4" ||
+              //   type==='mp3' ||
+              //   type==='mov' ||
+              //   type==='mpeg' ||
+              //   type==='mp2' ||
+              //   type==='wav'
+              //   ?
               //   <ReactPlayer
-              //     url={url}
-              //     controls={true}
-              //     onContextMenu={(e: any) => e.preventDefault()}
-              //     config={{
-              //       file: { attributes: { controlsList: "nodownload" } },
-              //     }}
-              //   />
-              // ) : ( 
-              //   <View key={url} style={{ flex: 1 }}>
+              //   url={url}
+              //   controls={true}
+              //   onContextMenu={(e: any) => e.preventDefault()}
+              //   config={{
+              //     file: { attributes: { controlsList: "nodownload" } },
+              //   }}
+              // />
+              // :
+              // <View key={url} style={{ flex: 1 }}>
+              //   {url.filter((u:any)=>u.status==='active').map((u:any)=>(
+              //     <Webview key={url} url={u.url} showDelete={true}/>
+              //   ))}
 
-              //       <Webview key={url} url={url} />
+              //   </View>:
+              //   //   mime.extension(url.type) ==="mp4" ||
+              //   //   mime.extension(url.type)==='mp3' ||
+              //   //   mime.extension(url.type)==='mov' ||
+              //   //   mime.extension(url.type)==='mpeg' ||
+              //   //   mime.extension(url.type)==='mp2' ||
+              //   //   mime.extension(url.type)==='wav'
+              //   //   ?
+              //   //   <ReactPlayer
+              //   //   url={url}
+              //   //   controls={true}
+              //   //   onContextMenu={(e: any) => e.preventDefault()}
+              //   //   config={{
+              //   //     file: { attributes: { controlsList: "nodownload" } },
+              //   //   }}
+              //   // />
+              //   // :
+              //   // <View key={url.url} style={{ flex: 1 }}>
+              //   //       <Webview key={url.url} url={url.url} showDelete={true}/>
+              //   //   </View>
 
-              //   </View>
-              // )
-            ) : null}
+              //   // type === "mp4" ||
+              //   //   type === "mp3" ||
+              //   //   type === "mov" ||
+              //   //   type === "mpeg" ||
+              //   //   type === "mp2" ||
+              //   //   type === "wav" ? (
+              //   //   <ReactPlayer
+              //   //     url={url}
+              //   //     controls={true}
+              //   //     onContextMenu={(e: any) => e.preventDefault()}
+              //   //     config={{
+              //   //       file: { attributes: { controlsList: "nodownload" } },
+              //   //     }}
+              //   //   />
+              //   // ) : (
+              //   //   <View key={url} style={{ flex: 1 }}>
+
+              //   //       <Webview key={url} url={url} />
+
+              //   //   </View>
+              //   // )
+              // ) : null}
+            }
             <RichEditor
               key={reloadEditorKey.toString()}
               containerStyle={{
@@ -1489,9 +1665,8 @@ console.log('cue',cue)
               onScroll={() => Keyboard.dismiss()}
               placeholder={PreferredLanguageText("title")}
               onChange={(text) => {
-                console.log('text', text)
                 const modifedText = text.split("&amp;").join("&");
-                findLink(modifedText)
+                findLink(modifedText);
                 setCue(modifedText);
               }}
               onHeightChange={handleHeightChange}
@@ -1611,8 +1786,8 @@ console.log('cue',cue)
                               shadowOpacity: 0,
                               borderWidth: 1,
                               borderColor: "#f4f4f6",
-                              overflow: 'scroll',
-                              maxHeight: '100%'
+                              overflow: "scroll",
+                              maxHeight: "100%",
                             },
                           }}
                         >
@@ -1685,7 +1860,7 @@ console.log('cue',cue)
                               display: "flex",
                               flexDirection: "row",
                               backgroundColor: "white",
-                              alignItems: 'center'
+                              alignItems: "center",
                             }}
                           >
                             <Text style={styles.text}>Available</Text>
@@ -1695,12 +1870,12 @@ console.log('cue',cue)
                               value={initiateAt}
                               onChange={(event: any) => {
                                 const date = new Date(event);
-                                const roundValue = roundSeconds(date)
+                                const roundValue = roundSeconds(date);
                                 if (date < new Date()) return;
                                 setInitiateAt(roundValue);
                               }}
                               size={"xs"}
-                            // isValidDate={disablePastDt}
+                              // isValidDate={disablePastDt}
                             />
                           </View>
                         ) : null}
@@ -1718,7 +1893,7 @@ console.log('cue',cue)
                               display: "flex",
                               flexDirection: "row",
                               backgroundColor: "white",
-                              alignItems: 'center'
+                              alignItems: "center",
                               // marginLeft: 50,
                             }}
                           >
@@ -1732,11 +1907,11 @@ console.log('cue',cue)
                               onChange={(event: any) => {
                                 const date = new Date(event);
                                 if (date < new Date()) return;
-                                const roundValue = roundSeconds(date)
+                                const roundValue = roundSeconds(date);
                                 setDeadline(roundValue);
                               }}
                               size={"xs"}
-                            // isValidDate={disablePastDt}
+                              // isValidDate={disablePastDt}
                             />
                           </View>
                         ) : null}
@@ -1794,7 +1969,7 @@ console.log('cue',cue)
                             display: "flex",
                             flexDirection: "row",
                             backgroundColor: "white",
-                            alignItems: 'center'
+                            alignItems: "center",
                           }}
                         >
                           <Text style={styles.text}>
@@ -1851,7 +2026,6 @@ console.log('cue',cue)
                       options={subscribers} // Options to display in the dropdown
                       selectedValues={selected} // Preselected value to persist in dropdown
                       onSelect={(e, f) => {
-                        console.log('on select values', e)
                         setSelected(e);
                         return true;
                       }} // Function will trigger on select event
@@ -1939,8 +2113,8 @@ console.log('cue',cue)
                                 shadowOpacity: 0,
                                 borderWidth: 1,
                                 borderColor: "#f4f4f6",
-                                overflow: 'scroll',
-                                maxHeight: '100%'
+                                overflow: "scroll",
+                                maxHeight: "100%",
                               },
                             }}
                           >
@@ -2189,8 +2363,8 @@ console.log('cue',cue)
                                 shadowOpacity: 0,
                                 borderWidth: 1,
                                 borderColor: "#f4f4f6",
-                                overflow: 'scroll',
-                                maxHeight: '100%'
+                                overflow: "scroll",
+                                maxHeight: "100%",
                               },
                             }}
                           >
@@ -2609,5 +2783,9 @@ const styles: any = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1,
     borderColor: "#a2a2ac",
+  },
+  container: {
+    flex: 1,
+    padding: 20,
   },
 });

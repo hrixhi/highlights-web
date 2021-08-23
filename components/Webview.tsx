@@ -4,7 +4,7 @@ import { WebView } from "react-native-webview";
 const Webview: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
 const urls = props.url
-
+console.log('urls web',urls)
     const ref: any = useRef()
     const [intervalKey, setIntervalKey] = useState(0)
     const [key, setKey] = useState(Math.random())
