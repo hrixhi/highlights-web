@@ -26,12 +26,12 @@ const Channels: React.FunctionComponent<{ [label: string]: any }> = (props: any)
             onTouchMove={() => Keyboard.dismiss()}
         >
             <Animated.View style={{
-                width: Dimensions.get('window').width < 1024 ? '100%' : '60%',
+                width: '100%',
                 paddingHorizontal: 0,
                 minHeight: '100%',
                 backgroundColor: 'white',
                 opacity: modalAnimation,
-                // alignSelf: 'center',
+                alignSelf: 'center',
                 // paddingLeft: 20
             }}>
                 <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 10 }}>

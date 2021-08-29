@@ -83,7 +83,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             flexDirection: "column",
             backgroundColor: "white"
         }}>
-        <ActivityIndicator color={"#a2a2ac"} />
+        <ActivityIndicator color={"#818385"} />
     </View>)
 
     return (
@@ -150,12 +150,12 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         if (noOfCorrect > 1) onlyOneCorrect = false;
                     }
 
-                    return <View style={{ borderBottomColor: '#f4f4f6', borderBottomWidth: index === (props.problems.length - 1) ? 0 : 1, marginBottom: 25 }} key={index}>
+                    return <View style={{ borderBottomColor: '#F8F9FA', borderBottomWidth: index === (props.problems.length - 1) ? 0 : 1, marginBottom: 25 }} key={index}>
                         {renderHeader(index)}
                         <View style={{ flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row', flex: 1 }}>
                             <View style={{ flexDirection: 'row', flex: 1 }}>
                                 <View style={{ paddingTop: 15 }}>
-                                    <Text style={{ color: '#a2a2ac', fontSize: 15, paddingBottom: 25, marginRight: 10, paddingTop: 10 }}>
+                                    <Text style={{ color: '#818385', fontSize: 15, paddingBottom: 25, marginRight: 10, paddingTop: 10 }}>
                                         {index + 1}.
                                     </Text>
                                 </View>
@@ -174,7 +174,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         (
                                             problem.question && problem.question.includes("formula:") ? (
                                                 <View style={{
-                                                    borderColor: '#f4f4f6',
+                                                    borderColor: '#F8F9FA',
                                                     borderWidth: 1,
                                                     borderRadius: 15,
                                                     padding: 10,
@@ -203,7 +203,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                         marginBottom: 20
                                                     }}
                                                     placeholder={'Problem ' + (index + 1).toString()}
-                                                    placeholderTextColor={'#a2a2ac'}
+                                                    placeholderTextColor={'#818385'}
                                                 />
                                         )
                                 }
@@ -218,7 +218,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     }}
                                     style={{
                                         width: '23%',
-                                        borderBottomColor: '#f4f4f6',
+                                        borderBottomColor: '#F8F9FA',
                                         borderBottomWidth: 1,
                                         fontSize: 15,
                                         padding: 15,
@@ -228,7 +228,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         marginBottom: 20
                                     }}
                                     placeholder={'Enter points'}
-                                    placeholderTextColor={'#a2a2ac'}
+                                    placeholderTextColor={'#818385'}
                                 />}
                                 {!props.isOwner ? null : <TextInput
                                     editable={false}
@@ -244,7 +244,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         marginBottom: 20
                                     }}
                                     placeholder={'Enter points'}
-                                    placeholderTextColor={'#a2a2ac'}
+                                    placeholderTextColor={'#818385'}
                                 />}
                                 {
                                     !props.isOwner ? <Text style={{ fontSize: 15, marginTop: 5, marginBottom: 20, paddingTop: 12, paddingRight: 30, textAlign: 'right' }}>
@@ -256,7 +256,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 {
                                     !problem.questionType && !onlyOneCorrect ?
                                         (<Text style={{
-                                            fontSize: 11, color: '#a2a2ac', marginBottom: 20, textAlign: 'left',
+                                            fontSize: 11, color: '#818385', marginBottom: 20, textAlign: 'left',
                                             paddingTop: Dimensions.get('window').width < 768 ? 25 : 15,
                                             paddingLeft: 35
                                         }}>
@@ -267,13 +267,13 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 {
                                     !problem.required ?
                                         (<Text style={{
-                                            fontSize: 11, color: '#a2a2ac', marginBottom: 20, textAlign: 'left', paddingLeft: 35,
+                                            fontSize: 11, color: '#818385', marginBottom: 20, textAlign: 'left', paddingLeft: 35,
                                             paddingTop: Dimensions.get('window').width < 768 ? 25 : 15
                                         }}>
                                             optional
                                         </Text>)
                                         : (<Text style={{
-                                            fontSize: 11, color: '#a2a2ac', marginBottom: 20, textAlign: 'left', paddingLeft: 35,
+                                            fontSize: 11, color: '#818385', marginBottom: 20, textAlign: 'left', paddingLeft: 35,
                                             paddingTop: Dimensions.get('window').width < 768 ? 25 : 15
                                         }}>
                                             required
@@ -285,7 +285,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         {
                             (!problem.questionType || problem.questionType === "trueFalse") && problem.options.map((option: any, i: any) => {
 
-                                let color = '#2F2F3C'
+                                let color = '#2f2f3c'
                                 if (option.isCorrect) {
                                     color = '#3B64F8'
                                 } else if (!option.isCorrect && solutions[index].selected[i].isSelected) {
@@ -324,7 +324,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             (
                                                 option.option && option.option.includes("formula:") ?
                                                     <View style={{
-                                                        borderColor: '#f4f4f6',
+                                                        borderColor: '#F8F9FA',
                                                         borderWidth: 1,
                                                         borderRadius: 15,
                                                         padding: 10,
@@ -351,7 +351,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                             color
                                                         }}
                                                         placeholder={'Option ' + (i + 1).toString()}
-                                                        placeholderTextColor={'#a2a2ac'}
+                                                        placeholderTextColor={'#818385'}
                                                     />
                                             )
                                     }
@@ -394,7 +394,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     </View>
                 })
             }
-            {!props.isOwner && !comment ? null : <View style={{ width: '100%', paddingVertical: 50, paddingHorizontal: 40, borderTopWidth: 1, borderColor: '#f4f4f6' }}>
+            {!props.isOwner && !comment ? null : <View style={{ width: '100%', paddingVertical: 50, paddingHorizontal: 40, borderTopWidth: 1, borderColor: '#F8F9FA' }}>
                 <Text style={{ width: '100%', textAlign: 'left' }}>
                     Feedback
                 </Text>
@@ -454,7 +454,7 @@ export default Quiz;
 const styles = StyleSheet.create({
     input: {
         width: '50%',
-        // borderBottomColor: '#f4f4f6',
+        // borderBottomColor: '#F8F9FA',
         // borderBottomWidth: 1,
         fontSize: 15,
         paddingTop: 12,

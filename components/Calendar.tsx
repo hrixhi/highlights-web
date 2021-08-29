@@ -4,7 +4,7 @@ import { TextInput } from "./CustomTextInput";
 import Alert from "./Alert";
 import { Text, View, TouchableOpacity } from "./Themed";
 import { fetchAPI } from "../graphql/FetchAPI";
-import { createDate, deleteDate, getChannels, getEvents, createDateV1, editDateV1, deleteDateV1, meetingRequest, markAttendance } from "../graphql/QueriesAndMutations";
+import { createDate, deleteDate, getChannels, getEvents, createDateV1, editDateV1, deleteDateV1, meetingRequest, markAttendance, getActivity } from "../graphql/QueriesAndMutations";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import Datetime from "react-datetime";
@@ -22,6 +22,9 @@ import {
     MenuOption,
     MenuTrigger,
 } from 'react-native-popup-menu';
+import ActivityCard from "./ActivityCard";
+import { Eventcalendar } from "@mobiscroll/react";
+import "@mobiscroll/react/dist/css/mobiscroll.min.css";
 
 // Try New Calendar
 // import Scheduler, {SchedulerData, ViewTypes, DATE_FORMAT} from 'react-big-scheduler'
@@ -40,6 +43,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const [channels, setChannels] = useState<any[]>([]);
     const [showAddEvent, setShowAddEvent] = useState(false);
     const [channelId, setChannelId] = useState("");
+    const [calendarChoice, setCalendarChoice] = useState('Schedule')
     // v1
     const current = new Date();
     const [description, setDescription] = useState("");
@@ -60,6 +64,28 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const [allEvents, setAllEvents] = useState<any[]>([]);
     const [filterByLectures, setFilterByLectures] = useState(false);
     const [filterByChannel, setFilterByChannel] = useState("All");
+    const [filterActivityByChannel, setFilterActivityByChannel] = useState("All");
+    const [activityChannelId, setActivityChannelId] = useState<any>('')
+
+    const [timeChoice, setTimeChoice] = useState('week')
+
+    const view: any = React.useMemo(() => {
+        if (calendarChoice === 'Calendar') {
+            return {
+                calendar: { type: 'month' },
+            };
+        }
+        if (calendarChoice === 'Schedule') {
+            return {
+                schedule: { type: 'week' },
+            };
+        }
+        if (calendarChoice === 'Agenda') {
+            return {
+                agenda: { type: 'week' },
+            };
+        }
+    }, [calendarChoice]);
 
     // const [viewModel, setViewModel] = useState<any>(new SchedulerData(new moment().format(DATE_FORMAT), ViewTypes.Week))
 
@@ -79,9 +105,36 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
             colorCode = matchSubscription.colorCode
         }
 
-        return <span style={{ color: colorCode }}>{event.title}</span>
+        return <span style={{ color: colorCode, backgroundColor: '#F8F9FA', borderRadius: 10, padding: 20, overflow: 'hidden' }}>{event.title}</span>
 
     }
+
+    const [activity, setActivity] = useState<any[]>([])
+
+    useEffect(() => {
+        (
+            async () => {
+
+                const u = await AsyncStorage.getItem('user')
+                if (u) {
+                    const user = JSON.parse(u)
+                    const server = fetchAPI('')
+                    server.query({
+                        query: getActivity,
+                        variables: {
+                            userId: user._id
+                        }
+                    }).then(res => {
+                        if (res.data && res.data.activity.getActivity) {
+                            const tempActivity = res.data.activity.getActivity.reverse()
+                            setActivity(tempActivity)
+                        }
+                    })
+                }
+            }
+        )()
+
+    }, [])
 
 
     const loadChannels = useCallback(async () => {
@@ -150,18 +203,70 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const renderFilterEvents = () => {
 
         return (eventChannels.length > 0 ? (
-            <View style={{ marginTop: 20, flexDirection: 'row' }} key={JSON.stringify(eventChannels)}>
-                <View style={{ width: width < 768 ? "100%" : "33.33%" }}>
-                    <View
-                        style={{ width: "100%", paddingBottom: 20, backgroundColor: "white" }}>
-                        <Text
-                            style={{
-                                fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase',
-                                paddingTop: width < 768 ? 15 : 5
-                            }}>
-                            Filter
-                        </Text>
+            <View style={{
+                marginTop: 0,
+                flexDirection: 'row',
+                paddingTop: width < 768 ? 20 : 0
+                // borderWidth: 1,
+                // alignSelf: 'flex-start',
+                // flex: 1
+            }} key={JSON.stringify(eventChannels)}>
+                <View style={{ paddingRight: 40 }}>
+                    <View style={{ backgroundColor: '#fff' }}>
+                        <View style={{}}>
+                            <Menu
+                                onSelect={(choice: any) => {
+                                    setCalendarChoice(choice)
+                                }}>
+                                <MenuTrigger>
+                                    <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#2f2f3c' }}>
+                                        {calendarChoice}<Ionicons name='caret-down' size={14} />
+                                    </Text>
+                                </MenuTrigger>
+                                <MenuOptions customStyles={{
+                                    optionsContainer: {
+                                        padding: 10,
+                                        borderRadius: 15,
+                                        shadowOpacity: 0,
+                                        borderWidth: 1,
+                                        borderColor: '#F8F9FA',
+                                        overflow: 'scroll',
+                                        maxHeight: '100%'
+                                    }
+                                }}>
+                                    <MenuOption
+                                        value={'Schedule'}>
+                                        <View style={{ display: 'flex', flexDirection: 'row', }}>
+                                            <Text style={{ marginLeft: 5 }}>
+                                                Schedule
+                                            </Text>
+                                        </View>
+                                    </MenuOption>
+                                    <MenuOption
+                                        value={'Agenda'}>
+                                        <View style={{ display: 'flex', flexDirection: 'row', }}>
+                                            <Text style={{ marginLeft: 5 }}>
+                                                Agenda
+                                            </Text>
+                                        </View>
+                                    </MenuOption>
+                                    <MenuOption
+                                        value={'Calendar'}>
+                                        <View style={{ display: 'flex', flexDirection: 'row', }}>
+                                            <Text style={{ marginLeft: 5 }}>
+                                                Calendar
+                                            </Text>
+                                        </View>
+                                    </MenuOption>
+                                </MenuOptions>
+                            </Menu>
+                            <Text style={{ fontSize: 10, color: '#2f2f3c', paddingTop: 7 }}>
+                                View
+                            </Text>
+                        </View>
                     </View>
+                </View>
+                <View style={{ paddingRight: 40 }}>
                     <View style={{ backgroundColor: '#fff' }}>
                         <View style={{ flexDirection: 'row', display: 'flex', backgroundColor: '#fff' }}>
                             <Menu
@@ -185,7 +290,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         borderRadius: 15,
                                         shadowOpacity: 0,
                                         borderWidth: 1,
-                                        borderColor: '#f4f4f6',
+                                        borderColor: '#F8F9FA',
                                         overflow: 'scroll',
                                         maxHeight: '100%'
                                     }
@@ -242,9 +347,59 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 </MenuOptions>
                             </Menu>
                         </View>
+                        <Text style={{ fontSize: 10, color: '#2f2f3c', paddingTop: 7 }}>
+                            Channel
+                        </Text>
                     </View>
                 </View>
-                <View style={{ width: width < 768 ? "100%" : "33.33%" }}>
+                <View>
+                    <View style={{ backgroundColor: '#fff' }}>
+                        <View style={{}}>
+                            <Menu
+                                onSelect={(choice: any) => {
+                                    setFilterByLectures(choice)
+                                }}>
+                                <MenuTrigger>
+                                    <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#2f2f3c' }}>
+                                        {filterByLectures ? 'Lectures' : 'All'}<Ionicons name='caret-down' size={14} />
+                                    </Text>
+                                </MenuTrigger>
+                                <MenuOptions customStyles={{
+                                    optionsContainer: {
+                                        padding: 10,
+                                        borderRadius: 15,
+                                        shadowOpacity: 0,
+                                        borderWidth: 1,
+                                        borderColor: '#F8F9FA',
+                                        overflow: 'scroll',
+                                        maxHeight: '100%'
+                                    }
+                                }}>
+                                    <MenuOption
+                                        value={false}>
+                                        <View style={{ display: 'flex', flexDirection: 'row', }}>
+                                            <Text style={{ marginLeft: 5 }}>
+                                                All
+                                            </Text>
+                                        </View>
+                                    </MenuOption>
+                                    <MenuOption
+                                        value={true}>
+                                        <View style={{ display: 'flex', flexDirection: 'row', }}>
+                                            <Text style={{ marginLeft: 5 }}>
+                                                Lectures
+                                            </Text>
+                                        </View>
+                                    </MenuOption>
+                                </MenuOptions>
+                            </Menu>
+                            <Text style={{ fontSize: 10, color: '#2f2f3c', paddingTop: 7 }}>
+                                Type
+                            </Text>
+                        </View>
+                    </View>
+                </View>
+                {/* <View style={{ width: width < 768 ? "100%" : "33.33%" }}>
                     <View style={{ width: "100%", paddingTop: width < 768 ? 15 : 5, paddingBottom: 15, backgroundColor: "white" }}>
                         <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>Lectures Only</Text>
                     </View>
@@ -259,16 +414,16 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             onValueChange={() => setFilterByLectures(!filterByLectures)}
                             style={{ height: 20 }}
                             trackColor={{
-                                false: "#f4f4f6",
+                                false: "#F8F9FA",
                                 true: "#3B64F8"
                             }}
                             activeThumbColor="white"
                         />
                     </View>
-                </View>
+                </View> */}
                 {/* {filterChannels.length === 0 && !filterByLectures ? null : <Text style={{
                     // width: '50%',
-                    color: '#a2a2ac',
+                    color: '#818385',
                     fontSize: 11,
                     paddingTop: 5,
                     paddingRight: 25,
@@ -663,7 +818,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         descriptionString
                     );
                 }
-                
+
             }
 
         }
@@ -672,7 +827,6 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     }
 
     const width = Dimensions.get("window").width;
-
     const windowHeight =
         width < 1024 ? Dimensions.get("window").height - 30 : Dimensions.get("window").height;
 
@@ -693,7 +847,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         onValueChange={() => setRecurring(!recurring)}
                         style={{ height: 20 }}
                         trackColor={{
-                            false: "#f4f4f6",
+                            false: "#F8F9FA",
                             true: "#3B64F8"
                         }}
                         activeThumbColor="white"
@@ -724,7 +878,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         {eventFrequencyOptions.map((item: any, index: number) => {
                             return (
                                 <Picker.Item
-                                    color={frequency === item.value ? "#3B64F8" : "#2F2F3C"}
+                                    color={frequency === item.value ? "#3B64F8" : "#2f2f3c"}
                                     label={item.value === "" ? "Once" : item.label}
                                     value={item.value}
                                     key={index}
@@ -794,7 +948,6 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     <View style={{ width: "100%", paddingTop: width < 768 ? 40 : 30, paddingBottom: 15, backgroundColor: "white" }}>
                         <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase', marginBottom: 5 }}>Lecture</Text>
                     </View>
-
                     <View
                         style={{
                             height: 40,
@@ -807,7 +960,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             }}
                             style={{ height: 20 }}
                             trackColor={{
-                                false: "#f4f4f6",
+                                false: "#F8F9FA",
                                 true: "#3B64F8"
                             }}
                             disabled={editEvent}
@@ -823,7 +976,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             width: width < 768 ? "100%" : "33.33%"
                         }}>
                         <View style={{ width: "100%", paddingTop: width < 768 ? 20 : 30, paddingBottom: 15, backgroundColor: "white" }}>
-                            <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase', marginBottom: 5 }}>Record Lecture</Text>
+                            <Text style={{ fontSize: 11, color: '#818385', textTransform: 'uppercase', marginBottom: 5 }}>Record Lecture</Text>
                         </View>
                         <Switch
                             value={recordMeeting}
@@ -832,8 +985,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             }}
                             style={{ height: 20 }}
                             trackColor={{
-                                false: "#f4f4f6",
-                                true: "#a2a2ac"
+                                false: "#F8F9FA",
+                                true: "#818385"
                             }}
                             activeThumbColor="white"
                         />
@@ -858,7 +1011,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         style={{
                             lineHeight: 20,
                             fontSize: 12,
-                            color: "#a2a2ac"
+                            color: "#818385"
                         }}>
                         Shared with {editChannelName}
                     </Text>
@@ -983,9 +1136,9 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     style={{
                         textAlign: "center",
                         lineHeight: 35,
-                        color: "#2F2F3C",
+                        color: "#2f2f3c",
                         fontSize: 12,
-                        backgroundColor: "#f4f4f6",
+                        backgroundColor: "#F8F9FA",
                         paddingHorizontal: 25,
                         fontFamily: "inter",
                         height: 35,
@@ -1013,9 +1166,9 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     style={{
                         textAlign: "center",
                         lineHeight: 35,
-                        color: "#2F2F3C",
+                        color: "#2f2f3c",
                         fontSize: 12,
-                        backgroundColor: "#f4f4f6",
+                        backgroundColor: "#F8F9FA",
                         paddingHorizontal: 25,
                         fontFamily: "inter",
                         height: 35,
@@ -1047,280 +1200,440 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
             style={{
                 opacity: modalAnimation,
                 width: "100%",
-                height: windowHeight,
+                // height: windowHeight - 85,
                 backgroundColor: "white",
                 borderTopRightRadius: 0,
                 borderTopLeftRadius: 0,
-                paddingHorizontal: 20
+                overflow: 'hidden'
             }}>
-            <Text style={{ width: "100%", textAlign: "center", height: 15, paddingBottom: 25 }}>
-                {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
-            </Text>
-            <View style={{ backgroundColor: "white", flexDirection: "row", paddingBottom: 35 }}>
-                <Text
-                    ellipsizeMode="tail"
-                    style={{
-                        fontSize: 20,
-                        paddingBottom: 20,
-                        fontFamily: 'inter',
-                        // textTransform: "uppercase",
-                        // paddingLeft: 10,
-                        flex: 1,
-                        lineHeight: 25
-                    }}>
-                    {PreferredLanguageText("planner")}
-                </Text>
-                <Text
-                    style={{
-                        color: "#3B64F8",
-                        fontSize: 11,
-                        lineHeight: 25,
-                        // paddingTop: 5,
-                        textAlign: "right",
-                        // paddingRight: 20,
-                        textTransform: "uppercase"
-                    }}
-                    onPress={() => {
-                        setShowAddEvent(!showAddEvent)
-                        setEditEvent(null)
-                    }}>
-                    {showAddEvent ? PreferredLanguageText("hide") : PreferredLanguageText("add")}
-                </Text>
-            </View>
-            <ScrollView
-                style={{
-                    width: "100%",
-                    height: windowHeight,
-                    backgroundColor: "white",
-                    borderTopRightRadius: 0,
-                    borderTopLeftRadius: 0
-                }}
-                showsVerticalScrollIndicator={false}
-                scrollEnabled={true}
-                scrollEventThrottle={1}
-                keyboardDismissMode={"on-drag"}
-                overScrollMode={"never"}
-                nestedScrollEnabled={true}>
-                {loading ? (
-                    <View
-                        style={{
-                            width: "100%",
-                            flex: 1,
-                            justifyContent: "center",
-                            display: "flex",
-                            flexDirection: "column",
-                            backgroundColor: "white"
-                        }}>
-                        <ActivityIndicator color={"#a2a2ac"} />
+            <View style={{
+                width: '100%', flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row',
+                paddingTop: 30
+            }}>
+                <View style={{
+                    width: Dimensions.get('window').width < 768 ? '100%' : '68%',
+                    paddingRight: Dimensions.get('window').width < 768 ? 0 : 30,
+                    borderRightWidth: Dimensions.get('window').width < 768 ? 0 : 1,
+                    borderColor: '#eeeeee'
+                }}>
+                    <View style={{ backgroundColor: "white", flexDirection: "row" }}>
+                        <View style={{ flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row', flex: 1 }}>
+                            <Text
+                                ellipsizeMode="tail"
+                                style={{
+                                    marginRight: 10,
+                                    color: '#3b64f8',
+                                    fontSize: 25,
+                                    paddingBottom: 20,
+                                    fontFamily: 'inter',
+                                    flex: 1,
+                                    flexDirection: 'row',
+                                    lineHeight: 25,
+                                    height: 65
+                                }}>
+                                <Ionicons name='calendar-outline' size={25} color='#3b64f8' /> {PreferredLanguageText("planner")}
+                            </Text>
+                            {!showAddEvent && width >= 768 ? renderFilterEvents() : null}
+                        </View>
+                        <TouchableOpacity
+                            onPress={() => {
+                                setShowAddEvent(!showAddEvent)
+                                setEditEvent(null)
+                            }}
+                            style={{
+                                backgroundColor: 'white',
+                                overflow: 'hidden',
+                                height: 35,
+                                marginLeft: 20,
+                                // marginTop: 15,
+                                justifyContent: 'center',
+                                flexDirection: 'row'
+                            }}>
+                            <Text style={{
+                                textAlign: 'center',
+                                lineHeight: 30,
+                                color: showAddEvent ? '#2f2f3c' : '#fff',
+                                fontSize: 12,
+                                backgroundColor: showAddEvent ? '#F8F9FA' : '#53BE6D',
+                                paddingHorizontal: 25,
+                                fontFamily: 'inter',
+                                height: 30,
+                                // width: 100,
+                                borderRadius: 15,
+                                textTransform: 'uppercase'
+                            }}>
+                                {!showAddEvent ? null : <Ionicons name='arrow-back-outline' size={12} />} {showAddEvent ? PreferredLanguageText("back") : PreferredLanguageText("add")} {showAddEvent ? null : <Ionicons name='add-outline' size={12} />}
+                            </Text>
+                        </TouchableOpacity>
                     </View>
-                ) : (
-                    <View
+                    {!showAddEvent && width < 768 ? renderFilterEvents() : null}
+                    <ScrollView
                         style={{
-                            backgroundColor: "white",
                             width: "100%",
-                            height: "100%",
-                            // paddingHorizontal: 20,
+                            // height: windowHeight,
+                            backgroundColor: "white",
                             borderTopRightRadius: 0,
                             borderTopLeftRadius: 0
-                        }}>
-                        {showAddEvent ? (
-                            <View>
-                                <View
-                                    style={{
-                                        flexDirection: width < 768 ? "column" : "row"
-                                    }}>
-                                    <View style={{ width: width < 768 ? "100%" : "30%" }}>
-                                        <TextInput
-                                            value={title}
-                                            placeholder={
-                                                'Event'
-                                            }
-                                            onChangeText={val => setTitle(val)}
-                                            placeholderTextColor={"#a2a2ac"}
-                                            required={true}
-                                        />
-                                    </View>
-
-                                    <View style={{ width: width < 768 ? "100%" : "30%", marginLeft: width < 768 ? 0 : 30 }}>
-                                        <TextInput
-                                            value={description}
-                                            placeholder="Description"
-                                            onChangeText={val => setDescription(val)}
-                                            placeholderTextColor={"#a2a2ac"}
-                                        />
-                                    </View>
-                                </View>
-                                {/* Put time here */}
-                                <View style={{ display: 'flex', width: "100%", flexDirection: width < 768 ? "column" : "row", marginBottom: 30, paddingVertical: 10, }} >
-                                    <View
-                                        style={{
-                                            width: width < 768 ? "100%" : "30%",
-                                            flexDirection: "row",
-                                            marginTop: 12,
-                                            alignItems: 'center'
-                                        }}>
-                                        <Text style={styles.text}>{PreferredLanguageText("start")}</Text>
-                                        <DatePicker
-                                            format="YYYY-MM-DD HH:mm"
-                                            preventOverflow={true}
-                                            value={start}
-                                            onChange={(event: any) => {
-                                                const date = new Date(event);
-                                                const roundOffDate = roundSeconds(date)
-                                                setStart(roundOffDate);
-                                            }}
-                                            size={'xs'}
-                                        />
-                                    </View>
-                                    <View
-                                        style={{
-                                            width: width < 768 ? "100%" : "30%",
-                                            flexDirection: "row",
-                                            marginTop: 12,
-                                            alignItems: 'center',
-                                            marginLeft: width < 768 ? 0 : 30
-                                        }}>
-                                        <Text style={styles.text}>{PreferredLanguageText("end")}</Text>
-                                        <DatePicker
-                                            format="YYYY-MM-DD HH:mm"
-                                            preventOverflow={true}
-                                            value={end}
-                                            onChange={(event: any) => {
-                                                const date = new Date(event);
-                                                const roundOffDate = roundSeconds(date)
-                                                setEnd(roundOffDate);
-                                            }}
-                                            size={'xs'}
-                                        />
-                                    </View>
-                                </View>
-                                <View
-                                    style={{
-                                        marginBottom: 20,
-                                        borderColor: "#f4f4f6",
-                                        // borderBottomWidth: 1,
-                                        paddingBottom: 20
-                                    }}>
-                                    {channels.length > 0 && !editEvent ? (
-                                        <View>
-                                            <View
-                                                style={{ width: "100%", paddingBottom: 20, backgroundColor: "white" }}>
-                                                <Text
-                                                    style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>
-                                                    Event For
-                                                </Text>
+                        }}
+                        showsVerticalScrollIndicator={false}
+                        scrollEnabled={true}
+                        scrollEventThrottle={1}
+                        keyboardDismissMode={"on-drag"}
+                        overScrollMode={"never"}
+                        nestedScrollEnabled={true}>
+                        {loading ? (
+                            <View
+                                style={{
+                                    width: "100%",
+                                    flex: 1,
+                                    justifyContent: "center",
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    backgroundColor: "white"
+                                }}>
+                                <ActivityIndicator color={"#818385"} />
+                            </View>
+                        ) : (
+                            <View
+                                style={{
+                                    backgroundColor: "white",
+                                    width: "100%",
+                                    height: "100%",
+                                    // paddingHorizontal: 20,
+                                    borderTopRightRadius: 0,
+                                    borderTopLeftRadius: 0
+                                }}>
+                                {showAddEvent ? (
+                                    <View>
+                                        <View
+                                            style={{
+                                                flexDirection: width < 768 ? "column" : "row"
+                                            }}>
+                                            <View style={{ width: width < 768 ? "100%" : "30%" }}>
+                                                <TextInput
+                                                    value={title}
+                                                    placeholder={
+                                                        'Event'
+                                                    }
+                                                    onChangeText={val => setTitle(val)}
+                                                    placeholderTextColor={"#818385"}
+                                                    required={true}
+                                                />
                                             </View>
 
-                                            <View style={{ flexDirection: 'row', display: 'flex', backgroundColor: '#fff' }}>
-                                                <Menu
-                                                    onSelect={(channelId: any) => {
-                                                        setChannelId(channelId)
-
-                                                    }}>
-                                                    <MenuTrigger>
-                                                        <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#2f2f3c' }}>
-                                                            {eventForChannelName}<Ionicons name='caret-down' size={14} />
+                                            <View style={{ width: width < 768 ? "100%" : "30%", marginLeft: width < 768 ? 0 : 30 }}>
+                                                <TextInput
+                                                    value={description}
+                                                    placeholder="Description"
+                                                    onChangeText={val => setDescription(val)}
+                                                    placeholderTextColor={"#818385"}
+                                                />
+                                            </View>
+                                        </View>
+                                        {/* Put time here */}
+                                        <View style={{ display: 'flex', width: "100%", flexDirection: width < 768 ? "column" : "row", marginBottom: 30, paddingVertical: 10, }} >
+                                            <View
+                                                style={{
+                                                    width: width < 768 ? "100%" : "30%",
+                                                    flexDirection: "row",
+                                                    marginTop: 12,
+                                                    alignItems: 'center'
+                                                }}>
+                                                <Text style={styles.text}>{PreferredLanguageText("start")}</Text>
+                                                <DatePicker
+                                                    format="YYYY-MM-DD HH:mm"
+                                                    preventOverflow={true}
+                                                    value={start}
+                                                    onChange={(event: any) => {
+                                                        const date = new Date(event);
+                                                        const roundOffDate = roundSeconds(date)
+                                                        setStart(roundOffDate);
+                                                    }}
+                                                    size={'xs'}
+                                                />
+                                            </View>
+                                            <View
+                                                style={{
+                                                    width: width < 768 ? "100%" : "30%",
+                                                    flexDirection: "row",
+                                                    marginTop: 12,
+                                                    alignItems: 'center',
+                                                    marginLeft: width < 768 ? 0 : 30
+                                                }}>
+                                                <Text style={styles.text}>{PreferredLanguageText("end")}</Text>
+                                                <DatePicker
+                                                    format="YYYY-MM-DD HH:mm"
+                                                    preventOverflow={true}
+                                                    value={end}
+                                                    onChange={(event: any) => {
+                                                        const date = new Date(event);
+                                                        const roundOffDate = roundSeconds(date)
+                                                        setEnd(roundOffDate);
+                                                    }}
+                                                    size={'xs'}
+                                                />
+                                            </View>
+                                        </View>
+                                        <View
+                                            style={{
+                                                marginBottom: 20,
+                                                borderColor: "#F8F9FA",
+                                                // borderBottomWidth: 1,
+                                                paddingBottom: 20
+                                            }}>
+                                            {channels.length > 0 && !editEvent ? (
+                                                <View>
+                                                    <View
+                                                        style={{ width: "100%", paddingBottom: 20, backgroundColor: "white" }}>
+                                                        <Text
+                                                            style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>
+                                                            Channel
                                                         </Text>
-                                                    </MenuTrigger>
-                                                    <MenuOptions customStyles={{
-                                                        optionsContainer: {
-                                                            padding: 10,
-                                                            borderRadius: 15,
-                                                            shadowOpacity: 0,
-                                                            borderWidth: 1,
-                                                            borderColor: '#f4f4f6'
-                                                        }
-                                                    }}>
-                                                        <MenuOption
-                                                            value={''}>
-                                                            <View style={{ display: 'flex', flexDirection: 'row', }}>
-                                                                <Text style={{ marginLeft: 5 }}>
-                                                                    My Cues
+                                                    </View>
+                                                    <View style={{ flexDirection: 'row', display: 'flex', backgroundColor: '#fff' }}>
+                                                        <Menu
+                                                            onSelect={(channelId: any) => {
+                                                                setChannelId(channelId)
+                                                            }}>
+                                                            <MenuTrigger>
+                                                                <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#2f2f3c' }}>
+                                                                    {eventForChannelName}<Ionicons name='caret-down' size={14} />
                                                                 </Text>
-                                                            </View>
-                                                        </MenuOption>
-                                                        {
-                                                            channels.map((channel: any) => {
-                                                                return <MenuOption
-                                                                    value={channel._id}>
+                                                            </MenuTrigger>
+                                                            <MenuOptions customStyles={{
+                                                                optionsContainer: {
+                                                                    padding: 10,
+                                                                    borderRadius: 15,
+                                                                    shadowOpacity: 0,
+                                                                    borderWidth: 1,
+                                                                    borderColor: '#F8F9FA'
+                                                                }
+                                                            }}>
+                                                                <MenuOption
+                                                                    value={''}>
                                                                     <View style={{ display: 'flex', flexDirection: 'row', }}>
                                                                         <Text style={{ marginLeft: 5 }}>
-                                                                            {channel.name}
+                                                                            My Cues
                                                                         </Text>
                                                                     </View>
                                                                 </MenuOption>
-                                                            })
-                                                        }
-                                                    </MenuOptions>
-                                                </Menu>
-                                            </View>
-                                        </View>
-                                    ) : null}
-                                    {renderEditChannelName()}
-                                    {!editEvent && renderRecurringOptions()}
-                                    {renderMeetingOptions()}
-                                    {channelId !== "" && <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase', paddingTop: 10 }}>
-                                        Attendances will only be captured for scheduled lectures.
-                                    </Text>}
-                                    {!editEvent ? <View
-                                        style={{
-                                            width: width < 768 ? "100%" : "10%",
-                                            flexDirection: "row",
-                                            display: "flex",
-                                            marginBottom: 10
-                                            // paddingLeft: 7
-                                            // justifyContent: 'center'
-                                        }}>
-                                        <TouchableOpacity
-                                            style={{
-                                                backgroundColor: "white",
-                                                overflow: "hidden",
-                                                height: 35,
-                                                marginTop: 35
-                                                // marginBottom: 20
-                                            }}
-                                            onPress={() => handleCreate()}
-                                            disabled={isCreatingEvents}>
-                                            <Text
+                                                                {
+                                                                    channels.map((channel: any) => {
+                                                                        return <MenuOption
+                                                                            value={channel._id}>
+                                                                            <View style={{ display: 'flex', flexDirection: 'row', }}>
+                                                                                <Text style={{ marginLeft: 5 }}>
+                                                                                    {channel.name}
+                                                                                </Text>
+                                                                            </View>
+                                                                        </MenuOption>
+                                                                    })
+                                                                }
+                                                            </MenuOptions>
+                                                        </Menu>
+                                                    </View>
+                                                </View>
+                                            ) : null}
+                                            {renderEditChannelName()}
+                                            {!editEvent && renderRecurringOptions()}
+                                            {renderMeetingOptions()}
+                                            {channelId !== "" && <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase', paddingTop: 10 }}>
+                                                Attendances will only be captured for scheduled lectures.
+                                            </Text>}
+                                            {!editEvent ? <View
                                                 style={{
-                                                    textAlign: "center",
-                                                    lineHeight: 35,
-                                                    color: 'white',
-                                                    fontSize: 12,
-                                                    backgroundColor: '#3B64F8',
-                                                    paddingHorizontal: 25,
-                                                    fontFamily: "inter",
-                                                    height: 35,
-                                                    // width: 125,
-                                                    borderRadius: 15,
-                                                    textTransform: "uppercase"
+                                                    width: width < 768 ? "100%" : "10%",
+                                                    flexDirection: "row",
+                                                    display: "flex",
+                                                    marginBottom: 10
+                                                    // paddingLeft: 7
+                                                    // justifyContent: 'center'
                                                 }}>
-                                                {isCreatingEvents ? "ADDING..." : "ADD"}
-                                            </Text>
-                                        </TouchableOpacity>
-                                    </View> : null}
-                                    {editEvent ? renderEditEventOptions() : null}
-                                    {/* {editEvent ? renderDeleteEventOptions() : null} */}
-                                </View>
+                                                <TouchableOpacity
+                                                    style={{
+                                                        backgroundColor: "white",
+                                                        overflow: "hidden",
+                                                        height: 35,
+                                                        marginTop: 35
+                                                        // marginBottom: 20
+                                                    }}
+                                                    onPress={() => handleCreate()}
+                                                    disabled={isCreatingEvents}>
+                                                    <Text
+                                                        style={{
+                                                            textAlign: "center",
+                                                            lineHeight: 35,
+                                                            color: 'white',
+                                                            fontSize: 12,
+                                                            backgroundColor: '#3B64F8',
+                                                            paddingHorizontal: 25,
+                                                            fontFamily: "inter",
+                                                            height: 35,
+                                                            // width: 125,
+                                                            borderRadius: 15,
+                                                            textTransform: "uppercase"
+                                                        }}>
+                                                        {isCreatingEvents ? "ADDING..." : "ADD"} <Ionicons name='add-outline' size={12} />
+                                                    </Text>
+                                                </TouchableOpacity>
+                                            </View> : null}
+                                            {editEvent ? renderEditEventOptions() : null}
+                                            {/* {editEvent ? renderDeleteEventOptions() : null} */}
+                                        </View>
+                                    </View>
+                                ) : null}
+                                {/* {!showAddEvent ? <Calendar
+                                    onSelectEvent={(e: any) => onSelectEvent(e)}
+                                    localizer={localizer}
+                                    events={events}
+                                    startAccessor="start"
+                                    endAccessor="end"
+                                    style={{ height: 500, fontFamily: "overpass", color: "#2f2f3c" }}
+                                    components={{
+                                        event: EventComponent
+                                    }}
+                                /> : null} */}
+                                {
+                                    !showAddEvent ?
+                                        <View
+                                            style={{
+                                                borderRadius: 15,
+                                                height: 'auto',
+                                                overflow: 'hidden',
+                                                marginTop: Dimensions.get('window').width < 768 ? 20 : 0,
+                                                marginBottom: Dimensions.get('window').width < 768 ? 20 : 0
+                                            }}
+                                        >
+                                            <Eventcalendar
+                                                key={Math.random()}
+                                                view={view}
+                                                data={events}
+                                                themeVariant="light"
+                                                height={425}
+                                            />
+                                        </View>
+                                        : null
+                                }
                             </View>
-                        ) : null}
-                        {!showAddEvent ? <Calendar
-                            onSelectEvent={(e: any) => onSelectEvent(e)}
-                            localizer={localizer}
-                            events={events}
-                            startAccessor="start"
-                            endAccessor="end"
-                            style={{ height: 525, fontFamily: "overpass", color: "#2F2F3C" }}
-                            components={{
-                                event: EventComponent
-                            }}
-                        /> : null}
-
-                        {!showAddEvent ? renderFilterEvents() : null}
-
+                        )}
+                    </ScrollView>
+                </View>
+                <View style={{
+                    width: Dimensions.get('window').width < 768 ? '100%' : '32%',
+                    paddingLeft: Dimensions.get('window').width < 768 ? 0 : 30,
+                    paddingTop: Dimensions.get('window').width < 768 ? 30 : 0
+                }}>
+                    <View style={{ flexDirection: 'row' }}>
+                        <Text style={{
+                            marginRight: 10,
+                            color: '#2f2f3c',
+                            fontSize: 25,
+                            paddingBottom: 40,
+                            fontFamily: 'inter',
+                            flex: 1,
+                            flexDirection: 'row',
+                            lineHeight: 25,
+                            height: 65
+                        }}>
+                            <Ionicons name='notifications-outline' size={25} /> Activity
+                        </Text>
+                        <View style={{ backgroundColor: '#fff' }}>
+                            <View style={{ flexDirection: 'row', backgroundColor: '#fff' }}>
+                                <Menu
+                                    onSelect={(channel: any) => {
+                                        if (channel === "All") {
+                                            setFilterActivityByChannel("All")
+                                            setActivityChannelId('')
+                                        } else {
+                                            setFilterActivityByChannel(channel.channelName);
+                                            setActivityChannelId(channel.channelId)
+                                        }
+                                    }}>
+                                    <MenuTrigger>
+                                        <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#2f2f3c', textAlign: 'center' }}>
+                                            {filterActivityByChannel}<Ionicons name='caret-down' size={14} />
+                                        </Text>
+                                    </MenuTrigger>
+                                    <MenuOptions customStyles={{
+                                        optionsContainer: {
+                                            padding: 10,
+                                            borderRadius: 15,
+                                            shadowOpacity: 0,
+                                            borderWidth: 1,
+                                            borderColor: '#F8F9FA',
+                                            overflow: 'scroll',
+                                            maxHeight: '100%'
+                                        }
+                                    }}>
+                                        <MenuOption
+                                            value={'All'}>
+                                            <View style={{ display: 'flex', flexDirection: 'row', }}>
+                                                <View style={{
+                                                    width: 8,
+                                                    height: 8,
+                                                    borderRadius: 10,
+                                                    marginTop: 1,
+                                                    backgroundColor: "#fff"
+                                                }} />
+                                                <Text style={{ marginLeft: 5 }}>
+                                                    All
+                                                </Text>
+                                            </View>
+                                        </MenuOption>
+                                        {
+                                            props.subscriptions.map((subscription: any) => {
+                                                return <MenuOption
+                                                    value={subscription}>
+                                                    <View style={{ display: 'flex', flexDirection: 'row', }}>
+                                                        <View style={{
+                                                            width: 8,
+                                                            height: 8,
+                                                            borderRadius: 10,
+                                                            marginTop: 1,
+                                                            backgroundColor: subscription.colorCode
+                                                        }} />
+                                                        <Text style={{ marginLeft: 5 }}>
+                                                            {subscription.channelName}
+                                                        </Text>
+                                                    </View>
+                                                </MenuOption>
+                                            })
+                                        }
+                                    </MenuOptions>
+                                </Menu>
+                            </View>
+                            <Text style={{ fontSize: 10, color: '#2f2f3c', paddingTop: 7 }}>
+                                Channel
+                            </Text>
+                        </View>
                     </View>
-                )}
-            </ScrollView>
+                    <ScrollView
+                        showsVerticalScrollIndicator={false}
+                        horizontal={false}
+                        // style={{ height: '100%' }}
+                        contentContainerStyle={{
+                            // borderWidth: 2,
+                            width: '100%',
+                            // height: windowHeight - 200,
+                        }}
+                    >
+                        {
+                            activity.map((act: any, index) => {
+                                if (activityChannelId !== '') {
+                                    if (activityChannelId !== act.channelId) {
+                                        return
+                                    }
+                                }
+                                return <View style={styles.col} key={index}>
+                                    <ActivityCard
+                                        activity={act}
+                                    />
+                                </View>
+                            })
+                        }
+                    </ScrollView>
+                </View>
+            </View>
         </Animated.View>
     );
 };
@@ -1330,7 +1643,7 @@ export default (CalendarX)
 const styles: any = StyleSheet.create({
     input: {
         width: "100%",
-        borderBottomColor: "#f4f4f6",
+        borderBottomColor: "#F8F9FA",
         borderBottomWidth: 1,
         fontSize: 15,
         paddingTop: 12,
@@ -1339,16 +1652,22 @@ const styles: any = StyleSheet.create({
     },
     text: {
         fontSize: 12,
-        color: "#a2a2ac",
+        color: "#818385",
         textAlign: "left",
         paddingRight: 10
     },
     allBlack: {
         fontSize: 12,
-        color: "#2F2F3C",
+        color: "#2f2f3c",
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: "white"
+    },
+    col: {
+        width: '100%',
+        height: 80,
+        marginBottom: 15,
+        backgroundColor: 'white'
     },
     allOutline: {
         fontSize: 12,
@@ -1356,7 +1675,7 @@ const styles: any = StyleSheet.create({
         height: 22,
         paddingHorizontal: 10,
         borderRadius: 10,
-        backgroundColor: "#2F2F3C"
+        backgroundColor: "#2f2f3c"
     },
     picker: {
         display: "flex",

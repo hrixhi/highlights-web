@@ -129,7 +129,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 setHeaders(currentHeaders);
                                 props.setHeaders(currentHeaders)
                             }}
-                            placeholderTextColor={'#a2a2ac'}
+                            placeholderTextColor={'#818385'}
                             hasMultipleLines={false}
                         />
                     </View>
@@ -148,7 +148,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     style={{ width: 100, flexDirection: 'row', }}
                     onPress={() => addHeader(index)}
                 >
-                    {/* <Ionicons name='add-circle' size={19} color={"#2F2F3C"} /> */}
+                    {/* <Ionicons name='add-circle' size={19} color={"#2f2f3c"} /> */}
                     <Text
                         style={{
                             marginLeft: 10,
@@ -172,7 +172,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
             width: '100%', height: '100%', backgroundColor: 'white',
             borderTopLeftRadius: 0,
             borderTopRightRadius: 0,
-            borderTopColor: '#f4f4f6',
+            borderTopColor: '#F8F9FA',
             borderTopWidth: 1,
             marginTop: 35,
             paddingTop: 25,
@@ -184,7 +184,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
             {
                 problems.map((problem: any, index: any) => {
                     const { questionType } = problem;
-                    return <View style={{ borderBottomColor: '#f4f4f6', borderBottomWidth: index === (problems.length - 1) ? 0 : 1, marginBottom: 25 }}>
+                    return <View style={{ borderBottomColor: '#F8F9FA', borderBottomWidth: index === (problems.length - 1) ? 0 : 1, marginBottom: 25 }}>
                         {renderHeaderOption(index)}
                         <View style={{ flexDirection: 'row' }}>
                             <View style={{ paddingTop: 15 }}>
@@ -210,7 +210,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                             :
                                             (problem.question && problem.question.includes("formula:") ?
                                                 <View style={{
-                                                    borderColor: '#f4f4f6',
+                                                    borderColor: '#F8F9FA',
                                                     borderWidth: 1,
                                                     borderRadius: 15,
                                                     padding: 10,
@@ -239,7 +239,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                         setProblems(newProbs)
                                                         props.setProblems(newProbs)
                                                     }}
-                                                    placeholderTextColor={'#a2a2ac'}
+                                                    placeholderTextColor={'#818385'}
                                                     hasMultipleLines={true}
                                                 />)
                                     }
@@ -268,7 +268,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                         style={{
                                                             paddingTop: problem.question && problem.question.includes("formula:")
                                                                 ? 10 : 0,
-                                                            color: '#a2a2ac',
+                                                            color: '#818385',
                                                             fontFamily: 'Overpass',
                                                             fontSize: 10
                                                         }}
@@ -299,7 +299,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 style={{
                                                     paddingTop: problem.question && (problem.question.includes("image:") || problem.question.includes("formula:"))
                                                         ? 10 : 0,
-                                                    color: '#a2a2ac',
+                                                    color: '#818385',
                                                     fontFamily: 'Overpass',
                                                     fontSize: 10
                                                 }}
@@ -333,7 +333,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 setProblems(newProbs)
                                                 props.setProblems(newProbs)
                                             }}
-                                            placeholderTextColor={'#a2a2ac'}
+                                            placeholderTextColor={'#818385'}
                                         />
                                     </View>
                                     <View
@@ -370,7 +370,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                     style={{
                                                         fontFamily: "inter",
                                                         fontSize: 14,
-                                                        color: "#2F2F3C",
+                                                        color: "#2f2f3c",
                                                     }}
                                                 >
                                                     {questionType === "" ? "MCQ" : questionType}
@@ -384,7 +384,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                         borderRadius: 15,
                                                         shadowOpacity: 0,
                                                         borderWidth: 1,
-                                                        borderColor: "#f4f4f6",
+                                                        borderColor: "#F8F9FA",
                                                         overflow: 'scroll',
                                                         maxHeight: '100%'
                                                     },
@@ -471,7 +471,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 :
                                                 (option.option && option.option.includes("formula:") ?
                                                     <View style={{
-                                                        borderColor: '#f4f4f6',
+                                                        borderColor: '#F8F9FA',
                                                         borderWidth: 1,
                                                         borderRadius: 15,
                                                         padding: 10,
@@ -500,7 +500,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                 props.setProblems(newProbs)
                                                             }}
                                                             editable={questionType === "trueFalse" ? false : true}
-                                                            placeholderTextColor={'#a2a2ac'}
+                                                            placeholderTextColor={'#818385'}
                                                         />
 
                                                     </View>)
@@ -528,7 +528,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                             style={{
                                                                 paddingTop: option.option && option.option.includes("formula:")
                                                                     ? 10 : 0,
-                                                                color: '#a2a2ac',
+                                                                color: '#818385',
                                                                 fontFamily: 'Overpass',
                                                                 fontSize: 10
                                                             }}
@@ -559,7 +559,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                     style={{
                                                         paddingTop: option.option && option.option.includes("formula:")
                                                             ? 10 : 0,
-                                                        color: '#a2a2ac',
+                                                        color: '#818385',
                                                         fontFamily: 'Overpass',
                                                         fontSize: 10
                                                     }}
@@ -586,7 +586,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                         style={{
                                                             paddingTop: option.option && option.option.includes("formula:")
                                                                 ? 10 : 0,
-                                                            color: '#a2a2ac',
+                                                            color: '#818385',
                                                             fontFamily: 'Overpass',
                                                             fontSize: 10
                                                         }}
@@ -614,7 +614,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 props.setProblems(updatedProblems)
                             }}
                             style={{ width: 100, flexDirection: 'row', marginLeft: 20, marginTop: 20 }} >
-                            {/* <Ionicons name='add-circle' size={19} color={"#2F2F3C"} /> */}
+                            {/* <Ionicons name='add-circle' size={19} color={"#2f2f3c"} /> */}
                             <Text
                                 style={{
                                     // marginLeft: 10,
@@ -635,7 +635,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
             <View style={{
                 width: '100%', flexDirection: 'row',
                 justifyContent: 'flex-start', paddingLeft: 12,
-                paddingTop: 25, borderBottomColor: '#cccccc',
+                paddingTop: 25, borderBottomColor: '#dddddd',
                 paddingBottom: 25, borderBottomWidth: 1
             }}>
                 <TouchableOpacity
@@ -676,7 +676,7 @@ export default QuizCreate;
 const styles = StyleSheet.create({
     input: {
         width: '50%',
-        borderBottomColor: '#f4f4f6',
+        borderBottomColor: '#F8F9FA',
         borderBottomWidth: 1,
         fontSize: 15,
         paddingTop: 12,

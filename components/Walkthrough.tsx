@@ -292,7 +292,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
         }).start();
     }, [])
 
-    const windowHeight = Dimensions.get('window').width < 1024 ? Dimensions.get('window').height - 30 : Dimensions.get('window').height;
+    const windowHeight = Dimensions.get('window').width < 1024 ? Dimensions.get('window').height - 30 : Dimensions.get('window').height - 210;
 
     return (
         <View style={{
@@ -307,7 +307,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     width: '100%',
                     height: '100%',
                     backgroundColor: 'white',
-                    paddingHorizontal: 20,
+                    paddingHorizontal: Dimensions.get("window").width < 768 ? 0 : 20,
                     opacity: modalAnimation,
                     borderTopLeftRadius: 0,
                     borderTopRightRadius: 0
@@ -315,8 +315,8 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 10 }}>
                     {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
                 </Text>
-                <View style={{ backgroundColor: 'white', paddingTop: 10, flexDirection: 'row', height: 50, maxWidth: 650 }}>
-                    <Text
+                <View style={{ backgroundColor: 'white', paddingTop: 10, flexDirection: 'row', height: 50, maxWidth: 650, alignSelf: 'center', width: '100%' }}>
+                    {/* <Text
                         style={{
                             fontSize: 20,
                             paddingBottom: 20,
@@ -330,7 +330,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         }}
                         ellipsizeMode="tail">
                         Help
-                    </Text>
+                    </Text> */}
                     <TouchableOpacity
                         key={Math.random()}
                         style={{
@@ -342,7 +342,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         }}>
                         <Text style={{
                             width: '100%',
-                            textAlign: 'right',
+                            textAlign: 'left',
                             marginRight: 20,
                             color: '#3B64F8',
                             fontSize: 11,
@@ -354,7 +354,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     </TouchableOpacity>
                 </View>
                 <ScrollView
-                    contentContainerStyle={{ marginTop: 25, backgroundColor: '#fff', maxWidth: 650, paddingBottom: 75 }}
+                    contentContainerStyle={{ marginTop: 25, backgroundColor: '#fff', maxWidth: 650, paddingBottom: 75, alignSelf: 'center', width: '100%' }}
                 >
                     {
                         options.map((item: any, index: any) => {
@@ -374,7 +374,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 }}
                                 style={{
                                     backgroundColor: '#fff',
-                                    borderColor: '#cccccc',
+                                    borderColor: '#dddddd',
                                     borderBottomWidth: item.question === 'Planner' ? 0 : 1,
                                     width: '100%',
                                     paddingBottom: 20,
@@ -425,7 +425,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     }}>
                     <View style={{ flex: 1 }}>
                         <Text
-                            style={{ color: '#2F2F3C', fontSize: 15, flex: 1, lineHeight: 25 }}
+                            style={{ color: '#2f2f3c', fontSize: 15, flex: 1, lineHeight: 25 }}
                         >
                             {headings[index]}
                         </Text>
@@ -446,15 +446,15 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                     }}
                                     style={{ height: 20 }}
                                     trackColor={{
-                                        false: '#f4f4f6',
-                                        true: '#a2a2ac'
+                                        false: '#F8F9FA',
+                                        true: '#818385'
                                     }}
                                     activeThumbColor='white'
                                 />
                             </View>
                             <Text style={{
                                 fontSize: 14,
-                                color: '#a2a2ac',
+                                color: '#818385',
                                 textAlign: 'left',
                                 paddingTop: 2
                             }}>
@@ -482,9 +482,9 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         prevPos: 'left',
                         nextPos: 'right',
                         nextTitle: '›',
-                        nextTitleStyle: { color: '#a2a2ac', fontSize: 60, fontFamily: 'overpass' },
+                        nextTitleStyle: { color: '#818385', fontSize: 60, fontFamily: 'overpass' },
                         prevTitle: '‹',
-                        prevTitleStyle: { color: '#a2a2ac', fontSize: 60, fontFamily: 'overpass' },
+                        prevTitleStyle: { color: '#818385', fontSize: 60, fontFamily: 'overpass' },
                         dotActiveStyle: { backgroundColor: '#3B64F8' }
                     }}
                 >
@@ -539,7 +539,7 @@ const styles = StyleSheet.create({
         height: '100%',
         width: '100%',
         maxWidth: 700,
-        paddingHorizontal: 50,
+        paddingHorizontal: Dimensions.get("window").width < 768 ? 0 : 50,
         // alignSelf: 'center',
         borderTopRightRadius: 0,
         borderTopLeftRadius: 0,
