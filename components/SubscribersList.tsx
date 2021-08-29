@@ -65,6 +65,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
     const [comment, setComment] = useState('')
     const [isQuiz, setIsQuiz] = useState(false);
     const [quizSolutions, setQuizSolutions] = useState<any>({});
+    const [initiatedAt, setInitiatedAt] = useState<any>({});
     const [imported, setImported] = useState(false)
     const [url, setUrl] = useState('')
     const [type, setType] = useState('')
@@ -258,7 +259,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                 }
 
                 subscriberRow.push(`${response}`);
-                subscriberRow.push(`${problemScores[i]} - Remark: ${problemComments ? problemComments[i] : ''}`)
+                subscriberRow.push(`${problemScores ? problemScores[i] : ""} - Remark: ${problemComments ? problemComments[i] : ''}`)
 
 
             })
@@ -313,6 +314,11 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                 setType(obj.type)
                 setTitle(obj.title)
             }
+
+            if (obj.initiatedAt) {
+                setInitiatedAt(obj.initiatedAt)
+            }
+
         } else {
             setImported(false)
             setUrl('')
@@ -1258,6 +1264,8 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             comment={comment}
                                             headers={headers}
                                             isOwner={true}
+                                            initiatedAt={initiatedAt}
+                                            submittedAt={submittedAt}
                                         />
                                     </View>
                                     :

@@ -54,6 +54,23 @@
       -ms-overflow-style: scrollbar;
     }
 
+    button, input, optgroup, select, textarea::-webkit-input-placeholder { /* WebKit browsers */
+      color:#a2a2ac;
+    }
+    button, input, optgroup, select, textarea:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+      color:#a2a2ac;
+    }
+    button, input, optgroup, select, textarea::-moz-placeholder { /* Mozilla Firefox 19+ */
+      color:#a2a2ac;
+    }
+    button, input, optgroup, select, textarea:-ms-input-placeholder { /* Internet Explorer 10+ */
+      color:#a2a2ac;
+    }
+
+    textarea {
+      border: 0px;
+    }
+
     /* Enable for apps that support dark-theme */
     /*@media (prefers-color-scheme: dark) {
         body {
