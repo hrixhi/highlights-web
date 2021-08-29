@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { StyleSheet, Dimensions, Keyboard } from 'react-native';
+import { StyleSheet, Dimensions, Keyboard, ActivityIndicator } from 'react-native';
 import { Text, TouchableOpacity, View } from './Themed';
 import { PreferredLanguageText } from '../helpers/LanguageContext';
 import { TextInput } from './CustomTextInput';
@@ -21,6 +21,10 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 
 const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
+
+    const [loadingOrg, setLoadingOrg] = useState(true);
+    const [loadingUsers, setLoadingUsers] = useState(true);
+    const [loadingChannelColor, setLoadingChannelColor] = useState(true);
 
     const [name, setName] = useState('')
     const [originalName, setOriginalName] = useState('')
@@ -496,6 +500,8 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 setOriginalOwners(filterOutMainOwner)
 
                                                 setOwners(filterOutMainOwner)
+
+                                                setLoadingOrg(false)
                                             }
                                         }
                                     })
@@ -504,6 +510,9 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 })
                             }
                         }
+                    })
+                    .catch(e => {
+                        alert("Could not Channel data. Check connection.")
                     })
 
                     // get subs
@@ -528,6 +537,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             })
                             setOriginalSubs(tempUsers)
                             setSelected(tempUsers)
+                            setLoadingUsers(false)
                         }
                     })
 
@@ -539,6 +549,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                     }).then(res => {
                         if (res.data && res.data.channel.getChannelColorCode) {
                             setColorCode(res.data.channel.getChannelColorCode)
+                            setLoadingChannelColor(false)
                         }
                     })
                 }
@@ -546,6 +557,20 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
         )()
 
     }, [props.channelId, props.user])
+
+    if (loadingOrg || loadingUsers || loadingChannelColor) {
+        return  <View
+            style={{
+                width: "100%",
+                flex: 1,
+                justifyContent: "center",
+                display: "flex",
+                flexDirection: "column",
+                backgroundColor: "white"
+            }}>
+            <ActivityIndicator color={"#a2a2ac"} />
+        </View>
+    }
 
     return (
         <View style={styles.screen} key={1}>

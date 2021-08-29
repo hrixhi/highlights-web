@@ -325,9 +325,9 @@ export const createQuiz = gql`
   }
 `;
 export const modifyQuiz = gql`
-  mutation($cueId: String!, $quiz: QuizInputObject!) {
+  mutation($cueId: String!, $quiz: QuizInputObject!, $modifiedCorrectAnswers: [String!]!, $regradeChoices: [String!]!) {
     quiz {
-      modifyQuiz(cueId: $cueId, quiz: $quiz)
+      modifyQuiz(cueId: $cueId, quiz: $quiz, modifiedCorrectAnswers: $modifiedCorrectAnswers, regradeChoices: $regradeChoices)
     }
   }
 `;
@@ -527,6 +527,7 @@ export const getChannelThreads = gql`
         time
         userId
         displayName
+        fullName
         isPrivate
         anonymous
       }
@@ -547,6 +548,7 @@ export const getCueThreads = gql`
         time
         userId
         displayName
+        fullName
         isPrivate
         anonymous
       }
@@ -566,6 +568,7 @@ export const getThreadWithReplies = gql`
         time
         userId
         displayName
+        fullName
         isPrivate
         anonymous
       }
@@ -721,6 +724,7 @@ export const getMessages = gql`
         sentBy
         message
         displayName
+        fullName
         sentAt
       }
     }
