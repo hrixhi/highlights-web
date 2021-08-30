@@ -215,6 +215,13 @@ export const sendDirectMessage = gql`
     }
   }
 `;
+export const sendMessage = gql`
+  mutation($users: [String!]!, $message: String!, $channelId: String, $userId: String!) {
+    message {
+      createDirect(users: $users, message: $message, channelId: $channelId, userId: $userId)
+    }
+  }
+`;
 export const inviteByEmail = gql`
   mutation($emails: [String!]!, $channelId: String!) {
     user {
@@ -721,6 +728,7 @@ export const getMessages = gql`
     message {
       getMessagesThread(users: $users) {
         groupId
+        _id
         sentBy
         message
         displayName
@@ -801,6 +809,22 @@ export const getGroups = gql`
         userNames {
           displayName
         }
+      }
+    }
+  }
+`;
+export const getChats = gql`
+  query($userId: String!) {
+    group {
+      getChats(userId: $userId) {
+        _id
+        users
+        unreadMessages
+        userNames {
+          fullName
+        }
+        lastMessage
+        lastMessageTime
       }
     }
   }
@@ -1019,3 +1043,53 @@ export const getSharableLink = gql`
    }
  }
  `
+export const getActivity = gql`
+ query($userId: String!) {
+   activity {
+     getActivity(userId: $userId) {
+       title
+       subtitle
+       body
+       channelName
+       channelId
+       status
+       colorCode
+       date
+     }
+   }
+ }
+ `
+export const getPerformanceReport = gql`
+ query($userId: String!) {
+   user {
+    getPerformanceReport(userId: $userId) {
+      channelId
+      channelName
+      score
+      total
+      channelCreatedBy
+    }
+   }
+ }
+ `
+export const getSearch = gql`
+ query($userId: String!, $term: String!) {
+   user {
+     search(userId: $userId, term: $term)
+   }
+ }
+ `
+export const getAllUsers = gql`
+ query($userId: String!) {
+   user {
+     getAllUsers(userId: $userId) {
+       _id
+       email
+       fullName
+       role
+       grade
+       section
+     }
+   }
+ }
+`;

@@ -15,7 +15,7 @@ import {
     PieChart
 } from "react-native-chart-kit";
 import { Ionicons } from '@expo/vector-icons';
-import {TextInput as CustomTextInput} from "../components/CustomTextInput"
+import { TextInput as CustomTextInput } from "../components/CustomTextInput"
 
 const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -56,7 +56,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 return u._id.toString() === cueId.toString();
             })
 
-            const { cue, releaseSubmission } = findCue; 
+            const { cue, releaseSubmission } = findCue;
 
             if (!releaseSubmission) {
                 return false;
@@ -286,7 +286,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
         }}
             key={JSON.stringify(props.scores)}
         >
-             <ScrollView
+            <ScrollView
                 showsHorizontalScrollIndicator={false}
                 horizontal={true}
                 contentContainerStyle={{
@@ -295,8 +295,8 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 }}
                 nestedScrollEnabled={true}
             >
-                <View style={{ width: '100%'}}>
-                    <Text style={{ textAlign: 'left', fontSize: 13, color: '#2F2F3C', fontFamily: 'inter', paddingBottom: 20, paddingLeft: Dimensions.get('window').width < 768 ? 0 : 150 }}>
+                <View style={{ width: '100%' }}>
+                    <Text style={{ textAlign: 'left', fontSize: 13, color: '#2f2f3c', fontFamily: 'inter', paddingBottom: 20, paddingLeft: Dimensions.get('window').width < 768 ? 0 : 150 }}>
                         Grade Weightage
                     </Text>
                     <PieChart
@@ -311,9 +311,9 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         hasLegend={true}
                     />
                 </View>
-            
-                {submissionStatistics.length > 0 ? <View style={{ width: '100%'}}>
-                    <Text style={{ textAlign: 'left', fontSize: 13, color: '#2F2F3C', fontFamily: 'inter', paddingTop: 50, paddingBottom: 20, paddingLeft: Dimensions.get('window').width < 768 ? 0 : 150 }}>
+
+                {submissionStatistics.length > 0 ? <View style={{ width: '100%' }}>
+                    <Text style={{ textAlign: 'left', fontSize: 13, color: '#2f2f3c', fontFamily: 'inter', paddingTop: 50, paddingBottom: 20, paddingLeft: Dimensions.get('window').width < 768 ? 0 : 150 }}>
                         Submissions
                     </Text>
                     <Chart
@@ -352,31 +352,47 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 <Text
                     ellipsizeMode="tail"
                     style={{
-                        fontSize: 20,
+                        fontSize: 25,
                         paddingBottom: 20,
                         fontFamily: 'inter',
                         // textTransform: "uppercase",
                         // paddingLeft: 10,
+                        paddingTop: 2,
                         flex: 1,
                         lineHeight: 25
                     }}>
                     {PreferredLanguageText("grades")}
                 </Text>
-                {(scores.length === 0 || cues.length === 0 || !props.isOwner) ? null : <Text
-                    style={{
-                        color: "#3B64F8",
-                        fontSize: 11,
-                        lineHeight: 25,
-                        // paddingTop: 5,
-                        textAlign: "right",
-                        // paddingRight: 20,
-                        textTransform: "uppercase"
-                    }}
-                    onPress={() => {
-                        exportGrades()
-                    }}>
-                    EXPORT
-                </Text>}
+                {(scores.length === 0 || cues.length === 0 || !props.isOwner) ? null :
+                    <TouchableOpacity
+                        onPress={() => {
+                            exportGrades()
+                        }}
+                        style={{
+                            backgroundColor: 'white',
+                            overflow: 'hidden',
+                            height: 35,
+                            // marginTop: 15,
+                            justifyContent: 'center',
+                            flexDirection: 'row'
+                        }}>
+                        <Text style={{
+                            textAlign: 'center',
+                            lineHeight: 30,
+                            color: '#fff',
+                            fontSize: 12,
+                            backgroundColor: '#53BE6D',
+                            paddingHorizontal: 25,
+                            fontFamily: 'inter',
+                            height: 30,
+                            // width: 100,
+                            borderRadius: 15,
+                            textTransform: 'uppercase'
+                        }}>
+                            EXPORT <Ionicons name='download-outline' size={12} />
+                        </Text>
+                    </TouchableOpacity>
+                }
             </View>
 
             {renderGradeStatsTabs()}
@@ -417,7 +433,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
             {
                 props.scores.length === 0 || cues.length === 0 ?
                     <View style={{ backgroundColor: 'white' }}>
-                        <Text style={{ width: '100%', color: '#a2a2ac', fontSize: 20, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter' }}>
+                        <Text style={{ width: '100%', color: '#818385', fontSize: 20, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter' }}>
                             {
                                 cues.length === 0 ? PreferredLanguageText('noGraded') : PreferredLanguageText('noStudents')
                             }
@@ -470,50 +486,50 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             }}
                             nestedScrollEnabled={true}
                         >
-                            <View style={{ minHeight: 70, flexDirection: 'row', overflow: 'hidden', paddingBottom: 10, borderBottomWidth: 1, borderBottomColor: 'black'}} key={"-"}>
-                                    <View style={styles.col} key={'0,0'}>
-                                        {props.isOwner ? <CustomTextInput 
-                                            value={studentSearch}
-                                            onChangeText={(val: string) => setStudentSearch(val)}
-                                            placeholder={"Search"}
-                                            placeholderTextColor={'#a2a2ac'}
-                                        /> : null}
-                                    </View>
-                                    {
-                                        cues.map((cue: any, col: number) => {
-                                            console.log("Cue from gradesList", cue);
-                                            const { title } = htmlStringParser(cue.cue)
-                                            // console.log("CUE", cue)
-                                            return <TouchableOpacity style={styles.col} key={col.toString()} onPress={() => props.openCueFromGrades(cue._id)}> 
-                                                <Text style={{ textAlign: 'center', fontSize: 10, color: '#2f2f3c', marginBottom: 5 }}>
-                                                    {
-                                                        (new Date(cue.deadline)).toString().split(' ')[1] +
-                                                        ' ' +
-                                                        (new Date(cue.deadline)).toString().split(' ')[2]
-                                                    }
-                                                </Text>
-                                                <Text style={{ textAlign: 'center', fontSize: 13, color: '#2F2F3C', fontFamily: 'inter', marginBottom: 5, height: 30, textAlignVertical: 'center'}} numberOfLines={2}>
-                                                    {title}
-                                                </Text>
-                                                <Text style={{ textAlign: 'center', fontSize: 10, color: '#2f2f3c' }}>
-                                                    {cue.gradeWeight}%
-                                                </Text>
-                                            </TouchableOpacity>
-                                        })
-                                    }
-                                    {
-                                        cues.length === 0 ? null :
-                                            <View style={styles.col} key={'total'}>
-                                                <View style={{ height: 10, marginBottom: 5 }} />
-                                                <Text style={{ textAlign: 'center', fontSize: 13, color: '#2F2F3C', fontFamily: 'inter', marginBottom: 5, height: 30,  }}>
-                                                    {PreferredLanguageText('total')}
-                                                </Text>
-                                                <Text style={{ textAlign: 'center', fontSize: 10, color: '#2F2F3C' }}>
-                                                    100%
-                                                </Text>
-                                            </View>
-                                    }
+                            <View style={{ minHeight: 70, flexDirection: 'row', overflow: 'hidden', paddingBottom: 10, borderBottomWidth: 1, borderBottomColor: 'black' }} key={"-"}>
+                                <View style={styles.col} key={'0,0'}>
+                                    {props.isOwner ? <CustomTextInput
+                                        value={studentSearch}
+                                        onChangeText={(val: string) => setStudentSearch(val)}
+                                        placeholder={"Search"}
+                                        placeholderTextColor={'#818385'}
+                                    /> : null}
                                 </View>
+                                {
+                                    cues.map((cue: any, col: number) => {
+                                        console.log("Cue from gradesList", cue);
+                                        const { title } = htmlStringParser(cue.cue)
+                                        // console.log("CUE", cue)
+                                        return <TouchableOpacity style={styles.col} key={col.toString()} onPress={() => props.openCueFromGrades(cue._id)}>
+                                            <Text style={{ textAlign: 'center', fontSize: 10, color: '#2f2f3c', marginBottom: 5 }}>
+                                                {
+                                                    (new Date(cue.deadline)).toString().split(' ')[1] +
+                                                    ' ' +
+                                                    (new Date(cue.deadline)).toString().split(' ')[2]
+                                                }
+                                            </Text>
+                                            <Text style={{ textAlign: 'center', fontSize: 13, color: '#2f2f3c', fontFamily: 'inter', marginBottom: 5, height: 30, textAlignVertical: 'center' }} numberOfLines={2}>
+                                                {title}
+                                            </Text>
+                                            <Text style={{ textAlign: 'center', fontSize: 10, color: '#2f2f3c' }}>
+                                                {cue.gradeWeight}%
+                                            </Text>
+                                        </TouchableOpacity>
+                                    })
+                                }
+                                {
+                                    cues.length === 0 ? null :
+                                        <View style={styles.col} key={'total'}>
+                                            <View style={{ height: 10, marginBottom: 5 }} />
+                                            <Text style={{ textAlign: 'center', fontSize: 13, color: '#2f2f3c', fontFamily: 'inter', marginBottom: 5, height: 30, }}>
+                                                {PreferredLanguageText('total')}
+                                            </Text>
+                                            <Text style={{ textAlign: 'center', fontSize: 10, color: '#2f2f3c' }}>
+                                                100%
+                                            </Text>
+                                        </View>
+                                }
+                            </View>
 
                             <ScrollView
                                 showsVerticalScrollIndicator={false}
@@ -540,10 +556,10 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
                                             return <View style={styles.row} key={row}>
                                                 <View style={styles.col} >
-                                                    <Text style={{ textAlign: 'left', fontSize: 12, color: '#2F2F3C', fontFamily: 'inter' }}>
+                                                    <Text style={{ textAlign: 'left', fontSize: 12, color: '#2f2f3c', fontFamily: 'inter' }}>
                                                         {score.fullName}
                                                     </Text>
-                                                    {/* <Text style={{ textAlign: 'left', fontSize: 12, color: '#2F2F3C' }}>
+                                                    {/* <Text style={{ textAlign: 'left', fontSize: 12, color: '#2f2f3c' }}>
                                                         {score.displayName}
                                                     </Text> */}
                                                 </View>
@@ -557,21 +573,21 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                         if (scoreObject && activeCueId === scoreObject.cueId && activeUserId === score.userId) {
                                                             return <View style={styles.col}>
                                                                 <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
-                                                                    <TextInput 
-                                                                        value={activeScore} 
+                                                                    <TextInput
+                                                                        value={activeScore}
                                                                         placeholder={' / 100'}
                                                                         onChangeText={val => {
                                                                             setActiveScore(val)
                                                                         }}
-                                                                        style={{ width: '50%', marginRight: 5, padding: 8, borderBottomColor: "#cccccc", borderBottomWidth: 1, fontSize: 12 }}
-                                                                        placeholderTextColor={'#a2a2ac'}
+                                                                        style={{ width: '50%', marginRight: 5, padding: 8, borderBottomColor: "#dddddd", borderBottomWidth: 1, fontSize: 12 }}
+                                                                        placeholderTextColor={'#818385'}
                                                                     />
                                                                     <TouchableOpacity onPress={() => {
                                                                         modifyGrade()
                                                                     }}>
-                                                                        <Ionicons name='checkmark-circle-outline' size={20} style={{ marginRight: 5 }} color={'#8bc34a'}/>
+                                                                        <Ionicons name='checkmark-circle-outline' size={20} style={{ marginRight: 5 }} color={'#8bc34a'} />
                                                                     </TouchableOpacity>
-                                                                    <TouchableOpacity onPress={() => { 
+                                                                    <TouchableOpacity onPress={() => {
                                                                         setActiveCueId('')
                                                                         setActiveUserId('')
                                                                         setActiveScore('')
@@ -583,23 +599,23 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                             </View>
                                                         }
 
-                                                        return <TouchableOpacity disabled={!props.isOwner} style={styles.col} key={row.toString() + '-' + col.toString()} onPress={() => { 
+                                                        return <TouchableOpacity disabled={!props.isOwner} style={styles.col} key={row.toString() + '-' + col.toString()} onPress={() => {
 
-                                                                if (!scoreObject) return;
-                                                                
-                                                                setActiveCueId(scoreObject.cueId);
-                                                                setActiveUserId(score.userId);
-                                                                setActiveScore(scoreObject.score);
-                                                            }}>
-                                                            {!scoreObject || !scoreObject.submittedAt ? <Text style={{ textAlign: 'center', fontSize: 11, color: '#D91D56',  }}>
-                                                                { scoreObject && scoreObject.graded ? scoreObject.score :  (!scoreObject || !scoreObject.cueId ? "N/A" : "Missing" )}
-                                                            </Text> 
-                                                            : 
-                                                            <Text style={{ textAlign: 'center', fontSize: 11, color: scoreObject && new Date(parseInt(scoreObject.submittedAt)) >= (new Date(cue.deadline)) ? '#ED7D22' : '#2f2f3c', }}>
-                                                                {
-                                                                    scoreObject && scoreObject.graded ? scoreObject.score : (scoreObject && new Date(parseInt(scoreObject.submittedAt)) >= (new Date(cue.deadline)) ? "Late" : '-')
-                                                                }
-                                                            </Text>}
+                                                            if (!scoreObject) return;
+
+                                                            setActiveCueId(scoreObject.cueId);
+                                                            setActiveUserId(score.userId);
+                                                            setActiveScore(scoreObject.score);
+                                                        }}>
+                                                            {!scoreObject || !scoreObject.submittedAt ? <Text style={{ textAlign: 'center', fontSize: 11, color: '#D91D56', }}>
+                                                                {scoreObject && scoreObject.graded ? scoreObject.score : (!scoreObject || !scoreObject.cueId ? "N/A" : "Missing")}
+                                                            </Text>
+                                                                :
+                                                                <Text style={{ textAlign: 'center', fontSize: 11, color: scoreObject && new Date(parseInt(scoreObject.submittedAt)) >= (new Date(cue.deadline)) ? '#ED7D22' : '#2f2f3c', }}>
+                                                                    {
+                                                                        scoreObject && scoreObject.graded ? scoreObject.score : (scoreObject && new Date(parseInt(scoreObject.submittedAt)) >= (new Date(cue.deadline)) ? "Late" : '-')
+                                                                    }
+                                                                </Text>}
                                                         </TouchableOpacity>
                                                     })
                                                 }
@@ -631,8 +647,8 @@ export default React.memo(GradesList, (prev, next) => {
 
 
 const styles = StyleSheet.create({
-    row: { minHeight: 70, flexDirection: 'row', overflow: 'hidden', borderBottomColor: '#e0e0e0', borderBottomWidth: 1  },
-    col: { width: 120, justifyContent: 'center', display: 'flex', flexDirection: 'column', padding: 7,   },
+    row: { minHeight: 70, flexDirection: 'row', overflow: 'hidden', borderBottomColor: '#e0e0e0', borderBottomWidth: 1 },
+    col: { width: 120, justifyContent: 'center', display: 'flex', flexDirection: 'column', padding: 7, },
     allGrayFill: {
         fontSize: 12,
         color: "#fff",
@@ -643,18 +659,18 @@ const styles = StyleSheet.create({
     },
     allGrayOutline: {
         fontSize: 12,
-        color: "#a2a2ac",
+        color: "#818385",
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: "white",
         borderRadius: 10,
         borderWidth: 1,
-        borderColor: "#a2a2ac",
+        borderColor: "#818385",
         lineHeight: 20
     },
     all: {
         fontSize: 12,
-        color: "#a2a2ac",
+        color: "#818385",
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: "white",

@@ -202,7 +202,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 width: '100%',
                                 lineHeight: 23
                             }}>
-                                <Ionicons name='chevron-back-outline' size={23} color={'#2F2F3C'} />
+                                <Ionicons name='arrow-back-outline' size={23} color={'#2f2f3c'} />
                             </Text>
                         </TouchableOpacity>
                     </View>
@@ -224,7 +224,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             style={{ alignSelf: 'flex-end', flex: 1 }}
                         >
                             <Text style={{
-                                color: '#a2a2ac',
+                                color: '#818385',
                                 fontSize: 11,
                                 lineHeight: 30,
                                 textAlign: 'right',
@@ -261,12 +261,12 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 style={styles.input}
                                 placeholder={'Title'}
                                 onChangeText={val => setTitle(val)}
-                                placeholderTextColor={'#a2a2ac'}
+                                placeholderTextColor={'#818385'}
                             />
                         </View>
                         <View>
-                            <Text style={{ width: '100%', color: '#a2a2ac', fontSize: 22, paddingVertical: 50, marginLeft: '10%', paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
-                                <Ionicons name='document-outline' size={50} color='#a2a2ac' />
+                            <Text style={{ width: '100%', color: '#818385', fontSize: 22, paddingVertical: 50, marginLeft: '10%', paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                <Ionicons name='document-outline' size={50} color='#818385' />
                             </Text>
                         </View>
                     </View>
@@ -280,7 +280,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         <RichEditor
                             disabled={false}
                             containerStyle={{
-                                backgroundColor: '#f4f4f6',
+                                backgroundColor: '#F8F9FA',
                                 borderRadius: 15,
                                 padding: 3,
                                 paddingTop: 5,
@@ -290,14 +290,14 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             ref={RichText}
                             style={{
                                 width: '100%',
-                                backgroundColor: '#f4f4f6',
+                                backgroundColor: '#F8F9FA',
                                 borderRadius: 15,
                                 minHeight: 100
                             }}
                             editorStyle={{
-                                backgroundColor: '#f4f4f6',
-                                placeholderColor: '#a2a2ac',
-                                color: '#2F2F3C',
+                                backgroundColor: '#F8F9FA',
+                                placeholderColor: '#818385',
+                                color: '#2f2f3c',
                                 contentCSSText: 'font-size: 13px;'
                             }}
                             initialContentHTML={props.message}
@@ -341,13 +341,13 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                             onChangeText={val => {
                                                                 setCustomCategory(val)
                                                             }}
-                                                            placeholderTextColor={'#a2a2ac'}
+                                                            placeholderTextColor={'#818385'}
                                                         />
                                                     </View> :
                                                     <Menu
                                                         onSelect={(cat: any) => setCustomCategory(cat)}>
                                                         <MenuTrigger>
-                                                            <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#a2a2ac' }}>
+                                                            <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#818385' }}>
                                                                 {customCategory === '' ? 'None' : customCategory}<Ionicons name='caret-down' size={14} />
                                                             </Text>
                                                         </MenuTrigger>
@@ -357,7 +357,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                 borderRadius: 15,
                                                                 shadowOpacity: 0,
                                                                 borderWidth: 1,
-                                                                borderColor: '#f4f4f6',
+                                                                borderColor: '#F8F9FA',
                                                                 overflow: 'scroll',
                                                                 maxHeight: '100%'
                                                             }
@@ -394,7 +394,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 }}
                                                 style={{ backgroundColor: 'white' }}>
                                                 <Text style={{ textAlign: 'right', lineHeight: 20, width: '100%' }}>
-                                                    <Ionicons name={addCustomCategory ? 'close' : 'add'} size={20} color={'#a2a2ac'} />
+                                                    <Ionicons name={addCustomCategory ? 'close' : 'add'} size={20} color={'#818385'} />
                                                 </Text>
                                             </TouchableOpacity>
                                         </View>
@@ -405,7 +405,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         <View style={{ flexDirection: 'row' }}>
                             {/* <View style={{ width: '33.33%', backgroundColor: 'white' }}>
                                 <View style={{ width: '100%', paddingTop: 40, paddingBottom: 10, backgroundColor: 'white' }}>
-                                    <Text style={{ fontSize: 11, color: '#a2a2ac', textTransform: 'uppercase' }}>
+                                    <Text style={{ fontSize: 11, color: '#818385', textTransform: 'uppercase' }}>
                                         {PreferredLanguageText('anonymous')}
                                     </Text>
                                 </View>
@@ -413,8 +413,8 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     value={anonymous}
                                     onValueChange={() => setAnonymous(!anonymous)}
                                     trackColor={{
-                                        false: '#f4f4f6',
-                                        true: '#a2a2ac'
+                                        false: '#F8F9FA',
+                                        true: '#818385'
                                     }}
                                     activeThumbColor='white'
                                     style={{ height: 20 }}
@@ -434,8 +434,8 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                     value={isPrivate}
                                                     onValueChange={() => setIsPrivate(!isPrivate)}
                                                     trackColor={{
-                                                        false: '#f4f4f6',
-                                                        true: '#a2a2ac'
+                                                        false: '#F8F9FA',
+                                                        true: '#818385'
                                                     }}
                                                     activeThumbColor='white'
                                                     style={{ height: 20 }}
@@ -484,7 +484,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             height: 35,
                             textTransform: 'uppercase'
                         }}>
-                            {props.users ? PreferredLanguageText('send') : (parentId ? PreferredLanguageText('reply') : PreferredLanguageText('post'))}
+                            {props.users ? PreferredLanguageText('send') : (parentId ? PreferredLanguageText('reply') : PreferredLanguageText('post'))} <Ionicons name='chatbubbles-outline' size={12} />
                         </Text>
                     </TouchableOpacity>
                 </View>
@@ -543,12 +543,12 @@ const styles: any = StyleSheet.create({
     },
     text: {
         fontSize: 12,
-        color: '#a2a2ac',
+        color: '#818385',
         textAlign: 'left'
     },
     input: {
         width: '100%',
-        borderBottomColor: '#f4f4f6',
+        borderBottomColor: '#F8F9FA',
         borderBottomWidth: 1,
         fontSize: 12,
         paddingTop: 12,
@@ -558,24 +558,24 @@ const styles: any = StyleSheet.create({
     },
     all: {
         fontSize: 12,
-        color: '#a2a2ac',
+        color: '#818385',
         height: 20,
         paddingHorizontal: 10,
         backgroundColor: 'white'
     },
     allOutline: {
         fontSize: 12,
-        color: '#a2a2ac',
+        color: '#818385',
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: 'white',
         borderRadius: 10,
         borderWidth: 1,
-        borderColor: '#a2a2ac'
+        borderColor: '#818385'
     },
     outline: {
         borderRadius: 10,
         borderWidth: 1,
-        borderColor: '#a2a2ac'
+        borderColor: '#818385'
     }
 })

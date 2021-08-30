@@ -10,10 +10,12 @@ import { uniqueNamesGenerator, colors } from 'unique-names-generator'
 import { PreferredLanguageText } from '../helpers/LanguageContext';
 import { ScrollView, Switch } from 'react-native-gesture-handler';
 import { CirclePicker } from "react-color";
+import alert from '../components/Alert';
+import { Ionicons } from '@expo/vector-icons';
 
 const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
-    const [option, setOption] = useState('Subscribe')
+    const [option, setOption] = useState('Create')
     const [name, setName] = useState('')
     const [password, setPassword] = useState('')
     const [passwordRequired, setPasswordRequired] = useState(false)
@@ -61,7 +63,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
 
     }, [name, password, passwordRequired, option, colorCode])
 
-    const handleSubscribe = useCallback(async () => {
+    const handleSubscribe = useCallback(async (nm, pass) => {
 
         const uString: any = await AsyncStorage.getItem('user')
         const user = JSON.parse(uString)
@@ -71,8 +73,8 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
             mutation: subscribe,
             variables: {
                 userId: user._id,
-                name,
-                password
+                name: nm,
+                password: pass
             }
         })
             .then(res => {
@@ -80,6 +82,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                     const subscriptionStatus = res.data.subscription.subscribe
                     switch (subscriptionStatus) {
                         case "subscribed":
+                            alert('Subscribed to ' + nm + '!')
                             props.closeModal()
                             break;
                         case "incorrect-password":
@@ -101,93 +104,95 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                 Alert(somethingWrongAlert, checkConnectionAlert)
             })
 
-    }, [name, password, props.closeModal])
+    }, [props.closeModal])
+
+    const handleSub = useCallback(async (cName) => {
+
+        setName(cName)
+
+        const uString: any = await AsyncStorage.getItem('user')
+        const user = JSON.parse(uString)
+
+        const server = fetchAPI('')
+        server.query({
+            query: checkChannelStatus,
+            variables: {
+                name: cName
+            }
+        }).then(res => {
+            if (res.data.channel && res.data.channel.getChannelStatus) {
+                const channelStatus = res.data.channel.getChannelStatus
+                switch (channelStatus) {
+                    case "public":
+                        handleSubscribe(cName, '')
+                        break;
+                    case "private":
+                        let pass: any = prompt('Enter Password')
+                        if (!pass) {
+                            pass = ''
+                        }
+                        handleSubscribe(cName, pass)
+                        break;
+                    case "non-existant":
+                        Alert(doesNotExistAlert)
+                        break;
+                    default:
+                        Alert(somethingWrongAlert, checkConnectionAlert)
+                        break
+                }
+            }
+        }).catch(err => {
+            console.log(err)
+            Alert(somethingWrongAlert, checkConnectionAlert)
+        })
+
+    }, [option, props.closeModal, passwordRequired, displayName, fullName, temporary])
 
     const handleSubmit = useCallback(async () => {
 
         const uString: any = await AsyncStorage.getItem('user')
         const user = JSON.parse(uString)
 
-        if (option === 'Subscribe') {
+        if (name.toString().trim() === '') {
+            return
+        }
 
-            if (name.toString().trim() === '') {
-                return
+        const server = fetchAPI('')
+        server.mutate({
+            mutation: createChannel,
+            variables: {
+                name,
+                password,
+                createdBy: user._id,
+                temporary,
+                colorCode
             }
-
-            if (passwordRequired === true) {
-                handleSubscribe()
-            } else {
-                const server = fetchAPI('')
-                server.query({
-                    query: checkChannelStatus,
-                    variables: {
-                        name
+        })
+            .then(res => {
+                if (res.data.channel.create) {
+                    const channelCreateStatus = res.data.channel.create
+                    switch (channelCreateStatus) {
+                        case "created":
+                            props.closeModal()
+                            break;
+                        case "invalid-name":
+                            Alert(invalidChannelNameAlert)
+                            break;
+                        case "exists":
+                            Alert(nameAlreadyInUseAlert)
+                            break;
+                        case "error":
+                            Alert(somethingWrongAlert, checkConnectionAlert)
+                            break;
+                        default:
+                            Alert(somethingWrongAlert, checkConnectionAlert)
+                            break;
                     }
-                }).then(res => {
-                    if (res.data.channel && res.data.channel.getChannelStatus) {
-                        const channelStatus = res.data.channel.getChannelStatus
-                        switch (channelStatus) {
-                            case "public":
-                                handleSubscribe()
-                                break;
-                            case "private":
-                                setPasswordRequired(true)
-                                break;
-                            case "non-existant":
-                                Alert(doesNotExistAlert)
-                                break;
-                            default:
-                                Alert(somethingWrongAlert, checkConnectionAlert)
-                                break
-                        }
-                    }
-                }).catch(err => {
-                    Alert(somethingWrongAlert, checkConnectionAlert)
-                })
-            }
-        } else if (option === 'Create') {
-
-            if (name.toString().trim() === '') {
-                return
-            }
-
-            const server = fetchAPI('')
-            server.mutate({
-                mutation: createChannel,
-                variables: {
-                    name,
-                    password,
-                    createdBy: user._id,
-                    temporary,
-                    colorCode
                 }
             })
-                .then(res => {
-                    if (res.data.channel.create) {
-                        const channelCreateStatus = res.data.channel.create
-                        switch (channelCreateStatus) {
-                            case "created":
-                                props.closeModal()
-                                break;
-                            case "invalid-name":
-                                Alert(invalidChannelNameAlert)
-                                break;
-                            case "exists":
-                                Alert(nameAlreadyInUseAlert)
-                                break;
-                            case "error":
-                                Alert(somethingWrongAlert, checkConnectionAlert)
-                                break;
-                            default:
-                                Alert(somethingWrongAlert, checkConnectionAlert)
-                                break;
-                        }
-                    }
-                })
-                .catch(err => {
-                    Alert(somethingWrongAlert, checkConnectionAlert)
-                })
-        }
+            .catch(err => {
+                Alert(somethingWrongAlert, checkConnectionAlert)
+            })
 
     }, [option, name, password, props.closeModal, passwordRequired, displayName, fullName, temporary])
 
@@ -256,7 +261,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
     }, [])
 
     useEffect(() => {
-        if (role === 'instructor' && school) {
+        if (school) {
             const server = fetchAPI('')
             server.query({
                 query: findBySchoolId,
@@ -286,8 +291,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
             <View style={{ width: '100%', backgroundColor: 'white' }}>
                 <View style={styles.colorBar}>
                     <Text style={{
-                        fontSize: 20, color: '#a2a2ac',
-                        // 
+                        fontSize: 20, color: '#818385'
                     }}>
                         {PreferredLanguageText('internetRequired')}
                     </Text>
@@ -296,10 +300,12 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
         </View>
     }
 
+    const width = Dimensions.get('window').width
+
     return (
         <View style={styles.screen} key={1}>
             <View style={{ width: '100%', backgroundColor: 'white' }}>
-                <Text
+                {/* <Text
                     style={{
                         fontSize: 20,
                         paddingBottom: 20,
@@ -310,227 +316,267 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         lineHeight: 25
                     }}>
                     {PreferredLanguageText('channels')}
-                </Text>
+                </Text> */}
                 {/* <Text style={{ paddingVertical: 15, fontSize: 14, color: '#a2a2a2' }}>
                     Users can store personal content in the 'My Cues' channel.{'\n\n'}
                 </Text> */}
-                <View style={styles.colorBar}>
-                    <TouchableOpacity
-                        style={option === 'Subscribe' ? styles.allOutline : styles.all}
-                        onPress={() => {
-                            setOption('Subscribe')
+                <View style={{ width: '100%', flexDirection: width < 768 ? 'column' : 'row' }}>
+                    <View style={{ backgroundColor: 'white', width: width < 768 ? '100%' : '32%' }}>
+                        <Text style={{
+                            fontSize: 25,
+                            paddingBottom: 40,
+                            paddingTop: 10,
+                            fontFamily: 'inter',
+                            // flex: 1,
+                            lineHeight: 23,
+                            color: '#2f2f3c'
                         }}>
-                        <Text style={{ color: option === 'Subscribe' ? '#fff' : '#a2a2ac', lineHeight: 20, fontSize: 12 }}>
-                            {PreferredLanguageText('subscribe')}
+                            <Ionicons name='create-outline' size={25} color='#2f2f3c' /> Create
                         </Text>
-                    </TouchableOpacity>
-                    {
-                        role === 'student' && (school && school.allowStudentChannelCreation === false) ?
-                            null :
+                        {/* 
+                            <View style={styles.colorBar}>
                             <TouchableOpacity
-                                style={option === 'Create' ? styles.allOutline : styles.all}
+                                style={option === 'Subscribe' ? styles.allOutline : styles.all}
                                 onPress={() => {
-                                    setOption('Create')
+                                    setOption('Subscribe')
                                 }}>
-                                <Text style={{ color: option === 'Create' ? '#fff' : '#a2a2ac', lineHeight: 20, fontSize: 12 }}>
-                                    {PreferredLanguageText('create')}
+                                <Text style={{ color: option === 'Subscribe' ? '#fff' : '#818385', lineHeight: 20, fontSize: 12 }}>
+                                    {PreferredLanguageText('subscribe')}
                                 </Text>
                             </TouchableOpacity>
-                    }
-                    {
+                            {
+                                role === 'student' && (school && school.allowStudentChannelCreation === false) ?
+                                    null :
+                                    <TouchableOpacity
+                                        style={option === 'Create' ? styles.allOutline : styles.all}
+                                        onPress={() => {
+                                            setOption('Create')
+                                        }}>
+                                        <Text style={{ color: option === 'Create' ? '#fff' : '#818385', lineHeight: 20, fontSize: 12 }}>
+                                            {PreferredLanguageText('create')}
+                                        </Text>
+                                    </TouchableOpacity>
+                            } */}
+                        {/* {
                         role === 'instructor' ?
                             <TouchableOpacity
                                 style={option === 'All' ? styles.allOutline : styles.all}
                                 onPress={() => {
                                     setOption('All')
                                 }}>
-                                <Text style={{ color: option === 'All' ? '#fff' : '#a2a2ac', lineHeight: 20, fontSize: 12 }}>
+                                <Text style={{ color: option === 'All' ? '#fff' : '#818385', lineHeight: 20, fontSize: 12 }}>
                                     All Channels
                                 </Text>
                             </TouchableOpacity> : null
-                    }
-                </View>
-                {
-                    option === 'All' ?
+                    } 
+                        </View>*/}
+                        <View style={{ backgroundColor: 'white' }}>
+                            <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>
+                                {PreferredLanguageText('channel') + ' ' + PreferredLanguageText('name')}
+                            </Text>
+                            <TextInput
+                                value={name}
+                                placeholder={''}
+                                onChangeText={val => {
+                                    setName(val)
+                                    setPasswordRequired(false)
+                                }}
+                                placeholderTextColor={'#818385'}
+                                required={true}
+                                footerMessage={'case sensitive'}
+                            />
+                        </View>
+                        {
+                            (option === 'Subscribe' && passwordRequired) || option === 'Create' ?
+                                <View style={{ backgroundColor: 'white' }}>
+                                    <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>
+                                        {PreferredLanguageText('enrolmentPassword')}
+                                    </Text>
+                                    <TextInput
+                                        value={password}
+                                        placeholder={option === 'Subscribe' ? '' : `(${PreferredLanguageText('optional')})`}
+                                        onChangeText={val => setPassword(val)}
+                                        placeholderTextColor={'#818385'}
+                                        secureTextEntry={true}
+                                        required={option === "Subscribe" ? true : false}
+                                    />
+                                </View>
+                                : (
+                                    option === 'Subscribe' && !passwordRequired ?
+                                        <View
+                                            style={{ height: 115, width: '100%', backgroundColor: 'white' }}
+                                        /> : null
+                                )
+                        }
+                        {
+                            option === 'Create' ?
+                                <View
+                                    style={{
+                                        width: "100%",
+                                    }}>
+                                    <View
+                                        style={{
+                                            width: "100%",
+                                            // paddingTop: 40,
+                                            paddingBottom: 15,
+                                            backgroundColor: "white"
+                                        }}>
+                                        <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>Temporary</Text>
+                                    </View>
+                                    <View
+                                        style={{
+                                            backgroundColor: "white",
+                                            width: "100%",
+                                            height: 40,
+                                            marginHorizontal: 10
+                                        }}>
+                                        <Switch
+                                            value={temporary}
+                                            onValueChange={() => setTemporary(!temporary)}
+                                            style={{ height: 20 }}
+                                            trackColor={{
+                                                false: "#F8F9FA",
+                                                true: "#3B64F8"
+                                            }}
+                                            activeThumbColor="white"
+                                        />
+                                    </View>
+                                    <Text style={{ color: '#818385', fontSize: 12 }}>
+                                        Channels that are not temporary can only be deleted by the school administrator.
+                                    </Text>
+                                </View>
+                                : null
+                        }
+                        {
+                            option === "Create" ?
+                                <View
+                                    style={{
+                                        width: "100%",
+                                        paddingVertical: 15,
+                                    }}>
+                                    <View
+                                        style={{
+                                            width: "100%",
+                                            paddingTop: 20,
+                                            paddingBottom: 15,
+                                            backgroundColor: "white"
+                                        }}>
+                                        <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>Color</Text>
+                                    </View>
+                                    <View style={{ width: '100%', backgroundColor: 'white' }}>
+                                        <CirclePicker
+                                            color={colorCode}
+                                            onChangeComplete={(color: any) => setColorCode(color.hex)}
+                                        />
+                                    </View>
+                                </View>
+                                : null
+                        }
+                        <View
+                            style={{
+                                flex: 1,
+                                backgroundColor: 'white',
+                                justifyContent: 'center',
+                                display: 'flex',
+                                flexDirection: 'row',
+                                height: 50,
+                                paddingTop: 25
+                            }}>
+                            {
+                                option === 'About' ? null :
+                                    <TouchableOpacity
+                                        onPress={() => handleSubmit()}
+                                        style={{
+                                            backgroundColor: 'white',
+                                            borderRadius: 15,
+                                            overflow: 'hidden',
+                                            height: 35,
+                                            marginTop: 15
+                                        }}
+                                        disabled={isSubmitDisabled}
+                                    >
+                                        <Text style={{
+                                            textAlign: 'center',
+                                            lineHeight: 35,
+                                            color: 'white',
+                                            fontSize: 12,
+                                            backgroundColor: '#3B64F8',
+                                            paddingHorizontal: 25,
+                                            fontFamily: 'inter',
+                                            height: 35,
+                                            textTransform: 'uppercase'
+                                        }}>
+                                            {PreferredLanguageText('create')} <Ionicons name='add-outline' size={12} />
+                                        </Text>
+                                    </TouchableOpacity>
+                            }
+                        </View>
+                    </View>
+                    <View style={{
+                        backgroundColor: '#fff',
+                        width: width < 768 ? '100%' : '68%',
+                        paddingLeft: width < 768 ? 0 : 20,
+                        paddingTop: width < 768 ? 40 : 0,
+                        marginLeft: width < 768 ? 0 : 20,
+                        borderLeftWidth: width < 768 ? 0 : 1, borderLeftColor: '#dddddd'
+                    }}>
+                        <Text style={{
+                            fontSize: 25,
+                            paddingBottom: 40,
+                            paddingTop: 10,
+                            fontFamily: 'inter',
+                            // flex: 1,
+                            lineHeight: 23,
+                            color: '#3b64f8'
+                        }}>
+                            <Ionicons name='list-outline' size={25} color='#3b64f8' /> Subscribe
+                        </Text>
                         <View style={{ backgroundColor: '#fff', flexDirection: 'row' }}>
-                            <View style={{ flex: 1, backgroundColor: '#f4f4f6', paddingLeft: 10 }}>
-                                <Text style={{ fontSize: 12, lineHeight: 25 }} ellipsizeMode='tail'>
-                                    NAME
+                            <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#F8F9FA', paddingLeft: 10 }}>
+                                <Text style={{ fontSize: 20, lineHeight: 25, fontFamily: 'inter', paddingHorizontal: 20, paddingVertical: 5 }} ellipsizeMode='tail'>
+                                    Name
                                 </Text>
                             </View>
-                            <View style={{ flex: 1, backgroundColor: '#f4f4f6', paddingLeft: 10 }}>
-                                <Text style={{ fontSize: 12, lineHeight: 25 }} ellipsizeMode='tail'>
-                                    OWNER
+                            <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#F8F9FA', paddingLeft: 10 }}>
+                                <Text style={{ fontSize: 20, lineHeight: 25, fontFamily: 'inter', paddingHorizontal: 20, paddingVertical: 5 }} ellipsizeMode='tail'>
+                                    Instructor
                                 </Text>
                             </View>
-                        </View> : null
-                }
-                {
-                    option === 'All' ?
+                            <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#F8F9FA', paddingLeft: 10 }}>
+
+                            </View>
+                        </View>
                         <ScrollView contentContainerStyle={{
                             maxHeight: 500
                         }}>
                             {
                                 channels.map((channel: any) => {
-                                    return <View style={{ backgroundColor: '#fff', flexDirection: 'row' }}>
+                                    return <View style={{ backgroundColor: '#fff', flexDirection: 'row', borderColor: '#eeeeee', borderBottomWidth: 1 }}>
                                         <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                            <Text style={{ fontSize: 12, lineHeight: 25 }} ellipsizeMode='tail'>
+                                            <Text style={{ fontSize: 12, lineHeight: 25, paddingHorizontal: 20, fontFamily: 'inter' }} ellipsizeMode='tail'>
                                                 {channel.name}
                                             </Text>
                                         </View>
                                         <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                            <Text style={{ fontSize: 12, lineHeight: 25 }} ellipsizeMode='tail'>
+                                            <Text style={{ fontSize: 12, lineHeight: 25, paddingHorizontal: 20 }} ellipsizeMode='tail'>
                                                 {channel.createdByUsername}
                                             </Text>
+                                        </View>
+                                        <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
+                                            <TouchableOpacity
+                                                onPress={() => handleSub(channel.name)}
+                                            >
+                                                <Text style={{ textAlign: 'center', fontSize: 12, lineHeight: 25, paddingHorizontal: 20, color: '#3b64f8' }} ellipsizeMode='tail'>
+                                                    Join
+                                                </Text>
+                                            </TouchableOpacity>
                                         </View>
                                     </View>
                                 })
                             }
-                        </ScrollView> :
-                        <View style={{ backgroundColor: 'white' }}>
-                            <View style={{ backgroundColor: 'white' }}>
-                                <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>
-                                    {PreferredLanguageText('channel') + ' ' + PreferredLanguageText('name')}
-                                </Text>
-                                <TextInput
-                                    value={name}
-                                    placeholder={''}
-                                    onChangeText={val => {
-                                        setName(val)
-                                        setPasswordRequired(false)
-                                    }}
-                                    placeholderTextColor={'#a2a2ac'}
-                                    required={true}
-                                    footerMessage={'case sensitive'}
-                                />
-                            </View>
-                            {
-                                (option === 'Subscribe' && passwordRequired) || option === 'Create' ?
-                                    <View style={{ backgroundColor: 'white' }}>
-                                        <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>
-                                            {PreferredLanguageText('enrolmentPassword')}
-                                        </Text>
-                                        <TextInput
-                                            value={password}
-                                            placeholder={option === 'Subscribe' ? '' : `(${PreferredLanguageText('optional')})`}
-                                            onChangeText={val => setPassword(val)}
-                                            placeholderTextColor={'#a2a2ac'}
-                                            secureTextEntry={true}
-                                            required={option === "Subscribe" ? true : false}
-                                        />
-                                    </View>
-                                    : (
-                                        option === 'Subscribe' && !passwordRequired ?
-                                            <View
-                                                style={{ height: 115, width: '100%', backgroundColor: 'white' }}
-                                            /> : null
-                                    )
-                            }
-                            {
-                                option === 'Create' ?
-                                    <View
-                                        style={{
-                                            width: "100%",
-                                        }}>
-                                        <View
-                                            style={{
-                                                width: "100%",
-                                                // paddingTop: 40,
-                                                paddingBottom: 15,
-                                                backgroundColor: "white"
-                                            }}>
-                                            <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>Temporary</Text>
-                                        </View>
-                                        <View
-                                            style={{
-                                                backgroundColor: "white",
-                                                width: "100%",
-                                                height: 40,
-                                                marginHorizontal: 10
-                                            }}>
-                                            <Switch
-                                                value={temporary}
-                                                onValueChange={() => setTemporary(!temporary)}
-                                                style={{ height: 20 }}
-                                                trackColor={{
-                                                    false: "#f4f4f6",
-                                                    true: "#3B64F8"
-                                                }}
-                                                activeThumbColor="white"
-                                            />
-                                        </View>
-                                        <Text style={{ color: '#a2a2ac', fontSize: 12 }}>
-                                            Channels that are not temporary can only be deleted by the school administrator.
-                                        </Text>
-                                    </View>
-                                    : null
-                            }
-                            {
-                                option === "Create" ?
-                                    <View
-                                        style={{
-                                            width: "100%",
-                                            paddingVertical: 15,
-                                        }}>
-                                        <View
-                                            style={{
-                                                width: "100%",
-                                                paddingTop: 20,
-                                                paddingBottom: 15,
-                                                backgroundColor: "white"
-                                            }}>
-                                            <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>Color</Text>
-                                        </View>
-                                        <View style={{ width: '100%', backgroundColor: 'white' }}>
-                                            <CirclePicker
-                                                color={colorCode}
-                                                onChangeComplete={(color: any) => setColorCode(color.hex)}
-                                            />
-                                        </View>
-                                    </View>
-                                    : null
-                            }
-                            <View
-                                style={{
-                                    flex: 1,
-                                    backgroundColor: 'white',
-                                    justifyContent: 'center',
-                                    display: 'flex',
-                                    flexDirection: 'row',
-                                    height: 50,
-                                    paddingTop: 25
-                                }}>
-                                {
-                                    option === 'About' ? null :
-                                        <TouchableOpacity
-                                            onPress={() => handleSubmit()}
-                                            style={{
-                                                backgroundColor: 'white',
-                                                borderRadius: 15,
-                                                overflow: 'hidden',
-                                                height: 35,
-                                                marginTop: 15
-                                            }}
-                                            disabled={isSubmitDisabled}
-                                        >
-                                            <Text style={{
-                                                textAlign: 'center',
-                                                lineHeight: 35,
-                                                color: 'white',
-                                                fontSize: 12,
-                                                backgroundColor: '#3B64F8',
-                                                paddingHorizontal: 25,
-                                                fontFamily: 'inter',
-                                                height: 35,
-                                                textTransform: 'uppercase'
-                                            }}>
-                                                {option === 'Subscribe' ? PreferredLanguageText('subscribe') : PreferredLanguageText('create')}
-                                            </Text>
-                                        </TouchableOpacity>
-                                }
-                            </View>
-                        </View>
-                }
+                        </ScrollView>
+                    </View>
+                </View>
             </View>
         </View>
     );
@@ -541,19 +587,19 @@ export default ChannelControls;
 const styles = StyleSheet.create({
     screen: {
         padding: 15,
-        paddingHorizontal: 20,
+        paddingHorizontal: Dimensions.get('window').width < 768 ? 0 : 20,
         width: '100%',
-        height: Dimensions.get('window').height - 50,
+        height: Dimensions.get('window').height - 230,
         backgroundColor: 'white',
     },
     outline: {
         borderRadius: 10,
         borderWidth: 1,
-        borderColor: '#a2a2ac'
+        borderColor: '#818385'
     },
     all: {
         fontSize: 15,
-        color: '#a2a2ac',
+        color: '#818385',
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: 'white'
@@ -576,7 +622,7 @@ const styles = StyleSheet.create({
     },
     input: {
         width: '100%',
-        borderBottomColor: '#f4f4f6',
+        borderBottomColor: '#F8F9FA',
         borderBottomWidth: 1,
         fontSize: 15,
         paddingTop: 13,

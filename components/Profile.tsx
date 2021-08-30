@@ -26,7 +26,7 @@ const Profile: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
         >
             <Animated.View style={{
                 width: '100%',
-                paddingHorizontal: Dimensions.get('window').width < 1024 ? 20 : 0,
+                paddingHorizontal: 0,
                 backgroundColor: 'white',
                 opacity: modalAnimation,
                 // paddingLeft: 20

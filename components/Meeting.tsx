@@ -258,7 +258,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
     const renderPastMeetings = () => {
         return (pastMeetings.length === 0 ?
             <View style={{ backgroundColor: 'white', flex: 1 }}>
-                <Text style={{ width: '100%', color: '#a2a2ac', fontSize: 20, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                <Text style={{ width: '100%', color: '#818385', fontSize: 20, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                     {PreferredLanguageText('noPastMeetings')}
                 </Text>
             </View>
@@ -277,7 +277,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                         Linking.openURL(date.url)
                                     }
                                 }}
-                                style={{ flexDirection: 'row', backgroundColor: '#f4f4f6', width: '90%' }}>
+                                style={{ flexDirection: 'row', backgroundColor: '#F8F9FA', width: '90%' }}>
                                 <Image
                                     height={45}
                                     width={75}
@@ -285,7 +285,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                     source={{ uri: date.thumbnail }}
                                     resizeMode={'contain'}
                                 />
-                                <View style={{ backgroundColor: '#f4f4f6', width: '100%', flexDirection: 'row', display: 'flex', marginLeft: 20 }}>
+                                <View style={{ backgroundColor: '#F8F9FA', width: '100%', flexDirection: 'row', display: 'flex', marginLeft: 20 }}>
                                     <Text ellipsizeMode={'tail'}
                                         numberOfLines={1}
                                         style={styles.title}>
@@ -295,7 +295,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                             </TouchableOpacity>
                             {
                                 isOwner ?
-                                    <TouchableOpacity style={{ backgroundColor: '#f4f4f6', width: '10%', }}
+                                    <TouchableOpacity style={{ backgroundColor: '#F8F9FA', width: '10%', }}
                                         onPress={() => {
                                             Alert("Delete past lecture ?", "", [
                                                 {
@@ -328,7 +328,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                             ]);
                                         }}
                                     >
-                                        <Text style={{ width: '100%', color: '#a2a2ac', fontSize: 15, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                        <Text style={{ width: '100%', color: '#818385', fontSize: 15, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                                             <Ionicons name='trash-outline' size={17} color="#d91d56" />
                                         </Text>
                                     </TouchableOpacity>
@@ -366,31 +366,46 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                     <Text
                         ellipsizeMode="tail"
                         style={{
-                            fontSize: 20,
+                            fontSize: 25,
                             paddingBottom: 20,
                             fontFamily: 'inter',
                             // textTransform: "uppercase",
                             // paddingLeft: 10,
+                            paddingTop: 2,
                             flex: 1,
                             lineHeight: 25
                         }}>
                         {PreferredLanguageText("classroom")}
                     </Text>
-                    <Text
-                        style={{
-                            color: "#3B64F8",
-                            fontSize: 11,
-                            lineHeight: 25,
-                            // paddingTop: 5,
-                            textAlign: "right",
-                            // paddingRight: 20,
-                            textTransform: "uppercase"
-                        }}
+                    <TouchableOpacity
                         onPress={() => {
                             setViewChannelAttendance(true);
+                        }}
+                        style={{
+                            backgroundColor: 'white',
+                            overflow: 'hidden',
+                            height: 35,
+                            // marginTop: 15,
+                            justifyContent: 'center',
+                            flexDirection: 'row'
                         }}>
-                        VIEW ATTENDANCE
-                    </Text>
+                        <Text style={{
+                            textAlign: 'center',
+                            lineHeight: 30,
+                            color: viewChannelAttendance ? '#2f2f3c' : '#fff',
+                            fontSize: 12,
+                            backgroundColor: viewChannelAttendance ? '#F8F9FA' : '#53BE6D',
+                            paddingHorizontal: 25,
+                            fontFamily: 'inter',
+                            height: 30,
+                            // width: 100,
+                            borderRadius: 15,
+                            textTransform: 'uppercase'
+                        }}>
+                            ATTENDANCE <Ionicons name='list-outline' size={12} />
+                        </Text>
+
+                    </TouchableOpacity>
                 </View>
                 <View style={{ backgroundColor: "white", flex: 1 }}>
                     <View
@@ -422,7 +437,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                         paddingHorizontal: 25,
                                         fontFamily: "inter",
                                         height: 35,
-                                        width: 210,
+                                        width: 150,
                                         borderRadius: 15,
                                         textTransform: "uppercase"
                                     }}>
@@ -434,8 +449,8 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                             isOwner ? (
                                 <View
                                     style={{
-                                        paddingLeft: 30,
-                                        marginBottom: 25,
+                                        paddingLeft: Dimensions.get('window').width < 768 ? 0 : 30,
+                                        // marginBottom: 25,
                                         backgroundColor: "white"
                                     }}>
                                     <View>
@@ -458,15 +473,15 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                                     lineHeight: 35,
                                                     color: "#2f2f3c",
                                                     fontSize: 12,
-                                                    backgroundColor: "#f4f4f6",
+                                                    backgroundColor: "#F8F9FA",
                                                     paddingHorizontal: 25,
                                                     fontFamily: "inter",
                                                     height: 35,
-                                                    width: 210,
+                                                    width: 150,
                                                     borderRadius: 15,
                                                     textTransform: "uppercase"
                                                 }}>
-                                                Copy Moderator Link
+                                                Host Link <Ionicons name='copy-outline' size={12} />
                                             </Text>
                                         </TouchableOpacity>
                                     </View>
@@ -477,8 +492,8 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                             isOwner ? (
                                 <View
                                     style={{
-                                        paddingLeft: 30,
-                                        marginBottom: 25,
+                                        paddingLeft: Dimensions.get('window').width < 768 ? 0 : 30,
+                                        // marginBottom: 25,
                                         backgroundColor: "white"
                                     }}>
                                     <View>
@@ -501,15 +516,15 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                                     lineHeight: 35,
                                                     color: "#2f2f3c",
                                                     fontSize: 12,
-                                                    backgroundColor: "#f4f4f6",
+                                                    backgroundColor: "#F8F9FA",
                                                     paddingHorizontal: 25,
                                                     fontFamily: "inter",
                                                     height: 35,
-                                                    width: 210,
+                                                    width: 150,
                                                     borderRadius: 15,
                                                     textTransform: "uppercase"
                                                 }}>
-                                                Copy Guest Link
+                                                Guest Link <Ionicons name='copy-outline' size={12} />
                                             </Text>
                                         </TouchableOpacity>
                                     </View>
@@ -518,7 +533,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                         }
                     </View>
                     {
-                        <View style={{ borderTopColor: '#f4f4f6', borderTopWidth: 1, marginTop: 25 }}>
+                        <View style={{ borderTopColor: '#F8F9FA', borderTopWidth: 1, marginTop: 25 }}>
                             <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 25 }}>
                             </Text>
                             <Text style={{
@@ -538,7 +553,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                         {
                                             attendances.length === 0 ?
                                                 <View style={{ backgroundColor: 'white', flex: 1 }}>
-                                                    <Text style={{ width: '100%', color: '#a2a2ac', fontSize: 20, paddingVertical: 50, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                                    <Text style={{ width: '100%', color: '#818385', fontSize: 20, paddingVertical: 50, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                                                         {PreferredLanguageText('noAttendances')}
                                                     </Text>
                                                 </View>
@@ -608,7 +623,7 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 12,
-        color: "#a2a2ac",
+        color: "#818385",
         textAlign: "left",
         paddingHorizontal: 10,
         paddingTop: 5
@@ -633,7 +648,7 @@ const styles = StyleSheet.create({
         maxWidth: '100%',
         borderRadius: 15,
         padding: 13,
-        backgroundColor: '#f4f4f6',
+        backgroundColor: '#F8F9FA',
         flexDirection: 'row',
         justifyContent: 'space-between'
     },
@@ -641,18 +656,18 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'column',
         flex: 1,
-        backgroundColor: '#f4f4f6',
+        backgroundColor: '#F8F9FA',
     },
     title: {
         fontFamily: 'inter',
         fontSize: 13,
         width: '100%',
         paddingTop: 5,
-        color: '#2F2F3C'
+        color: '#2f2f3c'
     },
     description: {
         fontSize: 13,
-        color: '#a2a2ac',
+        color: '#818385',
     }
 
 });

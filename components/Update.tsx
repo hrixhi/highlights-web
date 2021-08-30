@@ -85,7 +85,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         if (u) {
             parsedUser = JSON.parse(u)
         }
-        
+
         if (Number.isNaN(Number(cueId))) {
             const server = fetchAPI(parsedUser._id)
 
@@ -101,7 +101,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
                 if (res.data.threadStatus.getUnreadQACount === null || res.data.threadStatus.getUnreadQACount === undefined) {
                     return null
-                } 
+                }
 
 
                 let subCues: any = {};
@@ -153,7 +153,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 }
             })
 
-            
+
         }
 
     }
@@ -304,7 +304,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         borderTopLeftRadius: 0,
                         borderTopRightRadius: 0,
                     }}>
-                        <ActivityIndicator color={'#a2a2ac'} />
+                        <ActivityIndicator color={'#818385'} />
                     </View>
                     :
                     <Animated.View style={{
@@ -495,25 +495,6 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 borderTopLeftRadius: 0,
                                                 paddingTop: 10
                                             }}>
-                                            {/* <View style={{ backgroundColor: 'white', flexDirection: 'row', paddingBottom: 25 }}>
-                                    <TouchableOpacity
-                                        key={Math.random()}
-                                        style={{
-                                            flex: 1,
-                                            backgroundColor: 'white'
-                                        }}
-                                        onPress={() => {
-                                            setViewStatus(false)   
-                                        }}>
-                                            <Text style={{
-                                                width: '100%',
-                                                fontSize: 16,
-                                                color: '#a2a2ac'
-                                            }}>
-                                                <Ionicons name='chevron-back-outline' size={17} color={'#2f2f3c'} style={{ marginRight: 10 }} /> Cue
-                                            </Text>
-                                    </TouchableOpacity>
-                                    </View> */}
                                             <ScrollView
                                                 ref={scroll3}
                                                 contentContainerStyle={{
@@ -564,7 +545,7 @@ export default Update
 const styles: any = StyleSheet.create({
     all: {
         fontSize: 12,
-        color: '#a2a2ac',
+        color: '#818385',
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: 'white',

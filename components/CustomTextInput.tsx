@@ -22,7 +22,7 @@ type FooterProps = {
 };
 
 export type TextInputProps = ValidationProps &
-  FooterProps & 
+  FooterProps &
   FieldTypeProps &
   DefaultTextInput["props"];
 
@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
   },
   input: {
     width: "100%",
-    borderBottomColor: "#cccccc",
+    borderBottomColor: "#dddddd",
     borderBottomWidth: 1,
     fontSize: 15,
     paddingTop: 13,

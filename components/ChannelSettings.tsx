@@ -148,7 +148,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 borderRadius: 15,
                                 shadowOpacity: 0,
                                 borderWidth: 1,
-                                borderColor: '#f4f4f6',
+                                borderColor: '#F8F9FA',
                                 overflow: 'scroll',
                                 maxHeight: '100%'
                             }
@@ -205,7 +205,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 borderRadius: 15,
                                 shadowOpacity: 0,
                                 borderWidth: 1,
-                                borderColor: '#f4f4f6',
+                                borderColor: '#F8F9FA',
                                 overflow: 'scroll',
                                 maxHeight: '100%'
                             }
@@ -262,7 +262,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 borderRadius: 15,
                                 shadowOpacity: 0,
                                 borderWidth: 1,
-                                borderColor: '#f4f4f6',
+                                borderColor: '#F8F9FA',
                                 overflow: 'scroll',
                                 maxHeight: '100%'
                             }
@@ -577,8 +577,8 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
             <View style={{ width: '100%', backgroundColor: 'white', paddingTop: 10 }}>
                 <Text
                     style={{
-                        fontSize: 20,
-                        paddingBottom: 20,
+                        fontSize: 25,
+                        paddingBottom: 40,
                         fontFamily: 'inter',
                         // textTransform: "uppercase",
                         // paddingLeft: 10,
@@ -607,7 +607,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             onChangeText={val => {
                                 setName(val)
                             }}
-                            placeholderTextColor={'#a2a2ac'}
+                            placeholderTextColor={'#818385'}
                             required={true}
                             footerMessage={'case sensitive'}
                         />
@@ -620,7 +620,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             value={password}
                             placeholder={`(${PreferredLanguageText('optional')})`}
                             onChangeText={val => setPassword(val)}
-                            placeholderTextColor={'#a2a2ac'}
+                            placeholderTextColor={'#818385'}
                             secureTextEntry={true}
                             required={false}
                         />
@@ -774,9 +774,9 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     <Text style={{
                                         textAlign: 'center',
                                         lineHeight: 35,
-                                        color: '#2F2F3C',
+                                        color: '#2f2f3c',
                                         fontSize: 12,
-                                        backgroundColor: '#f4f4f6',
+                                        backgroundColor: '#F8F9FA',
                                         paddingHorizontal: 25,
                                         fontFamily: 'inter',
                                         height: 35,
@@ -808,24 +808,24 @@ const styles = StyleSheet.create({
     outline: {
         borderRadius: 10,
         borderWidth: 1,
-        borderColor: '#a2a2ac'
+        borderColor: '#818385'
     },
     all: {
         fontSize: 15,
-        color: '#a2a2ac',
+        color: '#818385',
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: 'white'
     },
     allOutline: {
         fontSize: 15,
-        color: '#a2a2ac',
+        color: '#818385',
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: 'white',
         borderRadius: 10,
         borderWidth: 1,
-        borderColor: '#a2a2ac'
+        borderColor: '#818385'
     },
     colorBar: {
         width: '100%',
@@ -837,7 +837,7 @@ const styles = StyleSheet.create({
     },
     input: {
         width: '100%',
-        borderBottomColor: '#f4f4f6',
+        borderBottomColor: '#F8F9FA',
         borderBottomWidth: 1,
         fontSize: 15,
         paddingTop: 13,
@@ -864,6 +864,6 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         borderRadius: 10,
         borderWidth: 1,
-        borderColor: '#a2a2ac'
+        borderColor: '#818385'
     },
 });
