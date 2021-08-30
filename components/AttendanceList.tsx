@@ -287,6 +287,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                         <DateRangePicker
                             preventOverflow={true}
                             size={'xs'}
+                            appearance={'subtle'}
                             placeholder={'Filter'}
                             onChange={e => {
                                 setStart(e[0])
@@ -489,13 +490,23 @@ const styles = StyleSheet.create({
         textAlign: "left",
         paddingHorizontal: 10
     },
+    all: {
+        fontSize: 14,
+        color: '#2f2f3c',
+        height: 22,
+        paddingHorizontal: 20,
+        backgroundColor: '#F8F9FA',
+        lineHeight: 22,
+        fontFamily: 'inter'
+    },
     allGrayFill: {
-        fontSize: 12,
-        color: "#fff",
-        paddingHorizontal: 10,
+        fontSize: 14,
+        color: '#fff',
+        paddingHorizontal: 20,
         borderRadius: 10,
-        backgroundColor: "#2f2f3c",
-        lineHeight: 20
+        backgroundColor: '#2f2f3c',
+        lineHeight: 22,
+        fontFamily: 'inter'
     },
     allGrayOutline: {
         fontSize: 12,
@@ -506,14 +517,6 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         borderWidth: 1,
         borderColor: "#818385",
-        lineHeight: 20
-    },
-    all: {
-        fontSize: 12,
-        color: "#818385",
-        height: 22,
-        paddingHorizontal: 10,
-        backgroundColor: "white",
         lineHeight: 20
     },
 })

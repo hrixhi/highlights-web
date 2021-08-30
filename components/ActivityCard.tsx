@@ -22,7 +22,7 @@ const ActivityCard: React.FunctionComponent<{ [label: string]: any }> = (props: 
                     <View style={styleObject.dateContainer}>
                         <Text style={{
                             fontSize: 11,
-                            color: '#2f2f3c',
+                            color: '#868E96',
                             marginRight: 5,
                             flex: 1,
                             textAlign: 'left'
@@ -141,7 +141,7 @@ const styles: any = () => StyleSheet.create({
         fontSize: 13,
         lineHeight: 20,
         paddingTop: 5,
-        color: '#2f2f3c',
+        color: '#868E96',
         marginLeft: 10
     },
     description: {

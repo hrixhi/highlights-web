@@ -341,7 +341,9 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
             backgroundColor: 'white',
             width: '100%',
             height: '100%',
-            paddingHorizontal: 20,
+            paddingRight: 20,
+            paddingLeft: Dimensions.get('window').width < 1024 ? 20 : 0,
+            paddingTop: 30,
             borderTopRightRadius: 0,
             borderTopLeftRadius: 0
         }}>
@@ -449,34 +451,34 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         key={JSON.stringify(props.scores)}
                     >
                         <View style={{ flexDirection: 'row', marginBottom: 10, }}>
-                                <View style={{ display: 'flex', flexDirection: 'row' }}>
-                                    <View 
-                                        style={{ 
-                                            width: 10,
-                                            height: 10,
-                                            borderRadius: 5,
-                                            backgroundColor: '#D91D56', 
-                                        }}
-                                    />
-                                    <Text style={{ paddingLeft: 10, fontSize: 11 }}>
-                                        No Submission
-                                    </Text>
-                                </View>
-
-                                <View style={{ display: 'flex', flexDirection: 'row', paddingLeft: 30 }}>
-                                    <View 
-                                        style={{ 
-                                            width: 10,
-                                            height: 10,
-                                            borderRadius: 5,
-                                            backgroundColor: '#ED7D22', 
-                                        }}
-                                    />
-                                    <Text style={{ paddingLeft: 10, fontSize: 11 }}>
-                                        Late Submission
-                                    </Text>
-                                </View>
+                            <View style={{ display: 'flex', flexDirection: 'row' }}>
+                                <View
+                                    style={{
+                                        width: 10,
+                                        height: 10,
+                                        borderRadius: 5,
+                                        backgroundColor: '#D91D56',
+                                    }}
+                                />
+                                <Text style={{ paddingLeft: 10, fontSize: 11 }}>
+                                    No Submission
+                                </Text>
                             </View>
+
+                            <View style={{ display: 'flex', flexDirection: 'row', paddingLeft: 30 }}>
+                                <View
+                                    style={{
+                                        width: 10,
+                                        height: 10,
+                                        borderRadius: 5,
+                                        backgroundColor: '#ED7D22',
+                                    }}
+                                />
+                                <Text style={{ paddingLeft: 10, fontSize: 11 }}>
+                                    Late Submission
+                                </Text>
+                            </View>
+                        </View>
                         <ScrollView
                             showsHorizontalScrollIndicator={false}
                             horizontal={true}
@@ -649,13 +651,23 @@ export default React.memo(GradesList, (prev, next) => {
 const styles = StyleSheet.create({
     row: { minHeight: 70, flexDirection: 'row', overflow: 'hidden', borderBottomColor: '#e0e0e0', borderBottomWidth: 1 },
     col: { width: 120, justifyContent: 'center', display: 'flex', flexDirection: 'column', padding: 7, },
+    all: {
+        fontSize: 14,
+        color: '#2f2f3c',
+        height: 22,
+        paddingHorizontal: 20,
+        backgroundColor: '#F8F9FA',
+        lineHeight: 22,
+        fontFamily: 'inter'
+    },
     allGrayFill: {
-        fontSize: 12,
-        color: "#fff",
-        paddingHorizontal: 10,
+        fontSize: 14,
+        color: '#fff',
+        paddingHorizontal: 20,
         borderRadius: 10,
-        backgroundColor: "#2f2f3c",
-        lineHeight: 20
+        backgroundColor: '#2f2f3c',
+        lineHeight: 22,
+        fontFamily: 'inter'
     },
     allGrayOutline: {
         fontSize: 12,
@@ -667,13 +679,5 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: "#818385",
         lineHeight: 20
-    },
-    all: {
-        fontSize: 12,
-        color: "#818385",
-        height: 22,
-        paddingHorizontal: 10,
-        backgroundColor: "white",
-        lineHeight: 20
-    },
+    }
 })

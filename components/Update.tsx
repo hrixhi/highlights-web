@@ -422,7 +422,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             setShowOriginal(false)
                                             setShowComments(false)
                                         }}>
-                                            
+
                                         <Text style={styles.all}>
                                             Details
                                         </Text>
@@ -444,7 +444,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         </Text>
                                     </TouchableOpacity>
                                     {
-                                        (channelOwner && submission) || isQuiz ? null :
+                                        !submission || (channelOwner && submission) || isQuiz ? null :
                                             <TouchableOpacity
                                                 style={{
                                                     justifyContent: 'center',
@@ -457,9 +457,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     setShowOptions(false)
                                                 }}>
                                                 <Text style={!showOriginal && !viewStatus && !showOptions && !showComments ? styles.allGrayFill : styles.all}>
-                                                    {
-                                                        submission ? PreferredLanguageText('mySubmission') : PreferredLanguageText('myNotes')
-                                                    }
+                                                    {PreferredLanguageText('mySubmission')}
                                                 </Text>
                                             </TouchableOpacity>
                                     }
@@ -544,20 +542,22 @@ export default Update
 
 const styles: any = StyleSheet.create({
     all: {
-        fontSize: 12,
-        color: '#818385',
+        fontSize: 14,
+        color: '#2f2f3c',
         height: 22,
-        paddingHorizontal: 10,
-        backgroundColor: 'white',
-        lineHeight: 20
+        paddingHorizontal: 20,
+        backgroundColor: '#fff',
+        lineHeight: 22,
+        fontFamily: 'inter'
     },
     allGrayFill: {
-        fontSize: 12,
+        fontSize: 14,
         color: '#fff',
-        paddingHorizontal: 10,
+        paddingHorizontal: 20,
         borderRadius: 10,
         backgroundColor: '#2f2f3c',
-        lineHeight: 20
+        lineHeight: 22,
+        fontFamily: 'inter'
     },
     badge: {
         position: 'absolute',

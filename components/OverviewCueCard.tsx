@@ -194,21 +194,13 @@ const OverviewCueCard: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         backgroundColor: '#3b64f8',
                                         textAlign: 'center',
                                         zIndex: 150,
+                                        marginLeft: 10,
                                         // marginLeft: 5,
                                         // marginTop: 12,
                                         color: 'white', lineHeight: 20, fontSize: 10
                                     }}>
                                         {props.cue.unreadThreads}
-                                    </Text> : <View
-                                        style={{
-                                            width: 20,
-                                            height: 20,
-                                            borderRadius: 10,
-                                            overflow: 'hidden',
-                                            backgroundColor: '#F8F9FA',
-                                            zIndex: 150
-                                        }}
-                                    />
+                                    </Text> : null
                             }
                         </View>
                         <Text
@@ -306,8 +298,8 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
         fontSize: 15,
         lineHeight: 20,
         // flex: 1,
-        height: '42%',
-        marginTop: 5,
+        height: '41%',
+        marginTop: 8,
         color: col
     },
     titleFlip: {

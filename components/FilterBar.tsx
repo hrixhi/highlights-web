@@ -219,6 +219,7 @@ const FilterBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         <DateRangePicker
                             preventOverflow={true}
                             size={'sm'}
+                            appearance={'subtle'}
                             placeholder={'Filter  '}
                             onChange={e => {
                                 console.log('dates start', e[0])

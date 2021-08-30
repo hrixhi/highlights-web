@@ -353,7 +353,9 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                 style={{
                     width: "100%",
                     backgroundColor: "white",
-                    padding: 20,
+                    paddingRight: 20,
+                    paddingTop: 30,
+                    paddingLeft: Dimensions.get('window').width < 1024 ? 20 : 0,
                     opacity: modalAnimation,
                     borderTopLeftRadius: 0,
                     borderTopRightRadius: 0,

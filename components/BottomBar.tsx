@@ -91,7 +91,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         style={styles.center}
                     >
                         <Text style={{ textAlign: 'left', lineHeight: 35, marginTop: 15 }}>
-                            <Ionicons name='arrow-back-outline' size={40} color={'#2f2f3c'} />
+                            <Ionicons name='arrow-back-outline' size={30} color={'#2f2f3c'} />
                         </Text>
                         {/* <Text style={{ fontSize: 10, color: '#fff', }}>
                             Dashboard

@@ -439,7 +439,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                             <View style={{ width: '100%', flexDirection: width < 768 ? 'column' : 'row' }}>
                                 <View style={{
                                     backgroundColor: 'white',
-                                    width: width < 768 ? '100%' : '25%',
+                                    width: width < 768 ? '100%' : '40%',
                                     paddingRight: width < 768 ? 0 : 20,
                                 }} key={showChat.toString()}>
                                     <View style={{
@@ -647,7 +647,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                     }
                                 </View>
                                 <View style={{
-                                    backgroundColor: '#fff', width: width < 768 ? '100%' : '75%',
+                                    backgroundColor: '#fff', width: width < 768 ? '100%' : '60%',
                                     paddingLeft: width < 768 ? 0 : 20,
                                     borderLeftWidth: width < 768 ? 0 : 1, borderLeftColor: '#dddddd'
                                 }}>
@@ -731,7 +731,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                     Channel
                                                 </Text>
                                             </View>
-                                            <View style={{ backgroundColor: 'white', paddingLeft: 25 }}>
+                                            {/* <View style={{ backgroundColor: 'white', paddingLeft: 25 }}>
                                                 <View style={{ flexDirection: 'row', justifyContent: 'flex-start', display: 'flex', backgroundColor: 'white', paddingLeft: 10 }}>
                                                     <Menu
                                                         onSelect={(role: any) => {
@@ -878,25 +878,32 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                     Sections
                                                 </Text>
                                             </View>
+                                             */}
                                         </View>
                                     </View>
                                     <ScrollView
                                         horizontal={true}
-                                        style={{ width: '100%' }}
+                                    // style={{ width: '100%' }}
                                     >
-                                        <View style={{ paddingBottom: 25, width: '100%' }}>
-                                            <View style={{ backgroundColor: '#fff', flexDirection: 'row', minWidth: 800, width: '100%', flex: 1 }}>
+                                        <View style={{ paddingBottom: 25, flex: 1, width: '100%' }}>
+                                            <View style={{ backgroundColor: '#fff', flexDirection: 'row', width: '100%', flex: 1, minWidth: 300 }}>
                                                 <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#F8F9FA', paddingLeft: 10 }}>
-                                                    <Text style={{ fontSize: 20, lineHeight: 25, fontFamily: 'inter', paddingHorizontal: 20, paddingVertical: 5 }} ellipsizeMode='tail'>
+                                                    <Text style={{
+                                                        flex: 1, flexDirection: 'row',
+                                                        fontSize: 20, lineHeight: 25, fontFamily: 'inter', paddingHorizontal: 20, paddingVertical: 5
+                                                    }} ellipsizeMode='tail'>
                                                         Name
                                                     </Text>
                                                 </View>
                                                 <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#F8F9FA', paddingLeft: 10 }}>
-                                                    <Text style={{ fontSize: 20, lineHeight: 25, fontFamily: 'inter', paddingHorizontal: 20, paddingVertical: 5 }} ellipsizeMode='tail'>
+                                                    <Text style={{
+                                                        flex: 1, flexDirection: 'row',
+                                                        fontSize: 20, lineHeight: 25, fontFamily: 'inter', paddingHorizontal: 20, paddingVertical: 5
+                                                    }} ellipsizeMode='tail'>
                                                         Email
                                                     </Text>
                                                 </View>
-                                                <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#F8F9FA', paddingLeft: 10 }}>
+                                                {/* <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#F8F9FA', paddingLeft: 10 }}>
                                                     <Text style={{ fontSize: 20, lineHeight: 25, fontFamily: 'inter', paddingHorizontal: 20, paddingVertical: 5 }} ellipsizeMode='tail'>
                                                         Role
                                                     </Text>
@@ -910,9 +917,8 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                     <Text style={{ fontSize: 20, lineHeight: 25, fontFamily: 'inter', paddingHorizontal: 20, paddingVertical: 5 }} ellipsizeMode='tail'>
                                                         Section
                                                     </Text>
-                                                </View>
+                                                </View> */}
                                                 <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#F8F9FA', paddingLeft: 10 }}>
-
                                                 </View>
                                             </View>
                                             <ScrollView contentContainerStyle={{
@@ -927,7 +933,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                             flexDirection: 'row',
                                                             borderColor: '#eeeeee',
                                                             borderBottomWidth: 1,
-                                                            minWidth: 800, // flex: 1,
+                                                            minWidth: 300, // flex: 1,
                                                             width: '100%'
                                                         }}>
                                                             <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
@@ -940,7 +946,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                     {user.email}
                                                                 </Text>
                                                             </View>
-                                                            <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
+                                                            {/* <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
                                                                 <Text style={{ fontSize: 12, lineHeight: 25, paddingHorizontal: 20 }} ellipsizeMode='tail'>
                                                                     {user.role}
                                                                 </Text>
@@ -954,7 +960,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                 <Text style={{ fontSize: 12, lineHeight: 25, paddingHorizontal: 20 }} ellipsizeMode='tail'>
                                                                     {user.section}
                                                                 </Text>
-                                                            </View>
+                                                            </View> */}
                                                             <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
                                                                 <TouchableOpacity
                                                                     onPress={() => {
