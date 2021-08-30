@@ -30,6 +30,14 @@ export const createChannel = gql`
     }
   }
 `;
+export const duplicateChannel = gql`
+mutation($channelId: String!, $name: String!, $password: String, $temporary: Boolean, $colorCode: String, $duplicateSubscribers: Boolean, $duplicateOwners: Boolean) {
+  channel {
+    duplicate(channelId: $channelId, name: $name, password: $password, temporary: $temporary, colorCode: $colorCode, duplicateSubscribers: $duplicateSubscribers, duplicateOwners: $duplicateOwners)
+  }
+}
+`;
+
 export const createCue = gql`
   mutation(
     $cue: String!

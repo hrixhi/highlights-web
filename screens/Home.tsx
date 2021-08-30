@@ -1117,6 +1117,32 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     })
   }, [email])
 
+  const refreshSubscriptions = async () => {
+    const u = await AsyncStorage.getItem('user')
+
+    if (u) {
+      const parsedUser = JSON.parse(u)
+      const server = fetchAPI(parsedUser._id)
+      server.query({
+        query: getSubscriptions,
+        variables: {
+          userId: parsedUser._id
+        }
+      })
+      .then(async res => {
+        if (res.data.subscription.findByUserId) {
+          setSubscriptions(res.data.subscription.findByUserId)
+          const stringSub = JSON.stringify(res.data.subscription.findByUserId)
+          await AsyncStorage.setItem('subscriptions', stringSub)
+        } 
+      })
+      .catch(e => {
+        alert("Could not refresh Subscriptions")
+      })
+    }
+    
+  }
+
   const closeModal = useCallback(() => {
     setCueId('')
     setModalType('')
@@ -1133,6 +1159,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
   const modalContent = modalType === 'ChannelSettings' ? <ChannelSettings
     channelId={channelId}
+    refreshSubscriptions={refreshSubscriptions}
     closeModal={() => {
       setShowHome(false)
       closeModal()
