@@ -71,7 +71,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         }} />
 
                         <Text style={styleObject.date}>
-                            {props.cue.channelName ? props.cue.channelName : 'My Cues'}
+                            {props.cue.channelName ? props.cue.channelName : 'My Notes'}
                         </Text>
                         {/* {
                             props.cue.channelName ?
@@ -167,7 +167,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     height: 20,
                                     borderRadius: 10,
                                     overflow: 'hidden',
-                                    backgroundColor: '#3B64F8',
+                                    backgroundColor: '#d91d56',
                                     textAlign: 'center',
                                     zIndex: 150,
                                     marginLeft: 10,
@@ -185,7 +185,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     height: 20,
                                     borderRadius: 10,
                                     overflow: 'hidden',
-                                    backgroundColor: '#d91d56',
+                                    backgroundColor: '#3b64f8',
                                     textAlign: 'center',
                                     zIndex: 150,
                                     marginLeft: 5,
@@ -275,10 +275,10 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
     },
     title: {
         fontFamily: 'inter',
-        fontSize: 20,
+        fontSize: 15,
         lineHeight: 20,
         flex: 1,
-        marginTop: 15,
+        marginTop: 12,
         color: col
     },
     titleFlip: {

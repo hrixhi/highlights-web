@@ -40,8 +40,10 @@ import EquationEditor from "equation-editor-react";
 import { PreferredLanguageText } from "../helpers/LanguageContext";
 import moment from "moment";
 import ReactPlayer from "react-player";
-import Webview from "./Webview";
+// import Webview from "./Webview";
 import Multiselect from "multiselect-react-dropdown";
+import WebViewer from '@pdftron/webviewer';
+
 
 import {
   Menu,
@@ -184,6 +186,25 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
       setTitle("");
     }
   }, [cue]);
+
+  useEffect(() => {
+    if (url === '' || !url) {
+      return
+    }
+    console.log(url)
+    WebViewer(
+      {
+        initialDoc: decodeURIComponent(url),
+      },
+      RichText.current,
+    ).then((instance) => {
+      const { documentViewer } = instance.Core;
+      // you can now call WebViewer APIs here...
+      documentViewer.addEventListener('documentLoaded', () => {
+        // perform document operations
+      });
+    });
+  }, [url, RichText, imported]);
 
   const createNewQuiz = useCallback(() => {
     setIsSubmitting(true);
@@ -855,7 +876,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
           <View style={{ backgroundColor: "white", flex: 1 }}>
             <Text
               style={{
-                fontSize: 20,
+                fontSize: 15,
                 paddingBottom: 20,
                 fontFamily: "inter",
                 // textTransform: "uppercase",
@@ -885,7 +906,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
               <Ionicons
                 name="bookmark"
                 size={34}
-                color={starred ? "#d91d56" : "#a2a2ac"}
+                color={starred ? "#d91d56" : "#818385"}
               />
             </Text>
           </TouchableOpacity>
@@ -899,6 +920,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
             paddingBottom: 4,
             marginTop: showImportOptions || imported || isQuiz ? 0 : 20,
             backgroundColor: "white",
+            borderBottomWidth: imported || isQuiz ? 0 : 1,
+            borderBottomColor: '#dddddd'
           }}
           onTouchStart={() => Keyboard.dismiss()}
         >
@@ -1042,7 +1065,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
           >
             <View
               style={{
-                borderColor: "#f4f4f6",
+                borderColor: "#F8F9FA",
                 borderWidth: 1,
                 borderRadius: 15,
                 padding: 10,
@@ -1065,7 +1088,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
               }}
               onPress={() => insertEquation()}
             >
-              <Ionicons name="add-circle-outline" color="#2F2F3C" size={20} />
+              <Ionicons name="add-circle-outline" color="#2f2f3c" size={20} />
             </TouchableOpacity>
             <View
               style={{
@@ -1075,7 +1098,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 justifyContent: "center",
               }}
             >
-              <Text style={{ flex: 1, fontSize: 12, color: "#2F2F3C", lineHeight: "1.5" }}>
+              <Text style={{ flex: 1, fontSize: 12, color: "#2f2f3c", lineHeight: "1.5" }}>
                 ^ → Superscript,  _ → Subscript,  int → Integral,  sum → Summation,  prod → Product,  sqrt → Square root,  bar → Bar over letter;  alpha, beta, ... omega → Small Greek letter;  Alpha, Beta, ... Omega → Capital Greek letter
               </Text>
             </View>
@@ -1103,7 +1126,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   width: width < 768 ? "100%" : "50%",
                   maxWidth: 400,
                   borderRightWidth: 0,
-                  borderColor: "#f4f4f6",
+                  borderColor: "#F8F9FA",
                   // paddingRight: 15,
                   // display: "flex",
                   paddingLeft: isQuiz && Dimensions.get('window').width > 768 ? 20 : 0,
@@ -1137,14 +1160,14 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                     >
                       <Ionicons
                         name="trash-outline"
-                        color="#a2a2ac"
+                        color="#818385"
                         size={20}
                         style={{ alignSelf: "center" }}
                       />
                       <Text
                         style={{
                           fontSize: 9,
-                          color: "#a2a2ac",
+                          color: "#818385",
                           textAlign: "center",
                         }}
                       >
@@ -1159,8 +1182,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                     width: width < 768 ? "100%" : "50%",
                     borderRightWidth: 0,
                     flex: 1,
-                    paddingLeft: Dimensions.get('window').width > 768 ? 20 : 0,
-                    borderColor: "#f4f4f6",
+                    paddingLeft: 20,
+                    borderColor: "#F8F9FA",
                     paddingTop: 10,
                     paddingRight: 25
                   }}
@@ -1209,7 +1232,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                       }}
                       style={{ height: 20, marginRight: 20 }}
                       trackColor={{
-                        false: "#f4f4f6",
+                        false: "#F8F9FA",
                         true: "#3B64F8",
                       }}
                       activeThumbColor="white"
@@ -1219,7 +1242,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                       style={{
                         borderRightWidth: 0,
                         paddingTop: 0,
-                        borderColor: "#f4f4f6",
+                        borderColor: "#F8F9FA",
                         flexDirection: 'row'
                       }}
                     >
@@ -1246,7 +1269,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                 borderRadius: 15,
                                 shadowOpacity: 0,
                                 borderWidth: 1,
-                                borderColor: "#f4f4f6",
+                                borderColor: "#F8F9FA",
                                 overflow: 'scroll',
                                 maxHeight: '100%'
                               },
@@ -1285,7 +1308,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                 borderRadius: 15,
                                 shadowOpacity: 0,
                                 borderWidth: 1,
-                                borderColor: "#f4f4f6",
+                                borderColor: "#F8F9FA",
                                 overflow: 'scroll',
                                 maxHeight: '100%'
                               },
@@ -1380,8 +1403,9 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   }}
                 />
               ) : (
-                <View key={url} style={{ flex: 1 }}>
-                  <Webview key={url} url={url} />
+                <View key={url} style={{ flex: 1, maxHeight: 800 }}>
+                  {/* <Webview key={url} url={url} /> */}
+                  <div className="webviewer" ref={RichText} style={{ height: "100vh" }}></div>
                 </View>
               )
             ) : null}
@@ -1403,13 +1427,13 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 // borderRadius: 15,
                 minHeight: 550,
                 display: isQuiz || imported ? "none" : "flex",
-                borderTopWidth: 1,
-                borderColor: "#a2a2ac",
+                // borderTopWidth: 0.5,
+                // borderColor: "#818385",
               }}
               editorStyle={{
                 backgroundColor: "#fff",
-                placeholderColor: "#a2a2ac",
-                color: "#2F2F3C",
+                placeholderColor: "#818385",
+                color: "#2f2f3c",
                 contentCSSText: "font-size: 14px;",
               }}
               initialContentHTML={cue}
@@ -1450,7 +1474,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   style={{
                     width: width < 768 ? "100%" : "33.33%",
                     borderRightWidth: 0,
-                    borderColor: "#f4f4f6",
+                    borderColor: "#F8F9FA",
                   }}
                 >
                   <View
@@ -1471,7 +1495,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                       {/* {PreferredLanguageText('channel')} */}
                       Share with
                       {/* <Ionicons
-                                                name='school-outline' size={20} color={'#a2a2ac'} /> */}
+                                                name='school-outline' size={20} color={'#818385'} /> */}
                     </Text>
                   </View>
                   <View
@@ -1521,7 +1545,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                             style={{
                               fontFamily: "inter",
                               fontSize: 14,
-                              color: "#2F2F3C",
+                              color: "#2f2f3c",
                             }}
                           >
                             {channelName === "" ? "My Cues" : channelName}
@@ -1535,7 +1559,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                               borderRadius: 15,
                               shadowOpacity: 0,
                               borderWidth: 1,
-                              borderColor: "#f4f4f6",
+                              borderColor: "#F8F9FA",
                               overflow: 'scroll',
                               maxHeight: '100%'
                             },
@@ -1593,8 +1617,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           }}
                           style={{ height: 20 }}
                           trackColor={{
-                            false: "#f4f4f6",
-                            true: "#a2a2ac",
+                            false: "#F8F9FA",
+                            true: "#818385",
                           }}
                           activeThumbColor="white"
                         />
@@ -1704,8 +1728,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           onValueChange={() => setGraded(!graded)}
                           style={{ height: 20 }}
                           trackColor={{
-                            false: "#f4f4f6",
-                            true: "#a2a2ac",
+                            false: "#F8F9FA",
+                            true: "#818385",
                           }}
                           activeThumbColor="white"
                         />
@@ -1729,7 +1753,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                             value={gradeWeight}
                             style={{
                               width: "25%",
-                              borderBottomColor: "#f4f4f6",
+                              borderBottomColor: "#F8F9FA",
                               borderBottomWidth: 1,
                               fontSize: 15,
                               padding: 15,
@@ -1738,7 +1762,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                             }}
                             placeholder={"0-100"}
                             onChangeText={(val) => setGradeWeight(val)}
-                            placeholderTextColor={"#a2a2ac"}
+                            placeholderTextColor={"#818385"}
                           />
                         </View>
                       ) : null}
@@ -1752,7 +1776,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
               style={{
                 width: width < 768 ? "100%" : "33.3%",
                 borderRightWidth: 0,
-                borderColor: "#f4f4f6",
+                borderColor: "#F8F9FA",
               }}
             >
               {channelId !== "" ? (
@@ -1799,7 +1823,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 style={{
                   width: width < 768 ? "100%" : "33.33%",
                   borderRightWidth: 0,
-                  borderColor: "#f4f4f6",
+                  borderColor: "#F8F9FA",
                 }}
               >
                 <View style={{ width: "100%", backgroundColor: "white" }}>
@@ -1839,7 +1863,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                             onChangeText={(val) => {
                               setCustomCategory(val);
                             }}
-                            placeholderTextColor={"#a2a2ac"}
+                            placeholderTextColor={"#818385"}
                           />
                         </View>
                       ) : (
@@ -1863,7 +1887,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                 borderRadius: 15,
                                 shadowOpacity: 0,
                                 borderWidth: 1,
-                                borderColor: "#f4f4f6",
+                                borderColor: "#F8F9FA",
                                 overflow: 'scroll',
                                 maxHeight: '100%'
                               },
@@ -1918,7 +1942,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 style={{
                   width: width < 768 ? "100%" : "33.33%",
                   borderRightWidth: 0,
-                  borderColor: "#f4f4f6",
+                  borderColor: "#F8F9FA",
                 }}
               >
                 <View
@@ -2031,7 +2055,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                     }}
                     style={{ height: 20 }}
                     trackColor={{
-                      false: "#f4f4f6",
+                      false: "#F8F9FA",
                       true: "#3B64F8",
                     }}
                     activeThumbColor="white"
@@ -2071,8 +2095,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                         onValueChange={() => setShuffle(!shuffle)}
                         style={{ height: 20 }}
                         trackColor={{
-                          false: "#f4f4f6",
-                          true: "#a2a2ac",
+                          false: "#F8F9FA",
+                          true: "#818385",
                         }}
                         activeThumbColor="white"
                       />
@@ -2113,7 +2137,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                 borderRadius: 15,
                                 shadowOpacity: 0,
                                 borderWidth: 1,
-                                borderColor: "#f4f4f6",
+                                borderColor: "#F8F9FA",
                                 overflow: 'scroll',
                                 maxHeight: '100%'
                               },
@@ -2150,7 +2174,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                                             {
                                                                 timedFrequencyOptions.map((item: any, index: number) => {
                                                                     return <Picker.Item
-                                                                        color={frequency === item.value ? '#3B64F8' : "#2F2F3C"}
+                                                                        color={frequency === item.value ? '#3B64F8' : "#2f2f3c"}
                                                                         label={item.value === '0' && channelId !== '' ? 'Once' : item.label}
                                                                         value={item.value}
                                                                         key={index}
@@ -2224,8 +2248,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                         }
                         style={{ height: 20 }}
                         trackColor={{
-                          false: "#f4f4f6",
-                          true: "#a2a2ac",
+                          false: "#F8F9FA",
+                          true: "#818385",
                         }}
                         activeThumbColor="white"
                       />
@@ -2294,8 +2318,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                       onValueChange={() => setShuffleQuiz(!shuffleQuiz)}
                       style={{ height: 20 }}
                       trackColor={{
-                        false: "#f4f4f6",
-                        true: "#a2a2ac",
+                        false: "#F8F9FA",
+                        true: "#818385",
                       }}
                       activeThumbColor="white"
                     />
@@ -2388,7 +2412,7 @@ const styles: any = StyleSheet.create({
     width: 125,
     fontSize: 15,
     height: 45,
-    color: "#2F2F3C",
+    color: "#2f2f3c",
     borderRadius: 10,
     marginLeft: 10,
   },
@@ -2401,7 +2425,7 @@ const styles: any = StyleSheet.create({
   },
   cuesInput: {
     width: "100%",
-    backgroundColor: "#f4f4f6",
+    backgroundColor: "#F8F9FA",
     borderRadius: 15,
     fontSize: 20,
     padding: 20,
@@ -2436,11 +2460,11 @@ const styles: any = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: "#a2a2ac",
+    borderColor: "#818385",
   },
   input: {
     width: "100%",
-    borderBottomColor: "#cccccc",
+    borderBottomColor: "#dddddd",
     borderBottomWidth: 1,
     fontSize: 15,
     paddingTop: 12,
@@ -2477,20 +2501,20 @@ const styles: any = StyleSheet.create({
   },
   text: {
     fontSize: 12,
-    color: "#a2a2ac",
+    color: "#818385",
     textAlign: "left",
     paddingHorizontal: 10,
   },
   all: {
     fontSize: 12,
-    color: "#a2a2ac",
+    color: "#818385",
     height: 22,
     paddingHorizontal: 10,
     backgroundColor: "white",
   },
   allBlack: {
     fontSize: 12,
-    color: "#2F2F3C",
+    color: "#2f2f3c",
     height: 22,
     paddingHorizontal: 10,
     backgroundColor: "white",
@@ -2502,18 +2526,18 @@ const styles: any = StyleSheet.create({
     height: 22,
     paddingHorizontal: 10,
     borderRadius: 10,
-    backgroundColor: "#2F2F3C",
+    backgroundColor: "#2f2f3c",
     marginBottom: 20,
   },
   allGrayOutline: {
     fontSize: 12,
-    color: "#a2a2ac",
+    color: "#818385",
     height: 22,
     paddingHorizontal: 10,
     backgroundColor: "white",
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: "#a2a2ac",
+    borderColor: "#818385",
   },
   color1: {
     backgroundColor: "#D11C60",
@@ -2533,6 +2557,6 @@ const styles: any = StyleSheet.create({
   outline: {
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: "#a2a2ac",
+    borderColor: "#818385",
   },
 });

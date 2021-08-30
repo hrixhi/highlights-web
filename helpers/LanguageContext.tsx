@@ -14,7 +14,7 @@ const languageOptions = [
 ]
 
 const EnglishBank: { [key: string]: string } = {
-    login: "Log in", // Done
+    login: "Sign in →", // Done
     continueLeftOff: "Continue where you left off.", // Done
     email: "Email", // Done
     password: "Password", // Done
@@ -80,9 +80,9 @@ const EnglishBank: { [key: string]: string } = {
     backUp: 'Sign Up', // Done
     createAccount: 'Create an account to save your work to the cloud.', // Done
     signUp: 'Sign Up', // Done
-    classroom: 'Lectures',
+    classroom: 'Classroom',
     initiateMeeting: 'Active',
-    enterClassroom: 'Enter Classroom', // Done
+    enterClassroom: 'Enter →', // Done
     upcoming: 'Schedule', // DOne
     start: 'Start', // Done
     end: 'End', // Done
@@ -146,6 +146,7 @@ const EnglishBank: { [key: string]: string } = {
     optional: 'Optional',
     required: 'Required',
     due: "Due",
+    name: 'Name',
     classroomNotInSession: "Classroom not in session. You will be notified when initiated.",
     incorrectPassword: 'Incorrect password.',
     alreadySubscribed: "Already subscribed.",
@@ -662,7 +663,7 @@ export function LanguageSelect() {
                         selectedValue={language}
                         style={{
                             height: 28, borderRadius: 10,
-                            // border: "1px solid #a2a2ac",
+                            // border: "1px solid #818385",
                             fontSize: 12,
                             padding: '0px 5px'
                         }}

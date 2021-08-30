@@ -88,9 +88,9 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
             }).then(res => {
                 if (props.refreshUnreadDiscussionCount) {
                     props.refreshUnreadDiscussionCount()
-                }  
+                }
             })
-            .catch(e => console.log(e))
+                .catch(e => console.log(e))
         }
 
     }, [])
@@ -164,7 +164,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
             borderTopRightRadius: props.cueId ? 0 : 30,
             borderTopLeftRadius: props.cueId ? 0 : 30,
             // marginBottom: props.cueId ? 0 : 25,
-            // borderBottomColor: '#f4f4f6',
+            // borderBottomColor: '#F8F9FA',
             // borderBottomWidth: props.cueId ? 0 : 1
         }}>
             <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 25 }}>
@@ -191,7 +191,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 width: '100%',
                                 lineHeight: 23
                             }}>
-                                <Ionicons name='chevron-back-outline' size={23} color={'#2f2f3c'} />
+                                <Ionicons name='arrow-back-outline' size={23} color={'#2f2f3c'} />
                             </Text>
                         </TouchableOpacity>
                     </View>
@@ -202,11 +202,12 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 ? <Text
                                     ellipsizeMode="tail"
                                     style={{
-                                        fontSize: 20,
+                                        fontSize: 25,
                                         paddingBottom: 20,
                                         fontFamily: 'inter',
                                         // textTransform: "uppercase",
                                         // paddingLeft: 10,
+                                        paddingTop: 2,
                                         flex: 1,
                                         lineHeight: 25
                                     }}>
@@ -236,23 +237,82 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             // </TouchableOpacity>
                         }
                         {
+                            showThreadCues ? null :
+                                <View style={{
+                                    // width: '100%',
+                                    height: 60,
+                                    paddingRight: 20,
+                                    paddingTop: 7,
+                                    backgroundColor: 'white',
+                                }}>
+                                    {
+                                        props.cueId === null ?
+                                            <Menu
+                                                onSelect={(cat: any) => setFilterChoice(cat)}>
+                                                <MenuTrigger>
+                                                    <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#818385' }}>
+                                                        {filterChoice === '' ? 'All' : filterChoice}<Ionicons name='caret-down' size={14} />
+                                                    </Text>
+                                                </MenuTrigger>
+                                                <MenuOptions customStyles={{
+                                                    optionsContainer: {
+                                                        padding: 10,
+                                                        borderRadius: 15,
+                                                        shadowOpacity: 0,
+                                                        borderWidth: 1,
+                                                        borderColor: '#F8F9FA',
+                                                        overflow: 'scroll',
+                                                        maxHeight: '100%'
+                                                    }
+                                                }}>
+                                                    <MenuOption
+                                                        value={'All'}>
+                                                        <Text>
+                                                            All
+                                                        </Text>
+                                                    </MenuOption>
+                                                    {
+                                                        categories.map((category: any) => {
+                                                            return <MenuOption
+                                                                value={category}>
+                                                                <Text>
+                                                                    {category}
+                                                                </Text>
+                                                            </MenuOption>
+                                                        })
+                                                    }
+                                                </MenuOptions>
+                                            </Menu> : null
+                                    }
+                                </View>
+                        }
+                        {
                             showComments ?
                                 <TouchableOpacity
                                     key={Math.random()}
+                                    onPress={() => setShowPost(true)}
                                     style={{
-                                        width: '20%',
-                                        backgroundColor: 'white'
-                                    }}
-                                    onPress={() => setShowPost(true)}>
-                                    <Text style={{
-                                        width: '100%',
-                                        textAlign: 'right',
-                                        lineHeight: 23,
-                                        marginRight: 20,
-                                        color: '#3B64F8',
-                                        fontSize: 11,
+                                        backgroundColor: 'white',
+                                        overflow: 'hidden',
+                                        height: 35,
+                                        // marginTop: 15,
+                                        justifyContent: 'center',
+                                        flexDirection: 'row'
                                     }}>
-                                        NEW POST
+                                    <Text style={{
+                                        textAlign: 'center',
+                                        lineHeight: 30,
+                                        color: showPost ? '#2f2f3c' : '#fff',
+                                        fontSize: 12,
+                                        backgroundColor: showPost ? '#F8F9FA' : '#53BE6D',
+                                        paddingHorizontal: 25,
+                                        fontFamily: 'inter',
+                                        height: 30,
+                                        // width: 100,
+                                        borderRadius: 15,
+                                        textTransform: 'uppercase'
+                                    }}>
+                                        POST <Ionicons name='chatbox-ellipses-outline' size={12} />
                                         {/* <Ionicons name='create-outline' size={20} color={'#2f2f3c'} /> */}
                                     </Text>
                                 </TouchableOpacity> : null
@@ -263,7 +323,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 {
                     threads.length === 0 ?
                         <View style={{ backgroundColor: 'white', flex: 1 }}>
-                            <Text style={{ width: '100%', color: '#a2a2ac', fontSize: 22, paddingTop: 100, paddingBottom: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                            <Text style={{ width: '100%', color: '#818385', fontSize: 22, paddingTop: 100, paddingBottom: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                                 {
                                     !props.cueId ? PreferredLanguageText('noPosts') : PreferredLanguageText('noComments')
                                 }
@@ -278,7 +338,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                     flexDirection: 'column',
                                     backgroundColor: 'white'
                                 }}>
-                                    <ActivityIndicator color={'#a2a2ac'} />
+                                    <ActivityIndicator color={'#818385'} />
                                 </View> :
                                 <View style={{
                                     width: '100%',
@@ -346,57 +406,6 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                 </View>
                                             </ScrollView>
                                     }
-                                    {
-                                        showThreadCues ? null :
-                                            <View style={{
-                                                width: '100%',
-                                                height: 60,
-                                                backgroundColor: 'white',
-                                                display: 'flex',
-                                                justifyContent: 'center',
-                                                flexDirection: 'column'
-                                            }}>
-                                                {
-                                                    props.cueId === null ?
-                                                        <Menu
-                                                            onSelect={(cat: any) => setFilterChoice(cat)}>
-                                                            <MenuTrigger>
-                                                                <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#a2a2ac' }}>
-                                                                    {filterChoice === '' ? 'All' : filterChoice}<Ionicons name='caret-down' size={14} />
-                                                                </Text>
-                                                            </MenuTrigger>
-                                                            <MenuOptions customStyles={{
-                                                                optionsContainer: {
-                                                                    padding: 10,
-                                                                    borderRadius: 15,
-                                                                    shadowOpacity: 0,
-                                                                    borderWidth: 1,
-                                                                    borderColor: '#f4f4f6',
-                                                                    overflow: 'scroll',
-                                                                    maxHeight: '100%'
-                                                                }
-                                                            }}>
-                                                                <MenuOption
-                                                                    value={'All'}>
-                                                                    <Text>
-                                                                        All
-                                                                    </Text>
-                                                                </MenuOption>
-                                                                {
-                                                                    categories.map((category: any) => {
-                                                                        return <MenuOption
-                                                                            value={category}>
-                                                                            <Text>
-                                                                                {category}
-                                                                            </Text>
-                                                                        </MenuOption>
-                                                                    })
-                                                                }
-                                                            </MenuOptions>
-                                                        </Menu> : null
-                                                }
-                                            </View>
-                                    }
                                 </View>
                         )
                 }
@@ -454,7 +463,7 @@ const styleObject = () => {
             height: 22,
             borderRadius: 10,
             borderWidth: 1,
-            borderColor: '#a2a2ac',
+            borderColor: '#818385',
             color: 'white'
         }
     })

@@ -32,6 +32,9 @@ import logo from '../components/default-images/cues-logo-black-exclamation-hidde
 
 // Web Notification
 import OneSignal, { useOneSignalSetup } from 'react-onesignal';
+import Dashboard from '../components/Dashboard';
+import FilterBar from '../components/FilterBar';
+import VerticalBar from '../components/VerticalBar';
 
 const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -90,11 +93,15 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   const leaveChannelAlert = PreferredLanguageText('leaveChannel')
   const areYouSureUnsubscribeAlert = PreferredLanguageText('areYouSureUnsubscribe')
   const keepContentAndUnsubscribeAlert = PreferredLanguageText('keepContentAndUnsubscribe')
-
   const [filterStart, setFilterStart] = useState<any>(new Date())
-
   const [filterEnd, setFilterEnd] = useState<any>(null)
 
+  const [option, setOption] = useState('Home')
+  const [options] = useState(['Home', 'Content', 'Inbox', 'Performance', 'Channels', 'Account', 'Help'])
+
+  const [menuCollapsed, setMenuCollapsed] = useState(true)
+
+  const [showHome, setShowHome] = useState(true)
 
   useEffect(() => {
     if (email && !validateEmail(email.toString().toLowerCase())) {
@@ -703,9 +710,9 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         }).start();
       }
       // OPEN WALKTHROUGH IF FIRST TIME LOAD
-      if (!init && dimensions.window.width >= 1024) {
-        openModal('Create')
-      }
+      // if (!init && dimensions.window.width >= 1024) {
+      //   // openModal('Calendar')
+      // }
       // HANDLE PROFILE
       if (u) {
         const parsedUser = JSON.parse(u)
@@ -1053,6 +1060,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     setCreatedBy(by)
     setCueId(_id)
     openModal('Update')
+    setShowHome(false)
   }, [subscriptions])
 
   const reloadCueListAfterUpdate = useCallback(async () => {
@@ -1151,8 +1159,11 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
   const modalContent = modalType === 'ChannelSettings' ? <ChannelSettings
     channelId={channelId}
-    closeModal={() => closeModal()}
     refreshSubscriptions={refreshSubscriptions}
+    closeModal={() => {
+      setShowHome(false)
+      closeModal()
+    }}
   /> :
     (modalType === 'Create' ? <Create
       key={JSON.stringify(customCategories)}
@@ -1183,7 +1194,10 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         />
           : (
             modalType === 'Channels' ? <Channels
-              closeModal={() => closeModal()}
+              closeModal={() => {
+                setShowHome(false)
+                closeModal()
+              }}
             /> : (
 
               modalType === 'Discussion' ? <Discussion
@@ -1310,7 +1324,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   const alertText = PreferredLanguageText('savedLocally');
 
   return (
-    <View style={styles.container}>
+    <View style={styles(channelId).container} key={showHome.toString()}>
       {
         showLoginWindow ? <View style={{
           width: '100%',
@@ -1328,10 +1342,10 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             alignSelf: 'center',
             justifyContent: 'center',
             backgroundColor: 'white',
-            width: dimensions.window.width < 1024 ? '100%' : 480,
-            height: dimensions.window.width < 1024 ? '100%' : 'auto',
-            borderRadius: dimensions.window.width < 1024 ? 0 : 20,
-            marginTop: dimensions.window.width < 1024 ? 0 : 75,
+            width: dimensions.window.width < 1024 ? '100%' : '100%',
+            height: dimensions.window.width < 1024 ? '100%' : '100%',
+            borderRadius: dimensions.window.width < 1024 ? 0 : 0,
+            marginTop: dimensions.window.width < 1024 ? 0 : 0,
             padding: 40
           }}>
             <View style={{ flexDirection: 'row', justifyContent: 'center', display: 'flex', paddingBottom: 50 }}>
@@ -1344,35 +1358,37 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 resizeMode={'contain'}
               />
             </View>
-            {/* <Text style={{ fontSize: 20, color: '#2F2F3C', fontFamily: 'inter', paddingBottom: 15, maxWidth: 500, textAlign: 'center' }}>
+            {/* <Text style={{ fontSize: 20, color: '#2f2f3c', fontFamily: 'inter', paddingBottom: 15, maxWidth: 500, textAlign: 'center' }}>
               {
                 showForgotPassword ? '' : PreferredLanguageText('login')
               }
             </Text> */}
-            <Text style={{ fontSize: 18, color: '#a2a2ac', fontFamily: 'overpass', paddingBottom: 25, maxWidth: 500, textAlign: 'center' }}>
+            <Text style={{ fontSize: 18, color: '#818385', fontFamily: 'overpass', paddingBottom: 25, textAlign: 'center' }}>
               {
                 showForgotPassword ? PreferredLanguageText('temporaryPassword') : PreferredLanguageText('continueLeftOff')
               }
             </Text>
             <View style={{
-              maxWidth: 500,
+              maxWidth: 400,
+              width: '100%',
               backgroundColor: 'white',
-              justifyContent: 'center'
+              justifyContent: 'center',
+              alignSelf: 'center'
             }}>
-              <Text style={{ color: '#2F2F3C', fontSize: 14, paddingBottom: 5, paddingTop: 10 }}>
+              <Text style={{ color: '#2f2f3c', fontSize: 14, paddingBottom: 5, paddingTop: 10 }}>
                 {PreferredLanguageText('email')}
               </Text>
               <TextInput
                 value={email}
                 placeholder={''}
                 onChangeText={(val: any) => setEmail(val)}
-                placeholderTextColor={'#a2a2ac'}
+                placeholderTextColor={'#818385'}
                 errorText={emailValidError}
               />
               {
                 showForgotPassword ? null :
                   <View>
-                    <Text style={{ color: '#2F2F3C', fontSize: 14, paddingBottom: 5 }}>
+                    <Text style={{ color: '#2f2f3c', fontSize: 14, paddingBottom: 5 }}>
                       {PreferredLanguageText('password')}
                     </Text>
                     <TextInput
@@ -1380,7 +1396,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                       value={password}
                       placeholder={''}
                       onChangeText={(val: any) => setPassword(val)}
-                      placeholderTextColor={'#a2a2ac'}
+                      placeholderTextColor={'#818385'}
                     />
                   </View>
               }
@@ -1439,9 +1455,9 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                   <Text style={{
                     textAlign: 'center',
                     lineHeight: 35,
-                    color: '#2F2F3C',
+                    color: '#2f2f3c',
                     fontSize: 12,
-                    backgroundColor: '#f4f4f6',
+                    backgroundColor: '#F8F9FA',
                     paddingHorizontal: 25,
                     fontFamily: 'inter',
                     height: 35,
@@ -1454,7 +1470,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     }
                   </Text>
                 </TouchableOpacity>
-                <TouchableOpacity
+                {/* <TouchableOpacity
                   onPress={() => {
                     setShowLoginWindow(false)
                     Alert(alertText);
@@ -1469,9 +1485,9 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                   <Text style={{
                     textAlign: 'center',
                     lineHeight: 35,
-                    color: '#2F2F3C',
+                    color: '#2f2f3c',
                     fontSize: 12,
-                    backgroundColor: '#f4f4f6',
+                    backgroundColor: '#F8F9FA',
                     paddingHorizontal: 25,
                     fontFamily: 'inter',
                     height: 35,
@@ -1481,7 +1497,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                   }}>
                     {PreferredLanguageText('skipForNow')}
                   </Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
               </View>
             </View>
             <View style={{ display: "flex", justifyContent: "flex-start", paddingLeft: 5, paddingBottom: 5, marginTop: 20 }}>
@@ -1490,148 +1506,400 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           </View>
         </View> : null
       }
-      <View style={{
-        width: dimensions.window.width < 1024 ? dimensions.window.width : dimensions.window.width * 0.3,
-        height: dimensions.window.height,
-        flexDirection: 'column',
-        backgroundColor: '#2F2F3C',
-        borderRightColor: '#eeeeef',
-        borderRightWidth: 0,
-      }}>
-        <TopBar
-          key={JSON.stringify(channelFilterChoice) + JSON.stringify(dateFilteredCues) + JSON.stringify(modalType) + JSON.stringify(filterChoice) + JSON.stringify(unreadDiscussionThreads) + JSON.stringify(unreadMessages) + JSON.stringify(meetingOn)}
-          openChannels={() => openModal('Channels')}
-          cues={dateFilteredCues}
-          filterChoice={filterChoice}
-          channelId={channelId}
-          channelFilterChoice={channelFilterChoice}
-          channelCreatedBy={channelCreatedBy}
-          loadData={() => loadData()}
-          // setChannelFilterChoice={(choice: any) => setChannelFilterChoice(choice)}
-          openDiscussion={() => openModal('Discussion')}
-          openSubscribers={() => openModal('Subscribers')}
-          openGrades={() => openModal('Grades')}
-          unsubscribe={() => unsubscribeChannel()}
-          openWalkthrough={() => openModal('Walkthrough')}
-          deleteChannel={() => deleteChannel()}
-          openCalendar={() => openModal('Calendar')}
-          openMeeting={() => openModal('Meeting')}
-          openChannelSettings={() => openModal('ChannelSettings')}
-          unreadDiscussionThreads={unreadDiscussionThreads}
-          unreadMessages={unreadMessages}
-          meetingOn={meetingOn}
-        />
-        {
-          reLoading ? <View style={[styles.activityContainer, styles.horizontal]}>
-            <ActivityIndicator color={'#a2a2ac'} />
-          </View>
-            : <View style={[styles.activityContainer, styles.horizontal]}>
-              <CardsList
-                pageNumber={pageNumber}
-                fadeAnimation={fadeAnimation}
-                key={JSON.stringify(filterChoice) + JSON.stringify(channelId) + JSON.stringify(dateFilteredCues) + JSON.stringify(channelFilterChoice)}
-                cues={dateFilteredCues}
-                channelId={channelId}
-                createdBy={channelCreatedBy}
-                filterChoice={filterChoice}
-                openUpdate={(index: any, key: any, pageNumber: any, _id: any, by: any, cId: any) => openUpdate(index, key, pageNumber, _id, by, cId)}
-                channelFilterChoice={channelFilterChoice}
-                subscriptions={subscriptions}
-              />
-            </View>
-        }
-        <BottomBar
-          cues={dateFilteredCues}
-          openWalkthrough={() => openModal('Walkthrough')}
-          openCalendar={() => openModal('Calendar')}
-          openCreate={() => openModal('Create')}
-          openChannels={() => openModal('Channels')}
-          openProfile={() => openModal('Profile')}
-          closeModal={() => closeModal()}
-          filterChoice={filterChoice}
-          handleFilterChange={(choice: any) => handleFilterChange(choice)}
-          key={Math.random()}
-          customCategories={customCategories}
-          subscriptions={subscriptions}
-          setChannelId={(id: string) => setChannelId(id)}
-          setChannelCreatedBy={(id: any) => setChannelCreatedBy(id)}
-          setChannelFilterChoice={(choice: string) => setChannelFilterChoice(choice)}
-          channelFilterChoice={channelFilterChoice}
-          filterStart={filterStart}
-          filterEnd={filterEnd}
-          setFilterStart={(s: any) => setFilterStart(s)}
-          setFilterEnd={(e: any) => setFilterEnd(e)}
-        />
-      </View >
       {
-        modalType === '' ? <View
+        showHome && !showLoginWindow ? <View
+          key={menuCollapsed.toString()}
           style={{
-            width: dimensions.window.width < 1024 ? 0 : dimensions.window.width * 0.7,
+            width: '100%',
             height: dimensions.window.height,
-            // paddingHorizontal: dimensions.window.width < 1024 ? 0 : 30,
-            paddingTop: 10,
-            // backgroundColor: '#f4f4f6',
-            backgroundColor: '#2F2F3C',
-            position: dimensions.window.width < 1024 ? 'absolute' : 'relative'
+            flex: 1,
+            position: 'absolute',
+            overflow: 'scroll',
+            zIndex: 50,
+            backgroundColor: '#fff'
           }}
         >
-          {
-            dimensions.window.width < 1024 ? null : <View style={{ flexDirection: 'column', flex: 1, width: '100%', justifyContent: 'center', backgroundColor: '#2f2f3c' }}>
-              <Text style={{ fontSize: 20, color: '#a2a2ac', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#2F2F3C' }}>
-                Select cue to view.
-              </Text>
-            </View>
-          }
-        </View>
-          :
           <View style={{
-            width: dimensions.window.width < 1024 ? '100%' : dimensions.window.width * 0.7,
-            height: dimensions.window.height,
-            // paddingHorizontal: dimensions.window.width < 1024 ? 0 : 30,
-            paddingTop: 0,
-            // backgroundColor: '#f4f4f6',
-            backgroundColor: '#2F2F3C',
-            position: dimensions.window.width < 1024 ? 'absolute' : 'relative'
+            position: 'absolute',
+            zIndex: 525,
+            display: 'flex',
+            alignSelf: 'center',
+            // justifyContent: 'center',
+            backgroundColor: 'white',
+            width: dimensions.window.width < 1024 ? '100%' : '100%',
+            height: dimensions.window.width < 1024 ? '100%' : dimensions.window.height,
+            borderRadius: dimensions.window.width < 1024 ? 0 : 0,
+            marginTop: dimensions.window.width < 1024 ? 0 : 0,
+            // paddingVertical: 20
           }}>
+            <Dashboard
+              setOption={(op: any) => setOption(op)}
+              option={option}
+              options={options}
+              hideHome={() => {
+                setShowHome(false)
+                loadData()
+              }}
+              closeModal={() => {
+                closeModal()
+              }}
+              saveDataInCloud={async () => await saveDataInCloud()}
+              reOpenProfile={() => {
+                setModalType('')
+                openModal('Profile')
+              }}
+              reloadData={() => {
+                loadData()
+                openModal('Walkthrough')
+              }}
+              key={cues.toString()}
+              cues={dateFilteredCues}
+              handleFilterChange={(choice: any) => handleFilterChange(choice)}
+              setChannelId={(id: string) => setChannelId(id)}
+              setChannelCreatedBy={(id: any) => setChannelCreatedBy(id)}
+              setChannelFilterChoice={(choice: string) => setChannelFilterChoice(choice)}
+              subscriptions={subscriptions}
+              openDiscussion={() => openModal('Discussion')}
+              openSubscribers={() => openModal('Subscribers')}
+              openGrades={() => openModal('Grades')}
+              openMeeting={() => openModal('Meeting')}
+              openChannelSettings={() => openModal('ChannelSettings')}
+              openUpdate={(index: any, key: any, pageNumber: any, _id: any, by: any, cId: any) => openUpdate(index, key, pageNumber, _id, by, cId)}
+              calendarCues={cues}
+              openCueFromCalendar={openCueFromCalendar}
+              filterStart={filterStart}
+              filterEnd={filterEnd}
+              setFilterStart={(s: any) => setFilterStart(s)}
+              setFilterEnd={(e: any) => setFilterEnd(e)}
+            />
+          </View>
+        </View> : null
+      }
+      <View
+        key={menuCollapsed.toString()}
+        style={{
+          flexDirection: dimensions.window.width < 768 ? 'column' : 'row',
+          flex: 1,
+          height: dimensions.window.height,
+          width: dimensions.window.width < 768 ? '100%' : 110
+        }}
+      >
+        {
+          menuCollapsed ?
+            // VERTICAL BAR
             <View style={{
-              flex: 1,
-              backgroundColor: 'white',
-              paddingHorizontal: 5,
-              marginTop: 0,
-              // dimensions.window.width < 1024 ? 0 : 25,
-              marginRight: 0,
-              // dimensions.window.width < 1024 ? 0 : 25,
-              borderTopLeftRadius: 0,
-              // dimensions.window.width < 1024 ? 0 : 20,
-              borderTopRightRadius: 0,
-              // dimensions.window.width < 1024 ? 0 : 20,
-              overflow: 'hidden'
+              height: dimensions.window.width < 768 ? (90) : dimensions.window.height
             }}>
-              {modalContent}
+              <VerticalBar
+                menuCollapsed={menuCollapsed}
+                hideMenu={() => setMenuCollapsed(false)}
+                closeModal={() => closeModal()}
+                showHome={() => {
+                  setShowHome(true)
+                  setMenuCollapsed(true)
+                }}
+                filterChoice={filterChoice}
+                handleFilterChange={(choice: any) => handleFilterChange(choice)}
+                key={Math.random()}
+                customCategories={customCategories}
+                subscriptions={subscriptions}
+                setChannelId={(id: string) => setChannelId(id)}
+                setChannelCreatedBy={(id: any) => setChannelCreatedBy(id)}
+                setChannelFilterChoice={(choice: string) => setChannelFilterChoice(choice)}
+                channelFilterChoice={channelFilterChoice}
+                openChannels={() => openModal('Channels')}
+                cues={dateFilteredCues}
+                channelId={channelId}
+                channelCreatedBy={channelCreatedBy}
+                loadData={() => loadData()}
+                // setChannelFilterChoice={(choice: any) => setChannelFilterChoice(choice)}
+                openDiscussion={() => openModal('Discussion')}
+                openSubscribers={() => openModal('Subscribers')}
+                openGrades={() => openModal('Grades')}
+                unsubscribe={() => unsubscribeChannel()}
+                openWalkthrough={() => openModal('Walkthrough')}
+                deleteChannel={() => deleteChannel()}
+                openCalendar={() => openModal('Calendar')}
+                openMeeting={() => openModal('Meeting')}
+                openChannelSettings={() => openModal('ChannelSettings')}
+                unreadDiscussionThreads={unreadDiscussionThreads}
+                unreadMessages={unreadMessages}
+                meetingOn={meetingOn}
+              />
             </View>
-            {
+            :
+            // FULL MENU
+            <View style={{
+              width: dimensions.window.width < 1024 ? dimensions.window.width : (dimensions.window.width * 0.23 + 50),
+              height: dimensions.window.height,
+              flexDirection: dimensions.window.width < 1024 ? 'column' : 'row',
+              backgroundColor: '#fff',
+              // position: 'absolute',
+              // borderRightColor: '#555555',
+              // borderRightWidth: 1,
+            }}>
+              <View style={{
+                backgroundColor: '#fff',
+                width: dimensions.window.width < 1024 ? dimensions.window.width : (dimensions.window.width * 0.23),
+                height: dimensions.window.width < 1024 ? dimensions.window.height - 30 : dimensions.window.height,
+              }}>
+                <BottomBar
+                  cues={dateFilteredCues}
+                  openWalkthrough={() => openModal('Walkthrough')}
+                  openCalendar={() => openModal('Calendar')}
+                  openCreate={() => openModal('Create')}
+                  openChannels={() => openModal('Channels')}
+                  openProfile={() => openModal('Profile')}
+                  closeModal={() => closeModal()}
+                  showHome={() => {
+                    setShowHome(true)
+                    setMenuCollapsed(true)
+                  }}
+                  filterChoice={filterChoice}
+                  handleFilterChange={(choice: any) => handleFilterChange(choice)}
+                  key={Math.random()}
+                  customCategories={customCategories}
+                  subscriptions={subscriptions}
+                  setChannelId={(id: string) => setChannelId(id)}
+                  setChannelCreatedBy={(id: any) => setChannelCreatedBy(id)}
+                  setChannelFilterChoice={(choice: string) => setChannelFilterChoice(choice)}
+                  channelFilterChoice={channelFilterChoice}
+                  filterStart={filterStart}
+                  filterEnd={filterEnd}
+                  setFilterStart={(s: any) => setFilterStart(s)}
+                  setFilterEnd={(e: any) => setFilterEnd(e)}
+                />
+                <FilterBar
+                  cues={dateFilteredCues}
+                  openWalkthrough={() => openModal('Walkthrough')}
+                  openCalendar={() => openModal('Calendar')}
+                  openCreate={() => openModal('Create')}
+                  openChannels={() => openModal('Channels')}
+                  openProfile={() => openModal('Profile')}
+                  closeModal={() => closeModal()}
+                  showHome={() => {
+                    setShowHome(true)
+                    setMenuCollapsed(true)
+                  }}
+                  filterChoice={filterChoice}
+                  handleFilterChange={(choice: any) => handleFilterChange(choice)}
+                  key={Math.random()}
+                  customCategories={customCategories}
+                  subscriptions={subscriptions}
+                  setChannelId={(id: string) => setChannelId(id)}
+                  setChannelCreatedBy={(id: any) => setChannelCreatedBy(id)}
+                  setChannelFilterChoice={(choice: string) => setChannelFilterChoice(choice)}
+                  channelFilterChoice={channelFilterChoice}
+                  filterStart={filterStart}
+                  filterEnd={filterEnd}
+                  setFilterStart={(s: any) => setFilterStart(s)}
+                  setFilterEnd={(e: any) => setFilterEnd(e)}
+                />
+                <TopBar
+                  key={JSON.stringify(channelFilterChoice) + JSON.stringify(dateFilteredCues) + JSON.stringify(modalType) + JSON.stringify(filterChoice) + JSON.stringify(unreadDiscussionThreads) + JSON.stringify(unreadMessages) + JSON.stringify(meetingOn)}
+                  openChannels={() => openModal('Channels')}
+                  cues={dateFilteredCues}
+                  filterChoice={filterChoice}
+                  channelId={channelId}
+                  channelFilterChoice={channelFilterChoice}
+                  channelCreatedBy={channelCreatedBy}
+                  loadData={() => loadData()}
+                  // setChannelFilterChoice={(choice: any) => setChannelFilterChoice(choice)}
+                  openDiscussion={() => openModal('Discussion')}
+                  openSubscribers={() => openModal('Subscribers')}
+                  openGrades={() => openModal('Grades')}
+                  unsubscribe={() => unsubscribeChannel()}
+                  openWalkthrough={() => openModal('Walkthrough')}
+                  deleteChannel={() => deleteChannel()}
+                  openCalendar={() => openModal('Calendar')}
+                  openMeeting={() => openModal('Meeting')}
+                  openChannelSettings={() => openModal('ChannelSettings')}
+                  unreadDiscussionThreads={unreadDiscussionThreads}
+                  unreadMessages={unreadMessages}
+                  meetingOn={meetingOn}
+                />
+                {
+                  reLoading ? <View style={[styles(channelId).activityContainer, styles(channelId).horizontal]}>
+                    <ActivityIndicator color={'#818385'} />
+                  </View>
+                    : <View style={[styles(channelId).activityContainer, styles(channelId).horizontal]}>
+                      <CardsList
+                        pageNumber={pageNumber}
+                        fadeAnimation={fadeAnimation}
+                        key={JSON.stringify(filterChoice) + JSON.stringify(channelId) + JSON.stringify(dateFilteredCues) + JSON.stringify(channelFilterChoice)}
+                        cues={dateFilteredCues}
+                        channelId={channelId}
+                        createdBy={channelCreatedBy}
+                        filterChoice={filterChoice}
+                        openUpdate={(index: any, key: any, pageNumber: any, _id: any, by: any, cId: any) => openUpdate(index, key, pageNumber, _id, by, cId)}
+                        channelFilterChoice={channelFilterChoice}
+                        subscriptions={subscriptions}
+                      />
+                    </View>
+                }
+              </View>
+              {
+                dimensions.window.width < 768 ?
+                  <TouchableOpacity
+                    onPress={() => setMenuCollapsed(true)}
+                    style={{
+                      height: 30,
+                      borderTopWidth: 1,
+                      borderColor: '#F8F9FA',
+                      backgroundColor: '#fff',
+                      justifyContent: 'center', width: '100%'
+                    }}>
+                    <Text style={{ textAlign: 'center' }}>
+                      <Ionicons
+                        name='chevron-up-circle-outline'
+                        color="#2f2f3c"
+                        size={20}
+                      // style={{ marginLeft: -10 }}
+                      />
+                    </Text>
+                  </TouchableOpacity> :
+                  <TouchableOpacity
+                    onPress={() => setMenuCollapsed(true)}
+                    style={{
+                      width: 30, backgroundColor: '#fff', justifyContent: 'center',
+                      // borderLeftWidth: 1,
+                      // borderRightWidth: 2,
+                      borderColor: '#F8F9FA'
+                    }}>
+                    <Text style={{ textAlign: 'center' }}>
+                      <Ionicons
+                        name='chevron-back-circle-outline'
+                        color="#2f2f3c"
+                        size={20}
+                        style={{}}
+                      />
+                    </Text>
+                  </TouchableOpacity>
+              }
+            </View >
+        }
+        {
+          !menuCollapsed && dimensions.window.width < 768 ? null :
+            (modalType === '' ? <View
+              style={{
+                width: dimensions.window.width < 1024 ? 0 : (menuCollapsed ? dimensions.window.width - 110 : (dimensions.window.width * 0.77 - 30)),
+                marginTop: dimensions.window.width < 1024 ? (menuCollapsed ? 55 : 0) : 0,
+                height: dimensions.window.width < 768 ? (menuCollapsed ? dimensions.window.height - 55 : 0) : dimensions.window.height,
+                // paddingHorizontal: dimensions.window.width < 1024 ? 0 : 30,
+                paddingTop: 10,
+                // backgroundColor: '#F8F9FA',
+                backgroundColor: '#fff',
+                position: dimensions.window.width < 1024 ? 'absolute' : 'relative'
+              }}
+            >
+              {
+                dimensions.window.width < 1024 ? null : <View style={{ flexDirection: 'column', flex: 1, width: '100%', justifyContent: 'center', backgroundColor: '#fff' }}>
+                  <Text style={{ fontSize: 20, color: '##2f2f3c', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#fff' }}>
+                    Select cue to view.
+                  </Text>
+                </View>
+              }
+            </View>
+              :
+              <View
+                key={menuCollapsed.toString()}
+                style={{
+                  width: dimensions.window.width < 1024 ? '100%' : (menuCollapsed ? dimensions.window.width - 110 : (dimensions.window.width * 0.77 - 30)),
+                  height: dimensions.window.width < 1024 ? (menuCollapsed ? (dimensions.window.height - 55) : dimensions.window.height) : dimensions.window.height,
+                  // paddingHorizontal: dimensions.window.width < 1024 ? 0 : 30,
+                  paddingTop: 0,
+                  // borderWidth: 1,
+                  // backgroundColor: '#F8F9FA',
+                  backgroundColor: '#fff',
+                  position: 'relative'
+                }}>
+                {
+                  // dimensions.window.width < 768 && !menuCollapsed ? null :
+                  <View style={{
+                    flex: 1,
+                    backgroundColor: 'white',
+                    paddingHorizontal: 0,
+                    // marginTop: 0,
+                    // dimensions.window.width < 1024 ? 0 : 25,
+                    marginRight: 0,
+                    // dimensions.window.width < 1024 ? 0 : 25,
+                    borderTopLeftRadius: 0,
+                    // dimensions.window.width < 1024 ? 0 : 20,
+                    borderTopRightRadius: 0,
+                    // dimensions.window.width < 1024 ? 0 : 20,
+                    overflow: 'hidden'
+                  }}>
+                    {modalContent}
+                  </View>
+                }
+                {/* {
               dimensions.window.width < 1024 ?
                 <TouchableOpacity
-                  onPress={() => closeModal()}
-                  style={{ height: 50, backgroundColor: '#fff', borderTopWidth: 1, borderColor: '#a2a2ac' }}>
-                  <Text style={{ flex: 1, textAlign: 'center', fontSize: 16, lineHeight: 16, marginTop: 15, color: '#2F2F3C', fontFamily: 'inter', fontWeight: 'bold' }}>
+                  onPress={() => {
+                    // closeModal()
+                  }}
+                  style={{ height: 50, backgroundColor: '#fff', borderTopWidth: 1, borderColor: '#818385' }}>
+                  <Text style={{ flex: 1, textAlign: 'center', fontSize: 16, lineHeight: 16, marginTop: 15, color: '#2f2f3c', fontFamily: 'inter', fontWeight: 'bold' }}>
                     <Ionicons name='chevron-back-outline' size={16} /> BACK
                   </Text>
-                </TouchableOpacity> :
-                <View style={{ backgroundColor: '#f4f4f6', height: 0 }} />
-            }
-          </View>
-      }
+                </TouchableOpacity>
+                :
+                <View style={{ backgroundColor: '#F8F9FA', height: 0 }} />
+            } */}
+              </View>)
+        }
+      </View>
+      {/* {
+        dimensions.window.width < 768 && !menuCollapsed ? <TouchableOpacity
+          onPress={() => setMenuCollapsed(true)}
+          style={{
+            width: Dimensions.get('window').width < 768 ? '100%' : 50,
+            backgroundColor: '#fff',
+            justifyContent: 'center'
+          }}>
+          <Text style={{ textAlign: 'center' }}>
+            <Ionicons
+              name={'chevron-up-outline'}
+              color="#2f2f3c"
+              size={Dimensions.get('window').width < 768 ? 25 : 35}
+            // style={{ marginLeft: -10 }}
+            />
+          </Text>
+        </TouchableOpacity> : null
+      } */}
+      <TouchableOpacity
+        onPress={() => {
+          openModal('Create')
+          setShowHome(false)
+        }}
+        style={{
+          position: 'absolute',
+          marginRight: 30,
+          marginBottom: 30,
+          zIndex: showLoginWindow ? 40 : 550,
+          right: 0,
+          justifyContent: 'center',
+          alignSelf: 'flex-end',
+          width: 60, height: 60, borderRadius: 30, backgroundColor: '#3b64f8'
+        }}
+      >
+        <Text style={{ color: '#fff', width: '100%', textAlign: 'center' }}>
+          <Ionicons name='add-outline' size={40} />
+        </Text>
+      </TouchableOpacity>
+      {/* </View>
+      </View> */}
     </View>
   );
 }
 
 export default Home
 
-const styles = StyleSheet.create({
+const styles = (channelId: string) => StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'row'
+    flexDirection: 'row',
+    height: Dimensions.get('window').height,
   },
   activityContainer: {
     borderTopWidth: 0,
@@ -1639,10 +1907,10 @@ const styles = StyleSheet.create({
     borderColor: '#eeeeef',
     borderTopRightRadius: 15,
     borderTopLeftRadius: 15,
-    height: '66%',
+    height: channelId === '' ? '83%' : '73%',
     width: '100%',
     justifyContent: "center",
-    backgroundColor: '#2F2F3C'
+    backgroundColor: '#F8F9FA'
   },
   horizontal: {
     flexDirection: "row",
@@ -1650,7 +1918,7 @@ const styles = StyleSheet.create({
   },
   input: {
     width: '100%',
-    borderBottomColor: '#f4f4f6',
+    borderBottomColor: '#F8F9FA',
     borderBottomWidth: 1,
     fontSize: 15,
     paddingTop: 13,
