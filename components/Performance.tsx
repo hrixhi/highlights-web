@@ -74,7 +74,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
         flexDirection: width < 768 ? 'column' : 'row',
         paddingTop: 30
     }}>
-        <View style={{ width: width < 768 ? '100%' : '68%', paddingRight: 30, borderRightWidth: width < 768 ? 0 : 1, borderColor: '#eeeeee' }}>
+        <View style={{ width: width < 768 ? '100%' : '50%', paddingRight: 30, borderRightWidth: width < 768 ? 0 : 1, borderColor: '#eeeeee' }}>
             <Text style={{
                 marginRight: 10,
                 color: '#3b64f8',
@@ -85,61 +85,67 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 lineHeight: 25,
                 height: width < 768 ? 30 : 65,
             }}>
-                <Ionicons name='stats-chart-outline' size={25} color='#3b64f8' /> Class Standing
+                <Ionicons name='stats-chart-outline' size={25} color='#3b64f8' /> Overview
             </Text>
             <ScrollView
                 horizontal={true}
             >
-                {
-                    scores.length > 0 ?
-                        <Chart
-                            style={{ minHeight: 500, minWidth: 800 }}
-                            chartType="BarChart"
-                            loader={<div>Loading Chart</div>}
-                            data={data}
-                            options={{
-                                // Material design options
-                                fontName: 'overpass',
-                                chartArea: { width: '70%' },
-                                isStacked: true,
-                                hAxis: {
-                                    title: 'Scores',
-                                    minValue: 0,
-                                    maxValue: 100
-                                },
-                                vAxis: {
-                                    title: 'Channel',
-                                },
-                            }}
-                        /> : (loading ? null :
-                            <Text style={{ fontSize: 15, color: '#818385', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#fff' }}>
-                                {PreferredLanguageText('noCuesCreated')}
-                            </Text>)
-                }
+
             </ScrollView>
         </View>
-        <View style={{ width: width < 768 ? '100%' : '32%', paddingLeft: width < 768 ? 0 : 30 }}>
+        <View style={{ width: width < 768 ? '100%' : '50%', paddingLeft: width < 768 ? 0 : 30 }}>
             <Text style={{
                 marginRight: 10,
                 color: '#2f2f3c',
                 fontSize: 25,
-                paddingBottom: 40,
+                paddingBottom: 20,
                 fontFamily: 'inter',
                 // flex: 1,
                 lineHeight: 25,
-                height: 65
+                // height: 65
             }}>
                 <Ionicons name='medal-outline' size={25} color='#2f2f3c' /> Scores
             </Text>
             <ScrollView
                 showsVerticalScrollIndicator={false}
                 horizontal={false}
+                nestedScrollEnabled={true}
                 // style={{ height: '100%' }}
                 contentContainerStyle={{
                     // borderWidth: 2,
                     width: '100%',
                 }}
             >
+                {
+                    scores.length > 0 ?
+                        <ScrollView
+                            horizontal={true}
+                        >
+                            <Chart
+                                style={{ minHeight: 400, minWidth: 400 }}
+                                chartType="BarChart"
+                                loader={<div>Loading Chart</div>}
+                                data={data}
+                                options={{
+                                    // Material design options
+                                    fontName: 'overpass',
+                                    chartArea: { width: '70%' },
+                                    isStacked: true,
+                                    hAxis: {
+                                        title: 'Scores',
+                                        minValue: 0,
+                                        maxValue: 100
+                                    },
+                                    vAxis: {
+                                        title: 'Channel',
+                                    },
+                                }}
+                            />
+                        </ScrollView> : (loading ? null :
+                            <Text style={{ fontSize: 15, color: '#818385', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#fff' }}>
+                                {PreferredLanguageText('noCuesCreated')}
+                            </Text>)
+                }
                 {
                     scores.map((sc: any, index) => {
                         return <View style={styleObject.col} key={index}>

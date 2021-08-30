@@ -1237,7 +1237,10 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             openCueFromGrades={(cueId: string) => openCueFromCalendar(channelId, cueId, channelCreatedBy)}
                           />
                             : (
-                              modalType === 'Calendar' ? <Calendar cues={cues} subscriptions={subscriptions} openCueFromCalendar={openCueFromCalendar} />
+                              modalType === 'Calendar' ? <Calendar
+                                cues={cues}
+                                subscriptions={subscriptions}
+                                openCueFromCalendar={openCueFromCalendar} />
                                 : (
                                   modalType === 'Meeting' ? <Meeting
                                     channelId={channelId}
@@ -1552,7 +1555,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 loadData()
                 openModal('Walkthrough')
               }}
-              key={cues.toString()}
               cues={dateFilteredCues}
               handleFilterChange={(choice: any) => handleFilterChange(choice)}
               setChannelId={(id: string) => setChannelId(id)}
@@ -1567,10 +1569,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               openUpdate={(index: any, key: any, pageNumber: any, _id: any, by: any, cId: any) => openUpdate(index, key, pageNumber, _id, by, cId)}
               calendarCues={cues}
               openCueFromCalendar={openCueFromCalendar}
-              filterStart={filterStart}
-              filterEnd={filterEnd}
-              setFilterStart={(s: any) => setFilterStart(s)}
-              setFilterEnd={(e: any) => setFilterEnd(e)}
             />
           </View>
         </View> : null
@@ -1630,7 +1628,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             :
             // FULL MENU
             <View style={{
-              width: dimensions.window.width < 1024 ? dimensions.window.width : (dimensions.window.width * 0.23 + 50),
+              width: dimensions.window.width < 1024 ? dimensions.window.width : (dimensions.window.width * 0.23 + 30),
               height: dimensions.window.height,
               flexDirection: dimensions.window.width < 1024 ? 'column' : 'row',
               backgroundColor: '#fff',

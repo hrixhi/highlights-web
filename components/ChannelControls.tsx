@@ -371,12 +371,17 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                     } 
                         </View>*/}
                         <View style={{ backgroundColor: 'white' }}>
-                            <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>
-                                {PreferredLanguageText('channel') + ' ' + PreferredLanguageText('name')}
+                            <Text style={{
+                                fontSize: 15,
+                                fontFamily: 'inter',
+                                color: '#2f2f3c'
+                            }}>
+                                {PreferredLanguageText('name')}
                             </Text>
                             <TextInput
                                 value={name}
                                 placeholder={''}
+                                autoCompleteType='off'
                                 onChangeText={val => {
                                     setName(val)
                                     setPasswordRequired(false)
@@ -389,11 +394,16 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         {
                             (option === 'Subscribe' && passwordRequired) || option === 'Create' ?
                                 <View style={{ backgroundColor: 'white' }}>
-                                    <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>
+                                    <Text style={{
+                                        fontSize: 15,
+                                        fontFamily: 'inter',
+                                        color: '#2f2f3c'
+                                    }}>
                                         {PreferredLanguageText('enrolmentPassword')}
                                     </Text>
                                     <TextInput
                                         value={password}
+                                        autoCompleteType='off'
                                         placeholder={option === 'Subscribe' ? '' : `(${PreferredLanguageText('optional')})`}
                                         onChangeText={val => setPassword(val)}
                                         placeholderTextColor={'#818385'}
@@ -421,7 +431,11 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             paddingBottom: 15,
                                             backgroundColor: "white"
                                         }}>
-                                        <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>Temporary</Text>
+                                        <Text style={{
+                                            fontSize: 15,
+                                            fontFamily: 'inter',
+                                            color: '#2f2f3c'
+                                        }}>Temporary</Text>
                                     </View>
                                     <View
                                         style={{
@@ -461,7 +475,11 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             paddingBottom: 15,
                                             backgroundColor: "white"
                                         }}>
-                                        <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>Color</Text>
+                                        <Text style={{
+                                            fontSize: 15,
+                                            fontFamily: 'inter',
+                                            color: '#2f2f3c'
+                                        }}>Color</Text>
                                     </View>
                                     <View style={{ width: '100%', backgroundColor: 'white' }}>
                                         <CirclePicker

@@ -61,7 +61,7 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         style={{ backgroundColor: '#F8F9FA', width: '100%', paddingBottom: 20 }}
                     >
                         <Text style={{ lineHeight: 35, marginTop: Dimensions.get('window').width < 768 ? 20 : 15, width: '100%', textAlign: 'center' }}>
-                            <Ionicons name='arrow-back-outline' size={35} color={'#2f2f3c'} />
+                            <Ionicons name='arrow-back-outline' size={30} color={'#2f2f3c'} />
                         </Text>
                         {/* <Text style={{ fontSize: 10, color: '#fff', }}>
                             Dashboard
@@ -238,7 +238,7 @@ const styleObject: any = (colorScheme: any, mc: any) => StyleSheet.create({
         // borderColor: '#555555',
         flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row',
         // flex: 1,
-        backgroundColor: '#fff'
+        backgroundColor: '#ffffff'
     },
     icons: {
         // width: '100%',

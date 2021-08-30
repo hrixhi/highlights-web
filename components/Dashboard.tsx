@@ -38,6 +38,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const [searchTerm, setSearchTerm] = useState('')
     const priorities = [4, 3, 2, 1, 0]
     const [collapseMap, setCollapseMap] = useState<any>({})
+    const [channelCategories, setChannelCategories] = useState<any>({})
     const [results, setResults] = useState<any>({
         'Channels': [],
         'Notes': [],
@@ -45,7 +46,10 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
         'Threads': []
     })
 
-    const [searchOptions, setSearchOptions] = useState(['Channels', 'Notes', 'Messages', 'Threads'])
+    const [filterStart, setFilterStart] = useState<any>(new Date())
+    const [filterEnd, setFilterEnd] = useState<any>(null)
+
+    const [searchOptions] = useState(['Channels', 'Notes', 'Messages', 'Threads'])
     const [sortBy, setSortBy] = useState('Priority')
 
     const [cueMap, setCueMap] = useState<any>({})
@@ -68,14 +72,40 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
         const tempCollapse: any = {}
         tempCollapse['My Notes'] = false
 
+        let dateFilteredCues: any[] = []
+        if (filterStart && filterEnd) {
+            dateFilteredCues = props.cues.filter((item: any) => {
+                const date = new Date(item.date)
+                return date >= filterStart && date <= filterEnd
+            })
+
+        } else {
+            dateFilteredCues = props.cues
+        }
+
         props.subscriptions.map((sub: any) => {
+            // const tempCategories: any = {}
             const tempCues: any[] = []
-            props.cues.map((cue: any) => {
+            dateFilteredCues.map((cue: any) => {
                 if (cue.channelName === sub.channelName) {
                     tempCues.push(cue)
                 }
             })
-            tempCues.reverse()
+            if (sortBy === 'Priority') {
+                tempCues.reverse()
+            } else if (sortBy === 'Date ↑') {
+                tempCues.sort((a: any, b: any) => {
+                    const aDate = new Date(a.date)
+                    const bDate = new Date(b.date)
+                    if (aDate < bDate) {
+                        return 1
+                    } else if (aDate > bDate) {
+                        return -1
+                    } else {
+                        return 0
+                    }
+                })
+            }
             temp[sub.channelName + '-SPLIT-' + sub.channelId + '-SPLIT-' + sub.channelCreatedBy + '-SPLIT-' + sub.colorCode] = tempCues
             tempCollapse[sub.channelName + '-SPLIT-' + sub.channelId + '-SPLIT-' + sub.channelCreatedBy + '-SPLIT-' + sub.colorCode] = false
         })
@@ -84,11 +114,25 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 mycues.push(cue)
             }
         })
-        mycues.reverse()
+        if (sortBy === 'Priority') {
+            mycues.reverse()
+        } else if (sortBy === 'Date ↑') {
+            mycues.sort((a: any, b: any) => {
+                const aDate = new Date(a.date)
+                const bDate = new Date(b.date)
+                if (aDate < bDate) {
+                    return -1
+                } else if (aDate > bDate) {
+                    return 1
+                } else {
+                    return 0
+                }
+            })
+        }
         temp['My Notes'] = mycues
         setCueMap(temp)
         setCollapseMap(tempCollapse)
-    }, [props.cues, props.subscriptions])
+    }, [props.cues, props.subscriptions, sortBy, filterStart, filterEnd])
 
     useEffect(() => {
         if (searchTerm.trim() === '') {
@@ -126,7 +170,10 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
             overflow: 'hidden',
             paddingTop: 20
         }}>
-        <View style={{ width: '100%' }}>
+        <View style={{
+            width: '100%',
+            paddingHorizontal: Dimensions.get('window').width < 768 ? 20 : 40
+        }}>
             <ScrollView
                 showsVerticalScrollIndicator={false}
                 horizontal={false}
@@ -143,7 +190,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     lineHeight: 23,
                     color: '#3b64f8'
                 }}>
-                    Search Results
+                    Results
                 </Text>
                 {
                     searchOptions.map((option: any) => {
@@ -154,7 +201,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
                         return <View style={{ marginBottom: 40, backgroundColor: '#fff' }}>
                             <Text style={{
-                                fontSize: 25,
+                                fontSize: 15,
                                 paddingBottom: 20,
                                 paddingTop: 10,
                                 fontFamily: 'inter',
@@ -236,7 +283,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
             height: Dimensions.get("window").height - 80,
             width: '100%',
             overflow: 'hidden',
-            paddingTop: 20
+            // paddingTop: 20
         }}>
         <View style={{ width: '100%' }}>
             <ScrollView
@@ -248,7 +295,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
             >
                 {
                     Object.keys(cueMap).map((key: any, ind: any) => {
-                        return <View style={{ marginBottom: 20, paddingBottom: 20 }}>
+                        return <View style={{ marginTop: 20, paddingBottom: 20 }}>
                             {
                                 ind !== 0 ?
                                     <View style={{ flexDirection: 'row', paddingBottom: 20 }}>
@@ -431,7 +478,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         </Text> :
                                         (
                                             collapseMap[key] ?
-                                                <View>
+                                                <View style={{ width: '100%' }}>
                                                     {
                                                         priorities.map((priority, i: any) => {
                                                             return <ScrollView
@@ -453,8 +500,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                         marginBottom: i === priorities.length - 1 ? 0 : 20,
                                                                         maxWidth: 150,
                                                                         backgroundColor: '#fff',
-                                                                        alignSelf: 'center',
-                                                                        width: '98%'
+                                                                        width: '100%'
                                                                     }} key={index}>
                                                                         <OverviewCueCard
                                                                             fadeAnimation={props.fadeAnimation}
@@ -545,10 +591,11 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
     return (
         <View style={{
             height: windowHeight - 85,
-            maxHeight: '100%'
+            maxHeight: '100%',
         }}>
             <View style={{
                 backgroundColor: '#F8F9FA',
+                // borderWidth: 1,
                 paddingTop: 30,
                 paddingHorizontal: Dimensions.get('window').width < 768 ? 20 : 40,
                 flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row',
@@ -561,7 +608,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         source={logo}
                         style={{
                             width: 80,
-                            height: 23
+                            height: 25
                         }}
                         resizeMode={'contain'}
                     />
@@ -628,7 +675,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     backgroundColor: '#F8F9FA'
                 }}>
                     {
-                        width < 768 ? <Ionicons name='search-outline' size={25} color='#2f2f3c'
+                        width < 768 ? <Ionicons name='search-outline' size={20} color='#2f2f3c'
                             style={{
                                 marginLeft: Dimensions.get('window').width < 768 ? 0 : 40,
                                 marginTop: -5
@@ -691,9 +738,15 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         </Text>
                                                     </MenuOption>
                                                     <MenuOption
-                                                        value={'Date'}>
+                                                        value={'Date ↑'}>
                                                         <Text>
-                                                            Date
+                                                            Date ↑
+                                                        </Text>
+                                                    </MenuOption>
+                                                    <MenuOption
+                                                        value={'Date ↓'}>
+                                                        <Text>
+                                                            Date ↓
                                                         </Text>
                                                     </MenuOption>
                                                 </MenuOptions>
@@ -706,10 +759,12 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             ) : null
                     }
                     {
-                        props.option === 'Content' || props.option === 'Home' ?
+                        props.option === 'Content' || props.option === 'Home' || props.option === 'Performance' ?
                             <DateRangePicker
+                                // key={Math.random()}
                                 preventOverflow={true}
                                 size={'sm'}
+                                appearance={'subtle'}
                                 placeholder={'Filter  '}
                                 onChange={(e: any) => {
                                     console.log('dates start', e[0])
@@ -719,15 +774,15 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         return
                                     }
                                     else {
-                                        props.setFilterStart(e[0])
-                                        props.setFilterEnd(e[1])
+                                        setFilterStart(e[0])
+                                        setFilterEnd(e[1])
                                     }
                                 }}
                                 defaultShow={true}
                                 showOneCalendar={true}
                                 value={[
-                                    props.filterStart,
-                                    props.filterEnd
+                                    filterStart,
+                                    filterEnd
                                 ]}
                                 style={{
                                     marginTop: -4,
@@ -770,9 +825,15 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         </Text>
                                                     </MenuOption>
                                                     <MenuOption
-                                                        value={'Date'}>
+                                                        value={'Date ↑'}>
                                                         <Text>
-                                                            Date
+                                                            Date ↑
+                                                        </Text>
+                                                    </MenuOption>
+                                                    <MenuOption
+                                                        value={'Date ↓'}>
+                                                        <Text>
+                                                            Date ↓
                                                         </Text>
                                                     </MenuOption>
                                                 </MenuOptions>
@@ -785,7 +846,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             )
                     }
                     {
-                        width < 768 ? null : <Ionicons name='search-outline' size={25} color='#2f2f3c'
+                        width < 768 ? null : <Ionicons name='search-outline' size={20} color='#2f2f3c'
                             style={{
                                 marginLeft: Dimensions.get('window').width < 768 ? 0 : 40,
                                 marginTop: -5
@@ -847,6 +908,8 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     {
                         props.option === 'Home' ?
                             <CalendarX
+                                filterStart={filterStart}
+                                filterEnd={filterEnd}
                                 cues={props.calendarCues}
                                 subscriptions={props.subscriptions}
                                 openCueFromCalendar={props.openCueFromCalendar}
@@ -863,6 +926,8 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     props.openGrades()
                                     props.hideHome()
                                 }}
+                                filterStart={filterStart}
+                                filterEnd={filterEnd}
                             /> : null
                     }
                     {

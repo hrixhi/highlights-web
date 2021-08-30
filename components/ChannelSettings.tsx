@@ -52,7 +52,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
     // Channel color
     const [colorCode, setColorCode] = useState("")
     const colorChoices = ["#f44336", "#e91e63", "#9c27b0", "#673ab7", "#3f51b5", "#2196f3", "#03a9f4", "#00bcd4", "#009688", "#4caf50", "#8bc34a", "#cddc39", "#0d5d35", "#ffc107", "#ff9800", "#ff5722", "#795548", "#607db8"]
-    
+
     // Filters
     const grades = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
     const sections = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",]
@@ -129,7 +129,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
             const subscribers = [...selected]
 
             const filterOutMainOwner = subscribers.filter((sub: any) => {
-              return sub.id !== channelCreator  
+                return sub.id !== channelCreator
             })
 
             setSelected(filterOutMainOwner)
@@ -573,9 +573,9 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             }
                         }
                     })
-                    .catch(e => {
-                        alert("Could not Channel data. Check connection.")
-                    })
+                        .catch(e => {
+                            alert("Could not Channel data. Check connection.")
+                        })
 
                     // get subs
                     server.query({
@@ -588,7 +588,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             const tempUsers: any[] = []
                             res.data.user.findByChannelId.map((item: any, index: any) => {
                                 const x = { ...item, selected: false, index }
-                                
+
                                 delete x.__typename
                                 tempUsers.push({
                                     name: item.fullName,
@@ -621,7 +621,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
     }, [props.channelId, props.user])
 
     if (loadingOrg || loadingUsers || loadingChannelColor) {
-        return  <View
+        return <View
             style={{
                 width: "100%",
                 flex: 1,
@@ -920,6 +920,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         </Text>
                         <TextInput
                             value={name}
+                            autoCompleteType='off'
                             placeholder={''}
                             onChangeText={val => {
                                 setName(val)
@@ -935,6 +936,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         </Text>
                         <TextInput
                             value={password}
+                            autoCompleteType='off'
                             placeholder={`(${PreferredLanguageText('optional')})`}
                             onChangeText={val => setPassword(val)}
                             placeholderTextColor={'#818385'}
@@ -1124,8 +1126,10 @@ export default ChannelSettings
 
 const styles = StyleSheet.create({
     screen: {
-        padding: 15,
-        paddingHorizontal: 20,
+        paddingTop: 10,
+        paddingBottom: 20,
+        paddingRight: 20,
+        paddingLeft: Dimensions.get('window').width < 1024 ? 20 : 0,
         width: '100%',
         maxWidth: 500,
         height: Dimensions.get('window').height - 50,

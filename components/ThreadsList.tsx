@@ -160,16 +160,14 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
             backgroundColor: 'white',
             width: '100%',
             height: props.cueId ? 'auto' : windowHeight - 50,
-            paddingHorizontal: 20,
+            paddingRight: 20,
+            paddingLeft: Dimensions.get('window').width < 1024 ? 20 : 0,
             borderTopRightRadius: props.cueId ? 0 : 30,
             borderTopLeftRadius: props.cueId ? 0 : 30,
-            // marginBottom: props.cueId ? 0 : 25,
+            paddingTop: props.cueId ? 0 : 40,
             // borderBottomColor: '#F8F9FA',
             // borderBottomWidth: props.cueId ? 0 : 1
         }}>
-            <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 25 }}>
-                {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
-            </Text>
             {
                 showThreadCues ?
                     <View style={{ backgroundColor: 'white', flexDirection: 'row', paddingBottom: 15 }}>
@@ -196,7 +194,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         </TouchableOpacity>
                     </View>
                     :
-                    <View style={{ backgroundColor: 'white', flexDirection: 'row', paddingBottom: !props.cueId ? 0 : 25, maxWidth: 500 }}>
+                    <View style={{ backgroundColor: 'white', flexDirection: 'row', paddingBottom: !props.cueId ? 0 : 0, maxWidth: 500 }}>
                         {
                             !props.cueId
                                 ? <Text

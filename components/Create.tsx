@@ -87,6 +87,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
   let RichText: any = useRef();
   const [height, setHeight] = useState(100);
   const [init, setInit] = useState(false);
+  const [role, setRole] = useState('')
   const [submission, setSubmission] = useState(false);
   const [deadline, setDeadline] = useState(
     new Date(current.getTime() + 1000 * 60 * 60 * 24)
@@ -345,6 +346,9 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
     const uString: any = await AsyncStorage.getItem("user");
 
     const userId = JSON.parse(uString);
+    if (userId.role) {
+      setRole(userId.role)
+    }
     if (channelId === "") {
       setCustomCategories(localCustomCategories);
       return;
@@ -850,7 +854,10 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
         backgroundColor: "white",
         borderTopLeftRadius: 0,
         borderTopRightRadius: 0,
-        paddingHorizontal: 20,
+        paddingRight: 20,
+        paddingLeft: dimensions.window.width < 1024
+          ? 20
+          : 0,
         overflow: "hidden",
       }}
     >
@@ -876,7 +883,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
           <View style={{ backgroundColor: "white", flex: 1 }}>
             <Text
               style={{
-                fontSize: 15,
+                fontSize: 25,
                 paddingBottom: 20,
                 fontFamily: "inter",
                 // textTransform: "uppercase",
@@ -1135,17 +1142,18 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
               >
                 <TextareaAutosize
                   value={title}
-                  style={{ width: "100%",
+                  style={{
+                    width: "100%",
                     maxWidth: '100%',
                     borderBottom: '1px solid #cccccc',
                     fontSize: 15,
                     paddingTop: 13,
                     paddingBottom: 13,
                     marginTop: 0,
-                    marginBottom: 15 
+                    marginBottom: 15
                   }}
                   // style={styles.input}
-                  minRows={isQuiz ? 3 : 1 }
+                  minRows={isQuiz ? 3 : 1}
                   placeholder={isQuiz ? "Quiz title" : PreferredLanguageText("title")}
                   onChange={(e: any) => setTitle(e.target.value)}
                 />
@@ -1198,14 +1206,11 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                     }}
                   >
                     <Text style={{
-                      color: "#2f2f3c",
-                      fontSize: 11,
-                      lineHeight: 30,
-                      // paddingRight: 20,
-                      paddingTop: 20,
-                      textTransform: "uppercase",
+                      fontSize: 15,
+                      fontFamily: 'inter',
+                      color: '#2f2f3c'
                     }}>
-                      TIMED
+                      Timed
                     </Text>
                   </View>
                   <View
@@ -1238,93 +1243,93 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                       activeThumbColor="white"
                     />
                     {timer ? (
-                    <View
-                      style={{
-                        borderRightWidth: 0,
-                        paddingTop: 0,
-                        borderColor: "#F8F9FA",
-                        flexDirection: 'row'
-                      }}
-                    >
-                      <View>
-                        <Menu onSelect={(hour: any) => setDuration({
-                          ...duration,
-                          hours: hour
-                        })}>
-                          <MenuTrigger>
-                            <Text
-                              style={{
-                                fontFamily: "inter",
-                                fontSize: 14,
-                                color: "#2f2f3c",
+                      <View
+                        style={{
+                          borderRightWidth: 0,
+                          paddingTop: 0,
+                          borderColor: "#F8F9FA",
+                          flexDirection: 'row'
+                        }}
+                      >
+                        <View>
+                          <Menu onSelect={(hour: any) => setDuration({
+                            ...duration,
+                            hours: hour
+                          })}>
+                            <MenuTrigger>
+                              <Text
+                                style={{
+                                  fontFamily: "inter",
+                                  fontSize: 14,
+                                  color: "#2f2f3c",
+                                }}
+                              >
+                                {duration.hours} H <Ionicons name="caret-down" size={14} /> &nbsp;&nbsp;:&nbsp;&nbsp;
+                              </Text>
+                            </MenuTrigger>
+                            <MenuOptions
+                              customStyles={{
+                                optionsContainer: {
+                                  padding: 10,
+                                  borderRadius: 15,
+                                  shadowOpacity: 0,
+                                  borderWidth: 1,
+                                  borderColor: "#F8F9FA",
+                                  overflow: 'scroll',
+                                  maxHeight: '100%'
+                                },
                               }}
                             >
-                              {duration.hours} H <Ionicons name="caret-down" size={14} /> &nbsp;&nbsp;:&nbsp;&nbsp;
-                            </Text>
-                          </MenuTrigger>
-                          <MenuOptions
-                            customStyles={{
-                              optionsContainer: {
-                                padding: 10,
-                                borderRadius: 15,
-                                shadowOpacity: 0,
-                                borderWidth: 1,
-                                borderColor: "#F8F9FA",
-                                overflow: 'scroll',
-                                maxHeight: '100%'
-                              },
-                            }}
-                          >
-                            {hours.map((hour: any) => {
-                              return (
-                                <MenuOption value={hour}>
-                                  <Text>{hour}</Text>
-                                </MenuOption>
-                              );
-                            })}
-                          </MenuOptions>
-                        </Menu>
-                      </View>
-                      <View>
-                        <Menu onSelect={(min: any) => setDuration({
-                          ...duration,
-                          minutes: min
-                        })}>
-                          <MenuTrigger>
-                            <Text
-                              style={{
-                                fontFamily: "inter",
-                                fontSize: 14,
-                                color: "#2f2f3c",
+                              {hours.map((hour: any) => {
+                                return (
+                                  <MenuOption value={hour}>
+                                    <Text>{hour}</Text>
+                                  </MenuOption>
+                                );
+                              })}
+                            </MenuOptions>
+                          </Menu>
+                        </View>
+                        <View>
+                          <Menu onSelect={(min: any) => setDuration({
+                            ...duration,
+                            minutes: min
+                          })}>
+                            <MenuTrigger>
+                              <Text
+                                style={{
+                                  fontFamily: "inter",
+                                  fontSize: 14,
+                                  color: "#2f2f3c",
+                                }}
+                              >
+                                {duration.minutes}  m  <Ionicons name="caret-down" size={14} />
+                              </Text>
+                            </MenuTrigger>
+                            <MenuOptions
+                              customStyles={{
+                                optionsContainer: {
+                                  padding: 10,
+                                  borderRadius: 15,
+                                  shadowOpacity: 0,
+                                  borderWidth: 1,
+                                  borderColor: "#F8F9FA",
+                                  overflow: 'scroll',
+                                  maxHeight: '100%'
+                                },
                               }}
                             >
-                              {duration.minutes}  m  <Ionicons name="caret-down" size={14} />
-                            </Text>
-                          </MenuTrigger>
-                          <MenuOptions
-                            customStyles={{
-                              optionsContainer: {
-                                padding: 10,
-                                borderRadius: 15,
-                                shadowOpacity: 0,
-                                borderWidth: 1,
-                                borderColor: "#F8F9FA",
-                                overflow: 'scroll',
-                                maxHeight: '100%'
-                              },
-                            }}
-                          >
-                            {minutes.map((min: any) => {
-                              return (
-                                <MenuOption value={min}>
-                                  <Text>{min}</Text>
-                                </MenuOption>
-                              );
-                            })}
-                          </MenuOptions>
-                        </Menu>
-                      </View>
-                      {/* <DurationPicker
+                              {minutes.map((min: any) => {
+                                return (
+                                  <MenuOption value={min}>
+                                    <Text>{min}</Text>
+                                  </MenuOption>
+                                );
+                              })}
+                            </MenuOptions>
+                          </Menu>
+                        </View>
+                        {/* <DurationPicker
                                                 // key={Math.random()}
                                                 onChange={(d) => onChangeDuration(d)}
                                                 initialDuration={
@@ -1335,8 +1340,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                                 // style={{ color: 'blue' }}
                                                 maxHours={6}
                                             /> */}
-                    </View>
-                  ) : null}
+                      </View>
+                    ) : null}
                   </View>
                 </View>
               ) : null}
@@ -1362,19 +1367,21 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   flexDirection: 'row',
                   width: '100%'
                 }}>
-                  <View style={{ width: '100%', maxWidth: 400, paddingRight:  Dimensions.get('window').width > 768 ? 15 : 0 }}>
+                  <View style={{ width: '100%', maxWidth: 400, paddingRight: Dimensions.get('window').width > 768 ? 15 : 0 }}>
                     <TextareaAutosize
                       value={quizInstructions}
                       placeholder="Instructions"
                       minRows={3}
-                      style={{ width: "100%",
-                      maxWidth: '100%',
-                      borderBottom: '1px solid #cccccc',
-                      fontSize: 15,
-                      paddingTop: 13,
-                      paddingBottom: 13,
-                      marginTop: 0,
-                      marginBottom: 5 }}
+                      style={{
+                        width: "100%",
+                        maxWidth: '100%',
+                        borderBottom: '1px solid #cccccc',
+                        fontSize: 15,
+                        paddingTop: 13,
+                        paddingBottom: 13,
+                        marginTop: 0,
+                        marginBottom: 5
+                      }}
                       onChange={(e) => setQuizInstructions(e.target.value)}
                       required={false}
                     />
@@ -1388,7 +1395,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 />
               </View>
             ) : imported ? (
-                type === "mp4" ||
+              type === "mp4" ||
                 type === "mp3" ||
                 type === "mov" ||
                 type === "mpeg" ||
@@ -1460,19 +1467,20 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
               display: "flex",
               flexDirection: "column",
               marginHorizontal: 10,
+              maxWidth: 500
             }}
           >
             {channels.length !== 0 ? (
               <View
                 style={{
                   display: "flex",
-                  flexDirection: width < 768 ? "column" : "row",
+                  flexDirection: "column",
                   overflow: "visible",
                 }}
               >
                 <View
                   style={{
-                    width: width < 768 ? "100%" : "33.33%",
+                    width: "100%",
                     borderRightWidth: 0,
                     borderColor: "#F8F9FA",
                   }}
@@ -1487,9 +1495,9 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   >
                     <Text
                       style={{
-                        fontSize: 11,
-                        color: "#2f2f3c",
-                        textTransform: "uppercase",
+                        fontSize: 15,
+                        fontFamily: 'inter',
+                        color: '#2f2f3c'
                       }}
                     >
                       {/* {PreferredLanguageText('channel')} */}
@@ -1581,8 +1589,50 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   </View>
                 </View>
 
+                <View
+                  style={{
+                    width: "100%",
+                    borderRightWidth: 0,
+                    borderColor: "#F8F9FA",
+                  }}
+                >
+                  {channelId !== "" ? (
+                    <View
+                      style={{
+                        flexDirection: "column",
+                        marginTop: 25,
+                        overflow: "scroll",
+                      }}
+                    >
+                      <View style={{ width: "90%", padding: 5, height: "auto" }}>
+                        <Multiselect
+                          placeholder="Share with..."
+                          displayValue="name"
+                          // key={userDropdownOptions.toString()}
+                          // style={{ width: '100%', color: '#2f2f3c',
+                          //     optionContainer: { // To change css for option container
+                          //         zIndex: 9999
+                          //     }
+                          // }}
+                          options={subscribers} // Options to display in the dropdown
+                          selectedValues={selected} // Preselected value to persist in dropdown
+                          onSelect={(e, f) => {
+                            console.log('on select values', e)
+                            setSelected(e);
+                            return true;
+                          }} // Function will trigger on select event
+                          onRemove={(e, f) => {
+                            setSelected(e);
+                            return true;
+                          }}
+                        />
+                      </View>
+                    </View>
+                  ) : null}
+                </View>
+
                 {channelId !== "" ? (
-                  <View style={{ width: width < 768 ? "100%" : "33.33%" }}>
+                  <View style={{ width: "100%" }}>
                     <View
                       style={{
                         width: "100%",
@@ -1593,9 +1643,9 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                     >
                       <Text
                         style={{
-                          fontSize: 11,
-                          color: "#2f2f3c",
-                          textTransform: "uppercase",
+                          fontSize: 15,
+                          fontFamily: 'inter',
+                          color: '#2f2f3c'
                         }}
                       >
                         {PreferredLanguageText("submissionRequired")}
@@ -1639,6 +1689,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           >
                             <Text style={styles.text}>Available</Text>
                             <DatePicker
+                              appearance={'subtle'}
                               format="YYYY-MM-DD HH:mm"
                               preventOverflow={true}
                               value={initiateAt}
@@ -1677,6 +1728,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                             <DatePicker
                               format="YYYY-MM-DD HH:mm"
                               preventOverflow={true}
+                              appearance={'subtle'}
                               value={deadline}
                               onChange={(event: any) => {
                                 const date = new Date(event);
@@ -1696,7 +1748,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   </View>
                 ) : null}
                 {submission ? (
-                  <View style={{ width: width < 768 ? "100%" : "33.33%" }}>
+                  <View style={{ width: "100%" }}>
                     <View
                       style={{
                         width: "100%",
@@ -1707,9 +1759,9 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                     >
                       <Text
                         style={{
-                          fontSize: 11,
-                          color: "#2f2f3c",
-                          textTransform: "uppercase",
+                          fontSize: 15,
+                          fontFamily: 'inter',
+                          color: '#2f2f3c'
                         }}
                       >
                         Grade Weight
@@ -1774,54 +1826,13 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
 
             <View
               style={{
-                width: width < 768 ? "100%" : "33.3%",
-                borderRightWidth: 0,
-                borderColor: "#F8F9FA",
-              }}
-            >
-              {channelId !== "" ? (
-                <View
-                  style={{
-                    flexDirection: "column",
-                    marginTop: 25,
-                    overflow: "scroll",
-                  }}
-                >
-                  <View style={{ width: "90%", padding: 5, height: "auto" }}>
-                    <Multiselect
-                      placeholder="Share with..."
-                      displayValue="name"
-                      // key={userDropdownOptions.toString()}
-                      // style={{ width: '100%', color: '#2f2f3c',
-                      //     optionContainer: { // To change css for option container
-                      //         zIndex: 9999
-                      //     }
-                      // }}
-                      options={subscribers} // Options to display in the dropdown
-                      selectedValues={selected} // Preselected value to persist in dropdown
-                      onSelect={(e, f) => {
-                        console.log('on select values', e)
-                        setSelected(e);
-                        return true;
-                      }} // Function will trigger on select event
-                      onRemove={(e, f) => {
-                        setSelected(e);
-                        return true;
-                      }}
-                    />
-                  </View>
-                </View>
-              ) : null}
-            </View>
-            <View
-              style={{
                 display: "flex",
-                flexDirection: width < 768 ? "column" : "row",
+                flexDirection: "column",
               }}
             >
               <View
                 style={{
-                  width: width < 768 ? "100%" : "33.33%",
+                  width: "100%",
                   borderRightWidth: 0,
                   borderColor: "#F8F9FA",
                 }}
@@ -1837,9 +1848,9 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   >
                     <Text
                       style={{
-                        fontSize: 11,
-                        color: "#2f2f3c",
-                        textTransform: "uppercase",
+                        fontSize: 15,
+                        fontFamily: 'inter',
+                        color: '#2f2f3c'
                       }}
                     >
                       {PreferredLanguageText("category")}
@@ -1940,7 +1951,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
               </View>
               <View
                 style={{
-                  width: width < 768 ? "100%" : "33.33%",
+                  width: "100%",
                   borderRightWidth: 0,
                   borderColor: "#F8F9FA",
                 }}
@@ -1955,9 +1966,9 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 >
                   <Text
                     style={{
-                      fontSize: 11,
-                      color: "#2f2f3c",
-                      textTransform: "uppercase",
+                      fontSize: 15,
+                      fontFamily: 'inter',
+                      color: '#2f2f3c'
                     }}
                   >
                     {PreferredLanguageText("priority")}
@@ -2010,10 +2021,10 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
               style={{
                 width: "100%",
                 paddingTop: 15,
-                flexDirection: width < 768 ? "column" : "row",
+                flexDirection: "column",
               }}
             >
-              <View style={{ width: width < 768 ? "100%" : "33.33%" }}>
+              <View style={{ width: "100%" }}>
                 <View
                   style={{
                     width: "100%",
@@ -2024,9 +2035,9 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 >
                   <Text
                     style={{
-                      fontSize: 11,
-                      color: "#2f2f3c",
-                      textTransform: "uppercase",
+                      fontSize: 15,
+                      fontFamily: 'inter',
+                      color: '#2f2f3c'
                     }}
                   >
                     Reminder
@@ -2063,7 +2074,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 </View>
               </View>
               {notify ? (
-                <View style={{ width: width < 768 ? "100%" : "33.33%" }}>
+                <View style={{ width: "100%" }}>
                   <View
                     style={{
                       width: "100%",
@@ -2074,9 +2085,9 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   >
                     <Text
                       style={{
-                        fontSize: 11,
-                        color: "#2f2f3c",
-                        textTransform: "uppercase",
+                        fontSize: 15,
+                        fontFamily: 'inter',
+                        color: '#2f2f3c'
                       }}
                     >
                       Recurring
@@ -2199,6 +2210,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           format="YYYY-MM-DD HH:mm"
                           value={endPlayAt}
                           preventOverflow={true}
+                          appearance={'subtle'}
                           onChange={(event: any) => {
                             const date = new Date(event);
                             if (date < new Date()) return;
@@ -2214,7 +2226,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 </View>
               ) : null}
               {notify && !shuffle ? (
-                <View style={{ width: width < 768 ? "100%" : "33.33%" }}>
+                <View style={{ width: "100%" }}>
                   <View
                     style={{
                       width: "100%",
@@ -2225,9 +2237,9 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   >
                     <Text
                       style={{
-                        fontSize: 11,
-                        color: "#2f2f3c",
-                        textTransform: "uppercase",
+                        fontSize: 15,
+                        fontFamily: 'inter',
+                        color: '#2f2f3c'
                       }}
                     >
                       Indefinite
@@ -2270,6 +2282,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           format="YYYY-MM-DD HH:mm"
                           value={endPlayAt}
                           preventOverflow={true}
+                          appearance={'subtle'}
                           onChange={(event: any) => {
                             const date = new Date(event);
                             if (date < new Date()) return;
@@ -2286,7 +2299,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
             </View>
             {/* if Quiz then ask Shuffle */}
             {isQuiz ? (
-              <View style={{ width: width < 768 ? "100%" : "33.33%" }}>
+              <View style={{ width: "100%" }}>
                 <View
                   style={{
                     width: "100%",
@@ -2297,9 +2310,9 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 >
                   <Text
                     style={{
-                      fontSize: 11,
-                      color: "#2f2f3c",
-                      textTransform: "uppercase",
+                      fontSize: 15,
+                      fontFamily: 'inter',
+                      color: '#2f2f3c'
                     }}
                   >
                     Shuffle Questions
@@ -2371,8 +2384,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                     }}
                   >
                     {isSubmitting
-                      ? PreferredLanguageText("sharing")
-                      : PreferredLanguageText("save")}
+                      ? 'Creating...'
+                      : 'Create'}
                   </Text>
                 ) : (
                   <Text
@@ -2391,8 +2404,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                     }}
                   >
                     {isSubmitting
-                      ? PreferredLanguageText("sharing")
-                      : PreferredLanguageText("share")}
+                      ? 'Creating...'
+                      : 'CREATE'}
                   </Text>
                 )}
               </TouchableOpacity>

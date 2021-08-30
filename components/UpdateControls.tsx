@@ -1120,13 +1120,13 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     let error = false;
                     problems.map((problem: any) => {
                         if (problem.question === "" || problem.question === "formula:") {
-                          Alert(fillMissingProblemsAlert);
-                          error = true;
+                            Alert(fillMissingProblemsAlert);
+                            error = true;
                         }
 
                         if (problem.points === "" || Number.isNaN(Number(problem.points))) {
-                          Alert(enterNumericPointsAlert);
-                          error = true;
+                            Alert(enterNumericPointsAlert);
+                            error = true;
                         }
 
                         let optionFound = false;
@@ -1134,35 +1134,35 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         //     Alert(mustHaveOneOptionAlert)
                         //     error = true;
                         // }
-                  
+
                         // If MCQ, check if any options repeat:
                         if (!problem.questionType || problem.questionType === "trueFalse") {
-                          const keys: any = {};
-                  
-                          problem.options.map((option: any) => {
-                            if (option.option === "" || option.option === "formula:") {
-                              Alert(fillMissingOptionsAlert);
-                              error = true;
+                            const keys: any = {};
+
+                            problem.options.map((option: any) => {
+                                if (option.option === "" || option.option === "formula:") {
+                                    Alert(fillMissingOptionsAlert);
+                                    error = true;
+                                }
+
+                                if (option.option in keys) {
+                                    Alert("Option repeated in a question");
+                                    error = true;
+                                }
+
+                                if (option.isCorrect) {
+                                    optionFound = true;
+                                }
+
+                                keys[option.option] = 1;
+                            });
+
+                            if (!optionFound) {
+                                Alert(eachOptionOneCorrectAlert);
+                                error = true;
                             }
-                  
-                            if (option.option in keys) {
-                              Alert("Option repeated in a question");
-                              error = true;
-                            }
-                  
-                            if (option.isCorrect) {
-                              optionFound = true;
-                            }
-                  
-                            keys[option.option] = 1;
-                          });
-                  
-                          if (!optionFound) {
-                            Alert(eachOptionOneCorrectAlert);
-                            error = true;
-                          }
                         }
-                      });
+                    });
 
                     // Check if any regrade choice has not been selected
                     modifiedCorrectAnswerProblems.map((prob: boolean, index: number) => {
@@ -1480,7 +1480,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         {props.cue.unreadThreads > 0 ? <View style={styles.badge} /> : null}
                     </Text>
                 </TouchableOpacity>
-                {(isOwner && submission) || isQuiz ? null : (
+                {!submission || (isOwner && submission) || isQuiz ? null : (
                     <TouchableOpacity
                         style={{
                             justifyContent: "center",
@@ -1492,7 +1492,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             props.setShowComments(false)
                         }}>
                         <Text style={!props.showOriginal && !props.viewStatus && !props.showComments && !props.showOptions ? styles.allGrayFill : styles.all}>
-                            {submission ? PreferredLanguageText("mySubmission") : PreferredLanguageText("myNotes")}
+                            {PreferredLanguageText("mySubmission")}
                         </Text>
                     </TouchableOpacity>
                 )}
@@ -1538,24 +1538,24 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             width: '100%'
                         }}
                         placeholder={"Title"}
-                        onChange={(e: any) => setTitle(e.target.value)}   
-                        minRows={1}                     
-                    /> : 
-                    <Text
-                        style={{
-                            fontSize: 18,
-                            paddingRight: 15,
-                            paddingTop: 12,
-                            paddingBottom: 12,
-                            marginTop: 20,
-                            marginBottom: 5,
-                            maxWidth: "100%",
-                            fontWeight: "600",
-                            width: '100%'
-                        }}
-                    >
-                        {title}
-                    </Text>}
+                        onChange={(e: any) => setTitle(e.target.value)}
+                        minRows={1}
+                    /> :
+                        <Text
+                            style={{
+                                fontSize: 18,
+                                paddingRight: 15,
+                                paddingTop: 12,
+                                paddingBottom: 12,
+                                marginTop: 20,
+                                marginBottom: 5,
+                                maxWidth: "100%",
+                                fontWeight: "600",
+                                width: '100%'
+                            }}
+                        >
+                            {title}
+                        </Text>}
                 </View>
                 {isQuiz && !props.cue.graded ? (
                     isQuizTimed && (!props.cue.submittedAt || props.cue.submittedAt === "") ? (
@@ -1625,7 +1625,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 Reload
                             </Text>
                         </View> */}
-                        <a download={true} href={url} style={{ textDecoration: "none", textAlign: "center" }}>
+                        {/* <a download={true} href={url} style={{ textDecoration: "none", textAlign: "center" }}>
                             <View>
                                 <Ionicons name="cloud-download-outline" color="#818385" size={20} />
                                 <Text
@@ -1637,7 +1637,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     Download
                                 </Text>
                             </View>
-                        </a>
+                        </a> */}
                         {
                             isOwner ?
                                 <TouchableOpacity
@@ -1699,9 +1699,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
     const renderMainCueContent = () => {
 
-        let hours = Math.floor(duration / 3600); 
+        let hours = Math.floor(duration / 3600);
 
-        let minutes = Math.floor((duration - hours * 3600) / 60); 
+        let minutes = Math.floor((duration - hours * 3600) / 60);
 
         return (<View
             style={{
@@ -1738,13 +1738,13 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     <Text style={{ marginRight: 10, fontWeight: '700' }}>
                                         {problems.length} {problems.length === 1 ? "Question" : "Questions"}
                                     </Text>
-                                    <Text style={{ marginRight: 10}}>
+                                    <Text style={{ marginRight: 10 }}>
                                         |
                                     </Text>
                                     <Text style={{ marginRight: 10, fontWeight: '700' }}>
-                                        {totalQuizPoints} Points 
+                                        {totalQuizPoints} Points
                                     </Text>
-                                    <Text style={{ marginRight: 10}}>
+                                    <Text style={{ marginRight: 10 }}>
                                         |
                                     </Text>
                                     <Text style={{ marginRight: 10, fontWeight: '700' }}>
@@ -1902,7 +1902,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     )
             )}
         </View>
-    );
+        );
     }
 
     const renderRichEditorOriginalCue = () => (
@@ -2008,7 +2008,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         backgroundColor: "white"
                     }}>
                     <Text style={{
-                        fontSize: 25,
+                        fontSize: 15,
                         fontFamily: 'inter',
                         color: '#2f2f3c'
                     }}>
@@ -2086,7 +2086,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         backgroundColor: "white"
                     }}>
                     <Text style={{
-                        fontSize: 25,
+                        fontSize: 15,
                         fontFamily: 'inter',
                         color: '#2f2f3c'
                     }}>{PreferredLanguageText("submissionRequired")}</Text>
@@ -2143,6 +2143,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 format="YYYY-MM-DD HH:mm"
                                 size={'xs'}
                                 value={initiateAt}
+                                appearance={'subtle'}
                                 preventOverflow={true}
                                 onChange={(event: any) => {
 
@@ -2187,6 +2188,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             <DatePicker
                                 preventOverflow={true}
                                 value={deadline}
+                                appearance={'subtle'}
                                 format="YYYY-MM-DD HH:mm"
                                 onChange={(event: any) => {
                                     const date = new Date(event);
@@ -2224,7 +2226,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         backgroundColor: "white"
                     }}>
                     <Text style={{
-                        fontSize: 25,
+                        fontSize: 15,
                         fontFamily: 'inter',
                         color: '#2f2f3c'
                     }}>Grade Weight</Text>
@@ -2315,7 +2317,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         backgroundColor: "white"
                     }}>
                     <Text style={{
-                        fontSize: 25,
+                        fontSize: 15,
                         fontFamily: 'inter',
                         color: '#2f2f3c'
                     }}>{PreferredLanguageText("category")}</Text>
@@ -2403,7 +2405,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 </Menu>
                             )}
                         </View>
-                        <View style={{ width: "20%", backgroundColor: "white",  paddingRight: 20 }}>
+                        <View style={{ width: "20%", backgroundColor: "white", paddingRight: 20 }}>
                             <TouchableOpacity
                                 onPress={() => {
                                     if (addCustomCategory) {
@@ -2447,7 +2449,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         backgroundColor: "white"
                     }}>
                     <Text style={{
-                        fontSize: 25,
+                        fontSize: 15,
                         fontFamily: 'inter',
                         color: '#2f2f3c'
                     }}>{PreferredLanguageText("priority")}</Text>
@@ -2504,7 +2506,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         backgroundColor: "white"
                     }}>
                     <Text style={{
-                        fontSize: 25,
+                        fontSize: 15,
                         fontFamily: 'inter',
                         color: '#2f2f3c'
                     }}>Forward</Text>
@@ -2680,7 +2682,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             backgroundColor: "white"
                         }}>
                         <Text style={{
-                            fontSize: 25,
+                            fontSize: 15,
                             fontFamily: 'inter',
                             color: '#2f2f3c'
                         }}>Reminder</Text>
@@ -2724,7 +2726,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 backgroundColor: "white"
                             }}>
                             <Text style={{
-                                fontSize: 25,
+                                fontSize: 15,
                                 fontFamily: 'inter',
                                 color: '#2f2f3c'
                             }}>Recurring</Text>
@@ -2801,6 +2803,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     <DatePicker
                                         preventOverflow={true}
                                         value={endPlayAt}
+                                        appearance={'subtle'}
                                         format="YYYY-MM-DD HH:mm"
                                         onChange={(event: any) => {
                                             const date = new Date(event);
@@ -2826,7 +2829,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 backgroundColor: "white"
                             }}>
                             <Text style={{
-                                fontSize: 25,
+                                fontSize: 15,
                                 fontFamily: 'inter',
                                 color: '#2f2f3c'
                             }}>Indefinite</Text>
@@ -2861,6 +2864,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     <DatePicker
                                         preventOverflow={true}
                                         format="YYYY-MM-DD HH:mm"
+                                        appearance={'subtle'}
                                         onChange={(event: any) => {
                                             const date = new Date(event);
                                             if (date < new Date()) return;
@@ -3012,7 +3016,11 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 backgroundColor: "white",
                 borderTopLeftRadius: 0,
                 borderTopRightRadius: 0,
-                paddingHorizontal: 20,
+                // paddingHorizontal: 20,
+                paddingLeft: Dimensions.get('window').width < 1024
+                    ? 20
+                    : 0,
+                paddingRight: 20,
                 paddingBottom: 50
                 // overflow: 'hidden'
             }}>
@@ -3313,7 +3321,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             Reload
                                         </Text>
                                     </View> */}
-                                                <a download={true} href={submissionUrl} style={{ textDecoration: "none", textAlign: "center" }}>
+                                                {/* <a download={true} href={submissionUrl} style={{ textDecoration: "none", textAlign: "center" }}>
                                                     <View>
                                                         <Ionicons name="cloud-download-outline" color="#818385" size={20} style={{ alignSelf: 'center' }} />
                                                         <Text
@@ -3325,7 +3333,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                             Download
                                                         </Text>
                                                     </View>
-                                                </a>
+                                                </a> */}
                                                 {
                                                     props.cue.graded || (currentDate > deadline) ? null :
                                                         <TouchableOpacity
@@ -3411,7 +3419,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     </TouchableOpacity> */}
                             </View>}
                     <Collapse isOpened={props.showOptions}>
-                        <View style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+                        <View style={{ flex: 1, display: "flex", flexDirection: "column", maxWidth: 600 }}>
                             {props.cue.channelId ? (
                                 <View
                                     style={{
@@ -3586,12 +3594,22 @@ const styles: any = StyleSheet.create({
         paddingHorizontal: 10
     },
     all: {
-        fontSize: 12,
-        color: "#2f2f3c",
+        fontSize: 14,
+        color: '#2f2f3c',
         height: 22,
-        paddingHorizontal: 10,
-        backgroundColor: "white",
-        lineHeight: 20
+        paddingHorizontal: 20,
+        backgroundColor: '#fff',
+        lineHeight: 22,
+        fontFamily: 'inter'
+    },
+    allGrayFill: {
+        fontSize: 14,
+        color: '#fff',
+        paddingHorizontal: 20,
+        borderRadius: 10,
+        backgroundColor: '#2f2f3c',
+        lineHeight: 22,
+        fontFamily: 'inter'
     },
     allOutline: {
         fontSize: 12,
@@ -3606,14 +3624,6 @@ const styles: any = StyleSheet.create({
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: "white"
-    },
-    allGrayFill: {
-        fontSize: 12,
-        color: "#fff",
-        paddingHorizontal: 10,
-        borderRadius: 10,
-        backgroundColor: "#2f2f3c",
-        lineHeight: 20
     },
     allGrayOutline: {
         fontSize: 12,
