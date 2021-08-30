@@ -68,6 +68,7 @@ const EnglishBank: { [key: string]: string } = {
     event: "Event", // Done
     subscribe: 'Subscribe', // Done
     profile: "Profile", // DOne
+    name: "Name",
     fullName: "Full Name", // Done
     displayName: "Display Name", // Done
     currentPassword: "Current Password", // DOne
@@ -262,6 +263,7 @@ const HindiBank: { [key: string]: string } = {
     event: "प्रतिस्पर्धा",
     subscribe: "सदस्य बनें",
     profile: "प्रोफ़ाइल",
+    name: "नाम",
     fullName: "पूरा नाम",
     displayName: "प्रयोक्ता नाम",
     currentPassword: "वर्तमान पासवर्ड",
@@ -454,6 +456,7 @@ const GujaratiBank: { [key: string]: string } = {
     event: "ઘટના",
     subscribe: "સબ્સ્ક્રાઇબ કરો",
     profile: "પ્રોફાઇલ",
+    name: "નામ",
     fullName: "પૂરું નામ",
     displayName: "વપરાશકર્તા નામ",
     currentPassword: "વર્તમાન પાસવર્ડ",

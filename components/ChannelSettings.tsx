@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { StyleSheet, Dimensions, Keyboard, ActivityIndicator } from 'react-native';
+import { StyleSheet, Dimensions, Keyboard, ActivityIndicator, Switch } from 'react-native';
 import { Text, TouchableOpacity, View } from './Themed';
 import { PreferredLanguageText } from '../helpers/LanguageContext';
 import { TextInput } from './CustomTextInput';
@@ -8,7 +8,7 @@ import { fetchAPI } from '../graphql/FetchAPI';
 import Multiselect from 'multiselect-react-dropdown';
 import {
     doesChannelNameExist, findChannelById, getOrganisation, getSubscribers,
-    getUserCount, subscribe, unsubscribe, updateChannel, getChannelColorCode
+    getUserCount, subscribe, unsubscribe, updateChannel, getChannelColorCode, duplicateChannel
 } from '../graphql/QueriesAndMutations';
 import { ScrollView } from 'react-native-gesture-handler';
 import { CirclePicker } from "react-color";
@@ -66,6 +66,14 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
 
     // Used to keep all users to filter
     const [allUsers, setAllUsers] = useState([]);
+
+    const [showDuplicateChannel, setShowDuplicateChannel] = useState(false);
+    const [duplicateChannelName, setDuplicateChannelName] = useState("");
+    const [duplicateChannelPassword, setDuplicateChannelPassword] = useState("");
+    const [duplicateChannelColor, setDuplicateChannelColor] = useState("");
+    const [duplicateChannelTemporary, setDuplicateChannelTemporary] = useState(false);
+    const [duplicateChannelSubscribers, setDuplicateChannelSubscribers] = useState(true);
+    const [duplicateChannelModerators, setDuplicateChannelModerators] = useState(true);
 
     useEffect(() => {
 
@@ -304,6 +312,59 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
         </View>)
     }
 
+    const handleDuplicate = useCallback(() => {
+
+        if (duplicateChannelName.toString().trim() === '') {
+            alert('Enter duplicate channel name.')
+            return
+        }
+
+        if (duplicateChannelColor === "") {
+            alert('Pick duplicate channel color.')
+            return
+        }
+
+        const server = fetchAPI('')
+        server.query({
+            query: doesChannelNameExist,
+            variables: {
+                name: duplicateChannelName.trim()
+            }
+        }).then(async res => {
+            if (res.data && (res.data.channel.doesChannelNameExist !== true)) {
+                server.mutate({
+                    mutation: duplicateChannel,
+                    variables: {
+                        channelId: props.channelId,
+                        name: duplicateChannelName.trim(),
+                        password: duplicateChannelPassword,
+                        colorCode: duplicateChannelColor,
+                        temporary: duplicateChannelTemporary,
+                        duplicateSubscribers: duplicateChannelSubscribers,
+                        duplicateOwners: duplicateChannelModerators
+                    }
+                }).then((res2) => {
+                    if (res2.data && res2.data.channel.duplicate === "created") {
+                        alert("Channel duplicated successfully.")
+                        // Refresh Subscriptions for user
+                        props.refreshSubscriptions()
+                        props.closeModal()
+                    }
+                })
+            }
+        })
+        .catch((e) => {
+            alert("Something went wrong. Try again.")
+        })
+
+
+
+
+
+    }, [duplicateChannel, duplicateChannelName, duplicateChannelPassword, props.channelId, 
+        duplicateChannelColor, duplicateChannelTemporary, duplicateChannelSubscribers,
+        duplicateChannelModerators])
+
     const handleSubmit = useCallback(() => {
         if (name.toString().trim() === '') {
             alert('Enter channel name.')
@@ -390,7 +451,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         setOriginalSubs([])
 
                         // need to refresh channel subscriptions since name will be updated
-                        
+
                         props.closeModal()
                     } else {
                         alert("Something went wrong.")
@@ -475,6 +536,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         }
                                     }).then(res => {
                                         if (res.data && res.data.channel.findById) {
+
                                             setName(res.data.channel.findById.name)
                                             setOriginalName(res.data.channel.findById.name)
                                             setPassword(res.data.channel.findById.password ? res.data.channel.findById.password : '')
@@ -571,9 +633,263 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
             <ActivityIndicator color={"#a2a2ac"} />
         </View>
     }
+    
+
+    if (showDuplicateChannel) {
+        return (<View style={styles.screen} >
+            <View style={{ width: '100%', backgroundColor: 'white', paddingTop: 10 }}>
+                <View style={{ backgroundColor: 'white', flexDirection: 'row', paddingBottom: 25 }}>
+                    <TouchableOpacity
+                        key={Math.random()}
+                        style={{
+                            flex: 1,
+                            backgroundColor: 'white'
+                        }}
+                        onPress={() => {
+                            setShowDuplicateChannel(false)
+                        }}>
+                        <Text style={{
+                            width: '100%',
+                            fontSize: 15,
+                            color: '#a2a2ac'
+                        }}>
+                            <Ionicons name='chevron-back-outline' size={17} color={'#2F2F3C'} style={{ marginRight: 10 }} /> 
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+                <Text
+                    style={{
+                        fontSize: 20,
+                        paddingBottom: 20,
+                        fontFamily: 'inter',
+                        // textTransform: "uppercase",
+                        // paddingLeft: 10,
+                        flex: 1,
+                        lineHeight: 25
+                    }}>
+                    Duplicate Channel
+                </Text>
+                <ScrollView
+                    onScroll={() => {
+                        Keyboard.dismiss()
+                    }}
+                    contentContainerStyle={{
+                        maxHeight: Dimensions.get('window').height - 95,
+                        // height: 'auto',
+                        minHeight: 100,
+                        paddingRight: 50
+                    }}
+                >
+                    <View style={{ backgroundColor: 'white' }}>
+                        <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>
+                            {PreferredLanguageText('channel') + ' ' + PreferredLanguageText('name')}
+                        </Text>
+                        <TextInput
+                            value={duplicateChannelName}
+                            placeholder={''}
+                            onChangeText={val => {
+                                setDuplicateChannelName(val)
+                            }}
+                            placeholderTextColor={'#a2a2ac'}
+                            required={true}
+                            footerMessage={'case sensitive'}
+                        />
+                    </View>
+                    <View style={{ backgroundColor: 'white' }}>
+                        <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>
+                            {PreferredLanguageText('enrolmentPassword')}
+                        </Text>
+                        <TextInput
+                            value={duplicateChannelPassword}
+                            placeholder={`(${PreferredLanguageText('optional')})`}
+                            onChangeText={val => setDuplicateChannelPassword(val)}
+                            placeholderTextColor={'#a2a2ac'}
+                            secureTextEntry={true}
+                            required={false}
+                        />
+                    </View>
+                    <View style={{ backgroundColor: 'white' }}>
+                        <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>
+                            color
+                        </Text>
+                        <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white', marginTop: 20 }}>
+                            <View style={{ width: '100%', backgroundColor: 'white' }}>
+                                <CirclePicker
+                                    colors={colorChoices}
+                                    color={duplicateChannelColor}
+                                    onChangeComplete={(color: any) => setDuplicateChannelColor(color.hex)}
+                                />
+                            </View>
+                        </View>
+                    </View>
+
+                    <View
+                        style={{
+                            width: "100%",
+                            paddingTop: 15,
+                        }}>
+                        <View
+                            style={{
+                                width: "100%",
+                                paddingTop: 15,
+                                paddingBottom: 15,
+                                backgroundColor: "white"
+                            }}>
+                            <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>Temporary</Text>
+                        </View>
+                        <View
+                            style={{
+                                backgroundColor: "white",
+                                width: "100%",
+                                height: 40,
+                            }}>
+                            <Switch
+                                value={duplicateChannelTemporary}
+                                onValueChange={() => setDuplicateChannelTemporary(!duplicateChannelTemporary)}
+                                style={{ height: 20 }}
+                                trackColor={{
+                                    false: "#f4f4f6",
+                                    true: "#3B64F8"
+                                }}
+                                activeThumbColor="white"
+                            />
+                        </View>
+                        <Text style={{ color: '#a2a2ac', fontSize: 12 }}>
+                            Channels that are not temporary can only be deleted by the school administrator.
+                        </Text>
+                    </View>
+                    {/* Switch to copy Subscribers */}
+                    {
+                        selected.length > 0 ? 
+                            <View>
+                                <View
+                                    style={{
+                                        width: "100%",
+                                        paddingTop: 30,
+                                        paddingBottom: 15,
+                                        backgroundColor: "white",
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                        fontSize: 11,
+                                        color: "#2f2f3c",
+                                        textTransform: "uppercase",
+                                        }}
+                                    >
+                                        Duplicate Subscribers
+                                    </Text>
+                                </View>
+                                <View style={{ flexDirection: "row" }}>
+                                    <View
+                                        style={{
+                                        backgroundColor: "white",
+                                        height: 40,
+                                        marginRight: 10,
+                                        }}
+                                    >
+                                        <Switch
+                                            value={duplicateChannelSubscribers}
+                                            onValueChange={() => {
+                                                setDuplicateChannelSubscribers(!duplicateChannelSubscribers);
+                                            }}
+                                            style={{ height: 20 }}
+                                            trackColor={{
+                                                false: "#f4f4f6",
+                                                true: "#3B64F8"
+                                            }}
+                                            activeThumbColor="white"
+                                        />
+                                    </View>
+                                </View>
+                            </View>
+                            : null
+                    }
+
+                    {/* Switch to copy Moderators */}
+                    {
+                        owners.length > 0 ? 
+                            <View>
+                                <View
+                                    style={{
+                                        width: "100%",
+                                        paddingTop: 15,
+                                        paddingBottom: 15,
+                                        backgroundColor: "white",
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                        fontSize: 11,
+                                        color: "#2f2f3c",
+                                        textTransform: "uppercase",
+                                        }}
+                                    >
+                                        Duplicate Moderators
+                                    </Text>
+                                </View>
+                                <View style={{ flexDirection: "row" }}>
+                                    <View
+                                        style={{
+                                        backgroundColor: "white",
+                                        height: 40,
+                                        marginRight: 10,
+                                        }}
+                                    >
+                                        <Switch
+                                            value={duplicateChannelModerators}
+                                            onValueChange={() => {
+                                                setDuplicateChannelModerators(!duplicateChannelModerators);
+                                            }}
+                                            style={{ height: 20 }}
+                                            trackColor={{
+                                                false: "#f4f4f6",
+                                                true: "#3B64F8"
+                                            }}
+                                            activeThumbColor="white"
+                                        />
+                                    </View>
+                                </View>
+                            </View>
+                            : null
+                    }
+
+
+                    <View style={{ flexDirection: 'column', alignItems: 'center', marginTop: 50, paddingBottom: 50 }}>
+                        <TouchableOpacity
+                            onPress={() => handleDuplicate()}
+                            style={{
+                                backgroundColor: 'white',
+                                borderRadius: 15,
+                                overflow: 'hidden',
+                                height: 35,
+                            }}
+                        >
+                            <Text style={{
+                                textAlign: 'center',
+                                lineHeight: 35,
+                                color: 'white',
+                                fontSize: 12,
+                                backgroundColor: '#3B64F8',
+                                paddingHorizontal: 25,
+                                fontFamily: 'inter',
+                                height: 35,
+                                textTransform: 'uppercase',
+                                width: 150
+                            }}>
+                                SAVE
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+
+                </ScrollView>
+            </View>
+        </View>)
+
+    }
 
     return (
-        <View style={styles.screen} key={1}>
+        <View style={styles.screen} >
             <View style={{ width: '100%', backgroundColor: 'white', paddingTop: 10 }}>
                 <Text
                     style={{
@@ -594,7 +910,8 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                     contentContainerStyle={{
                         maxHeight: Dimensions.get('window').height - 95,
                         // height: 'auto',
-                        minHeight: 100
+                        minHeight: 100,
+                        paddingRight: 50
                     }}
                 >
                     <View style={{ backgroundColor: 'white' }}>
@@ -712,17 +1029,8 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             />
                         </View>
                     </View>
-                    <View
-                        style={{
-                            flex: 1,
-                            backgroundColor: 'white',
-                            justifyContent: 'center',
-                            display: 'flex',
-                            flexDirection: 'row',
-                            // height: 50,
-                            paddingTop: 25,
-                            marginBottom: 50
-                        }}>
+
+                    <View style={{ flexDirection: 'column', alignItems: 'center', marginTop: 50, paddingBottom: 50 }}>
                         <TouchableOpacity
                             onPress={() => handleSubmit()}
                             style={{
@@ -730,8 +1038,6 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 borderRadius: 15,
                                 overflow: 'hidden',
                                 height: 35,
-                                marginTop: 15,
-                                marginBottom: 100,
                             }}
                         >
                             <Text style={{
@@ -743,24 +1049,41 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 paddingHorizontal: 25,
                                 fontFamily: 'inter',
                                 height: 35,
-                                textTransform: 'uppercase'
+                                textTransform: 'uppercase',
+                                width: 150
                             }}>
                                 UPDATE
                             </Text>
                         </TouchableOpacity>
-                    </View>
+
+                    
+                        <TouchableOpacity
+                            onPress={() => setShowDuplicateChannel(true)}
+                            style={{
+                                backgroundColor: 'white',
+                                borderRadius: 15,
+                                overflow: 'hidden',
+                                height: 35,
+                                marginTop: 15
+                            }}
+                        >
+                            <Text style={{
+                                textAlign: 'center',
+                                lineHeight: 35,
+                                color: '#2F2F3C',
+                                fontSize: 12,
+                                backgroundColor: '#f4f4f6',
+                                paddingHorizontal: 25,
+                                fontFamily: 'inter',
+                                height: 35,
+                                textTransform: 'uppercase',
+                                width: 150
+                            }}>
+                                DUPLICATE
+                            </Text>
+                        </TouchableOpacity>
                     {
                         temporary ?
-                            <View
-                                style={{
-                                    flex: 1,
-                                    backgroundColor: 'white',
-                                    justifyContent: 'center',
-                                    display: 'flex',
-                                    flexDirection: 'row',
-                                    // height: 50,
-                                    paddingTop: 15
-                                }}>
                                 <TouchableOpacity
                                     onPress={() => handleDelete()}
                                     style={{
@@ -768,7 +1091,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         borderRadius: 15,
                                         overflow: 'hidden',
                                         height: 35,
-                                        // marginTop: 15
+                                        marginTop: 15,
                                     }}
                                 >
                                     <Text style={{
@@ -780,14 +1103,17 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         paddingHorizontal: 25,
                                         fontFamily: 'inter',
                                         height: 35,
-                                        textTransform: 'uppercase'
+                                        textTransform: 'uppercase',
+                                        width: 150
                                     }}>
                                         DELETE
                                     </Text>
                                 </TouchableOpacity>
-                            </View> : null
+                            : null
                     }
-                    <View style={{ height: 50, backgroundColor: '#fff' }} />
+                    </View>
+                    
+                    {/* <View style={{ height: 50, backgroundColor: '#fff' }} /> */}
                 </ScrollView>
             </View>
         </View>
