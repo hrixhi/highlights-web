@@ -402,10 +402,24 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 </View>
                                 <Collapse isOpened={item.isOpen}>
                                     {
-                                        item.steps.map((step) => {
+                                        item.steps.map((step: string) => {
+
+                                            let renderContent = null;
+
+                                            const split = step.split(":");
+
+                                            if (split.length === 1) {
+                                                renderContent = <View>• {step}</View>
+                                            } else {
+                                                renderContent = (<View style={{ display: 'flex', flexDirection: 'row' }}>
+                                                    • <strong>{split[0]}:</strong>
+                                                    {split[1]}
+                                                </View>)
+                                            }
+
                                             return <View style={{ backgroundColor: '#fff', paddingTop: 15 }}>
-                                                <Text>
-                                                    • {step}
+                                                <Text style={{ display: 'flex', flexDirection: 'row' }}>
+                                                     {renderContent}
                                                 </Text>
                                             </View>
                                         })

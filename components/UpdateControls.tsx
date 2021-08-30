@@ -47,8 +47,10 @@ import {
     MenuOption,
     MenuTrigger,
 } from 'react-native-popup-menu';
-import WebViewer from '@pdftron/webviewer';
 
+import WebViewer from '@pdftron/webviewer';
+import TextareaAutosize from 'react-textarea-autosize';
+import lodash from 'lodash';
 
 const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const current = new Date();
@@ -126,6 +128,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     // QUIZ OPTIONS
     const [isQuiz, setIsQuiz] = useState(false);
     const [problems, setProblems] = useState<any[]>([]);
+    const [unmodifiedProblems, setUnmodifiedProblems] = useState<any[]>([]);
+    const [totalQuizPoints, setTotalQuizPoints] = useState(0);
     const [solutions, setSolutions] = useState<any[]>([]);
     const [quizId, setQuizId] = useState("");
     const [loading, setLoading] = useState(true);
@@ -176,6 +180,14 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const [channelOwners, setChannelOwners] = useState<any[]>([])
     const [selectedChannelOwner, setSelectedChannelOwner] = useState<any>(undefined)
     const [userId, setUserId] = useState('')
+
+    const fillMissingProblemsAlert = PreferredLanguageText("fillMissingProblems");
+    const enterNumericPointsAlert = PreferredLanguageText("enterNumericPoints");
+    // const mustHaveOneOptionAlert = PreferredLanguageText('mustHaveOneOption')
+    const fillMissingOptionsAlert = PreferredLanguageText("fillMissingOptions");
+    const eachOptionOneCorrectAlert = PreferredLanguageText(
+        "eachOptionOneCorrect"
+    );
 
     const loadUser = useCallback(async () => {
         const u = await AsyncStorage.getItem('user')
@@ -351,7 +363,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             });
 
                             const subscriberwithoutOwner: any = [];
-                            subscriberwithoutOwner.map((i: any) => {
+                            format.map((i: any) => {
                                 if (user._id !== i.id) {
                                     subscriberwithoutOwner.push(i);
                                 }
@@ -431,6 +443,18 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     setQuizSolutions(solutionsObject);
                                 }
                                 setProblems(res.data.quiz.getQuiz.problems);
+
+                                const deepCopy = lodash.cloneDeep(res.data.quiz.getQuiz.problems)
+                                setUnmodifiedProblems(deepCopy);
+
+                                let totalPoints = 0;
+
+                                res.data.quiz.getQuiz.problems.map((problem: any) => {
+                                    totalPoints += Number(problem.points)
+                                })
+
+                                setTotalQuizPoints(totalPoints);
+
                                 if (res.data.quiz.getQuiz.duration && res.data.quiz.getQuiz.duration !== 0) {
                                     setDuration(res.data.quiz.getQuiz.duration * 60);
                                     setIsQuizTimed(true);
@@ -1075,7 +1099,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         props.cue
     ]);
 
-    const updateQuiz = (instructions: string, problems: any, headers: any) => {
+    const updateQuiz = (instructions: string, problems: any, headers: any, modifiedCorrectAnswerProblems: boolean[], regradeChoices: string[], timer: boolean, duration: any) => {
         Alert("Update Quiz?", "", [
             {
                 text: "Cancel",
@@ -1089,6 +1113,69 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 onPress: async () => {
                     setLoadingAfterModifyingQuiz(true)
                     const server = fetchAPI("");
+
+                    // VALIDATION:
+                    // Check if any question without a correct answer
+
+                    let error = false;
+                    problems.map((problem: any) => {
+                        if (problem.question === "" || problem.question === "formula:") {
+                          Alert(fillMissingProblemsAlert);
+                          error = true;
+                        }
+
+                        if (problem.points === "" || Number.isNaN(Number(problem.points))) {
+                          Alert(enterNumericPointsAlert);
+                          error = true;
+                        }
+
+                        let optionFound = false;
+                        // if (problem.options.length === 0) {
+                        //     Alert(mustHaveOneOptionAlert)
+                        //     error = true;
+                        // }
+                  
+                        // If MCQ, check if any options repeat:
+                        if (!problem.questionType || problem.questionType === "trueFalse") {
+                          const keys: any = {};
+                  
+                          problem.options.map((option: any) => {
+                            if (option.option === "" || option.option === "formula:") {
+                              Alert(fillMissingOptionsAlert);
+                              error = true;
+                            }
+                  
+                            if (option.option in keys) {
+                              Alert("Option repeated in a question");
+                              error = true;
+                            }
+                  
+                            if (option.isCorrect) {
+                              optionFound = true;
+                            }
+                  
+                            keys[option.option] = 1;
+                          });
+                  
+                          if (!optionFound) {
+                            Alert(eachOptionOneCorrectAlert);
+                            error = true;
+                          }
+                        }
+                      });
+
+                    // Check if any regrade choice has not been selected
+                    modifiedCorrectAnswerProblems.map((prob: boolean, index: number) => {
+                        if (prob && regradeChoices[index] === "") {
+                            Alert('Select regrade option for any questions with modified correct answers.')
+                            error = true;
+                        }
+                    })
+
+                    if (error) {
+                        setLoadingAfterModifyingQuiz(false);
+                        return;
+                    }
 
                     // Points should be a string not a number
 
@@ -1110,6 +1197,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             options: sanitizeOptions
                         }
                     })
+
+                    const durationMinutes = duration.hours * 60 + duration.minutes + duration.seconds / 60;
+
                     server
                         .mutate({
                             mutation: modifyQuiz,
@@ -1118,8 +1208,11 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 quiz: {
                                     instructions,
                                     problems: sanitizeProblems,
-                                    headers: JSON.stringify(headers)
-                                }
+                                    headers: JSON.stringify(headers),
+                                    duration: timer ? durationMinutes.toString() : null,
+                                },
+                                modifiedCorrectAnswers: modifiedCorrectAnswerProblems.map((o: any) => o ? "yes" : "no"),
+                                regradeChoices: regradeChoices.map((choice: string) => choice === "" ? "none" : choice)
                             }
                         })
                         .then((res: any) => {
@@ -1135,9 +1228,12 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     .then(res => {
                                         if (res.data && res.data.quiz.getQuiz) {
                                             setProblems(res.data.quiz.getQuiz.problems);
+                                            const deepCopy = lodash.cloneDeep(res.data.quiz.getQuiz.problems)
+                                            setUnmodifiedProblems(deepCopy);
                                             setInstructions(res.data.quiz.getQuiz.instructions ? res.data.quiz.getQuiz.instructions : '')
                                             setHeaders(res.data.quiz.getQuiz.headers ? JSON.parse(res.data.quiz.getQuiz.headers) : {})
                                             setLoadingAfterModifyingQuiz(false);
+                                            setDuration(res.data.quiz.getQuiz.duration * 60);
                                             alert('Quiz updated successfully')
                                         }
                                     });
@@ -1395,7 +1491,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             props.setShowOptions(false)
                             props.setShowComments(false)
                         }}>
-                        <Text style={!props.showOriginal && !props.viewStatus ? styles.allGrayFill : styles.all}>
+                        <Text style={!props.showOriginal && !props.viewStatus && !props.showComments && !props.showOptions ? styles.allGrayFill : styles.all}>
                             {submission ? PreferredLanguageText("mySubmission") : PreferredLanguageText("myNotes")}
                         </Text>
                     </TouchableOpacity>
@@ -1423,19 +1519,43 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
     // QUIZ TIMER OR DOWNLOAD/REFRESH IF UPLOADED
     const renderQuizTimerOrUploadOptions = () => {
-        console.log(props.cue.graded)
-        console.log(props.cue.submittedAt)
         return props.showOriginal && (imported || isQuiz) ? (
             <View style={{ flexDirection: "row", marginRight: 0, marginLeft: 0 }}>
-                <View style={{ width: "40%", alignSelf: "flex-start" }}>
-                    <TextInput
-                        editable={isOwner}
+                <View style={{ width: Dimensions.get('window').width < 768 ? "60%" : "40%", alignSelf: "flex-start" }}>
+                    {isOwner ? <TextareaAutosize
                         value={title}
-                        style={styles.input}
+                        // style={styles.input}
+                        style={{
+                            fontSize: 15,
+                            padding: 15,
+                            paddingTop: 12,
+                            paddingBottom: 12,
+                            marginTop: 5,
+                            marginBottom: 20,
+                            maxWidth: "100%",
+                            borderBottom: '1px solid #cccccc',
+                            // fontWeight: "600",
+                            width: '100%'
+                        }}
                         placeholder={"Title"}
-                        onChangeText={val => setTitle(val)}
-                        placeholderTextColor={"#818385"}
-                    />
+                        onChange={(e: any) => setTitle(e.target.value)}   
+                        minRows={1}                     
+                    /> : 
+                    <Text
+                        style={{
+                            fontSize: 18,
+                            paddingRight: 15,
+                            paddingTop: 12,
+                            paddingBottom: 12,
+                            marginTop: 20,
+                            marginBottom: 5,
+                            maxWidth: "100%",
+                            fontWeight: "600",
+                            width: '100%'
+                        }}
+                    >
+                        {title}
+                    </Text>}
                 </View>
                 {isQuiz && !props.cue.graded ? (
                     isQuizTimed && (!props.cue.submittedAt || props.cue.submittedAt === "") ? (
@@ -1577,8 +1697,13 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         ) : null;
     };
 
-    const renderMainCueContent = () => (
-        <View
+    const renderMainCueContent = () => {
+
+        let hours = Math.floor(duration / 3600); 
+
+        let minutes = Math.floor((duration - hours * 3600) / 60); 
+
+        return (<View
             style={{
                 width: "100%",
                 minHeight: 475,
@@ -1590,6 +1715,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         <View style={{ width: '100%', paddingBottom: 50 }}>
                             <Quiz
                                 // disable quiz if graded or deadline has passed
+                                isOwner={isOwner}
                                 submitted={isQuiz && props.cue.submittedAt && props.cue.submittedAt !== "" ? true : false}
                                 graded={props.cue.graded}
                                 hasEnded={currentDate >= deadline}
@@ -1600,11 +1726,32 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 instructions={instructions}
                                 headers={headers}
                                 modifyQuiz={updateQuiz}
+                                unmodifiedProblems={unmodifiedProblems}
+                                duration={duration}
                             />
                             {renderFooter()}
                         </View>
                     ) : (
                         <View>
+                            {
+                                <View style={{ display: 'flex', flexDirection: 'row', marginTop: 20, marginBottom: 10 }}>
+                                    <Text style={{ marginRight: 10, fontWeight: '700' }}>
+                                        {problems.length} {problems.length === 1 ? "Question" : "Questions"}
+                                    </Text>
+                                    <Text style={{ marginRight: 10}}>
+                                        |
+                                    </Text>
+                                    <Text style={{ marginRight: 10, fontWeight: '700' }}>
+                                        {totalQuizPoints} Points 
+                                    </Text>
+                                    <Text style={{ marginRight: 10}}>
+                                        |
+                                    </Text>
+                                    <Text style={{ marginRight: 10, fontWeight: '700' }}>
+                                        {hours} H {minutes} min
+                                    </Text>
+                                </View>
+                            }
                             <View>
                                 <TouchableOpacity
                                     onPress={() => initQuiz()}
@@ -1650,6 +1797,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             instructions={instructions}
                             headers={headers}
                             modifyQuiz={updateQuiz}
+                            unmodifiedProblems={unmodifiedProblems}
+                            duration={duration}
                         />
                         {renderFooter()}
                     </View>
@@ -1754,6 +1903,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             )}
         </View>
     );
+    }
 
     const renderRichEditorOriginalCue = () => (
         <RichEditor
@@ -2135,7 +2285,14 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             />
                         ) : null}
                     </View>
-                ) : null}
+                ) : (!isOwner ? <Text style={{
+                    fontSize: 12,
+                    color: "#a2a2ac",
+                    textAlign: "left",
+                    paddingRight: 10,
+                }}>
+                    0%
+                </Text> : null)}
             </View>
         ) : null;
     };
@@ -2194,7 +2351,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             flexDirection: "row",
                             backgroundColor: "white"
                         }}>
-                        <View style={{ width: "85%", backgroundColor: "white" }}>
+                        <View style={{ width: "80%", backgroundColor: "white" }}>
                             {addCustomCategory ? (
                                 <View style={styles.colorBar}>
                                     <TextInput
@@ -2246,7 +2403,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 </Menu>
                             )}
                         </View>
-                        <View style={{ width: "15%", backgroundColor: "white" }}>
+                        <View style={{ width: "20%", backgroundColor: "white",  paddingRight: 20 }}>
                             <TouchableOpacity
                                 onPress={() => {
                                     if (addCustomCategory) {
@@ -2369,9 +2526,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             <MenuTrigger>
                                 <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#2f2f3c' }}>
                                     {
-                                        selectedChannelOwner === undefined ? 'All' :
+                                        selectedChannelOwner === undefined ? 'All channels' :
                                             (selectedChannelOwner !== null ? (selectedChannelOwner.name)
-                                                : 'Your Channels')
+                                                : 'Your channels')
                                     }< Ionicons name='caret-down' size={14} />
                                 </Text>
                             </MenuTrigger>
@@ -2426,7 +2583,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     setShareWithChannelName(channel.name)
                                 }
                                 if (selectedChannelOwner === undefined) {
-                                    if (userId.toString().trim() !== channel.createdBy.toString().trim()) {
+                                    if (userId !== undefined && channel.createdBy !== undefined && userId.toString().trim() !== channel.createdBy.toString().trim()) {
                                         setSelectedChannelOwner({
                                             id: channel.createdBy,
                                             name: channel.createdByUsername
@@ -2437,8 +2594,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 }
                             }}>
                             <MenuTrigger>
-                                <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#2f2f3c' }}>
-                                    {shareWithChannelName === '' ? 'None' : shareWithChannelName}<Ionicons name='caret-down' size={14} />
+                                <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#2F2F3C' }}>
+                                    {shareWithChannelName === '' ? 'Select channel' : shareWithChannelName}<Ionicons name='caret-down' size={14} />
                                 </Text>
                             </MenuTrigger>
                             <MenuOptions customStyles={{
@@ -2455,7 +2612,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 <MenuOption
                                     value={''}>
                                     <Text>
-                                        None
+                                        Select Channel
                                     </Text>
                                 </MenuOption>
                                 {

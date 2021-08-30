@@ -198,7 +198,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 const statuses = res2.data.status.findByCueId
                                 statuses.map((status: any) => {
                                     subs.push({
-                                        displayName: status.displayName,
+                                        displayName: status.fullName,
                                         _id: status.userId,
                                         fullName: status.status,
                                         submission: status.submission,
@@ -402,6 +402,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             flexDirection: 'column'
                                         }}
                                         onPress={() => {
+                                            setShowOptions(false)
                                             setViewStatus(false)
                                             setShowOriginal(true)
                                             setShowComments(false)
@@ -416,11 +417,12 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             flexDirection: "column"
                                         }}
                                         onPress={() => {
-                                            // setShowOptions(true)
+                                            setShowOptions(true)
                                             setViewStatus(false)
-                                            setShowOriginal(true);
+                                            setShowOriginal(false)
                                             setShowComments(false)
                                         }}>
+                                            
                                         <Text style={styles.all}>
                                             Details
                                         </Text>
@@ -431,9 +433,9 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             flexDirection: "column"
                                         }}
                                         onPress={() => {
-                                            // setShowOptions(true)
+                                            setShowOptions(false)
                                             setViewStatus(false)
-                                            setShowOriginal(true);
+                                            setShowOriginal(false)
                                             setShowComments(true)
                                         }}>
                                         <Text style={styles.all}>
@@ -452,8 +454,9 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     setViewStatus(false)
                                                     setShowOriginal(false)
                                                     setShowComments(false)
+                                                    setShowOptions(false)
                                                 }}>
-                                                <Text style={!showOriginal && !viewStatus ? styles.allGrayFill : styles.all}>
+                                                <Text style={!showOriginal && !viewStatus && !showOptions && !showComments ? styles.allGrayFill : styles.all}>
                                                     {
                                                         submission ? PreferredLanguageText('mySubmission') : PreferredLanguageText('myNotes')
                                                     }
@@ -472,6 +475,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     setViewStatus(true)
                                                     setShowOriginal(false)
                                                     setShowComments(false)
+                                                    setShowOptions(false)
                                                 }}>
                                                 <Text style={viewStatus ? styles.allGrayFill : styles.all}>
                                                     Responses

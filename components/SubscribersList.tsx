@@ -66,6 +66,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
     const [comment, setComment] = useState('')
     const [isQuiz, setIsQuiz] = useState(false);
     const [quizSolutions, setQuizSolutions] = useState<any>({});
+    const [initiatedAt, setInitiatedAt] = useState<any>({});
     const [imported, setImported] = useState(false)
     const [url, setUrl] = useState('')
     const [type, setType] = useState('')
@@ -163,7 +164,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
     const key = JSON.stringify(filteredSubscribers)
     let options = filteredSubscribers.map((sub: any) => {
         return {
-            value: sub._id, label: sub.displayName
+            value: sub._id, label: sub.fullName
         }
     })
     const group = selected.map(s => {
@@ -259,12 +260,12 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                 }
 
                 subscriberRow.push(`${response}`);
-                subscriberRow.push(`${problemScores[i]} - Remark: ${problemComments ? problemComments[i] : ''}`)
+                subscriberRow.push(`${problemScores ? problemScores[i] : ""} - Remark: ${problemComments ? problemComments[i] : ''}`)
 
 
             })
 
-            subscriberRow.push(moment(new Date(submittedAt)).format("MMMM Do YYYY, h:mm a"))
+            subscriberRow.push(moment(new Date(Number(submittedAt))).format("MMMM Do YYYY, h:mm a"))
 
             subscriberRow.push(comment)
 
@@ -314,6 +315,11 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                 setType(obj.type)
                 setTitle(obj.title)
             }
+
+            if (obj.initiatedAt) {
+                setInitiatedAt(obj.initiatedAt)
+            }
+
         } else {
             setImported(false)
             setUrl('')
@@ -884,7 +890,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 loadedChatWithUser && loadedChatWithUser !== {} && !showNewGroup && !showAddUsers && users.length < 3 && !showSubmission ?
                                     <View style={{ marginHorizontal: 20, paddingTop: 5 }}>
                                         <Text>
-                                            {loadedChatWithUser.displayName}, {loadedChatWithUser.fullName} {loadedChatWithUser.email ? ("(" + loadedChatWithUser.email + ")") : ''}
+                                            {loadedChatWithUser.fullName} {loadedChatWithUser.email ? ("(" + loadedChatWithUser.email + ")") : ''}
                                         </Text>
                                     </View> : null
                             }
@@ -1278,6 +1284,8 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             comment={comment}
                                             headers={headers}
                                             isOwner={true}
+                                            initiatedAt={initiatedAt}
+                                            submittedAt={submittedAt}
                                         />
                                     </View>
                                     :
@@ -1588,7 +1596,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         marginBottom: 10
                                     }}>
                                         <Text>
-                                            {sub.displayName}
+                                            {sub.fullName}
                                         </Text>
                                         <Text>
                                             {sub.email}

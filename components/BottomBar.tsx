@@ -59,6 +59,21 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
         })
         setChannelCategories(cat)
     }, [cues])
+    
+    let activeColor;
+
+    if (choice === "All") {
+        activeColor = "";
+    } else if (choice === "MyCues") {
+        activeColor = "#000";
+    } else {
+        const activeChannel = props.subscriptions.filter((subscription: any) => {
+            return subscription.channelName === choice;
+        })
+
+        activeColor = activeChannel[0].colorCode;
+    }
+
 
     return (
         <View style={styles.bottombar}>

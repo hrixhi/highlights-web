@@ -32,6 +32,17 @@ const FileUpload: React.FC<any> = (props: any) => {
             return
         }
 
+        if (props.action === "audio/video" && !(type === "mp4" ||
+            type === "mp3" ||
+            type === "mov" ||
+            type === "mpeg" ||
+            type === "mp2" ||
+            type === "wav")) {
+            alert('Error! Only audio/video files can be uploaded')
+            setUploading(false)
+            return
+        }
+
         fileUpload(file, type).then(response => {
             const { data } = response;
             if (data.status === "success") {

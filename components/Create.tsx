@@ -51,6 +51,7 @@ import {
   MenuOption,
   MenuTrigger,
 } from "react-native-popup-menu";
+import TextareaAutosize from 'react-textarea-autosize';
 
 const Create: React.FunctionComponent<{ [label: string]: any }> = (
   props: any
@@ -1128,16 +1129,25 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   borderColor: "#F8F9FA",
                   // paddingRight: 15,
                   // display: "flex",
-                  paddingLeft: isQuiz ? 20 : 0,
+                  paddingLeft: isQuiz && Dimensions.get('window').width > 768 ? 20 : 0,
                   flexDirection: "row",
                 }}
               >
-                <TextInput
+                <TextareaAutosize
                   value={title}
-                  style={styles.input}
-                  placeholder={PreferredLanguageText("title")}
-                  onChangeText={(val) => setTitle(val)}
-                  placeholderTextColor={"#818385"}
+                  style={{ width: "100%",
+                    maxWidth: '100%',
+                    borderBottom: '1px solid #cccccc',
+                    fontSize: 15,
+                    paddingTop: 13,
+                    paddingBottom: 13,
+                    marginTop: 0,
+                    marginBottom: 15 
+                  }}
+                  // style={styles.input}
+                  minRows={isQuiz ? 3 : 1 }
+                  placeholder={isQuiz ? "Quiz title" : PreferredLanguageText("title")}
+                  onChange={(e: any) => setTitle(e.target.value)}
                 />
                 {
                   !isQuiz ?
@@ -1220,15 +1230,14 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                         }
                         setTimer(!timer);
                       }}
-                      style={{ height: 20 }}
+                      style={{ height: 20, marginRight: 20 }}
                       trackColor={{
                         false: "#F8F9FA",
                         true: "#3B64F8",
                       }}
                       activeThumbColor="white"
                     />
-                  </View>
-                  {timer ? (
+                    {timer ? (
                     <View
                       style={{
                         borderRightWidth: 0,
@@ -1328,6 +1337,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                             /> */}
                     </View>
                   ) : null}
+                  </View>
                 </View>
               ) : null}
             </View>
@@ -1348,18 +1358,25 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
               >
                 <View style={{
                   backgroundColor: '#fff',
-                  paddingLeft: 20,
+                  paddingLeft: Dimensions.get('window').width > 768 ? 20 : 0,
                   flexDirection: 'row',
                   width: '100%'
                 }}>
-                  <View style={{ width: '100%', maxWidth: 400, paddingRight: 15 }}>
-                    <CustomTextInput
+                  <View style={{ width: '100%', maxWidth: 400, paddingRight:  Dimensions.get('window').width > 768 ? 15 : 0 }}>
+                    <TextareaAutosize
                       value={quizInstructions}
                       placeholder="Instructions"
-                      onChangeText={(val) => setQuizInstructions(val)}
-                      placeholderTextColor={"#818385"}
+                      minRows={3}
+                      style={{ width: "100%",
+                      maxWidth: '100%',
+                      borderBottom: '1px solid #cccccc',
+                      fontSize: 15,
+                      paddingTop: 13,
+                      paddingBottom: 13,
+                      marginTop: 0,
+                      marginBottom: 5 }}
+                      onChange={(e) => setQuizInstructions(e.target.value)}
                       required={false}
-                      hasMultipleLines={true}
                     />
                   </View>
                 </View>
@@ -1371,7 +1388,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 />
               </View>
             ) : imported ? (
-              type === "mp4" ||
+                type === "mp4" ||
                 type === "mp3" ||
                 type === "mov" ||
                 type === "mpeg" ||

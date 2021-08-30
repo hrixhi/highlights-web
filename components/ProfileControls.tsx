@@ -14,6 +14,7 @@ import Alert from "../components/Alert";
 import { TextInput } from "./CustomTextInput";
 import { PreferredLanguageText } from "../helpers/LanguageContext";
 import { LanguageSelect } from '../helpers/LanguageContext';
+import OneSignal from 'react-onesignal';
 
 const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
   props: any
@@ -173,7 +174,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
   }, []);
 
   const logout = useCallback(async () => {
-    // OneSignal.removeExternalUserId()
+    OneSignal.removeExternalUserId()
     await AsyncStorage.clear();
     window.location.reload();
   }, []);

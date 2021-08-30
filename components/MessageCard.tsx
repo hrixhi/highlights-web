@@ -50,7 +50,7 @@ const MessageCard: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         flex: 1,
                         textAlign: 'right'
                     }}>
-                        {props.message.displayName}
+                        {props.message.fullName}
                     </Text>
                 </View>
                 {

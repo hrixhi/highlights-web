@@ -66,7 +66,7 @@ const ThreadReplyCard: React.FunctionComponent<{ [label: string]: any }> = (prop
                         flex: 1,
                         textAlign: 'right'
                     }}>
-                        {props.thread.anonymous ? 'Anonymous' : props.thread.displayName}
+                        {props.thread.anonymous ? 'Anonymous' : props.thread.fullName}
                     </Text>
                 </View>
                 <View style={{ flexDirection: 'row', backgroundColor: '#F8F9FA' }}>
