@@ -1129,18 +1129,18 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           userId: parsedUser._id
         }
       })
-      .then(async res => {
-        if (res.data.subscription.findByUserId) {
-          setSubscriptions(res.data.subscription.findByUserId)
-          const stringSub = JSON.stringify(res.data.subscription.findByUserId)
-          await AsyncStorage.setItem('subscriptions', stringSub)
-        } 
-      })
-      .catch(e => {
-        alert("Could not refresh Subscriptions")
-      })
+        .then(async res => {
+          if (res.data.subscription.findByUserId) {
+            setSubscriptions(res.data.subscription.findByUserId)
+            const stringSub = JSON.stringify(res.data.subscription.findByUserId)
+            await AsyncStorage.setItem('subscriptions', stringSub)
+          }
+        })
+        .catch(e => {
+          alert("Could not refresh Subscriptions")
+        })
     }
-    
+
   }
 
   const closeModal = useCallback(() => {
@@ -1743,7 +1743,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     style={{
                       height: 30,
                       borderTopWidth: 1,
-                      borderColor: '#F8F9FA',
+                      borderColor: '#eeeeee',
                       backgroundColor: '#fff',
                       justifyContent: 'center', width: '100%'
                     }}>
@@ -1762,7 +1762,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                       width: 30, backgroundColor: '#fff', justifyContent: 'center',
                       // borderLeftWidth: 1,
                       // borderRightWidth: 2,
-                      borderColor: '#F8F9FA'
+                      borderLeftWidth: 1,
+                      borderColor: '#eeeeee'
                     }}>
                     <Text style={{ textAlign: 'center' }}>
                       <Ionicons

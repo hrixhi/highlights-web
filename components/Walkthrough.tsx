@@ -292,7 +292,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
         }).start();
     }, [])
 
-    const windowHeight = Dimensions.get('window').width < 1024 ? Dimensions.get('window').height - 30 : Dimensions.get('window').height - 210;
+    const windowHeight = Dimensions.get('window').width < 1024 ? Dimensions.get('window').height - 30 : Dimensions.get('window').height - 100;
 
     return (
         <View style={{
@@ -301,245 +301,154 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
             backgroundColor: '#fff',
             borderTopLeftRadius: 0,
             borderTopRightRadius: 0,
+            overflow: 'hidden'
         }}>
-            <Animated.View
+            <View
                 style={{
                     width: '100%',
                     height: '100%',
                     backgroundColor: 'white',
-                    paddingHorizontal: Dimensions.get("window").width < 768 ? 0 : 20,
-                    opacity: modalAnimation,
+                    paddingHorizontal: Dimensions.get("window").width < 768 ? 20 : 0,
                     borderTopLeftRadius: 0,
                     borderTopRightRadius: 0
                 }}>
-                <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 10 }}>
-                    {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
-                </Text>
-                <View style={{ backgroundColor: 'white', paddingTop: 10, flexDirection: 'row', height: 50, maxWidth: 650, alignSelf: 'center', width: '100%' }}>
-                    {/* <Text
-                        style={{
-                            fontSize: 20,
-                            paddingBottom: 20,
-                            fontFamily: 'inter',
-                            // textTransform: "uppercase",
-                            // paddingLeft: 10,
-                            flex: 1,
-                            flexDirection: 'row',
-                            lineHeight: 25,
-                            height: 25
-                        }}
-                        ellipsizeMode="tail">
-                        Help
-                    </Text> */}
-                    <TouchableOpacity
-                        key={Math.random()}
-                        style={{
-                            backgroundColor: 'white',
-                            height: 25
-                        }}
-                        onPress={() => {
-                            window.open('https://www.youtube.com/channel/UC-Tkz11V97prOm8hJTSRMHw', '_blank')
-                        }}>
-                        <Text style={{
-                            width: '100%',
-                            textAlign: 'left',
-                            marginRight: 20,
-                            color: '#3B64F8',
-                            fontSize: 11,
-                            height: 25,
-                            lineHeight: 25
-                        }}>
-                            WATCH TUTORIALS
-                        </Text>
-                    </TouchableOpacity>
-                </View>
-                <ScrollView
-                    contentContainerStyle={{ marginTop: 25, backgroundColor: '#fff', maxWidth: 650, paddingBottom: 75, alignSelf: 'center', width: '100%' }}
-                >
-                    {
-                        options.map((item: any, index: any) => {
-                            if (isInstructor && !item.instructorOnly) {
-                                return null;
-                            } else if (!isInstructor && item.instructorOnly) {
-                                return null;
-                            }
-                            return <TouchableOpacity
-                                onPress={() => {
-                                    const updatedOptions = JSON.parse(JSON.stringify(options))
-                                    updatedOptions[index] = {
-                                        ...options[index],
-                                        isOpen: !options[index].isOpen
-                                    }
-                                    setOptions(updatedOptions)
-                                }}
-                                style={{
-                                    backgroundColor: '#fff',
-                                    borderColor: '#dddddd',
-                                    borderBottomWidth: item.question === 'Planner' ? 0 : 1,
-                                    width: '100%',
-                                    paddingBottom: 20,
-                                    marginTop: 20,
-                                    marginBottom: 20,
-                                    // paddingTop: item.question === 'Home' ? 40 : 0,
-                                }}>
-                                <View style={{ flexDirection: 'row' }}>
-                                    <Text style={{
-                                        backgroundColor: '#fff',
+                <View style={{
+                    width: '100%',
+                    flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row',
+                    paddingTop: 30
+                }}>
+                    <View style={{
+                        width: Dimensions.get('window').width < 768 ? '100%' : '30%',
+                    }}
+                    >
+                        <View style={{ backgroundColor: "white", flexDirection: "row", }}>
+                            <View style={{ flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row', flex: 1 }}>
+                                <Text
+                                    ellipsizeMode="tail"
+                                    style={{
+                                        marginRight: 10,
+                                        color: '#2f2f3c',
+                                        fontSize: 25,
+                                        paddingBottom: 20,
                                         fontFamily: 'inter',
-                                        flexDirection: 'row',
                                         flex: 1,
-                                        fontSize: 17,
-                                        color: item.isOpen ? '#3B64F8' : '#333333'
+                                        flexDirection: 'row',
+                                        lineHeight: 25,
+                                        height: 65
                                     }}>
-                                        {item.question}
-                                    </Text>
-                                    <Text>
-                                        <Ionicons
-                                            name={item.isOpen ? 'chevron-up-outline' : 'chevron-down-outline'}
-                                            size={17}
-                                        />
-                                    </Text>
-                                </View>
-                                <Collapse isOpened={item.isOpen}>
-                                    {
-                                        item.steps.map((step: string) => {
-
-                                            let renderContent = null;
-
-                                            const split = step.split(":");
-
-                                            if (split.length === 1) {
-                                                renderContent = <View>• {step}</View>
-                                            } else {
-                                                renderContent = (<View style={{ display: 'flex', flexDirection: 'row' }}>
-                                                    • <strong>{split[0]}:</strong>
-                                                    {split[1]}
-                                                </View>)
-                                            }
-
-                                            return <View style={{ backgroundColor: '#fff', paddingTop: 15 }}>
-                                                <Text style={{ display: 'flex', flexDirection: 'row' }}>
-                                                     {renderContent}
-                                                </Text>
-                                            </View>
-                                        })
-                                    }
-                                </Collapse>
-                            </TouchableOpacity>
-                        })
-                    }
-                </ScrollView>
-                {/* <View
-                    style={{
-                        width: '100%',
-                        maxWidth: 500,
-                        paddingLeft: 55,
-                        paddingTop: 20,
-                        backgroundColor: 'white',
-                    }}>
-                    <View style={{ flex: 1 }}>
-                        <Text
-                            style={{ color: '#2f2f3c', fontSize: 15, flex: 1, lineHeight: 25 }}
-                        >
-                            {headings[index]}
-                        </Text>
-                    </View>
-                    <View style={{ backgroundColor: 'white' }}>
-                        <View style={{ flexDirection: 'row' }}>
-                            <View style={{
-                                backgroundColor: 'white',
-                                height: 40,
-                                marginRight: 10
-                            }}>
-                                <Switch
-                                    value={isInstructor}
-                                    onValueChange={async () => {
-                                        const updatedVal = !isInstructor;
-                                        await AsyncStorage.setItem("isInstructor", updatedVal.toString())
-                                        setIsInstructor(updatedVal)
-                                    }}
-                                    style={{ height: 20 }}
-                                    trackColor={{
-                                        false: '#F8F9FA',
-                                        true: '#818385'
-                                    }}
-                                    activeThumbColor='white'
-                                />
+                                    <Ionicons name='help-circle-outline' size={25} color='#3b64f8' /> FAQ
+                                </Text>
                             </View>
-                            <Text style={{
-                                fontSize: 14,
-                                color: '#818385',
-                                textAlign: 'left',
-                                paddingTop: 2
-                            }}>
-                                For Instructor
+                        </View>
+                        <ScrollView
+                            contentContainerStyle={{
+                                marginTop: 25, backgroundColor: '#fff', 
+                                height: windowHeight - 50,
+                                maxWidth: 650, paddingBottom: 75,
+                                width: '100%'
+                            }}
+                        >
+                            {
+                                options.map((item: any, index: any) => {
+                                    if (isInstructor && !item.instructorOnly) {
+                                        return null;
+                                    } else if (!isInstructor && item.instructorOnly) {
+                                        return null;
+                                    }
+                                    return <TouchableOpacity
+                                        onPress={() => {
+                                            const updatedOptions = JSON.parse(JSON.stringify(options))
+                                            updatedOptions[index] = {
+                                                ...options[index],
+                                                isOpen: !options[index].isOpen
+                                            }
+                                            setOptions(updatedOptions)
+                                        }}
+                                        style={{
+                                            backgroundColor: '#fff',
+                                            borderColor: '#dddddd',
+                                            borderBottomWidth: item.question === 'Planner' ? 0 : 1,
+                                            width: '100%',
+                                            paddingBottom: 20,
+                                            marginTop: 20,
+                                            marginBottom: 20,
+                                            // paddingTop: item.question === 'Home' ? 40 : 0,
+                                        }}>
+                                        <View style={{ flexDirection: 'row' }}>
+                                            <Text style={{
+                                                backgroundColor: '#fff',
+                                                fontFamily: 'inter',
+                                                flexDirection: 'row',
+                                                flex: 1,
+                                                fontSize: 17,
+                                                color: item.isOpen ? '#3B64F8' : '#333333'
+                                            }}>
+                                                {item.question}
+                                            </Text>
+                                            <Text>
+                                                <Ionicons
+                                                    name={item.isOpen ? 'chevron-up-outline' : 'chevron-down-outline'}
+                                                    size={17}
+                                                />
+                                            </Text>
+                                        </View>
+                                        <Collapse isOpened={item.isOpen}>
+                                            {
+                                                item.steps.map((step: string) => {
+
+                                                    let renderContent = null;
+
+                                                    const split = step.split(":");
+
+                                                    if (split.length === 1) {
+                                                        renderContent = <View>• {step}</View>
+                                                    } else {
+                                                        renderContent = (<View style={{ display: 'flex', flexDirection: 'row' }}>
+                                                            • <strong>{split[0]}:</strong>
+                                                            {split[1]}
+                                                        </View>)
+                                                    }
+
+                                                    return <View style={{ backgroundColor: '#fff', paddingTop: 15 }}>
+                                                        <Text style={{ display: 'flex', flexDirection: 'row' }}>
+                                                            {renderContent}
+                                                        </Text>
+                                                    </View>
+                                                })
+                                            }
+                                        </Collapse>
+                                    </TouchableOpacity>
+                                })
+                            }
+                        </ScrollView>
+                    </View>
+                    <View style={{
+                        width: Dimensions.get('window').width < 768 ? '100%' : '70%',
+                        paddingLeft: Dimensions.get('window').width < 768 ? 0 : 20,
+                        marginLeft: Dimensions.get('window').width < 768 ? 0 : 20,
+                        borderLeftWidth: Dimensions.get('window').width < 768 ? 0 : 1,
+                        borderColor: '#eeeeee'
+                    }}>
+                        <View style={{ flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row', flex: 1 }}>
+                            <Text
+                                ellipsizeMode="tail"
+                                style={{
+                                    marginRight: 10,
+                                    color: '#2f2f3c',
+                                    fontSize: 25,
+                                    paddingBottom: 20,
+                                    fontFamily: 'inter',
+                                    flex: 1,
+                                    flexDirection: 'row',
+                                    lineHeight: 25,
+                                    height: 65
+                                }}>
+                                <Ionicons name='compass-outline' size={25} color='#3b64f8' /> Tutorials
                             </Text>
                         </View>
                     </View>
                 </View>
-                <Swiper
-                    key={isInstructor.toString()}
-                    onIndexChanged={(ind) => {
-                        setIndex(ind)
-                    }}
-                    containerStyle={{
-                        width: '100%',
-                        maxWidth: 700,
-                        height: '100%',
-                        maxHeight: 400
-                    }}
-                    vertical={false}
-                    from={index}
-                    minDistanceForAction={0.1}
-                    controlsProps={{
-                        dotsTouchable: true,
-                        prevPos: 'left',
-                        nextPos: 'right',
-                        nextTitle: '›',
-                        nextTitleStyle: { color: '#818385', fontSize: 60, fontFamily: 'overpass' },
-                        prevTitle: '‹',
-                        prevTitleStyle: { color: '#818385', fontSize: 60, fontFamily: 'overpass' },
-                        dotActiveStyle: { backgroundColor: '#3B64F8' }
-                    }}
-                >
-                    <View style={styles.screen} key={Math.random()}>
-                        <YoutubePlayer
-                            height={windowHeight - 100}
-                            videoId={isInstructor ? "hQYMW3nvP-w" : "t-XBYlugTz8"}
-                        />
-                    </View>
-                    <View style={styles.screen} key={Math.random()}>
-                        <YoutubePlayer
-                            height={windowHeight - 100}
-                            videoId={isInstructor ? "XwZRc4TLaRI" : "kkcAXw30xvk"}
-                        />
-                    </View>
-                    <View style={styles.screen} key={Math.random()}>
-                        <YoutubePlayer
-                            height={windowHeight - 100}
-                            videoId={isInstructor ? "i4L0eJE7DVI" : "S_AaSO0Qcq4"}
-                        />
-                    </View>
-                    <View style={styles.screen} key={Math.random()}>
-                        <YoutubePlayer
-                            height={windowHeight - 100}
-                            videoId={isInstructor ? "0zYHoTEYwSs" : "vIy-kIg2DgM"}
-                        />
-                    </View>
-                    <View style={styles.screen} key={Math.random()}>
-                        <YoutubePlayer
-                            height={windowHeight - 100}
-                            videoId={isInstructor ? "uUB9rux8N6w" : "wmS8N2LczaA"}
-                        />
-                    </View>
-                    <View style={styles.screen} key={Math.random()}>
-                        <YoutubePlayer
-                            height={windowHeight - 100}
-                            videoId={isInstructor ? "R3W5_f0-VqI" : "S8N5w6uwD-8"}
-                        />
-                    </View>
-                </Swiper> */}
-            </Animated.View>
+            </View>
             <MessengerCustomerChat pageId="109965671259610" appId="746023139417168" themeColor="#3B64F8" />
         </View >
     );

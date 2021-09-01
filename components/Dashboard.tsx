@@ -295,7 +295,11 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
             >
                 {
                     Object.keys(cueMap).map((key: any, ind: any) => {
-                        return <View style={{ marginTop: 20, paddingBottom: 20 }}>
+                        return <View style={{
+                            marginTop: 20, paddingBottom: 20,
+                            borderColor: '#eeeeee',
+                            borderBottomWidth: 1,
+                        }}>
                             {
                                 ind !== 0 ?
                                     <View style={{ flexDirection: 'row', paddingBottom: 20 }}>
@@ -595,6 +599,8 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
         }}>
             <View style={{
                 backgroundColor: '#F8F9FA',
+                borderColor: '#eeeeee',
+                borderWidth: 1,
                 // borderWidth: 1,
                 paddingTop: 30,
                 paddingHorizontal: Dimensions.get('window').width < 768 ? 20 : 40,
@@ -928,6 +934,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 }}
                                 filterStart={filterStart}
                                 filterEnd={filterEnd}
+                                subscriptions={props.subscriptions}
                             /> : null
                     }
                     {

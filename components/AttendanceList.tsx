@@ -391,8 +391,6 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                     }
                                 </View>
                             </View>
-
-
                             <ScrollView
                                 showsVerticalScrollIndicator={false}
                                 horizontal={false}

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { ActivityIndicator, Animated, Dimensions } from 'react-native';
+import { ActivityIndicator, Animated, Dimensions, Image } from 'react-native';
 import Alert from '../components/Alert'
 import { Text, TouchableOpacity, View } from './Themed';
 import { ScrollView } from 'react-native'
@@ -125,7 +125,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                             user: {
                                 _id: msg.sentBy,
                                 name: msg.displayName,
-                                avatar: 'https://placeimg.com/140/140/any',
+                                avatar: msg.avatar,
                             },
                         })
                     })
@@ -454,7 +454,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                             flex: 1,
                                             flexDirection: 'row',
                                             lineHeight: 23,
-                                            color: '#3b64f8'
+                                            color: '#2f2f3c'
                                         }}>
                                             <Ionicons name='chatbubble-outline' size={25} color='#3b64f8' /> Chats
                                         </Text>
@@ -500,7 +500,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                 height: Dimensions.get('window').height - 230,
                                             }}>
                                                 <GiftedChat
-                                                    showUserAvatar={false}
+                                                    // showUserAvatar={false}
                                                     messages={chat}
                                                     onSend={messages => onSend(messages)}
                                                     user={{
@@ -665,7 +665,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                             lineHeight: 23,
                                             color: '#2f2f3c'
                                         }}>
-                                            <Ionicons name='folder-outline' size={25} color='#2f2f3c' /> Directory
+                                            <Ionicons name='folder-outline' size={25} color='#3b64f8' /> Directory
                                         </Text>
                                         <View style={{ flexDirection: 'row', flex: 1, justifyContent: width < 768 ? 'flex-start' : 'flex-end' }}>
                                             <View style={{ backgroundColor: '#fff', paddingLeft: width < 768 ? 0 : 20 }}>
@@ -885,8 +885,14 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                         horizontal={true}
                                     // style={{ width: '100%' }}
                                     >
-                                        <View style={{ paddingBottom: 25, flex: 1, width: '100%' }}>
-                                            <View style={{ backgroundColor: '#fff', flexDirection: 'row', width: '100%', flex: 1, minWidth: 300 }}>
+                                        <View style={{
+                                            flex: 1, width: '100%', borderWidth: 1,
+                                            borderRadius: 5,
+                                            borderColor: '#eeeeee'
+                                        }}>
+                                            <View style={{ backgroundColor: '#fff', flexDirection: 'row', width: '100%', flex: 1, minWidth: 600 }}>
+                                                <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#F8F9FA', paddingLeft: 10 }}>
+                                                </View>
                                                 <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#F8F9FA', paddingLeft: 10 }}>
                                                     <Text style={{
                                                         flex: 1, flexDirection: 'row',
@@ -903,23 +909,6 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                         Email
                                                     </Text>
                                                 </View>
-                                                {/* <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#F8F9FA', paddingLeft: 10 }}>
-                                                    <Text style={{ fontSize: 20, lineHeight: 25, fontFamily: 'inter', paddingHorizontal: 20, paddingVertical: 5 }} ellipsizeMode='tail'>
-                                                        Role
-                                                    </Text>
-                                                </View>
-                                                <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#F8F9FA', paddingLeft: 10 }}>
-                                                    <Text style={{ fontSize: 20, lineHeight: 25, fontFamily: 'inter', paddingHorizontal: 20, paddingVertical: 5 }} ellipsizeMode='tail'>
-                                                        Grade
-                                                    </Text>
-                                                </View>
-                                                <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#F8F9FA', paddingLeft: 10 }}>
-                                                    <Text style={{ fontSize: 20, lineHeight: 25, fontFamily: 'inter', paddingHorizontal: 20, paddingVertical: 5 }} ellipsizeMode='tail'>
-                                                        Section
-                                                    </Text>
-                                                </View> */}
-                                                <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#F8F9FA', paddingLeft: 10 }}>
-                                                </View>
                                             </View>
                                             <ScrollView contentContainerStyle={{
                                                 maxHeight: 500,
@@ -928,14 +917,32 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                             }}>
                                                 {
                                                     sectionFiltered.map((user: any) => {
-                                                        return <View style={{
-                                                            backgroundColor: '#fff',
-                                                            flexDirection: 'row',
-                                                            borderColor: '#eeeeee',
-                                                            borderBottomWidth: 1,
-                                                            minWidth: 300, // flex: 1,
-                                                            width: '100%'
-                                                        }}>
+                                                        return <TouchableOpacity
+                                                            onPress={() => {
+                                                                loadNewChat(user._id)
+                                                            }}
+                                                            style={{
+                                                                backgroundColor: '#fff',
+                                                                flexDirection: 'row',
+                                                                borderColor: '#eeeeee',
+                                                                borderBottomWidth: 1,
+                                                                minWidth: 600, // flex: 1,
+                                                                width: '100%'
+                                                            }}>
+                                                            <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
+                                                                <Image
+                                                                    style={{
+                                                                        height: 40,
+                                                                        width: 40,
+                                                                        marginTop: 5,
+                                                                        marginBottom: 5,
+                                                                        borderRadius: 75,
+                                                                        // marginTop: 20,
+                                                                        alignSelf: 'center'
+                                                                    }}
+                                                                    source={{ uri: user.avatar ? user.avatar : 'https://cues-files.s3.amazonaws.com/images/default.png' }}
+                                                                />
+                                                            </View>
                                                             <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
                                                                 <Text style={{ fontSize: 12, lineHeight: 25, paddingHorizontal: 20, fontFamily: 'inter' }} ellipsizeMode='tail'>
                                                                     {user.fullName}
@@ -961,18 +968,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                     {user.section}
                                                                 </Text>
                                                             </View> */}
-                                                            <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                                                <TouchableOpacity
-                                                                    onPress={() => {
-                                                                        loadNewChat(user._id)
-                                                                    }}
-                                                                >
-                                                                    <Text style={{ textAlign: 'center', fontSize: 13, lineHeight: 25, paddingHorizontal: 20, color: '#3b64f8' }} ellipsizeMode='tail'>
-                                                                        <Ionicons name='chatbubble-ellipses-outline' size={18} />
-                                                                    </Text>
-                                                                </TouchableOpacity>
-                                                            </View>
-                                                        </View>
+                                                        </TouchableOpacity>
                                                     })
                                                 }
                                             </ScrollView>

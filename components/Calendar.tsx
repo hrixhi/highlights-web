@@ -41,7 +41,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const [channels, setChannels] = useState<any[]>([]);
     const [showAddEvent, setShowAddEvent] = useState(false);
     const [channelId, setChannelId] = useState("");
-    const [calendarChoice, setCalendarChoice] = useState('Schedule')
+    const [calendarChoice, setCalendarChoice] = useState('Agenda')
     // v1
     const current = new Date();
     const [description, setDescription] = useState("");
@@ -253,19 +253,20 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         maxHeight: '100%'
                                     }
                                 }}>
-                                    <MenuOption
-                                        value={'Schedule'}>
-                                        <View style={{ display: 'flex', flexDirection: 'row', }}>
-                                            <Text style={{ marginLeft: 5 }}>
-                                                Schedule
-                                            </Text>
-                                        </View>
-                                    </MenuOption>
+
                                     <MenuOption
                                         value={'Agenda'}>
                                         <View style={{ display: 'flex', flexDirection: 'row', }}>
                                             <Text style={{ marginLeft: 5 }}>
                                                 Agenda
+                                            </Text>
+                                        </View>
+                                    </MenuOption>
+                                    <MenuOption
+                                        value={'Schedule'}>
+                                        <View style={{ display: 'flex', flexDirection: 'row', }}>
+                                            <Text style={{ marginLeft: 5 }}>
+                                                Schedule
                                             </Text>
                                         </View>
                                     </MenuOption>
@@ -1278,7 +1279,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 ellipsizeMode="tail"
                                 style={{
                                     marginRight: 10,
-                                    color: '#3b64f8',
+                                    color: '#2f2f3c',
                                     fontSize: 25,
                                     paddingBottom: 20,
                                     fontFamily: 'inter',
@@ -1345,7 +1346,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     justifyContent: "center",
                                     display: "flex",
                                     flexDirection: "column",
-                                    backgroundColor: "white"
+                                    backgroundColor: "white",
+                                    marginTop: 100
                                 }}>
                                 <ActivityIndicator color={"#818385"} />
                             </View>
@@ -1575,11 +1577,13 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     !showAddEvent ?
                                         <View
                                             style={{
-                                                borderRadius: 15,
+                                                // borderRadius: 5,
                                                 height: 'auto',
                                                 overflow: 'hidden',
                                                 marginTop: Dimensions.get('window').width < 768 ? 20 : 0,
-                                                marginBottom: Dimensions.get('window').width < 768 ? 20 : 0
+                                                marginBottom: Dimensions.get('window').width < 768 ? 20 : 0,
+                                                borderWidth: 1,
+                                                borderColor: '#eeeeee'
                                             }}
                                         >
                                             <Eventcalendar
@@ -1613,7 +1617,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             lineHeight: 25,
                             height: 65
                         }}>
-                            <Ionicons name='notifications-outline' size={25} /> Activity
+                            <Ionicons name='notifications-outline' size={25} color='#3b64f8' /> Activity
                         </Text>
                         <View style={{ flexDirection: 'row', flex: 1 }}>
                             {

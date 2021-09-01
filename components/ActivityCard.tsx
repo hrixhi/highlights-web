@@ -93,7 +93,7 @@ const styles: any = () => StyleSheet.create({
         maxWidth: 500,
         borderRadius: 15,
         overflow: 'hidden',
-        backgroundColor: '#F8F9FA'
+        backgroundColor: '#F8F9FA',
     },
     badge: {
         width: 20,
@@ -110,6 +110,8 @@ const styles: any = () => StyleSheet.create({
         borderRadius: 15,
         padding: 13,
         backgroundColor: '#F8F9FA',
+        borderWidth: 1,
+        borderColor: '#eeeeee'
     },
     text: {
         display: 'flex',

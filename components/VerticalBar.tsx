@@ -208,9 +208,9 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             height: Dimensions.get('window').width < 768 ? 30 : '100%',
                             backgroundColor: '#fff',
                             justifyContent: 'center',
-                            borderColor: '#F8F9FA',
-                            // borderBottomWidth: Dimensions.get('window').width < 768 ? 2 : 0,
-                            // borderRightWidth: Dimensions.get('window').width < 768 ? 0 : 2,
+                            borderColor: '#eeeeee',
+                            borderTopWidth: Dimensions.get('window').width < 768 ? 1 : 0,
+                            borderLeftWidth: Dimensions.get('window').width < 768 ? 0 : 1,
                         }}>
                         <Text style={{ textAlign: 'center' }}>
                             <Ionicons

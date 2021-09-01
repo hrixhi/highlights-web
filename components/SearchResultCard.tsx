@@ -216,6 +216,8 @@ const styles: any = (colorScheme: any) => StyleSheet.create({
         padding: 12,
         paddingHorizontal: 15,
         backgroundColor: '#F8F9FA',
+        borderWidth: 1,
+        borderColor: '#eeeeee'
     },
     flipCard: {
         height: '100%',
