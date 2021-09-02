@@ -1011,6 +1011,7 @@ query($userId: String!) {
       logo
       _id
       allowStudentChannelCreation
+      streamId
     }
   }
 }

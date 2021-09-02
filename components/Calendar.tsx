@@ -4,7 +4,7 @@ import { TextInput } from "./CustomTextInput";
 import Alert from "./Alert";
 import { Text, View, TouchableOpacity } from "./Themed";
 import { fetchAPI } from "../graphql/FetchAPI";
-import { createDate, deleteDate, getChannels, getEvents, createDateV1, editDateV1, deleteDateV1, meetingRequest, markAttendance, getActivity } from "../graphql/QueriesAndMutations";
+import { createDate, deleteDate, getChannels, getEvents, createDateV1, editDateV1, deleteDateV1, meetingRequest, markAttendance, getActivity, getOrganisation } from "../graphql/QueriesAndMutations";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import Datetime from "react-datetime";
@@ -86,6 +86,31 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     }, [calendarChoice]);
 
     // const [viewModel, setViewModel] = useState<any>(new SchedulerData(new moment().format(DATE_FORMAT), ViewTypes.Week))
+
+    const [school, setSchool] = useState<any>({})
+
+    useEffect(() => {
+        (
+            async () => {
+                const u = await AsyncStorage.getItem('user')
+                if (u) {
+                    const user = JSON.parse(u)
+                    const server = fetchAPI('')
+                    server.query({
+                        query: getOrganisation,
+                        variables: {
+                            userId: user._id
+                        }
+                    }).then(res => {
+                        if (res.data && res.data.school.findByUserId) {
+                            setSchool(res.data.school.findByUserId)
+                        }
+                    })
+                }
+            }
+        )()
+
+    }, [])
 
     const localizer = momentLocalizer(moment);
 
@@ -1273,61 +1298,10 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     borderRightWidth: Dimensions.get('window').width < 768 ? 0 : 1,
                     borderColor: '#eeeeee'
                 }}>
-                    <View style={{ backgroundColor: "white", flexDirection: "row" }}>
-                        <View style={{ flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row', flex: 1 }}>
-                            <Text
-                                ellipsizeMode="tail"
-                                style={{
-                                    marginRight: 10,
-                                    color: '#2f2f3c',
-                                    fontSize: 25,
-                                    paddingBottom: 20,
-                                    fontFamily: 'inter',
-                                    flex: 1,
-                                    flexDirection: 'row',
-                                    lineHeight: 25,
-                                    height: 65
-                                }}>
-                                <Ionicons name='calendar-outline' size={25} color='#3b64f8' /> {PreferredLanguageText("planner")}
-                            </Text>
-                            {!showAddEvent && width >= 768 ? renderFilterEvents() : null}
-                        </View>
-                        <TouchableOpacity
-                            onPress={() => {
-                                setShowAddEvent(!showAddEvent)
-                                setEditEvent(null)
-                            }}
-                            style={{
-                                backgroundColor: 'white',
-                                overflow: 'hidden',
-                                height: 35,
-                                marginLeft: 20,
-                                // marginTop: 15,
-                                justifyContent: 'center',
-                                flexDirection: 'row'
-                            }}>
-                            <Text style={{
-                                textAlign: 'center',
-                                lineHeight: 30,
-                                color: showAddEvent ? '#2f2f3c' : '#fff',
-                                fontSize: 12,
-                                backgroundColor: showAddEvent ? '#F8F9FA' : '#53BE6D',
-                                paddingHorizontal: 25,
-                                fontFamily: 'inter',
-                                height: 30,
-                                // width: 100,
-                                borderRadius: 15,
-                                textTransform: 'uppercase'
-                            }}>
-                                {!showAddEvent ? null : <Ionicons name='arrow-back-outline' size={12} />} {showAddEvent ? PreferredLanguageText("back") : PreferredLanguageText("add")} {showAddEvent ? null : <Ionicons name='add-outline' size={12} />}
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
-                    {!showAddEvent && width < 768 ? renderFilterEvents() : null}
                     <ScrollView
                         style={{
                             width: "100%",
-                            // height: windowHeight,
+                            height: windowHeight - 125,
                             backgroundColor: "white",
                             borderTopRightRadius: 0,
                             borderTopLeftRadius: 0
@@ -1338,6 +1312,57 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         keyboardDismissMode={"on-drag"}
                         overScrollMode={"never"}
                         nestedScrollEnabled={true}>
+                        <View style={{ backgroundColor: "white", flexDirection: "row" }}>
+                            <View style={{ flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row', flex: 1 }}>
+                                <Text
+                                    ellipsizeMode="tail"
+                                    style={{
+                                        marginRight: 10,
+                                        color: '#2f2f3c',
+                                        fontSize: 25,
+                                        paddingBottom: 20,
+                                        fontFamily: 'inter',
+                                        flex: 1,
+                                        flexDirection: 'row',
+                                        lineHeight: 25,
+                                        height: 65
+                                    }}>
+                                    <Ionicons name='calendar-outline' size={25} color='#3b64f8' /> {PreferredLanguageText("planner")}
+                                </Text>
+                                {!showAddEvent && width >= 768 ? renderFilterEvents() : null}
+                            </View>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    setShowAddEvent(!showAddEvent)
+                                    setEditEvent(null)
+                                }}
+                                style={{
+                                    backgroundColor: 'white',
+                                    overflow: 'hidden',
+                                    height: 35,
+                                    marginLeft: 20,
+                                    // marginTop: 15,
+                                    justifyContent: 'center',
+                                    flexDirection: 'row'
+                                }}>
+                                <Text style={{
+                                    textAlign: 'center',
+                                    lineHeight: 30,
+                                    color: showAddEvent ? '#2f2f3c' : '#fff',
+                                    fontSize: 12,
+                                    backgroundColor: showAddEvent ? '#F8F9FA' : '#53BE6D',
+                                    paddingHorizontal: 25,
+                                    fontFamily: 'inter',
+                                    height: 30,
+                                    // width: 100,
+                                    borderRadius: 15,
+                                    textTransform: 'uppercase'
+                                }}>
+                                    {!showAddEvent ? null : <Ionicons name='arrow-back-outline' size={12} />} {showAddEvent ? PreferredLanguageText("back") : PreferredLanguageText("add")} {showAddEvent ? null : <Ionicons name='add-outline' size={12} />}
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                        {!showAddEvent && width < 768 ? renderFilterEvents() : null}
                         {loading ? (
                             <View
                                 style={{
@@ -1347,7 +1372,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     display: "flex",
                                     flexDirection: "column",
                                     backgroundColor: "white",
-                                    marginTop: 100
+                                    marginTop: 50,
+                                    marginBottom: 50
                                 }}>
                                 <ActivityIndicator color={"#818385"} />
                             </View>
@@ -1356,7 +1382,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 style={{
                                     backgroundColor: "white",
                                     width: "100%",
-                                    height: "100%",
+                                    // height: "100%",
                                     // paddingHorizontal: 20,
                                     borderTopRightRadius: 0,
                                     borderTopLeftRadius: 0
@@ -1598,6 +1624,33 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 }
                             </View>
                         )}
+                        <View style={{ backgroundColor: "white", }}>
+                            <View style={{ flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row', flex: 1, paddingTop: 40 }}>
+                                <Text
+                                    ellipsizeMode="tail"
+                                    style={{
+                                        marginRight: 10,
+                                        color: '#2f2f3c',
+                                        fontSize: 25,
+                                        paddingBottom: 20,
+                                        fontFamily: 'inter',
+                                        flex: 1,
+                                        flexDirection: 'row',
+                                        lineHeight: 25,
+                                        height: 65
+                                    }}>
+                                    <Ionicons name='radio-outline' size={25} color='#3b64f8' /> Live Stream
+                                </Text>
+                            </View>
+                            <iframe
+                                width="700"
+                                style={{ maxWidth: '100%' }}
+                                height="400"
+                                src="https://www.youtube.com/embed/live_stream?channel=UC-Tkz11V97prOm8hJTSRMHw"
+                                frameBorder="0"
+                                allowFullScreen={true}
+                            />
+                        </View>
                     </ScrollView>
                 </View>
                 <View style={{

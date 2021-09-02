@@ -765,7 +765,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             ) : null
                     }
                     {
-                        props.option === 'Content' || props.option === 'Home' || props.option === 'Performance' ?
+                        props.option === 'Content' || props.option === 'Home' ?
                             <DateRangePicker
                                 // key={Math.random()}
                                 preventOverflow={true}

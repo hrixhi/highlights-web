@@ -260,7 +260,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 </View>
                                 <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
                                     <Text style={{ fontSize: 25, lineHeight: 25, textAlign: 'right', fontFamily: 'inter' }} ellipsizeMode='tail'>
-                                        {thread[sub.channelId] ? thread[sub.channelId].length : 0}
+                                        {score[sub.channelId] ? score[sub.channelId].totalAssessments : 0}
                                     </Text>
                                 </View>
                             </View>
@@ -277,7 +277,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 </View>
                                 <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
                                     <Text style={{ fontSize: 20, lineHeight: 25, textAlign: 'right' }} ellipsizeMode='tail'>
-                                        {thread[sub.channelId] ? thread[sub.channelId].length : 0}
+                                        {score[sub.channelId] ? score[sub.channelId].lateAssessments : 0}
                                     </Text>
                                 </View>
                             </View>
@@ -294,7 +294,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 </View>
                                 <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
                                     <Text style={{ fontSize: 20, lineHeight: 25, textAlign: 'right' }} ellipsizeMode='tail'>
-                                        {thread[sub.channelId] ? thread[sub.channelId].length : 0}
+                                        {score[sub.channelId] ? score[sub.channelId].gradedAssessments : 0}
                                     </Text>
                                 </View>
                             </View>
@@ -306,12 +306,12 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                         fontSize: 15, lineHeight: 25,
                                         fontFamily: 'inter'
                                     }} ellipsizeMode='tail'>
-                                        Completed
+                                        Submitted
                                     </Text>
                                 </View>
                                 <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
                                     <Text style={{ fontSize: 20, lineHeight: 25, textAlign: 'right' }} ellipsizeMode='tail'>
-                                        {thread[sub.channelId] ? thread[sub.channelId].length : 0}
+                                        {score[sub.channelId] ? score[sub.channelId].submittedAssessments : 0}
                                     </Text>
                                 </View>
                             </View>

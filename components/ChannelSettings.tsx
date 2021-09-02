@@ -353,15 +353,15 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                 })
             }
         })
-        .catch((e) => {
-            alert("Something went wrong. Try again.")
-        })
+            .catch((e) => {
+                alert("Something went wrong. Try again.")
+            })
 
 
 
 
 
-    }, [duplicateChannel, duplicateChannelName, duplicateChannelPassword, props.channelId, 
+    }, [duplicateChannel, duplicateChannelName, duplicateChannelPassword, props.channelId,
         duplicateChannelColor, duplicateChannelTemporary, duplicateChannelSubscribers,
         duplicateChannelModerators])
 
@@ -633,7 +633,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
             <ActivityIndicator color={"#a2a2ac"} />
         </View>
     }
-    
+
 
     if (showDuplicateChannel) {
         return (<View style={styles.screen} >
@@ -653,7 +653,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             fontSize: 15,
                             color: '#a2a2ac'
                         }}>
-                            <Ionicons name='chevron-back-outline' size={17} color={'#2F2F3C'} style={{ marginRight: 10 }} /> 
+                            <Ionicons name='chevron-back-outline' size={17} color={'#2F2F3C'} style={{ marginRight: 10 }} />
                         </Text>
                     </TouchableOpacity>
                 </View>
@@ -681,8 +681,12 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                     }}
                 >
                     <View style={{ backgroundColor: 'white' }}>
-                        <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>
-                            {PreferredLanguageText('channel') + ' ' + PreferredLanguageText('name')}
+                        <Text style={{
+                            fontSize: 15,
+                            fontFamily: 'inter',
+                            color: '#2f2f3c'
+                        }}>
+                            {PreferredLanguageText('name')}
                         </Text>
                         <TextInput
                             value={duplicateChannelName}
@@ -696,7 +700,11 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         />
                     </View>
                     <View style={{ backgroundColor: 'white' }}>
-                        <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>
+                        <Text style={{
+                            fontSize: 15,
+                            fontFamily: 'inter',
+                            color: '#2f2f3c'
+                        }}>
                             {PreferredLanguageText('enrolmentPassword')}
                         </Text>
                         <TextInput
@@ -709,8 +717,12 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         />
                     </View>
                     <View style={{ backgroundColor: 'white' }}>
-                        <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>
-                            color
+                        <Text style={{
+                            fontSize: 15,
+                            fontFamily: 'inter',
+                            color: '#2f2f3c'
+                        }}>
+                            Color
                         </Text>
                         <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white', marginTop: 20 }}>
                             <View style={{ width: '100%', backgroundColor: 'white' }}>
@@ -722,7 +734,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             </View>
                         </View>
                     </View>
-
+                    {/* 
                     <View
                         style={{
                             width: "100%",
@@ -735,7 +747,11 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 paddingBottom: 15,
                                 backgroundColor: "white"
                             }}>
-                            <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>Temporary</Text>
+                            <Text style={{
+                                fontSize: 15,
+                                fontFamily: 'inter',
+                                color: '#2f2f3c'
+                            }}>Temporary</Text>
                         </View>
                         <View
                             style={{
@@ -757,10 +773,10 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         <Text style={{ color: '#a2a2ac', fontSize: 12 }}>
                             Channels that are not temporary can only be deleted by the school administrator.
                         </Text>
-                    </View>
+                    </View> */}
                     {/* Switch to copy Subscribers */}
                     {
-                        selected.length > 0 ? 
+                        selected.length > 0 ?
                             <View>
                                 <View
                                     style={{
@@ -772,9 +788,9 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 >
                                     <Text
                                         style={{
-                                        fontSize: 11,
-                                        color: "#2f2f3c",
-                                        textTransform: "uppercase",
+                                            fontSize: 15,
+                                            fontFamily: 'inter',
+                                            color: '#2f2f3c'
                                         }}
                                     >
                                         Duplicate Subscribers
@@ -783,9 +799,9 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 <View style={{ flexDirection: "row" }}>
                                     <View
                                         style={{
-                                        backgroundColor: "white",
-                                        height: 40,
-                                        marginRight: 10,
+                                            backgroundColor: "white",
+                                            height: 40,
+                                            marginRight: 10,
                                         }}
                                     >
                                         <Switch
@@ -808,7 +824,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
 
                     {/* Switch to copy Moderators */}
                     {
-                        owners.length > 0 ? 
+                        owners.length > 0 ?
                             <View>
                                 <View
                                     style={{
@@ -820,9 +836,9 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 >
                                     <Text
                                         style={{
-                                        fontSize: 11,
-                                        color: "#2f2f3c",
-                                        textTransform: "uppercase",
+                                            fontSize: 15,
+                                            fontFamily: 'inter',
+                                            color: '#2f2f3c'
                                         }}
                                     >
                                         Duplicate Moderators
@@ -831,9 +847,9 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 <View style={{ flexDirection: "row" }}>
                                     <View
                                         style={{
-                                        backgroundColor: "white",
-                                        height: 40,
-                                        marginRight: 10,
+                                            backgroundColor: "white",
+                                            height: 40,
+                                            marginRight: 10,
                                         }}
                                     >
                                         <Switch
@@ -915,8 +931,12 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                     }}
                 >
                     <View style={{ backgroundColor: 'white' }}>
-                        <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>
-                            {PreferredLanguageText('channel') + ' ' + PreferredLanguageText('name')}
+                        <Text style={{
+                            fontSize: 15,
+                            fontFamily: 'inter',
+                            color: '#2f2f3c'
+                        }}>
+                            {PreferredLanguageText('name')}
                         </Text>
                         <TextInput
                             value={name}
@@ -931,7 +951,11 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         />
                     </View>
                     <View style={{ backgroundColor: 'white' }}>
-                        <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>
+                        <Text style={{
+                            fontSize: 15,
+                            fontFamily: 'inter',
+                            color: '#2f2f3c'
+                        }}>
                             {PreferredLanguageText('enrolmentPassword')}
                         </Text>
                         <TextInput
@@ -946,7 +970,11 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                     </View>
 
                     <View style={{ backgroundColor: 'white' }}>
-                        <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>
+                        <Text style={{
+                            fontSize: 15,
+                            fontFamily: 'inter',
+                            color: '#2f2f3c'
+                        }}>
                             color
                         </Text>
                         <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white', marginTop: 20 }}>
@@ -960,7 +988,11 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         </View>
                     </View>
 
-                    <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase', marginTop: 25, }}>
+                    <Text style={{
+                        fontSize: 15,
+                        fontFamily: 'inter',
+                        color: '#2f2f3c'
+                    }}>
                         Subscribers
                     </Text>
 
@@ -999,7 +1031,11 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             />
                         </View>
                     </View>
-                    <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase', marginTop: 25, }}>
+                    <Text style={{
+                        fontSize: 15,
+                        fontFamily: 'inter',
+                        color: '#2f2f3c', marginTop: 25,
+                    }}>
                         Moderators
                     </Text>
                     <View style={{ flexDirection: 'column', marginTop: 25, overflow: 'scroll' }}>
@@ -1058,7 +1094,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             </Text>
                         </TouchableOpacity>
 
-                    
+
                         <TouchableOpacity
                             onPress={() => setShowDuplicateChannel(true)}
                             style={{
@@ -1084,8 +1120,8 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 DUPLICATE
                             </Text>
                         </TouchableOpacity>
-                    {
-                        temporary ?
+                        {
+                            temporary ?
                                 <TouchableOpacity
                                     onPress={() => handleDelete()}
                                     style={{
@@ -1111,10 +1147,9 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         DELETE
                                     </Text>
                                 </TouchableOpacity>
-                            : null
-                    }
+                                : null
+                        }
                     </View>
-                    
                     {/* <View style={{ height: 50, backgroundColor: '#fff' }} /> */}
                 </ScrollView>
             </View>
