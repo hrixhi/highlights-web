@@ -71,6 +71,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true)
   const [saveDataInProgress, setSaveDataInProgress] = useState(false)
   const [dimensions, setDimensions] = useState({ window, screen });
+  const [target, setTarget] = useState('');
 
   // Notifications count for Top Bar
   const [unreadDiscussionThreads, setUnreadDiscussionThreads] = useState(0)
@@ -1041,6 +1042,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     setCreatedBy(by)
     setCueId(_id)
     openModal('Update')
+    setShowHome(false)
   }, [subscriptions])
 
   const openUpdate = useCallback((key, index, pageNumber, _id, by, channId) => {
@@ -1188,6 +1190,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         channelCreatedBy={channelCreatedBy}
         reloadCueListAfterUpdate={() => reloadCueListAfterUpdate()}
         reopenUpdateWindow={reopenUpdateWindow}
+        target={target}
       />
         :
         (modalType === 'Walkthrough' ? <Walkthrough
@@ -1569,6 +1572,23 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               openUpdate={(index: any, key: any, pageNumber: any, _id: any, by: any, cId: any) => openUpdate(index, key, pageNumber, _id, by, cId)}
               calendarCues={cues}
               openCueFromCalendar={openCueFromCalendar}
+              openDiscussionFromActivity={(channelId: string, createdBy: string) => {
+                setChannelId(channelId);
+                setChannelCreatedBy(createdBy);
+                setCreatedBy(createdBy)
+                openModal('Discussion')
+                setShowHome(false);
+              }}
+              openChannelFromActivity={(channelId: string, createdBy: string) => {
+                setChannelId(channelId);
+                setChannelCreatedBy(createdBy);
+                setCreatedBy(createdBy);
+                setShowHome(false);
+              }}
+              openQAFromActivity={(channelId: any, cueId: string, by: string) => {
+                openCueFromCalendar(channelId, cueId, by)
+                setTarget('Q&A')
+              }}
             />
           </View>
         </View> : null

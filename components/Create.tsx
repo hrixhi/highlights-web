@@ -52,12 +52,14 @@ import {
   MenuTrigger,
 } from "react-native-popup-menu";
 import TextareaAutosize from 'react-textarea-autosize';
+import { Editor } from '@tinymce/tinymce-react'; 
 
 const Create: React.FunctionComponent<{ [label: string]: any }> = (
   props: any
 ) => {
   const current = new Date();
   const [cue, setCue] = useState("");
+  const [cueDraft, setCueDraft] = useState("");
   const [shuffle, setShuffle] = useState(false);
   const [starred, setStarred] = useState(false);
   const [notify, setNotify] = useState(false);
@@ -85,6 +87,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
   const [modalAnimation] = useState(new Animated.Value(0));
   const [reloadEditorKey, setReloadEditorKey] = useState(Math.random());
   let RichText: any = useRef();
+  let editorRef: any = useRef();
+
   const [height, setHeight] = useState(100);
   const [init, setInit] = useState(false);
   const [role, setRole] = useState('')
@@ -167,8 +171,15 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
   }, []);
 
   const insertEquation = useCallback(() => {
+    // 
+    let currentContent = editorRef.current.getContent();
+
     const SVGEquation = TeXToSVG(equation, { width: 100 }); // returns svg in html format
-    RichText.current.insertHTML("<div><br/>" + SVGEquation + "<br/></div>");
+    currentContent += "<div>" + SVGEquation + "<br/></div>";
+
+    editorRef.current.setContent(currentContent)
+
+    // RichText.current.insertHTML("<div><br/>" + SVGEquation + "<br/></div>");
     setShowEquationEditor(false);
     setEquation("");
     // setReloadEditorKey(Math.random())
@@ -748,6 +759,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
         const h = await AsyncStorage.getItem("cueDraft");
         if (h !== null) {
           setCue(h);
+          setCueDraft(h);
         }
         const quizDraft = await AsyncStorage.getItem("quizDraft");
         if (quizDraft !== null) {
@@ -858,7 +870,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
         paddingLeft: dimensions.window.width < 1024
           ? 20
           : 0,
-        overflow: "hidden",
+        overflow: "scroll",
       }}
     >
       <Animated.View
@@ -925,7 +937,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
             flexDirection:
               dimensions.window.width < 768 ? "column-reverse" : "row",
             paddingBottom: 4,
-            marginTop: showImportOptions || imported || isQuiz ? 0 : 20,
+            marginTop: 20,
             backgroundColor: "white",
             borderBottomWidth: imported || isQuiz ? 0 : 1,
             borderBottomColor: '#dddddd'
@@ -938,7 +950,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
               flex: 1,
             }}
           >
-            {showImportOptions ? null : (
+            {/* {showImportOptions ? null : (
               <RichToolbar
                 key={reloadEditorKey.toString()}
                 style={{
@@ -991,7 +1003,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 onPressAddImage={galleryCallback}
                 insertCamera={cameraCallback}
               />
-            )}
+            )} */}
             {imported || !showImportOptions ? null : (
               <FileUpload
                 back={() => setShowImportOptions(false)}
@@ -1111,14 +1123,14 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
             </View>
           </View>
         ) : null}
-        <ScrollView
+        <View
           style={{ paddingBottom: 100 }}
-          showsVerticalScrollIndicator={false}
-          scrollEnabled={true}
-          scrollEventThrottle={1}
-          keyboardDismissMode={"on-drag"}
-          overScrollMode={"always"}
-          nestedScrollEnabled={true}
+          // showsVerticalScrollIndicator={false}
+          // scrollEnabled={true}
+          // scrollEventThrottle={1}
+          // keyboardDismissMode={"on-drag"}
+          // overScrollMode={"always"}
+          // nestedScrollEnabled={true}
         >
           {imported || isQuiz ? (
             <View
@@ -1416,7 +1428,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 </View>
               )
             ) : null}
-            <RichEditor
+            {/* <RichEditor
               key={reloadEditorKey.toString()}
               containerStyle={{
                 height,
@@ -1459,7 +1471,51 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
               allowsInlineMediaPlayback={true}
               allowsLinkPreview={true}
               allowsBackForwardNavigationGestures={true}
-            />
+            /> */}
+            {isQuiz || imported ? null : <Editor
+              onInit={(evt, editor) => editorRef.current = editor}
+              initialValue={cueDraft !== "" ? cueDraft : "<h1>Title</h1>"}
+              apiKey="ip4jckmpx73lbu6jgyw9oj53g0loqddalyopidpjl23fx7tl"
+              init={{
+                skin: "snow",
+                // toolbar_sticky: true,
+                branding: false,
+                placeholder: 'Content...',
+                min_height: 500,
+                paste_data_images: true,
+                images_upload_url: 'http://api.cuesapp.co/api/imageUploadEditor',
+                mobile: {
+                  plugins: 'print preview powerpaste casechange importcss searchreplace autolink autosave save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount tinymcespellchecker a11ychecker textpattern noneditable help formatpainter pageembed charmap mentions quickbars linkchecker emoticons advtable autoresize'
+                },
+                plugins: 'print preview powerpaste casechange importcss searchreplace autolink autosave save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount tinymcespellchecker a11ychecker textpattern noneditable help formatpainter pageembed charmap mentions quickbars linkchecker emoticons advtable autoresize',
+                menu : { // this is the complete default configuration
+                  file   : {title : 'File'  , items : 'newdocument'},
+                  edit   : {title : 'Edit'  , items : 'undo redo | cut copy paste pastetext | selectall'},
+                  insert : {title : 'Insert', items : 'link media | template hr'},
+                  view   : {title : 'View'  , items : 'visualaid'},
+                  format : {title : 'Format', items : 'bold italic underline strikethrough superscript subscript | formats | removeformat'},
+                  table  : {title : 'Table' , items : 'inserttable tableprops deletetable | cell row column'},
+                  tools  : {title : 'Tools' , items : 'spellchecker code'}
+                },
+                // menubar: 'file edit view insert format tools table tc help',
+                menubar: false,
+                toolbar: 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat  pagebreak | table image media pageembed link | preview print | charmap emoticons |  ltr rtl | showcomments addcomment',
+                importcss_append: true,
+                image_caption: true,
+                quickbars_selection_toolbar: 'bold italic underline | quicklink h2 h3 quickimage quicktable',
+                noneditable_noneditable_class: 'mceNonEditable',
+                toolbar_mode: 'sliding',
+                // tinycomments_mode: 'embedded',
+                // content_style: '.mymention{ color: gray; }',
+                // contextmenu: 'link image table configurepermanentpen',
+                // a11y_advanced_options: true,
+                extended_valid_elements: "svg[*],defs[*],pattern[*],desc[*],metadata[*],g[*],mask[*],path[*],line[*],marker[*],rect[*],circle[*],ellipse[*],polygon[*],polyline[*],linearGradient[*],radialGradient[*],stop[*],image[*],view[*],text[*],textPath[*],title[*],tspan[*],glyph[*],symbol[*],switch[*],use[*]"
+                // skin: useDarkMode ? 'oxide-dark' : 'oxide',
+                // content_css: useDarkMode ? 'dark' : 'default',
+              }}              
+              onChange={(e: any) => setCue(e.target.getContent()) }
+              
+            />}
           </View>
           <View
             style={{
@@ -2412,7 +2468,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
             </View>
           </View>
           {/* Collapsible ends here */}
-        </ScrollView>
+        </View>
       </Animated.View>
     </View>
   );

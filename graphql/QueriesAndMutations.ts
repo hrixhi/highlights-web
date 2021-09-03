@@ -443,6 +443,13 @@ mutation($userId: String!, $users: [String!]!, $channelId: String!) {
   }
 }
 `
+export const markActivityAsRead = gql`
+mutation($activityId: String, $userId: String!, $markAllRead: Boolean!) {
+  activity {
+    markActivityAsRead(activityId: $activityId, userId: $userId, markAllRead: $markAllRead)
+  }
+}
+`
 /**
  * ALL
  * QUERIES
@@ -1055,6 +1062,7 @@ export const getActivity = gql`
  query($userId: String!) {
    activity {
      getActivity(userId: $userId) {
+       _id
        title
        subtitle
        body
@@ -1063,6 +1071,9 @@ export const getActivity = gql`
        status
        colorCode
        date
+       cueId
+       createdBy
+       target
      }
    }
  }
