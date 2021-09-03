@@ -115,9 +115,9 @@ export const createMessage = gql`
   }
 `;
 export const updateUser = gql`
-  mutation($userId: String!, $displayName: String!, $fullName: String!) {
+  mutation($userId: String!, $displayName: String!, $fullName: String!, $avatar: String) {
     user {
-      update(userId: $userId, displayName: $displayName, fullName: $fullName)
+      update(userId: $userId, displayName: $displayName, fullName: $fullName, avatar: $avatar)
     }
   }
 `;
@@ -460,6 +460,7 @@ export const findUserById = gql`
       findById(id: $id) {
         _id
         fullName
+        avatar
         displayName
         notificationId
         randomShuffleFrequency
@@ -617,6 +618,7 @@ export const getSubscribers = gql`
       findByChannelId(channelId: $channelId) {
         _id
         email
+        avatar
         displayName
         fullName
         unreadMessages
@@ -748,6 +750,7 @@ export const getMessages = gql`
         message
         displayName
         fullName
+        avatar
         sentAt
       }
     }
@@ -875,6 +878,42 @@ export const getAttendances = gql`
     }
   }
 `;
+export const getAttendancesByUser = gql`
+  query($userId: String!) {
+    attendance {
+      getAttendancesByUser(userId: $userId) {
+        channelId
+        joinedAt
+        date {
+          start
+          end
+        }
+      }
+    }
+  }
+`;
+export const getAllPastDates = gql`
+  query($userId: String!) {
+    date {
+      getPastDates(userId: $userId) {
+        start
+        end
+        channelId
+      }
+    }
+  }
+`;
+export const findThreadsByUserId = gql`
+  query($userId: String!) {
+    thread {
+      findByUserId(userId: $userId) {
+        message
+        channelId
+        parentId
+      }
+    }
+  }
+`;
 export const getAttendancesForChannel = gql`
   query($channelId: String!) {
     attendance {
@@ -979,6 +1018,7 @@ query($userId: String!) {
       logo
       _id
       allowStudentChannelCreation
+      streamId
     }
   }
 }
@@ -1017,6 +1057,7 @@ export const getUserCount = gql`
             email
             displayName
             fullName
+            avatar
             _id
             role
             grade
@@ -1087,6 +1128,10 @@ export const getPerformanceReport = gql`
       score
       total
       channelCreatedBy
+      submittedAssessments
+      lateAssessments
+      gradedAssessments
+      totalAssessments
     }
    }
  }
@@ -1105,6 +1150,7 @@ export const getAllUsers = gql`
        _id
        email
        fullName
+       avatar
        role
        grade
        section

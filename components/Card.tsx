@@ -220,6 +220,8 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
         padding: 12,
         paddingHorizontal: 15,
         backgroundColor: '#fff',
+        borderWidth: 1,
+        borderColor: '#eeeeee'
     },
     flipCard: {
         height: '100%',

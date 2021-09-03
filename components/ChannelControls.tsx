@@ -331,7 +331,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             lineHeight: 23,
                             color: '#2f2f3c'
                         }}>
-                            <Ionicons name='create-outline' size={25} color='#2f2f3c' /> Create
+                            <Ionicons name='create-outline' size={25} color='#3b64f8' /> Create
                         </Text>
                         {/* 
                             <View style={styles.colorBar}>
@@ -545,54 +545,61 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             fontFamily: 'inter',
                             // flex: 1,
                             lineHeight: 23,
-                            color: '#3b64f8'
+                            color: '#2f2f3c'
                         }}>
                             <Ionicons name='list-outline' size={25} color='#3b64f8' /> Subscribe
                         </Text>
-                        <View style={{ backgroundColor: '#fff', flexDirection: 'row' }}>
-                            <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#F8F9FA', paddingLeft: 10 }}>
-                                <Text style={{ fontSize: 20, lineHeight: 25, fontFamily: 'inter', paddingHorizontal: 20, paddingVertical: 5 }} ellipsizeMode='tail'>
-                                    Name
-                                </Text>
-                            </View>
-                            <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#F8F9FA', paddingLeft: 10 }}>
-                                <Text style={{ fontSize: 20, lineHeight: 25, fontFamily: 'inter', paddingHorizontal: 20, paddingVertical: 5 }} ellipsizeMode='tail'>
-                                    Instructor
-                                </Text>
-                            </View>
-                            <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#F8F9FA', paddingLeft: 10 }}>
+                        <View
+                            style={{
+                                borderWidth: 1,
+                                borderColor: '#eeeeee'
+                            }}
+                        >
+                            <View style={{ backgroundColor: '#fff', flexDirection: 'row' }}>
+                                <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#F8F9FA', paddingLeft: 10 }}>
+                                    <Text style={{ fontSize: 20, lineHeight: 25, fontFamily: 'inter', paddingHorizontal: 20, paddingVertical: 5 }} ellipsizeMode='tail'>
+                                        Name
+                                    </Text>
+                                </View>
+                                <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#F8F9FA', paddingLeft: 10 }}>
+                                    <Text style={{ fontSize: 20, lineHeight: 25, fontFamily: 'inter', paddingHorizontal: 20, paddingVertical: 5 }} ellipsizeMode='tail'>
+                                        Instructor
+                                    </Text>
+                                </View>
+                                <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#F8F9FA', paddingLeft: 10 }}>
 
+                                </View>
                             </View>
-                        </View>
-                        <ScrollView contentContainerStyle={{
-                            maxHeight: 500
-                        }}>
-                            {
-                                channels.map((channel: any) => {
-                                    return <View style={{ backgroundColor: '#fff', flexDirection: 'row', borderColor: '#eeeeee', borderBottomWidth: 1 }}>
-                                        <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                            <Text style={{ fontSize: 12, lineHeight: 25, paddingHorizontal: 20, fontFamily: 'inter' }} ellipsizeMode='tail'>
-                                                {channel.name}
-                                            </Text>
-                                        </View>
-                                        <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                            <Text style={{ fontSize: 12, lineHeight: 25, paddingHorizontal: 20 }} ellipsizeMode='tail'>
-                                                {channel.createdByUsername}
-                                            </Text>
-                                        </View>
-                                        <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                            <TouchableOpacity
-                                                onPress={() => handleSub(channel.name)}
-                                            >
-                                                <Text style={{ textAlign: 'center', fontSize: 12, lineHeight: 25, paddingHorizontal: 20, color: '#3b64f8' }} ellipsizeMode='tail'>
-                                                    Join
+                            <ScrollView contentContainerStyle={{
+                                maxHeight: 500
+                            }}>
+                                {
+                                    channels.map((channel: any) => {
+                                        return <View style={{ backgroundColor: '#fff', flexDirection: 'row', borderColor: '#eeeeee', borderBottomWidth: 1 }}>
+                                            <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
+                                                <Text style={{ fontSize: 12, lineHeight: 25, paddingHorizontal: 20, fontFamily: 'inter' }} ellipsizeMode='tail'>
+                                                    {channel.name}
                                                 </Text>
-                                            </TouchableOpacity>
+                                            </View>
+                                            <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
+                                                <Text style={{ fontSize: 12, lineHeight: 25, paddingHorizontal: 20 }} ellipsizeMode='tail'>
+                                                    {channel.createdByUsername}
+                                                </Text>
+                                            </View>
+                                            <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
+                                                <TouchableOpacity
+                                                    onPress={() => handleSub(channel.name)}
+                                                >
+                                                    <Text style={{ textAlign: 'center', fontSize: 12, lineHeight: 25, paddingHorizontal: 20, color: '#3b64f8' }} ellipsizeMode='tail'>
+                                                        Join
+                                                    </Text>
+                                                </TouchableOpacity>
+                                            </View>
                                         </View>
-                                    </View>
-                                })
-                            }
-                        </ScrollView>
+                                    })
+                                }
+                            </ScrollView>
+                        </View>
                     </View>
                 </View>
             </View>

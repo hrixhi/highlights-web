@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Dimensions, StyleSheet } from "react-native";
+import { Dimensions, Image, StyleSheet } from "react-native";
 import { Text, View, TouchableOpacity } from "./Themed";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ScrollView } from "react-native-gesture-handler";
@@ -15,12 +15,15 @@ import { TextInput } from "./CustomTextInput";
 import { PreferredLanguageText } from "../helpers/LanguageContext";
 import { LanguageSelect } from '../helpers/LanguageContext';
 import OneSignal from 'react-onesignal';
+import FileUpload from "./UploadFiles";
+import { Ionicons } from "@expo/vector-icons";
 
 const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
   props: any
 ) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [avatar, setAvatar] = useState<any>(undefined)
   const [confirmPassword, setConfirmPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [fullName, setFullName] = useState("");
@@ -45,6 +48,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
   // Store existing fullname and displayname to see if anything has changed when updating profile
   const [currentFullName, setCurrentFullName] = useState("");
   const [currentDisplayName, setCurrentDisplayName] = useState("");
+  const [currentAvatar, setCurrentAvatar] = useState<any>(undefined)
 
   // Alerts
   const passwordUpdatedAlert = PreferredLanguageText('passwordUpdated');
@@ -88,66 +92,69 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
       return;
     }
 
-    if (!loggedIn) {
-      server
-        .mutate({
-          mutation: signup,
-          variables: {
-            email: email
-              .toString()
-              .trim()
-              .toLowerCase(),
-            password: password.toString(),
-            fullName: fullName.toString().trim(),
-            displayName: displayName.toString().trim(),
-            userId: user._id
-          }
-        })
-        .then(async res => {
-          console.log(res);
-          if (res.data.user.signup === "") {
-            const user = JSON.parse(u);
-            user.email = email;
-            user.fullName = fullName;
-            user.displayName = displayName;
-            const updatedUser = JSON.stringify(user);
-            await AsyncStorage.setItem("user", updatedUser);
-            props.saveDataInCloud();
-            props.reOpenProfile();
-          } else {
-            // Error
-            Alert(res.data.user.signup || somethingWentWrongAlert);
-          }
-        });
-    } else {
-      // update profile if already logged in
-      server
-        .mutate({
-          mutation: updateUser,
-          variables: {
-            displayName,
-            fullName,
-            userId: user._id
-          }
-        })
-        .then(async res => {
-          if (res.data && res.data.user.update) {
-            user.fullName = fullName;
-            user.displayName = displayName;
-            const updatedUser = JSON.stringify(user);
-            await AsyncStorage.setItem("user", updatedUser);
-            Alert(profileUpdatedAlert);
-            props.reOpenProfile();
-          } else {
-            Alert(somethingWentWrongAlert);
-          }
-        })
-        .catch(e => Alert(somethingWentWrongAlert));
-    }
+    // if (!loggedIn) {
+    //   server
+    //     .mutate({
+    //       mutation: signup,
+    //       variables: {
+    //         email: email
+    //           .toString()
+    //           .trim()
+    //           .toLowerCase(),
+    //         password: password.toString(),
+    //         fullName: fullName.toString().trim(),
+    //         displayName: displayName.toString().trim(),
+    //         userId: user._id
+    //       }
+    //     })
+    //     .then(async res => {
+    //       console.log(res);
+    //       if (res.data.user.signup === "") {
+    //         const user = JSON.parse(u);
+    //         user.email = email;
+    //         user.fullName = fullName;
+    //         user.displayName = displayName;
+    //         const updatedUser = JSON.stringify(user);
+    //         await AsyncStorage.setItem("user", updatedUser);
+    //         props.saveDataInCloud();
+    //         props.reOpenProfile();
+    //       } else {
+    //         // Error
+    //         Alert(res.data.user.signup || somethingWentWrongAlert);
+    //       }
+    //     });
+    // } else {
+    // update profile if already logged in
+    server
+      .mutate({
+        mutation: updateUser,
+        variables: {
+          displayName,
+          fullName,
+          userId: user._id,
+          avatar
+        }
+      })
+      .then(async res => {
+        if (res.data && res.data.user.update) {
+          user.fullName = fullName;
+          user.displayName = displayName;
+          user.avatar = avatar
+          const updatedUser = JSON.stringify(user);
+          await AsyncStorage.setItem("user", updatedUser);
+          Alert(profileUpdatedAlert);
+          props.reOpenProfile();
+        } else {
+          Alert(somethingWentWrongAlert);
+        }
+      })
+      .catch(e => Alert(somethingWentWrongAlert));
+    //}
   }, [
     loggedIn,
     email,
     password,
+    avatar,
     displayName,
     fullName,
     confirmPassword,
@@ -165,7 +172,8 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
         setEmail(parsedUser.email);
         setDisplayName(parsedUser.displayName);
         setFullName(parsedUser.fullName);
-
+        setAvatar(parsedUser.avatar ? parsedUser.avatar : undefined)
+        setCurrentAvatar(parsedUser.avatar ? parsedUser.avatar : undefined)
         setCurrentDisplayName(parsedUser.displayName);
         setCurrentFullName(parsedUser.fullName);
       }
@@ -204,7 +212,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
       loggedIn &&
       fullName &&
       displayName &&
-      (fullName !== currentFullName || displayName !== currentDisplayName)
+      (fullName !== currentFullName || displayName !== currentDisplayName || avatar !== currentAvatar)
     ) {
       setIsSubmitDisabled(false);
       return;
@@ -232,6 +240,8 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
     email,
     fullName,
     displayName,
+    avatar,
+    currentAvatar,
     password,
     confirmPassword,
     emailValidError,
@@ -330,7 +340,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
             // flex: 1,
             lineHeight: 25
           }}>
-          {PreferredLanguageText('profile')}
+          <Ionicons name='settings-outline' size={25} color='#3b64f8' /> {PreferredLanguageText('profile')}
         </Text>
         {/*}
         <Text
@@ -411,7 +421,53 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
               paddingBottom: 20
             }}
           >
+            <Image
+              style={{
+                height: 150,
+                width: 150,
+                borderRadius: 75,
+                // marginTop: 20,
+                alignSelf: 'center'
+              }}
+              source={{ uri: avatar ? avatar : 'https://cues-files.s3.amazonaws.com/images/default.png' }}
+            />
+            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', paddingTop: 15 }}>
+              {
+                avatar ? <TouchableOpacity
+                  onPress={() => setAvatar(undefined)}
+                  style={{
+                    backgroundColor: 'white',
+                    overflow: 'hidden',
+                    height: 35,
+                    // marginLeft: 20,
+                    // marginTop: 15,
+                    justifyContent: 'center',
+                    flexDirection: 'row'
+                  }}>
+                  <Text style={{
+                    textAlign: 'center',
+                    lineHeight: 30,
+                    color: '#fff',
+                    fontSize: 12,
+                    backgroundColor: '#53BE6D',
+                    paddingHorizontal: 25,
+                    fontFamily: 'inter',
+                    height: 30,
+                    // width: 100,
+                    borderRadius: 15,
+                    textTransform: 'uppercase'
+                  }}>
+                    REMOVE
+                  </Text>
+                </TouchableOpacity> : <FileUpload
+                  onUpload={(u: any, t: any) => {
+                    setAvatar(u)
+                  }}
+                />
+              }
+            </View>
             <Text style={{
+              marginTop: 20,
               fontSize: 15,
               fontFamily: 'inter',
               color: '#2f2f3c'
@@ -506,7 +562,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
             backgroundColor: "white",
             justifyContent: "center",
             display: "flex",
-            paddingTop: 30
+            // paddingTop: 30
           }}
         >
           {loggedIn ? (
@@ -516,7 +572,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                 backgroundColor: "white",
                 overflow: "hidden",
                 height: 35,
-                marginTop: 30,
+                marginTop: 20,
                 width: "100%",
                 justifyContent: "center",
                 flexDirection: "row"
@@ -540,9 +596,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                 {showSavePassword ? PreferredLanguageText('back') : PreferredLanguageText('password')}
               </Text>
             </TouchableOpacity>
-          ) : (
-            <View style={{ height: 50 }} />
-          )}
+          ) : null}
           <TouchableOpacity
             onPress={() => handleSubmit()}
             style={{
