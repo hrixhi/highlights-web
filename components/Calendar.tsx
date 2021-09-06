@@ -4,7 +4,8 @@ import { TextInput } from "./CustomTextInput";
 import Alert from "./Alert";
 import { Text, View, TouchableOpacity } from "./Themed";
 import { fetchAPI } from "../graphql/FetchAPI";
-import { createDate, deleteDate, getChannels, getEvents, createDateV1, editDateV1, deleteDateV1, meetingRequest, markAttendance, getActivity, getOrganisation } from "../graphql/QueriesAndMutations";
+import { createDate, deleteDate, getChannels, getEvents, createDateV1, editDateV1, deleteDateV1, meetingRequest, markAttendance, getActivity, getOrganisation, markActivityAsRead } from "../graphql/QueriesAndMutations";
+
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import Datetime from "react-datetime";
@@ -61,6 +62,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const [eventChannels, setEventChannels] = useState<any[]>([]);
     const [allEvents, setAllEvents] = useState<any[]>([]);
     const [filterByLectures, setFilterByLectures] = useState(false);
+    const [filterEventsType, setFilterEventsType] = useState('All');
     const [filterByChannel, setFilterByChannel] = useState("All");
     const [filterActivityByChannel, setFilterActivityByChannel] = useState("All");
     const [activityChannelId, setActivityChannelId] = useState<any>('')
@@ -142,7 +144,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 const u = await AsyncStorage.getItem('user')
                 if (u) {
                     const user = JSON.parse(u)
-                    const server = fetchAPI('')
+                    const server = fetchAPI(user._id)
                     server.query({
                         query: getActivity,
                         variables: {
@@ -217,8 +219,12 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
         let total = [...allEvents];
 
         // Filter the meetings first 
-        if (filterByLectures) {
+        if (filterEventsType === "Lectures") {
             total = total.filter((e: any) => e.meeting)
+        } else if (filterEventsType === "Submissions") {
+            total = total.filter((e: any) => e.cueId !== "");
+        } else if (filterEventsType === "Events") {
+            total = total.filter((e: any) => e.cueId === "" && !e.meeting);
         }
 
         if (props.filterEnd && props.filterStart) {
@@ -242,7 +248,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
             setEvents(filter)
         }
 
-    }, [filterByChannel, filterByLectures, props.filterStart, props.filterEnd])
+    }, [filterByChannel, filterEventsType, props.filterStart, props.filterEnd])
 
     const renderFilterEvents = () => {
 
@@ -402,11 +408,11 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         <View style={{}}>
                             <Menu
                                 onSelect={(choice: any) => {
-                                    setFilterByLectures(choice)
+                                    setFilterEventsType(choice);
                                 }}>
                                 <MenuTrigger>
                                     <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#2f2f3c' }}>
-                                        {filterByLectures ? 'Lectures' : 'All'}<Ionicons name='caret-down' size={14} />
+                                        {filterEventsType}<Ionicons name='caret-down' size={14} />
                                     </Text>
                                 </MenuTrigger>
                                 <MenuOptions customStyles={{
@@ -421,7 +427,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     }
                                 }}>
                                     <MenuOption
-                                        value={false}>
+                                        value={"All"}>
                                         <View style={{ display: 'flex', flexDirection: 'row', }}>
                                             <Text style={{ marginLeft: 5 }}>
                                                 All
@@ -429,10 +435,26 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         </View>
                                     </MenuOption>
                                     <MenuOption
-                                        value={true}>
+                                        value={"Lectures"}>
                                         <View style={{ display: 'flex', flexDirection: 'row', }}>
                                             <Text style={{ marginLeft: 5 }}>
                                                 Lectures
+                                            </Text>
+                                        </View>
+                                    </MenuOption>
+                                    <MenuOption
+                                        value={"Submissions"}>
+                                        <View style={{ display: 'flex', flexDirection: 'row', }}>
+                                            <Text style={{ marginLeft: 5 }}>
+                                                Submissions
+                                            </Text>
+                                        </View>
+                                    </MenuOption>
+                                    <MenuOption
+                                        value={"Events"}>
+                                        <View style={{ display: 'flex', flexDirection: 'row', }}>
+                                            <Text style={{ marginLeft: 5 }}>
+                                                Events
                                             </Text>
                                         </View>
                                     </MenuOption>
@@ -522,6 +544,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
         time.setSeconds(0, 0)
         return time
     }
+
+    console.log("Is meeting", isMeeting)
 
     const handleCreate = useCallback(async () => {
         if (start < new Date()) {
@@ -697,6 +721,16 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
                         channelsSet.add(e.channelName);
 
+                        let colorCode = "#202025";
+
+                        const matchSubscription = props.subscriptions.find((sub: any) => {
+                            return sub.channelName === e.channelName
+                        })
+
+                        if (matchSubscription && matchSubscription !== undefined) {
+                            colorCode = matchSubscription.colorCode
+                        }
+
                         parsedEvents.push({
                             eventId: e.eventId ? e.eventId : "",
                             originalTitle: title,
@@ -711,8 +745,11 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             recordMeeting: e.recordMeeting ? true : false,
                             meeting: e.meeting,
                             channelId: e.channelId,
-                            cueId: e.cueId
+                            cueId: e.cueId,
+                            color: colorCode
                         });
+
+                        
                     });
                     setEventChannels(Array.from(channelsSet))
                     setAllEvents(parsedEvents)
@@ -739,7 +776,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     useNativeDriver: true
                 }).start();
             });
-    }, [, modalAnimation]);
+    }, [props.subscriptions, modalAnimation]);
 
     useEffect(() => {
         loadEvents();
@@ -755,7 +792,9 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
         else return true
     }
 
-    const onSelectEvent = async (event: any) => {
+    const onSelectEvent = async (data: any) => {
+
+        const { event } = data; 
 
         const uString: any = await AsyncStorage.getItem("user");
         // Only allow edit if event is not past
@@ -1265,6 +1304,22 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
         </View>)
     }
 
+    const renderEventContent = ((data: any) => {
+
+        // Add buttons to view event, edit event, join meeting, etc
+
+        console.log("Event", data);
+
+        return <React.Fragment>
+            <div>{data.title}</div>
+            <div className="md-custom-event-cont">
+                <div style={{ color: '#818385', fontSize: 14 }}>{data.original.description}</div>
+                {/* <Button className="md-custom-event-btn" color="secondary" variant="outline" onClick={(domEvent) => add(domEvent, data.original)}>Add participant</Button> */}
+            </div>
+        </React.Fragment>;
+    });
+
+
     let eventForChannelName = ''
 
     if (channelId === "") {
@@ -1618,6 +1673,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 data={events}
                                                 themeVariant="light"
                                                 height={425}
+                                                onEventClick={onSelectEvent}
+                                                renderEventContent={renderEventContent}
                                             />
                                         </View>
                                         : null
@@ -1663,12 +1720,12 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             marginRight: 10,
                             color: '#2f2f3c',
                             fontSize: 25,
-                            paddingBottom: 40,
+                            paddingBottom: 20,
                             fontFamily: 'inter',
                             // flex: 1,
                             flexDirection: 'row',
                             lineHeight: 25,
-                            height: 65
+                            height: 50
                         }}>
                             <Ionicons name='notifications-outline' size={25} color='#3b64f8' /> Activity
                         </Text>
@@ -1762,6 +1819,75 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             </Text>
                         </View>
                     </View>
+                    {unreadCount !== 0 ? <View style={{ flexDirection: 'row', marginBottom: 20, width: "100%", justifyContent: "flex-end", }}>
+                        <TouchableOpacity
+                            onPress={async () => {
+                                const uString: any = await AsyncStorage.getItem("user");
+                                    if (uString) {
+                                        const user = JSON.parse(uString);
+                                        const server = fetchAPI(user._id);
+                                        server
+                                            .mutate({
+                                                mutation: markActivityAsRead,
+                                                variables: {
+                                                    userId: user._id,
+                                                    markAllRead: true
+                                                }
+                                            })
+                                            .then(res => {
+                                                if (res.data.activity.markActivityAsRead) {
+                                                    // setChannels(res.data.channel.findByUserId);
+                                                    console.log("Mark as read", res.data.activity.markActivityAsRead);
+
+                                                    server.query({
+                                                        query: getActivity,
+                                                        variables: {
+                                                            userId: user._id
+                                                        }
+                                                    }).then(res => {
+                                                        if (res.data && res.data.activity.getActivity) {
+                                                            const tempActivity = res.data.activity.getActivity.reverse()
+                                                            let unread = 0
+                                                            tempActivity.map((act: any) => {
+                                                                if (act.status === 'unread') {
+                                                                    unread++
+                                                                }
+                                                            })
+                                                            setUnreadCount(unread)
+                                                            setActivity(tempActivity)
+                                                        }
+                                                    })
+
+                                                }
+                                            })
+                                            .catch(err => { });
+                                    }
+                                }}
+                            style={{
+                                backgroundColor: 'white',
+                                overflow: 'hidden',
+                                height: 35,
+                                // marginTop: 15,
+                                justifyContent: 'center',
+                                flexDirection: 'row',
+                            }}>
+                            <Text style={{
+                                textAlign: 'center',
+                                lineHeight: 30,
+                                color: unreadCount === 0 ? '#2f2f3c' : '#fff',
+                                fontSize: 12,
+                                backgroundColor: unreadCount === 0 ? '#F8F9FA' : '#53BE6D',
+                                paddingHorizontal: 25,
+                                fontFamily: 'inter',
+                                height: 30,
+                                // width: 100,
+                                borderRadius: 15,
+                                textTransform: 'uppercase'
+                            }}>
+                                 Mark all Read {<Ionicons name='mail-open-outline' size={16} style={{ marginLeft: 5 }} />}
+                            </Text>
+                        </TouchableOpacity>
+                    </View> : null}
                     <ScrollView
                         showsVerticalScrollIndicator={false}
                         horizontal={false}
@@ -1774,6 +1900,9 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     >
                         {
                             activity.map((act: any, index) => {
+
+                                const { cueId, channelId, createdBy, target } = act;
+
                                 if (activityChannelId !== '') {
                                     if (activityChannelId !== act.channelId) {
                                         return
@@ -1796,6 +1925,48 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 return <View style={styles.col} key={index}>
                                     <ActivityCard
                                         activity={act}
+                                        onPress={async () => {
+
+                                            const uString: any = await AsyncStorage.getItem("user");
+                                            if (uString) {
+                                                const user = JSON.parse(uString);
+                                                const server = fetchAPI("");
+                                                server
+                                                    .mutate({
+                                                        mutation: markActivityAsRead,
+                                                        variables: {
+                                                            activityId: act._id,
+                                                            userId: user._id,
+                                                            markAllRead: false
+                                                        }
+                                                    })
+                                                    .then(res => {
+                                                        if (res.data.activity.markActivityAsRead) {
+                                                            // setChannels(res.data.channel.findByUserId);
+                                                            console.log("Mark as read", res.data.activity.markActivityAsRead);
+                                                        }
+                                                    })
+                                                    .catch(err => { });
+                                            }
+
+                                            // Opens the cue from the activity
+                                            if (cueId !== null && cueId !== "" && channelId !== "" && createdBy !== "" && (target === "CUE")) {
+                                                props.openCueFromCalendar(channelId, cueId, createdBy)
+                                            } 
+
+                                            if (target === "DISCUSSION") {
+                                                props.openDiscussion(channelId, createdBy)
+                                            }
+
+                                            if (target === "CHANNEL_SUBSCRIBED" || target === "CHANNEL_MODERATOR_ADDED" || target === "CHANNEL_MODERATOR_REMOVED") {
+                                                props.openChannel(channelId, createdBy)
+                                            }
+
+                                            if (target === "Q&A") {
+                                                props.openQA(channelId, cueId, createdBy)
+                                            }
+
+                                        }}
                                     />
                                 </View>
                             })

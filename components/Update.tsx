@@ -48,6 +48,12 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         }
     }, [props.cue])
 
+    useEffect(() => {
+        if (props.target && props.target === "Q&A") {
+            setShowComments(true);
+        }
+    }, [props.target])
+
     const updateCueWithReleaseSubmission = async (releaseSubmission: boolean) => {
 
         // Release Submission
@@ -395,7 +401,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 30, backgroundColor: 'white' }}>
                                     {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
                                 </Text>
-                                <View style={{ flexDirection: 'row', paddingLeft: 20 }}>
+                                <View style={{ flexDirection: 'row' }}>
                                     <TouchableOpacity
                                         style={{
                                             justifyContent: 'center',

@@ -51,10 +51,14 @@ import {
 import WebViewer from '@pdftron/webviewer';
 import TextareaAutosize from 'react-textarea-autosize';
 import lodash from 'lodash';
+import { Editor } from '@tinymce/tinymce-react'; 
+import parser from 'html-react-parser';
+
 
 const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const current = new Date();
     const [cue, setCue] = useState(props.cue.cue);
+    const [initialCue, setInitialCue] = useState(props.cue.cue);
     const [shuffle, setShuffle] = useState(props.cue.shuffle);
     const [starred, setStarred] = useState(props.cue.starred);
     const [color, setColor] = useState(props.cue.color);
@@ -80,6 +84,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     );
     const now = new Date(props.cue.date);
     const RichText: any = useRef();
+    const editorRef: any = useRef();
     const [height, setHeight] = useState(100);
     const colorChoices: any[] = ["#d91d56", "#ED7D22", "#FFBA10", "#B8D41F", "#53BE6D"].reverse();
     const [submission, setSubmission] = useState(props.cue.submission ? props.cue.submission : false);
@@ -122,8 +127,12 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const [subscribers, setSubscribers] = useState<any[]>([]);
     const [expandMenu] = useState(false);
     const [original, setOriginal] = useState(props.cue.original)
+    const [initialOriginal, setInitialOriginal] = useState(props.cue.original)
     const [comment] = useState(props.cue.comment)
     const [shareWithChannelName, setShareWithChannelName] = useState('')
+
+    const [updatingCueContent, setUpdatingCueContent] = useState(false);
+    const [updatingCueDetails, setUpdatingCueDetails] = useState(false);
 
     // QUIZ OPTIONS
     const [isQuiz, setIsQuiz] = useState(false);
@@ -148,10 +157,15 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const [loadingAfterModifyingQuiz, setLoadingAfterModifyingQuiz] = useState(false);
 
     const insertEquation = useCallback(() => {
+        let currentContent = editorRef.current.getContent();
+
         const SVGEquation = TeXToSVG(equation, { width: 100 }); // returns svg in html format
-        RichText.current.insertHTML("<div><br/>" + SVGEquation + "<br/></div>");
+        currentContent += "<div>" + SVGEquation + "<br/></div>";
+    
+        editorRef.current.setContent(currentContent)
         setShowEquationEditor(false);
         setEquation("");
+        
         // setReloadEditorKey(Math.random())
     }, [equation, RichText, RichText.current, cue]);
 
@@ -516,7 +530,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     }, [quizSolutions])
 
     useEffect(() => {
-        handleUpdate();
+        // handleUpdate();
     }, [
         cue,
         shuffle,
@@ -748,9 +762,176 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         title, original, imported, type, url
     ]);
 
-    console.log(isQuizTimed)
-    console.log(initDuration)
-    console.log(initiateAt)
+    useEffect(() => {
+        handleUpdateCue()
+    }, [submitted, solutions, initiatedAt, submissionType, submissionUrl, submissionTitle, submissionImported, isQuiz, cue])
+
+    const handleUpdateCue = useCallback(async () => {
+        let subCues: any = {};
+        try {
+            const value = await AsyncStorage.getItem("cues");
+            if (value) {
+                subCues = JSON.parse(value);
+            }
+        } catch (e) { }
+        if (subCues[props.cueKey].length === 0) {
+            return;
+        }
+
+        let updatedCue = '';
+
+        if (isQuiz) {
+            updatedCue = JSON.stringify({
+                solutions,
+                initiatedAt
+            });
+        } else if (submissionImported) {
+            const obj = {
+                type: submissionType,
+                url: submissionUrl,
+                title: submissionTitle
+            };
+            updatedCue = JSON.stringify(obj);
+        } else {
+            updatedCue = cue;
+        }
+
+        const submittedNow = new Date();
+
+        const currCue = subCues[props.cueKey][props.cueIndex]
+
+        const saveCue = {
+            ...currCue,
+            cue: props.cue.submittedAt ? props.cue.cue : updatedCue,
+            submittedAt: submitted ? submittedNow.toISOString() : props.cue.submittedAt,
+        }
+
+        subCues[props.cueKey][props.cueIndex] = saveCue;
+
+        const stringifiedCues = JSON.stringify(subCues);
+        await AsyncStorage.setItem("cues", stringifiedCues);
+        props.reloadCueListAfterUpdate();
+
+    }, [submitted, solutions, initiatedAt, submissionType, submissionUrl, submissionTitle, submissionImported, isQuiz, cue])
+
+    useEffect(() => {
+        handleUpdateStarred()
+    }, [starred])
+
+    const handleUpdateStarred = useCallback(async () => {
+        let subCues: any = {};
+        try {
+            const value = await AsyncStorage.getItem("cues");
+            if (value) {
+                subCues = JSON.parse(value);
+            }
+        } catch (e) { }
+        if (subCues[props.cueKey].length === 0) {
+            return;
+        }
+
+        const currCue = subCues[props.cueKey][props.cueIndex]
+
+        const saveCue = {
+            ...currCue,
+            starred,
+        }
+
+        subCues[props.cueKey][props.cueIndex] = saveCue;
+
+        const stringifiedCues = JSON.stringify(subCues);
+        await AsyncStorage.setItem("cues", stringifiedCues);
+        props.reloadCueListAfterUpdate();
+
+    }, [starred]) 
+
+    const handleUpdateContent = useCallback(async () => {
+        setUpdatingCueContent(true)
+        let subCues: any = {};
+        try {
+            const value = await AsyncStorage.getItem("cues");
+            if (value) {
+                subCues = JSON.parse(value);
+            }
+        } catch (e) { }
+        if (subCues[props.cueKey].length === 0) {
+            return;
+        }
+
+        let tempOriginal = ''
+        if (imported) {
+            const obj = {
+                type,
+                url,
+                title
+            }
+            tempOriginal = JSON.stringify(obj)
+        } else if (isQuiz) {
+            const parse = JSON.parse(original)
+            const obj = {
+                quizId: parse.quizId,
+                title
+            }
+            tempOriginal = JSON.stringify(obj)
+        } else {
+            tempOriginal = original
+        }
+
+        const currCue = subCues[props.cueKey][props.cueIndex]
+
+        const saveCue = {
+            ...currCue,
+            original: tempOriginal,
+        }
+
+        subCues[props.cueKey][props.cueIndex] = saveCue;
+
+        const stringifiedCues = JSON.stringify(subCues);
+        await AsyncStorage.setItem("cues", stringifiedCues);
+        props.reloadCueListAfterUpdate();
+
+        // Update initial Value for Editor 
+        setInitialOriginal(tempOriginal);
+        setUpdatingCueContent(false);
+    }, [title, original, imported, type, url])
+
+    const handleUpdateDetails = useCallback(async () => {
+        setUpdatingCueDetails(true)
+        let subCues: any = {};
+        try {
+            const value = await AsyncStorage.getItem("cues");
+            if (value) {
+                subCues = JSON.parse(value);
+            }
+        } catch (e) { }
+        if (subCues[props.cueKey].length === 0) {
+            return;
+        }
+
+        const currCue = subCues[props.cueKey][props.cueIndex]
+
+        const saveCue = {
+            ...currCue,
+            color,
+            shuffle,
+            frequency,
+            customCategory,
+            gradeWeight,
+            endPlayAt: notify && (shuffle || !playChannelCueIndef) ? endPlayAt.toISOString() : "",
+            submission,
+            deadline: submission ? deadline.toISOString() : "",
+            initiateAt: submission ? initiateAt.toISOString() : "",
+        }
+
+        subCues[props.cueKey][props.cueIndex] = saveCue;
+
+        const stringifiedCues = JSON.stringify(subCues);
+        await AsyncStorage.setItem("cues", stringifiedCues);
+        props.reloadCueListAfterUpdate();
+
+        setUpdatingCueDetails(false)
+        
+    }, [submission, deadline, initiateAt, gradeWeight, customCategory, endPlayAt, color, frequency, notify])
 
     // Handle Delete Cue
     const handleDelete = useCallback(async () => {
@@ -1490,6 +1671,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             props.setShowOriginal(false);
                             props.setShowOptions(false)
                             props.setShowComments(false)
+
+                            setInitialCue(cue);
+
                         }}>
                         <Text style={!props.showOriginal && !props.viewStatus && !props.showComments && !props.showOptions ? styles.allGrayFill : styles.all}>
                             {PreferredLanguageText("mySubmission")}
@@ -1874,7 +2058,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 props.cue.graded && props.cue.comment ?
                     <View style={{ width: '100%', paddingBottom: 50, display: 'flex', flexDirection: 'column' }}>
                         <View style={{ position: 'relative', flex: 1, width: '100%' }}>
-                            <View style={{ position: 'absolute', zIndex: 1, width: 800, height: 50000 }}>
+                            <View style={{ position: 'absolute', zIndex: 1 }}>
                                 {renderRichEditorModified()}
                                 {renderFooter()}
                             </View>
@@ -1894,7 +2078,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     </View>
                     : (
                         <View style={{ width: '100%', paddingBottom: 50, display: 'flex', flexDirection: 'column', height: 50000 }}>
-                            <View style={{ width: 800, height: 50000 }}>
+                            <View style={{  }}>
                                 {renderRichEditorModified()}
                                 {renderFooter()}
                             </View>
@@ -1905,95 +2089,153 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         );
     }
 
-    const renderRichEditorOriginalCue = () => (
-        <RichEditor
-            key={props.showOriginal.toString() + reloadEditorKey.toString()}
-            disabled={!isOwner}
-            containerStyle={{
-                height: height,
-                backgroundColor: "#fff",
-                padding: 3,
-                paddingTop: 5,
-                paddingBottom: 10,
-                borderRadius: 15
-            }}
-            ref={RichText}
-            style={{
-                width: '100%',
-                backgroundColor: '#fff',
-                // borderRadius: 15,
-                minHeight: 650,
-                display: (isQuiz || imported) ? "none" : "flex",
-                // borderTopWidth: 1,
-                borderColor: '#818385'
-            }}
-            editorStyle={{
-                backgroundColor: "#fff",
-                placeholderColor: "#818385",
-                color: "#2f2f3c",
-                contentCSSText: "font-size: 13px;"
-            }}
-            initialContentHTML={original}
-            onScroll={() => Keyboard.dismiss()}
-            placeholder={"Title"}
-            onChange={text => {
-                const modifedText = text.split("&amp;").join("&");
-                setOriginal(modifedText);
-            }}
-            onHeightChange={handleHeightChange}
-            onBlur={() => Keyboard.dismiss()}
-            allowFileAccess={true}
-            allowFileAccessFromFileURLs={true}
-            allowUniversalAccessFromFileURLs={true}
-            allowsFullscreenVideo={true}
-            allowsInlineMediaPlayback={true}
-            allowsLinkPreview={true}
-            allowsBackForwardNavigationGestures={true}
-        />
-    );
+    const renderRichEditorOriginalCue = () => {
+
+        if (!isOwner) {
+            return <View style={{ width: '100%' }}>
+                {parser(initialOriginal)}
+            </View>
+        }
+
+        return (<View style={{ width: '100%' }}>
+            <Editor
+            //   onInit={(evt, editor) => editorRef.current = editor}
+              initialValue={initialOriginal}
+              disabled={!isOwner}
+              apiKey="ip4jckmpx73lbu6jgyw9oj53g0loqddalyopidpjl23fx7tl"
+              init={{
+                skin: "snow",
+                // toolbar_sticky: true,
+                branding: false,
+                readonly: !isOwner,
+                placeholder: 'Content...',
+                min_height: 500,
+                paste_data_images: true,
+                images_upload_url: 'http://api.cuesapp.co/api/imageUploadEditor',
+                mobile: {
+                  plugins: !isOwner ? 'print preview' : 'print preview powerpaste casechange importcss tinydrive searchreplace autolink autosave save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount tinymcespellchecker a11ychecker textpattern noneditable help formatpainter pageembed charmap mentions quickbars linkchecker emoticons advtable autoresize'
+                },
+                plugins: !isOwner ? 'print preview' : 'print preview powerpaste casechange importcss tinydrive searchreplace autolink autosave save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount tinymcespellchecker a11ychecker textpattern noneditable help formatpainter pageembed charmap mentions quickbars linkchecker emoticons advtable autoresize',
+                menu : { // this is the complete default configuration
+                  file   : {title : 'File'  , items : 'newdocument'},
+                  edit   : {title : 'Edit'  , items : 'undo redo | cut copy paste pastetext | selectall'},
+                  insert : {title : 'Insert', items : 'link media | template hr'},
+                  view   : {title : 'View'  , items : 'visualaid'},
+                  format : {title : 'Format', items : 'bold italic underline strikethrough superscript subscript | formats | removeformat'},
+                  table  : {title : 'Table' , items : 'inserttable tableprops deletetable | cell row column'},
+                  tools  : {title : 'Tools' , items : 'spellchecker code'}
+                },
+                // menubar: 'file edit view insert format tools table tc help',
+                menubar: false,
+                toolbar: !isOwner ? false : 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat  pagebreak | table image media pageembed link | preview print | charmap emoticons |  ltr rtl | showcomments addcomment',
+                importcss_append: true,
+                image_caption: true,
+                quickbars_selection_toolbar: 'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
+                noneditable_noneditable_class: 'mceNonEditable',
+                toolbar_mode: 'sliding',
+                // tinycomments_mode: 'embedded',
+                // content_style: '.mymention{ color: gray; }',
+                // contextmenu: 'link image table configurepermanentpen',
+                // a11y_advanced_options: true,
+                extended_valid_elements: "svg[*],defs[*],pattern[*],desc[*],metadata[*],g[*],mask[*],path[*],line[*],marker[*],rect[*],circle[*],ellipse[*],polygon[*],polyline[*],linearGradient[*],radialGradient[*],stop[*],image[*],view[*],text[*],textPath[*],title[*],tspan[*],glyph[*],symbol[*],switch[*],use[*]"
+                // skin: useDarkMode ? 'oxide-dark' : 'oxide',
+                // content_css: useDarkMode ? 'dark' : 'default',
+              }}              
+              onChange={(e: any) => setOriginal(e.target.getContent()) }
+            />
+            {
+                isOwner ? 
+                    <View style={styles.footer}>
+                        <View
+                            style={{
+                                flex: 1,
+                                backgroundColor: "white",
+                                justifyContent: "center",
+                                display: "flex",
+                                flexDirection: "row",
+                                height: 50,
+                                paddingTop: 10,
+                            }}
+                        >
+                        <TouchableOpacity
+                            onPress={() => handleUpdateContent()}
+                            disabled={updatingCueContent}
+                            style={{
+                            borderRadius: 15,
+                            backgroundColor: "white",
+                            }}
+                        >   
+                            <Text
+                                style={{
+                                textAlign: "center",
+                                lineHeight: 35,
+                                color: "white",
+                                fontSize: 12,
+                                backgroundColor: "#3B64F8",
+                                borderRadius: 15,
+                                paddingHorizontal: 25,
+                                fontFamily: "inter",
+                                overflow: "hidden",
+                                height: 35,
+                                textTransform: "uppercase",
+                                }}
+                            >
+                                {updatingCueContent
+                                ? 'Saving...'
+                                : 'Save'}
+                            </Text>
+                        </TouchableOpacity>
+                        </View>
+                    </View>: null
+            }
+        </View>)
+        
+    }
 
     const renderRichEditorModified = () => (
-        <RichEditor
-            key={props.showOriginal.toString() + reloadEditorKey.toString()}
-            containerStyle={{
-                height: height,
-                backgroundColor: "#fff",
-                padding: 3,
-                paddingTop: 5,
-                paddingBottom: 10,
-            }}
-            disabled={(props.cue.graded && submission)}
-            ref={RichText}
-            style={{
-                width: '100%',
-                backgroundColor: '#fff',
-                minHeight: 650,
-                display: (isQuiz || submissionImported) ? "none" : "flex",
-                // borderTopWidth: 1,
-                borderColor: '#818385'
-            }}
-            editorStyle={{
-                backgroundColor: "#fff",
-                placeholderColor: "#818385",
-                color: "#2f2f3c",
-                contentCSSText: "font-size: 13px;"
-            }}
-            initialContentHTML={cue}
-            onScroll={() => Keyboard.dismiss()}
-            placeholder={props.cue.channelId && props.cue.channelId !== '' ? (submission ? "Submission" : "Notes") : "Title"}
-            onChange={text => {
-                const modifedText = text.split("&amp;").join("&");
-                setCue(modifedText);
-            }}
-            onHeightChange={handleHeightChange}
-            onBlur={() => Keyboard.dismiss()}
-            allowFileAccess={true}
-            allowFileAccessFromFileURLs={true}
-            allowUniversalAccessFromFileURLs={true}
-            allowsFullscreenVideo={true}
-            allowsInlineMediaPlayback={true}
-            allowsLinkPreview={true}
-            allowsBackForwardNavigationGestures={true}
+        <Editor
+            onInit={(evt, editor) => editorRef.current = editor}
+            initialValue={initialCue}
+            disabled={props.cue.graded && submission}
+            apiKey="ip4jckmpx73lbu6jgyw9oj53g0loqddalyopidpjl23fx7tl"
+            init={{
+            skin: "snow",
+            branding: false,
+            placeholder: 'Content...',
+            readonly: props.cue.graded && submission,
+            min_height: 500,
+            paste_data_images: true,
+            images_upload_url: 'http://api.cuesapp.co/api/imageUploadEditor',
+            mobile: {
+                plugins: 'print preview powerpaste casechange importcss tinydrive searchreplace autolink autosave save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount tinymcespellchecker a11ychecker textpattern noneditable help formatpainter pageembed charmap mentions quickbars linkchecker emoticons advtable autoresize'
+            },
+            plugins: 'print preview powerpaste casechange importcss tinydrive searchreplace autolink autosave save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount tinymcespellchecker a11ychecker textpattern noneditable help formatpainter pageembed charmap mentions quickbars linkchecker emoticons advtable autoresize',
+            menu : { // this is the complete default configuration
+                file   : {title : 'File'  , items : 'newdocument'},
+                edit   : {title : 'Edit'  , items : 'undo redo | cut copy paste pastetext | selectall'},
+                insert : {title : 'Insert', items : 'link media | template hr'},
+                view   : {title : 'View'  , items : 'visualaid'},
+                format : {title : 'Format', items : 'bold italic underline strikethrough superscript subscript | formats | removeformat'},
+                table  : {title : 'Table' , items : 'inserttable tableprops deletetable | cell row column'},
+                tools  : {title : 'Tools' , items : 'spellchecker code'}
+            },
+            // menubar: 'file edit view insert format tools table tc help',
+            menubar: false,
+            toolbar: props.cue.graded && submission ? false : 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat  pagebreak | table image media pageembed link | preview print | charmap emoticons |  ltr rtl | showcomments addcomment',
+            importcss_append: true,
+            image_caption: true,
+            quickbars_selection_toolbar: 'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
+            noneditable_noneditable_class: 'mceNonEditable',
+            toolbar_mode: 'sliding',
+            tinycomments_mode: 'embedded',
+            content_style: '.mymention{ color: gray; }',
+            contextmenu: 'link image imagetools table configurepermanentpen',
+            a11y_advanced_options: true,
+            extended_valid_elements: "svg[*],defs[*],pattern[*],desc[*],metadata[*],g[*],mask[*],path[*],line[*],marker[*],rect[*],circle[*],ellipse[*],polygon[*],polyline[*],linearGradient[*],radialGradient[*],stop[*],image[*],view[*],text[*],textPath[*],title[*],tspan[*],glyph[*],symbol[*],switch[*],use[*]"
+            // skin: useDarkMode ? 'oxide-dark' : 'oxide',
+            // content_css: useDarkMode ? 'dark' : 'default',
+            }}              
+            onChange={(e: any) => setCue(e.target.getContent()) }
         />
     );
 
@@ -2950,14 +3192,13 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     style={{
                         flex: 1,
                         backgroundColor: "white",
-                        justifyContent: "center",
+                        alignItems: "center",
                         display: "flex",
-                        flexDirection: "row",
-                        height: 50,
+                        flexDirection: "column",
+                        // height: 50,
                         paddingTop: 10
                     }}>
-                    {isOwner || !props.cue.channelId || props.cue.channelId === "" ? (
-                        <TouchableOpacity onPress={() => handleDelete()} style={{ backgroundColor: "white", borderRadius: 15 }}>
+                        <TouchableOpacity disabled={updatingCueDetails} onPress={() => handleUpdateDetails()} style={{ backgroundColor: "white", borderRadius: 15, marginBottom: 20 }}>
                             <Text
                                 style={{
                                     textAlign: "center",
@@ -2970,7 +3211,29 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     fontFamily: "inter",
                                     overflow: "hidden",
                                     height: 35,
-                                    textTransform: "uppercase"
+                                    textTransform: "uppercase",
+                                    width: 160
+                                }}>
+                                    Save
+                            </Text>
+                        </TouchableOpacity>
+
+                    {isOwner || !props.cue.channelId || props.cue.channelId === "" ? (
+                        <TouchableOpacity onPress={() => handleDelete()} style={{ backgroundColor: "white", borderRadius: 15 }}>
+                            <Text
+                                style={{
+                                    textAlign: "center",
+                                    lineHeight: 35,
+                                    color: "#2F2F3C",
+                                    fontSize: 12,
+                                    backgroundColor: "#F8F9FA",
+                                    borderRadius: 15,
+                                    paddingHorizontal: 25,
+                                    fontFamily: "inter",
+                                    overflow: "hidden",
+                                    height: 35,
+                                    textTransform: "uppercase",
+                                    width: 160
                                 }}>
                                 {isOwner
                                     ? props.cue.channelId && props.cue.channelId !== ""
@@ -2980,7 +3243,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             </Text>
                         </TouchableOpacity>
                     ) : null}
-
                 </View>
             </View>
         );
@@ -3175,7 +3437,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         ? 0 : 1,
                                     borderBottomColor: '#dddddd'
                                 }}>
-                                {renderRichToolbar()}
+                                {/* {renderRichToolbar()} */}
                                 {(!props.showOriginal && props.cue.submission && !submissionImported && showImportOptions)
                                     || (props.showOriginal && showImportOptions && isOwner) ? (
                                     <FileUpload

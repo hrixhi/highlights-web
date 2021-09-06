@@ -1375,6 +1375,9 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 cues={props.calendarCues}
                                 subscriptions={props.subscriptions}
                                 openCueFromCalendar={props.openCueFromCalendar}
+                                openDiscussion={props.openDiscussionFromActivity}
+                                openChannel={props.openChannelFromActivity}
+                                openQA={props.openQAFromActivity}
                             /> : null
                     }
                     {

@@ -71,6 +71,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true)
   const [saveDataInProgress, setSaveDataInProgress] = useState(false)
   const [dimensions, setDimensions] = useState({ window, screen });
+  const [target, setTarget] = useState('');
 
   // Notifications count for Top Bar
   const [unreadDiscussionThreads, setUnreadDiscussionThreads] = useState(0)
@@ -903,7 +904,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           delete cueInput.comment;
 
           // this change is propagated only when the user actively changes folder structure...
-          delete cueInput.folderId; 
+          delete cueInput.folderId;
 
           delete cueInput.unreadThreads;
           // delete cueInput.createdBy;
@@ -1045,6 +1046,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     setCreatedBy(by)
     setCueId(_id)
     openModal('Update')
+    setShowHome(false)
   }, [subscriptions])
 
   const openUpdate = useCallback((key, index, pageNumber, _id, by, channId) => {
@@ -1192,6 +1194,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         channelCreatedBy={channelCreatedBy}
         reloadCueListAfterUpdate={() => reloadCueListAfterUpdate()}
         reopenUpdateWindow={reopenUpdateWindow}
+        target={target}
       />
         :
         (modalType === 'Walkthrough' ? <Walkthrough
@@ -1573,6 +1576,23 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               calendarCues={cues}
               openCueFromCalendar={openCueFromCalendar}
               key={option.toString() + dateFilteredCues.toString() + subscriptions.toString() + cues.toString()}
+              openDiscussionFromActivity={(channelId: string, createdBy: string) => {
+                setChannelId(channelId);
+                setChannelCreatedBy(createdBy);
+                setCreatedBy(createdBy)
+                openModal('Discussion')
+                setShowHome(false);
+              }}
+              openChannelFromActivity={(channelId: string, createdBy: string) => {
+                setChannelId(channelId);
+                setChannelCreatedBy(createdBy);
+                setCreatedBy(createdBy);
+                setShowHome(false);
+              }}
+              openQAFromActivity={(channelId: any, cueId: string, by: string) => {
+                openCueFromCalendar(channelId, cueId, by)
+                setTarget('Q&A')
+              }}
             />
           </View>
         </View> : null
