@@ -146,7 +146,6 @@ const EnglishBank: { [key: string]: string } = {
     optional: 'Optional',
     required: 'Required',
     due: "Due",
-    name: 'Name',
     classroomNotInSession: "Classroom not in session. You will be notified when initiated.",
     incorrectPassword: 'Incorrect password.',
     alreadySubscribed: "Already subscribed.",

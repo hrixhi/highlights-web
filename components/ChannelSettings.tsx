@@ -975,7 +975,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             fontFamily: 'inter',
                             color: '#2f2f3c'
                         }}>
-                            color
+                            Color
                         </Text>
                         <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white', marginTop: 20 }}>
                             <View style={{ width: '100%', backgroundColor: 'white' }}>
@@ -990,6 +990,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
 
                     <Text style={{
                         fontSize: 15,
+                        paddingTop: 20,
                         fontFamily: 'inter',
                         color: '#2f2f3c'
                     }}>

@@ -1,17 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { StyleSheet, Image, Dimensions, Linking, ScrollView } from 'react-native';
 import { View, Text, TouchableOpacity } from '../components/Themed';
 import { Ionicons } from '@expo/vector-icons';
 import _ from 'lodash'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { fetchAPI } from '../graphql/FetchAPI';
-import { getActivity, getOrganisation, getSearch } from '../graphql/QueriesAndMutations';
+import { creatFolder, getActivity, getOrganisation, getSearch, updateFolder } from '../graphql/QueriesAndMutations';
 import logo from './default-images/cues-logo-black-exclamation-hidden.jpg'
 import Profile from './Profile';
 import Walkthrough from './Walkthrough';
 import Channels from './Channels';
 import ActivityCard from './ActivityCard';
 import OverviewCueCard from './OverviewCueCard';
+import Swiper from 'react-native-web-swiper'
 import { PreferredLanguageText } from '../helpers/LanguageContext';
 import CalendarX from './Calendar';
 import { TextInput } from "./CustomTextInput";
@@ -53,6 +54,13 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const [sortBy, setSortBy] = useState('Priority')
 
     const [cueMap, setCueMap] = useState<any>({})
+    const [categoryMap, setCategoryMap] = useState<any>({})
+    const [selectedCategories, setSelectedCategories] = useState<any>({})
+
+    const [editFolderChannelId, setEditFolderChannelId] = useState('')
+    const [cueIds, setCueIds] = useState<any[]>([])
+    const [folderIdsMap, setFolderIdsMap] = useState<any>({})
+    const [folderId, setFolderId] = useState('')
 
     useEffect(() => {
         (
@@ -67,10 +75,14 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
         )()
 
         const temp: any = {}
+        const tempCat: any = {}
         const mycues: any[] = []
         temp['My Notes'] = []
         const tempCollapse: any = {}
         tempCollapse['My Notes'] = false
+        const tempSelected: any = {}
+
+        const tempFolders: any = {}
 
         let dateFilteredCues: any[] = []
         if (filterStart && filterEnd) {
@@ -86,11 +98,16 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
         props.subscriptions.map((sub: any) => {
             // const tempCategories: any = {}
             const tempCues: any[] = []
-            dateFilteredCues.map((cue: any) => {
-                if (cue.channelName === sub.channelName) {
+            const cat: any = {}
+            dateFilteredCues.map((cue: any, ind: any) => {
+                if (cue.channelId === sub.channelId) {
                     tempCues.push(cue)
+                    if (!cat[cue.customCategory]) {
+                        cat[cue.customCategory] = ''
+                    }
                 }
             })
+
             if (sortBy === 'Priority') {
                 tempCues.reverse()
             } else if (sortBy === 'Date ↑') {
@@ -106,12 +123,30 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     }
                 })
             }
-            temp[sub.channelName + '-SPLIT-' + sub.channelId + '-SPLIT-' + sub.channelCreatedBy + '-SPLIT-' + sub.colorCode] = tempCues
-            tempCollapse[sub.channelName + '-SPLIT-' + sub.channelId + '-SPLIT-' + sub.channelCreatedBy + '-SPLIT-' + sub.colorCode] = false
+
+            tempCues.map((cue: any, ind: any) => {
+                if (cue.folderId) {
+                    if (tempFolders[cue.folderId]) {
+                        tempFolders[cue.folderId].push(ind)
+                    } else {
+                        tempFolders[cue.folderId] = [ind]
+                    }
+                }
+            })
+
+            const key = sub.channelName + '-SPLIT-' + sub.channelId + '-SPLIT-' + sub.channelCreatedBy + '-SPLIT-' + sub.colorCode
+            temp[key] = tempCues
+            tempCollapse[key] = false
+            tempCat[key] = Object.keys(cat)
+            tempSelected[key] = ''
         })
+        const cat: any = {}
         props.cues.map((cue: any) => {
             if (!cue.channelId || cue.channelId === '') {
                 mycues.push(cue)
+                if (!cat[cue.customCategory]) {
+                    cat[cue.customCategory] = ''
+                }
             }
         })
         if (sortBy === 'Priority') {
@@ -129,9 +164,25 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 }
             })
         }
+
+        mycues.map((cue: any, ind: any) => {
+            if (cue.folderId) {
+                if (tempFolders[cue.folderId]) {
+                    tempFolders[cue.folderId].push(ind)
+                } else {
+                    tempFolders[cue.folderId] = [ind]
+                }
+            }
+        })
+
         temp['My Notes'] = mycues
+        tempCat['My Notes'] = Object.keys(cat)
+        tempSelected['My Notes'] = ''
         setCueMap(temp)
         setCollapseMap(tempCollapse)
+        setCategoryMap(tempCat)
+        setFolderIdsMap(tempFolders)
+        setSelectedCategories(tempSelected)
     }, [props.cues, props.subscriptions, sortBy, filterStart, filterEnd])
 
     useEffect(() => {
@@ -160,6 +211,46 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
             console.log(err)
         })
     }, [searchTerm, userId])
+
+    const handleFolderUpdate = useCallback(() => {
+
+        const server = fetchAPI('')
+
+        if (folderId !== '') {
+            server.mutate({
+                mutation: updateFolder,
+                variables: {
+                    cueIds,
+                    folderId
+                }
+            }).then(res => {
+                if (res.data && res.data.folder.update) {
+                    setEditFolderChannelId('')
+                    setCueIds([])
+                    setFolderId('')
+                    props.reloadData()
+                }
+            })
+        } else {
+            if (cueIds.length === 0) {
+                return;
+            }
+            server.mutate({
+                mutation: creatFolder,
+                variables: {
+                    cueIds
+                }
+            }).then(res => {
+                if (res.data && res.data.folder.create) {
+                    setEditFolderChannelId('')
+                    setCueIds([])
+                    setFolderId('')
+                    props.reloadData()
+                }
+            })
+        }
+
+    }, [cueIds, folderId])
 
     const searchResults = <View
         key={cueMap.toString()}
@@ -276,6 +367,16 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
         </View>
     </View>
 
+    const onSwiperLongPress = useCallback((cue, key, swiperCue) => {
+        const temp: any[] = []
+        folderIdsMap[cue.folderId].map((i: any) => {
+            temp.push(cueMap[key][i]._id)
+        })
+        setCueIds(temp)
+        setFolderId(cue.folderId)
+        setEditFolderChannelId(swiperCue.channelId ? swiperCue.channelId : 'My Notes')
+    }, [folderIdsMap])
+
     const overview = <View
         key={cueMap.toString()}
         style={{
@@ -321,6 +422,129 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         </Text>
                                         <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', backgroundColor: '#fff', paddingTop: 10 }}>
                                             <View style={{ flexDirection: 'row', justifyContent: 'center', display: 'flex', backgroundColor: '#fff' }}>
+                                                {
+                                                    editFolderChannelId === key.split('-SPLIT-')[1] && (cueIds.length !== 0 || folderId !== '') ?
+                                                        <TouchableOpacity
+                                                            onPress={() => {
+                                                                handleFolderUpdate()
+                                                            }}
+                                                            style={{
+                                                                backgroundColor: 'white',
+                                                                overflow: 'hidden',
+                                                                height: 35,
+                                                                marginLeft: 20,
+                                                                // marginTop: 15,
+                                                                justifyContent: 'center',
+                                                                flexDirection: 'row'
+                                                            }}>
+                                                            <Text style={{
+                                                                textAlign: 'center',
+                                                                lineHeight: 30,
+                                                                color: '#fff',
+                                                                fontSize: 12,
+                                                                backgroundColor: '#53BE6D',
+                                                                paddingHorizontal: 25,
+                                                                marginRight: 15,
+                                                                fontFamily: 'inter',
+                                                                height: 30,
+                                                                // width: 100,
+                                                                borderRadius: 15,
+                                                                textTransform: 'uppercase'
+                                                            }}>
+                                                                GROUP
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                        : null
+                                                }
+                                                {
+                                                    editFolderChannelId === key.split('-SPLIT-')[1] ?
+                                                        <TouchableOpacity
+                                                            onPress={() => {
+                                                                setCueIds([])
+                                                                setEditFolderChannelId('')
+                                                                setFolderId('')
+                                                            }}
+                                                            style={{
+                                                                backgroundColor: 'white',
+                                                                overflow: 'hidden',
+                                                                height: 35,
+                                                                // marginLeft: 20,
+                                                                // marginTop: 15,
+                                                                justifyContent: 'center',
+                                                                flexDirection: 'row'
+                                                            }}>
+                                                            <Text style={{
+                                                                textAlign: 'center',
+                                                                lineHeight: 30,
+                                                                color: '#2f2f3c',
+                                                                fontSize: 12,
+                                                                backgroundColor: '#f4f4f6',
+                                                                paddingHorizontal: 25,
+                                                                marginRight: 15,
+                                                                fontFamily: 'inter',
+                                                                height: 30,
+                                                                // width: 100,
+                                                                borderRadius: 15,
+                                                                textTransform: 'uppercase'
+                                                            }}>
+                                                                CANCEL
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                        : null
+                                                }
+                                                {
+                                                    collapseMap[key] ?
+                                                        <View style={{ backgroundColor: '#fff', marginTop: -5, paddingRight: 5 }}>
+                                                            <View style={{ flexDirection: 'row', justifyContent: 'flex-start', display: 'flex', backgroundColor: '#fff' }}>
+                                                                <Menu
+                                                                    onSelect={(cat: any) => {
+                                                                        const temp = JSON.parse(JSON.stringify(selectedCategories))
+                                                                        temp[key] = cat
+                                                                        setSelectedCategories(temp)
+                                                                    }}>
+                                                                    <MenuTrigger>
+                                                                        <Text style={{ fontFamily: 'inter', fontSize: 15, color: '#2f2f3c', paddingTop: 5 }}>
+                                                                            {selectedCategories[key] === '' ? 'All' : selectedCategories[key]}<Ionicons name='caret-down' size={15} />
+                                                                        </Text>
+                                                                    </MenuTrigger>
+                                                                    <MenuOptions customStyles={{
+                                                                        optionsContainer: {
+                                                                            padding: 10,
+                                                                            borderRadius: 15,
+                                                                            shadowOpacity: 0,
+                                                                            borderWidth: 1,
+                                                                            borderColor: '#F8F9FA',
+                                                                            // overflow: 'scroll',
+                                                                            maxHeight: '100%'
+                                                                        }
+                                                                    }}>
+                                                                        <MenuOption
+                                                                            value={''}>
+                                                                            <Text>
+                                                                                All
+                                                                            </Text>
+                                                                        </MenuOption>
+                                                                        {
+                                                                            categoryMap[key].map((cat: any) => {
+                                                                                if (cat !== '') {
+                                                                                    return <MenuOption
+                                                                                        value={cat}>
+                                                                                        <Text>
+                                                                                            {cat}
+                                                                                        </Text>
+                                                                                    </MenuOption>
+                                                                                }
+                                                                            })
+                                                                        }
+                                                                    </MenuOptions>
+                                                                </Menu>
+                                                            </View>
+                                                            <Text style={{ fontSize: 10, color: '#2f2f3c', paddingTop: 7 }}>
+                                                                Category
+                                                            </Text>
+                                                        </View>
+                                                        : null
+                                                }
                                                 <Menu
                                                     onSelect={(option: any) => {
                                                         switch (option) {
@@ -455,6 +679,59 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             }} /> {key}
                                         </Text>
                                         <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', backgroundColor: '#fff', paddingTop: 10 }}>
+                                            {
+                                                collapseMap[key] ?
+                                                    <View style={{ backgroundColor: '#fff', marginTop: -5, paddingRight: 5 }}>
+                                                        <View style={{ flexDirection: 'row', justifyContent: 'flex-start', display: 'flex', backgroundColor: '#fff' }}>
+                                                            <Menu
+                                                                onSelect={(cat: any) => {
+                                                                    const temp = JSON.parse(JSON.stringify(selectedCategories))
+                                                                    temp[key] = cat
+                                                                    setSelectedCategories(temp)
+                                                                }}>
+                                                                <MenuTrigger>
+                                                                    <Text style={{ fontFamily: 'inter', fontSize: 15, color: '#2f2f3c', paddingTop: 5 }}>
+                                                                        {selectedCategories[key] === '' ? 'All' : selectedCategories[key]}<Ionicons name='caret-down' size={15} />
+                                                                    </Text>
+                                                                </MenuTrigger>
+                                                                <MenuOptions customStyles={{
+                                                                    optionsContainer: {
+                                                                        padding: 10,
+                                                                        borderRadius: 15,
+                                                                        shadowOpacity: 0,
+                                                                        borderWidth: 1,
+                                                                        borderColor: '#F8F9FA',
+                                                                        // overflow: 'scroll',
+                                                                        maxHeight: '100%'
+                                                                    }
+                                                                }}>
+                                                                    <MenuOption
+                                                                        value={''}>
+                                                                        <Text>
+                                                                            All
+                                                                        </Text>
+                                                                    </MenuOption>
+                                                                    {
+                                                                        categoryMap[key].map((cat: any) => {
+                                                                            if (cat !== '') {
+                                                                                return <MenuOption
+                                                                                    value={cat}>
+                                                                                    <Text>
+                                                                                        {cat}
+                                                                                    </Text>
+                                                                                </MenuOption>
+                                                                            }
+                                                                        })
+                                                                    }
+                                                                </MenuOptions>
+                                                            </Menu>
+                                                        </View>
+                                                        <Text style={{ fontSize: 10, color: '#2f2f3c', paddingTop: 7 }}>
+                                                            Category
+                                                        </Text>
+                                                    </View>
+                                                    : null
+                                            }
                                             <View style={{ flexDirection: 'row', justifyContent: 'center', display: 'flex', backgroundColor: '#fff' }}>
                                                 <TouchableOpacity
                                                     onPress={() => {
@@ -462,7 +739,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         tempCollapse[key] = !collapseMap[key]
                                                         setCollapseMap(tempCollapse)
                                                     }}
-                                                // style={{ height: 25 }}
                                                 >
                                                     <Text style={{
                                                         textAlign: 'center'
@@ -474,7 +750,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         </View>
                                     </View>
                             }
-                            <View style={{ flexDirection: 'row' }}>
+                            <View style={{ flexDirection: 'row' }} key={editFolderChannelId.toString() + cueIds.toString()}>
                                 {
                                     cueMap[key].length === 0 ?
                                         <Text style={{ fontSize: 15, color: '#818385', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#fff' }}>
@@ -498,6 +774,72 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                     if (cue.color !== priority) {
                                                                         return null
                                                                     }
+                                                                    if (selectedCategories[key] !== '' && cue.customCategory !== selectedCategories[key] && collapseMap[key]) {
+                                                                        return null
+                                                                    }
+                                                                    if (cue.folderId && folderId !== cue.folderId) {
+                                                                        if (folderIdsMap[cue.folderId][0] !== index) {
+                                                                            return null
+                                                                        } else {
+                                                                            // return swiper
+                                                                            return <Swiper
+                                                                                containerStyle={{
+                                                                                    height: 150,
+                                                                                    marginRight: 15,
+                                                                                    width: 150,
+                                                                                    backgroundColor: '#fff',
+                                                                                    alignSelf: 'center'
+                                                                                }}
+                                                                                swipeAreaStyle={{ width: 150, maxWidth: 150 }}
+                                                                                innerContainerStyle={{ width: 150 }}
+                                                                                // slideWrapperStyle={{ width: 150 }}
+                                                                                vertical={false}
+                                                                            >
+                                                                                {
+                                                                                    folderIdsMap[cue.folderId].map((ind: any) => {
+                                                                                        const swiperCue = cueMap[key][ind]
+                                                                                        return <OverviewCueCard
+                                                                                            cueIds={cueIds}
+                                                                                            editFolderChannelId={editFolderChannelId}
+                                                                                            onLongPress={() => onSwiperLongPress(cue, key, swiperCue)}
+                                                                                            add={() => {
+                                                                                                const temp = JSON.parse(JSON.stringify(cueIds))
+                                                                                                const found = temp.find((i: any) => {
+                                                                                                    return i === swiperCue._id
+                                                                                                })
+                                                                                                if (!found) {
+                                                                                                    temp.push(swiperCue._id)
+                                                                                                }
+                                                                                                console.log(temp)
+                                                                                                setCueIds(temp)
+                                                                                            }}
+                                                                                            remove={() => {
+                                                                                                const temp = JSON.parse(JSON.stringify(cueIds))
+                                                                                                const upd = temp.filter((i: any) => {
+                                                                                                    return i !== swiperCue._id
+                                                                                                })
+                                                                                                setCueIds(upd)
+                                                                                            }}
+                                                                                            fadeAnimation={props.fadeAnimation}
+                                                                                            updateModal={() => {
+                                                                                                props.openUpdate(
+                                                                                                    swiperCue.key,
+                                                                                                    swiperCue.index,
+                                                                                                    0,
+                                                                                                    swiperCue._id,
+                                                                                                    (swiperCue.createdBy ? swiperCue.createdBy : ''),
+                                                                                                    (swiperCue.channelId ? swiperCue.channelId : '')
+                                                                                                )
+                                                                                            }}
+                                                                                            cue={swiperCue}
+                                                                                            channelId={props.channelId}
+                                                                                            subscriptions={props.subscriptions}
+                                                                                        />
+                                                                                    })
+                                                                                }
+                                                                            </Swiper>
+                                                                        }
+                                                                    }
                                                                     return <View style={{
                                                                         height: 150,
                                                                         marginRight: 15,
@@ -507,6 +849,30 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                         width: '100%'
                                                                     }} key={index}>
                                                                         <OverviewCueCard
+                                                                            cueIds={cueIds}
+                                                                            onLongPress={() => {
+                                                                                setCueIds([])
+                                                                                setEditFolderChannelId(cue.channelId ? cue.channelId : 'My Notes')
+                                                                                // alert(cue.channelId ? cue.channelId : 'My Notes')
+                                                                            }}
+                                                                            add={() => {
+                                                                                const temp = JSON.parse(JSON.stringify(cueIds))
+                                                                                const found = temp.find((i: any) => {
+                                                                                    return i === cue._id
+                                                                                })
+                                                                                if (!found) {
+                                                                                    temp.push(cue._id)
+                                                                                }
+                                                                                setCueIds(temp)
+                                                                            }}
+                                                                            remove={() => {
+                                                                                const temp = JSON.parse(JSON.stringify(cueIds))
+                                                                                const upd = temp.filter((i: any) => {
+                                                                                    return i !== cue._id
+                                                                                })
+                                                                                setCueIds(upd)
+                                                                            }}
+                                                                            editFolderChannelId={editFolderChannelId}
                                                                             fadeAnimation={props.fadeAnimation}
                                                                             updateModal={() => {
                                                                                 props.openUpdate(
@@ -539,6 +905,71 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     }}
                                                 >
                                                     {cueMap[key].map((cue: any, index: any) => {
+
+                                                        if (cue.folderId && folderId !== cue.folderId) {
+                                                            if (folderIdsMap[cue.folderId][0] !== index) {
+                                                                return null
+                                                            } else {
+                                                                // return swiper
+                                                                return <Swiper
+                                                                    containerStyle={{
+                                                                        height: 150,
+                                                                        marginRight: 15,
+                                                                        width: 150,
+                                                                        backgroundColor: '#fff',
+                                                                        alignSelf: 'center'
+                                                                    }}
+                                                                    swipeAreaStyle={{ width: 150, maxWidth: 150 }}
+                                                                    innerContainerStyle={{ width: 150 }}
+                                                                    // slideWrapperStyle={{ width: 150 }}
+                                                                    vertical={false}
+                                                                >
+                                                                    {
+                                                                        folderIdsMap[cue.folderId].map((ind: any) => {
+                                                                            const swiperCue = cueMap[key][ind]
+                                                                            return <OverviewCueCard
+                                                                                onLongPress={() => onSwiperLongPress(cue, key, swiperCue)}
+                                                                                cueIds={cueIds}
+                                                                                editFolderChannelId={editFolderChannelId}
+                                                                                add={() => {
+                                                                                    const temp = JSON.parse(JSON.stringify(cueIds))
+                                                                                    const found = temp.find((i: any) => {
+                                                                                        return i === swiperCue._id
+                                                                                    })
+                                                                                    if (!found) {
+                                                                                        temp.push(swiperCue._id)
+                                                                                    }
+                                                                                    console.log(temp)
+                                                                                    setCueIds(temp)
+                                                                                }}
+                                                                                remove={() => {
+                                                                                    const temp = JSON.parse(JSON.stringify(cueIds))
+                                                                                    const upd = temp.filter((i: any) => {
+                                                                                        return i !== swiperCue._id
+                                                                                    })
+                                                                                    setCueIds(upd)
+                                                                                }}
+                                                                                fadeAnimation={props.fadeAnimation}
+                                                                                updateModal={() => {
+                                                                                    props.openUpdate(
+                                                                                        swiperCue.key,
+                                                                                        swiperCue.index,
+                                                                                        0,
+                                                                                        swiperCue._id,
+                                                                                        (swiperCue.createdBy ? swiperCue.createdBy : ''),
+                                                                                        (swiperCue.channelId ? swiperCue.channelId : '')
+                                                                                    )
+                                                                                }}
+                                                                                cue={swiperCue}
+                                                                                channelId={props.channelId}
+                                                                                subscriptions={props.subscriptions}
+                                                                            />
+                                                                        })
+                                                                    }
+                                                                </Swiper>
+                                                            }
+                                                        }
+
                                                         return <View style={{
                                                             height: 150,
                                                             marginRight: 15,
@@ -547,6 +978,31 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                             alignSelf: 'center',
                                                         }} key={index}>
                                                             <OverviewCueCard
+                                                                cueIds={cueIds}
+                                                                editFolderChannelId={editFolderChannelId}
+                                                                onLongPress={() => {
+                                                                    setCueIds([])
+                                                                    setEditFolderChannelId(cue.channelId ? cue.channelId : 'My Notes')
+                                                                    // alert(cue.channelId ? cue.channelId : 'My Notes')
+                                                                }}
+                                                                add={() => {
+                                                                    const temp = JSON.parse(JSON.stringify(cueIds))
+                                                                    const found = temp.find((i: any) => {
+                                                                        return i === cue._id
+                                                                    })
+                                                                    if (!found) {
+                                                                        temp.push(cue._id)
+                                                                    }
+                                                                    console.log(temp)
+                                                                    setCueIds(temp)
+                                                                }}
+                                                                remove={() => {
+                                                                    const temp = JSON.parse(JSON.stringify(cueIds))
+                                                                    const upd = temp.filter((i: any) => {
+                                                                        return i !== cue._id
+                                                                    })
+                                                                    setCueIds(upd)
+                                                                }}
                                                                 fadeAnimation={props.fadeAnimation}
                                                                 updateModal={() => {
                                                                     props.openUpdate(

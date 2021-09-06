@@ -656,7 +656,7 @@ const styles = StyleSheet.create({
         color: '#2f2f3c',
         height: 22,
         paddingHorizontal: 20,
-        backgroundColor: '#F8F9FA',
+        backgroundColor: '#fff',
         lineHeight: 22,
         fontFamily: 'inter'
     },

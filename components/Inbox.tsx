@@ -19,6 +19,7 @@ import Multiselect from 'multiselect-react-dropdown';
 import { PreferredLanguageText } from '../helpers/LanguageContext';
 import alert from '../components/Alert';
 import { Ionicons } from '@expo/vector-icons';
+import FileUpload from './UploadFiles';
 
 const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -26,6 +27,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
     const [loadingChats, setLoadingChats] = useState(true)
     const [chats, setChats] = useState<any[]>([])
     const [userId, setUserId] = useState('')
+    const [avatar, setAvatar] = useState('')
     const [fullName, setFullName] = useState('')
     const [chat, setChat] = useState<any[]>([])
     const [showChat, setShowChat] = useState(false)
@@ -36,7 +38,10 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
     const [roleFilter, setRoleFilter] = useState('')
     const [gradeFilter, setGradeFilter] = useState('')
     const [sectionFilter, setSectionFilter] = useState('')
+
     const [channelFilter, setChannelFilter] = useState('')
+    const [filterChannelName, setFilterChannelName] = useState('')
+    const [filterChannelId, setFilterChannelId] = useState('')
 
     const grades = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
     const sections = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",]
@@ -52,6 +57,11 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
             user = JSON.parse(u)
             server = fetchAPI(user._id)
             setUserId(user._id)
+            if (user.avatar) {
+                setAvatar(user.avatar)
+            } else {
+                setAvatar('https://cues-files.s3.amazonaws.com/images/default.png')
+            }
             setFullName(user.fullName)
         } else {
             return
@@ -102,6 +112,11 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
         })
     }, [])
 
+    const reload = useCallback(() => {
+        loadUsers()
+        loadChats()
+    }, [loadUsers, loadChats])
+
     const loadGroupChat = useCallback(async (groupUsers, groupId) => {
         const u = await AsyncStorage.getItem('user')
         if (u) {
@@ -125,7 +140,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                             user: {
                                 _id: msg.sentBy,
                                 name: msg.displayName,
-                                avatar: msg.avatar,
+                                avatar: msg.avatar ? msg.avatar : 'https://cues-files.s3.amazonaws.com/images/default.png',
                             },
                         })
                     })
@@ -251,7 +266,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                             user: {
                                 _id: msg.sentBy,
                                 name: msg.displayName,
-                                avatar: 'https://placeimg.com/140/140/any',
+                                avatar: msg.avatar ? msg.avatar : 'https://cues-files.s3.amazonaws.com/images/default.png',
                             },
                         })
                     })
@@ -323,7 +338,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                             user: {
                                 _id: msg.sentBy,
                                 name: msg.displayName,
-                                avatar: 'https://placeimg.com/140/140/any',
+                                avatar: msg.avatar ? msg.avatar : 'https://cues-files.s3.amazonaws.com/images/default.png',
                             },
                         })
                     })
@@ -338,8 +353,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
     }, [])
 
     useEffect(() => {
-        loadUsers()
-        loadChats()
+        reload()
     }, [])
 
     let options = users.map((sub: any) => {
@@ -459,6 +473,19 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                             <Ionicons name='chatbubble-outline' size={25} color='#3b64f8' /> Chats
                                         </Text>
                                         <TouchableOpacity
+                                            onPress={() => reload()}
+                                            style={{
+                                                paddingRight: 20,
+                                                paddingTop: 7
+                                            }}
+                                        >
+                                            <Text style={{
+                                                lineHeight: 25,
+                                            }}>
+                                                <Ionicons name='reload-outline' size={20} />
+                                            </Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity
                                             onPress={() => {
                                                 if (showChat || showNewGroup) {
                                                     loadChats()
@@ -505,7 +532,23 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                     onSend={messages => onSend(messages)}
                                                     user={{
                                                         _id: userId,
+                                                        avatar
                                                     }}
+                                                    renderActions={() => (
+                                                        <View style={{
+                                                            marginTop: -10
+                                                        }}>
+                                                            <FileUpload
+                                                                onUpload={(u: any, t: any) => {
+                                                                    const title = prompt('Enter title and click on OK to share.')
+                                                                    const obj = { url: u, type: t, title: (title + '.' + t) };
+                                                                    onSend([{
+                                                                        text: JSON.stringify(obj)
+                                                                    }])
+                                                                }}
+                                                            />
+                                                        </View>
+                                                    )}
                                                 />
                                             </View> :
                                             (
@@ -671,12 +714,18 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                             <View style={{ backgroundColor: '#fff', paddingLeft: width < 768 ? 0 : 20 }}>
                                                 <View style={{ flexDirection: 'row', backgroundColor: '#fff' }}>
                                                     <Menu
-                                                        onSelect={(channel: any) => {
-
+                                                        onSelect={(sub: any) => {
+                                                            if (sub === '') {
+                                                                setFilterChannelName('')
+                                                                setFilterChannelId('')
+                                                            } else {
+                                                                setFilterChannelId(sub.channelId)
+                                                                setFilterChannelName(sub.channelName)
+                                                            }
                                                         }}>
                                                         <MenuTrigger>
                                                             <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#2f2f3c' }}>
-                                                                Channel <Ionicons name='caret-down' size={14} />
+                                                                {filterChannelName === '' ? 'All' : filterChannelName} <Ionicons name='caret-down' size={14} />
                                                             </Text>
                                                         </MenuTrigger>
                                                         <MenuOptions customStyles={{
@@ -917,6 +966,15 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                             }}>
                                                 {
                                                     sectionFiltered.map((user: any) => {
+                                                        if (filterChannelId !== '') {
+                                                            const id = user.channelIds
+                                                                ? user.channelIds.find((id: any) => {
+                                                                    return id === filterChannelId
+                                                                }) : undefined
+                                                            if (!id) {
+                                                                return null
+                                                            }
+                                                        }
                                                         return <TouchableOpacity
                                                             onPress={() => {
                                                                 loadNewChat(user._id)
@@ -953,21 +1011,6 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                     {user.email}
                                                                 </Text>
                                                             </View>
-                                                            {/* <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                                                <Text style={{ fontSize: 12, lineHeight: 25, paddingHorizontal: 20 }} ellipsizeMode='tail'>
-                                                                    {user.role}
-                                                                </Text>
-                                                            </View>
-                                                            <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                                                <Text style={{ fontSize: 12, lineHeight: 25, paddingHorizontal: 20 }} ellipsizeMode='tail'>
-                                                                    {user.grade}
-                                                                </Text>
-                                                            </View>
-                                                            <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                                                <Text style={{ fontSize: 12, lineHeight: 25, paddingHorizontal: 20 }} ellipsizeMode='tail'>
-                                                                    {user.section}
-                                                                </Text>
-                                                            </View> */}
                                                         </TouchableOpacity>
                                                     })
                                                 }

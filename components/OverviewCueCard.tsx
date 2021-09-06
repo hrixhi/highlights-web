@@ -52,13 +52,28 @@ const OverviewCueCard: React.FunctionComponent<{ [label: string]: any }> = (prop
         }
     }, [props.cue])
 
+    const checked = props.cueIds.find((id: any) => {
+        return id.toString().trim() === props.cue._id.toString().trim()
+    })
+
     return (
         <View
             style={styleObject.swiper}
         >
             <TouchableOpacity
                 key={'textPage'}
-                onPress={() => props.updateModal()}
+                onPress={() => {
+                    if (props.editFolderChannelId === props.cue.channelId) {
+                        if (checked) {
+                            props.remove()
+                        } else {
+                            props.add()
+                        }
+                    } else {
+                        props.updateModal()
+                    }
+                }}
+                onLongPress={() => props.onLongPress()}
                 style={styleObject.card}>
                 <View style={styleObject.text}>
                     <View style={styleObject.dateContainer}>
@@ -156,6 +171,16 @@ const OverviewCueCard: React.FunctionComponent<{ [label: string]: any }> = (prop
                         <View
                             style={{ flexDirection: 'row', height: '15%', backgroundColor: '#F8F9FA', justifyContent: 'flex-end' }}
                         >
+                            {
+                                props.editFolderChannelId === props.cue.channelId ?
+                                    <input
+                                        disabled={true}
+                                        style={{ paddingRight: 20 }}
+                                        type='checkbox'
+                                        checked={checked ? true : false}
+                                        value={checked ? "true" : "false"}
+                                    /> : null
+                            }
                             {
                                 props.cue.status && (props.cue.status !== 'read' && props.cue.status !== 'submitted')
                                     ?

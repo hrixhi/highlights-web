@@ -901,6 +901,10 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           // delete cueInput.gradeWeight;
           // delete cueInput.submission;
           delete cueInput.comment;
+
+          // this change is propagated only when the user actively changes folder structure...
+          delete cueInput.folderId; 
+
           delete cueInput.unreadThreads;
           // delete cueInput.createdBy;
           // delete cueInput.original;
@@ -1552,8 +1556,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 openModal('Profile')
               }}
               reloadData={() => {
-                loadData()
-                openModal('Walkthrough')
+                loadDataFromCloud()
               }}
               cues={dateFilteredCues}
               handleFilterChange={(choice: any) => handleFilterChange(choice)}
@@ -1569,6 +1572,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               openUpdate={(index: any, key: any, pageNumber: any, _id: any, by: any, cId: any) => openUpdate(index, key, pageNumber, _id, by, cId)}
               calendarCues={cues}
               openCueFromCalendar={openCueFromCalendar}
+              key={option.toString() + dateFilteredCues.toString() + subscriptions.toString() + cues.toString()}
             />
           </View>
         </View> : null

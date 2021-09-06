@@ -443,6 +443,20 @@ mutation($userId: String!, $users: [String!]!, $channelId: String!) {
   }
 }
 `
+export const creatFolder = gql`
+mutation($cueIds: [String!]!) {
+  folder {
+    create(cueIds: $cueIds)
+  }
+}
+`
+export const updateFolder = gql`
+mutation($cueIds: [String!]!, $folderId: String!) {
+  folder {
+    update(cueIds: $cueIds, folderId: $folderId)
+  }
+}
+`
 /**
  * ALL
  * QUERIES
@@ -483,6 +497,7 @@ export const getCues = gql`
         cue
         color
         channelId
+        folderId
         customCategory
         frequency
         date
@@ -586,6 +601,7 @@ export const getThreadWithReplies = gql`
         displayName
         fullName
         isPrivate
+        avatar
         anonymous
       }
     }
@@ -664,6 +680,7 @@ export const getCuesFromCloud = gql`
         unreadThreads
         frequency
         date
+        folderId
         endPlayAt
         channelName
         starred
@@ -1143,6 +1160,7 @@ export const getAllUsers = gql`
        role
        grade
        section
+       channelIds
      }
    }
  }

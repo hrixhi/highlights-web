@@ -38,7 +38,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
     const [filterChoice, setFilterChoice] = useState('All')
     const unparsedSubs: any[] = JSON.parse(JSON.stringify(props.subscribers))
     const [subscribers] = useState<any[]>(unparsedSubs.reverse())
-    const categories = ['All', 'Read', 'Delivered', 'Not Delivered']
+    const categories = ['All', 'Read', 'Submitted', 'Graded']
     const categoriesLanguageMap: { [label: string]: string } = {
         All: 'all',
         Read: 'read',
@@ -1087,6 +1087,56 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                         key={key}
                     >
                         {
+                            !props.cueId || showSubmission ? null :
+                                <View style={{
+                                    width: '100%',
+                                    height: 70,
+                                    backgroundColor: 'white',
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    flexDirection: 'column',
+                                    maxWidth: 500
+                                }}>
+                                    <Menu
+                                        style={{ alignSelf: 'flex-end' }}
+                                        onSelect={(cat: any) => setFilterChoice(cat)}>
+                                        <MenuTrigger>
+                                            <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#818385' }}>
+                                                {filterChoice === '' ? 'All' : filterChoice}<Ionicons name='caret-down' size={14} />
+                                            </Text>
+                                        </MenuTrigger>
+                                        <MenuOptions customStyles={{
+                                            optionsContainer: {
+                                                padding: 10,
+                                                borderRadius: 15,
+                                                shadowOpacity: 0,
+                                                borderWidth: 1,
+                                                borderColor: '#F8F9FA',
+                                                overflow: 'scroll',
+                                                maxHeight: '100%'
+                                            }
+                                        }}>
+                                            {/* <MenuOption
+                                                value={''}>
+                                                <Text>
+                                                    All
+                                                </Text>
+                                            </MenuOption> */}
+                                            {
+                                                categories.map((category: any) => {
+                                                    return <MenuOption
+                                                        value={category}>
+                                                        <Text>
+                                                            {category}
+                                                        </Text>
+                                                    </MenuOption>
+                                                })
+                                            }
+                                        </MenuOptions>
+                                    </Menu>
+                                </View>
+                        }
+                        {
                             !showSubmission ?
                                 (
                                     showChat ?
@@ -1223,6 +1273,9 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                     }
                                                     {
                                                         filteredSubscribers.map((subscriber: any, index: any) => {
+                                                            if (subscriber.fullName !== 'submitted' && subscriber.fullName !== 'read' && subscriber.fullName !== 'graded') {
+                                                                return null
+                                                            }
                                                             return <View style={styles.col} key={filterChoice + key + index}>
                                                                 <SubscriberCard
                                                                     chat={!props.cueId || props.cueId === '' ? true : false}
@@ -1472,54 +1525,6 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             }
                                         </ScrollView>
                                     </View>
-                        }
-                        {
-                            !props.cueId || showSubmission ? null :
-                                <View style={{
-                                    width: '100%',
-                                    height: 70,
-                                    backgroundColor: 'white',
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    flexDirection: 'column'
-                                }}>
-                                    <Menu
-                                        onSelect={(cat: any) => setFilterChoice(cat)}>
-                                        <MenuTrigger>
-                                            <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#818385' }}>
-                                                {filterChoice === '' ? 'All' : filterChoice}<Ionicons name='caret-down' size={14} />
-                                            </Text>
-                                        </MenuTrigger>
-                                        <MenuOptions customStyles={{
-                                            optionsContainer: {
-                                                padding: 10,
-                                                borderRadius: 15,
-                                                shadowOpacity: 0,
-                                                borderWidth: 1,
-                                                borderColor: '#F8F9FA',
-                                                overflow: 'scroll',
-                                                maxHeight: '100%'
-                                            }
-                                        }}>
-                                            {/* <MenuOption
-                                                value={''}>
-                                                <Text>
-                                                    All
-                                                </Text>
-                                            </MenuOption> */}
-                                            {
-                                                categories.map((category: any) => {
-                                                    return <MenuOption
-                                                        value={category}>
-                                                        <Text>
-                                                            {category}
-                                                        </Text>
-                                                    </MenuOption>
-                                                })
-                                            }
-                                        </MenuOptions>
-                                    </Menu>
-                                </View>
                         }
                     </View>) :
                     <View style={{ width: 500, maxWidth: '100%' }}>

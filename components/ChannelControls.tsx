@@ -381,7 +381,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             <TextInput
                                 value={name}
                                 placeholder={''}
-                                autoCompleteType='off'
+                                autoCompleteType={'off'}
                                 onChangeText={val => {
                                     setName(val)
                                     setPasswordRequired(false)
@@ -403,7 +403,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     </Text>
                                     <TextInput
                                         value={password}
-                                        autoCompleteType='off'
+                                        autoCompleteType={'off'}
                                         placeholder={option === 'Subscribe' ? '' : `(${PreferredLanguageText('optional')})`}
                                         onChangeText={val => setPassword(val)}
                                         placeholderTextColor={'#818385'}
