@@ -274,7 +274,7 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     return (
         <ScrollView style={{
             width: '100%',
-            height: windowHeight,
+            maxHeight: 600,
             backgroundColor: 'white',
             borderTopRightRadius: 0,
             borderTopLeftRadius: 0
@@ -289,7 +289,7 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             <Animated.View style={{
                 opacity: modalAnimation,
                 width: '100%',
-                height: windowHeight,
+                maxHeight: 600,
                 backgroundColor: 'white',
                 borderTopRightRadius: 0,
                 borderTopLeftRadius: 0

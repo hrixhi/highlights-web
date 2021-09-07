@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Animated, Keyboard, Dimensions } from 'react-native';
+import { Animated, Keyboard } from 'react-native';
 import { Text, View } from './Themed';
-import { Ionicons } from '@expo/vector-icons';
 import ChannelControls from './ChannelControls';
 
 const Channels: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {

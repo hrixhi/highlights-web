@@ -430,7 +430,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         }}>
 
                                         <Text style={styles.all}>
-                                            Details
+                                            Settings
                                         </Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity
@@ -548,22 +548,25 @@ export default Update
 
 const styles: any = StyleSheet.create({
     all: {
-        fontSize: 14,
-        color: '#2f2f3c',
-        height: 22,
+        fontSize: 13,
+        color: '#43434F',
+        height: 24,
         paddingHorizontal: 20,
         backgroundColor: '#fff',
-        lineHeight: 22,
-        fontFamily: 'inter'
+        lineHeight: 24,
+        fontFamily: 'inter',
+        textTransform: 'uppercase'
     },
     allGrayFill: {
-        fontSize: 14,
+        fontSize: 13,
         color: '#fff',
         paddingHorizontal: 20,
-        borderRadius: 10,
-        backgroundColor: '#2f2f3c',
-        lineHeight: 22,
-        fontFamily: 'inter'
+        borderRadius: 12,
+        backgroundColor: '#43434F',
+        lineHeight: 24,
+        height: 24,
+        fontFamily: 'inter',
+        textTransform: 'uppercase'
     },
     badge: {
         position: 'absolute',

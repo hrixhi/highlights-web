@@ -124,9 +124,9 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 iconSize={12}
                 editor={RichText}
                 disabled={false}
-                iconTint={"#2f2f3c"}
-                selectedIconTint={"#2f2f3c"}
-                disabledIconTint={"#2f2f3c"}
+                iconTint={"#43434f"}
+                selectedIconTint={"#43434f"}
+                disabledIconTint={"#43434f"}
                 actions={
                     [
                       actions.setBold,
@@ -212,7 +212,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             }}
                             onPress={() => insertEquation()}
                         >
-                            <Ionicons name="add-circle-outline" color="#2F2F3C" size={20} />
+                            <Ionicons name="add-circle-outline" color="#43434f" size={20} />
                         </TouchableOpacity>
                     </View> : null)
                 }
@@ -240,7 +240,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     editorStyle={{
                         backgroundColor: "#fff",
                         placeholderColor: "#a2a2ac",
-                        color: "#2F2F3C",
+                        color: "#43434f",
                         contentCSSText: "font-size: 14px;",
                     }}
                     initialContentHTML={audioVideoQuestion ? content : problems[index].question}
@@ -442,7 +442,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     style={{ width: 100, flexDirection: 'row', }}
                     onPress={() => addHeader(index)}
                 >
-                    {/* <Ionicons name='add-circle' size={19} color={"#2F2F3C"} /> */}
+                    {/* <Ionicons name='add-circle' size={19} color={"#43434f"} /> */}
                     <Text
                         style={{
                             marginLeft: 10,
@@ -452,7 +452,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             // paddingLeft: 20,
                             flex: 1,
                             lineHeight: 25,
-                            color: '#2f2f3c',
+                            color: '#43434f',
                             paddingLeft: 12
                         }}>
                         Add Header
@@ -560,7 +560,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         {renderHeaderOption(index)}
                         <View style={{ flexDirection: 'row' }}>
                             <View style={{ paddingTop: 15 }}>
-                                <Text style={{ color: '#2f2f3c', fontSize: 15, paddingBottom: 25, marginRight: 10, paddingTop: 12 }}>
+                                <Text style={{ color: '#43434f', fontSize: 15, paddingBottom: 25, marginRight: 10, paddingTop: 12 }}>
                                     {index + 1}.
                                 </Text>
                             </View>
@@ -687,7 +687,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                     style={{
                                                         fontFamily: "inter",
                                                         fontSize: 14,
-                                                        color: "#2F2F3C",
+                                                        color: "#43434f",
                                                     }}
                                                 >
                                                     {questionTypeLabels[questionType]}
@@ -997,7 +997,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 props.setProblems(updatedProblems)
                             }}
                             style={{ width: 100, flexDirection: 'row', marginLeft: 20, marginTop: 20 }} >
-                            {/* <Ionicons name='add-circle' size={19} color={"#2F2F3C"} /> */}
+                            {/* <Ionicons name='add-circle' size={19} color={"#43434f"} /> */}
                             <Text
                                 style={{
                                     // marginLeft: 10,

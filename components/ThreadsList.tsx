@@ -202,7 +202,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         ? <Text
                             ellipsizeMode="tail"
                             style={{
-                                fontSize: 25,
+                                fontSize: 23,
                                 paddingBottom: 20,
                                 fontFamily: 'inter',
                                 // textTransform: "uppercase",
@@ -237,7 +237,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                         borderRadius: 15,
                                         shadowOpacity: 0,
                                         borderWidth: 1,
-                                        borderColor: '#F8F9FA',
+                                        borderColor: '#f8f9fa',
                                         overflow: 'scroll',
                                         maxHeight: '100%'
                                     }
@@ -293,7 +293,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 textTransform: 'uppercase'
                             }}>
                                 POST <Ionicons name='chatbox-ellipses-outline' size={12} />
-                                {/* <Ionicons name='create-outline' size={20} color={'#2f2f3c'} /> */}
+                                {/* <Ionicons name='create-outline' size={20} color={'#43434F'} /> */}
                             </Text>
                         </TouchableOpacity> : null
                 }
@@ -327,7 +327,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                     {
                                         threads.length === 0 ?
                                             <View style={{ backgroundColor: 'white', flex: 1 }}>
-                                                <Text style={{ width: '100%', color: '#818385', fontSize: 22, paddingTop: 100, paddingBottom: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                                <Text style={{ width: '100%', color: '#818385', fontSize: 23, paddingTop: 100, paddingBottom: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                                                     {
                                                         !props.cueId ? PreferredLanguageText('noPosts') : PreferredLanguageText('noComments')
                                                     }
@@ -479,7 +479,7 @@ const styleObject = () => {
             backgroundColor: 'white',
             paddingHorizontal: 10,
             height: 22,
-            borderRadius: 10,
+            borderRadius: 12,
             borderWidth: 1,
             borderColor: '#818385',
             color: 'white'

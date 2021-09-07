@@ -21,6 +21,7 @@ import Alert from "../components/Alert";
 import AttendanceList from "./AttendanceList";
 import moment from "moment";
 import { PreferredLanguageText } from "../helpers/LanguageContext";
+import Discussion from "./Discussion";
 
 const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const [modalAnimation] = useState(new Animated.Value(0));
@@ -277,7 +278,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                         Linking.openURL(date.url)
                                     }
                                 }}
-                                style={{ flexDirection: 'row', backgroundColor: '#F8F9FA', width: '90%' }}>
+                                style={{ flexDirection: 'row', backgroundColor: '#f8f9fa', width: '90%' }}>
                                 <Image
                                     height={45}
                                     width={75}
@@ -285,7 +286,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                     source={{ uri: date.thumbnail }}
                                     resizeMode={'contain'}
                                 />
-                                <View style={{ backgroundColor: '#F8F9FA', width: '100%', flexDirection: 'row', display: 'flex', marginLeft: 20 }}>
+                                <View style={{ backgroundColor: '#f8f9fa', width: '100%', flexDirection: 'row', display: 'flex', marginLeft: 20 }}>
                                     <Text ellipsizeMode={'tail'}
                                         numberOfLines={1}
                                         style={styles.title}>
@@ -295,7 +296,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                             </TouchableOpacity>
                             {
                                 isOwner ?
-                                    <TouchableOpacity style={{ backgroundColor: '#F8F9FA', width: '10%', }}
+                                    <TouchableOpacity style={{ backgroundColor: '#f8f9fa', width: '10%', }}
                                         onPress={() => {
                                             Alert("Delete past lecture ?", "", [
                                                 {
@@ -368,7 +369,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                     <Text
                         ellipsizeMode="tail"
                         style={{
-                            fontSize: 25,
+                            fontSize: 23,
                             paddingBottom: 20,
                             fontFamily: 'inter',
                             // textTransform: "uppercase",
@@ -377,7 +378,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                             flex: 1,
                             lineHeight: 25
                         }}>
-                        {PreferredLanguageText("classroom")}
+                        Meet
                     </Text>
                     <TouchableOpacity
                         onPress={() => {
@@ -394,9 +395,9 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                         <Text style={{
                             textAlign: 'center',
                             lineHeight: 30,
-                            color: viewChannelAttendance ? '#2f2f3c' : '#fff',
+                            color: viewChannelAttendance ? '#43434F' : '#fff',
                             fontSize: 12,
-                            backgroundColor: viewChannelAttendance ? '#F8F9FA' : '#53BE6D',
+                            backgroundColor: viewChannelAttendance ? '#f8f9fa' : '#53BE6D',
                             paddingHorizontal: 25,
                             fontFamily: 'inter',
                             height: 30,
@@ -473,9 +474,9 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                                 style={{
                                                     textAlign: "center",
                                                     lineHeight: 35,
-                                                    color: "#2f2f3c",
+                                                    color: "#43434F",
                                                     fontSize: 12,
-                                                    backgroundColor: "#F8F9FA",
+                                                    backgroundColor: "#f8f9fa",
                                                     paddingHorizontal: 25,
                                                     fontFamily: "inter",
                                                     height: 35,
@@ -516,9 +517,9 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                                 style={{
                                                     textAlign: "center",
                                                     lineHeight: 35,
-                                                    color: "#2f2f3c",
+                                                    color: "#43434F",
                                                     fontSize: 12,
-                                                    backgroundColor: "#F8F9FA",
+                                                    backgroundColor: "#f8f9fa",
                                                     paddingHorizontal: 25,
                                                     fontFamily: "inter",
                                                     height: 35,
@@ -535,18 +536,20 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                         }
                     </View>
                     {
-                        <View style={{ borderTopColor: '#F8F9FA', borderTopWidth: 1, marginTop: 25 }}>
+                        <View style={{ borderTopColor: '#f8f9fa', borderTopWidth: 1, marginTop: 25 }}>
                             <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 25 }}>
                             </Text>
                             <Text style={{
-                                lineHeight: 23,
-                                marginRight: 10,
-                                paddingBottom: 40,
-                                color: '#2f2f3c',
-                                fontSize: 11,
-                                textTransform: 'uppercase'
+                                fontSize: 23,
+                                paddingBottom: 20,
+                                fontFamily: 'inter',
+                                // textTransform: "uppercase",
+                                // paddingLeft: 10,
+                                paddingTop: 2,
+                                flex: 1,
+                                lineHeight: 25
                             }}>
-                                RECORDINGS
+                                Past Lectures
                             </Text>
                             {
 
@@ -608,7 +611,29 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
         />
     );
 
-    return !viewChannelAttendance ? mainClassroomView : attendanceListView;
+    const width = Dimensions.get('window').width
+
+    return <View style={{ width: '100%', flexDirection: width < 768 ? 'column' : 'row' }}>
+        <View style={{
+            backgroundColor: 'white',
+            width: width < 768 ? '100%' : '40%',
+            paddingRight: width < 768 ? 0 : 20,
+        }}>
+            {!viewChannelAttendance ? mainClassroomView : attendanceListView}
+        </View>
+        <View style={{
+            backgroundColor: '#fff', width: width < 768 ? '100%' : '60%',
+            paddingLeft: width < 768 ? 0 : 20,
+            borderLeftWidth: width < 768 ? 0 : 1, borderLeftColor: '#eeeeee',
+        }}>
+            <Discussion
+                channelId={props.channelId}
+                filterChoice={props.filterChoice}
+                channelCreatedBy={props.channelCreatedBy}
+                refreshUnreadDiscussionCount={() => props.refreshUnreadDiscussionCount()}
+            />
+        </View>
+    </View>;
 };
 
 export default Meeting;
@@ -650,7 +675,7 @@ const styles = StyleSheet.create({
         maxWidth: '100%',
         borderRadius: 15,
         padding: 13,
-        backgroundColor: '#F8F9FA',
+        backgroundColor: '#f8f9fa',
         flexDirection: 'row',
         justifyContent: 'space-between'
     },
@@ -658,14 +683,14 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'column',
         flex: 1,
-        backgroundColor: '#F8F9FA',
+        backgroundColor: '#f8f9fa',
     },
     title: {
         fontFamily: 'inter',
         fontSize: 13,
         width: '100%',
         paddingTop: 5,
-        color: '#2f2f3c'
+        color: '#43434F'
     },
     description: {
         fontSize: 13,

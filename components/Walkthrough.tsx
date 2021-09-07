@@ -7,6 +7,7 @@ import { fetchAPI } from '../graphql/FetchAPI';
 import { getRole } from '../graphql/QueriesAndMutations';
 import Collapse from 'react-collapse'
 import { Ionicons } from '@expo/vector-icons';
+import Profile from './Profile';
 
 const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -318,17 +319,30 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     paddingTop: 30
                 }}>
                     <View style={{
-                        width: Dimensions.get('window').width < 768 ? '100%' : '30%',
-                    }}
-                    >
+                        width: Dimensions.get('window').width < 768 ? '100%' : '50%',
+                    }}>
+                        <Profile
+                            closeModal={() => props.closeModal()}
+                            saveDataInCloud={() => props.saveDataInCloud()}
+                            reOpenProfile={() => props.reOpenProfile()}
+                            reloadData={() => props.reloadData()}
+                        />
+                    </View>
+                    <View style={{
+                        width: Dimensions.get('window').width < 768 ? '100%' : '50%',
+                        paddingLeft: Dimensions.get('window').width < 768 ? 0 : 20,
+                        marginLeft: Dimensions.get('window').width < 768 ? 0 : 20,
+                        borderLeftWidth: Dimensions.get('window').width < 768 ? 0 : 1,
+                        borderColor: '#eeeeee'
+                    }}>
                         <View style={{ backgroundColor: "white", flexDirection: "row", }}>
                             <View style={{ flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row', flex: 1 }}>
                                 <Text
                                     ellipsizeMode="tail"
                                     style={{
                                         marginRight: 10,
-                                        color: '#2f2f3c',
-                                        fontSize: 25,
+                                        color: '#43434F',
+                                        fontSize: 23,
                                         paddingBottom: 20,
                                         fontFamily: 'inter',
                                         flex: 1,
@@ -342,9 +356,8 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         </View>
                         <ScrollView
                             contentContainerStyle={{
-                                marginTop: 25, backgroundColor: '#fff', 
-                                height: windowHeight - 50,
-                                maxWidth: 650, paddingBottom: 75,
+                                marginTop: 25, backgroundColor: '#fff',
+                                height: windowHeight - 50, paddingBottom: 75,
                                 width: '100%'
                             }}
                         >
@@ -422,31 +435,6 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             }
                         </ScrollView>
                     </View>
-                    <View style={{
-                        width: Dimensions.get('window').width < 768 ? '100%' : '70%',
-                        paddingLeft: Dimensions.get('window').width < 768 ? 0 : 20,
-                        marginLeft: Dimensions.get('window').width < 768 ? 0 : 20,
-                        borderLeftWidth: Dimensions.get('window').width < 768 ? 0 : 1,
-                        borderColor: '#eeeeee'
-                    }}>
-                        <View style={{ flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row', flex: 1 }}>
-                            <Text
-                                ellipsizeMode="tail"
-                                style={{
-                                    marginRight: 10,
-                                    color: '#2f2f3c',
-                                    fontSize: 25,
-                                    paddingBottom: 20,
-                                    fontFamily: 'inter',
-                                    flex: 1,
-                                    flexDirection: 'row',
-                                    lineHeight: 25,
-                                    height: 65
-                                }}>
-                                <Ionicons name='compass-outline' size={25} color='#3b64f8' /> Tutorials
-                            </Text>
-                        </View>
-                    </View>
                 </View>
             </View>
             <MessengerCustomerChat pageId="109965671259610" appId="746023139417168" themeColor="#3B64F8" />
@@ -461,7 +449,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         height: '100%',
         width: '100%',
-        maxWidth: 700,
+        // maxWidth: 700,
         paddingHorizontal: Dimensions.get("window").width < 768 ? 0 : 50,
         // alignSelf: 'center',
         borderTopRightRadius: 0,

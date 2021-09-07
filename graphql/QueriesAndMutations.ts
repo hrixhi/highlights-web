@@ -858,6 +858,7 @@ export const getChats = gql`
         unreadMessages
         userNames {
           fullName
+          avatar
         }
         lastMessage
         lastMessageTime

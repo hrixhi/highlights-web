@@ -35,6 +35,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     const styles = styleObject()
     const [userId, setUserId] = useState('')
+    const [avatar, setAvatar] = useState('')
 
     const [searchTerm, setSearchTerm] = useState('')
     const priorities = [4, 3, 2, 1, 0]
@@ -68,6 +69,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 const u = await AsyncStorage.getItem('user')
                 if (u) {
                     const user = JSON.parse(u)
+                    setAvatar(user.avatar)
                     const server = fetchAPI(user._id)
                     setUserId(user._id)
                 }
@@ -273,7 +275,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 }}
             >
                 <Text style={{
-                    fontSize: 25,
+                    fontSize: 23,
                     paddingBottom: 20,
                     paddingTop: 10,
                     fontFamily: 'inter',
@@ -405,7 +407,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 ind !== 0 ?
                                     <View style={{ flexDirection: 'row', paddingBottom: 20 }}>
                                         <Text style={{
-                                            fontSize: 25,
+                                            fontSize: 23,
                                             paddingBottom: 20,
                                             paddingTop: 10,
                                             fontFamily: 'inter',
@@ -476,7 +478,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                             <Text style={{
                                                                 textAlign: 'center',
                                                                 lineHeight: 30,
-                                                                color: '#2f2f3c',
+                                                                color: '#43434F',
                                                                 fontSize: 12,
                                                                 backgroundColor: '#f4f4f6',
                                                                 paddingHorizontal: 25,
@@ -494,7 +496,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 }
                                                 {
                                                     collapseMap[key] ?
-                                                        <View style={{ backgroundColor: '#fff', marginTop: -5, paddingRight: 5 }}>
+                                                        <View style={{ backgroundColor: '#fff', marginTop: -5, paddingRight: 20 }}>
                                                             <View style={{ flexDirection: 'row', justifyContent: 'flex-start', display: 'flex', backgroundColor: '#fff' }}>
                                                                 <Menu
                                                                     onSelect={(cat: any) => {
@@ -503,7 +505,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                         setSelectedCategories(temp)
                                                                     }}>
                                                                     <MenuTrigger>
-                                                                        <Text style={{ fontFamily: 'inter', fontSize: 15, color: '#2f2f3c', paddingTop: 5 }}>
+                                                                        <Text style={{ fontFamily: 'inter', fontSize: 15, color: '#43434F', paddingTop: 5 }}>
                                                                             {selectedCategories[key] === '' ? 'All' : selectedCategories[key]}<Ionicons name='caret-down' size={15} />
                                                                         </Text>
                                                                     </MenuTrigger>
@@ -513,7 +515,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                             borderRadius: 15,
                                                                             shadowOpacity: 0,
                                                                             borderWidth: 1,
-                                                                            borderColor: '#F8F9FA',
+                                                                            borderColor: '#f8f9fa',
                                                                             // overflow: 'scroll',
                                                                             maxHeight: '100%'
                                                                         }
@@ -539,112 +541,62 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                     </MenuOptions>
                                                                 </Menu>
                                                             </View>
-                                                            <Text style={{ fontSize: 10, color: '#2f2f3c', paddingTop: 7 }}>
+                                                            <Text style={{ fontSize: 10, color: '#43434F', paddingTop: 7 }}>
                                                                 Category
                                                             </Text>
                                                         </View>
                                                         : null
                                                 }
-                                                <Menu
-                                                    onSelect={(option: any) => {
-                                                        switch (option) {
-                                                            case 'Classroom':
-                                                                props.setChannelFilterChoice('All')
-                                                                props.handleFilterChange(key.split('-SPLIT-')[0])
-                                                                props.setChannelId(key.split('-SPLIT-')[1])
-                                                                props.setChannelCreatedBy(key.split('-SPLIT-')[2])
-                                                                props.openMeeting()
-                                                                props.hideHome()
-                                                                break;
-                                                            case 'Inbox':
-                                                                props.setChannelFilterChoice('All')
-                                                                props.handleFilterChange(key.split('-SPLIT-')[0])
-                                                                props.setChannelId(key.split('-SPLIT-')[1])
-                                                                props.setChannelCreatedBy(key.split('-SPLIT-')[2])
-                                                                props.openSubscribers()
-                                                                props.hideHome()
-                                                                break;
-                                                            case 'Discussion':
-                                                                props.setChannelFilterChoice('All')
-                                                                props.handleFilterChange(key.split('-SPLIT-')[0])
-                                                                props.setChannelId(key.split('-SPLIT-')[1])
-                                                                props.setChannelCreatedBy(key.split('-SPLIT-')[2])
-                                                                props.openDiscussion()
-                                                                props.hideHome()
-                                                                break;
-                                                            case 'Grades':
+                                                {
+                                                    key.split('-SPLIT-')[2] === userId ?
+                                                        <TouchableOpacity
+                                                            style={{ marginRight: 20 }}
+                                                            onPress={() => {
                                                                 props.setChannelFilterChoice('All')
                                                                 props.handleFilterChange(key.split('-SPLIT-')[0])
                                                                 props.setChannelId(key.split('-SPLIT-')[1])
                                                                 props.setChannelCreatedBy(key.split('-SPLIT-')[2])
                                                                 props.openChannelSettings()
                                                                 props.hideHome()
-                                                                break;
-                                                            case 'Settings':
-                                                                props.setChannelFilterChoice('All')
-                                                                props.handleFilterChange(key.split('-SPLIT-')[0])
-                                                                props.setChannelId(key.split('-SPLIT-')[1])
-                                                                props.setChannelCreatedBy(key.split('-SPLIT-')[2])
-                                                                props.openChannelSettings()
-                                                                props.hideHome()
-                                                                break;
-                                                            default:
-                                                                break;
-                                                        }
-                                                    }}>
-                                                    <MenuTrigger>
-                                                        <Text style={{ fontFamily: 'inter', fontSize: 15, color: '#2f2f3c', paddingLeft: 10 }}>
-                                                            <Ionicons name='menu-outline' size={25} />
-                                                        </Text>
-                                                    </MenuTrigger>
-                                                    <MenuOptions customStyles={{
-                                                        optionsContainer: {
-                                                            padding: 10,
-                                                            borderRadius: 15,
-                                                            shadowOpacity: 0,
-                                                            borderWidth: 1,
-                                                            borderColor: '#F8F9FA',
-                                                            overflow: 'scroll',
-                                                            maxHeight: '100%'
-                                                        }
-                                                    }}>
-                                                        <MenuOption
-                                                            value={'Classroom'}>
-                                                            <Text>
-                                                                Classroom
+                                                            }}
+                                                        >
+                                                            <Text style={styles.channelText}>
+                                                                <Ionicons
+                                                                    name='settings-outline' size={19} color={'#43434F'} />
+                                                                {
+                                                                    props.meetingOn ?
+                                                                        <View style={styles.badge} /> : null
+                                                                }
                                                             </Text>
-                                                        </MenuOption>
-                                                        {/* <MenuOption
-                                                            value={'Inbox'}>
-                                                            <Text>
-                                                                Inbox
+                                                            <Text style={{ fontSize: 10, color: '#43434F', textAlign: 'center' }}>
+                                                                Settings
                                                             </Text>
-                                                        </MenuOption> */}
-                                                        <MenuOption
-                                                            value={'Discussion'}>
-                                                            <Text>
-                                                                Discussion
-                                                            </Text>
-                                                        </MenuOption>
-                                                        <MenuOption
-                                                            value={'Grades'}>
-                                                            <Text>
-                                                                Grades
-                                                            </Text>
-                                                        </MenuOption>
-                                                        {
-                                                            key.split('-SPLIT-')[2] === userId ?
-                                                                <MenuOption
-                                                                    value={'Settings'}>
-                                                                    <Text>
-                                                                        Settings
-                                                                    </Text>
-                                                                </MenuOption> : null
-                                                        }
-                                                    </MenuOptions>
-                                                </Menu>
+                                                        </TouchableOpacity>
+                                                        : null
+                                                }
                                                 <TouchableOpacity
-                                                    style={{ marginLeft: 15 }}
+                                                    style={{ marginRight: 20, backgroundColor: '#fff' }}
+                                                    onPress={() => {
+                                                        props.setChannelFilterChoice('All')
+                                                        props.handleFilterChange(key.split('-SPLIT-')[0])
+                                                        props.setChannelId(key.split('-SPLIT-')[1])
+                                                        props.setChannelCreatedBy(key.split('-SPLIT-')[2])
+                                                        props.openMeeting()
+                                                        props.hideHome()
+                                                    }}>
+                                                    <Text style={styles.channelText}>
+                                                        <Ionicons
+                                                            name='chatbubbles-outline' size={19} color={'#43434F'} />
+                                                        {
+                                                            props.meetingOn ?
+                                                                <View style={styles.badge} /> : null
+                                                        }
+                                                    </Text>
+                                                    <Text style={{ fontSize: 10, color: '#43434F', textAlign: 'center' }}>
+                                                        Classroom
+                                                    </Text>
+                                                </TouchableOpacity>
+                                                <TouchableOpacity
                                                     onPress={() => {
                                                         const tempCollapse = JSON.parse(JSON.stringify(collapseMap))
                                                         tempCollapse[key] = !collapseMap[key]
@@ -655,14 +607,17 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     <Text style={{
                                                         textAlign: 'center'
                                                     }}>
-                                                        <Ionicons name={collapseMap[key] ? 'contract-outline' : 'expand-outline'} size={25} color={'#2f2f3c'} />
+                                                        <Ionicons name={collapseMap[key] ? 'contract-outline' : 'expand-outline'} size={19} color={'#43434F'} />
+                                                    </Text>
+                                                    <Text style={{ fontSize: 10, color: '#43434F', textAlign: 'center' }}>
+                                                        {collapseMap[key] ? 'Hide' : 'Expand'}
                                                     </Text>
                                                 </TouchableOpacity>
                                             </View>
                                         </View>
                                     </View> : <View style={{ paddingBottom: 20, flexDirection: 'row', }}>
                                         <Text style={{
-                                            fontSize: 25,
+                                            fontSize: 23,
                                             paddingBottom: 20,
                                             paddingTop: 10,
                                             fontFamily: 'inter',
@@ -675,7 +630,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 height: 18,
                                                 borderRadius: 9,
                                                 marginTop: 1,
-                                                backgroundColor: '#2f2f3c'
+                                                backgroundColor: '#43434F'
                                             }} /> {key}
                                         </Text>
                                         <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', backgroundColor: '#fff', paddingTop: 10 }}>
@@ -690,7 +645,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                     setSelectedCategories(temp)
                                                                 }}>
                                                                 <MenuTrigger>
-                                                                    <Text style={{ fontFamily: 'inter', fontSize: 15, color: '#2f2f3c', paddingTop: 5 }}>
+                                                                    <Text style={{ fontFamily: 'inter', fontSize: 15, color: '#43434F', paddingTop: 5 }}>
                                                                         {selectedCategories[key] === '' ? 'All' : selectedCategories[key]}<Ionicons name='caret-down' size={15} />
                                                                     </Text>
                                                                 </MenuTrigger>
@@ -700,7 +655,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                         borderRadius: 15,
                                                                         shadowOpacity: 0,
                                                                         borderWidth: 1,
-                                                                        borderColor: '#F8F9FA',
+                                                                        borderColor: '#f8f9fa',
                                                                         // overflow: 'scroll',
                                                                         maxHeight: '100%'
                                                                     }
@@ -726,7 +681,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                 </MenuOptions>
                                                             </Menu>
                                                         </View>
-                                                        <Text style={{ fontSize: 10, color: '#2f2f3c', paddingTop: 7 }}>
+                                                        <Text style={{ fontSize: 10, color: '#43434F', paddingTop: 7 }}>
                                                             Category
                                                         </Text>
                                                     </View>
@@ -743,7 +698,10 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     <Text style={{
                                                         textAlign: 'center'
                                                     }}>
-                                                        <Ionicons name={collapseMap[key] ? 'contract-outline' : 'expand-outline'} size={25} color={'#2f2f3c'} />
+                                                        <Ionicons name={collapseMap[key] ? 'contract-outline' : 'expand-outline'} size={19} color={'#43434F'} />
+                                                    </Text>
+                                                    <Text style={{ fontSize: 10, color: '#43434F', textAlign: 'center' }}>
+                                                        {collapseMap[key] ? 'Hide' : 'Expand'}
                                                     </Text>
                                                 </TouchableOpacity>
                                             </View>
@@ -782,62 +740,80 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                             return null
                                                                         } else {
                                                                             // return swiper
-                                                                            return <Swiper
-                                                                                containerStyle={{
-                                                                                    height: 150,
-                                                                                    marginRight: 15,
-                                                                                    width: 150,
-                                                                                    backgroundColor: '#fff',
-                                                                                    alignSelf: 'center'
-                                                                                }}
-                                                                                swipeAreaStyle={{ width: 150, maxWidth: 150 }}
-                                                                                innerContainerStyle={{ width: 150 }}
-                                                                                // slideWrapperStyle={{ width: 150 }}
-                                                                                vertical={false}
-                                                                            >
-                                                                                {
-                                                                                    folderIdsMap[cue.folderId].map((ind: any) => {
-                                                                                        const swiperCue = cueMap[key][ind]
-                                                                                        return <OverviewCueCard
-                                                                                            cueIds={cueIds}
-                                                                                            editFolderChannelId={editFolderChannelId}
-                                                                                            onLongPress={() => onSwiperLongPress(cue, key, swiperCue)}
-                                                                                            add={() => {
-                                                                                                const temp = JSON.parse(JSON.stringify(cueIds))
-                                                                                                const found = temp.find((i: any) => {
-                                                                                                    return i === swiperCue._id
-                                                                                                })
-                                                                                                if (!found) {
-                                                                                                    temp.push(swiperCue._id)
-                                                                                                }
-                                                                                                console.log(temp)
-                                                                                                setCueIds(temp)
-                                                                                            }}
-                                                                                            remove={() => {
-                                                                                                const temp = JSON.parse(JSON.stringify(cueIds))
-                                                                                                const upd = temp.filter((i: any) => {
-                                                                                                    return i !== swiperCue._id
-                                                                                                })
-                                                                                                setCueIds(upd)
-                                                                                            }}
-                                                                                            fadeAnimation={props.fadeAnimation}
-                                                                                            updateModal={() => {
-                                                                                                props.openUpdate(
-                                                                                                    swiperCue.key,
-                                                                                                    swiperCue.index,
-                                                                                                    0,
-                                                                                                    swiperCue._id,
-                                                                                                    (swiperCue.createdBy ? swiperCue.createdBy : ''),
-                                                                                                    (swiperCue.channelId ? swiperCue.channelId : '')
-                                                                                                )
-                                                                                            }}
-                                                                                            cue={swiperCue}
-                                                                                            channelId={props.channelId}
-                                                                                            subscriptions={props.subscriptions}
-                                                                                        />
-                                                                                    })
-                                                                                }
-                                                                            </Swiper>
+                                                                            return <View style={{ width: 165, height: 170 }}>
+                                                                                <Swiper
+                                                                                    controlsProps={{
+                                                                                        nextTitle: '>',
+                                                                                        prevTitle: '<',
+                                                                                        prevTitleStyle: {
+                                                                                            marginTop: 10,
+                                                                                            fontFamily: 'inter'
+                                                                                        },
+                                                                                        nextTitleStyle: {
+                                                                                            marginTop: 10,
+                                                                                            fontFamily: 'inter'
+                                                                                        },
+                                                                                        dotsWrapperStyle: {
+                                                                                            marginTop: 12
+                                                                                        }
+                                                                                    }}
+                                                                                    containerStyle={{
+                                                                                        height: 150,
+                                                                                        marginRight: 15,
+                                                                                        marginBottom: 20,
+                                                                                        width: 150,
+                                                                                        backgroundColor: '#fff',
+                                                                                        alignSelf: 'center'
+                                                                                    }}
+                                                                                    swipeAreaStyle={{ width: 150, maxWidth: 150 }}
+                                                                                    innerContainerStyle={{ width: 150 }}
+                                                                                    // slideWrapperStyle={{ width: 150 }}
+                                                                                    vertical={false}
+                                                                                >
+                                                                                    {
+                                                                                        folderIdsMap[cue.folderId].map((ind: any) => {
+                                                                                            const swiperCue = cueMap[key][ind]
+                                                                                            return <OverviewCueCard
+                                                                                                cueIds={cueIds}
+                                                                                                editFolderChannelId={editFolderChannelId}
+                                                                                                onLongPress={() => onSwiperLongPress(cue, key, swiperCue)}
+                                                                                                add={() => {
+                                                                                                    const temp = JSON.parse(JSON.stringify(cueIds))
+                                                                                                    const found = temp.find((i: any) => {
+                                                                                                        return i === swiperCue._id
+                                                                                                    })
+                                                                                                    if (!found) {
+                                                                                                        temp.push(swiperCue._id)
+                                                                                                    }
+                                                                                                    console.log(temp)
+                                                                                                    setCueIds(temp)
+                                                                                                }}
+                                                                                                remove={() => {
+                                                                                                    const temp = JSON.parse(JSON.stringify(cueIds))
+                                                                                                    const upd = temp.filter((i: any) => {
+                                                                                                        return i !== swiperCue._id
+                                                                                                    })
+                                                                                                    setCueIds(upd)
+                                                                                                }}
+                                                                                                fadeAnimation={props.fadeAnimation}
+                                                                                                updateModal={() => {
+                                                                                                    props.openUpdate(
+                                                                                                        swiperCue.key,
+                                                                                                        swiperCue.index,
+                                                                                                        0,
+                                                                                                        swiperCue._id,
+                                                                                                        (swiperCue.createdBy ? swiperCue.createdBy : ''),
+                                                                                                        (swiperCue.channelId ? swiperCue.channelId : '')
+                                                                                                    )
+                                                                                                }}
+                                                                                                cue={swiperCue}
+                                                                                                channelId={props.channelId}
+                                                                                                subscriptions={props.subscriptions}
+                                                                                            />
+                                                                                        })
+                                                                                    }
+                                                                                </Swiper>
+                                                                            </View>
                                                                         }
                                                                     }
                                                                     return <View style={{
@@ -905,68 +881,87 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     }}
                                                 >
                                                     {cueMap[key].map((cue: any, index: any) => {
-
                                                         if (cue.folderId && folderId !== cue.folderId) {
                                                             if (folderIdsMap[cue.folderId][0] !== index) {
                                                                 return null
                                                             } else {
+                                                                console.log('HELLO')
                                                                 // return swiper
-                                                                return <Swiper
-                                                                    containerStyle={{
-                                                                        height: 150,
-                                                                        marginRight: 15,
-                                                                        width: 150,
-                                                                        backgroundColor: '#fff',
-                                                                        alignSelf: 'center'
-                                                                    }}
-                                                                    swipeAreaStyle={{ width: 150, maxWidth: 150 }}
-                                                                    innerContainerStyle={{ width: 150 }}
-                                                                    // slideWrapperStyle={{ width: 150 }}
-                                                                    vertical={false}
-                                                                >
-                                                                    {
-                                                                        folderIdsMap[cue.folderId].map((ind: any) => {
-                                                                            const swiperCue = cueMap[key][ind]
-                                                                            return <OverviewCueCard
-                                                                                onLongPress={() => onSwiperLongPress(cue, key, swiperCue)}
-                                                                                cueIds={cueIds}
-                                                                                editFolderChannelId={editFolderChannelId}
-                                                                                add={() => {
-                                                                                    const temp = JSON.parse(JSON.stringify(cueIds))
-                                                                                    const found = temp.find((i: any) => {
-                                                                                        return i === swiperCue._id
-                                                                                    })
-                                                                                    if (!found) {
-                                                                                        temp.push(swiperCue._id)
-                                                                                    }
-                                                                                    console.log(temp)
-                                                                                    setCueIds(temp)
-                                                                                }}
-                                                                                remove={() => {
-                                                                                    const temp = JSON.parse(JSON.stringify(cueIds))
-                                                                                    const upd = temp.filter((i: any) => {
-                                                                                        return i !== swiperCue._id
-                                                                                    })
-                                                                                    setCueIds(upd)
-                                                                                }}
-                                                                                fadeAnimation={props.fadeAnimation}
-                                                                                updateModal={() => {
-                                                                                    props.openUpdate(
-                                                                                        swiperCue.key,
-                                                                                        swiperCue.index,
-                                                                                        0,
-                                                                                        swiperCue._id,
-                                                                                        (swiperCue.createdBy ? swiperCue.createdBy : ''),
-                                                                                        (swiperCue.channelId ? swiperCue.channelId : '')
-                                                                                    )
-                                                                                }}
-                                                                                cue={swiperCue}
-                                                                                channelId={props.channelId}
-                                                                                subscriptions={props.subscriptions}
-                                                                            />
-                                                                        })
-                                                                    }
-                                                                </Swiper>
+                                                                return <View style={{ width: 165, height: 150 }}>
+                                                                    <Swiper
+                                                                        controlsProps={{
+                                                                            nextTitle: '>',
+                                                                            prevTitle: '<',
+                                                                            prevTitleStyle: {
+                                                                                marginTop: 10,
+                                                                                fontFamily: 'inter'
+                                                                            },
+                                                                            nextTitleStyle: {
+                                                                                marginTop: 10,
+                                                                                fontFamily: 'inter'
+                                                                            },
+                                                                            dotsWrapperStyle: {
+                                                                                marginTop: 12
+                                                                            }
+                                                                        }}
+                                                                        containerStyle={{
+                                                                            height: 150,
+                                                                            marginRight: 15,
+                                                                            width: 150,
+                                                                            backgroundColor: '#fff',
+                                                                            // alignSelf: 'center',
+                                                                            // borderWidth: 1
+                                                                        }}
+                                                                        swipeAreaStyle={{ width: 150, }}
+                                                                        innerContainerStyle={{ width: 150 }}
+                                                                        // slideWrapperStyle={{ width: 150 }}
+                                                                        key={index}
+                                                                        vertical={false}
+                                                                    >
+                                                                        {
+                                                                            folderIdsMap[cue.folderId].map((ind: any) => {
+                                                                                const swiperCue = cueMap[key][ind]
+                                                                                return <OverviewCueCard
+                                                                                    onLongPress={() => onSwiperLongPress(cue, key, swiperCue)}
+                                                                                    cueIds={cueIds}
+                                                                                    editFolderChannelId={editFolderChannelId}
+                                                                                    add={() => {
+                                                                                        const temp = JSON.parse(JSON.stringify(cueIds))
+                                                                                        const found = temp.find((i: any) => {
+                                                                                            return i === swiperCue._id
+                                                                                        })
+                                                                                        if (!found) {
+                                                                                            temp.push(swiperCue._id)
+                                                                                        }
+                                                                                        console.log(temp)
+                                                                                        setCueIds(temp)
+                                                                                    }}
+                                                                                    remove={() => {
+                                                                                        const temp = JSON.parse(JSON.stringify(cueIds))
+                                                                                        const upd = temp.filter((i: any) => {
+                                                                                            return i !== swiperCue._id
+                                                                                        })
+                                                                                        setCueIds(upd)
+                                                                                    }}
+                                                                                    fadeAnimation={props.fadeAnimation}
+                                                                                    updateModal={() => {
+                                                                                        props.openUpdate(
+                                                                                            swiperCue.key,
+                                                                                            swiperCue.index,
+                                                                                            0,
+                                                                                            swiperCue._id,
+                                                                                            (swiperCue.createdBy ? swiperCue.createdBy : ''),
+                                                                                            (swiperCue.channelId ? swiperCue.channelId : '')
+                                                                                        )
+                                                                                    }}
+                                                                                    cue={swiperCue}
+                                                                                    channelId={props.channelId}
+                                                                                    subscriptions={props.subscriptions}
+                                                                                />
+                                                                            })
+                                                                        }
+                                                                    </Swiper>
+                                                                </View>
                                                             }
                                                         }
 
@@ -1034,7 +1029,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 <Text style={{
                                     textAlign: 'center', width: '100%'
                                 }}>
-                                    <Ionicons name={collapseMap[key] ? 'contract-outline' : 'expand-outline'} size={20} color={'#2f2f3c'} />
+                                    <Ionicons name={collapseMap[key] ? 'contract-outline' : 'expand-outline'} size={20} color={'#43434F'} />
                                 </Text>
                             </TouchableOpacity> */}
                         </View>
@@ -1054,7 +1049,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
             maxHeight: '100%',
         }}>
             <View style={{
-                backgroundColor: '#F8F9FA',
+                backgroundColor: '#f8f9fa',
                 borderColor: '#eeeeee',
                 borderWidth: 1,
                 // borderWidth: 1,
@@ -1065,7 +1060,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 paddingBottom: 0,
                 width: '100%'
             }}>
-                <View style={{ flexDirection: 'row', flex: 1, backgroundColor: '#F8F9FA', }}>
+                <View style={{ flexDirection: 'row', flex: 1, backgroundColor: '#f8f9fa', }}>
                     <Image
                         source={logo}
                         style={{
@@ -1076,14 +1071,21 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     />
                     {
                         Dimensions.get('window').width < 768 ?
-                            <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end', backgroundColor: '#F8F9FA', }}>
+                            <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end', backgroundColor: '#f8f9fa', }}>
                                 <Menu
                                     onSelect={(op: any) => props.setOption(op)}>
                                     <MenuTrigger style={{ flexDirection: 'row' }}>
-                                        <Text style={{ color: '#2f2f3c', paddingLeft: 10, flexDirection: 'row', lineHeight: 15, fontSize: 15, marginTop: 3, fontFamily: 'inter' }}>
+                                        <Text style={{
+                                            color: '#43434F',
+                                            paddingLeft: 10,
+                                            textTransform: 'uppercase',
+                                            flexDirection: 'row',
+                                            lineHeight: 14,
+                                            fontSize: 14, marginTop: 3, fontFamily: 'inter'
+                                        }}>
                                             {props.option}
                                         </Text>
-                                        <Text style={{ color: '#2f2f3c', paddingLeft: 10, flexDirection: 'row', lineHeight: 15, fontSize: 15, marginTop: 2 }}>
+                                        <Text style={{ color: '#43434F', paddingLeft: 10, flexDirection: 'row', lineHeight: 14, fontSize: 14, marginTop: 2 }}>
                                             <Ionicons name='menu-outline' size={25} />
                                         </Text>
                                     </MenuTrigger>
@@ -1093,16 +1095,16 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             borderRadius: 15,
                                             shadowOpacity: 0,
                                             borderWidth: 1,
-                                            borderColor: '#F8F9FA',
+                                            borderColor: '#f8f9fa',
                                             overflow: 'scroll',
-                                            maxHeight: '100%'
+                                            maxHeight: '100%',
                                         }
                                     }}>
                                         {
                                             props.options.map((op: any) => {
                                                 return <MenuOption
                                                     value={op}>
-                                                    <Text>
+                                                    <Text style={{ textTransform: 'uppercase' }}>
                                                         {op}
                                                     </Text>
                                                 </MenuOption>
@@ -1111,12 +1113,12 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     </MenuOptions>
                                 </Menu>
                             </View>
-                            : <View style={{ flexDirection: 'row', paddingLeft: 30, flex: 1, backgroundColor: '#F8F9FA' }}>
+                            : <View style={{ flexDirection: 'row', paddingLeft: 30, flex: 1, backgroundColor: '#f8f9fa' }}>
                                 {
                                     props.options.map((op: any) => {
                                         return <TouchableOpacity
                                             style={{
-                                                backgroundColor: '#F8F9FA'
+                                                backgroundColor: '#f8f9fa'
                                             }}
                                             onPress={() => props.setOption(op)}>
                                             <Text style={op === props.option ? styles.allGrayFill : styles.all}>
@@ -1130,55 +1132,76 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 </View>
                 <View style={{
                     flexDirection: 'row',
+                    width: Dimensions.get('window').width < 768 ? '100%' : 'auto',
                     justifyContent: Dimensions.get('window').width < 768 ? 'flex-start' : 'flex-end',
                     marginTop: Dimensions.get('window').width < 768 ? 25 : 0,
                     // flex: Dimensions.get('window').width < 768 ? 1 : 0,
                     // borderWidth: 1,
-                    backgroundColor: '#F8F9FA'
+                    backgroundColor: '#f8f9fa'
                 }}>
-                    {
-                        width < 768 ? <Ionicons name='search-outline' size={20} color='#2f2f3c'
+                    {/* {
+                        width < 768 ? <Ionicons name='search-outline' size={20} color='#43434F'
                             style={{
                                 marginLeft: Dimensions.get('window').width < 768 ? 0 : 40,
-                                marginTop: -5
+                                marginTop: 0
                             }}
                         /> : null
-                    }
+                    } */}
                     {
                         width < 768 ? <TextInput
                             value={searchTerm}
                             style={{
                                 // width: "100%",
-                                borderBottomColor: "#2f2f3c",
+                                borderBottomColor: "#818385",
                                 borderBottomWidth: 1,
                                 fontSize: 15,
-                                padding: 15,
+                                padding: 5,
                                 paddingVertical: 12,
-                                marginTop: -23,
+                                marginTop: -25,
                                 flex: 1, flexDirection: 'row',
-                                // marginLeft: 40,
-                                width: 140,
+                                marginLeft: 10,
+                                marginRight: 30,
+                                width: 175,
                                 // borderWidth: 1,
-                                marginLeft: 5,
-                                marginRight: Dimensions.get('window').width < 768 ? 5 : 0
+                                // marginLeft: 5,
                             }}
-                            // placeholder={"Search"}
+                            placeholder={"🔍"}
                             onChangeText={(val) => setSearchTerm(val)}
                             placeholderTextColor={"#818385"}
                         /> : null
                     }
-                    {
-                        width < 768 ?
-                            (
-                                props.option === 'Content' ?
-                                    <View style={{ backgroundColor: '#F8F9FA', marginTop: -5, paddingRight: 5 }}>
-                                        <View style={{ flexDirection: 'row', justifyContent: 'center', display: 'flex', backgroundColor: '#F8F9FA' }}>
+                    {props.option === 'Home' || props.option === 'Content' ?
+                        <Menu
+                            onSelect={(category: any) => {
+
+                            }}>
+                            <MenuTrigger>
+                                <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#43434F', paddingTop: 7 }}>
+                                    FILTER
+                                </Text>
+                            </MenuTrigger>
+                            <MenuOptions customStyles={{
+                                optionsContainer: {
+                                    padding: 10,
+                                    borderRadius: 15,
+                                    shadowOpacity: 0,
+                                    borderWidth: 1,
+                                    borderColor: '#f8f9fa',
+                                    overflow: 'scroll',
+                                    maxHeight: '100%'
+                                }
+                            }}>
+                                {(props.option === 'Content' ? <MenuOption
+                                    // disabled={true}
+                                    value={'1'}>
+                                    <View style={{ backgroundColor: '#fff', paddingLeft: 10 }}>
+                                        <View style={{ flexDirection: 'row', display: 'flex', backgroundColor: '#fff' }}>
                                             <Menu
                                                 onSelect={(category: any) => {
                                                     setSortBy(category)
                                                 }}>
                                                 <MenuTrigger>
-                                                    <Text style={{ fontFamily: 'inter', fontSize: 15, color: '#2f2f3c' }}>
+                                                    <Text style={{ fontFamily: 'inter', fontSize: 15, color: '#43434F' }}>
                                                         {sortBy}<Ionicons name='caret-down' size={15} />
                                                     </Text>
                                                 </MenuTrigger>
@@ -1188,7 +1211,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         borderRadius: 15,
                                                         shadowOpacity: 0,
                                                         borderWidth: 1,
-                                                        borderColor: '#F8F9FA',
+                                                        borderColor: '#f8f9fa',
                                                         overflow: 'scroll',
                                                         maxHeight: '100%'
                                                     }
@@ -1214,129 +1237,127 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 </MenuOptions>
                                             </Menu>
                                         </View>
-                                        <Text style={{ fontSize: 10, color: '#2f2f3c', paddingTop: 7 }}>
+                                        <Text style={{ fontSize: 10, color: '#43434F', paddingTop: 7, backgroundColor: '#fff' }}>
                                             Sort By
                                         </Text>
-                                    </View> : null
-                            ) : null
+                                    </View>
+                                </MenuOption>
+                                    : null
+                                )
+                                }
+
+                                {
+                                    props.option === 'Content' || props.option === 'Home' ? <MenuOption
+                                        disabled={true}
+                                        value={'2'}>
+
+                                        <DateRangePicker
+                                            // key={Math.random()}
+                                            preventOverflow={true}
+                                            size={'sm'}
+                                            appearance={'subtle'}
+                                            placeholder={'Filter  '}
+                                            onChange={(e: any) => {
+                                                console.log('dates start', e[0])
+                                                console.log('dates end', e[1])
+                                                if (e[0] > e[1]) {
+                                                    alert('End date must be greater')
+                                                    return
+                                                }
+                                                else {
+                                                    setFilterStart(e[0])
+                                                    setFilterEnd(e[1])
+                                                }
+                                            }}
+                                            defaultShow={true}
+                                            showOneCalendar={true}
+                                            value={[
+                                                filterStart,
+                                                filterEnd
+                                            ]}
+                                            style={{
+                                                marginTop: -4,
+                                                marginRight: width < 768 ? -20 : 0,
+                                                // alignSelf: 'flex-end'
+                                                // paddingLeft: 40
+                                            }}
+                                        />
+                                    </MenuOption>
+                                        : null
+                                }
+                            </MenuOptions>
+                        </Menu> : null
                     }
-                    {
-                        props.option === 'Content' || props.option === 'Home' ?
-                            <DateRangePicker
-                                // key={Math.random()}
-                                preventOverflow={true}
-                                size={'sm'}
-                                appearance={'subtle'}
-                                placeholder={'Filter  '}
-                                onChange={(e: any) => {
-                                    console.log('dates start', e[0])
-                                    console.log('dates end', e[1])
-                                    if (e[0] > e[1]) {
-                                        alert('End date must be greater')
-                                        return
-                                    }
-                                    else {
-                                        setFilterStart(e[0])
-                                        setFilterEnd(e[1])
-                                    }
-                                }}
-                                defaultShow={true}
-                                showOneCalendar={true}
-                                value={[
-                                    filterStart,
-                                    filterEnd
-                                ]}
-                                style={{
-                                    marginTop: -4,
-                                    marginRight: width < 768 ? -20 : 0,
-                                    // alignSelf: 'flex-end'
-                                    // paddingLeft: 40
-                                }}
-                            /> : null
-                    }
-                    {
-                        width < 768 ? null :
-                            (
-                                props.option === 'Content' ?
-                                    <View style={{ backgroundColor: '#F8F9FA', paddingLeft: 30, marginTop: -5 }}>
-                                        <View style={{ flexDirection: 'row', display: 'flex', backgroundColor: '#F8F9FA' }}>
-                                            <Menu
-                                                onSelect={(category: any) => {
-                                                    setSortBy(category)
-                                                }}>
-                                                <MenuTrigger>
-                                                    <Text style={{ fontFamily: 'inter', fontSize: 15, color: '#2f2f3c' }}>
-                                                        {sortBy}<Ionicons name='caret-down' size={15} />
-                                                    </Text>
-                                                </MenuTrigger>
-                                                <MenuOptions customStyles={{
-                                                    optionsContainer: {
-                                                        padding: 10,
-                                                        borderRadius: 15,
-                                                        shadowOpacity: 0,
-                                                        borderWidth: 1,
-                                                        borderColor: '#F8F9FA',
-                                                        overflow: 'scroll',
-                                                        maxHeight: '100%'
-                                                    }
-                                                }}>
-                                                    <MenuOption
-                                                        value={'Priority'}>
-                                                        <Text>
-                                                            Priority
-                                                        </Text>
-                                                    </MenuOption>
-                                                    <MenuOption
-                                                        value={'Date ↑'}>
-                                                        <Text>
-                                                            Date ↑
-                                                        </Text>
-                                                    </MenuOption>
-                                                    <MenuOption
-                                                        value={'Date ↓'}>
-                                                        <Text>
-                                                            Date ↓
-                                                        </Text>
-                                                    </MenuOption>
-                                                </MenuOptions>
-                                            </Menu>
-                                        </View>
-                                        <Text style={{ fontSize: 10, color: '#2f2f3c', paddingTop: 7, backgroundColor: '#F8F9FA' }}>
-                                            Sort By
-                                        </Text>
-                                    </View> : null
-                            )
-                    }
-                    {
-                        width < 768 ? null : <Ionicons name='search-outline' size={20} color='#2f2f3c'
+                    {/* {
+                        width < 768 ? null : <Ionicons name='search-outline' size={20} color='#43434F'
                             style={{
                                 marginLeft: Dimensions.get('window').width < 768 ? 0 : 40,
-                                marginTop: -5
+                                marginTop: 0
                             }}
                         />
-                    }
+                    } */}
                     {
                         width < 768 ? null : <TextInput
                             value={searchTerm}
                             style={{
                                 // width: "100%",
-                                borderBottomColor: "#2f2f3c",
+                                borderBottomColor: "#818385",
                                 borderBottomWidth: 1,
                                 fontSize: 15,
-                                padding: 15,
+                                padding: 5,
                                 paddingVertical: 12,
-                                marginTop: -23,
+                                marginTop: -25,
                                 flex: 1, flexDirection: 'row',
-                                // marginLeft: 40,
+                                marginLeft: 40,
                                 // borderWidth: 1,
-                                marginLeft: 5,
                                 marginRight: Dimensions.get('window').width < 768 ? 30 : 0
                             }}
-                            // placeholder={"Search"}
+                            placeholder={"🔍"}
                             onChangeText={(val) => setSearchTerm(val)}
                             placeholderTextColor={"#818385"}
                         />
                     }
+                    <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#f8f9fa' }} />
+                    <Menu
+                        style={{ marginLeft: 30, right: 0, marginTop: -7 }}
+                        onSelect={(op: any) => props.setOption(op)}>
+                        <MenuTrigger>
+                            <Image
+                                style={{
+                                    height: 40,
+                                    width: 40,
+                                    // marginTop: -20,
+                                    marginBottom: 5,
+                                    borderRadius: 75,
+                                }}
+                                source={{ uri: avatar ? avatar : 'https://cues-files.s3.amazonaws.com/images/default.png' }}
+                            />
+                        </MenuTrigger>
+                        <MenuOptions customStyles={{
+                            optionsContainer: {
+                                padding: 10,
+                                borderRadius: 15,
+                                shadowOpacity: 0,
+                                borderWidth: 1,
+                                borderColor: '#f8f9fa',
+                                overflow: 'scroll',
+                                maxHeight: '100%'
+                            }
+                        }}>
+                            <MenuOption
+                                value={'Channels'}>
+                                <Text>
+                                    CHANNELS
+                                </Text>
+                            </MenuOption>
+                            <MenuOption
+                                value={'Settings'}>
+                                <Text>
+                                    SETTINGS
+                                </Text>
+                            </MenuOption>
+                        </MenuOptions>
+                    </Menu>
                 </View>
             </View>
             {
@@ -1345,17 +1366,13 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     paddingHorizontal: Dimensions.get('window').width < 768 ? 20 : 40
                 }}>
                     {
-                        props.option === 'Account' ?
-                            <Profile
+                        props.option === 'Settings' ?
+                            <Walkthrough
                                 closeModal={() => props.hideHome()}
                                 saveDataInCloud={() => props.saveDataInCloud()}
                                 reOpenProfile={() => props.reOpenProfile()}
                                 reloadData={() => props.reloadData()}
                             /> : null
-                    }
-                    {
-                        props.option === 'Help' ?
-                            <Walkthrough /> : null
                     }
                     {
                         props.option === 'Channels' ?
@@ -1414,22 +1431,25 @@ export default Dashboard
 
 const styleObject: any = () => StyleSheet.create({
     all: {
-        fontSize: 14,
-        color: '#2f2f3c',
-        height: 22,
+        fontSize: 13,
+        color: '#43434F',
+        height: 24,
         paddingHorizontal: 20,
-        backgroundColor: '#F8F9FA',
-        lineHeight: 22,
-        fontFamily: 'inter'
+        backgroundColor: '#f8f9fa',
+        lineHeight: 24,
+        fontFamily: 'inter',
+        textTransform: 'uppercase'
     },
     allGrayFill: {
-        fontSize: 14,
+        fontSize: 13,
         color: '#fff',
         paddingHorizontal: 20,
-        borderRadius: 10,
-        backgroundColor: '#2f2f3c',
-        lineHeight: 22,
-        fontFamily: 'inter'
+        borderRadius: 12,
+        backgroundColor: '#43434F',
+        lineHeight: 24,
+        height: 24,
+        fontFamily: 'inter',
+        textTransform: 'uppercase'
     },
     col: {
         width: '100%',

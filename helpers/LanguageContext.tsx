@@ -67,7 +67,7 @@ const EnglishBank: { [key: string]: string } = {
     planner: "Planner", // DOne
     event: "Event", // Done
     subscribe: 'Subscribe', // Done
-    profile: "Profile", // DOne
+    profile: "Account", // DOne
     name: "Name",
     fullName: "Full Name", // Done
     displayName: "Display Name", // Done
@@ -115,7 +115,7 @@ const EnglishBank: { [key: string]: string } = {
     noGraded: 'No graded assignments.',
     total: 'Total', // Done
     test: 'Test', // Done
-    discussion: 'Discussion', // Done
+    discussion: 'Discuss', // Done
     send: 'Send',
     reply: 'Reply', // Done
     add: 'Add',
@@ -642,7 +642,7 @@ export function LanguageSelect() {
 
     const [showLanguageDropdown, setShowLanguageDropdown] = useState(false);
     const colorScheme = useColorScheme();
-    const color = colorScheme === 'light' ? '#2f2f3c' : '#fff'
+    const color = colorScheme === 'light' ? '#43434f' : '#fff'
 
     return <LanguageContext.Consumer>
         {context => {
@@ -661,7 +661,7 @@ export function LanguageSelect() {
                     <Picker
                         selectedValue={language}
                         style={{
-                            height: 28, borderRadius: 10,
+                            height: 28, borderRadius: 12,
                             // border: "1px solid #818385",
                             fontSize: 12,
                             padding: '0px 5px'
