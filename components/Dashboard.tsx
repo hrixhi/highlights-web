@@ -562,7 +562,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         >
                                                             <Text style={styles.channelText}>
                                                                 <Ionicons
-                                                                    name='settings-outline' size={19} color={'#43434F'} />
+                                                                    name='hammer-outline' size={19} color={'#43434F'} />
                                                                 {
                                                                     props.meetingOn ?
                                                                         <View style={styles.badge} /> : null
@@ -740,21 +740,21 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                             return null
                                                                         } else {
                                                                             // return swiper
-                                                                            return <View style={{ width: 165, height: 170 }}>
+                                                                            return <View style={{ width: 165, height: 190, alignSelf: 'flex-end', marginTop: 0 }}>
                                                                                 <Swiper
                                                                                     controlsProps={{
                                                                                         nextTitle: '>',
                                                                                         prevTitle: '<',
                                                                                         prevTitleStyle: {
-                                                                                            marginTop: 15,
+                                                                                            marginTop: 30,
                                                                                             fontFamily: 'inter'
                                                                                         },
                                                                                         nextTitleStyle: {
-                                                                                            marginTop: 15,
+                                                                                            marginTop: 30,
                                                                                             fontFamily: 'inter'
                                                                                         },
                                                                                         dotsWrapperStyle: {
-                                                                                            marginTop: 14
+                                                                                            marginTop: 28
                                                                                         }
                                                                                     }}
                                                                                     containerStyle={{
@@ -765,8 +765,8 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                         backgroundColor: '#fff',
                                                                                         alignSelf: 'center'
                                                                                     }}
-                                                                                    swipeAreaStyle={{ width: 150, maxWidth: 150 }}
-                                                                                    innerContainerStyle={{ width: 150 }}
+                                                                                    // swipeAreaStyle={{ width: 150, maxWidth: 150 }}
+                                                                                    // innerContainerStyle={{ width: 150 }}
                                                                                     // slideWrapperStyle={{ width: 150 }}
                                                                                     vertical={false}
                                                                                 >
@@ -883,21 +883,21 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                 return null
                                                             } else {
                                                                 // return swiper
-                                                                return <View style={{ width: 165, height: 150 }}>
+                                                                return <View style={{ width: 165, height: 175, alignSelf: 'flex-end', marginTop: 25 }}>
                                                                     <Swiper
                                                                         controlsProps={{
                                                                             nextTitle: '>',
                                                                             prevTitle: '<',
                                                                             prevTitleStyle: {
-                                                                                marginTop: 15,
+                                                                                marginTop: 20,
                                                                                 fontFamily: 'inter'
                                                                             },
                                                                             nextTitleStyle: {
-                                                                                marginTop: 15,
+                                                                                marginTop: 20,
                                                                                 fontFamily: 'inter'
                                                                             },
                                                                             dotsWrapperStyle: {
-                                                                                marginTop: 14
+                                                                                marginTop: 18
                                                                             }
                                                                         }}
                                                                         containerStyle={{
@@ -908,8 +908,8 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                             // alignSelf: 'center',
                                                                             // borderWidth: 1
                                                                         }}
-                                                                        swipeAreaStyle={{ width: 150, }}
-                                                                        innerContainerStyle={{ width: 150 }}
+                                                                        // swipeAreaStyle={{ width: 150, }}
+                                                                        // innerContainerStyle={{ width: 150 }}
                                                                         // slideWrapperStyle={{ width: 150 }}
                                                                         key={index}
                                                                         vertical={false}
@@ -1173,7 +1173,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             }}>
                             <MenuTrigger>
                                 <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#43434F', paddingTop: 7 }}>
-                                    FILTER
+                                    FILTER <Ionicons name="caret-down" size={14} />
                                 </Text>
                             </MenuTrigger>
                             <MenuOptions customStyles={{

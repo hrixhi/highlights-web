@@ -331,7 +331,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             lineHeight: 23,
                             color: '#43434f'
                         }}>
-                            <Ionicons name='create-outline' size={25} color='#3b64f8' /> Create
+                            Create
                         </Text>
                         {/* 
                             <View style={styles.colorBar}>
@@ -547,7 +547,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             lineHeight: 23,
                             color: '#43434f'
                         }}>
-                            <Ionicons name='list-outline' size={25} color='#3b64f8' /> Subscribe
+                            Subscribe
                         </Text>
                         <View
                             style={{

@@ -132,30 +132,6 @@ const OverviewCueCard: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 </Text>
                                 : null
                         }
-                        {/* <View style={{
-                            ...styleObject.date,
-                            display: 'flex',
-                            flexDirection: 'row',
-                            justifyContent: 'flex-end',
-                            flex: 1,
-                            marginRight: 5,
-                            marginTop: -5,
-                            backgroundColor: colorScheme === 'light'
-                                ? (starred ? '#43434F' : '#fff')
-                                : (starred ? 'white' : '#fff'),
-                        }}>
-                            {
-                                props.cue.submission ? <Text>
-                                    <Ionicons name='share-outline' size={11} color={props.cue.submittedAt && props.cue.submittedAt !== '' ? ('#3B64F8') : (colorScheme === 'light' ? '#fff' : '#333333')} style={{ marginRight: 10 }} />
-                                </Text> : null
-                            }
-                            {
-                                props.cue.frequency !== '0' ?
-                                    <Text>
-                                        <Ionicons name='notifications-outline' size={11} color={colorScheme === 'light' ? '#fff' : '#333333'} />
-                                    </Text> : null
-                            }
-                        </View> */}
                         <Text style={styleObject.date2}>
                             {
                                 (new Date(props.cue.date)).toString().split(' ')[1] +
@@ -169,7 +145,7 @@ const OverviewCueCard: React.FunctionComponent<{ [label: string]: any }> = (prop
                         width: '100%', flex: 1, height: '80%'
                     }}>
                         <View
-                            style={{ flexDirection: 'row', height: '15%', backgroundColor: '#f8f9fa', justifyContent: 'flex-end' }}
+                            style={{ flexDirection: 'row', height: '13%', backgroundColor: '#f8f9fa', justifyContent: 'flex-end' }}
                         >
                             {
                                 props.editFolderChannelId === props.cue.channelId ?
@@ -257,7 +233,8 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
         borderRadius: 15,
         overflow: 'hidden',
         maxWidth: 150,
-        width: '100%'
+        width: '100%',
+        maxHeight: 150
     },
     card: {
         maxWidth: 150,
@@ -268,7 +245,8 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
         paddingHorizontal: 15,
         backgroundColor: '#f8f9fa',
         borderWidth: 1,
-        borderColor: '#eeeeee'
+        borderColor: '#eeeeee',
+        maxHeight: 150
     },
     flipCard: {
         height: '100%',

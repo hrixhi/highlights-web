@@ -1661,7 +1661,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         lineHeight: 25,
                                         height: 65
                                     }}>
-                                    Live Stream
+                                    Live
                                 </Text>
                             </View>
                             <iframe

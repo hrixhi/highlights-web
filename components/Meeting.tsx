@@ -375,212 +375,139 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                             flex: 1,
                             lineHeight: 25
                         }}>
-                        Meet
+                        Meetings
                     </Text>
-                    {/* <TouchableOpacity
-                        onPress={() => {
-                            setViewChannelAttendance(true);
-                        }}
-                        style={{
-                            backgroundColor: 'white',
-                            overflow: 'hidden',
-                            height: 35,
-                            // marginTop: 15,
-                            justifyContent: 'center',
-                            flexDirection: 'row'
-                        }}>
-                        <Text style={{
-                            textAlign: 'center',
-                            lineHeight: 30,
-                            color: viewChannelAttendance ? '#43434F' : '#fff',
-                            fontSize: 12,
-                            backgroundColor: viewChannelAttendance ? '#f8f9fa' : '#53BE6D',
-                            paddingHorizontal: 25,
-                            fontFamily: 'inter',
-                            height: 30,
-                            // width: 100,
-                            borderRadius: 15,
-                            textTransform: 'uppercase'
-                        }}>
-                            ATTENDANCE <Ionicons name='list-outline' size={12} />
-                        </Text>
-
-                    </TouchableOpacity> */}
-                </View>
-                <View style={{ backgroundColor: "white", flex: 1 }}>
+                    {
+                        isOwner ? (
+                            <View
+                                style={{
+                                    backgroundColor: "white"
+                                }}>
+                                <View>
+                                    <TouchableOpacity
+                                        style={{
+                                            backgroundColor: '#fff',
+                                            width: Dimensions.get('window').width < 768 ? 'auto' : '100%',
+                                            paddingBottom: 20
+                                        }}
+                                        onPress={() => {
+                                            navigator.clipboard.writeText(instructorLink)
+                                            Alert("Link copied! Users will only be able to join after you initiate the classroom.")
+                                        }}>
+                                        <Text style={{
+                                            lineHeight: 21,
+                                            textAlign: 'center'
+                                        }}>
+                                            <Ionicons name='copy-outline' size={19} color={'#43434F'} />
+                                        </Text>
+                                        <Text style={{ fontSize: 10, color: '#43434F', textAlign: 'center', width: '100%', }}>
+                                            Host Link
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        ) : null
+                    }
+                    {
+                        isOwner ? (
+                            <View
+                                style={{
+                                    backgroundColor: "white"
+                                }}>
+                                <View>
+                                    <TouchableOpacity
+                                        style={{
+                                            backgroundColor: '#fff',
+                                            width: Dimensions.get('window').width < 768 ? 'auto' : '100%',
+                                            paddingBottom: 20,
+                                            marginLeft: 10,
+                                            marginRight: 25
+                                        }}
+                                        onPress={() => {
+                                            navigator.clipboard.writeText(guestLink)
+                                            Alert("Link copied! Users will only be able to join after you initiate the classroom.")
+                                        }}>
+                                        <Text style={{
+                                            lineHeight: 21,
+                                            textAlign: 'center'
+                                        }}>
+                                            <Ionicons name='copy-outline' size={19} color={'#43434F'} />
+                                        </Text>
+                                        <Text style={{ fontSize: 10, color: '#43434F', textAlign: 'center', width: '100%', }}>
+                                            Guest Link
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        ) : null
+                    }
                     <View
                         style={{
-                            width: "100%",
-                            backgroundColor: "white",
-                            flexDirection: 'column'
+                            backgroundColor: "white"
                         }}>
-                        <View
+                        <TouchableOpacity
+                            onPress={handleEnterClassroom}
                             style={{
-                                backgroundColor: "white"
+                                backgroundColor: 'white',
+                                overflow: 'hidden',
+                                height: 35,
+                                marginLeft: 15,
+                                // marginTop: 15,
+                                justifyContent: 'center',
+                                flexDirection: 'row'
                             }}>
-                            <TouchableOpacity
-                                onPress={handleEnterClassroom}
-                                style={{
-                                    backgroundColor: "white",
-                                    overflow: "hidden",
-                                    height: 35,
-                                    // marginTop: 15,
-                                    marginBottom: 20
-                                }}>
-                                <Text
-                                    style={{
-                                        textAlign: "center",
-                                        lineHeight: 35,
-                                        color: "#fff",
-                                        fontSize: 12,
-                                        backgroundColor: "#3B64F8",
-                                        paddingHorizontal: 25,
-                                        fontFamily: "inter",
-                                        height: 35,
-                                        width: 150,
-                                        borderRadius: 15,
-                                        textTransform: "uppercase"
-                                    }}>
-                                    {PreferredLanguageText("enterClassroom")}
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
+                            <Text style={{
+                                textAlign: 'center',
+                                lineHeight: 30,
+                                color: '#fff',
+                                fontSize: 12,
+                                backgroundColor: '#53BE6D',
+                                paddingHorizontal: 25,
+                                fontFamily: 'inter',
+                                height: 30,
+                                // width: 100,
+                                borderRadius: 15,
+                                textTransform: 'uppercase'
+                            }}>
+                                {PreferredLanguageText("enterClassroom")} <Ionicons name='videocam-outline'/>
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+                {
+                    <View style={{ marginTop: 25 }}>
                         {
-                            isOwner ? (
-                                <View
-                                    style={{
-                                        // paddingLeft: Dimensions.get('window').width < 768 ? 0 : 30,
-                                        // marginBottom: 25,
-                                        backgroundColor: "white"
-                                    }}>
-                                    <View>
-                                        <TouchableOpacity
-                                            onPress={() => {
-                                                navigator.clipboard.writeText(instructorLink)
-                                                Alert("Link copied! Users will only be able to join after you initiate the classroom.")
-                                            }}
-                                            style={{
-                                                backgroundColor: "white",
-                                                overflow: "hidden",
-                                                height: 35,
-                                                marginTop: 15,
-                                                marginBottom: 20
-                                            }}
-                                        >
-                                            <Text
-                                                style={{
-                                                    textAlign: "center",
-                                                    lineHeight: 35,
-                                                    color: "#43434F",
-                                                    fontSize: 12,
-                                                    backgroundColor: "#f8f9fa",
-                                                    paddingHorizontal: 25,
-                                                    fontFamily: "inter",
-                                                    height: 35,
-                                                    width: 150,
-                                                    borderRadius: 15,
-                                                    textTransform: "uppercase"
-                                                }}>
-                                                Host Link <Ionicons name='copy-outline' size={12} />
-                                            </Text>
-                                        </TouchableOpacity>
-                                    </View>
+
+                            showAttendances ?
+                                <View>
+                                    {
+                                        attendances.length === 0 ?
+                                            <View style={{ backgroundColor: 'white', flex: 1 }}>
+                                                <Text style={{ width: '100%', color: '#818385', fontSize: 20, paddingVertical: 50, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                                    {PreferredLanguageText('noAttendances')}
+                                                </Text>
+                                            </View>
+                                            :
+                                            attendances.map((att: any, index: any) => {
+                                                return <View style={styles.col} key={index}>
+                                                    <SubscriberCard
+                                                        hideChevron={true}
+                                                        fadeAnimation={props.fadeAnimation}
+                                                        subscriber={{
+                                                            displayName: att.displayName,
+                                                            fullName: PreferredLanguageText('joinedAt') + ' ' + moment(new Date(att.joinedAt)).format('MMMM Do YYYY, h:mm a')
+                                                        }}
+                                                        onPress={() => { }}
+                                                        status={!props.cueId ? false : true}
+                                                    />
+                                                </View>
+                                            })
+                                    }
                                 </View>
-                            ) : null
-                        }
-                        {
-                            isOwner ? (
-                                <View
-                                    style={{
-                                        // paddingLeft: Dimensions.get('window').width < 768 ? 0 : 30,
-                                        // marginBottom: 25,
-                                        backgroundColor: "white"
-                                    }}>
-                                    <View>
-                                        <TouchableOpacity
-                                            onPress={() => {
-                                                navigator.clipboard.writeText(guestLink)
-                                                Alert("Link copied! Users will only be able to join after you initiate the classroom.")
-                                            }}
-                                            style={{
-                                                backgroundColor: "white",
-                                                overflow: "hidden",
-                                                height: 35,
-                                                marginTop: 15,
-                                                marginBottom: 20
-                                            }}
-                                        >
-                                            <Text
-                                                style={{
-                                                    textAlign: "center",
-                                                    lineHeight: 35,
-                                                    color: "#43434F",
-                                                    fontSize: 12,
-                                                    backgroundColor: "#f8f9fa",
-                                                    paddingHorizontal: 25,
-                                                    fontFamily: "inter",
-                                                    height: 35,
-                                                    width: 150,
-                                                    borderRadius: 15,
-                                                    textTransform: "uppercase"
-                                                }}>
-                                                Guest Link <Ionicons name='copy-outline' size={12} />
-                                            </Text>
-                                        </TouchableOpacity>
-                                    </View>
-                                </View>
-                            ) : null
+                                : (showPastMeetings ? renderPastMeetings() : null)
                         }
                     </View>
-                    {
-                        <View style={{ borderTopColor: '#eeeeee', borderTopWidth: 1, marginTop: 25 }}>
-                            <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 25 }}>
-                            </Text>
-                            <Text style={{
-                                fontSize: 23,
-                                paddingBottom: 20,
-                                fontFamily: 'inter',
-                                // textTransform: "uppercase",
-                                // paddingLeft: 10,
-                                paddingTop: 2,
-                                flex: 1,
-                                lineHeight: 25
-                            }}>
-                                Past Meetings
-                            </Text>
-                            {
-
-                                showAttendances ?
-                                    <View>
-                                        {
-                                            attendances.length === 0 ?
-                                                <View style={{ backgroundColor: 'white', flex: 1 }}>
-                                                    <Text style={{ width: '100%', color: '#818385', fontSize: 20, paddingVertical: 50, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
-                                                        {PreferredLanguageText('noAttendances')}
-                                                    </Text>
-                                                </View>
-                                                :
-                                                attendances.map((att: any, index: any) => {
-                                                    return <View style={styles.col} key={index}>
-                                                        <SubscriberCard
-                                                            hideChevron={true}
-                                                            fadeAnimation={props.fadeAnimation}
-                                                            subscriber={{
-                                                                displayName: att.displayName,
-                                                                fullName: PreferredLanguageText('joinedAt') + ' ' + moment(new Date(att.joinedAt)).format('MMMM Do YYYY, h:mm a')
-                                                            }}
-                                                            onPress={() => { }}
-                                                            status={!props.cueId ? false : true}
-                                                        />
-                                                    </View>
-                                                })
-                                        }
-                                    </View>
-                                    : (showPastMeetings ? renderPastMeetings() : null)
-                            }
-                        </View>
-                    }
-                </View>
+                }
             </Animated.View>
         </ScrollView>
     );

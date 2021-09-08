@@ -430,7 +430,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         }}>
 
                                         <Text style={styles.all}>
-                                            Settings
+                                            Details
                                         </Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity
@@ -482,7 +482,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     setShowOptions(false)
                                                 }}>
                                                 <Text style={viewStatus ? styles.allGrayFill : styles.all}>
-                                                    Responses
+                                                    ENGAGEMENT
                                                 </Text>
                                             </TouchableOpacity>
                                     }

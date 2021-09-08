@@ -340,7 +340,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
             // flex: 1,
             lineHeight: 25
           }}>
-          <Ionicons name='settings-outline' size={25} color='#3b64f8' /> {PreferredLanguageText('profile')}
+          {PreferredLanguageText('profile')}
         </Text>
         {/*}
         <Text

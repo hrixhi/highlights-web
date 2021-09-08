@@ -1134,7 +1134,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         </MenuOptions>
                                     </Menu>
                                     <Text style={{ fontSize: 10, color: '#43434F', paddingTop: 7 }}>
-                                        Topic
+                                        Type
                                     </Text>
                                 </View>
                         }
@@ -1243,7 +1243,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                         borderColor: '#eeeeee',
                                                         maxHeight: props.cueId ? windowHeight - 220 : '100%',
                                                         marginBottom: props.cueId ? 20 : 0,
-                                                        maxWidth: 550,
+                                                        maxWidth: 450,
                                                     }}
                                                 >
                                                     {

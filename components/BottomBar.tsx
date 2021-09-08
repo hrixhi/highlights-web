@@ -83,7 +83,6 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
         activeColor = activeChannel[0].colorCode;
     }
 
-
     return (
         <View style={styles.bottombar}>
             <View style={{ display: 'flex', flexDirection: 'row', backgroundColor: '#f8f9fa' }}>
@@ -121,7 +120,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     Classroom
                                 </Text>
                             </TouchableOpacity>
-                        </View> : null
+                        </View> : <View style={styles.icons} />
                 }
                 {
                     isOwner ?
@@ -130,15 +129,14 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 style={styles.center}
                                 onPress={() => props.openChannelSettings()}>
                                 <Text style={styles.channelText}>
-                                    <Ionicons name='settings-outline' size={19} color={'#43434F'} />
+                                    <Ionicons name='hammer-outline' size={19} color={'#43434F'} />
                                 </Text>
                                 <Text style={{ fontSize: 10, color: '#43434F', textAlign: 'center' }}>
                                     Settings
                                 </Text>
                             </TouchableOpacity>
-
                         </View>
-                        : null}
+                        : <View style={styles.icons} />}
                 <View style={styles.icons}>
                     <TouchableOpacity
                         style={styles.center}
@@ -165,8 +163,6 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
         width: '100%',
         display: 'flex',
         paddingBottom: 10,
-        // borderTopWidth: 1,
-        // borderColor: '#555555',
         backgroundColor: '#f8f9fa'
     },
     icons: {

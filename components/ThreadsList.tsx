@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { StyleSheet, ActivityIndicator, ScrollView, Dimensions, Image } from 'react-native';
+import { StyleSheet, ActivityIndicator, ScrollView, Dimensions, Image, Platform, Linking } from 'react-native';
 import Alert from '../components/Alert'
 import { View, Text, TouchableOpacity } from './Themed';
 import _ from 'lodash'
@@ -109,10 +109,33 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     setThreadWithReplies(res.data.thread.getThreadWithReplies)
                     const tempChat: any[] = []
                     res.data.thread.getThreadWithReplies.map((msg: any) => {
-                        const { title } = htmlStringParser(msg.message)
+                        let text: any = ''
+                        if (msg.message[0] === '{' && msg.message[msg.message.length - 1] === '}') {
+                            const obj = JSON.parse(msg.message)
+                            text = <TouchableOpacity style={{ backgroundColor: '#2484FF' }}>
+                                <Text style={{
+                                    textDecorationLine: 'underline',
+                                    backgroundColor: '#2484FF',
+                                    color: '#fff'
+                                }}
+                                    onPress={() => {
+                                        if (Platform.OS === 'web' || Platform.OS === 'macos' || Platform.OS === 'windows') {
+                                            window.open(obj.url, '_blank')
+                                        } else {
+                                            Linking.openURL(obj.url)
+                                        }
+                                    }}
+                                >
+                                    {obj.title + '.' + obj.type}
+                                </Text>
+                            </TouchableOpacity>
+                        } else {
+                            const { title: t, subtitle: s } = htmlStringParser(msg.message)
+                            text = t
+                        }
                         tempChat.push({
                             _id: msg._id,
-                            text: title,
+                            text,
                             createdAt: msg.time,
                             user: {
                                 _id: msg.userId,
@@ -219,7 +242,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     // width: '100%',
                     height: 60,
                     paddingRight: 20,
-                    paddingTop: 7,
+                    // paddingTop: 7,
                     backgroundColor: 'white',
                 }}>
                     {
@@ -227,7 +250,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             <Menu
                                 onSelect={(cat: any) => setFilterChoice(cat)}>
                                 <MenuTrigger>
-                                    <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#818385' }}>
+                                    <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#43434f' }}>
                                         {filterChoice === '' ? 'All' : filterChoice}<Ionicons name='caret-down' size={14} />
                                     </Text>
                                 </MenuTrigger>
@@ -261,6 +284,9 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 </MenuOptions>
                             </Menu> : null
                     }
+                    <Text style={{ fontSize: 10, color: '#43434F', width: '100%', paddingTop: 3 }}>
+                        Topic
+                    </Text>
                 </View>
                 {
                     showComments ?

@@ -1643,7 +1643,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         props.setShowComments(false)
                     }}>
                     <Text style={props.showOptions ? styles.allGrayFill : styles.all}>
-                        Settings
+                        Details
                     </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -1694,7 +1694,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             props.setShowComments(true)
                             props.changeViewStatus();
                         }}>
-                        <Text style={props.viewStatus ? styles.allGrayFill : styles.all}>Responses</Text>
+                        <Text style={props.viewStatus ? styles.allGrayFill : styles.all}>Engagement</Text>
                     </TouchableOpacity>
                 )}
             </View>
@@ -3382,7 +3382,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 props.setShowOptions(true)
                             }}>
                             <Text style={props.showOptions ? styles.allGrayFill : styles.all}>
-                                Settings
+                                Details
                             </Text>
                         </TouchableOpacity>
                         {/* <View style={{ backgroundColor: "white", flex: 1 }}>
@@ -3422,20 +3422,21 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 width: "100%",
                                 display: "flex",
                                 flexDirection: Dimensions.get("window").width < 768 ? "column-reverse" : "row",
-                                paddingBottom: 4,
+                                marginBottom: 5,
                                 backgroundColor: "white",
-                                marginTop: 20
+                                marginTop: 20,
+                                borderBottomWidth: ((props.cue.channelId && props.cue.channelId !== '' && !isOwner && props.showOriginal) || (props.showOriginal && showImportOptions) || isQuiz)
+                                    || (((props.cue.graded && submission && !isOwner) && !props.showOriginal) || (!props.showOriginal && showImportOptions))
+                                    || (!props.showOriginal && submissionImported) || (imported && props.showOriginal)
+                                    ? 0 : 1,
+                                borderBottomColor: '#eeeeee'
                             }}
                             onTouchStart={() => Keyboard.dismiss()}>
                             <View
                                 style={{
                                     flexDirection: Dimensions.get("window").width < 768 ? "column" : "row",
                                     flex: 1,
-                                    borderBottomWidth: ((props.cue.channelId && props.cue.channelId !== '' && !isOwner && props.showOriginal) || (props.showOriginal && showImportOptions) || isQuiz)
-                                        || (((props.cue.graded && submission && !isOwner) && !props.showOriginal) || (!props.showOriginal && showImportOptions))
-                                        || (!props.showOriginal && submissionImported) || (imported && props.showOriginal)
-                                        ? 0 : 1,
-                                    borderBottomColor: '#dddddd'
+
                                 }}>
                                 {/* {renderRichToolbar()} */}
                                 {(!props.showOriginal && props.cue.submission && !submissionImported && showImportOptions)
@@ -3454,7 +3455,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     />
                                 ) : null}
                             </View>
-                            <View style={{ backgroundColor: '#fff', flexDirection: 'row' }}>
+                            <View style={{ backgroundColor: '#fff', flexDirection: 'row', marginBottom: 5 }}>
                                 {(!props.showOriginal && !submissionImported && !props.cue.graded)
                                     || (props.showOriginal && isOwner && !imported && !isQuiz)
                                     ? (

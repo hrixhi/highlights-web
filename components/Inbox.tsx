@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { ActivityIndicator, Animated, Dimensions, Image } from 'react-native';
+import { ActivityIndicator, Animated, Dimensions, Image, Platform, Linking } from 'react-native';
 import Alert from '../components/Alert'
 import { Text, TouchableOpacity, View } from './Themed';
 import { ScrollView } from 'react-native'
@@ -132,10 +132,33 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                 .then(res => {
                     const tempChat: any[] = []
                     res.data.message.getMessagesThread.map((msg: any) => {
-                        const { title } = htmlStringParser(msg.message)
+                        let text: any = ''
+                        if (msg.message[0] === '{' && msg.message[msg.message.length - 1] === '}') {
+                            const obj = JSON.parse(msg.message)
+                            text = <TouchableOpacity style={{ backgroundColor: '#2484FF' }}>
+                                <Text style={{
+                                    textDecorationLine: 'underline',
+                                    backgroundColor: '#2484FF',
+                                    color: '#fff'
+                                }}
+                                    onPress={() => {
+                                        if (Platform.OS === 'web' || Platform.OS === 'macos' || Platform.OS === 'windows') {
+                                            window.open(obj.url, '_blank')
+                                        } else {
+                                            Linking.openURL(obj.url)
+                                        }
+                                    }}
+                                >
+                                    {obj.title + '.' + obj.type}
+                                </Text>
+                            </TouchableOpacity>
+                        } else {
+                            const { title: t, subtitle: s } = htmlStringParser(msg.message)
+                            text = t
+                        }
                         tempChat.push({
                             _id: msg._id,
-                            text: title,
+                            text,
                             createdAt: msg.sentAt,
                             user: {
                                 _id: msg.sentBy,
@@ -258,10 +281,33 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                 .then(res => {
                     const tempChat: any[] = []
                     res.data.message.getMessagesThread.map((msg: any) => {
-                        const { title } = htmlStringParser(msg.message)
+                        let text: any = ''
+                        if (msg.message[0] === '{' && msg.message[msg.message.length - 1] === '}') {
+                            const obj = JSON.parse(msg.message)
+                            text = <TouchableOpacity style={{ backgroundColor: '#2484FF' }}>
+                                <Text style={{
+                                    textDecorationLine: 'underline',
+                                    backgroundColor: '#2484FF',
+                                    color: '#fff'
+                                }}
+                                    onPress={() => {
+                                        if (Platform.OS === 'web' || Platform.OS === 'macos' || Platform.OS === 'windows') {
+                                            window.open(obj.url, '_blank')
+                                        } else {
+                                            Linking.openURL(obj.url)
+                                        }
+                                    }}
+                                >
+                                    {obj.title}
+                                </Text>
+                            </TouchableOpacity>
+                        } else {
+                            const { title: t, subtitle: s } = htmlStringParser(msg.message)
+                            text = t
+                        }
                         tempChat.push({
                             _id: msg._id,
-                            text: title,
+                            text,
                             createdAt: msg.sentAt,
                             user: {
                                 _id: msg.sentBy,
@@ -289,28 +335,6 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                 // props.refreshUnreadMessagesCount()
             })
                 .catch(e => console.log(e))
-            // load the user
-            // server.query({
-            //     query: findUserById,
-            //     variables: {
-            //         id: userId
-            //     }
-            // }).then(res => {
-            //     if (res.data && res.data.user.findById) {
-            //         setLoadedChatWithUser(res.data.user.findById)
-            //         server.query({
-            //             query: isSubInactive,
-            //             variables: {
-            //                 userId: res.data.user.findById._id,
-            //                 channelId: props.channelId
-            //             }
-            //         }).then((res2: any) => {
-            //             if (res2.data && res2.data.subscription.isSubInactive) {
-            //                 setIsLoadedUserInactive(true)
-            //             }
-            //         }).catch((err) => console.log(err))
-            //     }
-            // })
         }
     }, [])
 
@@ -330,10 +354,33 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                 .then(res => {
                     const tempChat: any[] = []
                     res.data.message.getMessagesThread.map((msg: any) => {
-                        const { title } = htmlStringParser(msg.message)
+                        let text: any = ''
+                        if (msg.message[0] === '{' && msg.message[msg.message.length - 1] === '}') {
+                            const obj = JSON.parse(msg.message)
+                            text = <TouchableOpacity style={{ backgroundColor: '#2484FF' }}>
+                                <Text style={{
+                                    textDecorationLine: 'underline',
+                                    backgroundColor: '#2484FF',
+                                    color: '#fff'
+                                }}
+                                    onPress={() => {
+                                        if (Platform.OS === 'web' || Platform.OS === 'macos' || Platform.OS === 'windows') {
+                                            window.open(obj.url, '_blank')
+                                        } else {
+                                            Linking.openURL(obj.url)
+                                        }
+                                    }}
+                                >
+                                    {obj.title + '.' + obj.type}
+                                </Text>
+                            </TouchableOpacity>
+                        } else {
+                            const { title: t, subtitle: s } = htmlStringParser(msg.message)
+                            text = t
+                        }
                         tempChat.push({
                             _id: msg._id,
-                            text: title,
+                            text,
                             createdAt: msg.sentAt,
                             user: {
                                 _id: msg.sentBy,
@@ -469,7 +516,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                             lineHeight: 23,
                                             color: '#43434f'
                                         }}>
-                                            Chats
+                                            Messages
                                         </Text>
                                     </View>
                                     <View style={{ flexDirection: 'row', width: '100%' }}>
@@ -562,22 +609,11 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                         showsVerticalScrollIndicator={false}
                                                         keyboardDismissMode={'on-drag'}
                                                         style={{ flex: 1, paddingTop: 12 }}>
-                                                        {/* <Text
-                                                        ellipsizeMode="tail"
-                                                        style={{ fontSize: 11, color: '#818385', textTransform: 'uppercase' }}>
-                                                        {PreferredLanguageText('newGroup')}
-                                                    </Text> */}
                                                         <View style={{ flexDirection: 'column', marginTop: 25, overflow: 'scroll', marginBottom: 25 }}>
                                                             <View style={{ width: '90%', padding: 5, maxWidth: 500, minHeight: 200 }}>
                                                                 <Multiselect
                                                                     placeholder='Select users'
                                                                     displayValue='label'
-                                                                    // key={userDropdownOptions.toString()}
-                                                                    // style={{ width: '100%', color: '#43434f', 
-                                                                    //     optionContainer: { // To change css for option container 
-                                                                    //         zIndex: 9999
-                                                                    //     }
-                                                                    // }}
                                                                     options={options} // Options to display in the dropdown
                                                                     selectedValues={selected} // Preselected value to persist in dropdown
                                                                     onSelect={(e, f) => {

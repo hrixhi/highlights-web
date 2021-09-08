@@ -350,7 +350,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                         lineHeight: 25,
                                         height: 65
                                     }}>
-                                    <Ionicons name='help-circle-outline' size={25} color='#3b64f8' /> FAQ
+                                    Walkthrough
                                 </Text>
                             </View>
                         </View>

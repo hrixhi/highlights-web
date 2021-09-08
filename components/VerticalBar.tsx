@@ -112,7 +112,7 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                     }}
                                     onPress={() => props.openChannelSettings()}>
                                     <Text style={styles.channelText}>
-                                        <Ionicons name='settings-outline' size={19} color={'#43434F'} />
+                                        <Ionicons name='hammer-outline' size={19} color={'#43434F'} />
                                     </Text>
                                     <Text style={{ fontSize: 10, color: '#43434F', textAlign: 'center', width: '100%', }}>
                                         Settings

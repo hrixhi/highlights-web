@@ -82,7 +82,7 @@ const EnglishBank: { [key: string]: string } = {
     signUp: 'Sign Up', // Done
     classroom: 'Classroom',
     initiateMeeting: 'Active',
-    enterClassroom: 'Enter →', // Done
+    enterClassroom: 'Join', // Done
     upcoming: 'Schedule', // DOne
     start: 'Start', // Done
     end: 'End', // Done
@@ -115,7 +115,7 @@ const EnglishBank: { [key: string]: string } = {
     noGraded: 'No graded assignments.',
     total: 'Total', // Done
     test: 'Test', // Done
-    discussion: 'Discuss', // Done
+    discussion: 'Threads', // Done
     send: 'Send',
     reply: 'Reply', // Done
     add: 'Add',
