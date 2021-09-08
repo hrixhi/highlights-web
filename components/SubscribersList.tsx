@@ -1098,10 +1098,9 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     maxWidth: 500
                                 }}>
                                     <Menu
-                                        style={{ alignSelf: 'flex-end' }}
                                         onSelect={(cat: any) => setFilterChoice(cat)}>
                                         <MenuTrigger>
-                                            <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#818385' }}>
+                                            <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#43434F' }}>
                                                 {filterChoice === '' ? 'All' : filterChoice}<Ionicons name='caret-down' size={14} />
                                             </Text>
                                         </MenuTrigger>
@@ -1134,6 +1133,9 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             }
                                         </MenuOptions>
                                     </Menu>
+                                    <Text style={{ fontSize: 10, color: '#43434F', paddingTop: 7 }}>
+                                        Topic
+                                    </Text>
                                 </View>
                         }
                         {
@@ -1235,9 +1237,13 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                     horizontal={false}
                                                     key={filterChoice + key}
                                                     contentContainerStyle={{
-                                                        width: '100%',
-                                                        height: props.cueId ? windowHeight - 220 : '100%',
-                                                        marginBottom: props.cueId ? 20 : 0
+                                                        // width: '100%',
+                                                        borderRadius: 12,
+                                                        borderWidth: 1,
+                                                        borderColor: '#eeeeee',
+                                                        maxHeight: props.cueId ? windowHeight - 220 : '100%',
+                                                        marginBottom: props.cueId ? 20 : 0,
+                                                        maxWidth: 550,
                                                     }}
                                                 >
                                                     {
@@ -1276,6 +1282,70 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                             if (subscriber.fullName !== 'submitted' && subscriber.fullName !== 'read' && subscriber.fullName !== 'graded') {
                                                                 return null
                                                             }
+                                                            return <TouchableOpacity
+                                                                onPress={() => {
+                                                                    if (props.cueId && props.cueId !== null) {
+                                                                        if (subscriber.fullName === 'submitted' || subscriber.fullName === 'graded') {
+                                                                            setSubmission(subscriber.submission)
+                                                                            setSubmittedAt(subscriber.submittedAt)
+                                                                            setDeadline(subscriber.deadline)
+                                                                            setShowSubmission(true)
+                                                                            setStatus(subscriber.fullName)
+                                                                            setScore(subscriber.score ? subscriber.score.toString() : '0')
+                                                                            setGraded(subscriber.graded)
+                                                                            setComment(subscriber.comment)
+                                                                            console.log(subscriber.comment)
+                                                                            try {
+                                                                                const comm = JSON.parse(subscriber.comment)
+                                                                                setAnnotation(comm.annotation)
+                                                                                setAnnotations(comm.annotations)
+                                                                            } catch (e) {
+                                                                                console.log('')
+                                                                            }
+                                                                            setUserId(subscriber.userId)
+                                                                        }
+                                                                    } else {
+                                                                        loadChat(subscriber._id, subscriber.groupId)
+                                                                    }
+                                                                }}
+                                                                style={{
+                                                                    backgroundColor: '#f8f9fa',
+                                                                    flexDirection: 'row',
+                                                                    borderColor: '#eeeeee',
+                                                                    borderBottomWidth: index === filteredSubscribers.length - 1 ? 0 : 1,
+                                                                    // minWidth: 600, // flex: 1,
+                                                                    width: '100%',
+                                                                }}>
+                                                                {/* <View style={{ flex: 1, backgroundColor: '#f8f9fa', padding: 10 }}>
+                                                                <Image
+                                                                    style={{
+                                                                        height: 40,
+                                                                        width: 40,
+                                                                        marginTop: 5,
+                                                                        marginBottom: 5,
+                                                                        borderRadius: 75,
+                                                                        // marginTop: 20,
+                                                                        alignSelf: 'center'
+                                                                    }}
+                                                                    source={{ uri: user.avatar ? user.avatar : 'https://cues-files.s3.amazonaws.com/images/default.png' }}
+                                                                />
+                                                            </View> */}
+                                                                <View style={{ flex: 1, backgroundColor: '#f8f9fa', paddingLeft: 10 }}>
+                                                                    <Text style={{ fontSize: 12, padding: 10, fontFamily: 'inter' }} ellipsizeMode='tail'>
+                                                                        {subscriber.displayName ? subscriber.displayName : ''}
+                                                                    </Text>
+                                                                </View>
+                                                                <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
+                                                                    <Text style={{ fontSize: 12, padding: 10 }} ellipsizeMode='tail'>
+                                                                        {subscriber.fullName ? subscriber.fullName : ''}
+                                                                    </Text>
+                                                                </View>
+                                                                <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
+                                                                    <Text style={{ fontSize: 15, padding: 10, color: '#3b64f8' }} ellipsizeMode='tail'>
+                                                                        <Ionicons name='chevron-forward-outline' size={20} />
+                                                                    </Text>
+                                                                </View>
+                                                            </TouchableOpacity>
                                                             return <View style={styles.col} key={filterChoice + key + index}>
                                                                 <SubscriberCard
                                                                     chat={!props.cueId || props.cueId === '' ? true : false}

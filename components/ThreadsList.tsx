@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { StyleSheet, ActivityIndicator, ScrollView, Dimensions } from 'react-native';
+import { StyleSheet, ActivityIndicator, ScrollView, Dimensions, Image } from 'react-native';
 import Alert from '../components/Alert'
 import { View, Text, TouchableOpacity } from './Themed';
 import _ from 'lodash'
@@ -194,9 +194,9 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
             paddingLeft: Dimensions.get('window').width < 1024 ? 20 : 0,
             borderTopRightRadius: props.cueId ? 0 : 30,
             borderTopLeftRadius: props.cueId ? 0 : 30,
-            paddingTop: props.cueId ? 0 : 40
+            paddingTop: props.cueId ? 0 : 0
         }}>
-            <View style={{ backgroundColor: 'white', flexDirection: 'row', paddingBottom: !props.cueId ? 0 : 0, maxWidth: 500 }}>
+            <View style={{ backgroundColor: 'white', flexDirection: 'row', paddingBottom: !props.cueId ? 0 : 0 }}>
                 {
                     !props.cueId
                         ? <Text
@@ -213,7 +213,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             }}>
                             {PreferredLanguageText('discussion')}
                         </Text>
-                        : <View style={{ flex: 1, flexDirection: 'row' }} />
+                        : null
                 }
                 <View style={{
                     // width: '100%',
@@ -322,7 +322,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 key={JSON.stringify(filteredThreads) + JSON.stringify(showPost)}
                             >
                                 <View style={{
-                                    width: '40%'
+                                    width: '50%'
                                 }}>
                                     {
                                         threads.length === 0 ?
@@ -338,14 +338,68 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                 horizontal={false}
                                                 // style={{ height: '100%' }}
                                                 contentContainerStyle={{
-                                                    // borderWidth: 2,
+                                                    borderWidth: 1,
+                                                    borderColor: '#eeeeee',
+                                                    borderRadius: 12,
                                                     width: '100%',
                                                     // height: windowHeight - 200,
                                                 }}
                                             >
                                                 {
-                                                    filteredThreads.map((thread: any, index) => {
-                                                        return <View style={styles.col} key={index}>
+                                                    filteredThreads.map((thread: any, ind) => {
+
+                                                        let title = ''
+
+                                                        if (thread.message[0] === '{' && thread.message[thread.message.length - 1] === '}') {
+                                                            const obj = JSON.parse(thread.message)
+                                                            title = obj.title
+                                                        } else {
+                                                            const { title: t, subtitle: s } = htmlStringParser(thread.message)
+                                                            title = t
+                                                        }
+
+                                                        return <TouchableOpacity
+                                                            onPress={() => loadCueDiscussions(thread._id)}
+                                                            style={{
+                                                                backgroundColor: '#f8f9fa',
+                                                                flexDirection: 'row',
+                                                                borderColor: '#eeeeee',
+                                                                borderBottomWidth: ind === filteredThreads.length - 1 ? 0 : 1,
+                                                                // minWidth: 600, // flex: 1,
+                                                                width: '100%'
+                                                            }}>
+                                                            {/* <View style={{ flex: 1, backgroundColor: '#f8f9fa', padding: 10 }}>
+                                                                <Image
+                                                                    style={{
+                                                                        height: 40,
+                                                                        width: 40,
+                                                                        marginTop: 5,
+                                                                        marginBottom: 5,
+                                                                        borderRadius: 75,
+                                                                        // marginTop: 20,
+                                                                        alignSelf: 'center'
+                                                                    }}
+                                                                    source={{ uri: user.avatar ? user.avatar : 'https://cues-files.s3.amazonaws.com/images/default.png' }}
+                                                                />
+                                                            </View> */}
+                                                            <View style={{ flex: 1, backgroundColor: '#f8f9fa', paddingLeft: 10 }}>
+                                                                <Text style={{ fontSize: 12, padding: 10, fontFamily: 'inter' }} ellipsizeMode='tail'>
+                                                                    {thread.anonymous ? 'Anonymous' : thread.fullName}
+                                                                </Text>
+                                                            </View>
+                                                            <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
+                                                                <Text style={{ fontSize: 12, padding: 10 }} ellipsizeMode='tail'>
+                                                                    {title}
+                                                                </Text>
+                                                            </View>
+                                                            <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
+                                                                <Text style={{ fontSize: 15, padding: 10, color: '#3b64f8' }} ellipsizeMode='tail'>
+                                                                    <Ionicons name='chevron-forward-outline' size={20} />
+                                                                </Text>
+                                                            </View>
+                                                        </TouchableOpacity>
+
+                                                        return <View style={styles.col} key={ind}>
                                                             <ThreadCard
                                                                 fadeAnimation={props.fadeAnimation}
                                                                 thread={thread}
@@ -393,7 +447,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                         </View>
                                         : (showThreadCues ?
                                             <View style={{
-                                                width: '60%',
+                                                width: '50%',
                                                 paddingLeft: 20,
                                                 height: Dimensions.get('window').height - 230,
                                             }}

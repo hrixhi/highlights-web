@@ -107,20 +107,22 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         </Text> */}
                     </TouchableOpacity>
                 </View>
-                <View style={styles.icons}>
-                    <TouchableOpacity
-                        style={styles.center}
-                        onPress={() => props.openMeeting()}>
-                        <Text style={styles.channelText}>
-                            <Ionicons
-                                name='chatbubbles-outline' size={19} color={'#43434F'} />
-                        </Text>
-                        <Text style={{ fontSize: 10, color: '#43434F', textAlign: 'center' }}>
-                            Classroom
-                        </Text>
-                    </TouchableOpacity>
-
-                </View>
+                {
+                    !props.channelId || props.channelId === '' ?
+                        <View style={styles.icons}>
+                            <TouchableOpacity
+                                style={styles.center}
+                                onPress={() => props.openMeeting()}>
+                                <Text style={styles.channelText}>
+                                    <Ionicons
+                                        name='chatbubbles-outline' size={19} color={'#43434F'} />
+                                </Text>
+                                <Text style={{ fontSize: 10, color: '#43434F', textAlign: 'center' }}>
+                                    Classroom
+                                </Text>
+                            </TouchableOpacity>
+                        </View> : null
+                }
                 {
                     isOwner ?
                         <View style={styles.icons}>

@@ -133,11 +133,6 @@ const ThreadCard: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 </Text>
                             </View>
                     }
-                    {/* <Text ellipsizeMode={'tail'}
-                        numberOfLines={1}
-                        style={styleObject.description}>
-                        {subtitle}
-                    </Text> */}
                 </View>
             </TouchableOpacity>
         </View>

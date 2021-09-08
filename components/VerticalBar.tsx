@@ -73,16 +73,18 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         flex: 1, backgroundColor: '#f8f9fa', width: '100%',
                         // borderWidth: 1,
                     }}>
-                    {
-                        props.channelId !== '' && (props.menuCollapsed === true) ?
-                            <View style={{
-                                flex: 1,
-                                // borderWidth: 1,
-                                flexDirection: Dimensions.get('window').width < 768 ? 'row' : (props.menuCollapsed ? 'column' : 'row'),
-                                backgroundColor: '#f8f9fa', width: '100%',
-                                paddingTop: Dimensions.get('window').width < 768 ? 7 : 0,
-                                justifyContent: Dimensions.get('window').width < 768 ? 'space-evenly' : 'flex-start'
-                            }}>
+
+                    <View style={{
+                        flex: 1,
+                        // borderWidth: 1,
+                        flexDirection: Dimensions.get('window').width < 768 ? 'row' : (props.menuCollapsed ? 'column' : 'row'),
+                        backgroundColor: '#f8f9fa', width: '100%',
+                        paddingTop: Dimensions.get('window').width < 768 ? 7 : 0,
+                        justifyContent: Dimensions.get('window').width < 768 ? 'space-evenly' : 'flex-start'
+                    }}>
+                        {
+
+                            props.channelId !== '' && (props.menuCollapsed === true) ?
                                 <TouchableOpacity
                                     style={{ backgroundColor: '#f8f9fa', width: Dimensions.get('window').width < 768 ? 'auto' : '100%', paddingBottom: 20 }}
                                     onPress={() => props.openMeeting()}>
@@ -98,23 +100,27 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                         Classroom
                                     </Text>
                                 </TouchableOpacity>
-                                {
-                                    isOwner ?
-                                        <TouchableOpacity
-                                            style={{
-                                                backgroundColor: '#f8f9fa',
-                                                width: Dimensions.get('window').width < 768 ? 'auto' : '100%',
-                                                paddingBottom: 20
-                                            }}
-                                            onPress={() => props.openChannelSettings()}>
-                                            <Text style={styles.channelText}>
-                                                <Ionicons name='settings-outline' size={19} color={'#43434F'} />
-                                            </Text>
-                                            <Text style={{ fontSize: 10, color: '#43434F', textAlign: 'center', width: '100%', }}>
-                                                Settings
-                                            </Text>
-                                        </TouchableOpacity> : null
-                                }
+                                : null
+                        }
+                        {
+                            isOwner && props.channelId !== '' && (props.menuCollapsed === true) ?
+                                <TouchableOpacity
+                                    style={{
+                                        backgroundColor: '#f8f9fa',
+                                        width: Dimensions.get('window').width < 768 ? 'auto' : '100%',
+                                        paddingBottom: 20
+                                    }}
+                                    onPress={() => props.openChannelSettings()}>
+                                    <Text style={styles.channelText}>
+                                        <Ionicons name='settings-outline' size={19} color={'#43434F'} />
+                                    </Text>
+                                    <Text style={{ fontSize: 10, color: '#43434F', textAlign: 'center', width: '100%', }}>
+                                        Settings
+                                    </Text>
+                                </TouchableOpacity> : null
+                        }
+                        {
+                            (props.menuCollapsed === true) ?
                                 <TouchableOpacity
                                     style={{ backgroundColor: '#f8f9fa', width: Dimensions.get('window').width < 768 ? 'auto' : '100%', paddingBottom: 20 }}
                                     onPress={() => props.hideMenu()}>
@@ -129,9 +135,9 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                     <Text style={{ fontSize: 10, color: '#43434F', textAlign: 'center', width: Dimensions.get('window').width < 768 ? 'auto' : '100%' }}>
                                         Expand
                                     </Text>
-                                </TouchableOpacity>
-                            </View> : null
-                    }
+                                </TouchableOpacity> : null
+                        }
+                    </View>
                 </View>
             </View>
             {

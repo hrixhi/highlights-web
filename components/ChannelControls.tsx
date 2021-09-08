@@ -551,13 +551,13 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         </Text>
                         <View
                             style={{
-                                borderWidth: 1,
+                                borderWidth: channels.length === 0 ? 0 : 1,
                                 borderColor: '#eeeeee',
                                 overflow: 'hidden',
                                 borderRadius: 12
                             }}
                         >
-                            <View style={{ backgroundColor: '#fff', flexDirection: 'row' }}>
+                            {/* <View style={{ backgroundColor: '#fff', flexDirection: 'row' }}>
                                 <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#f8f9fa', paddingLeft: 10 }}>
                                     <Text style={{ fontSize: 20, lineHeight: 50, fontFamily: 'inter', paddingHorizontal: 20, paddingVertical: 5 }} ellipsizeMode='tail'>
                                         Name
@@ -571,15 +571,18 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#f8f9fa', paddingLeft: 10 }}>
 
                                 </View>
-                            </View>
+                            </View> */}
                             <ScrollView contentContainerStyle={{
-                                maxHeight: 500
+                                maxHeight: 550
                             }}>
                                 {
-                                    channels.map((channel: any) => {
-                                        return <View style={{ backgroundColor: '#fff', flexDirection: 'row', borderColor: '#eeeeee', borderBottomWidth: 1 }}>
-                                            <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                                <Text style={{ fontSize: 12, lineHeight: 50, paddingHorizontal: 20, fontFamily: 'inter' }} ellipsizeMode='tail'>
+                                    channels.map((channel: any, ind: any) => {
+                                        return <View style={{
+                                            backgroundColor: '#fff', flexDirection: 'row', borderColor: '#eeeeee',
+                                            borderBottomWidth: ind === channels.length - 1 ? 0 : 1
+                                        }}>
+                                            <View style={{ flex: 1, backgroundColor: '#f8f9fa', paddingLeft: 10 }}>
+                                                <Text style={{ fontSize: 12, padding: 20, fontFamily: 'inter' }} ellipsizeMode='tail'>
                                                     {channel.name}
                                                 </Text>
                                             </View>
@@ -592,7 +595,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 <TouchableOpacity
                                                     onPress={() => handleSub(channel.name)}
                                                 >
-                                                    <Text style={{ textAlign: 'center', fontSize: 12, lineHeight: 50, paddingHorizontal: 20, color: '#3b64f8' }} ellipsizeMode='tail'>
+                                                    <Text style={{ textAlign: 'center', fontSize: 12, padding: 20, color: '#3b64f8' }} ellipsizeMode='tail'>
                                                         Join
                                                     </Text>
                                                 </TouchableOpacity>

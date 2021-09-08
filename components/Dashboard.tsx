@@ -746,15 +746,15 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                         nextTitle: '>',
                                                                                         prevTitle: '<',
                                                                                         prevTitleStyle: {
-                                                                                            marginTop: 10,
+                                                                                            marginTop: 15,
                                                                                             fontFamily: 'inter'
                                                                                         },
                                                                                         nextTitleStyle: {
-                                                                                            marginTop: 10,
+                                                                                            marginTop: 15,
                                                                                             fontFamily: 'inter'
                                                                                         },
                                                                                         dotsWrapperStyle: {
-                                                                                            marginTop: 12
+                                                                                            marginTop: 14
                                                                                         }
                                                                                     }}
                                                                                     containerStyle={{
@@ -873,11 +873,8 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 <ScrollView
                                                     showsVerticalScrollIndicator={false}
                                                     horizontal={true}
-                                                    // style={{ height: '100%' }}
                                                     contentContainerStyle={{
-                                                        // borderWidth: 2,
                                                         width: '100%',
-                                                        // height: windowHeight - 200,
                                                     }}
                                                 >
                                                     {cueMap[key].map((cue: any, index: any) => {
@@ -885,7 +882,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                             if (folderIdsMap[cue.folderId][0] !== index) {
                                                                 return null
                                                             } else {
-                                                                console.log('HELLO')
                                                                 // return swiper
                                                                 return <View style={{ width: 165, height: 150 }}>
                                                                     <Swiper
@@ -893,15 +889,15 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                             nextTitle: '>',
                                                                             prevTitle: '<',
                                                                             prevTitleStyle: {
-                                                                                marginTop: 10,
+                                                                                marginTop: 15,
                                                                                 fontFamily: 'inter'
                                                                             },
                                                                             nextTitleStyle: {
-                                                                                marginTop: 10,
+                                                                                marginTop: 15,
                                                                                 fontFamily: 'inter'
                                                                             },
                                                                             dotsWrapperStyle: {
-                                                                                marginTop: 12
+                                                                                marginTop: 14
                                                                             }
                                                                         }}
                                                                         containerStyle={{
@@ -1053,7 +1049,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 borderColor: '#eeeeee',
                 borderWidth: 1,
                 // borderWidth: 1,
-                paddingTop: 30,
+                paddingTop: 20,
                 paddingHorizontal: Dimensions.get('window').width < 768 ? 20 : 40,
                 flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row',
                 // flex: 1, 

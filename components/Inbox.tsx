@@ -887,7 +887,6 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                 flexDirection: 'row',
                                                                 borderColor: '#eeeeee',
                                                                 borderBottomWidth: ind === sectionFiltered.length - 1 ? 0 : 1,
-                                                                // minWidth: 600, // flex: 1,
                                                                 width: '100%'
                                                             }}>
                                                             <View style={{ flex: 1, backgroundColor: '#f8f9fa', padding: 10 }}>

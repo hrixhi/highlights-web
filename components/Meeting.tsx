@@ -355,17 +355,14 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                     width: "100%",
                     backgroundColor: "white",
                     paddingRight: 20,
-                    paddingTop: 30,
+                    paddingTop: 20,
                     paddingLeft: Dimensions.get('window').width < 1024 ? 20 : 0,
                     opacity: modalAnimation,
                     borderTopLeftRadius: 0,
                     borderTopRightRadius: 0,
                     alignSelf: "center"
                 }}>
-                <Text style={{ width: "100%", textAlign: "center", paddingTop: 5 }}>
-                    {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
-                </Text>
-                <View style={{ backgroundColor: "white", flexDirection: "row", paddingBottom: 25 }}>
+                <View style={{ backgroundColor: "white", flexDirection: "row", paddingBottom: 20 }}>
                     <Text
                         ellipsizeMode="tail"
                         style={{
@@ -380,7 +377,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                         }}>
                         Meet
                     </Text>
-                    <TouchableOpacity
+                    {/* <TouchableOpacity
                         onPress={() => {
                             setViewChannelAttendance(true);
                         }}
@@ -408,14 +405,14 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                             ATTENDANCE <Ionicons name='list-outline' size={12} />
                         </Text>
 
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                 </View>
                 <View style={{ backgroundColor: "white", flex: 1 }}>
                     <View
                         style={{
                             width: "100%",
                             backgroundColor: "white",
-                            flexDirection: Dimensions.get("window").width < 768 ? "column" : "row"
+                            flexDirection: 'column'
                         }}>
                         <View
                             style={{
@@ -427,7 +424,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                     backgroundColor: "white",
                                     overflow: "hidden",
                                     height: 35,
-                                    marginTop: 15,
+                                    // marginTop: 15,
                                     marginBottom: 20
                                 }}>
                                 <Text
@@ -452,7 +449,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                             isOwner ? (
                                 <View
                                     style={{
-                                        paddingLeft: Dimensions.get('window').width < 768 ? 0 : 30,
+                                        // paddingLeft: Dimensions.get('window').width < 768 ? 0 : 30,
                                         // marginBottom: 25,
                                         backgroundColor: "white"
                                     }}>
@@ -495,7 +492,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                             isOwner ? (
                                 <View
                                     style={{
-                                        paddingLeft: Dimensions.get('window').width < 768 ? 0 : 30,
+                                        // paddingLeft: Dimensions.get('window').width < 768 ? 0 : 30,
                                         // marginBottom: 25,
                                         backgroundColor: "white"
                                     }}>
@@ -536,7 +533,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                         }
                     </View>
                     {
-                        <View style={{ borderTopColor: '#f8f9fa', borderTopWidth: 1, marginTop: 25 }}>
+                        <View style={{ borderTopColor: '#eeeeee', borderTopWidth: 1, marginTop: 25 }}>
                             <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 25 }}>
                             </Text>
                             <Text style={{
@@ -549,7 +546,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                 flex: 1,
                                 lineHeight: 25
                             }}>
-                                Past Lectures
+                                Past Meetings
                             </Text>
                             {
 
@@ -616,14 +613,16 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
     return <View style={{ width: '100%', flexDirection: width < 768 ? 'column' : 'row' }}>
         <View style={{
             backgroundColor: 'white',
-            width: width < 768 ? '100%' : '40%',
-            paddingRight: width < 768 ? 0 : 20,
+            width: width < 768 ? '100%' : '30%',
+            // paddingRight: width < 768 ? 0 : 20,
         }}>
             {!viewChannelAttendance ? mainClassroomView : attendanceListView}
         </View>
         <View style={{
-            backgroundColor: '#fff', width: width < 768 ? '100%' : '60%',
+            backgroundColor: '#fff', width: width < 768 ? '100%' : '70%',
             paddingLeft: width < 768 ? 0 : 20,
+            marginTop: 20,
+            marginBottom: 20,
             borderLeftWidth: width < 768 ? 0 : 1, borderLeftColor: '#eeeeee',
         }}>
             <Discussion
