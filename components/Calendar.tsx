@@ -1930,7 +1930,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             const uString: any = await AsyncStorage.getItem("user");
                                             if (uString) {
                                                 const user = JSON.parse(uString);
-                                                const server = fetchAPI("");
+                                                const server = fetchAPI(user._id);
                                                 server
                                                     .mutate({
                                                         mutation: markActivityAsRead,

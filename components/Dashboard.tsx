@@ -265,6 +265,16 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         <SearchResultCard
                                             title={t}
                                             subtitle={s}
+                                            onPress={() => {
+                                                if (option === 'Notes') {
+                                                    props.openCueFromCalendar(obj.channelId, obj._id, obj.createdBy)
+                                                } else if (option === '') {
+
+                                                } else {
+                                                    
+                                                }
+
+                                            }}
                                         />
                                     </View>
                                 })}
@@ -773,8 +783,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 appearance={'subtle'}
                                 placeholder={'Filter  '}
                                 onChange={(e: any) => {
-                                    console.log('dates start', e[0])
-                                    console.log('dates end', e[1])
                                     if (e[0] > e[1]) {
                                         alert('End date must be greater')
                                         return

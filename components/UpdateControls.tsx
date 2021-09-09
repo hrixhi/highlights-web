@@ -58,7 +58,7 @@ import parser from 'html-react-parser';
 const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const current = new Date();
     const [cue, setCue] = useState(props.cue.cue);
-    const [initialCue, setInitialCue] = useState(props.cue.cue);
+    const [initialSubmissionDraft, setInitialSubmissionDraft] = useState('');
     const [shuffle, setShuffle] = useState(props.cue.shuffle);
     const [starred, setStarred] = useState(props.cue.starred);
     const [color, setColor] = useState(props.cue.color);
@@ -85,9 +85,11 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const now = new Date(props.cue.date);
     const RichText: any = useRef();
     const editorRef: any = useRef();
+    const submissionViewerRef: any = useRef();
     const [height, setHeight] = useState(100);
     const colorChoices: any[] = ["#d91d56", "#ED7D22", "#FFBA10", "#B8D41F", "#53BE6D"].reverse();
     const [submission, setSubmission] = useState(props.cue.submission ? props.cue.submission : false);
+    const [limitedShares, setLimitedShares] = useState(props.cue.limitedShares ? props.cue.limitedShares : false)
     const [frequencyName, setFrequencyName] = useState('Day')
     const dead =
         props.cue.deadline && props.cue.deadline !== ""
@@ -130,9 +132,16 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const [initialOriginal, setInitialOriginal] = useState(props.cue.original)
     const [comment] = useState(props.cue.comment)
     const [shareWithChannelName, setShareWithChannelName] = useState('')
-
+    const [unlimitedAttempts, setUnlimitedAttempts] = useState(!props.cue.allowedAttempts)
+    const [allowedAttempts, setAllowedAttemps] = useState(!props.cue.allowedAttempts ? "" : props.cue.allowedAttempts.toString())
+    const [submissionAttempts, setSubmissionAttempts] = useState<any[]>([])
+    const [submissionDraft, setSubmissionDraft] = useState('')
     const [updatingCueContent, setUpdatingCueContent] = useState(false);
     const [updatingCueDetails, setUpdatingCueDetails] = useState(false);
+    const [viewSubmission, setViewSubmission] = useState(props.cue.graded && props.cue.releaseSubmission);
+    const [viewSubmissionTab, setViewSubmissionTab] = useState('mySubmission');
+    const [quizAttempts, setQuizAttempts] = useState<any[]>([])
+    const [remainingAttempts, setRemainingAttempts] = useState<any>(null)
 
     // QUIZ OPTIONS
     const [isQuiz, setIsQuiz] = useState(false);
@@ -151,7 +160,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const [shuffleQuiz, setShuffleQuiz] = useState(false);
     const [instructions, setInstructions] = useState('');
     const [headers, setHeaders] = useState({})
-    const [cueGraded, setCueGraded] = useState(props.cue.graded);
+    const [cueGraded] = useState(props.cue.graded);
     const [quizSolutions, setQuizSolutions] = useState<any>({});
     const [isV0Quiz, setIsV0Quiz] = useState(false);
     const [loadingAfterModifyingQuiz, setLoadingAfterModifyingQuiz] = useState(false);
@@ -292,9 +301,124 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         }
     }, [])
 
+    useEffect(() => {
+ 
+        if (submissionAttempts && submissionAttempts.length > 0 && submissionViewerRef && submissionViewerRef.current) {
+            const attempt = submissionAttempts[submissionAttempts.length - 1];
+
+            let url = attempt.html !== undefined ? attempt.annotationPDF : attempt.url;
+            
+            if (!url) {
+                return;
+            }
+
+            WebViewer(
+                {
+                    initialDoc: decodeURIComponent(url),
+                },
+                submissionViewerRef.current,
+            ).then(async (instance) => {
+                const { documentViewer, annotationManager } = instance.Core;
+
+                const u = await AsyncStorage.getItem("user");
+
+                let user: any;
+
+                if (u) {
+                    user = JSON.parse(u);
+                    annotationManager.setCurrentUser(user.fullName)
+                }
+
+                documentViewer.addEventListener('documentLoaded', async () => {
+                    // perform document operations
+
+                    const currAttempt = submissionAttempts[submissionAttempts.length - 1];
+
+                    const xfdfString = currAttempt.annotations;
+
+                    if (xfdfString !== "") {
+                        annotationManager.importAnnotations(xfdfString).then((annotations: any) => {
+
+                            annotations.forEach((annotation: any) => {
+
+                                // Hide instructor annotations until grades are released
+                                if (!props.cue.releaseSubmission && annotation.Author !== user.fullName) {
+                                    annotationManager.hideAnnotation(annotation);
+                                } else {
+                                    annotationManager.redrawAnnotation(annotation);
+                                }
+
+                                
+                            });
+                        });
+                    }
+                });
+
+                
+
+                annotationManager.addEventListener('annotationChanged', async (annotations: any, action: any, { imported }) => {
+                    // If the event is triggered by importing then it can be ignored
+                    // This will happen when importing the initial annotations
+                    // from the server or individual changes from other users
+                    if (imported) return;
+              
+                    const xfdfString = await annotationManager.exportAnnotations({ useDisplayAuthor: true });
+
+                    let subCues: any = {};
+                    try {
+                        const value = await AsyncStorage.getItem("cues");
+                        if (value) {
+                            subCues = JSON.parse(value);
+                        }
+                    } catch (e) { }
+
+                    if (subCues[props.cueKey].length === 0) {
+                        return;
+                    }
+
+                    const currCue = subCues[props.cueKey][props.cueIndex]
+
+                    const currCueValue = currCue.cue;
+
+                    const obj = JSON.parse(currCueValue);
+
+                    const currAttempt = submissionAttempts[submissionAttempts.length - 1];
+
+                    currAttempt.annotations = xfdfString;
+
+                    const allAttempts = [...obj.attempts];
+
+                    allAttempts[allAttempts.length - 1] = currAttempt;
+
+                    const updateCue = {
+                        attempts: allAttempts,
+                        submissionDraft: obj.submissionDraft
+                    }
+
+                    const saveCue = {
+                        ...currCue,
+                        cue: JSON.stringify(updateCue),
+                    }
+            
+                    subCues[props.cueKey][props.cueIndex] = saveCue;
+            
+                    const stringifiedCues = JSON.stringify(subCues);
+                    await AsyncStorage.setItem("cues", stringifiedCues);
+                    props.reloadCueListAfterUpdate(); 
+
+                  });
+                
+                // you can now call WebViewer APIs here...
+                // documentViewer.addEventListener('documentLoaded', () => {
+                //     // perform document operations
+                // });
+            });
+        }
+
+    }, [viewSubmission, submissionViewerRef, submissionViewerRef.current])
+
     // Used to detect ongoing quiz and
     useEffect(() => {
-        console.log(duration)
         if (!isQuizTimed || initiatedAt === null || initiatedAt === "" || isOwner) {
             // not a timed quiz or its not been initiated
             return;
@@ -409,20 +533,27 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             }
         }
     }, [props.cue, props.channelId]);
-
+ 
     // If cue contains a Quiz, then need to fetch the quiz and set State
     useEffect(() => {
+        
         if (props.cue.channelId && props.cue.channelId !== "") {
             const data1 = original;
             const data2 = cue;
             if (data2 && data2[0] && data2[0] === "{" && data2[data2.length - 1] === "}") {
                 const obj = JSON.parse(data2);
-                setSubmissionImported(true);
-                setSubmissionUrl(obj.url);
-                setSubmissionType(obj.type);
-                if (loading) {
-                    setSubmissionTitle(obj.title);
+
+                // V1: Modified with addition of multiple submission attempts
+                // This is old schema
+                if (obj.url !== undefined && obj.title !== undefined && obj.type !== undefined) {
+                    setSubmissionImported(true);
+                    setSubmissionUrl(obj.url);
+                    setSubmissionType(obj.type);
+                    if (loading) {
+                        setSubmissionTitle(obj.title);
+                    }
                 }
+               
             } else {
                 setSubmissionImported(false);
                 setSubmissionUrl("");
@@ -451,11 +582,46 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         .then(res => {
                             if (res.data && res.data.quiz.getQuiz) {
                                 setQuizId(obj.quizId);
+
                                 const solutionsObject = cue ? JSON.parse(cue) : {};
                                 if (solutionsObject.solutions) {
                                     setSolutions(solutionsObject.solutions);
                                     setQuizSolutions(solutionsObject);
+                                } 
+
+                                if (solutionsObject.initiatedAt && solutionsObject.initiatedAt !== "") {
+                                    const init = new Date(solutionsObject.initiatedAt);
+                                    setInitiatedAt(init);
                                 }
+                                
+                                // NEW SCHEMA V1: QUIZ RESPONSES STORED AS quizResponses 
+                                if (solutionsObject.quizResponses !== undefined && solutionsObject.quizResponses !== "") {
+                                    const parseQuizResponses = JSON.parse(solutionsObject.quizResponses);
+
+                                    setSolutions(parseQuizResponses.solutions)
+
+                                    if (parseQuizResponses.initiatedAt !== undefined && parseQuizResponses.initiatedAt !== null) {
+                                        const init = new Date(parseQuizResponses.initiatedAt);
+                                        setInitiatedAt(init);
+                                    }
+                                }
+
+                                if (solutionsObject.attempts !== undefined) {
+                                    setQuizAttempts(solutionsObject.attempts)
+
+                                    // FInd the active one and set it to quizSolutions
+                                    solutionsObject.attempts.map((attempt: any) => {
+                                        if (attempt.isActive) {
+                                            setQuizSolutions(attempt)
+                                        }
+                                    })
+
+                                    // Set remaining attempts 
+                                    if (props.cue.allowedAttempts !== null) {
+                                        setRemainingAttempts(solutionsObject.attempts ? (props.cue.allowedAttempts - solutionsObject.attempts.length) : props.cue.allowedAttempts)
+                                    }
+                                }
+
                                 setProblems(res.data.quiz.getQuiz.problems);
 
                                 const deepCopy = lodash.cloneDeep(res.data.quiz.getQuiz.problems)
@@ -473,10 +639,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     setDuration(res.data.quiz.getQuiz.duration * 60);
                                     setIsQuizTimed(true);
                                 }
-                                if (solutionsObject.initiatedAt && solutionsObject.initiatedAt !== "") {
-                                    const init = new Date(solutionsObject.initiatedAt);
-                                    setInitiatedAt(init);
-                                }
+
+                                
                                 setShuffleQuiz(res.data.quiz.getQuiz.shuffleQuiz ? true : false)
                                 setTitle(obj.title);
                                 setIsQuiz(true);
@@ -517,6 +681,46 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         }
         setLoading(false);
     }, [props.cue, cue, loading, original]);
+
+
+
+    // Initialize submission Draft + Submission import title, url, type for new SCHEMA
+    useEffect(() => {
+
+        if (props.cue.channelId && props.cue.channelId !== "") {
+            const data = cue;
+
+            if (data && data[0] && data[0] === '{' && data[data.length - 1] === '}') {
+                const obj = JSON.parse(data);
+
+                // New Schema
+                if (obj.submissionDraft !== undefined) {
+                    if (obj.submissionDraft[0] === '{' && obj.submissionDraft[obj.submissionDraft.length - 1] === '}') {
+                        let parse = JSON.parse(obj.submissionDraft);
+
+                        if (parse.url !== undefined && parse.title !== undefined && parse.type !== undefined) {
+                            setSubmissionImported(true);
+                            setSubmissionUrl(parse.url);
+                            setSubmissionType(parse.type);
+                            setSubmissionTitle(parse.title)
+                        } 
+
+                        setSubmissionDraft(obj.submissionDraft)
+
+                    } else {
+
+                        setInitialSubmissionDraft(obj.submissionDraft)
+                        setSubmissionDraft(obj.submissionDraft)
+                        
+                    }
+                    
+                    setSubmissionAttempts(obj.attempts)
+
+                }
+            }
+        }
+
+    }, [cue, props.cue.channelId])
 
     // Important for new Quiz version with problemScores and comments
     useEffect(() => {
@@ -762,9 +966,19 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         title, original, imported, type, url
     ]);
 
+    // Clear submission imported if submissionDraft is set to ""
+    useEffect(() => {
+        if (submissionDraft === "" && submissionImported) {
+            setSubmissionImported(false);
+            setSubmissionUrl("");
+            setSubmissionType("");
+            setSubmissionTitle("");
+        }
+    }, [submissionDraft])
+
     useEffect(() => {
         handleUpdateCue()
-    }, [submitted, solutions, initiatedAt, submissionType, submissionUrl, submissionTitle, submissionImported, isQuiz, cue])
+    }, [submitted, solutions, initiatedAt, submissionType, submissionUrl, submissionTitle, submissionImported, isQuiz, submissionDraft])
 
     const handleUpdateCue = useCallback(async () => {
         let subCues: any = {};
@@ -778,33 +992,75 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             return;
         }
 
+        const currCue = subCues[props.cueKey][props.cueIndex]
+
+        const currCueValue = currCue.cue;
+
+        // If there are no existing submissions then initiate cue obj
+        let submissionObj = {
+            submissionDraft: '',
+            attempts: []
+        };
+
+        let quizObj = {
+            quizResponses: {},
+            attempts: []
+        }
+
         let updatedCue = '';
 
         if (isQuiz) {
-            updatedCue = JSON.stringify({
+
+            if (currCueValue[0] === '{' && currCueValue[currCueValue.length - 1] === '}') {
+                quizObj = JSON.parse(currCueValue);
+            }
+
+            quizObj.quizResponses = JSON.stringify({
                 solutions,
                 initiatedAt
-            });
+            })
+
+            updatedCue = JSON.stringify(quizObj);
+
         } else if (submissionImported) {
+
+            if (currCueValue[0] === '{' && currCueValue[currCueValue.length - 1] === '}') {
+                submissionObj = JSON.parse(currCueValue);
+            }
+
+            const updatedDraft = JSON.parse(submissionDraft)
+            // Submission draft will also have annotations so preserve those
+
             const obj = {
+                ...updatedDraft,
                 type: submissionType,
                 url: submissionUrl,
-                title: submissionTitle
+                title: submissionTitle,
             };
-            updatedCue = JSON.stringify(obj);
+
+            submissionObj.submissionDraft = JSON.stringify(obj)
+
+            updatedCue = JSON.stringify(submissionObj);
+
         } else {
-            updatedCue = cue;
+
+            if (currCueValue[0] === '{' && currCueValue[currCueValue.length - 1] === '}') {
+                submissionObj = JSON.parse(currCueValue);
+            }
+
+            submissionObj.submissionDraft = submissionDraft
+            
+            updatedCue = JSON.stringify(submissionObj);
         }
 
         const submittedNow = new Date();
 
-        const currCue = subCues[props.cueKey][props.cueIndex]
-
         const saveCue = {
             ...currCue,
-            cue: props.cue.submittedAt ? props.cue.cue : updatedCue,
+            cue: updatedCue,
             submittedAt: submitted ? submittedNow.toISOString() : props.cue.submittedAt,
         }
+        
 
         subCues[props.cueKey][props.cueIndex] = saveCue;
 
@@ -812,7 +1068,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         await AsyncStorage.setItem("cues", stringifiedCues);
         props.reloadCueListAfterUpdate();
 
-    }, [submitted, solutions, initiatedAt, submissionType, submissionUrl, submissionTitle, submissionImported, isQuiz, cue])
+    }, [submitted, solutions, initiatedAt, submissionType, submissionUrl, submissionTitle, submissionImported, isQuiz, submissionDraft])
 
     useEffect(() => {
         handleUpdateStarred()
@@ -1074,19 +1330,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 solutions,
                                 initiatedAt
                             });
-                        } else if (submissionImported) {
-                            const obj = {
-                                type: submissionType,
-                                url: submissionUrl,
-                                title: submissionTitle
-                            };
-                            saveCue = JSON.stringify(obj);
-                        } else {
-                            if (cue === "") {
-                                // submission cannot be empty
-                                return;
-                            }
-                            saveCue = cue;
+                        } else  {
+                            saveCue = submissionDraft;
                         }
 
                         const server = fetchAPI("");
@@ -1194,7 +1439,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         setTitle('')
                     } else {
                         setSubmissionImported(false)
-                        setCue('')
+                        setSubmissionDraft('')
+                        setInitialSubmissionDraft('')
                         setSubmissionUrl('')
                         setSubmissionType('')
                         setSubmissionTitle('')
@@ -1484,12 +1730,87 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     initialDoc: decodeURIComponent(url),
                 },
                 RichText.current,
-            ).then((instance) => {
-                const { documentViewer } = instance.Core;
+            ).then(async (instance: any) => {
+                const { documentViewer, annotationManager } = instance.Core;
+                const u = await AsyncStorage.getItem("user");
+
+                let user: any;
+
+                if (u) {
+                    user = JSON.parse(u);
+                    annotationManager.setCurrentUser(user.fullName)
+                }
+
                 // you can now call WebViewer APIs here...
-                documentViewer.addEventListener('documentLoaded', () => {
+                documentViewer.addEventListener('documentLoaded', async () => {
                     // perform document operations
+
+                    // Need to modify the original property in the cue
+                    let subCues: any = {};
+                    try {
+                        const value = await AsyncStorage.getItem("cues");
+                        if (value) {
+                            subCues = JSON.parse(value);
+                        }
+                    } catch (e) { }
+
+                    if (subCues[props.cueKey].length === 0) {
+                        return;
+                    }
+
+                    const currCue = subCues[props.cueKey][props.cueIndex]
+
+                    if (currCue.annotations !== "") {
+                        const xfdfString = currCue.annotations;
+
+                        annotationManager.importAnnotations(xfdfString).then((annotations: any) => {
+
+                            annotations.forEach((annotation: any) => {
+                                annotationManager.redrawAnnotation(annotation);                                
+                            });
+                        });
+
+                    }
+                    
+
                 });
+
+                annotationManager.addEventListener('annotationChanged', async (annotations: any, action: any, { imported }) => {
+                    // If the event is triggered by importing then it can be ignored
+                    // This will happen when importing the initial annotations
+                    // from the server or individual changes from other users
+                    if (imported) return;
+              
+                    const xfdfString = await annotationManager.exportAnnotations({ useDisplayAuthor: true });
+
+                    let subCues: any = {};
+                    try {
+                        const value = await AsyncStorage.getItem("cues");
+                        if (value) {
+                            subCues = JSON.parse(value);
+                        }
+                    } catch (e) { }
+
+                    if (subCues[props.cueKey].length === 0) {
+                        return;
+                    }
+
+                    const currCue = subCues[props.cueKey][props.cueIndex]
+
+
+
+                    const saveCue = {
+                        ...currCue,
+                        annotations: xfdfString,
+                    }
+            
+                    subCues[props.cueKey][props.cueIndex] = saveCue;
+            
+                    const stringifiedCues = JSON.stringify(subCues);
+                    await AsyncStorage.setItem("cues", stringifiedCues);
+                    props.reloadCueListAfterUpdate(); 
+
+                  });
             });
         } else {
             if (submissionUrl === '' || !submissionUrl) {
@@ -1501,15 +1822,60 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     initialDoc: decodeURIComponent(submissionUrl),
                 },
                 RichText.current,
-            ).then((instance) => {
-                const { documentViewer } = instance.Core;
+            ).then(async (instance: any) => {
+                const { documentViewer, annotationManager } = instance.Core;
                 // you can now call WebViewer APIs here...
+
+                const u = await AsyncStorage.getItem("user");
+
+                let user: any;
+
+                if (u) {
+                    user = JSON.parse(u);
+                    annotationManager.setCurrentUser(user.fullName)
+                }
+
                 documentViewer.addEventListener('documentLoaded', () => {
                     // perform document operations
+
+                    if (submissionDraft !== "" && submissionDraft[0] && submissionDraft[0] === "{" && submissionDraft[submissionDraft.length - 1] === "}") {
+                        const obj = JSON.parse(submissionDraft);
+
+                        if (obj.annotations !== "") {
+                            const xfdfString = obj.annotations;
+
+                            annotationManager.importAnnotations(xfdfString).then((annotations: any) => {
+
+                                annotations.forEach((annotation: any) => {
+                                    annotationManager.redrawAnnotation(annotation);                                
+                                });
+                            });
+                        }
+                    }
+                });
+
+
+                annotationManager.addEventListener('annotationChanged', async (annotations: any, action: any, { imported }) => {
+                    // If the event is triggered by importing then it can be ignored
+                    // This will happen when importing the initial annotations
+                    // from the server or individual changes from other users
+                    if (imported) return;
+
+                    const xfdfString = await annotationManager.exportAnnotations({ useDisplayAuthor: true });
+
+                    const obj = JSON.parse(submissionDraft);
+
+                    let updateSubmissionDraftWithAnnotation = {
+                        ...obj,
+                        annotations: xfdfString
+                    }
+
+                    setSubmissionDraft(JSON.stringify(updateSubmissionDraftWithAnnotation))
+
                 });
             });
         }
-    }, [url, RichText, imported, submissionImported, props.showOriginal]);
+    }, [url, RichText, imported, submissionImported, props.showOriginal, submissionUrl]);
 
 
     if (loading || loadingAfterModifyingQuiz) {
@@ -1672,7 +2038,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             props.setShowOptions(false)
                             props.setShowComments(false)
 
-                            setInitialCue(cue);
+                            
+                            setInitialSubmissionDraft(submissionDraft);
 
                         }}>
                         <Text style={!props.showOriginal && !props.viewStatus && !props.showComments && !props.showOptions ? styles.allGrayFill : styles.all}>
@@ -1741,8 +2108,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             {title}
                         </Text>}
                 </View>
-                {isQuiz && !props.cue.graded ? (
-                    isQuizTimed && (!props.cue.submittedAt || props.cue.submittedAt === "") ? (
+                {isQuiz ? (
+                    isQuizTimed ? (
                         initiatedAt && initDuration !== 0 ? (
                             <View
                                 style={{
@@ -1881,11 +2248,322 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         ) : null;
     };
 
-    const renderMainCueContent = () => {
+    const renderQuizEndedMessage = () => {
+            return (<View style={{ backgroundColor: 'white', flex: 1, }}>
+                <Text style={{ width: '100%', color: '#818385', fontSize: 20, paddingTop: 200, paddingBottom: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1, textAlign: 'center' }}>
+                    Quiz submission ended. {remainingAttempts === 0 ? "You have used up all your attempts. " : ""} 
+                </Text>
+            </View>)
+
+    }
+
+    const renderQuizSubmissionHistory = () => {
+
+        const quizAttempted = quizAttempts.length > 0;
+
+        const latestSubmission = quizAttempts[quizAttempts.length - 1];
+
+        return (<View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between'}}>
+                <View>
+                <View
+                    style={{
+                        width: "100%",
+                        paddingTop: 40,
+                        paddingBottom: 15,
+                        backgroundColor: "white"
+                    }}>
+                    <Text style={{
+                        fontSize: 15,
+                        fontFamily: 'inter',
+                        color: '#2f2f3c'                    
+                    }}>Submission History</Text>
+                </View>
+                {quizAttempted
+                ? 
+                <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                    <Ionicons name='checkmark-outline' size={22} color={"#53BE68"} /> 
+                    <Text style={{ fontSize: 15, paddingLeft: 5 }}>
+                        Submitted at {moment(new Date(latestSubmission.submittedAt)).format('MMMM Do, h:mm a')}
+                    </Text>
+                </View> 
+                : 
+                <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                    <Ionicons name='alert-circle-outline' size={22} color={"#D91D56"} /> 
+                    <Text style={{ fontSize: 15, paddingLeft: 5 }}>
+                        Not Attempted
+                    </Text>
+                </View>}
+                {/* Add remaining attempts here */}
+                {/* <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
+                    <Text style={{ fontSize: 15, paddingLeft: 5 }}>
+                        {!allowedAttempts ? "" : "Remaining Attempts: " + (allowedAttempts - usedAttempts)}
+                    </Text>
+                </View> */}
+
+                {/* View Submission button here */}
+
+                {/* {
+                    props.cue.submittedAt && props.cue.submittedAt !== "" 
+                    ?
+                    <View style={{ flexDirection: 'row', marginTop: 10, }}>
+                        {viewSubmission ? 
+                        <TouchableOpacity
+                            disabled={props.cue.graded && props.cue.releaseSubmission}
+                            onPress={async () => {
+                                setViewSubmission(false)
+                            }}
+                            style={{
+                                backgroundColor: 'white',
+                                overflow: 'hidden',
+                                height: 35,
+                                // marginTop: 15,
+                                justifyContent: 'center',
+                                flexDirection: 'row',
+                            }}>
+                            <Text style={{
+                                textAlign: 'center',
+                                lineHeight: 30,
+                                color: '#fff',
+                                fontSize: 12,
+                                backgroundColor: '#53BE6D',
+                                paddingHorizontal: 25,
+                                fontFamily: 'inter',
+                                height: 30,
+                                // width: 100,
+                                borderRadius: 15,
+                                textTransform: 'uppercase'
+                            }}>
+                                {(props.cue.graded && props.cue.releaseSubmission) ? "GRADED" : "Re-Submit"}
+                            </Text>
+                        </TouchableOpacity>
+                        :
+                        <TouchableOpacity
+                            onPress={async () => {
+                                setViewSubmission(true)
+                            }}
+                            style={{
+                                backgroundColor: 'white',
+                                overflow: 'hidden',
+                                height: 35,
+                                // marginTop: 15,
+                                justifyContent: 'center',
+                                flexDirection: 'row',
+                            }}>
+                            <Text style={{
+                                textAlign: 'center',
+                                lineHeight: 30,
+                                color: '#fff',
+                                fontSize: 12,
+                                backgroundColor: '#53BE6D',
+                                paddingHorizontal: 25,
+                                fontFamily: 'inter',
+                                height: 30,
+                                // width: 100,
+                                borderRadius: 15,
+                                textTransform: 'uppercase'
+                            }}>
+                                View Submission
+                            </Text>
+                        </TouchableOpacity>}
+                    </View>
+                    :
+                    null
+                } */}
+                </View>
+                
+                {props.cue.graded && props.cue.releaseSubmission ? (<View>
+                    <Text style={{
+                        fontSize: 15,
+                        fontFamily: 'inter',
+                        color: '#2f2f3c', 
+                        paddingTop: 40,
+                        paddingBottom: 15,
+                    }}>
+                        {PreferredLanguageText('score')}
+                    </Text>
+                    <Text style={{
+                        fontSize: 25,
+                        fontFamily: 'inter',
+                        color: '#2f2f3c'
+                    }}>
+                        {props.cue.score}%
+                    </Text>
+
+                </View>) : null}
+
+            </View>)
+    }
+
+    const renderSubmissionHistory = () => {
+
+        const usedAttempts = submissionAttempts.length;
+
+        return (<View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between'}}>
+                <View>
+                <View
+                    style={{
+                        width: "100%",
+                        paddingTop: 40,
+                        paddingBottom: 15,
+                        backgroundColor: "white"
+                    }}>
+                    <Text style={{
+                        fontSize: 15,
+                        fontFamily: 'inter',
+                        color: '#2f2f3c'                    
+                    }}>Submission History</Text>
+                </View>
+                {props.cue.submittedAt && props.cue.submittedAt !== "" 
+                ? 
+                <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                    <Ionicons name='checkmark-outline' size={22} color={"#53BE68"} /> 
+                    <Text style={{ fontSize: 15, paddingLeft: 5 }}>
+                        Turned In at {moment(new Date(props.cue.submittedAt)).format('MMMM Do, h:mm a')}
+                    </Text>
+                </View> 
+                : 
+                <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                    <Ionicons name='alert-circle-outline' size={22} color={"#D91D56"} /> 
+                    <Text style={{ fontSize: 15, paddingLeft: 5 }}>
+                        Not Turned In
+                    </Text>
+                </View>}
+                {/* Add remaining attempts here */}
+                {/* <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
+                    <Text style={{ fontSize: 15, paddingLeft: 5 }}>
+                        {!allowedAttempts ? "" : "Remaining Attempts: " + (allowedAttempts - usedAttempts)}
+                    </Text>
+                </View> */}
+
+                {/* View Submission button here */}
+
+                {
+                    props.cue.submittedAt && props.cue.submittedAt !== "" 
+                    ?
+                    <View style={{ flexDirection: 'row', marginTop: 10, }}>
+                        {viewSubmission ? 
+                        <TouchableOpacity
+                            disabled={props.cue.graded && props.cue.releaseSubmission}
+                            onPress={async () => {
+                                setViewSubmission(false)
+                            }}
+                            style={{
+                                backgroundColor: 'white',
+                                overflow: 'hidden',
+                                height: 35,
+                                // marginTop: 15,
+                                justifyContent: 'center',
+                                flexDirection: 'row',
+                            }}>
+                            <Text style={{
+                                textAlign: 'center',
+                                lineHeight: 30,
+                                color: '#fff',
+                                fontSize: 12,
+                                backgroundColor: '#53BE6D',
+                                paddingHorizontal: 25,
+                                fontFamily: 'inter',
+                                height: 30,
+                                // width: 100,
+                                borderRadius: 15,
+                                textTransform: 'uppercase'
+                            }}>
+                                {(props.cue.graded && props.cue.releaseSubmission) ? "GRADED" : "Re-Submit"}
+                            </Text>
+                        </TouchableOpacity>
+                        :
+                        <TouchableOpacity
+                            onPress={async () => {
+                                setViewSubmission(true)
+                            }}
+                            style={{
+                                backgroundColor: 'white',
+                                overflow: 'hidden',
+                                height: 35,
+                                // marginTop: 15,
+                                justifyContent: 'center',
+                                flexDirection: 'row',
+                            }}>
+                            <Text style={{
+                                textAlign: 'center',
+                                lineHeight: 30,
+                                color: '#fff',
+                                fontSize: 12,
+                                backgroundColor: '#53BE6D',
+                                paddingHorizontal: 25,
+                                fontFamily: 'inter',
+                                height: 30,
+                                // width: 100,
+                                borderRadius: 15,
+                                textTransform: 'uppercase'
+                            }}>
+                                View Submission
+                            </Text>
+                        </TouchableOpacity>}
+                    </View>
+                    :
+                    null
+                }
+                </View>
+                
+                {props.cue.graded && props.cue.releaseSubmission ? (<View>
+                    <Text style={{
+                        fontSize: 15,
+                        fontFamily: 'inter',
+                        color: '#2f2f3c', 
+                        paddingTop: 40,
+                        paddingBottom: 15,
+                    }}>
+                        {PreferredLanguageText('score')}
+                    </Text>
+                    <Text style={{
+                        fontSize: 25,
+                        fontFamily: 'inter',
+                        color: '#2f2f3c'
+                    }}>
+                        {props.cue.score}%
+                    </Text>
+
+                </View>) : null}
+
+            </View>)
+    }
+
+    const renderQuizDetails = () => {
 
         let hours = Math.floor(duration / 3600);
 
         let minutes = Math.floor((duration - hours * 3600) / 60);
+
+        return (<View style={{ display: 'flex', flexDirection: 'row', marginTop: 20, marginBottom: 10 }}>
+            <Text style={{ marginRight: 10, fontWeight: '700' }}>
+                {problems.length} {problems.length === 1 ? "Question" : "Questions"}
+            </Text>
+            <Text style={{ marginRight: 10 }}>
+                |
+            </Text>
+            <Text style={{ marginRight: 10, fontWeight: '700' }}>
+                {totalQuizPoints} Points
+            </Text>
+            <Text style={{ marginRight: 10 }}>
+                |
+            </Text>
+            {duration === 0 ?
+            <Text style={{ marginRight: 10, fontWeight: '700' }}>No Time Limit</Text> :
+            <Text style={{ marginRight: 10, fontWeight: '700' }}>
+                {hours} H {minutes} min
+            </Text>}
+            {!isOwner ? <Text style={{ marginRight: 10, fontSize: 15}}>
+                |
+            </Text> : null}
+            {!isOwner ? <Text style={{ marginRight: 10, fontWeight: '700' }}>
+                {allowedAttempts && allowedAttempts !== null  ? 'Remaining Attempts: ' + remainingAttempts : "Unlimited Attempts"}
+            </Text> : null}
+        </View>)
+
+    }
+
+    const renderMainCueContent = () => {
 
         return (<View
             style={{
@@ -1912,30 +2590,13 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 modifyQuiz={updateQuiz}
                                 unmodifiedProblems={unmodifiedProblems}
                                 duration={duration}
+                                remainingAttempts={remainingAttempts}
+                                quizAttempts={quizAttempts}
                             />
                             {renderFooter()}
                         </View>
                     ) : (
                         <View>
-                            {
-                                <View style={{ display: 'flex', flexDirection: 'row', marginTop: 20, marginBottom: 10 }}>
-                                    <Text style={{ marginRight: 10, fontWeight: '700' }}>
-                                        {problems.length} {problems.length === 1 ? "Question" : "Questions"}
-                                    </Text>
-                                    <Text style={{ marginRight: 10 }}>
-                                        |
-                                    </Text>
-                                    <Text style={{ marginRight: 10, fontWeight: '700' }}>
-                                        {totalQuizPoints} Points
-                                    </Text>
-                                    <Text style={{ marginRight: 10 }}>
-                                        |
-                                    </Text>
-                                    <Text style={{ marginRight: 10, fontWeight: '700' }}>
-                                        {hours} H {minutes} min
-                                    </Text>
-                                </View>
-                            }
                             <View>
                                 <TouchableOpacity
                                     onPress={() => initQuiz()}
@@ -1983,6 +2644,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             modifyQuiz={updateQuiz}
                             unmodifiedProblems={unmodifiedProblems}
                             duration={duration}
+                            remainingAttempts={remainingAttempts}
+                            quizAttempts={quizAttempts}
                         />
                         {renderFooter()}
                     </View>
@@ -1998,93 +2661,42 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         }}
                     />
                 ) : (
-                    <View key={url} style={{ zIndex: 1, height: 50000 }}>
+                    <View key={url} style={{ }}>
                         <div className="webviewer" ref={RichText} style={{ height: "100vh" }}></div>
-                        {/* 
-                        <Webview
-                            fullScreen={true}
-                            url={url}
-                            key={url}
-                        /> */}
                     </View>
                 )
             ) : (
                 renderRichEditorOriginalCue()
             )}
-            {props.showOriginal ? null : submissionImported ? (
+            {!props.showOriginal && submissionImported && !viewSubmission ? (
                 submissionType === "mp4" ||
                     submissionType === "mp3" ||
                     submissionType === "mov" ||
                     submissionType === "mpeg" ||
                     submissionType === "mp2" ||
                     submissionType === "wav" ? (
-                    <ReactPlayer url={submissionUrl} controls={true} />
-                ) : (
-
-                    props.cue.graded && props.cue.comment ?
-                        <View style={{ position: 'relative', flex: 1 }}>
-                            <View style={{ position: 'absolute', zIndex: 1, width: 800, height: 50000 }}>
-                                {/* <Webview
-                                    key={submissionUrl}
-                                    url={submissionUrl}
-                                    fullScreen={true}
-                                /> */}
-                                <div className="webviewer" ref={RichText} style={{ height: "100vh" }}></div>
-                            </View>
-                            <View style={{ position: 'absolute', zIndex: 1, flex: 1, width: 800, height: 50000, backgroundColor: 'rgb(0,0,0,0)' }}>
-                                <Annotation
-                                    disableAnnotation={true}
-                                    style={{ resizeMode: 'cover', width: '100%', height: '100%', backgroundColor: 'rgb(0,0,0,0)', background: 'none', border: 'none' }}
-                                    src={require('./default-images/transparent.png')}
-                                    annotations={annotations}
-                                    // type={this.state.type}
-                                    value={annotation}
-                                    onChange={(e: any) => setAnnotation(e)}
-                                    onSubmit={onSubmit}
-                                />
-                            </View>
-                        </View>
-                        : <View style={{ width: 800, height: 50000 }}>
-                            {/* <Webview
-                                key={submissionUrl}
-                                url={submissionUrl}
-                                fullScreen={true}
-                            /> */}
-                            <div className="webviewer" ref={RichText} style={{ height: "100vh" }}></div>
-                        </View>
-
-                )
-            ) : (
-                props.cue.graded && props.cue.comment ?
-                    <View style={{ width: '100%', paddingBottom: 50, display: 'flex', flexDirection: 'column' }}>
-                        <View style={{ position: 'relative', flex: 1, width: '100%' }}>
-                            <View style={{ position: 'absolute', zIndex: 1 }}>
-                                {renderRichEditorModified()}
-                                {renderFooter()}
-                            </View>
-                            <View style={{ position: 'absolute', zIndex: 1, flex: 1, width: 800, height: 50000, backgroundColor: 'rgb(0,0,0,0)' }}>
-                                <Annotation
-                                    disableAnnotation={true}
-                                    style={{ resizeMode: 'cover', width: '100%', height: '100%', backgroundColor: 'rgb(0,0,0,0)', background: 'none', border: 'none' }}
-                                    src={require('./default-images/transparent.png')}
-                                    annotations={annotations}
-                                    // type={this.state.type}
-                                    value={annotation}
-                                    onChange={(e: any) => setAnnotation(e)}
-                                    onSubmit={onSubmit}
-                                />
-                            </View>
-                        </View>
+                    <View style={{ }}>
+                        <ReactPlayer url={submissionUrl} controls={true} />
+                        {renderFooter()}
                     </View>
-                    : (
-                        <View style={{ width: '100%', paddingBottom: 50, display: 'flex', flexDirection: 'column', height: 50000 }}>
-                            <View style={{  }}>
-                                {renderRichEditorModified()}
-                                {renderFooter()}
-                            </View>
-                        </View>
-                    )
-            )}
+                ) : (
+                    <View style={{ }}>
+                        <div className="webviewer" ref={RichText} style={{ height: "100vh" }}></div>
+                        {renderFooter()}
+                    </View>
+                )
+            ) : null}
+
+            {
+                props.showOriginal ? null : <View style={{ width: '100%', paddingBottom: 50, display: 'flex', flexDirection: 'column', }}>
+                {!viewSubmission ? (submissionImported ? null : <View style={{  }}>
+                    {renderRichEditorModified()}
+                    {renderFooter()}
+                </View>) : <View>
+                    {renderViewSubmission()}
+                </View>}                    
+            </View>
+            }
         </View>
         );
     }
@@ -2192,17 +2804,75 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         
     }
 
+    // Make sure that when the deadline has passed that the viewSubmission is set to true by default and that (Re-Submit button is not there)
+
+    const renderViewSubmission = () => {
+        const attempt = submissionAttempts[submissionAttempts.length - 1];
+
+        return (<View style={{ width: '100%', marginTop: 20 }}>
+            {/* Render Tabs to switch between original submission and Annotations only if submission was HTML and not a file upload */}
+            {attempt.url !== undefined ? null : <View style={{ flexDirection: "row", width: '100%', justifyContent: 'center' }}>
+                <TouchableOpacity
+                    style={{
+                        justifyContent: "center",
+                        flexDirection: "column"
+                    }}
+                    onPress={() => {
+                        setViewSubmissionTab("mySubmission");
+                    }}>
+                    <Text style={viewSubmissionTab === "mySubmission" ? styles.allGrayFill : styles.all}>
+                        My Submission
+                    </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={{
+                        justifyContent: "center",
+                        flexDirection: "column"
+                    }}
+                    onPress={() => {
+                        setViewSubmissionTab("instructorAnnotations");
+                    }}>
+                    <Text style={viewSubmissionTab === "instructorAnnotations" ? styles.allGrayFill : styles.all}>
+                        Feedback/Comments
+                    </Text>
+                </TouchableOpacity>
+            </View>}
+            {
+                attempt.url !== undefined ? 
+                    (attempt.type === 'mp4' || attempt.type === 'mp3' || attempt.type === 'mov' || attempt.type === 'mpeg' || attempt.type === 'mp2' || attempt.type === 'wav' ?
+                    <View style={{ width: '100%', marginTop: 25 }}>
+                        <ReactPlayer url={url} controls={true} /> 
+                    </View>
+                    : 
+                    <View style={{ width: '100%', marginTop: 25 }}>
+                        <div className="webviewer" ref={submissionViewerRef} style={{ height: "100vh" }}></div>
+                    </View>)
+                :
+                <View style={{ width: '100%', marginTop: 25 }}>
+                    {viewSubmissionTab === "mySubmission" ?  
+                    <View style={{ width: '100%' }}>
+                        {parser(attempt.html)}
+                    </View> : 
+                    <div className="webviewer" ref={submissionViewerRef} style={{ height: "100vh" }}></div>
+                    }
+               </View>
+
+            }
+        </View>)
+
+    }
+
     const renderRichEditorModified = () => (
         <Editor
             onInit={(evt, editor) => editorRef.current = editor}
-            initialValue={initialCue}
-            disabled={props.cue.graded && submission}
+            initialValue={initialSubmissionDraft}
+            disabled={props.cue.graded && props.cue.releaseSubmission && submission}
             apiKey="ip4jckmpx73lbu6jgyw9oj53g0loqddalyopidpjl23fx7tl"
             init={{
             skin: "snow",
             branding: false,
             placeholder: 'Content...',
-            readonly: props.cue.graded && submission,
+            readonly: props.cue.graded && props.cue.releaseSubmission && submission,
             min_height: 500,
             paste_data_images: true,
             images_upload_url: 'http://api.cuesapp.co/api/imageUploadEditor',
@@ -2221,7 +2891,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             },
             // menubar: 'file edit view insert format tools table tc help',
             menubar: false,
-            toolbar: props.cue.graded && submission ? false : 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat  pagebreak | table image media pageembed link | preview print | charmap emoticons |  ltr rtl | showcomments addcomment',
+            toolbar: props.cue.graded && props.cue.releaseSubmission && submission ? false : 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat  pagebreak | table image media pageembed link | preview print | charmap emoticons |  ltr rtl | showcomments addcomment',
             importcss_append: true,
             image_caption: true,
             quickbars_selection_toolbar: 'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
@@ -2235,7 +2905,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             // skin: useDarkMode ? 'oxide-dark' : 'oxide',
             // content_css: useDarkMode ? 'dark' : 'default',
             }}              
-            onChange={(e: any) => setCue(e.target.getContent()) }
+            onChange={(e: any) => {
+                setSubmissionDraft(e.target.getContent())
+            } }
         />
     );
 
@@ -2257,7 +2929,43 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         {props.cue.channelId && props.cue.channelId !== "" ? "Shared with" : "Saved in"}
                     </Text>
                 </View>
-                <View
+                {
+                    props.cue.channelId !== "" ? (<View>
+                    <View style={{ flexDirection: "row" }}>
+                    
+
+                      <View
+                        style={{
+                          backgroundColor: "white",
+                          height: 40,
+                          marginRight: 10,
+                        }}
+                      >
+                        <Switch
+                          value={!limitedShares}
+                          onValueChange={() => {
+                            setLimitedShares(!limitedShares);
+                          }}
+                          style={{ height: 20 }}
+                          trackColor={{
+                            false: "#F8F9FA",
+                            true: "#818385",
+                          }}
+                          activeThumbColor="white"
+                        />
+                      </View>
+                      <Text style={{
+                            fontSize: 12,
+                            color: "#818385",
+                            textAlign: "left",
+                            paddingTop: 5
+                        }}>
+                            All Subscribers
+                        </Text>
+                    </View> 
+                    </View>) : null
+                  }
+                {limitedShares ? <View
                     style={{
                         flexDirection: "column",
                         overflow: "scroll"
@@ -2312,7 +3020,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             }}
                         />
                     </View>
-                </View>
+                </View> : null}
             </View>
         ) : null;
     };
@@ -2531,8 +3239,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     </View>
                 ) : (!isOwner ? <Text style={{
                     fontSize: 12,
-                    color: "#a2a2ac",
-                    textAlign: "left",
+                    color: "#818385",
+                    textAlign: "left",                        
                     paddingRight: 10,
                 }}>
                     0%
@@ -2540,6 +3248,134 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             </View>
         ) : null;
     };
+
+    const renderAttemptsOptions = () => {
+        return submission ? (
+            (!isOwner ? 
+            <View style={{ width: "100%" }}>
+                <View
+                style={{
+                  width: "100%",
+                  paddingTop: 40,
+                  paddingBottom: 15,
+                  backgroundColor: "white",
+                }}
+                >
+                    <Text
+                    style={{
+                        fontSize: 15,
+                        fontFamily: 'inter',
+                        color: '#2f2f3c'
+                    }}
+                    >
+                        Allowed Attempts
+                    </Text>
+                </View>
+
+                <View
+                    style={{
+                      width: "100%",
+                      display: "flex",
+                      flexDirection: "row",
+                      backgroundColor: "white",
+                      alignItems: 'center'
+                    }}
+                  >
+                    <Text style={{
+                        fontSize: 12,
+                        color: "#818385",
+                        textAlign: "left",
+                        paddingRight: 10,
+                    }}>
+                      {unlimitedAttempts ? "Unlimited" : allowedAttempts}
+                    </Text>
+                </View>
+            </View>
+            :
+            <View style={{ width: "100%" }}>
+              <View
+                style={{
+                  width: "100%",
+                  paddingTop: 40,
+                  paddingBottom: 15,
+                  backgroundColor: "white",
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 15,
+                    fontFamily: 'inter',
+                    color: '#2f2f3c'
+                  }}
+                >
+                  Unlimited Attempts
+                </Text>
+              </View>
+              <View style={{ flexDirection: "row" }}>
+                <View
+                  style={{
+                    backgroundColor: "white",
+                    height: 40,
+                    marginRight: 10,
+                  }}
+                >
+                  <Switch
+                    value={unlimitedAttempts}
+                    onValueChange={() => {
+                      if (!unlimitedAttempts) {
+                        setAllowedAttemps("")
+                      } else {
+                        setAllowedAttemps('1')
+                      }
+                      setUnlimitedAttempts(!unlimitedAttempts)
+                    }}
+                    style={{ height: 20 }}
+                    trackColor={{
+                      false: "#F8F9FA",
+                      true: "#818385",
+                    }}
+                    activeThumbColor="white"
+                  />
+                </View>
+              </View>
+              <View>
+                {!unlimitedAttempts ? (
+                  <View
+                    style={{
+                      width: "100%",
+                      display: "flex",
+                      flexDirection: "row",
+                      backgroundColor: "white",
+                      alignItems: 'center'
+                    }}
+                  >
+                    <Text style={styles.text}>
+                      Allowed attempts
+                    </Text>
+                    <TextInput
+                      value={allowedAttempts}
+                      style={{
+                        width: "25%",
+                        borderBottomColor: "#F8F9FA",
+                        borderBottomWidth: 1,
+                        fontSize: 15,
+                        padding: 15,
+                        paddingVertical: 12,
+                        marginTop: 0,
+                      }}
+                      placeholder={""}
+                      onChangeText={(val) => { 
+                        if (Number.isNaN(Number(val))) return;
+                        setAllowedAttemps(val)
+                      }}
+                      placeholderTextColor={"#818385"}
+                    />
+                  </View>
+                ) : null}
+              </View>
+            </View>)
+          ) : null
+    }
 
     const renderCategoryOptions = () => {
         return (props.cue.channelId && props.cue.channelId !== "" && isOwner) ||
@@ -3143,14 +3979,12 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             disabled={
                                 // if user has not signed up
                                 !userSetupComplete ||
-                                // deadline has passed & its not an initiated timed quiz
-                                // (currentDate >= deadline && !(isQuiz && isQuizTimed && initiatedAt)) ||
-                                // graded
-                                props.cue.graded ||
+                                // Once release Submission that means assignment should be locked
+                                (props.cue.releaseSubmission) ||
                                 // if timed quiz not initiated
                                 (isQuiz && isQuizTimed && !initiatedAt) ||
                                 // if quiz submitted already
-                                (isQuiz && props.cue.submittedAt && props.cue.submittedAt !== "")
+                                (isQuiz && remainingAttempts === 0)
                             }
                             onPress={() => handleSubmit()}
                             style={{ backgroundColor: "white", borderRadius: 15 }}>
@@ -3170,9 +4004,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 }}>
                                 {userSetupComplete
                                     ? (props.cue.submittedAt && props.cue.submittedAt !== "") || submitted
-                                        ? props.cue.graded
+                                        ? (props.cue.graded && props.cue.releaseSubmission)
                                             ? PreferredLanguageText("graded")
-                                            : isQuiz
+                                            : (isQuiz && remainingAttempts === 0)
                                                 ? PreferredLanguageText("submitted")
                                                 : PreferredLanguageText("submit")
                                         : PreferredLanguageText("submit")
@@ -3259,15 +4093,15 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         </View>)
     }
 
-    if (isQuiz && props.cue.submission && props.cue.submittedAt !== null && !props.cue.releaseSubmission && !isOwner) {
-        return (<View style={{ minHeight: Dimensions.get('window').height }}>
-            <View style={{ backgroundColor: 'white', flex: 1, }}>
-                <Text style={{ width: '100%', color: '#818385', fontSize: 20, paddingTop: 200, paddingBottom: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1, textAlign: 'center' }}>
-                    Quiz submitted. You will be notified when scores are released.
-                </Text>
-            </View>
-        </View>)
-    }
+    // if (isQuiz && props.cue.submission && props.cue.submittedAt !== null && !props.cue.releaseSubmission && !isOwner) {
+    //     return (<View style={{ minHeight: Dimensions.get('window').height }}>
+    //         <View style={{ backgroundColor: 'white', flex: 1, }}>
+    //             <Text style={{ width: '100%', color: '#818385', fontSize: 20, paddingTop: 200, paddingBottom: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1, textAlign: 'center' }}>
+    //                 Quiz submitted. You will be notified when scores are released.
+    //             </Text>
+    //         </View>
+    //     </View>)
+    // }
 
     // MAIN RETURN
     return (
@@ -3415,8 +4249,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         </TouchableOpacity>
                     </View>
                 )}
+                {(props.showOptions || props.showComments || isOwner || props.showOriginal || props.viewStatus || !submission || isQuiz) ? null : renderSubmissionHistory()}
                 {
-                    props.showOptions || props.showComments ? null :
+                    props.showOptions || props.showComments || viewSubmission ? null :
                         <View
                             style={{
                                 width: "100%",
@@ -3424,18 +4259,18 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 flexDirection: Dimensions.get("window").width < 768 ? "column-reverse" : "row",
                                 paddingBottom: 4,
                                 backgroundColor: "white",
-                                marginTop: 20
+                                marginTop: 20,
+                                borderBottomWidth: ((props.cue.channelId && props.cue.channelId !== '' && !isOwner && props.showOriginal) || (props.showOriginal && showImportOptions) || isQuiz)
+                                        || (((props.cue.graded && submission && !isOwner) && !props.showOriginal) || (!props.showOriginal && showImportOptions))
+                                        || (!props.showOriginal && submissionImported) || (imported && props.showOriginal)
+                                        ? 0 : 1,
+                                borderBottomColor: '#dddddd'
                             }}
                             onTouchStart={() => Keyboard.dismiss()}>
                             <View
                                 style={{
                                     flexDirection: Dimensions.get("window").width < 768 ? "column" : "row",
-                                    flex: 1,
-                                    borderBottomWidth: ((props.cue.channelId && props.cue.channelId !== '' && !isOwner && props.showOriginal) || (props.showOriginal && showImportOptions) || isQuiz)
-                                        || (((props.cue.graded && submission && !isOwner) && !props.showOriginal) || (!props.showOriginal && showImportOptions))
-                                        || (!props.showOriginal && submissionImported) || (imported && props.showOriginal)
-                                        ? 0 : 1,
-                                    borderBottomColor: '#dddddd'
+                                    flex: 1, 
                                 }}>
                                 {/* {renderRichToolbar()} */}
                                 {(!props.showOriginal && props.cue.submission && !submissionImported && showImportOptions)
@@ -3443,11 +4278,17 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     <FileUpload
                                         back={() => setShowImportOptions(false)}
                                         onUpload={(u: any, t: any) => {
-                                            const obj = { url: u, type: t, title: props.showOriginal ? title : submissionTitle };
                                             if (props.showOriginal) {
-                                                setOriginal(JSON.stringify(obj))
+                                                setOriginal(JSON.stringify({
+                                                    url: u, type: t, title
+                                                }))
                                             } else {
-                                                setCue(JSON.stringify(obj))
+                                                setSubmissionDraft(JSON.stringify({
+                                                    url: u, type: t, title: submissionTitle, annotations: ''
+                                                }))
+                                                setSubmissionImported(true);
+                                                setSubmissionType(t);
+                                                setSubmissionUrl(u);
                                             }
                                             setShowImportOptions(false);
                                         }}
@@ -3533,9 +4374,10 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     {
                         props.showOptions || props.showComments ? null :
                             <View>
+
                                 {renderQuizTimerOrUploadOptions()}
                                 {/* {renderCueRemarks()} */}
-                                {!props.showOriginal && submissionImported && !isQuiz ? (
+                                {!props.showOriginal && submissionImported && !isQuiz  && !viewSubmission ? (
                                     <View style={{ flexDirection: "row" }}>
                                         <View
                                             style={{
@@ -3646,7 +4488,13 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         }}
                                     />
                                 ) : null}
-                                {isQuiz && cueGraded && !isV0Quiz ? <QuizGrading
+                                {
+                                    isQuiz ? renderQuizDetails() : null
+                                }
+                                {
+                                    isQuiz && !isOwner ? renderQuizSubmissionHistory() : null
+                                }
+                                {isQuiz && cueGraded && props.cue.releaseSubmission ? <QuizGrading
                                     problems={problems}
                                     solutions={quizSolutions}
                                     partiallyGraded={false}
@@ -3654,7 +4502,11 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     comment={comment}
                                     isOwner={false}
                                     headers={headers}
-                                /> : renderMainCueContent()}
+                                    attempts={quizAttempts}
+                                /> : ((remainingAttempts === 0 || props.cue.releaseSubmission) && !isOwner && isQuiz
+                                    ? renderQuizEndedMessage() 
+                                    :
+                                    renderMainCueContent())}
                                 {/* <TouchableOpacity
                         onPress={() => setShowOptions(!showOptions)}
                         style={{
@@ -3691,6 +4543,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     {renderShareWithOptions()}
                                     {renderSubmissionRequiredOptions()}
                                     {renderGradeOptions()}
+                                    {renderAttemptsOptions()}
                                 </View>
                             ) : null}
                             <View
