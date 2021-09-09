@@ -8,6 +8,7 @@ import { RadioButton } from "./RadioButton";
 import parser from 'html-react-parser';
 
 import ReactPlayer from "react-player";
+import { Ionicons } from "@expo/vector-icons";
 
 const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -20,7 +21,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     const [percentage, setPercentage] = useState("");
     const [comment, setComment] = useState(props.comment ? props.comment : "");
     const [headers, setHeaders] = useState<any>(props.headers)
-    const [attemptDuration, setAttemptDuration] = useState<any>("")
+
 
     useEffect(() => {
 
@@ -37,6 +38,10 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         })
         setCurrentScore(currentScore);
 
+        setSolutions(props.solutions.solutions)
+        setProblemScores(props.solutions.problemScores)
+        setProblemComments(props.solutions.problemComments ? props.solutions.problemComments : [])
+
         if (props.solutions.solutions && !props.solutions.problemComments) {
             let comments: any[] = [];
 
@@ -45,6 +50,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             setProblemComments(comments);
 
         }
+       
 
     }, [props.solutions])
 
@@ -71,33 +77,12 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     }, [problemScores, totalPossible])
 
     const diff_seconds = (dt2: any, dt1: any) => {
-        console.log("dt2", dt2);
-        console.log("dt1", dt1);
 
         const diff = dt2.getTime() - dt1.getTime();
 
         const Seconds_from_T1_to_T2 = diff / 1000;
         return Math.abs(Seconds_from_T1_to_T2);
     };
-
-    useEffect(() => {
-        if (props.initiatedAt && props.initiatedAt !== null) {
-            const difference = diff_seconds(new Date(parseInt(props.submittedAt)), new Date(props.initiatedAt));
-
-            console.log("Difference", difference);
-
-            if (Number.isNaN(difference)) {
-                setAttemptDuration("");
-                return;
-            }
-
-            let hours = Math.floor(difference / 3600); 
-            let minutes = Math.floor((difference - hours * 3600) / 60); 
-            let seconds = difference - hours * 3600 - minutes * 60;
-            
-            setAttemptDuration(`${hours === 0 ? "" : Math.round(hours)} ${hours === 0 ? "" : "H"}  ${Math.round(minutes)} min  ${Math.round(seconds)} s `)
-        }
-    }, [props.submittedAt, props.initiatedAt])
 
     const renderAudioVideoPlayer = (url: string, type: string) => {
         return <ReactPlayer
@@ -110,6 +95,74 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           file: { attributes: { controlsList: "nodownload" } },
         }}
       />
+    }
+
+
+    const renderAttemptHistory = () => {
+
+        return (<View style={{ width: Dimensions.get('window').width < 768 ? '100%' : '60%', marginTop: 40, marginBottom: 80 }}>
+            <View style={{ marginBottom: 20 }}>
+                <Text style={{ fontSize: 23, fontWeight: 'bold'  }}>
+                    Attempt History
+                </Text>
+            </View>
+            <View style={styles.row}>
+                <View style={styles.col} />
+                <View style={styles.col}>
+                    <Text style={{ fontWeight: 'bold'}}>
+                        Attempt
+                    </Text>
+                </View>
+                <View style={styles.col}>
+                    <Text style={{ fontWeight: 'bold'}}>
+                        Time
+                    </Text>
+                </View>
+                <View style={styles.col}>
+                    <Text style={{ fontWeight: 'bold'}}>
+                        Score
+                    </Text>
+                </View>
+            </View>
+            {
+                props.attempts.map((attempt: any, index: number) => {
+
+                    let duration = attempt.initiatedAt !== null ? diff_seconds(new Date(attempt.submittedAt), new Date(attempt.initiatedAt)) : 0
+
+                    let hours = duration !== 0 ? Math.floor(duration / 3600) :  0;
+
+                    let minutes = duration !== 0 ? Math.floor((duration - hours * 3600) / 60) : 0;
+
+                    return (<View style={styles.row}>
+                        <View style={styles.col}>
+                            {attempt.isActive ? <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                                <Ionicons name='checkmark-outline' size={25} color={"#53BE68"} /> 
+                                <Text style={{ fontSize: 17, paddingLeft: 5 }}>
+                                    KEPT
+                                </Text>
+                            </View> : null}
+                        </View> 
+                        <View style={styles.col}>
+                            {props.isOwner ? <TouchableOpacity onPress={() => props.onChangeQuizAttempt(index)}>
+                                <Text style={{ color: '#3B64F8' }}>
+                                    Attempt {index + 1}
+                                </Text>
+                            </TouchableOpacity> : <Text>
+                                Attempt {index + 1}
+                            </Text>}
+                            
+                        </View>
+                        <View style={styles.col}>
+                            {duration !== 0 ? `${hours !== 0 ? "" + hours + " H " : ""} ${minutes !== 0 ? "" + minutes + " min" : ""}` : "-"}
+                        </View>
+                        <View style={styles.col}>
+                            {attempt.score} out of {totalPossible} 
+                        </View>
+                    </View>)
+                })
+            }
+
+        </View>)
     }
 
     const renderHeader = (index: number) => {
@@ -151,23 +204,17 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             justifyContent: 'flex-start'
         }}>
             {
-                <View style={{ display: 'flex', flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row', justifyContent: 'space-between', marginBottom: 20, borderBottomWidth: 1, borderBottomColor: "#cccccc", width: '100%' }}>
+                props.isOwner ? <View style={{ display: 'flex', flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row', justifyContent: 'space-between', marginBottom: 20, borderBottomWidth: 1, borderBottomColor: "#cccccc", width: '100%' }}>
                     <View style={{ display: 'flex', flexDirection: 'row', marginBottom: Dimensions.get('window').width < 768 ? 20 : 0  }}>
                         <Text style={{ marginRight: 10, fontWeight: '700', fontSize: 15 }}>
-                            {problems.length} {problems.length === 1 ? "Question" : "Questions"}
+                            {props.problems.length} {props.problems.length === 1 ? "Question" : "Questions"}
                         </Text>
                         <Text style={{ marginRight: 10, fontSize: 15}}>
                             |
                         </Text>
                         <Text style={{ marginRight: 10, fontWeight: '700', fontSize: 15 }}>
-                            {totalPoints} Points 
+                            {totalPossible} Points 
                         </Text>
-                        {props.initiatedAt && attemptDuration !== "" ? <Text style={{ marginRight: 10, fontSize: 15}}>
-                            |
-                        </Text> : null}
-                        {props.initiatedAt && attemptDuration !== "" ? <Text style={{ marginRight: 10, fontWeight: '700', fontSize: 15 }}>
-                            Attempt Duration: {attemptDuration}
-                        </Text> : null}
                     </View>
                     
 
@@ -207,9 +254,18 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         </View>
 
                     </View>
-                </View>
+                </View> : null
             }
+
+            {renderAttemptHistory()}
+
+            {props.isOwner ? <View style={{ marginBottom: 20 }}>
+                <Text style={{ fontSize: 23, fontWeight: 'bold'  }}>
+                    Attempt {props.currentQuizAttempt + 1}
+                </Text>
+            </View> : null}
             
+
 
             {
                 props.problems.map((problem: any, index: any) => {
@@ -516,12 +572,40 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 style={{
                     flex: 1,
                     backgroundColor: 'white',
-                    justifyContent: 'center',
+                    alignItems: 'center',
                     display: 'flex',
-                    flexDirection: 'row',
                     marginTop: 25,
                     marginBottom: 25
                 }}>
+
+                {
+                    props.isOwner && props.isV1Quiz  && props.currentQuizAttempt !== props.activeQuizAttempt ?
+                    <TouchableOpacity
+                    onPress={() => props.modifyActiveQuizAttempt()}
+                    style={{
+                        backgroundColor: 'white',
+                        borderRadius: 15,
+                        overflow: 'hidden',
+                        height: 35,
+                        marginBottom: 20,
+                    }}>
+                        <Text style={{
+                            textAlign: 'center',
+                            lineHeight: 35,
+                            color: '#2f2f3c',
+                            fontSize: 12,
+                            backgroundColor: '#F8F9FA',
+                            paddingHorizontal: 25,
+                            fontFamily: 'inter',
+                            height: 35,
+                            width: 150
+
+                        }}>
+                            MAKE ACTIVE
+                        </Text>
+                    </TouchableOpacity> : null
+
+                }
                 <TouchableOpacity
                     onPress={() => props.onGradeQuiz(problemScores, problemComments, Number(percentage), comment)}
                     style={{
@@ -538,12 +622,15 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         backgroundColor: '#3B64F8',
                         paddingHorizontal: 25,
                         fontFamily: 'inter',
-                        height: 35
+                        height: 35,
+                        width: 150
                     }}>
                         SAVE
                     </Text>
                 </TouchableOpacity>
             </View> : null}
+
+           
         </View >
     );
 }
@@ -560,5 +647,7 @@ const styles = StyleSheet.create({
         paddingBottom: 12,
         marginTop: 5,
         marginBottom: 20
-    }
+    },
+    row: { minHeight: 50, flexDirection: 'row', overflow: 'hidden', borderBottomColor: '#e0e0e0', borderBottomWidth: 1 },
+    col: { width: "25%", justifyContent: 'center', display: 'flex', flexDirection: 'column', padding: 7, },
 });

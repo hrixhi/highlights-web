@@ -284,6 +284,71 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         }
     }, [cueId, modalAnimation, createdBy, channelCreatedBy])
 
+    const reloadStatuses = useCallback(async () => {
+        setLoading(true)
+        const u = await AsyncStorage.getItem('user')
+        let parsedUser: any = {}
+        if (u) {
+            parsedUser = JSON.parse(u)
+        } else {
+            return;
+        }
+
+        const server = fetchAPI(parsedUser._id)
+        server.query({
+            query: getStatuses,
+            variables: {
+                cueId
+            }
+        }).then(res2 => {
+            if (res2.data.status && res2.data.status.findByCueId) {
+                const subs: any[] = []
+                const statuses = res2.data.status.findByCueId
+                statuses.map((status: any) => {
+                    subs.push({
+                        displayName: status.fullName,
+                        _id: status.userId,
+                        fullName: status.status,
+                        submission: status.submission,
+                        comment: status.comment,
+                        score: status.score,
+                        graded: status.graded,
+                        userId: status.userId,
+                        submittedAt: status.submittedAt,
+                        deadline: status.deadline,
+                        releaseSubmission: status.releaseSubmission,
+                    })
+                })
+                setSubscribers(subs)
+                setLoading(false)
+                // modalAnimation.setValue(0)
+                // Animated.timing(modalAnimation, {
+                //     toValue: 1,
+                //     duration: 150,
+                //     useNativeDriver: true
+                // }).start();
+            } else {
+                setLoading(false)
+                // modalAnimation.setValue(0)
+                // Animated.timing(modalAnimation, {
+                //     toValue: 1,
+                //     duration: 150,
+                //     useNativeDriver: true
+                // }).start();
+            }
+        }).catch(err => {
+            Alert(unableToLoadStatusesAlert, checkConnectionAlert)
+            setLoading(false)
+            // modalAnimation.setValue(0)
+            // Animated.timing(modalAnimation, {
+            //     toValue: 1,
+            //     duration: 150,
+            //     useNativeDriver: true
+            // }).start();
+        })
+    }, [cueId]) 
+    
+
     useEffect(() => {
         loadThreadsAndStatuses()
     }, [props.cueId, props.channelId])
@@ -530,6 +595,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     reload={() => loadThreadsAndStatuses()}
                                                     cue={props.cue}
                                                     updateCueWithReleaseSubmission={updateCueWithReleaseSubmission}
+                                                    reloadStatuses={reloadStatuses}
                                                 />
                                             </ScrollView>
                                         </View>

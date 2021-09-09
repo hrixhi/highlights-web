@@ -54,6 +54,8 @@ export const createCue = gql`
     $deadline: String
     $initiateAt: String
     $shareWithUserIds: [String!]
+    $limitedShares: Boolean
+    $allowedAttempts: String
   ) {
     cue {
       create(
@@ -71,6 +73,8 @@ export const createCue = gql`
         deadline: $deadline
         initiateAt: $initiateAt
         shareWithUserIds: $shareWithUserIds
+        limitedShares: $limitedShares
+        allowedAttempts: $allowedAttempts
       )
     }
   }
@@ -465,6 +469,14 @@ mutation($activityId: String, $userId: String!, $markAllRead: Boolean!) {
   }
 }
 `
+
+export const updateAnnotation = gql`
+mutation($cueId: String!, $userId: String!, $attempts: String!) {
+  cue {
+    updateAnnotation(cueId: $cueId, userId: $userId, attempts: $attempts)
+  }
+}
+`
 /**
  * ALL
  * QUERIES
@@ -527,6 +539,8 @@ export const getCues = gql`
         submittedAt
         releaseSubmission
         active
+        limitedShares
+        allowedAttempts
       }
     }
   }
@@ -706,6 +720,9 @@ export const getCuesFromCloud = gql`
         submittedAt
         releaseSubmission
         active
+        limitedShares
+        allowedAttempts
+        annotations
       }
     }
   }
@@ -975,9 +992,16 @@ export const getQuiz = gql`
 `;
 
 export const gradeQuiz = gql`
-  mutation($userId: String!, $cueId: String! $problemScores: [String!]!, $problemComments: [String!]!, $score: Float!, $comment: String) {
+  mutation($userId: String!, $cueId: String! $problemScores: [String!]!, $problemComments: [String!]!, $score: Float!, $comment: String, $quizAttempt: Float) {
     cue {
-      gradeQuiz(userId: $userId, cueId: $cueId, problemScores: $problemScores, problemComments: $problemComments, score: $score, comment: $comment)
+      gradeQuiz(userId: $userId, cueId: $cueId, problemScores: $problemScores, problemComments: $problemComments, score: $score, comment: $comment, quizAttempt: $quizAttempt)
+    }
+  }
+`
+export const modifyActiveAttemptQuiz = gql`
+  mutation($userId: String!, $cueId: String!, $quizAttempt: Float!) {
+    cue {
+      modifyActiveAttemptQuiz(userId: $userId, cueId: $cueId, quizAttempt: $quizAttempt)
     }
   }
 `

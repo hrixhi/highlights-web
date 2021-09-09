@@ -611,12 +611,9 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             action={"audio/video"}
                             back={() => setShowImportOptions(false)}
                             onUpload={(u: any, t: any) => {
-                                console.log("url after upload", u)
                                 const obj = { url: u, type: t, content: '' };
                                 const newProbs = [...problems];
-                                console.log("New problems", newProbs);
                                 newProbs[index].question = JSON.stringify(obj);
-                                console.log("Update with object problems", newProbs);
                                 setProblems(newProbs)
                                 props.setProblems(newProbs)
                                 setShowImportOptions(false);
@@ -779,7 +776,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         return null
     }
 
-    let displayProblems = props.shuffleQuiz && !props.isOwner && !props.submitted ? shuffledProblems : problems;
+    let displayProblems = props.shuffleQuiz && !props.isOwner ? shuffledProblems : problems;
 
     let totalPoints = 0;
 
@@ -810,7 +807,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         }}
         >
             {/* Show number of questions, Points, number of attempts here */}
-            {
+            {/* {
                 <View style={{ display: 'flex', flexDirection: 'row', }}>
                     <Text style={{ marginRight: 10, fontWeight: '700', fontSize: 15 }}>
                         {problems.length} {problems.length === 1 ? "Question" : "Questions"}
@@ -827,8 +824,16 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     {!props.isOwner && props.duration ? <Text style={{ marginRight: 10, fontWeight: '700' }}>
                         {duration.hours} H {duration.minutes} min
                     </Text> : null}
+
+                    {!props.isOwner ? <Text style={{ marginRight: 10, fontSize: 15}}>
+                        |
+                    </Text> : null}
+                    {!props.isOwner ? <Text style={{ marginRight: 10, fontWeight: '700' }}>
+                        {props.remainingAttempts ? 'Remaining Attempts: ' + props.remainingAttempts : "Unlimited Attempts"}
+                    </Text> : null}
+                    
                 </View>
-            }
+            } */}
             {props.isOwner ? renderTimer() : null }
             {
                 (props.isOwner ? 
@@ -1071,11 +1076,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 let color = '#43434f'
                                 if (props.isOwner && option.isCorrect) {
                                     color = '#3B64F8'
-                                } else if (props.submitted && option.isCorrect) {
-                                    color = '#3B64F8'
-                                } else if (props.submitted && !option.isCorrect && solutions[problemIndex].selected[i].isSelected) {
-                                    color = '#D91D56'
-                                }
+                                } 
 
                                 return <View style={{ flexDirection: 'row' }} >
                                     <View style={{ paddingLeft: 40, paddingRight: 10 }}>
@@ -1086,12 +1087,12 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             onPress={() => {
                                                 selectMCQOption(problem, problemIndex, i);
                                             }} 
-                                            disabled={props.submitted || props.isOwner || props.hasEnded}
+                                            disabled={props.isOwner}
                                         >
                                             <RadioButton selected={props.isOwner ? option.isCorrect : solutions[problemIndex].selected[i].isSelected} />
                                         </TouchableOpacity>
                                         : <input
-                                            disabled={props.isOwner && editQuestionNumber === (index + 1) ? false : (props.submitted || props.isOwner || props.hasEnded)}
+                                            disabled={props.isOwner && editQuestionNumber === (index + 1) ? false : props.isOwner}
                                             style={{ paddingRight: 20, marginTop: 22 }}
                                             type='checkbox'
                                             // value={props.isOwner ? String(option.isCorrect) : String(solutions[index].selected[i].isSelected)}
@@ -1186,7 +1187,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             problem.questionType === "freeResponse" ?
 
                                 <View style={{ width: '100%', paddingHorizontal: 40 }}>
-                                    {props.isOwner || props.submitted || props.graded || props.hasEnded  ? <Text style={{
+                                    {props.isOwner ? <Text style={{
                                             marginTop: 20,
                                             fontSize: 15,
                                             paddingTop: 12,
