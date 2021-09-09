@@ -576,7 +576,7 @@ const styles: any = StyleSheet.create({
         marginRight: -2,
         marginTop: 0,
         borderRadius: 15,
-        backgroundColor: '#F53464',
+        backgroundColor: '#f94144',
         textAlign: 'center',
         zIndex: 50
     },

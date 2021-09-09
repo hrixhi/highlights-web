@@ -261,7 +261,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             style={{ height: 20, marginRight: 20 }}
             trackColor={{
               false: "#f4f4f6",
-              true: "#6963e2",
+              true: "#560bad",
             }}
             activeThumbColor="white"
           />
@@ -902,7 +902,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         {renderHeader(index)}
                         {props.isOwner && modifiedCorrectAnswerProblems[index] ? 
                             <View style={{ marginVertical: 10, flexDirection: 'row', alignItems: 'center', padding: 10, backgroundColor: '#f3f3f3', borderRadius: 12 }}>
-                                {regradeChoices[index] !== "" ? <Ionicons name='checkmark-circle-outline' size={22} color={'#53BE68'} /> : <Ionicons name='warning-outline' size={22} color={'#F8992A'} />}
+                                {regradeChoices[index] !== "" ? <Ionicons name='checkmark-circle-outline' size={22} color={'#53BE68'} /> : <Ionicons name='warning-outline' size={22} color={'#f3722c'} />}
                                 <Text style={{ paddingLeft: 10 }}>
                                     {regradeChoices[index] !== "" ? (regradeChoices[index] === "noRegrading" ? "Question will not be regraded" : "Question will be re-graded for all existing submissions") : "Correct Answer modified. Select regrade option for those who have already taken the quiz." }  
                                 </Text>
@@ -1048,7 +1048,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     }
                                     {
                                         props.isOwner ? (editQuestionNumber !== (index + 1) ? 
-                                        (<TouchableOpacity onPress={() => setEditQuestionNumber(index + 1)} style={{ marginBottom: 20, paddingTop: 8, paddingLeft: 30, paddingRight: 5 }}> <Ionicons name='pencil-outline' size={25} color={'#6963e2'} /></TouchableOpacity>) 
+                                        (<TouchableOpacity onPress={() => setEditQuestionNumber(index + 1)} style={{ marginBottom: 20, paddingTop: 8, paddingLeft: 30, paddingRight: 5 }}> <Ionicons name='pencil-outline' size={25} color={'#560bad'} /></TouchableOpacity>) 
                                         : (<TouchableOpacity style={{ marginBottom: 20, paddingTop: 8, paddingLeft: 30, paddingRight: 5 }}> <View style={{ width: 22 }} /></TouchableOpacity>))
                                         :
                                         null
@@ -1070,11 +1070,11 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
                                 let color = '#43434f'
                                 if (props.isOwner && option.isCorrect) {
-                                    color = '#6963e2'
+                                    color = '#560bad'
                                 } else if (props.submitted && option.isCorrect) {
-                                    color = '#6963e2'
+                                    color = '#560bad'
                                 } else if (props.submitted && !option.isCorrect && solutions[problemIndex].selected[i].isSelected) {
-                                    color = '#F53464'
+                                    color = '#f94144'
                                 }
 
                                 return <View style={{ flexDirection: 'row' }} >
@@ -1353,7 +1353,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     lineHeight: 35,
                                     color: "white",
                                     fontSize: 12,
-                                    backgroundColor: "#6963e2",
+                                    backgroundColor: "#560bad",
                                     borderRadius: 15,
                                     paddingHorizontal: 25,
                                     fontFamily: "inter",

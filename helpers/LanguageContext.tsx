@@ -67,7 +67,7 @@ const EnglishBank: { [key: string]: string } = {
     planner: "Planner", // DOne
     event: "Event", // Done
     subscribe: 'Subscribe', // Done
-    profile: "Account", // DOne
+    profile: "Profile", // DOne
     name: "Name",
     fullName: "Full Name", // Done
     displayName: "Display Name", // Done

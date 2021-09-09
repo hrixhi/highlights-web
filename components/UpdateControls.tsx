@@ -86,7 +86,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const RichText: any = useRef();
     const editorRef: any = useRef();
     const [height, setHeight] = useState(100);
-    const colorChoices: any[] = ["#F53464", "#F8992A", "#F7C440", "#3EC57F", "#33A9F4"].reverse();
+    const colorChoices: any[] = ["#f94144", "#f3722c", "#f8961e", "#f9c74f", "#4c956c"].reverse();
     const [submission, setSubmission] = useState(props.cue.submission ? props.cue.submission : false);
     const [frequencyName, setFrequencyName] = useState('Day')
     const dead =
@@ -1765,7 +1765,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     isPlaying={true}
                                     duration={duration}
                                     initialRemainingTime={initDuration}
-                                    colors="#6963e2"
+                                    colors="#560bad"
                                 />
                             </View>
                         ) : null
@@ -1999,7 +1999,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     />
                 ) : (
                     <View key={url} style={{ zIndex: 1, height: 50000 }}>
-                        <div className="webviewer" ref={RichText} style={{ height: "80vh", borderWidth: 1, borderColor: '#eeeeee', borderRadius: 12 }}></div>
+                        <div className="webviewer" ref={RichText} style={{ height: "80vh", borderWidth: 1, borderColor: '#e1e9f0', borderRadius: 12 }}></div>
                         {/* 
                         <Webview
                             fullScreen={true}
@@ -2029,7 +2029,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     url={submissionUrl}
                                     fullScreen={true}
                                 /> */}
-                                <div className="webviewer" ref={RichText} style={{ height: "80vh", borderWidth: 1, borderColor: '#eeeeee', borderRadius: 12 }}></div>
+                                <div className="webviewer" ref={RichText} style={{ height: "80vh", borderWidth: 1, borderColor: '#e1e9f0', borderRadius: 12 }}></div>
                             </View>
                             <View style={{ position: 'absolute', zIndex: 1, flex: 1, width: 800, height: 50000, backgroundColor: 'rgb(0,0,0,0)' }}>
                                 <Annotation
@@ -2050,7 +2050,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 url={submissionUrl}
                                 fullScreen={true}
                             /> */}
-                            <div className="webviewer" ref={RichText} style={{ height: "80vh", borderWidth: 1, borderColor: '#eeeeee', borderRadius: 12 }}></div>
+                            <div className="webviewer" ref={RichText} style={{ height: "80vh", borderWidth: 1, borderColor: '#e1e9f0', borderRadius: 12 }}></div>
                         </View>
 
                 )
@@ -2171,7 +2171,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         lineHeight: 35,
                                         color: "white",
                                         fontSize: 12,
-                                        backgroundColor: "#6963e2",
+                                        backgroundColor: "#560bad",
                                         borderRadius: 15,
                                         paddingHorizontal: 25,
                                         fontFamily: "inter",
@@ -2241,10 +2241,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
     const renderShareWithOptions = () => {
         return props.cue.channelId !== "" && isOwner ? (
-            <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : 'row' }}>
+            <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : 'row', paddingTop: 40 }}>
                 <View
                     style={{
-                        paddingTop: 40,
                         paddingBottom: 15,
                         backgroundColor: "white",
                         width: 300
@@ -2262,7 +2261,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         flexDirection: "column",
                         overflow: "scroll",
                         maxWidth: 500,
-                        paddingTop: width < 768 ? 0 : 40,
                     }}>
                     <View
                         style={{
@@ -2321,11 +2319,10 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
     const renderSubmissionRequiredOptions = () => {
         return props.cue.channelId !== "" ? (
-            <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : 'row' }}>
+            <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : 'row', paddingTop: 40 }}>
                 <View
                     style={{
                         width: 300,
-                        paddingTop: 40,
                         paddingBottom: 15,
                         backgroundColor: "white"
                     }}>
@@ -2336,7 +2333,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     }}>{PreferredLanguageText("submissionRequired")}</Text>
                 </View>
                 <View>
-                    <View style={{ flexDirection: "row", paddingTop: 40, }}>
+                    <View style={{ flexDirection: "row" }}>
                         {isOwner ? (
                             <View
                                 style={{
@@ -2463,11 +2460,10 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
     const renderGradeOptions = () => {
         return submission ? (
-            <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : 'row' }}>
+            <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : 'row', paddingTop: 40 }}>
                 <View
                     style={{
                         width: 300,
-                        paddingTop: 40,
                         paddingBottom: 15,
                         backgroundColor: "white"
                     }}>
@@ -2477,7 +2473,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         color: '#43434f'
                     }}>Grade Weight</Text>
                 </View>
-                <View style={{ paddingTop: 40 }}>
+                <View style={{}}>
                     {isOwner ? <View style={{ flexDirection: "row" }}>
                         <View
                             style={{
@@ -2556,12 +2552,12 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     width: "100%",
                     borderRightWidth: 0,
                     flexDirection: width < 768 ? 'column' : 'row',
+                    paddingTop: 40,
                     borderColor: "#FBFBFC"
                 }}>
                 <View
                     style={{
                         width: 300,
-                        paddingTop: 40,
                         paddingBottom: 15,
                         backgroundColor: "white"
                     }}>
@@ -2571,7 +2567,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         color: '#43434f'
                     }}>{PreferredLanguageText("category")}</Text>
                 </View>
-                <View style={{ paddingTop: 40 }}>
+                <View style={{}}>
                     {props.cue.channelId && !props.channelOwner ? (
                         <View
                             style={{
@@ -2691,12 +2687,12 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     width: "100%",
                     borderRightWidth: 0,
                     flexDirection: width < 768 ? 'column' : 'row',
+                    paddingTop: 40,
                     borderColor: "#FBFBFC"
                 }}>
                 <View
                     style={{
                         width: 300,
-                        paddingTop: 40,
                         paddingBottom: 15,
                         backgroundColor: "white"
                     }}>
@@ -2709,7 +2705,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 <View
                     style={{
                         width: "100%",
-                        paddingTop: 40,
                         display: "flex",
                         flexDirection: "row",
                         backgroundColor: "white"
@@ -2750,12 +2745,13 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     width: "100%",
                     flexDirection: width < 768 ? 'column' : 'row',
                     borderRightWidth: 0,
-                    borderColor: "#FBFBFC"
+                    borderColor: "#FBFBFC",
+                    paddingTop: 40,
                 }}>
                 <View
                     style={{
                         width: 300,
-                        paddingTop: 40,
+                        // paddingTop: 40,
                         paddingBottom: 15,
                         backgroundColor: "white"
                     }}>
@@ -2769,8 +2765,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     style={{
                         width: "100%",
                         display: "flex",
-                        paddingTop: 40,
-                        flexDirection: "row",
+                        // paddingTop: 40,
+                        // flexDirection: "row",
                         backgroundColor: "white"
                     }}>
                     <View style={{ width: "42.5%", backgroundColor: "white" }}>
@@ -2928,11 +2924,10 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     paddingTop: 15,
                     flexDirection: "column"
                 }}>
-                <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : 'row', }}>
+                <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : 'row', paddingTop: 40, }}>
                     <View
                         style={{
                             width: 300,
-                            paddingTop: 40,
                             paddingBottom: 15,
                             backgroundColor: "white"
                         }}>
@@ -2947,7 +2942,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             backgroundColor: "white",
                             width: "100%",
                             height: 40,
-                            paddingTop: 40,
                             marginHorizontal: 10
                         }}>
                         <Switch
@@ -2966,18 +2960,17 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             style={{ height: 20 }}
                             trackColor={{
                                 false: "#FBFBFC",
-                                true: "#6963e2"
+                                true: "#560bad"
                             }}
                             activeThumbColor="white"
                         />
                     </View>
                 </View>
                 {notify ? (
-                    <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : 'row', }}>
+                    <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : 'row', paddingTop: 40 }}>
                         <View
                             style={{
                                 width: 300,
-                                paddingTop: 40,
                                 paddingBottom: 15,
                                 backgroundColor: "white"
                             }}>
@@ -2987,7 +2980,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 color: '#43434f'
                             }}>Recurring</Text>
                         </View>
-                        <View style={{ flexDirection: "row", paddingTop: 40 }}>
+                        <View style={{}}>
                             <View
                                 style={{
                                     backgroundColor: "white",
@@ -3076,11 +3069,10 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     </View>
                 ) : null}
                 {notify && !shuffle ? (
-                    <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : 'row', }}>
+                    <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : 'row', paddingTop: 40, }}>
                         <View
                             style={{
                                 width: 300,
-                                paddingTop: 40,
                                 paddingBottom: 15,
                                 backgroundColor: "white"
                             }}>
@@ -3174,7 +3166,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     lineHeight: 35,
                                     color: "white",
                                     fontSize: 12,
-                                    backgroundColor: "#6963e2",
+                                    backgroundColor: "#560bad",
                                     borderRadius: 15,
                                     paddingHorizontal: 25,
                                     fontFamily: "inter",
@@ -3219,7 +3211,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 lineHeight: 35,
                                 color: "white",
                                 fontSize: 12,
-                                backgroundColor: "#6963e2",
+                                backgroundColor: "#560bad",
                                 borderRadius: 15,
                                 paddingHorizontal: 25,
                                 fontFamily: "inter",
@@ -3336,7 +3328,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     paddingHorizontal: 10,
                                     marginLeft: 10,
                                     borderRadius: 12,
-                                    backgroundColor: "#6963e2",
+                                    backgroundColor: "#560bad",
                                     lineHeight: 20,
                                     paddingTop: 1
                                 }}>
@@ -3345,8 +3337,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         ) : null}
                         {
                             !isOwner && props.cue.submittedAt !== "" && (new Date(props.cue.submittedAt) >= deadline) ?
-                                <View style={{ borderRadius: 12, padding: 5, borderWidth: 1, borderColor: '#F53464', marginLeft: 15, }}>
-                                    <Text style={{ color: '#F53464', fontSize: 12, textAlign: 'center' }}>
+                                <View style={{ borderRadius: 12, padding: 5, borderWidth: 1, borderColor: '#f94144', marginLeft: 15, }}>
+                                    <Text style={{ color: '#f94144', fontSize: 12, textAlign: 'center' }}>
                                         LATE
                                     </Text>
                                 </View>
@@ -3367,7 +3359,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     // paddingRight: 25,
                                     width: "100%"
                                 }}>
-                                <Ionicons name="bookmark" size={34} color={starred ? "#F53464" : "#818385"} />
+                                <Ionicons name="bookmark" size={34} color={starred ? "#f94144" : "#818385"} />
                             </Text>
                         </TouchableOpacity>
                     </View>
@@ -3424,7 +3416,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     // paddingRight: 25,
                                     width: "100%"
                                 }}>
-                                <Ionicons name="bookmark" size={34} color={starred ? "#F53464" : "#818385"} />
+                                <Ionicons name="bookmark" size={34} color={starred ? "#f94144" : "#818385"} />
                             </Text>
                         </TouchableOpacity>
                     </View>
@@ -3443,7 +3435,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     || (((props.cue.graded && submission && !isOwner) && !props.showOriginal) || (!props.showOriginal && showImportOptions))
                                     || (!props.showOriginal && submissionImported) || (imported && props.showOriginal)
                                     ? 0 : 1,
-                                borderBottomColor: '#eeeeee'
+                                borderBottomColor: '#e1e9f0'
                             }}
                             onTouchStart={() => Keyboard.dismiss()}>
                             <View
@@ -3671,7 +3663,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     headers={headers}
                                 /> : renderMainCueContent()}
                             </View>}
-                    <View style={{ width: '100%', maxWidth: 700, alignSelf: 'center' }}>
+                    <View style={{
+                        width: '100%', maxWidth: 700, alignSelf: 'center'
+                    }}>
                         <Collapse isOpened={props.showOptions}>
                             <View style={{ flex: 1, display: "flex", flexDirection: "column" }}>
                                 {props.cue.channelId ? (
@@ -3696,8 +3690,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 </View>
                             </View>
                             {renderReminderOptions()}
-                            {isQuiz && isOwner ? <View style={{ width: "100%" }}>
-                                <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
+                            {isQuiz && isOwner ? <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : 'row', paddingTop: 40 }}>
+                                <View style={{ width: '100%', paddingBottom: 15, backgroundColor: 'white' }}>
                                     <Text style={{ fontSize: 11, color: '#43434f', textTransform: 'uppercase' }}>
                                         Shuffle Questions
                                     </Text>
@@ -3895,19 +3889,19 @@ const styles: any = StyleSheet.create({
         lineHeight: 20
     },
     color1: {
-        backgroundColor: "#F53464"
+        backgroundColor: "#f94144"
     },
     color2: {
-        backgroundColor: "#F8992A"
+        backgroundColor: "#f3722c"
     },
     color3: {
-        backgroundColor: "#F7C440"
+        backgroundColor: "#f8961e"
     },
     color4: {
-        backgroundColor: "#3EC57F"
+        backgroundColor: "#f9c74f"
     },
     color5: {
-        backgroundColor: "#33A9F4"
+        backgroundColor: "#4c956c"
     },
     outline: {
         borderRadius: 12,
@@ -3922,7 +3916,7 @@ const styles: any = StyleSheet.create({
         marginRight: -2,
         marginTop: 0,
         borderRadius: 15,
-        backgroundColor: '#F53464',
+        backgroundColor: '#f94144',
         textAlign: 'center',
         zIndex: 50
     },

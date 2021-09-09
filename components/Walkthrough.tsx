@@ -320,6 +320,10 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 }}>
                     <View style={{
                         width: Dimensions.get('window').width < 768 ? '100%' : '50%',
+                        // paddingRight: Dimensions.get('window').width < 768 ? 0 : 25,
+                        marginRight: Dimensions.get('window').width < 768 ? 0 : 20,
+                        borderRightWidth: Dimensions.get('window').width < 768 ? 0 : 1,
+                        borderColor: '#e1e9f0'
                     }}>
                         <Profile
                             closeModal={() => props.closeModal()}
@@ -330,10 +334,6 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     </View>
                     <View style={{
                         width: Dimensions.get('window').width < 768 ? '100%' : '50%',
-                        paddingLeft: Dimensions.get('window').width < 768 ? 0 : 20,
-                        marginLeft: Dimensions.get('window').width < 768 ? 0 : 20,
-                        borderLeftWidth: Dimensions.get('window').width < 768 ? 0 : 1,
-                        borderColor: '#eeeeee'
                     }}>
                         <View style={{ backgroundColor: "white", flexDirection: "row", }}>
                             <View style={{ flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row', flex: 1 }}>
@@ -350,7 +350,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                         lineHeight: 25,
                                         height: 65
                                     }}>
-                                    Walkthrough
+                                    Help
                                 </Text>
                             </View>
                         </View>
@@ -358,7 +358,8 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             contentContainerStyle={{
                                 marginTop: 25, backgroundColor: '#fff',
                                 height: windowHeight - 50, paddingBottom: 75,
-                                width: '100%'
+                                width: '100%',
+                                maxWidth: 500, alignSelf: 'center'
                             }}
                         >
                             {
@@ -379,7 +380,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                         }}
                                         style={{
                                             backgroundColor: '#fff',
-                                            borderColor: '#dddddd',
+                                            borderColor: '#e1e9f0',
                                             borderBottomWidth: item.question === 'Planner' ? 0 : 1,
                                             width: '100%',
                                             paddingBottom: 20,
@@ -394,7 +395,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                 flexDirection: 'row',
                                                 flex: 1,
                                                 fontSize: 17,
-                                                color: item.isOpen ? '#6963e2' : '#333333'
+                                                color: item.isOpen ? '#560bad' : '#333333'
                                             }}>
                                                 {item.question}
                                             </Text>
@@ -437,7 +438,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     </View>
                 </View>
             </View>
-            <MessengerCustomerChat pageId="109965671259610" appId="746023139417168" themeColor="#6963e2" />
+            <MessengerCustomerChat pageId="109965671259610" appId="746023139417168" themeColor="#560bad" />
         </View >
     );
 }

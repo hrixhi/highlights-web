@@ -321,7 +321,7 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
         marginBottom: 10,
         marginTop: -8,
         borderRadius: 12,
-        backgroundColor: '#F53464',
+        backgroundColor: '#f94144',
         textAlign: 'center',
         zIndex: 50
     },

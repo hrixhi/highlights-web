@@ -281,7 +281,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     fontFamily: 'inter',
                     flex: 1,
                     lineHeight: 23,
-                    color: '#6963e2'
+                    color: '#560bad'
                 }}>
                     Results
                 </Text>
@@ -400,7 +400,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     Object.keys(cueMap).map((key: any, ind: any) => {
                         return <View style={{
                             marginTop: 20, paddingBottom: 20,
-                            borderColor: '#eeeeee',
+                            borderColor: '#e1e9f0',
                             borderBottomWidth: 1,
                         }}>
                             {
@@ -444,7 +444,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                 lineHeight: 30,
                                                                 color: '#fff',
                                                                 fontSize: 12,
-                                                                backgroundColor: '#33A9F4',
+                                                                backgroundColor: '#4c956c',
                                                                 paddingHorizontal: 25,
                                                                 marginRight: 15,
                                                                 fontFamily: 'inter',
@@ -623,7 +623,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             fontFamily: 'inter',
                                             flex: 1,
                                             lineHeight: 23,
-                                            color: '#6963e2'
+                                            color: '#560bad'
                                         }}>
                                             <View style={{
                                                 width: 18,
@@ -746,15 +746,20 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                         nextTitle: '>',
                                                                                         prevTitle: '<',
                                                                                         prevTitleStyle: {
-                                                                                            marginTop: 30,
-                                                                                            fontFamily: 'inter'
+                                                                                            marginTop: 20,
+                                                                                            fontFamily: 'inter',
+                                                                                            color: '#560bad'
                                                                                         },
                                                                                         nextTitleStyle: {
-                                                                                            marginTop: 30,
-                                                                                            fontFamily: 'inter'
+                                                                                            marginTop: 20,
+                                                                                            fontFamily: 'inter',
+                                                                                            color: '#560bad'
                                                                                         },
                                                                                         dotsWrapperStyle: {
-                                                                                            marginTop: 28
+                                                                                            marginTop: 19
+                                                                                        },
+                                                                                        dotActiveStyle: {
+                                                                                            backgroundColor: '#560bad'
                                                                                         }
                                                                                     }}
                                                                                     containerStyle={{
@@ -890,14 +895,19 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                             prevTitle: '<',
                                                                             prevTitleStyle: {
                                                                                 marginTop: 20,
-                                                                                fontFamily: 'inter'
+                                                                                fontFamily: 'inter',
+                                                                                color: '#560bad'
                                                                             },
                                                                             nextTitleStyle: {
                                                                                 marginTop: 20,
-                                                                                fontFamily: 'inter'
+                                                                                fontFamily: 'inter',
+                                                                                color: '#560bad'
                                                                             },
                                                                             dotsWrapperStyle: {
-                                                                                marginTop: 18
+                                                                                marginTop: 19
+                                                                            },
+                                                                            dotActiveStyle: {
+                                                                                backgroundColor: '#560bad'
                                                                             }
                                                                         }}
                                                                         containerStyle={{
@@ -1046,7 +1056,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
         }}>
             <View style={{
                 backgroundColor: '#FBFBFC',
-                borderColor: '#eeeeee',
+                borderColor: '#e1e9f0',
                 borderWidth: 1,
                 // borderWidth: 1,
                 paddingTop: 20,
@@ -1061,7 +1071,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         source={logo}
                         style={{
                             width: 80,
-                            height: 25
+                            height: 23
                         }}
                         resizeMode={'contain'}
                     />
@@ -1156,8 +1166,8 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 marginTop: -25,
                                 flex: 1, flexDirection: 'row',
                                 marginLeft: 10,
-                                marginRight: 30,
-                                width: 175,
+                                marginRight: 20,
+                                // width: 175,
                                 // borderWidth: 1,
                                 // marginLeft: 5,
                             }}
@@ -1315,7 +1325,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     }
                     <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#FBFBFC' }} />
                     <Menu
-                        style={{ marginLeft: 30, right: 0, marginTop: -7 }}
+                        style={{ marginLeft: 0, right: 0, marginTop: -7 }}
                         onSelect={(op: any) => props.setOption(op)}>
                         <MenuTrigger>
                             <Image
@@ -1323,6 +1333,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     height: 40,
                                     width: 40,
                                     // marginTop: -20,
+                                    marginRight: width < 768 ? 20 : 0,
                                     marginBottom: 5,
                                     borderRadius: 75,
                                 }}
@@ -1349,7 +1360,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             <MenuOption
                                 value={'Settings'}>
                                 <Text>
-                                    SETTINGS
+                                    ACCOUNT
                                 </Text>
                             </MenuOption>
                         </MenuOptions>

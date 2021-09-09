@@ -450,7 +450,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             style={{ height: 20 }}
                                             trackColor={{
                                                 false: "#FBFBFC",
-                                                true: "#6963e2"
+                                                true: "#560bad"
                                             }}
                                             activeThumbColor="white"
                                         />
@@ -518,7 +518,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             lineHeight: 35,
                                             color: 'white',
                                             fontSize: 12,
-                                            backgroundColor: '#6963e2',
+                                            backgroundColor: '#560bad',
                                             paddingHorizontal: 25,
                                             fontFamily: 'inter',
                                             height: 35,
@@ -536,7 +536,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         paddingLeft: width < 768 ? 0 : 20,
                         paddingTop: width < 768 ? 40 : 0,
                         marginLeft: width < 768 ? 0 : 20,
-                        borderLeftWidth: width < 768 ? 0 : 1, borderLeftColor: '#dddddd'
+                        borderLeftWidth: width < 768 ? 0 : 1, borderLeftColor: '#e1e9f0'
                     }}>
                         <Text style={{
                             fontSize: 23,
@@ -552,7 +552,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         <View
                             style={{
                                 borderWidth: channels.length === 0 ? 0 : 1,
-                                borderColor: '#eeeeee',
+                                borderColor: '#e1e9f0',
                                 overflow: 'hidden',
                                 borderRadius: 12
                             }}
@@ -578,7 +578,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 {
                                     channels.map((channel: any, ind: any) => {
                                         return <View style={{
-                                            backgroundColor: '#fff', flexDirection: 'row', borderColor: '#eeeeee',
+                                            backgroundColor: '#fff', flexDirection: 'row', borderColor: '#e1e9f0',
                                             borderBottomWidth: ind === channels.length - 1 ? 0 : 1
                                         }}>
                                             <View style={{ flex: 1, backgroundColor: '#FBFBFC', paddingLeft: 10 }}>
@@ -595,7 +595,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 <TouchableOpacity
                                                     onPress={() => handleSub(channel.name)}
                                                 >
-                                                    <Text style={{ textAlign: 'center', fontSize: 12, padding: 20, color: '#6963e2' }} ellipsizeMode='tail'>
+                                                    <Text style={{ textAlign: 'center', fontSize: 12, padding: 20, color: '#560bad' }} ellipsizeMode='tail'>
                                                         Join
                                                     </Text>
                                                 </TouchableOpacity>

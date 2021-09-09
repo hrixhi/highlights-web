@@ -78,11 +78,11 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
   );
   const [playChannelCueIndef, setPlayChannelCueIndef] = useState(true);
   const colorChoices: any[] = [
-    "#F53464",
-    "#F8992A",
-    "#F7C440",
-    "#3EC57F",
-    "#33A9F4",
+    "#f94144",
+    "#f3722c",
+    "#f8961e",
+    "#f9c74f",
+    "#4c956c",
   ].reverse();
   const [modalAnimation] = useState(new Animated.Value(0));
   const [reloadEditorKey, setReloadEditorKey] = useState(Math.random());
@@ -904,7 +904,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 lineHeight: 25,
               }}
             >
-              {PreferredLanguageText("new")}
+              {/* {PreferredLanguageText("new")} */}
             </Text>
           </View>
           <TouchableOpacity
@@ -924,8 +924,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
             >
               <Ionicons
                 name="bookmark"
-                size={34}
-                color={starred ? "#F53464" : "#818385"}
+                size={40}
+                color={starred ? "#f94144" : "#818385"}
               />
             </Text>
           </TouchableOpacity>
@@ -940,7 +940,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
             marginTop: 20,
             backgroundColor: "white",
             borderBottomWidth: imported || isQuiz ? 0 : 1,
-            borderBottomColor: '#dddddd'
+            borderBottomColor: '#e1e9f0'
           }}
           onTouchStart={() => Keyboard.dismiss()}
         >
@@ -1250,7 +1250,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                       style={{ height: 20, marginRight: 20 }}
                       trackColor={{
                         false: "#FBFBFC",
-                        true: "#6963e2",
+                        true: "#560bad",
                       }}
                       activeThumbColor="white"
                     />
@@ -1424,7 +1424,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
               ) : (
                 <View key={url} style={{ flex: 1, maxHeight: 800 }}>
                   {/* <Webview key={url} url={url} /> */}
-                  <div className="webviewer" ref={RichText} style={{ height: "100vh", borderWidth: 1, borderColor: '#eeeeee', borderRadius: 12 }}></div>
+                  <div className="webviewer" ref={RichText} style={{ height: "100vh", borderWidth: 1, borderColor: '#e1e9f0', borderRadius: 12 }}></div>
                 </View>
               )
             ) : null}
@@ -1519,32 +1519,33 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
           </View>
           <View
             style={{
-              flex: 1,
+              width: '100%',
               display: "flex",
               flexDirection: "column",
               marginHorizontal: 10,
-              maxWidth: 700, alignSelf: 'center'
+              maxWidth: 700, alignSelf: 'center',
+              // marginLeft: width < 768 ? 0 : 200
             }}
           >
             {channels.length !== 0 ? (
               <View
                 style={{
                   display: "flex",
-                  flexDirection: "column",
                   overflow: "visible",
                 }}
               >
                 <View
                   style={{
-                    width: "100%",
+                    // width: 300,
+                    flexDirection: width < 768 ? 'column' : "row",
                     borderRightWidth: 0,
                     borderColor: "#FBFBFC",
+                    paddingTop: 40
                   }}
                 >
                   <View
                     style={{
-                      width: "100%",
-                      paddingTop: 40,
+                      width: 300,
                       paddingBottom: 15,
                       backgroundColor: "white",
                     }}
@@ -1564,15 +1565,14 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   </View>
                   <View
                     style={{
-                      width: "100%",
                       display: "flex",
-                      flexDirection: "row",
+                      // flexDirection: "row",
                       backgroundColor: "white",
                     }}
                   >
                     <View
                       style={{
-                        width: "85%",
+                        // width: "85%",
                         backgroundColor: "white",
                         display: "flex",
                       }}
@@ -1641,58 +1641,57 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           })}
                         </MenuOptions>
                       </Menu>
+                      <View
+                        style={{
+                          width: "100%",
+                          borderRightWidth: 0,
+                          borderColor: "#FBFBFC",
+                        }}
+                      >
+                        {channelId !== "" ? (
+                          <View
+                            style={{
+                              flexDirection: "column",
+                              marginTop: 25,
+                              maxWidth: 500,
+                              overflow: "scroll",
+                            }}
+                          >
+                            <View style={{ width: "90%", padding: 5, height: "auto" }}>
+                              <Multiselect
+                                placeholder="Share with..."
+                                displayValue="name"
+                                // key={userDropdownOptions.toString()}
+                                // style={{ width: '100%', color: '#43434f',
+                                //     optionContainer: { // To change css for option container
+                                //         zIndex: 9999
+                                //     }
+                                // }}
+                                options={subscribers} // Options to display in the dropdown
+                                selectedValues={selected} // Preselected value to persist in dropdown
+                                onSelect={(e, f) => {
+                                  console.log('on select values', e)
+                                  setSelected(e);
+                                  return true;
+                                }} // Function will trigger on select event
+                                onRemove={(e, f) => {
+                                  setSelected(e);
+                                  return true;
+                                }}
+                              />
+                            </View>
+                          </View>
+                        ) : null}
+                      </View>
                     </View>
                   </View>
                 </View>
 
-                <View
-                  style={{
-                    width: "100%",
-                    borderRightWidth: 0,
-                    borderColor: "#FBFBFC",
-                  }}
-                >
-                  {channelId !== "" ? (
-                    <View
-                      style={{
-                        flexDirection: "column",
-                        marginTop: 25,
-                        overflow: "scroll",
-                      }}
-                    >
-                      <View style={{ width: "90%", padding: 5, height: "auto" }}>
-                        <Multiselect
-                          placeholder="Share with..."
-                          displayValue="name"
-                          // key={userDropdownOptions.toString()}
-                          // style={{ width: '100%', color: '#43434f',
-                          //     optionContainer: { // To change css for option container
-                          //         zIndex: 9999
-                          //     }
-                          // }}
-                          options={subscribers} // Options to display in the dropdown
-                          selectedValues={selected} // Preselected value to persist in dropdown
-                          onSelect={(e, f) => {
-                            console.log('on select values', e)
-                            setSelected(e);
-                            return true;
-                          }} // Function will trigger on select event
-                          onRemove={(e, f) => {
-                            setSelected(e);
-                            return true;
-                          }}
-                        />
-                      </View>
-                    </View>
-                  ) : null}
-                </View>
-
                 {channelId !== "" ? (
-                  <View style={{ width: "100%" }}>
+                  <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : "row", paddingTop: 40 }}>
                     <View
                       style={{
-                        width: "100%",
-                        paddingTop: 40,
+                        width: 300,
                         paddingBottom: 15,
                         backgroundColor: "white",
                       }}
@@ -1707,7 +1706,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                         {PreferredLanguageText("submissionRequired")}
                       </Text>
                     </View>
-                    <View style={{ flexDirection: "row" }}>
+                    <View>
                       <View
                         style={{
                           backgroundColor: "white",
@@ -1729,86 +1728,84 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           activeThumbColor="white"
                         />
                       </View>
-                    </View>
-
-                    <View style={{ width: "100%", marginBottom: 15 }}>
-                      <View style={{ flexDirection: "row" }}>
-                        {submission ? (
-                          <View
-                            style={{
-                              width: "100%",
-                              display: "flex",
-                              flexDirection: "row",
-                              backgroundColor: "white",
-                              alignItems: 'center'
-                            }}
-                          >
-                            <Text style={styles.text}>Available</Text>
-                            <DatePicker
-                              appearance={'subtle'}
-                              format="YYYY-MM-DD HH:mm"
-                              preventOverflow={true}
-                              value={initiateAt}
-                              onChange={(event: any) => {
-                                const date = new Date(event);
-                                const roundValue = roundSeconds(date)
-                                if (date < new Date()) return;
-                                setInitiateAt(roundValue);
+                      <View style={{ width: "100%", marginBottom: 15 }}>
+                        <View style={{ flexDirection: "row" }}>
+                          {submission ? (
+                            <View
+                              style={{
+                                width: "100%",
+                                display: "flex",
+                                flexDirection: "row",
+                                backgroundColor: "white",
+                                alignItems: 'center'
                               }}
-                              size={"xs"}
-                            // isValidDate={disablePastDt}
-                            />
-                          </View>
-                        ) : null}
-                      </View>
-                    </View>
-
-                    {/* Add it here */}
-
-                    <View style={{ width: "100%" }}>
-                      <View style={{ flexDirection: "row" }}>
-                        {submission ? (
-                          <View
-                            style={{
-                              width: "100%",
-                              display: "flex",
-                              flexDirection: "row",
-                              backgroundColor: "white",
-                              alignItems: 'center'
-                              // marginLeft: 50,
-                            }}
-                          >
-                            <Text style={styles.text}>
-                              {PreferredLanguageText("deadline")}
-                            </Text>
-                            <DatePicker
-                              format="YYYY-MM-DD HH:mm"
-                              preventOverflow={true}
-                              appearance={'subtle'}
-                              value={deadline}
-                              onChange={(event: any) => {
-                                const date = new Date(event);
-                                if (date < new Date()) return;
-                                const roundValue = roundSeconds(date)
-                                setDeadline(roundValue);
-                              }}
-                              size={"xs"}
-                            // isValidDate={disablePastDt}
-                            />
-                          </View>
-                        ) : null}
+                            >
+                              <Text style={styles.text}>Available</Text>
+                              <DatePicker
+                                appearance={'subtle'}
+                                format="YYYY-MM-DD HH:mm"
+                                preventOverflow={true}
+                                value={initiateAt}
+                                onChange={(event: any) => {
+                                  const date = new Date(event);
+                                  const roundValue = roundSeconds(date)
+                                  if (date < new Date()) return;
+                                  setInitiateAt(roundValue);
+                                }}
+                                size={"xs"}
+                              // isValidDate={disablePastDt}
+                              />
+                            </View>
+                          ) : null}
+                        </View>
                       </View>
 
                       {/* Add it here */}
+
+                      <View style={{ width: "100%" }}>
+                        <View style={{ flexDirection: "row" }}>
+                          {submission ? (
+                            <View
+                              style={{
+                                width: "100%",
+                                display: "flex",
+                                flexDirection: "row",
+                                backgroundColor: "white",
+                                alignItems: 'center'
+                                // marginLeft: 50,
+                              }}
+                            >
+                              <Text style={styles.text}>
+                                {PreferredLanguageText("deadline")}
+                              </Text>
+                              <DatePicker
+                                format="YYYY-MM-DD HH:mm"
+                                preventOverflow={true}
+                                appearance={'subtle'}
+                                value={deadline}
+                                onChange={(event: any) => {
+                                  const date = new Date(event);
+                                  if (date < new Date()) return;
+                                  const roundValue = roundSeconds(date)
+                                  setDeadline(roundValue);
+                                }}
+                                size={"xs"}
+                              // isValidDate={disablePastDt}
+                              />
+                            </View>
+                          ) : null}
+                        </View>
+
+                        {/* Add it here */}
+                      </View>
                     </View>
                   </View>
                 ) : null}
                 {submission ? (
-                  <View style={{ width: "100%" }}>
+                  <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : 'row', paddingTop: 40 }}>
                     <View
                       style={{
-                        width: "100%",
-                        paddingTop: 40,
+                        width: 300,
                         paddingBottom: 15,
                         backgroundColor: "white",
                       }}
@@ -1823,57 +1820,59 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                         Grade Weight
                       </Text>
                     </View>
-                    <View style={{ flexDirection: "row" }}>
-                      <View
-                        style={{
-                          backgroundColor: "white",
-                          height: 40,
-                          marginRight: 10,
-                        }}
-                      >
-                        <Switch
-                          value={graded}
-                          onValueChange={() => setGraded(!graded)}
-                          style={{ height: 20 }}
-                          trackColor={{
-                            false: "#FBFBFC",
-                            true: "#818385",
-                          }}
-                          activeThumbColor="white"
-                        />
-                      </View>
-                    </View>
                     <View>
-                      {graded ? (
+                      <View style={{ flexDirection: "row" }}>
                         <View
                           style={{
-                            width: "100%",
-                            display: "flex",
-                            flexDirection: "row",
                             backgroundColor: "white",
-                            alignItems: 'center'
+                            height: 40,
+                            marginRight: 10,
                           }}
                         >
-                          <Text style={styles.text}>
-                            {PreferredLanguageText("percentageOverall")}
-                          </Text>
-                          <TextInput
-                            value={gradeWeight}
-                            style={{
-                              width: "25%",
-                              borderBottomColor: "#FBFBFC",
-                              borderBottomWidth: 1,
-                              fontSize: 15,
-                              padding: 15,
-                              paddingVertical: 12,
-                              marginTop: 0,
+                          <Switch
+                            value={graded}
+                            onValueChange={() => setGraded(!graded)}
+                            style={{ height: 20 }}
+                            trackColor={{
+                              false: "#FBFBFC",
+                              true: "#818385",
                             }}
-                            placeholder={"0-100"}
-                            onChangeText={(val) => setGradeWeight(val)}
-                            placeholderTextColor={"#818385"}
+                            activeThumbColor="white"
                           />
                         </View>
-                      ) : null}
+                      </View>
+                      <View>
+                        {graded ? (
+                          <View
+                            style={{
+                              width: "100%",
+                              display: "flex",
+                              flexDirection: "row",
+                              backgroundColor: "white",
+                              alignItems: 'center'
+                            }}
+                          >
+                            <Text style={styles.text}>
+                              {PreferredLanguageText("percentageOverall")}
+                            </Text>
+                            <TextInput
+                              value={gradeWeight}
+                              style={{
+                                width: "25%",
+                                borderBottomColor: "#FBFBFC",
+                                borderBottomWidth: 1,
+                                fontSize: 15,
+                                padding: 15,
+                                paddingVertical: 12,
+                                marginTop: 0,
+                              }}
+                              placeholder={"0-100"}
+                              onChangeText={(val) => setGradeWeight(val)}
+                              placeholderTextColor={"#818385"}
+                            />
+                          </View>
+                        ) : null}
+                      </View>
                     </View>
                   </View>
                 ) : null}
@@ -1883,7 +1882,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
             <View
               style={{
                 display: "flex",
-                flexDirection: "column",
               }}
             >
               <View
@@ -1893,11 +1891,10 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   borderColor: "#FBFBFC",
                 }}
               >
-                <View style={{ width: "100%", backgroundColor: "white" }}>
+                <View style={{ width: "100%", backgroundColor: "white", flexDirection: width < 768 ? 'column' : 'row', paddingTop: 40 }}>
                   <View
                     style={{
-                      width: "100%",
-                      paddingTop: 40,
+                      width: 300,
                       paddingBottom: 15,
                       backgroundColor: "white",
                     }}
@@ -1914,7 +1911,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   </View>
                   <View
                     style={{
-                      width: "100%",
+                      // width: "100%",
                       display: "flex",
                       flexDirection: "row",
                       backgroundColor: "white",
@@ -2010,12 +2007,12 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   width: "100%",
                   borderRightWidth: 0,
                   borderColor: "#FBFBFC",
+                  flexDirection: width < 768 ? 'column' : 'row', paddingTop: 40
                 }}
               >
                 <View
                   style={{
-                    width: "100%",
-                    paddingTop: 40,
+                    width: 300,
                     paddingBottom: 15,
                     backgroundColor: "white",
                   }}
@@ -2032,7 +2029,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 </View>
                 <View
                   style={{
-                    width: "100%",
+                    // width: "100%",
                     display: "flex",
                     flexDirection: "row",
                     backgroundColor: "white",
@@ -2076,15 +2073,14 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
             <View
               style={{
                 width: "100%",
-                paddingTop: 15,
+                // paddingTop: 15,
                 flexDirection: "column",
               }}
             >
-              <View style={{ width: "100%" }}>
+              <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : 'row', paddingTop: 40 }}>
                 <View
                   style={{
-                    width: "100%",
-                    paddingTop: 40,
+                    width: 300,
                     paddingBottom: 15,
                     backgroundColor: "white",
                   }}
@@ -2123,18 +2119,17 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                     style={{ height: 20 }}
                     trackColor={{
                       false: "#FBFBFC",
-                      true: "#6963e2",
+                      true: "#560bad",
                     }}
                     activeThumbColor="white"
                   />
                 </View>
               </View>
               {notify ? (
-                <View style={{ width: "100%" }}>
+                <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : 'row', paddingTop: 40 }}>
                   <View
                     style={{
-                      width: "100%",
-                      paddingTop: 40,
+                      width: 300,
                       paddingBottom: 15,
                       backgroundColor: "white",
                     }}
@@ -2149,7 +2144,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                       Recurring
                     </Text>
                   </View>
-                  <View style={{ flexDirection: "row" }}>
+                  <View style={{}}>
                     <View
                       style={{
                         backgroundColor: "white",
@@ -2210,12 +2205,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                               },
                             }}
                           >
-                            {/* <MenuOption
-                                                                    value={''}>
-                                                                    <Text>
-                                                                        None
-                                                                    </Text>
-                                                                </MenuOption> */}
                             {timedFrequencyOptions.map((item: any) => {
                               return (
                                 <MenuOption value={item}>
@@ -2229,26 +2218,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                             })}
                           </MenuOptions>
                         </Menu>
-                        {/* <Picker
-                                                            style={styles.picker}
-                                                            itemStyle={{
-                                                                fontSize: 15
-                                                            }}
-                                                            selectedValue={frequency}
-                                                            onValueChange={(itemValue: any) =>
-                                                                setFrequency(itemValue)
-                                                            }>
-                                                            {
-                                                                timedFrequencyOptions.map((item: any, index: number) => {
-                                                                    return <Picker.Item
-                                                                        color={frequency === item.value ? '#6963e2' : "#43434f"}
-                                                                        label={item.value === '0' && channelId !== '' ? 'Once' : item.label}
-                                                                        value={item.value}
-                                                                        key={index}
-                                                                    />
-                                                                })
-                                                            }
-                                                        </Picker> */}
                       </View>
                     ) : (
                       <View
@@ -2282,11 +2251,10 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 </View>
               ) : null}
               {notify && !shuffle ? (
-                <View style={{ width: "100%" }}>
+                <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : 'row', paddingTop: 40 }}>
                   <View
                     style={{
-                      width: "100%",
-                      paddingTop: 40,
+                      width: 300,
                       paddingBottom: 15,
                       backgroundColor: "white",
                     }}
@@ -2355,11 +2323,10 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
             </View>
             {/* if Quiz then ask Shuffle */}
             {isQuiz ? (
-              <View style={{ width: "100%" }}>
+              <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : 'row', paddingTop: 40 }}>
                 <View
                   style={{
-                    width: "100%",
-                    paddingTop: 40,
+                    width: 30,
                     paddingBottom: 15,
                     backgroundColor: "white",
                   }}
@@ -2430,7 +2397,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                       lineHeight: 35,
                       color: "white",
                       fontSize: 12,
-                      backgroundColor: "#6963e2",
+                      backgroundColor: "#560bad",
                       borderRadius: 15,
                       paddingHorizontal: 25,
                       fontFamily: "inter",
@@ -2450,7 +2417,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                       lineHeight: 35,
                       color: "white",
                       fontSize: 12,
-                      backgroundColor: "#6963e2",
+                      backgroundColor: "#560bad",
                       borderRadius: 15,
                       paddingHorizontal: 25,
                       fontFamily: "inter",
@@ -2533,7 +2500,7 @@ const styles: any = StyleSheet.create({
   },
   input: {
     width: "100%",
-    borderBottomColor: "#dddddd",
+    borderBottomColor: "#e1e9f0",
     borderBottomWidth: 1,
     fontSize: 15,
     paddingTop: 12,
@@ -2618,7 +2585,7 @@ const styles: any = StyleSheet.create({
     backgroundColor: "#E0D41F",
   },
   color4: {
-    backgroundColor: "#3EC57F",
+    backgroundColor: "#f9c74f",
   },
   color5: {
     backgroundColor: "#7FB1D3",

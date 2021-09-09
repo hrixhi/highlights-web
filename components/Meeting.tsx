@@ -330,7 +330,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                         }}
                                     >
                                         <Text style={{ width: '100%', color: '#818385', fontSize: 15, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
-                                            <Ionicons name='trash-outline' size={17} color="#F53464" />
+                                            <Ionicons name='trash-outline' size={17} color="#f94144" />
                                         </Text>
                                     </TouchableOpacity>
                                     : null
@@ -461,7 +461,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                 lineHeight: 30,
                                 color: '#fff',
                                 fontSize: 12,
-                                backgroundColor: '#33A9F4',
+                                backgroundColor: '#4c956c',
                                 paddingHorizontal: 25,
                                 fontFamily: 'inter',
                                 height: 30,
@@ -550,7 +550,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
             paddingLeft: width < 768 ? 0 : 20,
             marginTop: 20,
             marginBottom: 20,
-            borderLeftWidth: width < 768 ? 0 : 1, borderLeftColor: '#eeeeee',
+            borderLeftWidth: width < 768 ? 0 : 1, borderLeftColor: '#e1e9f0',
         }}>
             <Discussion
                 channelId={props.channelId}

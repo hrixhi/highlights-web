@@ -149,7 +149,7 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             height: Dimensions.get('window').width < 768 ? 30 : '100%',
                             backgroundColor: '#fff',
                             justifyContent: 'center',
-                            borderColor: '#eeeeee',
+                            borderColor: '#e1e9f0',
                             borderTopWidth: Dimensions.get('window').width < 768 ? 1 : 0,
                             borderLeftWidth: Dimensions.get('window').width < 768 ? 0 : 1,
                         }}>
@@ -218,7 +218,7 @@ const styleObject: any = (colorScheme: any, mc: any) => StyleSheet.create({
         marginBottom: 10,
         marginTop: -4,
         borderRadius: 12,
-        backgroundColor: '#F53464',
+        backgroundColor: '#f94144',
         textAlign: 'center',
         zIndex: 50
     },

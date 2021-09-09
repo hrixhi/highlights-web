@@ -193,7 +193,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
         flexDirection: width < 768 ? 'column' : 'row',
         paddingTop: 30
     }}>
-        <View style={{ width: width < 768 ? '100%' : '50%', paddingRight: 30, borderRightWidth: width < 768 ? 0 : 1, borderColor: '#eeeeee' }}>
+        <View style={{ width: width < 768 ? '100%' : '50%', paddingRight: 30, borderRightWidth: width < 768 ? 0 : 1, borderColor: '#e1e9f0' }}>
             <Text style={{
                 marginRight: 10,
                 color: '#43434f',
@@ -213,7 +213,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     props.subscriptions.map((sub: any, ind: any) => {
                         return <View style={{
                             backgroundColor: '#fff',
-                            borderColor: '#eeeeee',
+                            borderColor: '#e1e9f0',
                             borderBottomWidth: 1,
                             paddingBottom: 20,
                             marginBottom: 20,

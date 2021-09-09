@@ -29,7 +29,6 @@ const Profile: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                 paddingHorizontal: 0,
                 backgroundColor: 'white',
                 opacity: modalAnimation,
-                maxWidth: 500,
                 alignSelf: 'center'
                 // paddingLeft: 20
             }}>

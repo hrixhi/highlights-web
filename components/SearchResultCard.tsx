@@ -8,7 +8,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
-    const colorChoices: any[] = ['#6963e2', '#F8992A', '#F7C440', '#3EC57F', '#33A9F4'].reverse()
+    const colorChoices: any[] = ['#560bad', '#f3722c', '#f8961e', '#f9c74f', '#4c956c'].reverse()
     const colorScheme = 'dark'
     const styleObject = styles(colorScheme)
 
@@ -47,7 +47,7 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                         </Text> */}
                         {/* {
                             props.cue.submission ? <Text style={styleObject.date}>
-                                <Ionicons name='share-outline' size={9} color={props.cue.submittedAt && props.cue.submittedAt !== '' ? ('#6963e2') : (colorScheme === 'light' ? '#fff' : '#333333')} style={{ marginRight: 10 }} />
+                                <Ionicons name='share-outline' size={9} color={props.cue.submittedAt && props.cue.submittedAt !== '' ? ('#560bad') : (colorScheme === 'light' ? '#fff' : '#333333')} style={{ marginRight: 10 }} />
                             </Text> : null
                         }
                         {
@@ -59,7 +59,7 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                         {/* {
                             props.cue.graded && showScore && !isOwner ? <Text style={{
                                 fontSize: 9,
-                                color: '#6963e2',
+                                color: '#560bad',
                                 marginLeft: 10
                             }}>
                                 {props.cue.score}%
@@ -76,7 +76,7 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                                     width: '97%',
                                     zIndex: 20
                                 }}>
-                                    <Ionicons name='bookmark' size={18} color={starred ? '#6963e2' : '#fff'} />
+                                    <Ionicons name='bookmark' size={18} color={starred ? '#560bad' : '#fff'} />
                                 </Text>
                                 : null
                         } */}
@@ -94,7 +94,7 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                         }}>
                             {
                                 props.cue.submission ? <Text>
-                                    <Ionicons name='share-outline' size={11} color={props.cue.submittedAt && props.cue.submittedAt !== '' ? ('#6963e2') : (colorScheme === 'light' ? '#fff' : '#333333')} style={{ marginRight: 10 }} />
+                                    <Ionicons name='share-outline' size={11} color={props.cue.submittedAt && props.cue.submittedAt !== '' ? ('#560bad') : (colorScheme === 'light' ? '#fff' : '#333333')} style={{ marginRight: 10 }} />
                                 </Text> : null
                             }
                             {
@@ -144,7 +144,7 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                                                 width: 20,
                                                 height: 20,
                                                 borderRadius: 12,
-                                                backgroundColor: '#6963e2',
+                                                backgroundColor: '#560bad',
                                                 textAlign: 'center',
                                                 zIndex: 150,
                                                 marginLeft: 10,
@@ -165,7 +165,7 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                                     height: 20,
                                     borderRadius: 12,
                                     overflow: 'hidden',
-                                    backgroundColor: '#6963e2',
+                                    backgroundColor: '#560bad',
                                     textAlign: 'center',
                                     zIndex: 150,
                                     marginLeft: 10,
@@ -183,7 +183,7 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                                     height: 20,
                                     borderRadius: 12,
                                     overflow: 'hidden',
-                                    backgroundColor: '#6963e2',
+                                    backgroundColor: '#560bad',
                                     textAlign: 'center',
                                     zIndex: 150,
                                     marginLeft: 5,
@@ -217,7 +217,7 @@ const styles: any = (colorScheme: any) => StyleSheet.create({
         paddingHorizontal: 15,
         backgroundColor: '#FBFBFC',
         borderWidth: 1,
-        borderColor: '#eeeeee'
+        borderColor: '#e1e9f0'
     },
     flipCard: {
         height: '100%',

@@ -200,7 +200,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             lineHeight: 30,
                             color: '#fff',
                             fontSize: 12,
-                            backgroundColor: '#33A9F4',
+                            backgroundColor: '#4c956c',
                             paddingHorizontal: 25,
                             fontFamily: 'inter',
                             height: 30,
@@ -251,7 +251,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
         // PIE CHART FOR GRADE WEIGHTS
 
         // ADD MORE COLORS HERE LATER
-        const colors = ["#F53464", "#F8992A", "#F7C440", "#3EC57F", "#33A9F4", "#f95d6a", "#ff7c43", "#ffa600"]
+        const colors = ["#f94144", "#f3722c", "#f8961e", "#f9c74f", "#4c956c", "#f95d6a", "#ff7c43", "#ffa600"]
 
         const nonZeroGradeWeight = cues.filter((cue: any) => cue.gradeWeight > 0)
 
@@ -406,7 +406,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                         width: 10,
                                         height: 10,
                                         borderRadius: 5,
-                                        backgroundColor: '#F53464',
+                                        backgroundColor: '#f94144',
                                     }}
                                 />
                                 <Text style={{ paddingLeft: 10, fontSize: 11 }}>
@@ -420,7 +420,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                         width: 10,
                                         height: 10,
                                         borderRadius: 5,
-                                        backgroundColor: '#F8992A',
+                                        backgroundColor: '#f3722c',
                                     }}
                                 />
                                 <Text style={{ paddingLeft: 10, fontSize: 11 }}>
@@ -531,7 +531,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                         onChangeText={val => {
                                                                             setActiveScore(val)
                                                                         }}
-                                                                        style={{ width: '50%', marginRight: 5, padding: 8, borderBottomColor: "#dddddd", borderBottomWidth: 1, fontSize: 12 }}
+                                                                        style={{ width: '50%', marginRight: 5, padding: 8, borderBottomColor: "#e1e9f0", borderBottomWidth: 1, fontSize: 12 }}
                                                                         placeholderTextColor={'#818385'}
                                                                     />
                                                                     <TouchableOpacity onPress={() => {
@@ -544,7 +544,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                         setActiveUserId('')
                                                                         setActiveScore('')
                                                                     }}>
-                                                                        <Ionicons name='close-circle-outline' size={20} color={'#F53464'} />
+                                                                        <Ionicons name='close-circle-outline' size={20} color={'#f94144'} />
                                                                     </TouchableOpacity>
                                                                 </View>
 
@@ -559,11 +559,11 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                             setActiveUserId(score.userId);
                                                             setActiveScore(scoreObject.score);
                                                         }}>
-                                                            {!scoreObject || !scoreObject.submittedAt ? <Text style={{ textAlign: 'center', fontSize: 11, color: '#F53464', }}>
+                                                            {!scoreObject || !scoreObject.submittedAt ? <Text style={{ textAlign: 'center', fontSize: 11, color: '#f94144', }}>
                                                                 {scoreObject && scoreObject.graded ? scoreObject.score : (!scoreObject || !scoreObject.cueId ? "N/A" : "Missing")}
                                                             </Text>
                                                                 :
-                                                                <Text style={{ textAlign: 'center', fontSize: 11, color: scoreObject && new Date(parseInt(scoreObject.submittedAt)) >= (new Date(cue.deadline)) ? '#F8992A' : '#43434f', }}>
+                                                                <Text style={{ textAlign: 'center', fontSize: 11, color: scoreObject && new Date(parseInt(scoreObject.submittedAt)) >= (new Date(cue.deadline)) ? '#f3722c' : '#43434f', }}>
                                                                     {
                                                                         scoreObject && scoreObject.graded ? scoreObject.score : (scoreObject && new Date(parseInt(scoreObject.submittedAt)) >= (new Date(cue.deadline)) ? "Late" : '-')
                                                                     }

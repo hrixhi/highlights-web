@@ -8,7 +8,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
-    const colorChoices: any[] = ['#F53464', '#F8992A', '#F7C440', '#3EC57F', '#33A9F4'].reverse()
+    const colorChoices: any[] = ['#f94144', '#f3722c', '#f8961e', '#f9c74f', '#4c956c'].reverse()
     const colorScheme = 'dark'
     const styleObject = styles(colorScheme, props.channelId, colorChoices[props.cue.color])
     const starred = props.cue.starred;
@@ -84,7 +84,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         </Text> */}
                         {/* {
                             props.cue.submission ? <Text style={styleObject.date}>
-                                <Ionicons name='share-outline' size={9} color={props.cue.submittedAt && props.cue.submittedAt !== '' ? ('#6963e2') : (colorScheme === 'light' ? '#fff' : '#333333')} style={{ marginRight: 10 }} />
+                                <Ionicons name='share-outline' size={9} color={props.cue.submittedAt && props.cue.submittedAt !== '' ? ('#560bad') : (colorScheme === 'light' ? '#fff' : '#333333')} style={{ marginRight: 10 }} />
                             </Text> : null
                         }
                         {
@@ -96,7 +96,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         {
                             props.cue.graded && showScore && !isOwner ? <Text style={{
                                 fontSize: 9,
-                                color: '#6963e2',
+                                color: '#560bad',
                                 marginLeft: 10
                             }}>
                                 {props.cue.score}%
@@ -113,7 +113,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     width: '97%',
                                     zIndex: 20
                                 }}>
-                                    <Ionicons name='bookmark' size={18} color={starred ? '#F53464' : '#fff'} />
+                                    <Ionicons name='bookmark' size={18} color={starred ? '#f94144' : '#fff'} />
                                 </Text>
                                 : null
                         }
@@ -131,7 +131,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         }}>
                             {
                                 props.cue.submission ? <Text>
-                                    <Ionicons name='share-outline' size={11} color={props.cue.submittedAt && props.cue.submittedAt !== '' ? ('#6963e2') : (colorScheme === 'light' ? '#fff' : '#333333')} style={{ marginRight: 10 }} />
+                                    <Ionicons name='share-outline' size={11} color={props.cue.submittedAt && props.cue.submittedAt !== '' ? ('#560bad') : (colorScheme === 'light' ? '#fff' : '#333333')} style={{ marginRight: 10 }} />
                                 </Text> : null
                             }
                             {
@@ -167,7 +167,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     height: 20,
                                     borderRadius: 12,
                                     overflow: 'hidden',
-                                    backgroundColor: '#F53464',
+                                    backgroundColor: '#f94144',
                                     textAlign: 'center',
                                     zIndex: 150,
                                     marginLeft: 10,
@@ -185,7 +185,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     height: 20,
                                     borderRadius: 12,
                                     overflow: 'hidden',
-                                    backgroundColor: '#6963e2',
+                                    backgroundColor: '#560bad',
                                     textAlign: 'center',
                                     zIndex: 150,
                                     marginLeft: 5,
@@ -221,7 +221,7 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
         paddingHorizontal: 15,
         backgroundColor: '#fff',
         borderWidth: 1,
-        borderColor: '#eeeeee'
+        borderColor: '#e1e9f0'
     },
     flipCard: {
         height: '100%',

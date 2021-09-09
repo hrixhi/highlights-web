@@ -355,317 +355,321 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
         >
           {!loggedIn ? PreferredLanguageText('createAccount') : ""}
         </Text> */}
-        {showSavePassword ? (
-          <View
-            style={{
-              width: "100%",
-              backgroundColor: "white",
-              paddingTop: 20,
-              paddingBottom: 20
-            }}
-          >
-            <Text style={{
-              fontSize: 15,
-              fontFamily: 'inter',
-              color: '#43434f'
-            }}>
-              {PreferredLanguageText('currentPassword')}
-            </Text>
-            <TextInput
-              secureTextEntry={true}
-              value={currentPassword}
-              placeholder={""}
-              onChangeText={val => setCurrentPassword(val)}
-              placeholderTextColor={"#818385"}
-            />
-            <Text style={{
-              fontSize: 15,
-              fontFamily: 'inter',
-              color: '#43434f'
-            }}>
-              {PreferredLanguageText('newPassword')}
-            </Text>
-            <TextInput
-              secureTextEntry={true}
-              value={newPassword}
-              placeholder={""}
-              onChangeText={val => setNewPassword(val)}
-              placeholderTextColor={"#818385"}
-              errorText={newPasswordValidError}
-              footerMessage={
-                PreferredLanguageText('atleast8char')
-              }
-            />
-            <Text style={{
-              fontSize: 15,
-              fontFamily: 'inter',
-              color: '#43434f'
-            }}>
-              {PreferredLanguageText('confirmNewPassword')}
-            </Text>
-            <TextInput
-              secureTextEntry={true}
-              value={confirmNewPassword}
-              placeholder={""}
-              onChangeText={val => setConfirmNewPassword(val)}
-              placeholderTextColor={"#818385"}
-              errorText={confirmNewPasswordError}
-            />
-          </View>
-        ) : (
-          <View
-            style={{
-              width: "100%",
-              backgroundColor: "white",
-              paddingTop: 20,
-              paddingBottom: 20
-            }}
-          >
-            <Image
-              style={{
-                height: 150,
-                width: 150,
-                borderRadius: 75,
-                // marginTop: 20,
-                alignSelf: 'center'
-              }}
-              source={{ uri: avatar ? avatar : 'https://cues-files.s3.amazonaws.com/images/default.png' }}
-            />
-            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', paddingTop: 15 }}>
-              {
-                avatar ? <TouchableOpacity
-                  onPress={() => setAvatar(undefined)}
-                  style={{
-                    backgroundColor: 'white',
-                    overflow: 'hidden',
-                    height: 35,
-                    // marginLeft: 20,
-                    // marginTop: 15,
-                    justifyContent: 'center',
-                    flexDirection: 'row'
-                  }}>
-                  <Text style={{
-                    textAlign: 'center',
-                    lineHeight: 30,
-                    color: '#fff',
-                    fontSize: 12,
-                    backgroundColor: '#33A9F4',
-                    paddingHorizontal: 25,
-                    fontFamily: 'inter',
-                    height: 30,
-                    // width: 100,
-                    borderRadius: 15,
-                    textTransform: 'uppercase'
-                  }}>
-                    REMOVE
-                  </Text>
-                </TouchableOpacity> : <FileUpload
-                  onUpload={(u: any, t: any) => {
-                    setAvatar(u)
-                  }}
-                />
-              }
-            </View>
-            <Text style={{
-              marginTop: 20,
-              fontSize: 15,
-              fontFamily: 'inter',
-              color: '#43434f'
-            }}>
-              {PreferredLanguageText('email')}
-            </Text>
-            <TextInput
-              editable={!loggedIn}
-              value={email}
-              placeholder={""}
-              onChangeText={val => setEmail(val)}
-              placeholderTextColor={"#818385"}
-              required={true}
-              errorText={emailValidError}
-            />
-            <Text style={{
-              fontSize: 15,
-              fontFamily: 'inter',
-              color: '#43434f'
-            }}>
-              {PreferredLanguageText('fullName')}
-            </Text>
-            <TextInput
-              value={fullName}
-              placeholder={""}
-              onChangeText={val => setFullName(val)}
-              placeholderTextColor={"#818385"}
-              required={true}
-            />
-            <Text style={{
-              fontSize: 15,
-              fontFamily: 'inter',
-              color: '#43434f'
-            }}>
-              {PreferredLanguageText('displayName')}
-            </Text>
-            <TextInput
-              value={displayName}
-              placeholder={""}
-              onChangeText={val => setDisplayName(val)}
-              placeholderTextColor={"#818385"}
-              required={true}
-            />
-            {loggedIn ? null : (
-              <View>
-                <Text
-                  style={{
-                    fontSize: 15,
-                    fontFamily: 'inter',
-                    color: '#43434f'
-                  }}
-                >
-                  {PreferredLanguageText('password')}
+        <View style={{ width: '100%', flexDirection: 'row', flex: 1, justifyContent: 'center' }}>
+          <View style={{ maxWidth: 500, width: '100%' }}>
+            {showSavePassword ? (
+              <View
+                style={{
+                  width: "100%",
+                  backgroundColor: "white",
+                  paddingTop: 20,
+                  paddingBottom: 20
+                }}
+              >
+                <Text style={{
+                  fontSize: 15,
+                  fontFamily: 'inter',
+                  color: '#43434f'
+                }}>
+                  {PreferredLanguageText('currentPassword')}
                 </Text>
                 <TextInput
-                  value={password}
-                  placeholder={""}
-                  onChangeText={val => setPassword(val)}
-                  placeholderTextColor={"#818385"}
                   secureTextEntry={true}
-                  required={true}
+                  value={currentPassword}
+                  placeholder={""}
+                  onChangeText={val => setCurrentPassword(val)}
+                  placeholderTextColor={"#818385"}
+                />
+                <Text style={{
+                  fontSize: 15,
+                  fontFamily: 'inter',
+                  color: '#43434f'
+                }}>
+                  {PreferredLanguageText('newPassword')}
+                </Text>
+                <TextInput
+                  secureTextEntry={true}
+                  value={newPassword}
+                  placeholder={""}
+                  onChangeText={val => setNewPassword(val)}
+                  placeholderTextColor={"#818385"}
+                  errorText={newPasswordValidError}
                   footerMessage={
                     PreferredLanguageText('atleast8char')
                   }
-                  errorText={passwordValidError}
                 />
-                <Text
-                  style={{
-                    fontSize: 15,
-                    fontFamily: 'inter',
-                    color: '#43434f'
-                  }}
-                >
-                  {PreferredLanguageText('confirmPassword')}
+                <Text style={{
+                  fontSize: 15,
+                  fontFamily: 'inter',
+                  color: '#43434f'
+                }}>
+                  {PreferredLanguageText('confirmNewPassword')}
                 </Text>
                 <TextInput
-                  value={confirmPassword}
-                  placeholder={""}
-                  onChangeText={val => setConfirmPassword(val)}
-                  placeholderTextColor={"#818385"}
                   secureTextEntry={true}
-                  required={true}
-                  errorText={confirmPasswordError}
+                  value={confirmNewPassword}
+                  placeholder={""}
+                  onChangeText={val => setConfirmNewPassword(val)}
+                  placeholderTextColor={"#818385"}
+                  errorText={confirmNewPasswordError}
                 />
               </View>
-            )}
-          </View>
-        )}
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: "white",
-            justifyContent: "center",
-            display: "flex",
-            // paddingTop: 30
-          }}
-        >
-          {loggedIn ? (
-            <TouchableOpacity
-              onPress={() => setShowSavePassword(!showSavePassword)}
-              style={{
-                backgroundColor: "white",
-                overflow: "hidden",
-                height: 35,
-                marginTop: 20,
-                width: "100%",
-                justifyContent: "center",
-                flexDirection: "row"
-              }}
-            >
-              <Text
+            ) : (
+              <View
                 style={{
-                  textAlign: "center",
-                  lineHeight: 35,
-                  color: "#43434f",
-                  fontSize: 12,
-                  backgroundColor: "#FBFBFC",
-                  paddingHorizontal: 25,
-                  fontFamily: "inter",
-                  height: 35,
-                  width: 150,
-                  borderRadius: 15,
-                  textTransform: "uppercase"
+                  width: "100%",
+                  backgroundColor: "white",
+                  paddingTop: 20,
+                  paddingBottom: 20
                 }}
               >
-                {showSavePassword ? PreferredLanguageText('back') : PreferredLanguageText('password')}
-              </Text>
-            </TouchableOpacity>
-          ) : null}
-          <TouchableOpacity
-            onPress={() => handleSubmit()}
-            style={{
-              backgroundColor: "white",
-              overflow: "hidden",
-              height: 35,
-              marginTop: 15,
-              width: "100%",
-              justifyContent: "center",
-              flexDirection: "row"
-            }}
-            disabled={isSubmitDisabled}
-          >
-            <Text
+                <Image
+                  style={{
+                    height: 150,
+                    width: 150,
+                    borderRadius: 75,
+                    // marginTop: 20,
+                    alignSelf: 'center'
+                  }}
+                  source={{ uri: avatar ? avatar : 'https://cues-files.s3.amazonaws.com/images/default.png' }}
+                />
+                <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', paddingTop: 15 }}>
+                  {
+                    avatar ? <TouchableOpacity
+                      onPress={() => setAvatar(undefined)}
+                      style={{
+                        backgroundColor: 'white',
+                        overflow: 'hidden',
+                        height: 35,
+                        // marginLeft: 20,
+                        // marginTop: 15,
+                        justifyContent: 'center',
+                        flexDirection: 'row'
+                      }}>
+                      <Text style={{
+                        textAlign: 'center',
+                        lineHeight: 30,
+                        color: '#fff',
+                        fontSize: 12,
+                        backgroundColor: '#4c956c',
+                        paddingHorizontal: 25,
+                        fontFamily: 'inter',
+                        height: 30,
+                        // width: 100,
+                        borderRadius: 15,
+                        textTransform: 'uppercase'
+                      }}>
+                        REMOVE
+                      </Text>
+                    </TouchableOpacity> : <FileUpload
+                      onUpload={(u: any, t: any) => {
+                        setAvatar(u)
+                      }}
+                    />
+                  }
+                </View>
+                <Text style={{
+                  marginTop: 20,
+                  fontSize: 15,
+                  fontFamily: 'inter',
+                  color: '#43434f'
+                }}>
+                  {PreferredLanguageText('email')}
+                </Text>
+                <TextInput
+                  editable={!loggedIn}
+                  value={email}
+                  placeholder={""}
+                  onChangeText={val => setEmail(val)}
+                  placeholderTextColor={"#818385"}
+                  required={true}
+                  errorText={emailValidError}
+                />
+                <Text style={{
+                  fontSize: 15,
+                  fontFamily: 'inter',
+                  color: '#43434f'
+                }}>
+                  {PreferredLanguageText('fullName')}
+                </Text>
+                <TextInput
+                  value={fullName}
+                  placeholder={""}
+                  onChangeText={val => setFullName(val)}
+                  placeholderTextColor={"#818385"}
+                  required={true}
+                />
+                <Text style={{
+                  fontSize: 15,
+                  fontFamily: 'inter',
+                  color: '#43434f'
+                }}>
+                  {PreferredLanguageText('displayName')}
+                </Text>
+                <TextInput
+                  value={displayName}
+                  placeholder={""}
+                  onChangeText={val => setDisplayName(val)}
+                  placeholderTextColor={"#818385"}
+                  required={true}
+                />
+                {loggedIn ? null : (
+                  <View>
+                    <Text
+                      style={{
+                        fontSize: 15,
+                        fontFamily: 'inter',
+                        color: '#43434f'
+                      }}
+                    >
+                      {PreferredLanguageText('password')}
+                    </Text>
+                    <TextInput
+                      value={password}
+                      placeholder={""}
+                      onChangeText={val => setPassword(val)}
+                      placeholderTextColor={"#818385"}
+                      secureTextEntry={true}
+                      required={true}
+                      footerMessage={
+                        PreferredLanguageText('atleast8char')
+                      }
+                      errorText={passwordValidError}
+                    />
+                    <Text
+                      style={{
+                        fontSize: 15,
+                        fontFamily: 'inter',
+                        color: '#43434f'
+                      }}
+                    >
+                      {PreferredLanguageText('confirmPassword')}
+                    </Text>
+                    <TextInput
+                      value={confirmPassword}
+                      placeholder={""}
+                      onChangeText={val => setConfirmPassword(val)}
+                      placeholderTextColor={"#818385"}
+                      secureTextEntry={true}
+                      required={true}
+                      errorText={confirmPasswordError}
+                    />
+                  </View>
+                )}
+              </View>
+            )}
+            <View
               style={{
-                textAlign: "center",
-                lineHeight: 35,
-                color: "white",
-                fontSize: 12,
-                backgroundColor: "#6963e2",
-                paddingHorizontal: 25,
-                fontFamily: "inter",
-                height: 35,
-                borderRadius: 15,
-                width: 150,
-                textTransform: "uppercase"
+                flex: 1,
+                backgroundColor: "white",
+                justifyContent: "center",
+                display: "flex",
+                // paddingTop: 30
               }}
             >
-              {loggedIn ? (showSavePassword ? PreferredLanguageText('update') : PreferredLanguageText('save')) : PreferredLanguageText('signUp')}
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              if (loggedIn) {
-                logout();
-              } else {
-                window.location.reload();
-              }
-            }}
-            style={{
-              backgroundColor: "white",
-              overflow: "hidden",
-              height: 35,
-              marginTop: 15,
-              width: "100%",
-              justifyContent: "center",
-              flexDirection: "row",
-            }}
-          >
-            <Text
-              style={{
-                textAlign: "center",
-                lineHeight: 35,
-                color: "#43434f",
-                fontSize: 12,
-                backgroundColor: "#FBFBFC",
-                paddingHorizontal: 25,
-                fontFamily: "inter",
-                height: 35,
-                width: 150,
-                borderRadius: 15,
-                textTransform: 'uppercase'
-              }}
-            >
-              {loggedIn ? PreferredLanguageText('logout') : PreferredLanguageText('login')}
-            </Text>
-          </TouchableOpacity>
-          <View style={{ flexDirection: 'row', justifyContent: 'center', paddingBottom: 20, width: '100%', marginTop: 30, marginBottom: 100 }}>
-            <LanguageSelect />
+              {loggedIn ? (
+                <TouchableOpacity
+                  onPress={() => setShowSavePassword(!showSavePassword)}
+                  style={{
+                    backgroundColor: "white",
+                    overflow: "hidden",
+                    height: 35,
+                    marginTop: 20,
+                    width: "100%",
+                    justifyContent: "center",
+                    flexDirection: "row"
+                  }}
+                >
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      lineHeight: 35,
+                      color: "#43434f",
+                      fontSize: 12,
+                      backgroundColor: "#FBFBFC",
+                      paddingHorizontal: 25,
+                      fontFamily: "inter",
+                      height: 35,
+                      width: 150,
+                      borderRadius: 15,
+                      textTransform: "uppercase"
+                    }}
+                  >
+                    {showSavePassword ? PreferredLanguageText('back') : PreferredLanguageText('password')}
+                  </Text>
+                </TouchableOpacity>
+              ) : null}
+              <TouchableOpacity
+                onPress={() => handleSubmit()}
+                style={{
+                  backgroundColor: "white",
+                  overflow: "hidden",
+                  height: 35,
+                  marginTop: 15,
+                  width: "100%",
+                  justifyContent: "center",
+                  flexDirection: "row"
+                }}
+                disabled={isSubmitDisabled}
+              >
+                <Text
+                  style={{
+                    textAlign: "center",
+                    lineHeight: 35,
+                    color: "white",
+                    fontSize: 12,
+                    backgroundColor: "#560bad",
+                    paddingHorizontal: 25,
+                    fontFamily: "inter",
+                    height: 35,
+                    borderRadius: 15,
+                    width: 150,
+                    textTransform: "uppercase"
+                  }}
+                >
+                  {loggedIn ? (showSavePassword ? PreferredLanguageText('update') : PreferredLanguageText('save')) : PreferredLanguageText('signUp')}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  if (loggedIn) {
+                    logout();
+                  } else {
+                    window.location.reload();
+                  }
+                }}
+                style={{
+                  backgroundColor: "white",
+                  overflow: "hidden",
+                  height: 35,
+                  marginTop: 15,
+                  width: "100%",
+                  justifyContent: "center",
+                  flexDirection: "row",
+                }}
+              >
+                <Text
+                  style={{
+                    textAlign: "center",
+                    lineHeight: 35,
+                    color: "#43434f",
+                    fontSize: 12,
+                    backgroundColor: "#FBFBFC",
+                    paddingHorizontal: 25,
+                    fontFamily: "inter",
+                    height: 35,
+                    width: 150,
+                    borderRadius: 15,
+                    textTransform: 'uppercase'
+                  }}
+                >
+                  {loggedIn ? PreferredLanguageText('logout') : PreferredLanguageText('login')}
+                </Text>
+              </TouchableOpacity>
+              <View style={{ flexDirection: 'row', justifyContent: 'center', paddingBottom: 20, width: '100%', marginTop: 30, marginBottom: 100 }}>
+                <LanguageSelect />
+              </View>
+            </View>
           </View>
         </View>
       </ScrollView>
@@ -677,7 +681,7 @@ export default ProfileControls;
 
 const styles = StyleSheet.create({
   screen: {
-    paddingHorizontal: Dimensions.get("window").width < 768 ? 0 : 20,
+    // paddingHorizontal: Dimensions.get("window").width < 768 ? 0 : 20,
     width: "100%",
     // maxWidth: 600,
     alignSelf: 'center',

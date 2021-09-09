@@ -57,7 +57,7 @@ const ActivityCard: React.FunctionComponent<{ [label: string]: any }> = (props: 
                                     width: 20,
                                     height: 20,
                                     borderRadius: 12,
-                                    backgroundColor: '#F53464',
+                                    backgroundColor: '#f94144',
                                     textAlign: 'center',
                                     zIndex: 150,
                                     marginLeft: 10,
@@ -99,7 +99,7 @@ const styles: any = () => StyleSheet.create({
         width: 20,
         height: 20,
         borderRadius: 12,
-        backgroundColor: '#F53464',
+        backgroundColor: '#f94144',
         textAlign: 'center',
         zIndex: 150,
         marginLeft: 10
@@ -111,7 +111,7 @@ const styles: any = () => StyleSheet.create({
         padding: 13,
         backgroundColor: '#FBFBFC',
         borderWidth: 1,
-        borderColor: '#eeeeee'
+        borderColor: '#e1e9f0'
     },
     text: {
         display: 'flex',

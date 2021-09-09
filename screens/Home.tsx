@@ -1443,7 +1443,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     lineHeight: 35,
                     color: 'white',
                     fontSize: 12,
-                    backgroundColor: '#6963e2',
+                    backgroundColor: '#560bad',
                     paddingHorizontal: 25,
                     fontFamily: 'inter',
                     height: 35,
@@ -1785,7 +1785,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     style={{
                       height: 30,
                       borderTopWidth: 1,
-                      borderColor: '#eeeeee',
+                      borderColor: '#e1e9f0',
                       backgroundColor: '#fff',
                       justifyContent: 'center', width: '100%'
                     }}>
@@ -1806,7 +1806,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                       // borderLeftWidth: 1,
                       // borderRightWidth: 2,
                       borderLeftWidth: 1,
-                      borderColor: '#eeeeee'
+                      borderColor: '#e1e9f0'
                     }}>
                     <Text style={{ textAlign: 'center' }}>
                       {/* <Ionicons
@@ -1922,7 +1922,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           right: 0,
           justifyContent: 'center',
           alignSelf: 'flex-end',
-          width: 60, height: 60, borderRadius: 30, backgroundColor: '#6963e2'
+          width: 60, height: 60, borderRadius: 30, backgroundColor: '#560bad'
         }}
       >
         <Text style={{ color: '#fff', width: '100%', textAlign: 'center' }}>

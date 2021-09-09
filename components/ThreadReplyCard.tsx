@@ -34,7 +34,7 @@ const ThreadReplyCard: React.FunctionComponent<{ [label: string]: any }> = (prop
         if (u) {
             const unparsedUser = JSON.parse(u)
             if (props.channelCreatedBy.toString().trim() === props.thread.userId.toString().trim()) {
-                setColor('#6963e2')
+                setColor('#560bad')
             } else if (unparsedUser._id.toString().trim() === props.thread.userId.toString().trim()) {
                 setColor('#818385')
             }
@@ -89,7 +89,7 @@ const ThreadReplyCard: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 onPress={() => props.deleteThread()}
                             >
                                 <Text style={{ width: '100%', color: '#818385', fontSize: 15, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
-                                    <Ionicons name='trash-outline' size={17} color={props.index === 0 ? '#F53464' : '#818385'} />
+                                    <Ionicons name='trash-outline' size={17} color={props.index === 0 ? '#f94144' : '#818385'} />
                                 </Text>
                             </TouchableOpacity> : null
                     }

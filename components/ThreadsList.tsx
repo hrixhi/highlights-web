@@ -309,7 +309,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 lineHeight: 30,
                                 color: '#fff',
                                 fontSize: 12,
-                                backgroundColor: '#33A9F4',
+                                backgroundColor: '#4c956c',
                                 paddingHorizontal: 25,
                                 fontFamily: 'inter',
                                 height: 30,
@@ -364,7 +364,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                 // style={{ height: '100%' }}
                                                 contentContainerStyle={{
                                                     borderWidth: 1,
-                                                    borderColor: '#eeeeee',
+                                                    borderColor: '#e1e9f0',
                                                     borderRadius: 12,
                                                     width: '100%',
                                                     // height: windowHeight - 200,
@@ -388,7 +388,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                             style={{
                                                                 backgroundColor: '#FBFBFC',
                                                                 flexDirection: 'row',
-                                                                borderColor: '#eeeeee',
+                                                                borderColor: '#e1e9f0',
                                                                 borderBottomWidth: ind === filteredThreads.length - 1 ? 0 : 1,
                                                                 // minWidth: 600, // flex: 1,
                                                                 width: '100%'
@@ -418,7 +418,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                                 </Text>
                                                             </View>
                                                             <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                                                <Text style={{ fontSize: 15, padding: 10, color: '#6963e2' }} ellipsizeMode='tail'>
+                                                                <Text style={{ fontSize: 15, padding: 10, color: '#560bad' }} ellipsizeMode='tail'>
                                                                     <Ionicons name='chevron-forward-outline' size={20} />
                                                                 </Text>
                                                             </View>

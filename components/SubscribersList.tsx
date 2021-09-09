@@ -948,7 +948,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             lineHeight: 35,
                                             color: '#fff',
                                             fontSize: 12,
-                                            backgroundColor: '#6963e2',
+                                            backgroundColor: '#560bad',
                                             paddingHorizontal: 25,
                                             fontFamily: 'inter',
                                             height: 35,
@@ -996,7 +996,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         textAlign: 'right',
                                         lineHeight: 23,
                                         marginRight: 20,
-                                        color: '#6963e2',
+                                        color: '#560bad',
                                         fontSize: 11,
                                     }}>
                                         NEW GROUP
@@ -1039,7 +1039,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 style={{ height: 20, marginRight: 20 }}
                                 trackColor={{
                                     false: '#FBFBFC',
-                                    true: '#6963e2'
+                                    true: '#560bad'
                                 }}
                                 activeThumbColor='white'
                             />
@@ -1056,7 +1056,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                         </View>
                         {isQuiz ? <Text
                             style={{
-                                color: "#6963e2",
+                                color: "#560bad",
                                 fontSize: 11,
                                 lineHeight: 25,
                                 textAlign: "right",
@@ -1240,7 +1240,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                         // width: '100%',
                                                         borderRadius: 12,
                                                         borderWidth: 1,
-                                                        borderColor: '#eeeeee',
+                                                        borderColor: '#e1e9f0',
                                                         maxHeight: props.cueId ? windowHeight - 220 : '100%',
                                                         marginBottom: props.cueId ? 20 : 0,
                                                         maxWidth: 450,
@@ -1311,7 +1311,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                 style={{
                                                                     backgroundColor: '#FBFBFC',
                                                                     flexDirection: 'row',
-                                                                    borderColor: '#eeeeee',
+                                                                    borderColor: '#e1e9f0',
                                                                     borderBottomWidth: index === filteredSubscribers.length - 1 ? 0 : 1,
                                                                     // minWidth: 600, // flex: 1,
                                                                     width: '100%',
@@ -1341,7 +1341,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                     </Text>
                                                                 </View>
                                                                 <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                                                    <Text style={{ fontSize: 15, padding: 10, color: '#6963e2' }} ellipsizeMode='tail'>
+                                                                    <Text style={{ fontSize: 15, padding: 10, color: '#560bad' }} ellipsizeMode='tail'>
                                                                         <Ionicons name='chevron-forward-outline' size={20} />
                                                                     </Text>
                                                                 </View>
@@ -1389,8 +1389,8 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         {
                                             submittedAt !== "" && deadline !== "" && submittedAt >= deadline ?
                                                 <View style={{ width: '100%', }}>
-                                                    <View style={{ borderRadius: 12, padding: 5, borderWidth: 1, borderColor: '#F53464', marginVertical: 10, width: 150, marginLeft: 'auto' }}>
-                                                        <Text style={{ color: '#F53464', fontSize: 13, textAlign: 'center' }}>
+                                                    <View style={{ borderRadius: 12, padding: 5, borderWidth: 1, borderColor: '#f94144', marginVertical: 10, width: 150, marginLeft: 'auto' }}>
+                                                        <Text style={{ color: '#f94144', fontSize: 13, textAlign: 'center' }}>
                                                             LATE SUBMISSION
                                                         </Text>
                                                     </View>
@@ -1423,8 +1423,8 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             {
                                                 submittedAt !== "" && deadline !== "" && submittedAt >= deadline ?
                                                     <View style={{ width: '100%', maxWidth: 800, marginBottom: 30 }}>
-                                                        <View style={{ borderRadius: 12, padding: 5, borderWidth: 1, borderColor: '#F53464', marginVertical: 10, width: 150, marginLeft: 'auto' }}>
-                                                            <Text style={{ color: '#F53464', fontSize: 13, textAlign: 'center' }}>
+                                                        <View style={{ borderRadius: 12, padding: 5, borderWidth: 1, borderColor: '#f94144', marginVertical: 10, width: 150, marginLeft: 'auto' }}>
+                                                            <Text style={{ color: '#f94144', fontSize: 13, textAlign: 'center' }}>
                                                                 LATE SUBMISSION
                                                             </Text>
                                                         </View>
@@ -1471,7 +1471,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                 lineHeight: 35,
                                                                 color: 'white',
                                                                 fontSize: 12,
-                                                                backgroundColor: '#6963e2',
+                                                                backgroundColor: '#560bad',
                                                                 paddingHorizontal: 25,
                                                                 fontFamily: 'inter',
                                                                 height: 35,
@@ -1573,7 +1573,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                                         url={url}
                                                                                         fullScreen={true}
                                                                                     /> */}
-                                                                                    <div className="webviewer" ref={RichText} style={{ height: "80vh", borderWidth: 1, borderColor: '#eeeeee', borderRadius: 12 }}></div>
+                                                                                    <div className="webviewer" ref={RichText} style={{ height: "80vh", borderWidth: 1, borderColor: '#e1e9f0', borderRadius: 12 }}></div>
                                                                                 </View>
                                                                                 {/* <View style={{ position: 'absolute', zIndex: 1, flex: 1, width: 800, height: 20000, backgroundColor: 'rgb(0,0,0,0)' }}>
                                                                                     <Annotation
