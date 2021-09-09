@@ -39,7 +39,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
     const [filterChoice, setFilterChoice] = useState('All')
     const unparsedSubs: any[] = JSON.parse(JSON.stringify(props.subscribers))
     const [subscribers] = useState<any[]>(unparsedSubs.reverse())
-    const categories = ['All', 'Read', 'Delivered', 'Not Delivered']
+    const categories = ['All', 'Read', 'Submitted', 'Graded']
     const categoriesLanguageMap: { [label: string]: string } = {
         All: 'all',
         Read: 'read',
@@ -1095,7 +1095,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     width: '100%',
                                     lineHeight: 23,
                                 }}>
-                                    <Ionicons name='arrow-back-outline' size={23} color={'#2f2f3c'} />
+                                    <Ionicons name='arrow-back-outline' size={23} color={'#43434F'} />
                                 </Text>
                             </TouchableOpacity>
                             {
@@ -1250,14 +1250,14 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 onValueChange={() => updateReleaseSubmission()}
                                 style={{ height: 20, marginRight: 20 }}
                                 trackColor={{
-                                    false: '#F8F9FA',
+                                    false: '#f8f9fa',
                                     true: '#3B64F8'
                                 }}
                                 activeThumbColor='white'
                             />
                             <View style={{ backgroundColor: 'white', }}>
                                 <Text style={{
-                                    color: "#2f2f3c",
+                                    color: "#43434F",
                                     fontSize: 11,
                                     lineHeight: 25,
                                     textTransform: 'uppercase'
@@ -1285,7 +1285,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
             {
                 !showAddUsers ? (subscribers.length === 0 ?
                     <View style={{ backgroundColor: 'white', flex: 1 }}>
-                        <Text style={{ width: '100%', color: '#818385', fontSize: 22, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                        <Text style={{ width: '100%', color: '#818385', fontSize: 23, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                             {
                                 props.cueId ? PreferredLanguageText('noStatuses') : PreferredLanguageText('noStudents')
                             }
@@ -1299,6 +1299,58 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                         key={key}
                     >
                         {
+                            !props.cueId || showSubmission ? null :
+                                <View style={{
+                                    width: '100%',
+                                    height: 70,
+                                    backgroundColor: 'white',
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    flexDirection: 'column',
+                                    maxWidth: 500
+                                }}>
+                                    <Menu
+                                        onSelect={(cat: any) => setFilterChoice(cat)}>
+                                        <MenuTrigger>
+                                            <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#43434F' }}>
+                                                {filterChoice === '' ? 'All' : filterChoice}<Ionicons name='caret-down' size={14} />
+                                            </Text>
+                                        </MenuTrigger>
+                                        <MenuOptions customStyles={{
+                                            optionsContainer: {
+                                                padding: 10,
+                                                borderRadius: 15,
+                                                shadowOpacity: 0,
+                                                borderWidth: 1,
+                                                borderColor: '#f8f9fa',
+                                                overflow: 'scroll',
+                                                maxHeight: '100%'
+                                            }
+                                        }}>
+                                            {/* <MenuOption
+                                                value={''}>
+                                                <Text>
+                                                    All
+                                                </Text>
+                                            </MenuOption> */}
+                                            {
+                                                categories.map((category: any) => {
+                                                    return <MenuOption
+                                                        value={category}>
+                                                        <Text>
+                                                            {category}
+                                                        </Text>
+                                                    </MenuOption>
+                                                })
+                                            }
+                                        </MenuOptions>
+                                    </Menu>
+                                    <Text style={{ fontSize: 10, color: '#43434F', paddingTop: 7 }}>
+                                        Type
+                                    </Text>
+                                </View>
+                        }
+                        {
                             !showSubmission ?
                                 (
                                     showChat ?
@@ -1308,7 +1360,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             style={{ flex: 1, paddingTop: 12 }}>
                                             {
                                                 messages.length === 0 ?
-                                                    <Text style={{ width: '100%', color: '#818385', fontSize: 22, paddingVertical: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                                    <Text style={{ width: '100%', color: '#818385', fontSize: 23, paddingVertical: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                                                         {PreferredLanguageText('noMessages')}
                                                     </Text>
                                                     : null
@@ -1356,7 +1408,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                 placeholder='Select users'
                                                                 displayValue='label'
                                                                 // key={userDropdownOptions.toString()}
-                                                                // style={{ width: '100%', color: '#2f2f3c', 
+                                                                // style={{ width: '100%', color: '#43434F', 
                                                                 //     optionContainer: { // To change css for option container 
                                                                 //         zIndex: 9999
                                                                 //     }
@@ -1397,14 +1449,18 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                     horizontal={false}
                                                     key={filterChoice + key}
                                                     contentContainerStyle={{
-                                                        width: '100%',
-                                                        height: props.cueId ? windowHeight - 220 : '100%',
-                                                        marginBottom: props.cueId ? 20 : 0
+                                                        // width: '100%',
+                                                        borderRadius: 12,
+                                                        borderWidth: 1,
+                                                        borderColor: '#eeeeee',
+                                                        maxHeight: props.cueId ? windowHeight - 220 : '100%',
+                                                        marginBottom: props.cueId ? 20 : 0,
+                                                        maxWidth: 450,
                                                     }}
                                                 >
                                                     {
                                                         !props.cueId || props.cueId === '' ?
-                                                            <View style={{ backgroundColor: 'white', borderBottomWidth: 1, borderBottomColor: '#F8F9FA', marginBottom: 20 }}>
+                                                            <View style={{ backgroundColor: 'white', borderBottomWidth: 1, borderBottomColor: '#f8f9fa', marginBottom: 20 }}>
                                                                 {
                                                                     props.groups.length > 0 ? (props.groups.map((group: any, index: any) => {
                                                                         let displayName = ''
@@ -1425,7 +1481,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                             />
                                                                         </View>
                                                                     })) : <View style={{ backgroundColor: 'white', flex: 1 }}>
-                                                                        <Text style={{ width: '100%', color: '#818385', fontSize: 22, paddingHorizontal: 50, paddingBottom: 100, paddingTop: 50, fontFamily: 'inter', flex: 1 }}>
+                                                                        <Text style={{ width: '100%', color: '#818385', fontSize: 23, paddingHorizontal: 50, paddingBottom: 100, paddingTop: 50, fontFamily: 'inter', flex: 1 }}>
                                                                             {PreferredLanguageText('noGroups')}
                                                                         </Text>
                                                                     </View>
@@ -1435,6 +1491,73 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                     }
                                                     {
                                                         filteredSubscribers.map((subscriber: any, index: any) => {
+                                                            if (subscriber.fullName !== 'submitted' && subscriber.fullName !== 'read' && subscriber.fullName !== 'graded') {
+                                                                return null
+                                                            }
+                                                            return <TouchableOpacity
+                                                                onPress={() => {
+                                                                    if (props.cueId && props.cueId !== null) {
+                                                                        if (subscriber.fullName === 'submitted' || subscriber.fullName === 'graded') {
+                                                                            setSubmission(subscriber.submission)
+                                                                            setSubmittedAt(subscriber.submittedAt)
+                                                                            setDeadline(subscriber.deadline)
+                                                                            setShowSubmission(true)
+                                                                            setStatus(subscriber.fullName)
+                                                                            setScore(subscriber.score ? subscriber.score.toString() : '0')
+                                                                            setGraded(subscriber.graded)
+                                                                            setComment(subscriber.comment)
+                                                                            console.log(subscriber.comment)
+                                                                            try {
+                                                                                const comm = JSON.parse(subscriber.comment)
+                                                                                setAnnotation(comm.annotation)
+                                                                                setAnnotations(comm.annotations)
+                                                                            } catch (e) {
+                                                                                console.log('')
+                                                                            }
+                                                                            setUserId(subscriber.userId)
+                                                                        }
+                                                                    } else {
+                                                                        loadChat(subscriber._id, subscriber.groupId)
+                                                                    }
+                                                                }}
+                                                                style={{
+                                                                    backgroundColor: '#f8f9fa',
+                                                                    flexDirection: 'row',
+                                                                    borderColor: '#eeeeee',
+                                                                    borderBottomWidth: index === filteredSubscribers.length - 1 ? 0 : 1,
+                                                                    // minWidth: 600, // flex: 1,
+                                                                    width: '100%',
+                                                                }}>
+                                                                {/* <View style={{ flex: 1, backgroundColor: '#f8f9fa', padding: 10 }}>
+                                                                <Image
+                                                                    style={{
+                                                                        height: 40,
+                                                                        width: 40,
+                                                                        marginTop: 5,
+                                                                        marginBottom: 5,
+                                                                        borderRadius: 75,
+                                                                        // marginTop: 20,
+                                                                        alignSelf: 'center'
+                                                                    }}
+                                                                    source={{ uri: user.avatar ? user.avatar : 'https://cues-files.s3.amazonaws.com/images/default.png' }}
+                                                                />
+                                                            </View> */}
+                                                                <View style={{ flex: 1, backgroundColor: '#f8f9fa', paddingLeft: 10 }}>
+                                                                    <Text style={{ fontSize: 12, padding: 10, fontFamily: 'inter' }} ellipsizeMode='tail'>
+                                                                        {subscriber.displayName ? subscriber.displayName : ''}
+                                                                    </Text>
+                                                                </View>
+                                                                <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
+                                                                    <Text style={{ fontSize: 12, padding: 10 }} ellipsizeMode='tail'>
+                                                                        {subscriber.fullName ? subscriber.fullName : ''}
+                                                                    </Text>
+                                                                </View>
+                                                                <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
+                                                                    <Text style={{ fontSize: 15, padding: 10, color: '#3b64f8' }} ellipsizeMode='tail'>
+                                                                        <Ionicons name='chevron-forward-outline' size={20} />
+                                                                    </Text>
+                                                                </View>
+                                                            </TouchableOpacity>
                                                             return <View style={styles.col} key={filterChoice + key + index}>
                                                                 <SubscriberCard
                                                                     chat={!props.cueId || props.cueId === '' ? true : false}
@@ -1478,7 +1601,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         {
                                             submittedAt !== "" && deadline !== "" && new Date(submittedAt) >= new Date(parseInt(deadline)) ?
                                                 <View style={{ width: '100%', }}>
-                                                    <View style={{ borderRadius: 10, padding: 5, borderWidth: 1, borderColor: '#D91D56', marginVertical: 10, width: 150, marginLeft: 'auto' }}>
+                                                    <View style={{ borderRadius: 12, padding: 5, borderWidth: 1, borderColor: '#D91D56', marginVertical: 10, width: 150, marginLeft: 'auto' }}>
                                                         <Text style={{ color: '#D91D56', fontSize: 13, textAlign: 'center' }}>
                                                             LATE SUBMISSION
                                                         </Text>
@@ -1529,8 +1652,8 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             style={{ flex: 1, paddingTop: 12 }}>
                                             {
                                                 submittedAt !== "" && deadline !== "" && submittedAt >= deadline ?
-                                                    <View style={{ width: '100%', marginBottom: 10 }}>
-                                                        <View style={{ borderRadius: 10, padding: 5, borderWidth: 1, borderColor: '#D91D56', marginTop: 10, width: 150,  }}>
+                                                    <View style={{ width: '100%', maxWidth: 800, marginBottom: 30 }}>
+                                                        <View style={{ borderRadius: 12, padding: 5, borderWidth: 1, borderColor: '#D91D56', marginVertical: 10, width: 150, marginLeft: 'auto' }}>
                                                             <Text style={{ color: '#D91D56', fontSize: 13, textAlign: 'center' }}>
                                                                 LATE SUBMISSION
                                                             </Text>
@@ -1551,11 +1674,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 <View style={{
                                                     width: '40%'
                                                 }}>
-                                                    <Text style={{
-                                                        fontSize: 15,
-                                                        fontFamily: 'inter',
-                                                        color: '#2f2f3c'
-                                                    }}>
+                                                    <Text style={{ color: '#43434F', fontSize: 14, paddingBottom: 10 }}>
                                                         {PreferredLanguageText('score')}
                                                     </Text>
                                                     <TextInput
@@ -1637,7 +1756,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                 disabled={true}
                                                                 key={Math.random()}
                                                                 containerStyle={{
-                                                                    backgroundColor: '#F8F9FA',
+                                                                    backgroundColor: '#f8f9fa',
                                                                     padding: 3,
                                                                     paddingTop: 5,
                                                                     paddingBottom: 10,
@@ -1646,14 +1765,14 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                 ref={RichText}
                                                                 style={{
                                                                     width: '100%',
-                                                                    backgroundColor: '#F8F9FA',
+                                                                    backgroundColor: '#f8f9fa',
                                                                     borderRadius: 15,
                                                                     height: 20000
                                                                 }}
                                                                 editorStyle={{
-                                                                    backgroundColor: '#F8F9FA',
+                                                                    backgroundColor: '#f8f9fa',
                                                                     placeholderColor: '#818385',
-                                                                    color: '#2f2f3c',
+                                                                    color: '#43434F',
                                                                     contentCSSText: 'font-size: 13px;'
                                                                 }}
                                                                 initialContentHTML={submission}
@@ -1703,7 +1822,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                                         url={url}
                                                                                         fullScreen={true}
                                                                                     /> */}
-                                                                                    <div className="webviewer" ref={RichText} style={{ height: "80vh" }}></div>
+                                                                                    <div className="webviewer" ref={RichText} style={{ height: "80vh", borderWidth: 1, borderColor: '#eeeeee', borderRadius: 12 }}></div>
                                                                                 </View>
                                                                                 {/* <View style={{ position: 'absolute', zIndex: 1, flex: 1, width: 800, height: 20000, backgroundColor: 'rgb(0,0,0,0)' }}>
                                                                                     <Annotation
@@ -1726,65 +1845,17 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         </ScrollView>
                                     </View>
                         }
-                        {
-                            !props.cueId || showSubmission ? null :
-                                <View style={{
-                                    width: '100%',
-                                    height: 70,
-                                    backgroundColor: 'white',
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    flexDirection: 'column'
-                                }}>
-                                    <Menu
-                                        onSelect={(cat: any) => setFilterChoice(cat)}>
-                                        <MenuTrigger>
-                                            <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#818385' }}>
-                                                {filterChoice === '' ? 'All' : filterChoice}<Ionicons name='caret-down' size={14} />
-                                            </Text>
-                                        </MenuTrigger>
-                                        <MenuOptions customStyles={{
-                                            optionsContainer: {
-                                                padding: 10,
-                                                borderRadius: 15,
-                                                shadowOpacity: 0,
-                                                borderWidth: 1,
-                                                borderColor: '#F8F9FA',
-                                                overflow: 'scroll',
-                                                maxHeight: '100%'
-                                            }
-                                        }}>
-                                            {/* <MenuOption
-                                                value={''}>
-                                                <Text>
-                                                    All
-                                                </Text>
-                                            </MenuOption> */}
-                                            {
-                                                categories.map((category: any) => {
-                                                    return <MenuOption
-                                                        value={category}>
-                                                        <Text>
-                                                            {category}
-                                                        </Text>
-                                                    </MenuOption>
-                                                })
-                                            }
-                                        </MenuOptions>
-                                    </Menu>
-                                </View>
-                        }
                     </View>) :
                     <View style={{ width: 500, maxWidth: '100%' }}>
-                        <Text style={{ color: '#2f2f3c', fontSize: 14, paddingBottom: 10 }}>
+                        <Text style={{ color: '#43434F', fontSize: 14, paddingBottom: 10 }}>
                             {PreferredLanguageText('inviteByEmail')}
                         </Text>
                         <TextInput
                             value={emails}
                             style={{
                                 height: 200,
-                                backgroundColor: '#F8F9FA',
-                                borderRadius: 10,
+                                backgroundColor: '#f8f9fa',
+                                borderRadius: 12,
                                 fontSize: 15,
                                 padding: 15,
                                 paddingTop: 13,
@@ -1811,9 +1882,9 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                             <Text style={{
                                 textAlign: 'center',
                                 lineHeight: 35,
-                                color: '#2f2f3c',
+                                color: '#43434F',
                                 fontSize: 12,
-                                backgroundColor: '#F8F9FA',
+                                backgroundColor: '#f8f9fa',
                                 paddingHorizontal: 25,
                                 fontFamily: 'inter',
                                 height: 35,
@@ -1828,7 +1899,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                         <Text style={{
                             textAlign: 'center',
                             lineHeight: 35,
-                            color: '#2f2f3c',
+                            color: '#43434F',
                             fontSize: 12,
                             paddingHorizontal: 25,
                             width: "100%",
@@ -1842,7 +1913,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                             {
                                 filteredSubscribers.map((sub: any) => {
                                     return (<View style={{
-                                        backgroundColor: '#F8F9FA',
+                                        backgroundColor: '#f8f9fa',
                                         width: '100%',
                                         padding: 10,
                                         borderRadius: 8,
@@ -1902,7 +1973,7 @@ const styleObject = () => {
         },
         input: {
             width: '100%',
-            borderBottomColor: '#F8F9FA',
+            borderBottomColor: '#f8f9fa',
             borderBottomWidth: 1,
             fontSize: 15,
             paddingTop: 13,
@@ -1911,7 +1982,7 @@ const styleObject = () => {
             marginBottom: 20
         },
         outline: {
-            borderRadius: 10,
+            borderRadius: 12,
             borderWidth: 1,
             borderColor: '#818385',
             color: 'white'
@@ -1927,7 +1998,7 @@ const styleObject = () => {
             backgroundColor: 'white',
             paddingHorizontal: 10,
             height: 22,
-            borderRadius: 10,
+            borderRadius: 12,
             borderWidth: 1,
             borderColor: '#818385',
             color: 'white'

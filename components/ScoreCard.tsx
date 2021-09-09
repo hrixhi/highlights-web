@@ -30,14 +30,14 @@ const ScoreCard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         {/* <Text style={{
                             fontSize: 11,
                             fontWeight: 'bold',
-                            color: '#2f2f3c',
+                            color: '#43434F',
                             marginRight: 5,
                             flex: 1,
                             textAlign: 'right'
                         }}>
                            
                         </Text> */}
-                    </View> <View style={{ backgroundColor: '#F8F9FA', width: '100%', flexDirection: 'row', display: 'flex' }}>
+                    </View> <View style={{ backgroundColor: '#f8f9fa', width: '100%', flexDirection: 'row', display: 'flex' }}>
                         <Text ellipsizeMode={'tail'}
                             numberOfLines={1}
                             style={styleObject.title}>
@@ -48,7 +48,7 @@ const ScoreCard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 <Text style={{
                                     width: 20,
                                     height: 20,
-                                    borderRadius: 10,
+                                    borderRadius: 12,
                                     backgroundColor: '#d91d56',
                                     textAlign: 'center',
                                     zIndex: 150,
@@ -88,14 +88,14 @@ const styles: any = () => StyleSheet.create({
         height: '100%',
         width: '100%',
         maxWidth: 500,
-        borderRadius: 15,
+        borderRadius: 12,
         overflow: 'hidden',
-        backgroundColor: '#F8F9FA'
+        backgroundColor: '#f8f9fa'
     },
     badge: {
         width: 20,
         height: 20,
-        borderRadius: 10,
+        borderRadius: 12,
         backgroundColor: '#d91d56',
         textAlign: 'center',
         zIndex: 150,
@@ -104,20 +104,20 @@ const styles: any = () => StyleSheet.create({
     card: {
         height: '100%',
         width: '100%',
-        borderRadius: 15,
+        borderRadius: 12,
         padding: 13,
-        backgroundColor: '#F8F9FA',
+        backgroundColor: '#f8f9fa',
     },
     text: {
         display: 'flex',
         flexDirection: 'column',
         flex: 1,
-        backgroundColor: '#F8F9FA'
+        backgroundColor: '#f8f9fa'
     },
     dateContainer: {
         fontSize: 10,
         height: '22%',
-        backgroundColor: '#F8F9FA',
+        backgroundColor: '#f8f9fa',
         display: 'flex',
         flexDirection: 'row'
     },
@@ -130,7 +130,7 @@ const styles: any = () => StyleSheet.create({
         fontFamily: 'inter',
         fontSize: 13,
         paddingTop: 5,
-        color: '#2f2f3c',
+        color: '#43434F',
         flex: 1
     },
     titleArrow: {
@@ -138,7 +138,7 @@ const styles: any = () => StyleSheet.create({
         fontSize: 13,
         lineHeight: 20,
         paddingTop: 5,
-        color: '#2f2f3c',
+        color: '#43434F',
         marginLeft: 10
     },
     description: {
@@ -149,7 +149,7 @@ const styles: any = () => StyleSheet.create({
     color: {
         width: 10,
         height: 10,
-        borderRadius: 10,
+        borderRadius: 12,
         marginTop: 1
     }
 });

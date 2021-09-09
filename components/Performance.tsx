@@ -9,6 +9,7 @@ import ScoreCard from './ScoreCard';
 import { PreferredLanguageText } from '../helpers/LanguageContext';
 import Chart from 'react-google-charts';
 import { Ionicons } from '@expo/vector-icons';
+import Grades from './Grades';
 
 const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -23,9 +24,17 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
     const [thread, setThread] = useState<any>({})
     const [threads, setThreads] = useState<any[]>([])
 
+    const [collapseMap, setCollpaseMap] = useState<any>({})
+
     useEffect(() => {
 
         // FILTERS PENDING
+
+        const temp: any = {}
+        props.subscriptions.map((item: any, ind: any) => {
+            temp[ind] = true
+        })
+        setCollpaseMap(temp)
 
         const tempSc: any = {}
         scores.map((sc: any) => {
@@ -67,7 +76,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
 
         setLoading(false)
 
-    }, [attendances, dates, props.filterStart, props.filterEnd, threads, scores])
+    }, [attendances, dates, props.filterStart, props.filterEnd, threads, scores, props.subscriptions])
 
     useEffect(() => {
         setLoading(true);
@@ -184,24 +193,24 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
         flexDirection: width < 768 ? 'column' : 'row',
         paddingTop: 30
     }}>
-        <View style={{ width: width < 768 ? '100%' : '60%', paddingRight: 30, borderRightWidth: width < 768 ? 0 : 1, borderColor: '#eeeeee' }}>
+        <View style={{ width: width < 768 ? '100%' : '50%', paddingRight: 30, borderRightWidth: width < 768 ? 0 : 1, borderColor: '#eeeeee' }}>
             <Text style={{
                 marginRight: 10,
-                color: '#2f2f3c',
-                fontSize: 25,
+                color: '#43434F',
+                fontSize: 23,
                 marginBottom: 40,
                 fontFamily: 'inter',
                 // flex: 1,
                 lineHeight: 25,
                 height: width < 768 ? 30 : 65,
             }}>
-                <Ionicons name='clipboard-outline' size={25} color='#3b64f8' /> Report
+                Report
             </Text>
             <ScrollView
             // horizontal={true}
             >
                 {
-                    props.subscriptions.map((sub: any) => {
+                    props.subscriptions.map((sub: any, ind: any) => {
                         return <View style={{
                             backgroundColor: '#fff',
                             borderColor: '#eeeeee',
@@ -213,7 +222,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         }}>
                             <View style={{ flexDirection: 'row', flex: 1, marginBottom: 20 }}>
                                 <Text style={{
-                                    fontSize: 25,
+                                    fontSize: 23,
                                     paddingBottom: 30,
                                     paddingTop: 10,
                                     fontFamily: 'inter',
@@ -242,8 +251,25 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                     </Text>
                                 </View>
                                 <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                    <Text style={{ fontSize: 25, lineHeight: 25, textAlign: 'right', fontFamily: 'inter' }} ellipsizeMode='tail'>
+                                    <Text style={{ fontSize: 23, lineHeight: 25, textAlign: 'right', fontFamily: 'inter' }} ellipsizeMode='tail'>
                                         {attendance[sub.channelId] ? attendance[sub.channelId].length : 0} / {date[sub.channelId] ? date[sub.channelId].length : 0}
+                                    </Text>
+                                </View>
+                            </View>
+                            <View style={{ flexDirection: 'row', flex: 1, paddingTop: 20 }}>
+                                <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
+                                    <Text style={{
+                                        flex: 1, flexDirection: 'row',
+                                        color: '#818385',
+                                        fontSize: 20, lineHeight: 25,
+                                        fontFamily: 'inter'
+                                    }} ellipsizeMode='tail'>
+                                        Posts
+                                    </Text>
+                                </View>
+                                <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
+                                    <Text style={{ fontSize: 23, lineHeight: 25, textAlign: 'right', fontFamily: 'inter' }} ellipsizeMode='tail'>
+                                        {thread[sub.channelId] ? thread[sub.channelId].length : 0}
                                     </Text>
                                 </View>
                             </View>
@@ -259,7 +285,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                     </Text>
                                 </View>
                                 <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                    <Text style={{ fontSize: 25, lineHeight: 25, textAlign: 'right', fontFamily: 'inter' }} ellipsizeMode='tail'>
+                                    <Text style={{ fontSize: 23, lineHeight: 25, textAlign: 'right', fontFamily: 'inter' }} ellipsizeMode='tail'>
                                         {score[sub.channelId] ? score[sub.channelId].totalAssessments : 0}
                                     </Text>
                                 </View>
@@ -327,7 +353,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                     </Text>
                                 </View>
                                 <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                    <Text style={{ fontSize: 25, lineHeight: 25, textAlign: 'right', fontFamily: 'inter' }} ellipsizeMode='tail'>
+                                    <Text style={{ fontSize: 23, lineHeight: 25, textAlign: 'right', fontFamily: 'inter' }} ellipsizeMode='tail'>
                                         {score[sub.channelId] ? score[sub.channelId].score : 0}%
                                     </Text>
                                 </View>
@@ -344,45 +370,53 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                     </Text>
                                 </View>
                                 <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                    <Text style={{ fontSize: 25, lineHeight: 25, textAlign: 'right', fontFamily: 'inter' }} ellipsizeMode='tail'>
+                                    <Text style={{ fontSize: 23, lineHeight: 25, textAlign: 'right', fontFamily: 'inter' }} ellipsizeMode='tail'>
                                         {score[sub.channelId] ? score[sub.channelId].total : 0}%
                                     </Text>
                                 </View>
                             </View>
-                            <View style={{ flexDirection: 'row', flex: 1, paddingTop: 20 }}>
-                                <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                    <Text style={{
-                                        flex: 1, flexDirection: 'row',
-                                        color: '#818385',
-                                        fontSize: 20, lineHeight: 25,
-                                        fontFamily: 'inter'
-                                    }} ellipsizeMode='tail'>
-                                        Posts
-                                    </Text>
-                                </View>
-                                <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                    <Text style={{ fontSize: 25, lineHeight: 25, textAlign: 'right', fontFamily: 'inter' }} ellipsizeMode='tail'>
-                                        {thread[sub.channelId] ? thread[sub.channelId].length : 0}
-                                    </Text>
-                                </View>
-                            </View>
+                            {
+                                !collapseMap[ind] ? <View>
+                                    <Grades
+                                        closeModal={() => { }}
+                                        channelId={sub.channelId}
+                                        channelCreatedBy={sub.channelCreatedBy}
+                                        filterChoice={sub.channelName}
+                                        openCueFromGrades={(cueId: string) => {
+                                            // openCueFromCalendar(channelId, cueId, channelCreatedBy)
+                                        }}
+                                    />
+                                </View> : null
+                            }
+                            <TouchableOpacity
+                                onPress={() => {
+                                    const temp = JSON.parse(JSON.stringify(collapseMap))
+                                    temp[ind] = !temp[ind]
+                                    setCollpaseMap(temp)
+                                }}
+                                style={{ width: '100%' }}
+                            >
+                                <Text style={{ width: '100%', textAlign: 'center' }}>
+                                    <Ionicons name={collapseMap[ind] ? 'chevron-down-outline' : 'chevron-up-outline'} size={30} />
+                                </Text>
+                            </TouchableOpacity>
                         </View>
                     })
                 }
             </ScrollView>
         </View>
-        <View style={{ width: width < 768 ? '100%' : '40%', paddingLeft: width < 768 ? 0 : 30 }}>
+        <View style={{ width: width < 768 ? '100%' : '50%', paddingLeft: width < 768 ? 0 : 30 }}>
             <Text style={{
                 marginRight: 10,
-                color: '#2f2f3c',
-                fontSize: 25,
+                color: '#43434F',
+                fontSize: 23,
                 paddingBottom: 20,
                 fontFamily: 'inter',
                 // flex: 1,
                 lineHeight: 25,
                 // height: 65
             }}>
-                <Ionicons name='analytics-outline' size={25} color='#3b64f8' /> Progress
+                Progress
             </Text>
             <ScrollView
                 showsVerticalScrollIndicator={false}
@@ -400,7 +434,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             horizontal={true}
                         >
                             <Chart
-                                style={{ minHeight: 550, minWidth: 500 }}
+                                style={{ minHeight: 550, minWidth: 700 }}
                                 chartType="BarChart"
                                 loader={<div>Loading Chart</div>}
                                 data={data}

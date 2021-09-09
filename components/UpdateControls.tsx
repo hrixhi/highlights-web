@@ -51,7 +51,7 @@ import {
 import WebViewer from '@pdftron/webviewer';
 import TextareaAutosize from 'react-textarea-autosize';
 import lodash from 'lodash';
-import { Editor } from '@tinymce/tinymce-react'; 
+import { Editor } from '@tinymce/tinymce-react';
 import parser from 'html-react-parser';
 
 
@@ -170,11 +170,11 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
         const SVGEquation = TeXToSVG(equation, { width: 100 }); // returns svg in html format
         currentContent += "<div>" + SVGEquation + "<br/></div>";
-    
+
         editorRef.current.setContent(currentContent)
         setShowEquationEditor(false);
         setEquation("");
-        
+
         // setReloadEditorKey(Math.random())
     }, [equation, RichText, RichText.current, cue]);
 
@@ -1099,7 +1099,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         await AsyncStorage.setItem("cues", stringifiedCues);
         props.reloadCueListAfterUpdate();
 
-    }, [starred]) 
+    }, [starred])
 
     const handleUpdateContent = useCallback(async () => {
         setUpdatingCueContent(true)
@@ -1186,7 +1186,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         props.reloadCueListAfterUpdate();
 
         setUpdatingCueDetails(false)
-        
+
     }, [submission, deadline, initiateAt, gradeWeight, customCategory, endPlayAt, color, frequency, notify])
 
     // Handle Delete Cue
@@ -1900,9 +1900,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 iconSize={12}
                 editor={RichText}
                 disabled={false}
-                iconTint={"#2f2f3c"}
-                selectedIconTint={"#2f2f3c"}
-                disabledIconTint={"#2f2f3c"}
+                iconTint={"#43434F"}
+                selectedIconTint={"#43434F"}
+                disabledIconTint={"#43434F"}
                 actions={
                     (!props.showOriginal && submissionImported) || (imported && props.showOriginal)
                         ? ['']
@@ -1943,7 +1943,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 }}>
                 <View
                     style={{
-                        borderColor: "#F8F9FA",
+                        borderColor: "#f8f9fa",
                         borderWidth: 1,
                         borderRadius: 15,
                         padding: 10,
@@ -1964,7 +1964,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         maxWidth: "10%"
                     }}
                     onPress={() => insertEquation()}>
-                    <Ionicons name="add-circle-outline" color="#2f2f3c" size={20} />
+                    <Ionicons name="add-circle-outline" color="#43434F" size={20} />
                 </TouchableOpacity>
                 <View
                     style={{
@@ -1973,7 +1973,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         paddingVertical: 5,
                         justifyContent: "center"
                     }}>
-                    <Text style={{ flex: 1, fontSize: 12, color: "#2f2f3c", lineHeight: "1.5" }}>
+                    <Text style={{ flex: 1, fontSize: 12, color: "#43434F", lineHeight: "1.5" }}>
                         ^ → Superscript,  _ → Subscript,  int → Integral,  sum → Summation,  prod → Product,  sqrt → Square root,  bar → Bar over letter;  alpha, beta, ... omega → Small Greek letter;  Alpha, Beta, ... Omega → Capital Greek letter
                     </Text>
                 </View>
@@ -2061,7 +2061,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             props.setShowComments(true)
                             props.changeViewStatus();
                         }}>
-                        <Text style={props.viewStatus ? styles.allGrayFill : styles.all}>Responses</Text>
+                        <Text style={props.viewStatus ? styles.allGrayFill : styles.all}>Engagement</Text>
                     </TouchableOpacity>
                 )}
             </View>
@@ -2219,7 +2219,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             <View>
                 <Text
                     style={{
-                        color: "#2f2f3c",
+                        color: "#43434F",
                         fontSize: 14,
                         paddingBottom: 25,
                         marginLeft: "5%"
@@ -2230,8 +2230,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     value={props.cue.comment}
                     style={{
                         height: 200,
-                        backgroundColor: "#F8F9FA",
-                        borderRadius: 10,
+                        backgroundColor: "#f8f9fa",
+                        borderRadius: 12,
                         fontSize: 15,
                         padding: 15,
                         paddingTop: 13,
@@ -2613,9 +2613,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         style={{
                                             textAlign: "center",
                                             lineHeight: 35,
-                                            color: "#2f2f3c",
+                                            color: "#43434F",
                                             fontSize: 12,
-                                            backgroundColor: "#F8F9FA",
+                                            backgroundColor: "#f8f9fa",
                                             paddingHorizontal: 25,
                                             fontFamily: "inter",
                                             height: 35,
@@ -2661,6 +2661,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         }}
                     />
                 ) : (
+
                     <View key={url} style={{ }}>
                         <div className="webviewer" ref={RichText} style={{ height: "100vh" }}></div>
                     </View>
@@ -2711,52 +2712,52 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
         return (<View style={{ width: '100%' }}>
             <Editor
-            //   onInit={(evt, editor) => editorRef.current = editor}
-              initialValue={initialOriginal}
-              disabled={!isOwner}
-              apiKey="ip4jckmpx73lbu6jgyw9oj53g0loqddalyopidpjl23fx7tl"
-              init={{
-                skin: "snow",
-                // toolbar_sticky: true,
-                branding: false,
-                readonly: !isOwner,
-                placeholder: 'Content...',
-                min_height: 500,
-                paste_data_images: true,
-                images_upload_url: 'http://api.cuesapp.co/api/imageUploadEditor',
-                mobile: {
-                  plugins: !isOwner ? 'print preview' : 'print preview powerpaste casechange importcss tinydrive searchreplace autolink autosave save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount tinymcespellchecker a11ychecker textpattern noneditable help formatpainter pageembed charmap mentions quickbars linkchecker emoticons advtable autoresize'
-                },
-                plugins: !isOwner ? 'print preview' : 'print preview powerpaste casechange importcss tinydrive searchreplace autolink autosave save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount tinymcespellchecker a11ychecker textpattern noneditable help formatpainter pageembed charmap mentions quickbars linkchecker emoticons advtable autoresize',
-                menu : { // this is the complete default configuration
-                  file   : {title : 'File'  , items : 'newdocument'},
-                  edit   : {title : 'Edit'  , items : 'undo redo | cut copy paste pastetext | selectall'},
-                  insert : {title : 'Insert', items : 'link media | template hr'},
-                  view   : {title : 'View'  , items : 'visualaid'},
-                  format : {title : 'Format', items : 'bold italic underline strikethrough superscript subscript | formats | removeformat'},
-                  table  : {title : 'Table' , items : 'inserttable tableprops deletetable | cell row column'},
-                  tools  : {title : 'Tools' , items : 'spellchecker code'}
-                },
-                // menubar: 'file edit view insert format tools table tc help',
-                menubar: false,
-                toolbar: !isOwner ? false : 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat  pagebreak | table image media pageembed link | preview print | charmap emoticons |  ltr rtl | showcomments addcomment',
-                importcss_append: true,
-                image_caption: true,
-                quickbars_selection_toolbar: 'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
-                noneditable_noneditable_class: 'mceNonEditable',
-                toolbar_mode: 'sliding',
-                // tinycomments_mode: 'embedded',
-                // content_style: '.mymention{ color: gray; }',
-                // contextmenu: 'link image table configurepermanentpen',
-                // a11y_advanced_options: true,
-                extended_valid_elements: "svg[*],defs[*],pattern[*],desc[*],metadata[*],g[*],mask[*],path[*],line[*],marker[*],rect[*],circle[*],ellipse[*],polygon[*],polyline[*],linearGradient[*],radialGradient[*],stop[*],image[*],view[*],text[*],textPath[*],title[*],tspan[*],glyph[*],symbol[*],switch[*],use[*]"
-                // skin: useDarkMode ? 'oxide-dark' : 'oxide',
-                // content_css: useDarkMode ? 'dark' : 'default',
-              }}              
-              onChange={(e: any) => setOriginal(e.target.getContent()) }
+                //   onInit={(evt, editor) => editorRef.current = editor}
+                initialValue={initialOriginal}
+                disabled={!isOwner}
+                apiKey="ip4jckmpx73lbu6jgyw9oj53g0loqddalyopidpjl23fx7tl"
+                init={{
+                    skin: "snow",
+                    // toolbar_sticky: true,
+                    branding: false,
+                    readonly: !isOwner,
+                    placeholder: 'Content...',
+                    min_height: 500,
+                    paste_data_images: true,
+                    images_upload_url: 'http://api.cuesapp.co/api/imageUploadEditor',
+                    mobile: {
+                        plugins: !isOwner ? 'print preview' : 'print preview powerpaste casechange importcss tinydrive searchreplace autolink autosave save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount tinymcespellchecker a11ychecker textpattern noneditable help formatpainter pageembed charmap mentions quickbars linkchecker emoticons advtable autoresize'
+                    },
+                    plugins: !isOwner ? 'print preview' : 'print preview powerpaste casechange importcss tinydrive searchreplace autolink autosave save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount tinymcespellchecker a11ychecker textpattern noneditable help formatpainter pageembed charmap mentions quickbars linkchecker emoticons advtable autoresize',
+                    menu: { // this is the complete default configuration
+                        file: { title: 'File', items: 'newdocument' },
+                        edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall' },
+                        insert: { title: 'Insert', items: 'link media | template hr' },
+                        view: { title: 'View', items: 'visualaid' },
+                        format: { title: 'Format', items: 'bold italic underline strikethrough superscript subscript | formats | removeformat' },
+                        table: { title: 'Table', items: 'inserttable tableprops deletetable | cell row column' },
+                        tools: { title: 'Tools', items: 'spellchecker code' }
+                    },
+                    // menubar: 'file edit view insert format tools table tc help',
+                    menubar: false,
+                    toolbar: !isOwner ? false : 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat  pagebreak | table image media pageembed link | preview print | charmap emoticons |  ltr rtl | showcomments addcomment',
+                    importcss_append: true,
+                    image_caption: true,
+                    quickbars_selection_toolbar: 'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
+                    noneditable_noneditable_class: 'mceNonEditable',
+                    toolbar_mode: 'sliding',
+                    // tinycomments_mode: 'embedded',
+                    // content_style: '.mymention{ color: gray; }',
+                    // contextmenu: 'link image table configurepermanentpen',
+                    // a11y_advanced_options: true,
+                    extended_valid_elements: "svg[*],defs[*],pattern[*],desc[*],metadata[*],g[*],mask[*],path[*],line[*],marker[*],rect[*],circle[*],ellipse[*],polygon[*],polyline[*],linearGradient[*],radialGradient[*],stop[*],image[*],view[*],text[*],textPath[*],title[*],tspan[*],glyph[*],symbol[*],switch[*],use[*]"
+                    // skin: useDarkMode ? 'oxide-dark' : 'oxide',
+                    // content_css: useDarkMode ? 'dark' : 'default',
+                }}
+                onChange={(e: any) => setOriginal(e.target.getContent())}
             />
             {
-                isOwner ? 
+                isOwner ?
                     <View style={styles.footer}>
                         <View
                             style={{
@@ -2769,39 +2770,39 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 paddingTop: 10,
                             }}
                         >
-                        <TouchableOpacity
-                            onPress={() => handleUpdateContent()}
-                            disabled={updatingCueContent}
-                            style={{
-                            borderRadius: 15,
-                            backgroundColor: "white",
-                            }}
-                        >   
-                            <Text
+                            <TouchableOpacity
+                                onPress={() => handleUpdateContent()}
+                                disabled={updatingCueContent}
                                 style={{
-                                textAlign: "center",
-                                lineHeight: 35,
-                                color: "white",
-                                fontSize: 12,
-                                backgroundColor: "#3B64F8",
-                                borderRadius: 15,
-                                paddingHorizontal: 25,
-                                fontFamily: "inter",
-                                overflow: "hidden",
-                                height: 35,
-                                textTransform: "uppercase",
+                                    borderRadius: 15,
+                                    backgroundColor: "white",
                                 }}
                             >
-                                {updatingCueContent
-                                ? 'Saving...'
-                                : 'Save'}
-                            </Text>
-                        </TouchableOpacity>
+                                <Text
+                                    style={{
+                                        textAlign: "center",
+                                        lineHeight: 35,
+                                        color: "white",
+                                        fontSize: 12,
+                                        backgroundColor: "#3B64F8",
+                                        borderRadius: 15,
+                                        paddingHorizontal: 25,
+                                        fontFamily: "inter",
+                                        overflow: "hidden",
+                                        height: 35,
+                                        textTransform: "uppercase",
+                                    }}
+                                >
+                                    {updatingCueContent
+                                        ? 'Saving...'
+                                        : 'Save'}
+                                </Text>
+                            </TouchableOpacity>
                         </View>
-                    </View>: null
+                    </View> : null
             }
         </View>)
-        
+
     }
 
     // Make sure that when the deadline has passed that the viewSubmission is set to true by default and that (Re-Submit button is not there)
@@ -2869,45 +2870,43 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             disabled={props.cue.graded && props.cue.releaseSubmission && submission}
             apiKey="ip4jckmpx73lbu6jgyw9oj53g0loqddalyopidpjl23fx7tl"
             init={{
-            skin: "snow",
-            branding: false,
-            placeholder: 'Content...',
-            readonly: props.cue.graded && props.cue.releaseSubmission && submission,
-            min_height: 500,
-            paste_data_images: true,
-            images_upload_url: 'http://api.cuesapp.co/api/imageUploadEditor',
-            mobile: {
-                plugins: 'print preview powerpaste casechange importcss tinydrive searchreplace autolink autosave save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount tinymcespellchecker a11ychecker textpattern noneditable help formatpainter pageembed charmap mentions quickbars linkchecker emoticons advtable autoresize'
-            },
-            plugins: 'print preview powerpaste casechange importcss tinydrive searchreplace autolink autosave save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount tinymcespellchecker a11ychecker textpattern noneditable help formatpainter pageembed charmap mentions quickbars linkchecker emoticons advtable autoresize',
-            menu : { // this is the complete default configuration
-                file   : {title : 'File'  , items : 'newdocument'},
-                edit   : {title : 'Edit'  , items : 'undo redo | cut copy paste pastetext | selectall'},
-                insert : {title : 'Insert', items : 'link media | template hr'},
-                view   : {title : 'View'  , items : 'visualaid'},
-                format : {title : 'Format', items : 'bold italic underline strikethrough superscript subscript | formats | removeformat'},
-                table  : {title : 'Table' , items : 'inserttable tableprops deletetable | cell row column'},
-                tools  : {title : 'Tools' , items : 'spellchecker code'}
-            },
-            // menubar: 'file edit view insert format tools table tc help',
-            menubar: false,
-            toolbar: props.cue.graded && props.cue.releaseSubmission && submission ? false : 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat  pagebreak | table image media pageembed link | preview print | charmap emoticons |  ltr rtl | showcomments addcomment',
-            importcss_append: true,
-            image_caption: true,
-            quickbars_selection_toolbar: 'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
-            noneditable_noneditable_class: 'mceNonEditable',
-            toolbar_mode: 'sliding',
-            tinycomments_mode: 'embedded',
-            content_style: '.mymention{ color: gray; }',
-            contextmenu: 'link image imagetools table configurepermanentpen',
-            a11y_advanced_options: true,
-            extended_valid_elements: "svg[*],defs[*],pattern[*],desc[*],metadata[*],g[*],mask[*],path[*],line[*],marker[*],rect[*],circle[*],ellipse[*],polygon[*],polyline[*],linearGradient[*],radialGradient[*],stop[*],image[*],view[*],text[*],textPath[*],title[*],tspan[*],glyph[*],symbol[*],switch[*],use[*]"
-            // skin: useDarkMode ? 'oxide-dark' : 'oxide',
-            // content_css: useDarkMode ? 'dark' : 'default',
-            }}              
-            onChange={(e: any) => {
-                setSubmissionDraft(e.target.getContent())
-            } }
+                skin: "snow",
+                branding: false,
+                placeholder: 'Content...',
+                readonly: props.cue.graded && submission,
+                min_height: 500,
+                paste_data_images: true,
+                images_upload_url: 'http://api.cuesapp.co/api/imageUploadEditor',
+                mobile: {
+                    plugins: 'print preview powerpaste casechange importcss tinydrive searchreplace autolink autosave save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount tinymcespellchecker a11ychecker textpattern noneditable help formatpainter pageembed charmap mentions quickbars linkchecker emoticons advtable autoresize'
+                },
+                plugins: 'print preview powerpaste casechange importcss tinydrive searchreplace autolink autosave save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount tinymcespellchecker a11ychecker textpattern noneditable help formatpainter pageembed charmap mentions quickbars linkchecker emoticons advtable autoresize',
+                menu: { // this is the complete default configuration
+                    file: { title: 'File', items: 'newdocument' },
+                    edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall' },
+                    insert: { title: 'Insert', items: 'link media | template hr' },
+                    view: { title: 'View', items: 'visualaid' },
+                    format: { title: 'Format', items: 'bold italic underline strikethrough superscript subscript | formats | removeformat' },
+                    table: { title: 'Table', items: 'inserttable tableprops deletetable | cell row column' },
+                    tools: { title: 'Tools', items: 'spellchecker code' }
+                },
+                // menubar: 'file edit view insert format tools table tc help',
+                menubar: false,
+                toolbar: props.cue.graded && submission ? false : 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat  pagebreak | table image media pageembed link | preview print | charmap emoticons |  ltr rtl | showcomments addcomment',
+                importcss_append: true,
+                image_caption: true,
+                quickbars_selection_toolbar: 'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
+                noneditable_noneditable_class: 'mceNonEditable',
+                toolbar_mode: 'sliding',
+                tinycomments_mode: 'embedded',
+                content_style: '.mymention{ color: gray; }',
+                contextmenu: 'link image imagetools table configurepermanentpen',
+                a11y_advanced_options: true,
+                extended_valid_elements: "svg[*],defs[*],pattern[*],desc[*],metadata[*],g[*],mask[*],path[*],line[*],marker[*],rect[*],circle[*],ellipse[*],polygon[*],polyline[*],linearGradient[*],radialGradient[*],stop[*],image[*],view[*],text[*],textPath[*],title[*],tspan[*],glyph[*],symbol[*],switch[*],use[*]"
+                // skin: useDarkMode ? 'oxide-dark' : 'oxide',
+                // content_css: useDarkMode ? 'dark' : 'default',
+            }}
+            onChange={(e: any) => setCue(e.target.getContent())}
         />
     );
 
@@ -2924,7 +2923,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     <Text style={{
                         fontSize: 15,
                         fontFamily: 'inter',
-                        color: '#2f2f3c'
+                        color: '#43434F'
                     }}>
                         {props.cue.channelId && props.cue.channelId !== "" ? "Shared with" : "Saved in"}
                     </Text>
@@ -2980,7 +2979,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             placeholder='Share with...'
                             displayValue='name'
                             // key={userDropdownOptions.toString()}
-                            // style={{ width: '100%', color: '#2f2f3c', 
+                            // style={{ width: '100%', color: '#43434F', 
                             //     optionContainer: { // To change css for option container 
                             //         zIndex: 9999
                             //     }
@@ -3038,7 +3037,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     <Text style={{
                         fontSize: 15,
                         fontFamily: 'inter',
-                        color: '#2f2f3c'
+                        color: '#43434F'
                     }}>{PreferredLanguageText("submissionRequired")}</Text>
                 </View>
                 <View style={{ flexDirection: "row", width: '100%' }}>
@@ -3057,7 +3056,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 }}
                                 style={{ height: 20 }}
                                 trackColor={{
-                                    false: "#F8F9FA",
+                                    false: "#f8f9fa",
                                     true: "#818385"
                                 }}
                                 activeThumbColor="white"
@@ -3065,7 +3064,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         </View>
                     ) : (
                         <View style={{ flex: 1, backgroundColor: "#fff" }}>
-                            <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>{!submission ? PreferredLanguageText("no") : null}</Text>
+                            <Text style={{ fontSize: 11, color: '#43434F', textTransform: 'uppercase' }}>{!submission ? PreferredLanguageText("no") : null}</Text>
                         </View>
                     )}
                 </View>
@@ -3178,7 +3177,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     <Text style={{
                         fontSize: 15,
                         fontFamily: 'inter',
-                        color: '#2f2f3c'
+                        color: '#43434F'
                     }}>Grade Weight</Text>
                 </View>
                 {isOwner ? <View style={{ flexDirection: "row" }}>
@@ -3194,7 +3193,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             onValueChange={() => setGraded(!graded)}
                             style={{ height: 20 }}
                             trackColor={{
-                                false: "#F8F9FA",
+                                false: "#f8f9fa",
                                 true: "#818385"
                             }}
                             activeThumbColor="white"
@@ -3224,7 +3223,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 value={gradeWeight}
                                 style={{
                                     width: "25%",
-                                    borderBottomColor: "#F8F9FA",
+                                    borderBottomColor: "#f8f9fa",
                                     borderBottomWidth: 1,
                                     fontSize: 15,
                                     padding: 15,
@@ -3385,7 +3384,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 style={{
                     width: "100%",
                     borderRightWidth: 0,
-                    borderColor: "#F8F9FA"
+                    borderColor: "#f8f9fa"
                 }}>
                 <View
                     style={{
@@ -3397,7 +3396,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     <Text style={{
                         fontSize: 15,
                         fontFamily: 'inter',
-                        color: '#2f2f3c'
+                        color: '#43434F'
                     }}>{PreferredLanguageText("category")}</Text>
                 </View>
                 {props.cue.channelId && !props.channelOwner ? (
@@ -3413,7 +3412,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 <TouchableOpacity style={styles.allGrayOutline} onPress={() => { }}>
                                     <Text
                                         style={{
-                                            color: "#2f2f3c",
+                                            color: "#43434F",
                                             lineHeight: 20,
                                             fontSize: 12
                                         }}>
@@ -3448,7 +3447,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 <Menu
                                     onSelect={(cat: any) => setCustomCategory(cat)}>
                                     <MenuTrigger>
-                                        <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#2f2f3c' }}>
+                                        <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#43434F' }}>
                                             {customCategory === '' ? 'None' : customCategory}<Ionicons name='caret-down' size={14} />
                                         </Text>
                                     </MenuTrigger>
@@ -3458,7 +3457,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             borderRadius: 15,
                                             shadowOpacity: 0,
                                             borderWidth: 1,
-                                            borderColor: '#F8F9FA',
+                                            borderColor: '#f8f9fa',
                                             overflow: 'scroll',
                                             maxHeight: '100%'
                                         }
@@ -3501,7 +3500,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         lineHeight: 20,
                                         width: "100%"
                                     }}>
-                                    <Ionicons name={addCustomCategory ? "close" : "add"} size={20} color={"#2f2f3c"} />
+                                    <Ionicons name={addCustomCategory ? "close" : "add"} size={20} color={"#43434F"} />
                                 </Text>
                             </TouchableOpacity>
                         </View>
@@ -3517,7 +3516,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 style={{
                     width: "100%",
                     borderRightWidth: 0,
-                    borderColor: "#F8F9FA"
+                    borderColor: "#f8f9fa"
                 }}>
                 <View
                     style={{
@@ -3529,7 +3528,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     <Text style={{
                         fontSize: 15,
                         fontFamily: 'inter',
-                        color: '#2f2f3c'
+                        color: '#43434F'
                     }}>{PreferredLanguageText("priority")}</Text>
                 </View>
                 <View
@@ -3574,7 +3573,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 style={{
                     width: "100%",
                     borderRightWidth: 0,
-                    borderColor: "#F8F9FA"
+                    borderColor: "#f8f9fa"
                 }}>
                 <View
                     style={{
@@ -3586,7 +3585,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     <Text style={{
                         fontSize: 15,
                         fontFamily: 'inter',
-                        color: '#2f2f3c'
+                        color: '#43434F'
                     }}>Forward</Text>
                 </View>
                 <View
@@ -3604,7 +3603,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 setShareWithChannelName('')
                             }}>
                             <MenuTrigger>
-                                <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#2f2f3c' }}>
+                                <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#43434F' }}>
                                     {
                                         selectedChannelOwner === undefined ? 'All channels' :
                                             (selectedChannelOwner !== null ? (selectedChannelOwner.name)
@@ -3618,7 +3617,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     borderRadius: 15,
                                     shadowOpacity: 0,
                                     borderWidth: 1,
-                                    borderColor: '#F8F9FA',
+                                    borderColor: '#f8f9fa',
                                     overflow: 'scroll',
                                     maxHeight: '100%',
                                 }
@@ -3674,7 +3673,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 }
                             }}>
                             <MenuTrigger>
-                                <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#2F2F3C' }}>
+                                <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#43434F' }}>
                                     {shareWithChannelName === '' ? 'Select channel' : shareWithChannelName}<Ionicons name='caret-down' size={14} />
                                 </Text>
                             </MenuTrigger>
@@ -3684,7 +3683,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     borderRadius: 15,
                                     shadowOpacity: 0,
                                     borderWidth: 1,
-                                    borderColor: '#F8F9FA',
+                                    borderColor: '#f8f9fa',
                                     overflow: 'scroll',
                                     maxHeight: '100%',
                                 }
@@ -3733,7 +3732,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 <Ionicons
                                     name={"arrow-redo-outline"}
                                     size={20}
-                                    color={shareWithChannelId === "" ? "#818385" : "#2f2f3c"}
+                                    color={shareWithChannelId === "" ? "#818385" : "#43434F"}
                                 />
                             </Text>
                         </TouchableOpacity>
@@ -3762,7 +3761,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         <Text style={{
                             fontSize: 15,
                             fontFamily: 'inter',
-                            color: '#2f2f3c'
+                            color: '#43434F'
                         }}>Reminder</Text>
                     </View>
                     <View
@@ -3787,7 +3786,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             }}
                             style={{ height: 20 }}
                             trackColor={{
-                                false: "#F8F9FA",
+                                false: "#f8f9fa",
                                 true: "#3B64F8"
                             }}
                             activeThumbColor="white"
@@ -3806,7 +3805,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             <Text style={{
                                 fontSize: 15,
                                 fontFamily: 'inter',
-                                color: '#2f2f3c'
+                                color: '#43434F'
                             }}>Recurring</Text>
                         </View>
                         <View style={{ flexDirection: "row" }}>
@@ -3821,7 +3820,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     onValueChange={() => setShuffle(!shuffle)}
                                     style={{ height: 20 }}
                                     trackColor={{
-                                        false: "#F8F9FA",
+                                        false: "#f8f9fa",
                                         true: "#818385"
                                     }}
                                     activeThumbColor="white"
@@ -3841,7 +3840,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             setFrequencyName(cat.label)
                                         }}>
                                         <MenuTrigger>
-                                            <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#2f2f3c' }}>
+                                            <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#43434F' }}>
                                                 {frequencyName}<Ionicons name='caret-down' size={14} />
                                             </Text>
                                         </MenuTrigger>
@@ -3851,7 +3850,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                 borderRadius: 15,
                                                 shadowOpacity: 0,
                                                 borderWidth: 1,
-                                                borderColor: '#F8F9FA',
+                                                borderColor: '#f8f9fa',
                                                 overflow: 'scroll',
                                                 maxHeight: '100%'
                                             }
@@ -3909,7 +3908,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             <Text style={{
                                 fontSize: 15,
                                 fontFamily: 'inter',
-                                color: '#2f2f3c'
+                                color: '#43434F'
                             }}>Indefinite</Text>
                         </View>
                         <View style={{ flexDirection: "row" }}>
@@ -3924,7 +3923,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     onValueChange={() => setPlayChannelCueIndef(!playChannelCueIndef)}
                                     style={{ height: 20 }}
                                     trackColor={{
-                                        false: "#F8F9FA",
+                                        false: "#f8f9fa",
                                         true: "#818385"
                                     }}
                                     activeThumbColor="white"
@@ -4032,25 +4031,25 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         // height: 50,
                         paddingTop: 10
                     }}>
-                        <TouchableOpacity disabled={updatingCueDetails} onPress={() => handleUpdateDetails()} style={{ backgroundColor: "white", borderRadius: 15, marginBottom: 20 }}>
-                            <Text
-                                style={{
-                                    textAlign: "center",
-                                    lineHeight: 35,
-                                    color: "white",
-                                    fontSize: 12,
-                                    backgroundColor: "#3B64F8",
-                                    borderRadius: 15,
-                                    paddingHorizontal: 25,
-                                    fontFamily: "inter",
-                                    overflow: "hidden",
-                                    height: 35,
-                                    textTransform: "uppercase",
-                                    width: 160
-                                }}>
-                                    Save
-                            </Text>
-                        </TouchableOpacity>
+                    <TouchableOpacity disabled={updatingCueDetails} onPress={() => handleUpdateDetails()} style={{ backgroundColor: "white", borderRadius: 15, marginBottom: 20 }}>
+                        <Text
+                            style={{
+                                textAlign: "center",
+                                lineHeight: 35,
+                                color: "white",
+                                fontSize: 12,
+                                backgroundColor: "#3B64F8",
+                                borderRadius: 15,
+                                paddingHorizontal: 25,
+                                fontFamily: "inter",
+                                overflow: "hidden",
+                                height: 35,
+                                textTransform: "uppercase",
+                                width: 160
+                            }}>
+                            Save
+                        </Text>
+                    </TouchableOpacity>
 
                     {isOwner || !props.cue.channelId || props.cue.channelId === "" ? (
                         <TouchableOpacity onPress={() => handleDelete()} style={{ backgroundColor: "white", borderRadius: 15 }}>
@@ -4058,9 +4057,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 style={{
                                     textAlign: "center",
                                     lineHeight: 35,
-                                    color: "#2F2F3C",
+                                    color: "#43434F",
                                     fontSize: 12,
-                                    backgroundColor: "#F8F9FA",
+                                    backgroundColor: "#f8f9fa",
                                     borderRadius: 15,
                                     paddingHorizontal: 25,
                                     fontFamily: "inter",
@@ -4155,7 +4154,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     height: 22,
                                     paddingHorizontal: 10,
                                     marginLeft: 10,
-                                    borderRadius: 10,
+                                    borderRadius: 12,
                                     backgroundColor: "#3B64F8",
                                     lineHeight: 20,
                                     paddingTop: 1
@@ -4165,7 +4164,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         ) : null}
                         {
                             !isOwner && props.cue.submittedAt !== "" && (new Date(props.cue.submittedAt) >= deadline) ?
-                                <View style={{ borderRadius: 10, padding: 5, borderWidth: 1, borderColor: '#D91D56', marginLeft: 15, }}>
+                                <View style={{ borderRadius: 12, padding: 5, borderWidth: 1, borderColor: '#D91D56', marginLeft: 15, }}>
                                     <Text style={{ color: '#D91D56', fontSize: 12, textAlign: 'center' }}>
                                         LATE
                                     </Text>
@@ -4257,20 +4256,20 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 width: "100%",
                                 display: "flex",
                                 flexDirection: Dimensions.get("window").width < 768 ? "column-reverse" : "row",
-                                paddingBottom: 4,
+                                marginBottom: 5,
                                 backgroundColor: "white",
                                 marginTop: 20,
                                 borderBottomWidth: ((props.cue.channelId && props.cue.channelId !== '' && !isOwner && props.showOriginal) || (props.showOriginal && showImportOptions) || isQuiz)
-                                        || (((props.cue.graded && submission && !isOwner) && !props.showOriginal) || (!props.showOriginal && showImportOptions))
-                                        || (!props.showOriginal && submissionImported) || (imported && props.showOriginal)
-                                        ? 0 : 1,
-                                borderBottomColor: '#dddddd'
+                                    || (((props.cue.graded && submission && !isOwner) && !props.showOriginal) || (!props.showOriginal && showImportOptions))
+                                    || (!props.showOriginal && submissionImported) || (imported && props.showOriginal)
+                                    ? 0 : 1,
+                                borderBottomColor: '#eeeeee'
                             }}
                             onTouchStart={() => Keyboard.dismiss()}>
                             <View
                                 style={{
                                     flexDirection: Dimensions.get("window").width < 768 ? "column" : "row",
-                                    flex: 1, 
+                                    flex: 1,
                                 }}>
                                 {/* {renderRichToolbar()} */}
                                 {(!props.showOriginal && props.cue.submission && !submissionImported && showImportOptions)
@@ -4295,13 +4294,13 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     />
                                 ) : null}
                             </View>
-                            <View style={{ backgroundColor: '#fff', flexDirection: 'row' }}>
+                            <View style={{ backgroundColor: '#fff', flexDirection: 'row', marginBottom: 5 }}>
                                 {(!props.showOriginal && !submissionImported && !props.cue.graded)
                                     || (props.showOriginal && isOwner && !imported && !isQuiz)
                                     ? (
                                         <Text
                                             style={{
-                                                color: "#2f2f3c",
+                                                color: "#43434F",
                                                 fontSize: 11,
                                                 lineHeight: 30,
                                                 textAlign: "right",
@@ -4320,7 +4319,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     !props.cue.graded && !isQuiz ? (
                                     <Text
                                         style={{
-                                            color: "#2f2f3c",
+                                            color: "#43434F",
                                             fontSize: 11,
                                             lineHeight: 30,
                                             textAlign: "right",
@@ -4340,7 +4339,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         ? null :
                                         (
                                             <Text style={{
-                                                color: '#2f2f3c',
+                                                color: '#43434F',
                                                 fontSize: 11,
                                                 lineHeight: 30,
                                                 textAlign: 'right',
@@ -4361,7 +4360,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     style={{
                         paddingBottom: 25,
                         height: "100%",
-                        // borderBottomColor: "#F8F9FA",
+                        // borderBottomColor: "#f8f9fa",
                         // borderBottomWidth: 1
                     }}
                     showsVerticalScrollIndicator={false}
@@ -4513,7 +4512,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             width: "100%",
                             flexDirection: "row",
                             // marginTop: 20,
-                            // borderTopColor: "#F8F9FA",
+                            // borderTopColor: "#f8f9fa",
                             // borderTopWidth: 1,
                             paddingTop: 40,
                             paddingBottom: 20
@@ -4521,14 +4520,14 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         <Text style={{
                             lineHeight: 23,
                             marginRight: 10,
-                            color: '#2f2f3c',
+                            color: '#43434F',
                             fontSize: 11,
                             textTransform: 'uppercase'
                         }}>
                             {PreferredLanguageText('options')}
                         </Text>
                         <Text style={{ lineHeight: 21 }}>
-                            <Ionicons size={14} name={showOptions ? 'caret-down-outline' : 'caret-forward-outline'} color='#2f2f3c' />
+                            <Ionicons size={14} name={showOptions ? 'caret-down-outline' : 'caret-forward-outline'} color='#43434F' />
                         </Text>
                     </TouchableOpacity> */}
                             </View>}
@@ -4559,7 +4558,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         {renderReminderOptions()}
                         {isQuiz && isOwner ? <View style={{ width: "100%" }}>
                             <View style={{ width: '100%', paddingTop: 40, paddingBottom: 15, backgroundColor: 'white' }}>
-                                <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>
+                                <Text style={{ fontSize: 11, color: '#43434F', textTransform: 'uppercase' }}>
                                     Shuffle Questions
                                 </Text>
                             </View>
@@ -4575,7 +4574,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         onValueChange={() => setShuffleQuiz(!shuffleQuiz)}
                                         style={{ height: 20 }}
                                         trackColor={{
-                                            false: '#F8F9FA',
+                                            false: '#f8f9fa',
                                             true: '#818385'
                                         }}
                                         activeThumbColor='white'
@@ -4598,13 +4597,13 @@ const styles: any = StyleSheet.create({
         width: 125,
         fontSize: 15,
         height: 45,
-        color: "#2f2f3c",
-        borderRadius: 10,
+        color: "#43434F",
+        borderRadius: 12,
         marginLeft: 10
     },
     cuesInput: {
         width: "100%",
-        backgroundColor: "#F8F9FA",
+        backgroundColor: "#f8f9fa",
         borderRadius: 15,
         fontSize: 20,
         padding: 20,
@@ -4637,13 +4636,13 @@ const styles: any = StyleSheet.create({
         marginLeft: 7,
         paddingHorizontal: 4,
         backgroundColor: "white",
-        borderRadius: 10,
+        borderRadius: 12,
         borderWidth: 1,
         borderColor: "#818385"
     },
     input: {
         width: "100%",
-        borderBottomColor: "#F8F9FA",
+        borderBottomColor: "#f8f9fa",
         borderBottomWidth: 1,
         fontSize: 15,
         paddingTop: 12,
@@ -4709,33 +4708,36 @@ const styles: any = StyleSheet.create({
         paddingHorizontal: 10
     },
     all: {
-        fontSize: 14,
-        color: '#2f2f3c',
-        height: 22,
+        fontSize: 13,
+        color: '#43434F',
+        height: 24,
         paddingHorizontal: 20,
         backgroundColor: '#fff',
-        lineHeight: 22,
-        fontFamily: 'inter'
+        lineHeight: 24,
+        fontFamily: 'inter',
+        textTransform: 'uppercase'
     },
     allGrayFill: {
-        fontSize: 14,
+        fontSize: 13,
         color: '#fff',
         paddingHorizontal: 20,
-        borderRadius: 10,
-        backgroundColor: '#2f2f3c',
-        lineHeight: 22,
-        fontFamily: 'inter'
+        borderRadius: 12,
+        backgroundColor: '#43434F',
+        lineHeight: 24,
+        height: 24,
+        fontFamily: 'inter',
+        textTransform: 'uppercase'
     },
     allOutline: {
         fontSize: 12,
-        backgroundColor: "#2f2f3c",
+        backgroundColor: "#43434F",
         height: 22,
         paddingHorizontal: 10,
-        borderRadius: 10
+        borderRadius: 12
     },
     allBlack: {
         fontSize: 12,
-        color: "#2f2f3c",
+        color: "#43434F",
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: "white"
@@ -4746,7 +4748,7 @@ const styles: any = StyleSheet.create({
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: "white",
-        borderRadius: 10,
+        borderRadius: 12,
         borderWidth: 1,
         borderColor: "#818385",
         lineHeight: 20
@@ -4767,7 +4769,7 @@ const styles: any = StyleSheet.create({
         backgroundColor: "#53BE6D"
     },
     outline: {
-        borderRadius: 10,
+        borderRadius: 12,
         borderWidth: 1,
         borderColor: "#818385"
     },

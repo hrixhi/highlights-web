@@ -28,10 +28,19 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const [deadline, setDeadline] = useState(new Date(current.getTime() + 1000 * 60 * 60 * 24))
     const [initialDate, setInitialDate] = useState<Date>(new Date(current.getTime()))
 
+    // const [filterChoice] = useState(props.channelFilterChoice)
+    // const [meetingOn, setMeetingOn] = useState(false)
+    const [isOwner, setIsOwner] = useState(false)
+
     const getUser = useCallback(async () => {
         const u = await AsyncStorage.getItem('user')
         if (u) {
             const parsedUser = JSON.parse(u)
+            if (props.channelId !== '') {
+                if (parsedUser._id.toString().trim() === props.channelCreatedBy.toString().trim()) {
+                    setIsOwner(true)
+                }
+            }
             if (parsedUser.email) {
                 setLoggedIn(true)
             }
@@ -40,11 +49,11 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
             }
         }
         setUserLoaded(true)
-    }, [])
+    }, [props.channelId, props.channelCreatedBy])
 
     useEffect(() => {
         getUser()
-    }, [])
+    }, [props.channelId, props.channelCreatedBy])
 
     useEffect(() => {
         const custom: any = {}
@@ -59,7 +68,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
         })
         setChannelCategories(cat)
     }, [cues])
-    
+
     let activeColor;
 
     if (choice === "All") {
@@ -74,10 +83,9 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
         activeColor = activeChannel[0].colorCode;
     }
 
-
     return (
         <View style={styles.bottombar}>
-            <View style={{ display: 'flex', flexDirection: 'row', paddingHorizontal: 30, backgroundColor: '#F8F9FA' }}>
+            <View style={{ display: 'flex', flexDirection: 'row', backgroundColor: '#f8f9fa' }}>
                 <View style={styles.icons}>
                     <TouchableOpacity
                         onPress={() => {
@@ -90,40 +98,58 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         }}
                         style={styles.center}
                     >
-                        <Text style={{ textAlign: 'left', lineHeight: 35, marginTop: 15 }}>
-                            <Ionicons name='arrow-back-outline' size={30} color={'#2f2f3c'} />
+                        <Text style={styles.channelText}>
+                            <Ionicons name='arrow-back-outline' size={30} color={'#43434F'} />
                         </Text>
                         {/* <Text style={{ fontSize: 10, color: '#fff', }}>
                             Dashboard
                         </Text> */}
                     </TouchableOpacity>
                 </View>
-                {/* <View style={styles.icons}>
+                {
+                    !props.channelId || props.channelId === '' ?
+                        <View style={styles.icons}>
+                            <TouchableOpacity
+                                style={styles.center}
+                                onPress={() => props.openMeeting()}>
+                                <Text style={styles.channelText}>
+                                    <Ionicons
+                                        name='chatbubbles-outline' size={19} color={'#43434F'} />
+                                </Text>
+                                <Text style={{ fontSize: 10, color: '#43434F', textAlign: 'center' }}>
+                                    Classroom
+                                </Text>
+                            </TouchableOpacity>
+                        </View> : <View style={styles.icons} />
+                }
+                {
+                    isOwner ?
+                        <View style={styles.icons}>
+                            <TouchableOpacity
+                                style={styles.center}
+                                onPress={() => props.openChannelSettings()}>
+                                <Text style={styles.channelText}>
+                                    <Ionicons name='hammer-outline' size={19} color={'#43434F'} />
+                                </Text>
+                                <Text style={{ fontSize: 10, color: '#43434F', textAlign: 'center' }}>
+                                    Settings
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                        : <View style={styles.icons} />}
+                <View style={styles.icons}>
                     <TouchableOpacity
-                        onPress={() => props.openCreate()}
                         style={styles.center}
-                    >
-                        <Text style={{ textAlign: 'center', lineHeight: 35, marginTop: 15 }}>
-                            <Ionicons name='add-circle' size={35} color={'#fff'} />
+                        onPress={() => props.hideMenu()}>
+                        <Text style={styles.channelText}>
+                            <Ionicons
+                                name='contract-outline' size={19} color={'#43434F'} />
                         </Text>
-                        <Text style={{ fontSize: 10, color: '#fff', marginTop: -3 }}>
-                            New
+                        <Text style={{ fontSize: 10, color: '#43434F', textAlign: 'center' }}>
+                            Hide
                         </Text>
                     </TouchableOpacity>
                 </View>
-                <View style={styles.icons}>
-                    <TouchableOpacity
-                        onPress={() => props.openCalendar()}
-                        style={styles.center}
-                    >
-                        <Text style={{ textAlign: 'center', lineHeight: 35, marginTop: 15 }}>
-                            <Ionicons name='calendar-outline' size={30} color={'#fff'} />
-                        </Text>
-                        <Text style={{ fontSize: 10, color: '#fff' }}>
-                            Planner
-                        </Text>
-                    </TouchableOpacity>
-                </View> */}
             </View>
         </View>
     );
@@ -137,17 +163,15 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
         width: '100%',
         display: 'flex',
         paddingBottom: 10,
-        // borderTopWidth: 1,
-        // borderColor: '#555555',
-        backgroundColor: '#F8F9FA'
+        backgroundColor: '#f8f9fa'
     },
     icons: {
-        width: '100%',
+        width: '25%',
         display: 'flex',
         justifyContent: 'center',
         flexDirection: 'column',
         overflow: 'hidden',
-        backgroundColor: '#F8F9FA'
+        backgroundColor: '#f8f9fa'
     },
     defaultFont: {
         fontFamily: 'system font'
@@ -156,14 +180,14 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
         width: '100%',
         // justifyContent: 'center',
         display: 'flex',
-        textAlign: 'left',
-        backgroundColor: '#F8F9FA'
+        textAlign: 'center',
+        backgroundColor: '#f8f9fa'
     },
     colorBar: {
         width: '100%',
         height: '47%',
         paddingTop: 20,
-        backgroundColor: '#F8F9FA'
+        backgroundColor: '#f8f9fa'
     },
     iconContainer: {
         width: '20%',
@@ -177,15 +201,15 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
         marginLeft: 8,
         marginBottom: 10,
         marginTop: -8,
-        borderRadius: 10,
+        borderRadius: 12,
         backgroundColor: '#d91d56',
         textAlign: 'center',
         zIndex: 50
     },
     outline: {
-        borderRadius: 10,
-        backgroundColor: colorScheme === 'light' ? '#F8F9FA' : 'white',
-        color: colorScheme === 'light' ? '#2f2f3c' : '#2f2f3c'
+        borderRadius: 12,
+        backgroundColor: colorScheme === 'light' ? '#f8f9fa' : 'white',
+        color: colorScheme === 'light' ? '#43434F' : '#43434F'
     },
     cusCategory: {
         fontSize: 15,
@@ -195,16 +219,20 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
     },
     sub: {
         fontSize: 15,
-        color: colorScheme === 'light' ? '#F8F9FA' : 'white',
+        color: colorScheme === 'light' ? '#f8f9fa' : 'white',
         height: 22,
         paddingHorizontal: 10
     },
     subOutline: {
         fontSize: 15,
-        color: colorScheme === 'light' ? '#F8F9FA' : 'white',
+        color: colorScheme === 'light' ? '#f8f9fa' : 'white',
         height: 22,
         paddingHorizontal: 10,
-        borderRadius: 10,
-        backgroundColor: colorScheme === 'light' ? '#F8F9FA' : 'white',
+        borderRadius: 12,
+        backgroundColor: colorScheme === 'light' ? '#f8f9fa' : 'white',
+    },
+    channelText: {
+        textAlign: 'center',
+        marginTop: 15
     }
 });

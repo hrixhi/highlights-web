@@ -181,6 +181,38 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 }}>
                 <Text style={showStatistics ? styles.allGrayFill : styles.all}>Statistics</Text>
             </TouchableOpacity>
+            <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
+                {(scores.length === 0 || cues.length === 0 || !props.isOwner) ? null :
+                    <TouchableOpacity
+                        onPress={() => {
+                            exportGrades()
+                        }}
+                        style={{
+                            backgroundColor: 'white',
+                            overflow: 'hidden',
+                            height: 35,
+                            // marginTop: 15,
+                            justifyContent: 'center',
+                            flexDirection: 'row'
+                        }}>
+                        <Text style={{
+                            textAlign: 'center',
+                            lineHeight: 30,
+                            color: '#fff',
+                            fontSize: 12,
+                            backgroundColor: '#53BE6D',
+                            paddingHorizontal: 25,
+                            fontFamily: 'inter',
+                            height: 30,
+                            // width: 100,
+                            borderRadius: 15,
+                            textTransform: 'uppercase'
+                        }}>
+                            EXPORT <Ionicons name='download-outline' size={12} />
+                        </Text>
+                    </TouchableOpacity>
+                }
+            </View>
         </View>)
     }
 
@@ -296,7 +328,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 nestedScrollEnabled={true}
             >
                 <View style={{ width: '100%' }}>
-                    <Text style={{ textAlign: 'left', fontSize: 13, color: '#2f2f3c', fontFamily: 'inter', paddingBottom: 20, paddingLeft: Dimensions.get('window').width < 768 ? 0 : 150 }}>
+                    <Text style={{ textAlign: 'left', fontSize: 13, color: '#43434F', fontFamily: 'inter', paddingBottom: 20, paddingLeft: Dimensions.get('window').width < 768 ? 0 : 150 }}>
                         Grade Weightage
                     </Text>
                     <PieChart
@@ -313,7 +345,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 </View>
 
                 {submissionStatistics.length > 0 ? <View style={{ width: '100%' }}>
-                    <Text style={{ textAlign: 'left', fontSize: 13, color: '#2f2f3c', fontFamily: 'inter', paddingTop: 50, paddingBottom: 20, paddingLeft: Dimensions.get('window').width < 768 ? 0 : 150 }}>
+                    <Text style={{ textAlign: 'left', fontSize: 13, color: '#43434F', fontFamily: 'inter', paddingTop: 50, paddingBottom: 20, paddingLeft: Dimensions.get('window').width < 768 ? 0 : 150 }}>
                         Submissions
                     </Text>
                     <Chart
@@ -341,97 +373,13 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
             backgroundColor: 'white',
             width: '100%',
             height: '100%',
-            paddingRight: 20,
+            // paddingRight: 20,
             paddingLeft: Dimensions.get('window').width < 1024 ? 20 : 0,
             paddingTop: 30,
             borderTopRightRadius: 0,
             borderTopLeftRadius: 0
         }}>
-            <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 10 }}>
-                {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
-            </Text>
-            <View style={{ backgroundColor: "white", flexDirection: "row", paddingBottom: 25 }}>
-                <Text
-                    ellipsizeMode="tail"
-                    style={{
-                        fontSize: 25,
-                        paddingBottom: 20,
-                        fontFamily: 'inter',
-                        // textTransform: "uppercase",
-                        // paddingLeft: 10,
-                        paddingTop: 2,
-                        flex: 1,
-                        lineHeight: 25
-                    }}>
-                    {PreferredLanguageText("grades")}
-                </Text>
-                {(scores.length === 0 || cues.length === 0 || !props.isOwner) ? null :
-                    <TouchableOpacity
-                        onPress={() => {
-                            exportGrades()
-                        }}
-                        style={{
-                            backgroundColor: 'white',
-                            overflow: 'hidden',
-                            height: 35,
-                            // marginTop: 15,
-                            justifyContent: 'center',
-                            flexDirection: 'row'
-                        }}>
-                        <Text style={{
-                            textAlign: 'center',
-                            lineHeight: 30,
-                            color: '#fff',
-                            fontSize: 12,
-                            backgroundColor: '#53BE6D',
-                            paddingHorizontal: 25,
-                            fontFamily: 'inter',
-                            height: 30,
-                            // width: 100,
-                            borderRadius: 15,
-                            textTransform: 'uppercase'
-                        }}>
-                            EXPORT <Ionicons name='download-outline' size={12} />
-                        </Text>
-                    </TouchableOpacity>
-                }
-            </View>
-
             {renderGradeStatsTabs()}
-
-
-
-            {/* {scores.length === 0 || cues.length === 0 ?  null : 
-                                    <View style={{ display: 'flex', flexDirection: 'row', marginVertical: 25 }}>
-                                        <TouchableOpacity
-                                                        onPress={async () => {
-                                                            exportGrades()
-                                                        }}
-                                                        style={{
-                                                            borderRadius: 15,
-                                                            backgroundColor: 'white'
-                                                        }}>
-                                                        {
-                                                        
-                                                                <Text style={{
-                                                                    textAlign: 'center',
-                                                                    lineHeight: 35,
-                                                                    color: 'white',
-                                                                    fontSize: 12,
-                                                                    backgroundColor: '#3B64F8',
-                                                                    borderRadius: 15,
-                                                                    paddingHorizontal: 25,
-                                                                    fontFamily: 'inter',
-                                                                    overflow: 'hidden',
-                                                                    height: 35,
-                                                                    textTransform: 'uppercase'
-                                                                }}>
-                                                                    EXPORT
-                                                            </Text> 
-                                                        }
-                                        </TouchableOpacity>
-                                    </View>
-                                } */}
             {
                 props.scores.length === 0 || cues.length === 0 ?
                     <View style={{ backgroundColor: 'white' }}>
@@ -445,8 +393,9 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     (!showStatistics ? <View style={{
                         width: '100%',
                         backgroundColor: 'white',
-                        flex: 1,
-                        paddingTop: 30
+                        // flex: 1,
+                        paddingTop: 30,
+                        maxHeight: 500
                     }}
                         key={JSON.stringify(props.scores)}
                     >
@@ -484,6 +433,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             horizontal={true}
                             contentContainerStyle={{
                                 height: '100%',
+                                maxHeight: 450,
                                 flexDirection: 'column'
                             }}
                             nestedScrollEnabled={true}
@@ -503,17 +453,17 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                         const { title } = htmlStringParser(cue.cue)
                                         // console.log("CUE", cue)
                                         return <TouchableOpacity style={styles.col} key={col.toString()} onPress={() => props.openCueFromGrades(cue._id)}>
-                                            <Text style={{ textAlign: 'center', fontSize: 10, color: '#2f2f3c', marginBottom: 5 }}>
+                                            <Text style={{ textAlign: 'center', fontSize: 10, color: '#43434F', marginBottom: 5 }}>
                                                 {
                                                     (new Date(cue.deadline)).toString().split(' ')[1] +
                                                     ' ' +
                                                     (new Date(cue.deadline)).toString().split(' ')[2]
                                                 }
                                             </Text>
-                                            <Text style={{ textAlign: 'center', fontSize: 13, color: '#2f2f3c', fontFamily: 'inter', marginBottom: 5, height: 30, textAlignVertical: 'center' }} numberOfLines={2}>
+                                            <Text style={{ textAlign: 'center', fontSize: 13, color: '#43434F', fontFamily: 'inter', marginBottom: 5, height: 30, textAlignVertical: 'center' }} numberOfLines={2}>
                                                 {title}
                                             </Text>
-                                            <Text style={{ textAlign: 'center', fontSize: 10, color: '#2f2f3c' }}>
+                                            <Text style={{ textAlign: 'center', fontSize: 10, color: '#43434F' }}>
                                                 {cue.gradeWeight}%
                                             </Text>
                                         </TouchableOpacity>
@@ -523,10 +473,10 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     cues.length === 0 ? null :
                                         <View style={styles.col} key={'total'}>
                                             <View style={{ height: 10, marginBottom: 5 }} />
-                                            <Text style={{ textAlign: 'center', fontSize: 13, color: '#2f2f3c', fontFamily: 'inter', marginBottom: 5, height: 30, }}>
+                                            <Text style={{ textAlign: 'center', fontSize: 13, color: '#43434F', fontFamily: 'inter', marginBottom: 5, height: 30, }}>
                                                 {PreferredLanguageText('total')}
                                             </Text>
-                                            <Text style={{ textAlign: 'center', fontSize: 10, color: '#2f2f3c' }}>
+                                            <Text style={{ textAlign: 'center', fontSize: 10, color: '#43434F' }}>
                                                 100%
                                             </Text>
                                         </View>
@@ -558,10 +508,10 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
                                             return <View style={styles.row} key={row}>
                                                 <View style={styles.col} >
-                                                    <Text style={{ textAlign: 'left', fontSize: 12, color: '#2f2f3c', fontFamily: 'inter' }}>
+                                                    <Text style={{ textAlign: 'left', fontSize: 12, color: '#43434F', fontFamily: 'inter' }}>
                                                         {score.fullName}
                                                     </Text>
-                                                    {/* <Text style={{ textAlign: 'left', fontSize: 12, color: '#2f2f3c' }}>
+                                                    {/* <Text style={{ textAlign: 'left', fontSize: 12, color: '#43434F' }}>
                                                         {score.displayName}
                                                     </Text> */}
                                                 </View>
@@ -613,7 +563,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                 {scoreObject && scoreObject.graded ? scoreObject.score : (!scoreObject || !scoreObject.cueId ? "N/A" : "Missing")}
                                                             </Text>
                                                                 :
-                                                                <Text style={{ textAlign: 'center', fontSize: 11, color: scoreObject && new Date(parseInt(scoreObject.submittedAt)) >= (new Date(cue.deadline)) ? '#ED7D22' : '#2f2f3c', }}>
+                                                                <Text style={{ textAlign: 'center', fontSize: 11, color: scoreObject && new Date(parseInt(scoreObject.submittedAt)) >= (new Date(cue.deadline)) ? '#ED7D22' : '#43434F', }}>
                                                                     {
                                                                         scoreObject && scoreObject.graded ? scoreObject.score : (scoreObject && new Date(parseInt(scoreObject.submittedAt)) >= (new Date(cue.deadline)) ? "Late" : '-')
                                                                     }
@@ -624,7 +574,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 {
                                                     cues.length === 0 ? null :
                                                         <View style={styles.col} key={'total'}>
-                                                            <Text style={{ textAlign: 'center', fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>
+                                                            <Text style={{ textAlign: 'center', fontSize: 11, color: '#43434F', textTransform: 'uppercase' }}>
                                                                 {totalScore !== 0 ? (totalPoints / totalScore).toFixed(2) : '0'}%
                                                             </Text>
                                                         </View>
@@ -653,10 +603,10 @@ const styles = StyleSheet.create({
     col: { width: 120, justifyContent: 'center', display: 'flex', flexDirection: 'column', padding: 7, },
     all: {
         fontSize: 14,
-        color: '#2f2f3c',
+        color: '#43434F',
         height: 22,
         paddingHorizontal: 20,
-        backgroundColor: '#F8F9FA',
+        backgroundColor: '#fff',
         lineHeight: 22,
         fontFamily: 'inter'
     },
@@ -664,8 +614,8 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: '#fff',
         paddingHorizontal: 20,
-        borderRadius: 10,
-        backgroundColor: '#2f2f3c',
+        borderRadius: 12,
+        backgroundColor: '#43434F',
         lineHeight: 22,
         fontFamily: 'inter'
     },
@@ -675,7 +625,7 @@ const styles = StyleSheet.create({
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: "white",
-        borderRadius: 10,
+        borderRadius: 12,
         borderWidth: 1,
         borderColor: "#818385",
         lineHeight: 20

@@ -226,7 +226,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     color: "white",
                                     height: 22,
                                     paddingHorizontal: 10,
-                                    borderRadius: 10,
+                                    borderRadius: 12,
                                     backgroundColor: "#3B64F8",
                                     lineHeight: 20,
                                     paddingTop: 1
@@ -241,14 +241,14 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     // textAlign: 'right',
                                     paddingHorizontal: 10,
                                     marginLeft: 10,
-                                    borderRadius: 10,
+                                    borderRadius: 12,
                                     backgroundColor: "#3B64F8",
                                     lineHeight: 20,
                                     paddingTop: 1
                                 }}>
                                 {currentScore}/{totalPossible}
                             </Text>
-                            {props.isOwner ? <Text style={{ fontSize: 15, color: "#2f2f3c", marginBottom: 10, paddingLeft: 20, lineHeight: 22, textTransform: 'uppercase' }}>
+                            {props.isOwner ? <Text style={{ fontSize: 15, color: "#43434F", marginBottom: 10, paddingLeft: 20, lineHeight: 22, textTransform: 'uppercase' }}>
                                 {props.partiallyGraded ? "In progress" : "Graded"}
                             </Text> : null}
                         </View>
@@ -423,7 +423,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         {
                             (!problem.questionType || problem.questionType === "trueFalse") && problem.options.map((option: any, i: any) => {
 
-                                let color = '#2F2F3C'
+                                let color = '#43434F'
                                 if (option.isCorrect) {
                                     color = '#3B64F8'
                                 } else if (!option.isCorrect && solutions[index].selected[i].isSelected) {

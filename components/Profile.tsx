@@ -29,11 +29,10 @@ const Profile: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                 paddingHorizontal: 0,
                 backgroundColor: 'white',
                 opacity: modalAnimation,
+                maxWidth: 500,
+                alignSelf: 'center'
                 // paddingLeft: 20
             }}>
-                <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 25, backgroundColor: 'white' }}>
-                    {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
-                </Text>
                 <ProfileControls
                     saveDataInCloud={() => props.saveDataInCloud()}
                     reOpenProfile={() => props.reOpenProfile()}

@@ -55,11 +55,11 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     return (
         <Animated.View style={{
-            borderColor: '#F8F9FA',
-            backgroundColor: '#F8F9FA',
+            borderColor: '#f8f9fa',
+            backgroundColor: '#f8f9fa',
             // borderBottomWidth: 2,
             // borderTopWidth: 1,
-            height: ((dimensions.window.height) * (props.channelId === '' ? 0.83 : 0.73)),
+            height: ((dimensions.window.height) * (0.83)),
             opacity: props.fadeAnimation,
             width: dimensions.window.width < 1024 ? dimensions.window.width : dimensions.window.width * 0.23 - 1,
             paddingHorizontal: 25,
@@ -69,16 +69,16 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 showsVerticalScrollIndicator={false}
                 horizontal={false}
                 contentContainerStyle={{
-                    backgroundColor: '#F8F9FA',
+                    backgroundColor: '#f8f9fa',
                     width: dimensions.window.width < 1024 ? dimensions.window.width - 50 : (dimensions.window.width * 0.23 - 51),
-                    height: dimensions.window.width < 1024 ? '100%' : (((dimensions.window.height) * (props.channelId === '' ? 0.83 : 0.73)) - 2),
+                    height: dimensions.window.width < 1024 ? '100%' : (((dimensions.window.height) * (0.83)) - 2),
                 }}
                 style={{ paddingBottom: 15 }}
             >
                 {/* <View style={styles.marginSmall} /> */}
                 {
                     filteredCues.map((cue: any, index: number) => {
-                        return <View style={{ height: 65, marginBottom: 15, maxWidth: 500, backgroundColor: '#F8F9FA', alignSelf: 'center', width: '98%' }} key={index}>
+                        return <View style={{ height: 65, marginBottom: 15, maxWidth: 500, backgroundColor: '#f8f9fa', alignSelf: 'center', width: '98%' }} key={index}>
                             <Card
                                 fadeAnimation={props.fadeAnimation}
                                 updateModal={() => props.openUpdate(
@@ -97,11 +97,11 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     })
                 }
                 {
-                    filteredCues.length === 0 ? <Text style={{ fontSize: 20, color: '#818385', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#F8F9FA' }}>
+                    filteredCues.length === 0 ? <Text style={{ fontSize: 20, color: '#818385', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#f8f9fa' }}>
                         {PreferredLanguageText('noCuesCreated')}
                     </Text> : null
                 }
-                <View style={{ height: 15, backgroundColor: '#F8F9FA' }} />
+                <View style={{ height: 15, backgroundColor: '#f8f9fa' }} />
             </ScrollView>
         </Animated.View >
     );
@@ -134,7 +134,7 @@ const styleObject = (channelId: any) => {
             width: 20,
             height: 20,
             marginTop: -2,
-            borderRadius: 10,
+            borderRadius: 12,
             backgroundColor: '#d91d56',
             textAlign: 'center',
             zIndex: 50
@@ -146,7 +146,7 @@ const styleObject = (channelId: any) => {
             marginRight: 25,
             height: 20,
             marginTop: -2,
-            borderRadius: 10,
+            borderRadius: 12,
             backgroundColor: '#3B64F8',
             textAlign: 'center',
             zIndex: 50

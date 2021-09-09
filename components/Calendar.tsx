@@ -130,7 +130,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
             colorCode = matchSubscription.colorCode
         }
 
-        return <span style={{ color: colorCode, backgroundColor: '#F8F9FA', borderRadius: 10, padding: 20, overflow: 'hidden' }}>{event.title}</span>
+        return <span style={{ color: colorCode, backgroundColor: '#f8f9fa', borderRadius: 12, padding: 20, overflow: 'hidden' }}>{event.title}</span>
 
     }
 
@@ -252,259 +252,221 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     const renderFilterEvents = () => {
 
-        return (eventChannels.length > 0 ? (
-            <View style={{
-                marginTop: 0,
-                flexDirection: 'row',
-                paddingTop: width < 768 ? 20 : 0
-                // borderWidth: 1,
-                // alignSelf: 'flex-start',
-                // flex: 1
-            }} key={JSON.stringify(eventChannels)}>
-                <View style={{ paddingRight: 40 }}>
-                    <View style={{ backgroundColor: '#fff' }}>
-                        <View style={{}}>
-                            <Menu
-                                onSelect={(choice: any) => {
-                                    setCalendarChoice(choice)
-                                }}>
-                                <MenuTrigger>
-                                    <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#2f2f3c' }}>
-                                        {calendarChoice}<Ionicons name='caret-down' size={14} />
-                                    </Text>
-                                </MenuTrigger>
-                                <MenuOptions customStyles={{
-                                    optionsContainer: {
-                                        padding: 10,
-                                        borderRadius: 15,
-                                        shadowOpacity: 0,
-                                        borderWidth: 1,
-                                        borderColor: '#F8F9FA',
-                                        overflow: 'scroll',
-                                        maxHeight: '100%'
-                                    }
-                                }}>
+        return (<View style={{
+            marginTop: 0,
+            flexDirection: 'row',
+            // paddingTop: width < 768 ? 20 : 0
+            // borderWidth: 1,
+            // alignSelf: 'flex-start',
+            // flex: 1
+        }} key={JSON.stringify(eventChannels)}>
+            <View style={{ paddingRight: 40 }}>
+                <View style={{ backgroundColor: '#fff' }}>
+                    <View style={{}}>
+                        <Menu
+                            onSelect={(choice: any) => {
+                                setCalendarChoice(choice)
+                            }}>
+                            <MenuTrigger>
+                                <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#43434F' }}>
+                                    {calendarChoice}<Ionicons name='caret-down' size={14} />
+                                </Text>
+                            </MenuTrigger>
+                            <MenuOptions customStyles={{
+                                optionsContainer: {
+                                    padding: 10,
+                                    borderRadius: 15,
+                                    shadowOpacity: 0,
+                                    borderWidth: 1,
+                                    borderColor: '#f8f9fa',
+                                    overflow: 'scroll',
+                                    maxHeight: '100%'
+                                }
+                            }}>
 
-                                    <MenuOption
-                                        value={'Agenda'}>
-                                        <View style={{ display: 'flex', flexDirection: 'row', }}>
-                                            <Text style={{ marginLeft: 5 }}>
-                                                Agenda
-                                            </Text>
-                                        </View>
-                                    </MenuOption>
-                                    <MenuOption
-                                        value={'Schedule'}>
-                                        <View style={{ display: 'flex', flexDirection: 'row', }}>
-                                            <Text style={{ marginLeft: 5 }}>
-                                                Schedule
-                                            </Text>
-                                        </View>
-                                    </MenuOption>
-                                    <MenuOption
-                                        value={'Calendar'}>
-                                        <View style={{ display: 'flex', flexDirection: 'row', }}>
-                                            <Text style={{ marginLeft: 5 }}>
-                                                Calendar
-                                            </Text>
-                                        </View>
-                                    </MenuOption>
-                                </MenuOptions>
-                            </Menu>
-                            <Text style={{ fontSize: 10, color: '#2f2f3c', paddingTop: 7 }}>
-                                View
-                            </Text>
-                        </View>
-                    </View>
-                </View>
-                <View style={{ paddingRight: 40 }}>
-                    <View style={{ backgroundColor: '#fff' }}>
-                        <View style={{ flexDirection: 'row', display: 'flex', backgroundColor: '#fff' }}>
-                            <Menu
-                                onSelect={(channel: any) => {
-                                    if (channel === "All") {
-                                        setFilterByChannel("All")
-                                    } else if (channel === "My Cues") {
-                                        setFilterByChannel("My Cues")
-                                    } else {
-                                        setFilterByChannel(channel.channelName);
-                                    }
-                                }}>
-                                <MenuTrigger>
-                                    <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#2f2f3c' }}>
-                                        {filterByChannel}<Ionicons name='caret-down' size={14} />
-                                    </Text>
-                                </MenuTrigger>
-                                <MenuOptions customStyles={{
-                                    optionsContainer: {
-                                        padding: 10,
-                                        borderRadius: 15,
-                                        shadowOpacity: 0,
-                                        borderWidth: 1,
-                                        borderColor: '#F8F9FA',
-                                        overflow: 'scroll',
-                                        maxHeight: '100%'
-                                    }
-                                }}>
-                                    <MenuOption
-                                        value={'All'}>
-                                        <View style={{ display: 'flex', flexDirection: 'row', }}>
-                                            <View style={{
-                                                width: 8,
-                                                height: 8,
-                                                borderRadius: 10,
-                                                marginTop: 1,
-                                                backgroundColor: "#fff"
-                                            }} />
-                                            <Text style={{ marginLeft: 5 }}>
-                                                All
-                                            </Text>
-                                        </View>
-                                    </MenuOption>
-                                    <MenuOption
-                                        value={'My Cues'}>
-                                        <View style={{ display: 'flex', flexDirection: 'row', }}>
-                                            <View style={{
-                                                width: 8,
-                                                height: 8,
-                                                borderRadius: 10,
-                                                marginTop: 1,
-                                                backgroundColor: "#000"
-                                            }} />
-                                            <Text style={{ marginLeft: 5 }}>
-                                                My Cues
-                                            </Text>
-                                        </View>
-                                    </MenuOption>
-                                    {
-                                        props.subscriptions.map((subscription: any) => {
-                                            return <MenuOption
-                                                value={subscription}>
-                                                <View style={{ display: 'flex', flexDirection: 'row', }}>
-                                                    <View style={{
-                                                        width: 8,
-                                                        height: 8,
-                                                        borderRadius: 10,
-                                                        marginTop: 1,
-                                                        backgroundColor: subscription.colorCode
-                                                    }} />
-                                                    <Text style={{ marginLeft: 5 }}>
-                                                        {subscription.channelName}
-                                                    </Text>
-                                                </View>
-                                            </MenuOption>
-                                        })
-                                    }
-                                </MenuOptions>
-                            </Menu>
-                        </View>
-                        <Text style={{ fontSize: 10, color: '#2f2f3c', paddingTop: 7 }}>
-                            Channel
+                                <MenuOption
+                                    value={'Agenda'}>
+                                    <View style={{ display: 'flex', flexDirection: 'row', }}>
+                                        <Text style={{ marginLeft: 5 }}>
+                                            Agenda
+                                        </Text>
+                                    </View>
+                                </MenuOption>
+                                <MenuOption
+                                    value={'Schedule'}>
+                                    <View style={{ display: 'flex', flexDirection: 'row', }}>
+                                        <Text style={{ marginLeft: 5 }}>
+                                            Schedule
+                                        </Text>
+                                    </View>
+                                </MenuOption>
+                                <MenuOption
+                                    value={'Calendar'}>
+                                    <View style={{ display: 'flex', flexDirection: 'row', }}>
+                                        <Text style={{ marginLeft: 5 }}>
+                                            Calendar
+                                        </Text>
+                                    </View>
+                                </MenuOption>
+                            </MenuOptions>
+                        </Menu>
+                        <Text style={{ fontSize: 10, color: '#43434F', paddingTop: 7 }}>
+                            View
                         </Text>
                     </View>
                 </View>
-                <View>
-                    <View style={{ backgroundColor: '#fff' }}>
-                        <View style={{}}>
-                            <Menu
-                                onSelect={(choice: any) => {
-                                    setFilterEventsType(choice);
-                                }}>
-                                <MenuTrigger>
-                                    <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#2f2f3c' }}>
-                                        {filterEventsType}<Ionicons name='caret-down' size={14} />
-                                    </Text>
-                                </MenuTrigger>
-                                <MenuOptions customStyles={{
-                                    optionsContainer: {
-                                        padding: 10,
-                                        borderRadius: 15,
-                                        shadowOpacity: 0,
-                                        borderWidth: 1,
-                                        borderColor: '#F8F9FA',
-                                        overflow: 'scroll',
-                                        maxHeight: '100%'
-                                    }
-                                }}>
-                                    <MenuOption
-                                        value={"All"}>
-                                        <View style={{ display: 'flex', flexDirection: 'row', }}>
-                                            <Text style={{ marginLeft: 5 }}>
-                                                All
-                                            </Text>
-                                        </View>
-                                    </MenuOption>
-                                    <MenuOption
-                                        value={"Lectures"}>
-                                        <View style={{ display: 'flex', flexDirection: 'row', }}>
-                                            <Text style={{ marginLeft: 5 }}>
-                                                Lectures
-                                            </Text>
-                                        </View>
-                                    </MenuOption>
-                                    <MenuOption
-                                        value={"Submissions"}>
-                                        <View style={{ display: 'flex', flexDirection: 'row', }}>
-                                            <Text style={{ marginLeft: 5 }}>
-                                                Submissions
-                                            </Text>
-                                        </View>
-                                    </MenuOption>
-                                    <MenuOption
-                                        value={"Events"}>
-                                        <View style={{ display: 'flex', flexDirection: 'row', }}>
-                                            <Text style={{ marginLeft: 5 }}>
-                                                Events
-                                            </Text>
-                                        </View>
-                                    </MenuOption>
-                                </MenuOptions>
-                            </Menu>
-                            <Text style={{ fontSize: 10, color: '#2f2f3c', paddingTop: 7 }}>
-                                Type
-                            </Text>
-                        </View>
+            </View>
+            <View style={{ paddingRight: 40 }}>
+                <View style={{ backgroundColor: '#fff' }}>
+                    <View style={{ flexDirection: 'row', display: 'flex', backgroundColor: '#fff' }}>
+                        <Menu
+                            onSelect={(channel: any) => {
+                                if (channel === "All") {
+                                    setFilterByChannel("All")
+                                } else if (channel === "My Cues") {
+                                    setFilterByChannel("My Cues")
+                                } else {
+                                    setFilterByChannel(channel.channelName);
+                                }
+                            }}>
+                            <MenuTrigger>
+                                <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#43434F' }}>
+                                    {filterByChannel}<Ionicons name='caret-down' size={14} />
+                                </Text>
+                            </MenuTrigger>
+                            <MenuOptions customStyles={{
+                                optionsContainer: {
+                                    padding: 10,
+                                    borderRadius: 15,
+                                    shadowOpacity: 0,
+                                    borderWidth: 1,
+                                    borderColor: '#f8f9fa',
+                                    overflow: 'scroll',
+                                    maxHeight: '100%'
+                                }
+                            }}>
+                                <MenuOption
+                                    value={'All'}>
+                                    <View style={{ display: 'flex', flexDirection: 'row', }}>
+                                        <View style={{
+                                            width: 8,
+                                            height: 8,
+                                            borderRadius: 12,
+                                            marginTop: 1,
+                                            backgroundColor: "#fff"
+                                        }} />
+                                        <Text style={{ marginLeft: 5 }}>
+                                            All
+                                        </Text>
+                                    </View>
+                                </MenuOption>
+                                <MenuOption
+                                    value={'My Cues'}>
+                                    <View style={{ display: 'flex', flexDirection: 'row', }}>
+                                        <View style={{
+                                            width: 8,
+                                            height: 8,
+                                            borderRadius: 12,
+                                            marginTop: 1,
+                                            backgroundColor: "#000"
+                                        }} />
+                                        <Text style={{ marginLeft: 5 }}>
+                                            My Cues
+                                        </Text>
+                                    </View>
+                                </MenuOption>
+                                {
+                                    props.subscriptions.map((subscription: any) => {
+                                        return <MenuOption
+                                            value={subscription}>
+                                            <View style={{ display: 'flex', flexDirection: 'row', }}>
+                                                <View style={{
+                                                    width: 8,
+                                                    height: 8,
+                                                    borderRadius: 12,
+                                                    marginTop: 1,
+                                                    backgroundColor: subscription.colorCode
+                                                }} />
+                                                <Text style={{ marginLeft: 5 }}>
+                                                    {subscription.channelName}
+                                                </Text>
+                                            </View>
+                                        </MenuOption>
+                                    })
+                                }
+                            </MenuOptions>
+                        </Menu>
+                    </View>
+                    <Text style={{ fontSize: 10, color: '#43434F', paddingTop: 7 }}>
+                        Channel
+                    </Text>
+                </View>
+            </View>
+            <View>
+                <View style={{ backgroundColor: '#fff' }}>
+                    <View style={{}}>
+                        <Menu
+                            onSelect={(choice: any) => {
+                                setFilterEventsType(choice);
+                            }}>
+                            <MenuTrigger>
+                                <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#43434F' }}>
+                                    {filterEventsType}<Ionicons name='caret-down' size={14} />
+                                </Text>
+                            </MenuTrigger>
+                            <MenuOptions customStyles={{
+                                optionsContainer: {
+                                    padding: 10,
+                                    borderRadius: 15,
+                                    shadowOpacity: 0,
+                                    borderWidth: 1,
+                                    borderColor: '#f8f9fa',
+                                    overflow: 'scroll',
+                                    maxHeight: '100%'
+                                }
+                            }}>
+                                <MenuOption
+                                    value={"All"}>
+                                    <View style={{ display: 'flex', flexDirection: 'row', }}>
+                                        <Text style={{ marginLeft: 5 }}>
+                                            All
+                                        </Text>
+                                    </View>
+                                </MenuOption>
+                                <MenuOption
+                                    value={"Lectures"}>
+                                    <View style={{ display: 'flex', flexDirection: 'row', }}>
+                                        <Text style={{ marginLeft: 5 }}>
+                                            Lectures
+                                        </Text>
+                                    </View>
+                                </MenuOption>
+                                <MenuOption
+                                    value={"Submissions"}>
+                                    <View style={{ display: 'flex', flexDirection: 'row', }}>
+                                        <Text style={{ marginLeft: 5 }}>
+                                            Submissions
+                                        </Text>
+                                    </View>
+                                </MenuOption>
+                                <MenuOption
+                                    value={"Events"}>
+                                    <View style={{ display: 'flex', flexDirection: 'row', }}>
+                                        <Text style={{ marginLeft: 5 }}>
+                                            Events
+                                        </Text>
+                                    </View>
+                                </MenuOption>
+                            </MenuOptions>
+                        </Menu>
+                        <Text style={{ fontSize: 10, color: '#43434F', paddingTop: 7 }}>
+                            Type
+                        </Text>
                     </View>
                 </View>
-                {/* <View style={{ width: width < 768 ? "100%" : "33.33%" }}>
-                    <View style={{ width: "100%", paddingTop: width < 768 ? 15 : 5, paddingBottom: 15, backgroundColor: "white" }}>
-                        <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase' }}>Lectures Only</Text>
-                    </View>
-                    <View
-                        style={{
-                            backgroundColor: "white",
-                            height: 40,
-                            marginRight: 10
-                        }}>
-                        <Switch
-                            value={filterByLectures}
-                            onValueChange={() => setFilterByLectures(!filterByLectures)}
-                            style={{ height: 20 }}
-                            trackColor={{
-                                false: "#F8F9FA",
-                                true: "#3B64F8"
-                            }}
-                            activeThumbColor="white"
-                        />
-                    </View>
-                </View> */}
-                {/* {filterChannels.length === 0 && !filterByLectures ? null : <Text style={{
-                    // width: '50%',
-                    color: '#818385',
-                    fontSize: 11,
-                    paddingTop: 5,
-                    paddingRight: 25,
-                    textTransform: 'uppercase'
-                }}
-                    onPress={() => {
-                        setFilterChannels([]);
-                        setFilterByLectures(false)
-                    }}
-                >
-                    RESET
-                </Text>} */}
             </View>
-        ) : null)
+        </View>
+        )
     }
 
 
@@ -749,7 +711,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             color: colorCode
                         });
 
-                        
+
                     });
                     setEventChannels(Array.from(channelsSet))
                     setAllEvents(parsedEvents)
@@ -794,7 +756,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     const onSelectEvent = async (data: any) => {
 
-        const { event } = data; 
+        const { event } = data;
 
         const uString: any = await AsyncStorage.getItem("user");
         // Only allow edit if event is not past
@@ -926,7 +888,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     <Text style={{
                         fontSize: 15,
                         fontFamily: 'inter',
-                        color: '#2f2f3c'
+                        color: '#43434F'
                     }}>Recurring</Text>
                 </View>
                 <View
@@ -941,7 +903,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         onValueChange={() => setRecurring(!recurring)}
                         style={{ height: 20 }}
                         trackColor={{
-                            false: "#F8F9FA",
+                            false: "#f8f9fa",
                             true: "#3B64F8"
                         }}
                         activeThumbColor="white"
@@ -955,7 +917,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         style={{
                             fontSize: 15,
                             fontFamily: 'inter',
-                            color: '#2f2f3c'
+                            color: '#43434F'
                         }}>
                         Repeat every
                     </Text>
@@ -971,7 +933,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             setFrequency(itemValue)
                         }}>
                         <MenuTrigger>
-                            <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#2f2f3c' }}>
+                            <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#43434F' }}>
                                 {freq}<Ionicons name='caret-down' size={14} />
                             </Text>
                         </MenuTrigger>
@@ -981,7 +943,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 borderRadius: 15,
                                 shadowOpacity: 0,
                                 borderWidth: 1,
-                                borderColor: '#F8F9FA'
+                                borderColor: '#f8f9fa'
                             }
                         }}>
                             {eventFrequencyOptions.map((item: any, index: number) => {
@@ -1006,7 +968,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     <Text style={{
                         fontSize: 15,
                         fontFamily: 'inter',
-                        color: '#2f2f3c'
+                        color: '#43434F'
                     }}>Repeat until</Text>
                 </View>
                 <View
@@ -1066,7 +1028,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         <Text style={{
                             fontSize: 15,
                             fontFamily: 'inter',
-                            color: '#2f2f3c'
+                            color: '#43434F'
                         }}>Lecture</Text>
                     </View>
                     <View
@@ -1081,7 +1043,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             }}
                             style={{ height: 20 }}
                             trackColor={{
-                                false: "#F8F9FA",
+                                false: "#f8f9fa",
                                 true: "#3B64F8"
                             }}
                             disabled={editEvent}
@@ -1106,7 +1068,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             }}
                             style={{ height: 20 }}
                             trackColor={{
-                                false: "#F8F9FA",
+                                false: "#f8f9fa",
                                 true: "#818385"
                             }}
                             activeThumbColor="white"
@@ -1132,7 +1094,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         style={{
                             fontSize: 15,
                             fontFamily: 'inter',
-                            color: '#2f2f3c'
+                            color: '#43434F'
                         }}>
                         Shared with {editChannelName}
                     </Text>
@@ -1257,9 +1219,9 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     style={{
                         textAlign: "center",
                         lineHeight: 35,
-                        color: "#2f2f3c",
+                        color: "#43434F",
                         fontSize: 12,
-                        backgroundColor: "#F8F9FA",
+                        backgroundColor: "#f8f9fa",
                         paddingHorizontal: 25,
                         fontFamily: "inter",
                         height: 35,
@@ -1287,9 +1249,9 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     style={{
                         textAlign: "center",
                         lineHeight: 35,
-                        color: "#2f2f3c",
+                        color: "#43434F",
                         fontSize: 12,
-                        backgroundColor: "#F8F9FA",
+                        backgroundColor: "#f8f9fa",
                         paddingHorizontal: 25,
                         fontFamily: "inter",
                         height: 35,
@@ -1348,7 +1310,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 paddingTop: 30
             }}>
                 <View style={{
-                    width: Dimensions.get('window').width < 768 ? '100%' : '68%',
+                    width: Dimensions.get('window').width < 768 ? '100%' : '50%',
                     paddingRight: Dimensions.get('window').width < 768 ? 0 : 30,
                     borderRightWidth: Dimensions.get('window').width < 768 ? 0 : 1,
                     borderColor: '#eeeeee'
@@ -1373,8 +1335,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     ellipsizeMode="tail"
                                     style={{
                                         marginRight: 10,
-                                        color: '#2f2f3c',
-                                        fontSize: 25,
+                                        color: '#43434F',
+                                        fontSize: 23,
                                         paddingBottom: 20,
                                         fontFamily: 'inter',
                                         flex: 1,
@@ -1382,13 +1344,17 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         lineHeight: 25,
                                         height: 65
                                     }}>
-                                    <Ionicons name='calendar-outline' size={25} color='#3b64f8' /> {PreferredLanguageText("planner")}
+                                    {PreferredLanguageText("planner")}
                                 </Text>
-                                {!showAddEvent && width >= 768 ? renderFilterEvents() : null}
+                                {/* {!showAddEvent && width >= 768 ? renderFilterEvents() : null} */}
+                            </View>
+                        </View>
+                        <View style={{ flexDirection: 'row', flex: 1 }}>
+                            <View style={{ flexDirection: 'row', flex: 1 }}>
+                                {!showAddEvent ? renderFilterEvents() : null}
                             </View>
                             <TouchableOpacity
                                 onPress={() => {
-                                    setShowAddEvent(!showAddEvent)
                                     setEditEvent(null)
                                 }}
                                 style={{
@@ -1403,9 +1369,9 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 <Text style={{
                                     textAlign: 'center',
                                     lineHeight: 30,
-                                    color: showAddEvent ? '#2f2f3c' : '#fff',
+                                    color: showAddEvent ? '#43434F' : '#fff',
                                     fontSize: 12,
-                                    backgroundColor: showAddEvent ? '#F8F9FA' : '#53BE6D',
+                                    backgroundColor: showAddEvent ? '#f8f9fa' : '#53BE6D',
                                     paddingHorizontal: 25,
                                     fontFamily: 'inter',
                                     height: 30,
@@ -1417,7 +1383,6 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 </Text>
                             </TouchableOpacity>
                         </View>
-                        {!showAddEvent && width < 768 ? renderFilterEvents() : null}
                         {loading ? (
                             <View
                                 style={{
@@ -1453,7 +1418,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     style={{
                                                         fontSize: 15,
                                                         fontFamily: 'inter',
-                                                        color: '#2f2f3c'
+                                                        color: '#43434F'
                                                     }}>
                                                     Event
                                                 </Text>
@@ -1472,7 +1437,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     style={{
                                                         fontSize: 15,
                                                         fontFamily: 'inter',
-                                                        color: '#2f2f3c'
+                                                        color: '#43434F'
                                                     }}>
                                                     Description
                                                 </Text>
@@ -1534,7 +1499,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         <View
                                             style={{
                                                 marginBottom: 20,
-                                                borderColor: "#F8F9FA",
+                                                borderColor: "#f8f9fa",
                                                 // borderBottomWidth: 1,
                                                 paddingTop: 20
                                             }}>
@@ -1546,7 +1511,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                             style={{
                                                                 fontSize: 15,
                                                                 fontFamily: 'inter',
-                                                                color: '#2f2f3c'
+                                                                color: '#43434F'
                                                             }}>
                                                             Channel
                                                         </Text>
@@ -1557,7 +1522,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                 setChannelId(channelId)
                                                             }}>
                                                             <MenuTrigger>
-                                                                <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#2f2f3c' }}>
+                                                                <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#43434F' }}>
                                                                     {eventForChannelName}<Ionicons name='caret-down' size={14} />
                                                                 </Text>
                                                             </MenuTrigger>
@@ -1567,7 +1532,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                     borderRadius: 15,
                                                                     shadowOpacity: 0,
                                                                     borderWidth: 1,
-                                                                    borderColor: '#F8F9FA'
+                                                                    borderColor: '#f8f9fa'
                                                                 }
                                                             }}>
                                                                 <MenuOption
@@ -1598,7 +1563,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             {renderEditChannelName()}
                                             {!editEvent && renderRecurringOptions()}
                                             {renderMeetingOptions()}
-                                            {channelId !== "" && <Text style={{ fontSize: 11, color: '#2f2f3c', textTransform: 'uppercase', paddingTop: 10 }}>
+                                            {channelId !== "" && <Text style={{ fontSize: 11, color: '#43434F', textTransform: 'uppercase', paddingTop: 10 }}>
                                                 Attendances will only be captured for scheduled lectures.
                                             </Text>}
                                             {!editEvent ? <View
@@ -1649,7 +1614,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     events={events}
                                     startAccessor="start"
                                     endAccessor="end"
-                                    style={{ height: 500, fontFamily: "overpass", color: "#2f2f3c" }}
+                                    style={{ height: 500, fontFamily: "overpass", color: "#43434F" }}
                                     components={{
                                         event: EventComponent
                                     }}
@@ -1658,10 +1623,10 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     !showAddEvent ?
                                         <View
                                             style={{
-                                                // borderRadius: 5,
+                                                borderRadius: 12,
                                                 height: 'auto',
                                                 overflow: 'hidden',
-                                                marginTop: Dimensions.get('window').width < 768 ? 20 : 0,
+                                                marginTop: 20,
                                                 marginBottom: Dimensions.get('window').width < 768 ? 20 : 0,
                                                 borderWidth: 1,
                                                 borderColor: '#eeeeee'
@@ -1687,8 +1652,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     ellipsizeMode="tail"
                                     style={{
                                         marginRight: 10,
-                                        color: '#2f2f3c',
-                                        fontSize: 25,
+                                        color: '#43434F',
+                                        fontSize: 23,
                                         paddingBottom: 20,
                                         fontFamily: 'inter',
                                         flex: 1,
@@ -1696,13 +1661,20 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         lineHeight: 25,
                                         height: 65
                                     }}>
-                                    <Ionicons name='radio-outline' size={25} color='#3b64f8' /> Live Stream
+                                    Live
                                 </Text>
                             </View>
                             <iframe
                                 width="700"
-                                style={{ maxWidth: '100%' }}
-                                height="400"
+                                style={{
+                                    maxWidth: '100%',
+                                    width: '100%',
+                                    // borderWidth: 1,
+                                    borderRadius: 12,
+                                    borderColor: '#eeeeee',
+                                    marginBottom: 25,
+                                }}
+                                height="450"
                                 src="https://www.youtube.com/embed/live_stream?channel=UC-Tkz11V97prOm8hJTSRMHw"
                                 frameBorder="0"
                                 allowFullScreen={true}
@@ -1711,15 +1683,15 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     </ScrollView>
                 </View>
                 <View style={{
-                    width: Dimensions.get('window').width < 768 ? '100%' : '32%',
+                    width: Dimensions.get('window').width < 768 ? '100%' : '50%',
                     paddingLeft: Dimensions.get('window').width < 768 ? 0 : 30,
                     paddingTop: Dimensions.get('window').width < 768 ? 30 : 0
                 }}>
                     <View style={{ flexDirection: 'row' }}>
                         <Text style={{
                             marginRight: 10,
-                            color: '#2f2f3c',
-                            fontSize: 25,
+                            color: '#43434F',
+                            fontSize: 23,
                             paddingBottom: 20,
                             fontFamily: 'inter',
                             // flex: 1,
@@ -1727,9 +1699,9 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             lineHeight: 25,
                             height: 50
                         }}>
-                            <Ionicons name='notifications-outline' size={25} color='#3b64f8' /> Activity
+                            Activity
                         </Text>
-                        <View style={{ flexDirection: 'row', flex: 1 }}>
+                        {/* <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
                             {
                                 unreadCount !== 0 ?
                                     <Text style={{
@@ -1742,13 +1714,15 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         zIndex: 150,
                                         marginLeft: 10,
                                         fontFamily: 'inter',
-                                        marginTop: -4,
-                                        color: 'white', lineHeight: 32, fontSize: 13
+                                        // marginTop: -4,
+                                        color: 'white', lineHeight: 32, fontSize: 10
                                     }}>
                                         {unreadCount}
                                     </Text> : null
                             }
-                        </View>
+                        </View> */}
+                    </View>
+                    <View style={{ flexDirection: 'row', marginBottom: 35, marginTop: 15, flex: 1 }}>
                         <View style={{ backgroundColor: '#fff' }}>
                             <View style={{ flexDirection: 'row', backgroundColor: '#fff' }}>
                                 <Menu
@@ -1762,7 +1736,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         }
                                     }}>
                                     <MenuTrigger>
-                                        <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#2f2f3c', textAlign: 'center' }}>
+                                        <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#43434F', textAlign: 'center' }}>
                                             {filterActivityByChannel}<Ionicons name='caret-down' size={14} />
                                         </Text>
                                     </MenuTrigger>
@@ -1772,7 +1746,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             borderRadius: 15,
                                             shadowOpacity: 0,
                                             borderWidth: 1,
-                                            borderColor: '#F8F9FA',
+                                            borderColor: '#f8f9fa',
                                             overflow: 'scroll',
                                             maxHeight: '100%'
                                         }
@@ -1783,7 +1757,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 <View style={{
                                                     width: 8,
                                                     height: 8,
-                                                    borderRadius: 10,
+                                                    borderRadius: 12,
                                                     marginTop: 1,
                                                     backgroundColor: "#fff"
                                                 }} />
@@ -1800,7 +1774,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         <View style={{
                                                             width: 8,
                                                             height: 8,
-                                                            borderRadius: 10,
+                                                            borderRadius: 12,
                                                             marginTop: 1,
                                                             backgroundColor: subscription.colorCode
                                                         }} />
@@ -1814,88 +1788,93 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     </MenuOptions>
                                 </Menu>
                             </View>
-                            <Text style={{ fontSize: 10, color: '#2f2f3c', paddingTop: 7 }}>
+                            <Text style={{ fontSize: 10, color: '#43434F', paddingTop: 7 }}>
                                 Channel
                             </Text>
                         </View>
+                        <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
+                            {unreadCount !== 0 ?
+                                <TouchableOpacity
+                                    onPress={async () => {
+                                        const uString: any = await AsyncStorage.getItem("user");
+                                        if (uString) {
+                                            const user = JSON.parse(uString);
+                                            const server = fetchAPI(user._id);
+                                            server
+                                                .mutate({
+                                                    mutation: markActivityAsRead,
+                                                    variables: {
+                                                        userId: user._id,
+                                                        markAllRead: true
+                                                    }
+                                                })
+                                                .then(res => {
+                                                    if (res.data.activity.markActivityAsRead) {
+                                                        // setChannels(res.data.channel.findByUserId);
+                                                        console.log("Mark as read", res.data.activity.markActivityAsRead);
+
+                                                        server.query({
+                                                            query: getActivity,
+                                                            variables: {
+                                                                userId: user._id
+                                                            }
+                                                        }).then(res => {
+                                                            if (res.data && res.data.activity.getActivity) {
+                                                                const tempActivity = res.data.activity.getActivity.reverse()
+                                                                let unread = 0
+                                                                tempActivity.map((act: any) => {
+                                                                    if (act.status === 'unread') {
+                                                                        unread++
+                                                                    }
+                                                                })
+                                                                setUnreadCount(unread)
+                                                                setActivity(tempActivity)
+                                                            }
+                                                        })
+
+                                                    }
+                                                })
+                                                .catch(err => { });
+                                        }
+                                    }}
+                                    style={{
+                                        backgroundColor: 'white',
+                                        overflow: 'hidden',
+                                        height: 35,
+                                        // marginTop: 15,
+                                        justifyContent: 'center',
+                                        flexDirection: 'row',
+                                    }}>
+                                    <Text style={{
+                                        textAlign: 'center',
+                                        lineHeight: 30,
+                                        color: unreadCount === 0 ? '#43434F' : '#fff',
+                                        fontSize: 12,
+                                        backgroundColor: unreadCount === 0 ? '#f8f9fa' : '#53BE6D',
+                                        paddingHorizontal: 20,
+                                        fontFamily: 'inter',
+                                        height: 30,
+                                        // width: 100,
+                                        borderRadius: 15,
+                                        textTransform: 'uppercase'
+                                    }}>
+                                        Read all {<Ionicons name='checkmark-done-outline' size={12} />}
+                                    </Text>
+                                </TouchableOpacity>
+                                : null}
+                        </View>
                     </View>
-                    {unreadCount !== 0 ? <View style={{ flexDirection: 'row', marginBottom: 20, width: "100%", justifyContent: "flex-end", }}>
-                        <TouchableOpacity
-                            onPress={async () => {
-                                const uString: any = await AsyncStorage.getItem("user");
-                                    if (uString) {
-                                        const user = JSON.parse(uString);
-                                        const server = fetchAPI(user._id);
-                                        server
-                                            .mutate({
-                                                mutation: markActivityAsRead,
-                                                variables: {
-                                                    userId: user._id,
-                                                    markAllRead: true
-                                                }
-                                            })
-                                            .then(res => {
-                                                if (res.data.activity.markActivityAsRead) {
-                                                    // setChannels(res.data.channel.findByUserId);
-                                                    console.log("Mark as read", res.data.activity.markActivityAsRead);
-
-                                                    server.query({
-                                                        query: getActivity,
-                                                        variables: {
-                                                            userId: user._id
-                                                        }
-                                                    }).then(res => {
-                                                        if (res.data && res.data.activity.getActivity) {
-                                                            const tempActivity = res.data.activity.getActivity.reverse()
-                                                            let unread = 0
-                                                            tempActivity.map((act: any) => {
-                                                                if (act.status === 'unread') {
-                                                                    unread++
-                                                                }
-                                                            })
-                                                            setUnreadCount(unread)
-                                                            setActivity(tempActivity)
-                                                        }
-                                                    })
-
-                                                }
-                                            })
-                                            .catch(err => { });
-                                    }
-                                }}
-                            style={{
-                                backgroundColor: 'white',
-                                overflow: 'hidden',
-                                height: 35,
-                                // marginTop: 15,
-                                justifyContent: 'center',
-                                flexDirection: 'row',
-                            }}>
-                            <Text style={{
-                                textAlign: 'center',
-                                lineHeight: 30,
-                                color: unreadCount === 0 ? '#2f2f3c' : '#fff',
-                                fontSize: 12,
-                                backgroundColor: unreadCount === 0 ? '#F8F9FA' : '#53BE6D',
-                                paddingHorizontal: 25,
-                                fontFamily: 'inter',
-                                height: 30,
-                                // width: 100,
-                                borderRadius: 15,
-                                textTransform: 'uppercase'
-                            }}>
-                                 Mark all Read {<Ionicons name='mail-open-outline' size={16} style={{ marginLeft: 5 }} />}
-                            </Text>
-                        </TouchableOpacity>
-                    </View> : null}
                     <ScrollView
                         showsVerticalScrollIndicator={false}
                         horizontal={false}
                         // style={{ height: '100%' }}
                         contentContainerStyle={{
-                            // borderWidth: 2,
+                            borderWidth: activity.length === 0 ? 0 : 1,
                             width: '100%',
-                            // height: windowHeight - 200,
+                            // height: windowHeight - 100,
+                            borderRadius: 12,
+                            overflow: 'hidden',
+                            borderColor: '#eeeeee'
                         }}
                     >
                         {
@@ -1922,53 +1901,91 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     }
                                 }
 
-                                return <View style={styles.col} key={index}>
-                                    <ActivityCard
-                                        activity={act}
-                                        onPress={async () => {
 
-                                            const uString: any = await AsyncStorage.getItem("user");
-                                            if (uString) {
-                                                const user = JSON.parse(uString);
-                                                const server = fetchAPI(user._id);
-                                                server
-                                                    .mutate({
-                                                        mutation: markActivityAsRead,
-                                                        variables: {
-                                                            activityId: act._id,
-                                                            userId: user._id,
-                                                            markAllRead: false
-                                                        }
-                                                    })
-                                                    .then(res => {
-                                                        if (res.data.activity.markActivityAsRead) {
-                                                            // setChannels(res.data.channel.findByUserId);
-                                                            console.log("Mark as read", res.data.activity.markActivityAsRead);
-                                                        }
-                                                    })
-                                                    .catch(err => { });
-                                            }
+                                return <TouchableOpacity
+                                    onPress={async () => {
+                                        const uString: any = await AsyncStorage.getItem("user");
+                                        if (uString) {
+                                            const user = JSON.parse(uString);
+                                            const server = fetchAPI("");
+                                            server
+                                                .mutate({
+                                                    mutation: markActivityAsRead,
+                                                    variables: {
+                                                        activityId: act._id,
+                                                        userId: user._id,
+                                                        markAllRead: false
+                                                    }
+                                                })
+                                                .then(res => {
+                                                    if (res.data.activity.markActivityAsRead) {
+                                                        // setChannels(res.data.channel.findByUserId);
+                                                        console.log("Mark as read", res.data.activity.markActivityAsRead);
+                                                    }
+                                                })
+                                                .catch(err => { });
+                                        }
 
-                                            // Opens the cue from the activity
-                                            if (cueId !== null && cueId !== "" && channelId !== "" && createdBy !== "" && (target === "CUE")) {
-                                                props.openCueFromCalendar(channelId, cueId, createdBy)
-                                            } 
+                                        // Opens the cue from the activity
+                                        if (cueId !== null && cueId !== "" && channelId !== "" && createdBy !== "" && (target === "CUE")) {
+                                            props.openCueFromCalendar(channelId, cueId, createdBy)
+                                        }
 
-                                            if (target === "DISCUSSION") {
-                                                props.openDiscussion(channelId, createdBy)
-                                            }
+                                        if (target === "DISCUSSION") {
+                                            props.openDiscussion(channelId, createdBy)
+                                        }
 
-                                            if (target === "CHANNEL_SUBSCRIBED" || target === "CHANNEL_MODERATOR_ADDED" || target === "CHANNEL_MODERATOR_REMOVED") {
-                                                props.openChannel(channelId, createdBy)
-                                            }
+                                        if (target === "CHANNEL_SUBSCRIBED" || target === "CHANNEL_MODERATOR_ADDED" || target === "CHANNEL_MODERATOR_REMOVED") {
+                                            props.openChannel(channelId, createdBy)
+                                        }
 
-                                            if (target === "Q&A") {
-                                                props.openQA(channelId, cueId, createdBy)
-                                            }
+                                        if (target === "Q&A") {
+                                            props.openQA(channelId, cueId, createdBy)
+                                        }
 
-                                        }}
-                                    />
-                                </View>
+                                    }}
+                                    style={{
+                                        backgroundColor: '#f8f9fa',
+                                        flexDirection: 'row',
+                                        borderColor: '#eeeeee',
+                                        borderBottomWidth: index === activity.length - 1 ? 0 : 1,
+                                        minWidth: 600, // flex: 1,
+                                        width: '100%'
+                                    }}>
+                                    <View style={{ flex: 1, backgroundColor: '#f8f9fa', padding: 0, flexDirection: 'row' }}>
+                                        <Text style={{ fontSize: 12, padding: 20, fontFamily: 'inter' }} ellipsizeMode='tail'>
+                                            <View style={{
+                                                width: 9,
+                                                height: 9,
+                                                borderRadius: 12,
+                                                marginRight: 5,
+                                                // marginTop: 1,
+                                                backgroundColor: act.colorCode
+                                            }} /> {act.channelName}
+                                        </Text>
+                                    </View>
+                                    <View style={{ flex: 1, backgroundColor: '#fff', padding: 0 }}>
+                                        <Text style={{ fontSize: 12, padding: 20, fontFamily: 'inter' }} ellipsizeMode='tail'>
+                                            {act.title}
+                                        </Text>
+                                    </View>
+                                    <View style={{ flex: 1, backgroundColor: '#fff', padding: 0 }}>
+                                        <Text style={{ fontSize: 12, padding: 20 }} ellipsizeMode='tail'>
+                                            {act.subtitle}
+                                        </Text>
+                                    </View>
+                                    <View style={{ flex: 1, backgroundColor: '#fff', padding: 0 }}>
+                                        <Text style={{ fontSize: 12, padding: 20 }} ellipsizeMode='tail'>
+                                            {act.date.toString().split('T')[0]}
+                                        </Text>
+                                    </View>
+                                    <View style={{ flex: 1, backgroundColor: '#fff', padding: 0 }}>
+                                        <Text style={{ fontSize: 18, padding: 20, color: '#3b64f8' }} ellipsizeMode='tail'>
+                                            <Ionicons name='chevron-forward-outline' size={20} /> {act.status === 'unread' ?
+                                                <Ionicons name='alert-circle-outline' color='#d91d56' size={20} /> : null}
+                                        </Text>
+                                    </View>
+                                </TouchableOpacity>
                             })
                         }
                     </ScrollView>
@@ -1983,7 +2000,7 @@ export default (CalendarX)
 const styles: any = StyleSheet.create({
     input: {
         width: "100%",
-        borderBottomColor: "#F8F9FA",
+        borderBottomColor: "#f8f9fa",
         borderBottomWidth: 1,
         fontSize: 15,
         paddingTop: 12,
@@ -1993,11 +2010,11 @@ const styles: any = StyleSheet.create({
     text: {
         fontSize: 15,
         fontFamily: 'inter',
-        color: '#2f2f3c'
+        color: '#43434F'
     },
     allBlack: {
         fontSize: 12,
-        color: "#2f2f3c",
+        color: "#43434F",
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: "white"
@@ -2013,8 +2030,8 @@ const styles: any = StyleSheet.create({
         color: "#FFF",
         height: 22,
         paddingHorizontal: 10,
-        borderRadius: 10,
-        backgroundColor: "#2f2f3c"
+        borderRadius: 12,
+        backgroundColor: "#43434F"
     },
     picker: {
         display: "flex",

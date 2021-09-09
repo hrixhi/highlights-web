@@ -21,6 +21,7 @@ import Alert from "../components/Alert";
 import AttendanceList from "./AttendanceList";
 import moment from "moment";
 import { PreferredLanguageText } from "../helpers/LanguageContext";
+import Discussion from "./Discussion";
 
 const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const [modalAnimation] = useState(new Animated.Value(0));
@@ -277,7 +278,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                         Linking.openURL(date.url)
                                     }
                                 }}
-                                style={{ flexDirection: 'row', backgroundColor: '#F8F9FA', width: '90%' }}>
+                                style={{ flexDirection: 'row', backgroundColor: '#f8f9fa', width: '90%' }}>
                                 <Image
                                     height={45}
                                     width={75}
@@ -285,7 +286,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                     source={{ uri: date.thumbnail }}
                                     resizeMode={'contain'}
                                 />
-                                <View style={{ backgroundColor: '#F8F9FA', width: '100%', flexDirection: 'row', display: 'flex', marginLeft: 20 }}>
+                                <View style={{ backgroundColor: '#f8f9fa', width: '100%', flexDirection: 'row', display: 'flex', marginLeft: 20 }}>
                                     <Text ellipsizeMode={'tail'}
                                         numberOfLines={1}
                                         style={styles.title}>
@@ -295,7 +296,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                             </TouchableOpacity>
                             {
                                 isOwner ?
-                                    <TouchableOpacity style={{ backgroundColor: '#F8F9FA', width: '10%', }}
+                                    <TouchableOpacity style={{ backgroundColor: '#f8f9fa', width: '10%', }}
                                         onPress={() => {
                                             Alert("Delete past lecture ?", "", [
                                                 {
@@ -354,21 +355,18 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                     width: "100%",
                     backgroundColor: "white",
                     paddingRight: 20,
-                    paddingTop: 30,
+                    paddingTop: 20,
                     paddingLeft: Dimensions.get('window').width < 1024 ? 20 : 0,
                     opacity: modalAnimation,
                     borderTopLeftRadius: 0,
                     borderTopRightRadius: 0,
                     alignSelf: "center"
                 }}>
-                <Text style={{ width: "100%", textAlign: "center", paddingTop: 5 }}>
-                    {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
-                </Text>
-                <View style={{ backgroundColor: "white", flexDirection: "row", paddingBottom: 25 }}>
+                <View style={{ backgroundColor: "white", flexDirection: "row", paddingBottom: 20 }}>
                     <Text
                         ellipsizeMode="tail"
                         style={{
-                            fontSize: 25,
+                            fontSize: 23,
                             paddingBottom: 20,
                             fontFamily: 'inter',
                             // textTransform: "uppercase",
@@ -377,210 +375,139 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                             flex: 1,
                             lineHeight: 25
                         }}>
-                        {PreferredLanguageText("classroom")}
+                        Meetings
                     </Text>
-                    <TouchableOpacity
-                        onPress={() => {
-                            setViewChannelAttendance(true);
-                        }}
-                        style={{
-                            backgroundColor: 'white',
-                            overflow: 'hidden',
-                            height: 35,
-                            // marginTop: 15,
-                            justifyContent: 'center',
-                            flexDirection: 'row'
-                        }}>
-                        <Text style={{
-                            textAlign: 'center',
-                            lineHeight: 30,
-                            color: viewChannelAttendance ? '#2f2f3c' : '#fff',
-                            fontSize: 12,
-                            backgroundColor: viewChannelAttendance ? '#F8F9FA' : '#53BE6D',
-                            paddingHorizontal: 25,
-                            fontFamily: 'inter',
-                            height: 30,
-                            // width: 100,
-                            borderRadius: 15,
-                            textTransform: 'uppercase'
-                        }}>
-                            ATTENDANCE <Ionicons name='list-outline' size={12} />
-                        </Text>
-
-                    </TouchableOpacity>
-                </View>
-                <View style={{ backgroundColor: "white", flex: 1 }}>
+                    {
+                        isOwner ? (
+                            <View
+                                style={{
+                                    backgroundColor: "white"
+                                }}>
+                                <View>
+                                    <TouchableOpacity
+                                        style={{
+                                            backgroundColor: '#fff',
+                                            width: Dimensions.get('window').width < 768 ? 'auto' : '100%',
+                                            paddingBottom: 20
+                                        }}
+                                        onPress={() => {
+                                            navigator.clipboard.writeText(instructorLink)
+                                            Alert("Link copied! Users will only be able to join after you initiate the classroom.")
+                                        }}>
+                                        <Text style={{
+                                            lineHeight: 21,
+                                            textAlign: 'center'
+                                        }}>
+                                            <Ionicons name='copy-outline' size={19} color={'#43434F'} />
+                                        </Text>
+                                        <Text style={{ fontSize: 10, color: '#43434F', textAlign: 'center', width: '100%', }}>
+                                            Host Link
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        ) : null
+                    }
+                    {
+                        isOwner ? (
+                            <View
+                                style={{
+                                    backgroundColor: "white"
+                                }}>
+                                <View>
+                                    <TouchableOpacity
+                                        style={{
+                                            backgroundColor: '#fff',
+                                            width: Dimensions.get('window').width < 768 ? 'auto' : '100%',
+                                            paddingBottom: 20,
+                                            marginLeft: 10,
+                                            marginRight: 25
+                                        }}
+                                        onPress={() => {
+                                            navigator.clipboard.writeText(guestLink)
+                                            Alert("Link copied! Users will only be able to join after you initiate the classroom.")
+                                        }}>
+                                        <Text style={{
+                                            lineHeight: 21,
+                                            textAlign: 'center'
+                                        }}>
+                                            <Ionicons name='copy-outline' size={19} color={'#43434F'} />
+                                        </Text>
+                                        <Text style={{ fontSize: 10, color: '#43434F', textAlign: 'center', width: '100%', }}>
+                                            Guest Link
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        ) : null
+                    }
                     <View
                         style={{
-                            width: "100%",
-                            backgroundColor: "white",
-                            flexDirection: Dimensions.get("window").width < 768 ? "column" : "row"
+                            backgroundColor: "white"
                         }}>
-                        <View
+                        <TouchableOpacity
+                            onPress={handleEnterClassroom}
                             style={{
-                                backgroundColor: "white"
+                                backgroundColor: 'white',
+                                overflow: 'hidden',
+                                height: 35,
+                                marginLeft: 15,
+                                // marginTop: 15,
+                                justifyContent: 'center',
+                                flexDirection: 'row'
                             }}>
-                            <TouchableOpacity
-                                onPress={handleEnterClassroom}
-                                style={{
-                                    backgroundColor: "white",
-                                    overflow: "hidden",
-                                    height: 35,
-                                    marginTop: 15,
-                                    marginBottom: 20
-                                }}>
-                                <Text
-                                    style={{
-                                        textAlign: "center",
-                                        lineHeight: 35,
-                                        color: "#fff",
-                                        fontSize: 12,
-                                        backgroundColor: "#3B64F8",
-                                        paddingHorizontal: 25,
-                                        fontFamily: "inter",
-                                        height: 35,
-                                        width: 150,
-                                        borderRadius: 15,
-                                        textTransform: "uppercase"
-                                    }}>
-                                    {PreferredLanguageText("enterClassroom")}
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-                        {
-                            isOwner ? (
-                                <View
-                                    style={{
-                                        paddingLeft: Dimensions.get('window').width < 768 ? 0 : 30,
-                                        // marginBottom: 25,
-                                        backgroundColor: "white"
-                                    }}>
-                                    <View>
-                                        <TouchableOpacity
-                                            onPress={() => {
-                                                navigator.clipboard.writeText(instructorLink)
-                                                Alert("Link copied! Users will only be able to join after you initiate the classroom.")
-                                            }}
-                                            style={{
-                                                backgroundColor: "white",
-                                                overflow: "hidden",
-                                                height: 35,
-                                                marginTop: 15,
-                                                marginBottom: 20
-                                            }}
-                                        >
-                                            <Text
-                                                style={{
-                                                    textAlign: "center",
-                                                    lineHeight: 35,
-                                                    color: "#2f2f3c",
-                                                    fontSize: 12,
-                                                    backgroundColor: "#F8F9FA",
-                                                    paddingHorizontal: 25,
-                                                    fontFamily: "inter",
-                                                    height: 35,
-                                                    width: 150,
-                                                    borderRadius: 15,
-                                                    textTransform: "uppercase"
-                                                }}>
-                                                Host Link <Ionicons name='copy-outline' size={12} />
-                                            </Text>
-                                        </TouchableOpacity>
-                                    </View>
-                                </View>
-                            ) : null
-                        }
-                        {
-                            isOwner ? (
-                                <View
-                                    style={{
-                                        paddingLeft: Dimensions.get('window').width < 768 ? 0 : 30,
-                                        // marginBottom: 25,
-                                        backgroundColor: "white"
-                                    }}>
-                                    <View>
-                                        <TouchableOpacity
-                                            onPress={() => {
-                                                navigator.clipboard.writeText(guestLink)
-                                                Alert("Link copied! Users will only be able to join after you initiate the classroom.")
-                                            }}
-                                            style={{
-                                                backgroundColor: "white",
-                                                overflow: "hidden",
-                                                height: 35,
-                                                marginTop: 15,
-                                                marginBottom: 20
-                                            }}
-                                        >
-                                            <Text
-                                                style={{
-                                                    textAlign: "center",
-                                                    lineHeight: 35,
-                                                    color: "#2f2f3c",
-                                                    fontSize: 12,
-                                                    backgroundColor: "#F8F9FA",
-                                                    paddingHorizontal: 25,
-                                                    fontFamily: "inter",
-                                                    height: 35,
-                                                    width: 150,
-                                                    borderRadius: 15,
-                                                    textTransform: "uppercase"
-                                                }}>
-                                                Guest Link <Ionicons name='copy-outline' size={12} />
-                                            </Text>
-                                        </TouchableOpacity>
-                                    </View>
-                                </View>
-                            ) : null
-                        }
-                    </View>
-                    {
-                        <View style={{ borderTopColor: '#F8F9FA', borderTopWidth: 1, marginTop: 25 }}>
-                            <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 25 }}>
-                            </Text>
                             <Text style={{
-                                lineHeight: 23,
-                                marginRight: 10,
-                                paddingBottom: 40,
-                                color: '#2f2f3c',
-                                fontSize: 11,
+                                textAlign: 'center',
+                                lineHeight: 30,
+                                color: '#fff',
+                                fontSize: 12,
+                                backgroundColor: '#53BE6D',
+                                paddingHorizontal: 25,
+                                fontFamily: 'inter',
+                                height: 30,
+                                // width: 100,
+                                borderRadius: 15,
                                 textTransform: 'uppercase'
                             }}>
-                                RECORDINGS
+                                {PreferredLanguageText("enterClassroom")} <Ionicons name='videocam-outline'/>
                             </Text>
-                            {
-
-                                showAttendances ?
-                                    <View>
-                                        {
-                                            attendances.length === 0 ?
-                                                <View style={{ backgroundColor: 'white', flex: 1 }}>
-                                                    <Text style={{ width: '100%', color: '#818385', fontSize: 20, paddingVertical: 50, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
-                                                        {PreferredLanguageText('noAttendances')}
-                                                    </Text>
-                                                </View>
-                                                :
-                                                attendances.map((att: any, index: any) => {
-                                                    return <View style={styles.col} key={index}>
-                                                        <SubscriberCard
-                                                            hideChevron={true}
-                                                            fadeAnimation={props.fadeAnimation}
-                                                            subscriber={{
-                                                                displayName: att.displayName,
-                                                                fullName: PreferredLanguageText('joinedAt') + ' ' + moment(new Date(att.joinedAt)).format('MMMM Do YYYY, h:mm a')
-                                                            }}
-                                                            onPress={() => { }}
-                                                            status={!props.cueId ? false : true}
-                                                        />
-                                                    </View>
-                                                })
-                                        }
-                                    </View>
-                                    : (showPastMeetings ? renderPastMeetings() : null)
-                            }
-                        </View>
-                    }
+                        </TouchableOpacity>
+                    </View>
                 </View>
+                {
+                    <View style={{ marginTop: 25 }}>
+                        {
+
+                            showAttendances ?
+                                <View>
+                                    {
+                                        attendances.length === 0 ?
+                                            <View style={{ backgroundColor: 'white', flex: 1 }}>
+                                                <Text style={{ width: '100%', color: '#818385', fontSize: 20, paddingVertical: 50, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                                    {PreferredLanguageText('noAttendances')}
+                                                </Text>
+                                            </View>
+                                            :
+                                            attendances.map((att: any, index: any) => {
+                                                return <View style={styles.col} key={index}>
+                                                    <SubscriberCard
+                                                        hideChevron={true}
+                                                        fadeAnimation={props.fadeAnimation}
+                                                        subscriber={{
+                                                            displayName: att.displayName,
+                                                            fullName: PreferredLanguageText('joinedAt') + ' ' + moment(new Date(att.joinedAt)).format('MMMM Do YYYY, h:mm a')
+                                                        }}
+                                                        onPress={() => { }}
+                                                        status={!props.cueId ? false : true}
+                                                    />
+                                                </View>
+                                            })
+                                    }
+                                </View>
+                                : (showPastMeetings ? renderPastMeetings() : null)
+                        }
+                    </View>
+                }
             </Animated.View>
         </ScrollView>
     );
@@ -608,7 +535,31 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
         />
     );
 
-    return !viewChannelAttendance ? mainClassroomView : attendanceListView;
+    const width = Dimensions.get('window').width
+
+    return <View style={{ width: '100%', flexDirection: width < 768 ? 'column' : 'row' }}>
+        <View style={{
+            backgroundColor: 'white',
+            width: width < 768 ? '100%' : '30%',
+            // paddingRight: width < 768 ? 0 : 20,
+        }}>
+            {!viewChannelAttendance ? mainClassroomView : attendanceListView}
+        </View>
+        <View style={{
+            backgroundColor: '#fff', width: width < 768 ? '100%' : '70%',
+            paddingLeft: width < 768 ? 0 : 20,
+            marginTop: 20,
+            marginBottom: 20,
+            borderLeftWidth: width < 768 ? 0 : 1, borderLeftColor: '#eeeeee',
+        }}>
+            <Discussion
+                channelId={props.channelId}
+                filterChoice={props.filterChoice}
+                channelCreatedBy={props.channelCreatedBy}
+                refreshUnreadDiscussionCount={() => props.refreshUnreadDiscussionCount()}
+            />
+        </View>
+    </View>;
 };
 
 export default Meeting;
@@ -650,7 +601,7 @@ const styles = StyleSheet.create({
         maxWidth: '100%',
         borderRadius: 15,
         padding: 13,
-        backgroundColor: '#F8F9FA',
+        backgroundColor: '#f8f9fa',
         flexDirection: 'row',
         justifyContent: 'space-between'
     },
@@ -658,14 +609,14 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'column',
         flex: 1,
-        backgroundColor: '#F8F9FA',
+        backgroundColor: '#f8f9fa',
     },
     title: {
         fontFamily: 'inter',
         fontSize: 13,
         width: '100%',
         paddingTop: 5,
-        color: '#2f2f3c'
+        color: '#43434F'
     },
     description: {
         fontSize: 13,

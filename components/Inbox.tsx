@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { ActivityIndicator, Animated, Dimensions, Image } from 'react-native';
+import { ActivityIndicator, Animated, Dimensions, Image, Platform, Linking } from 'react-native';
 import Alert from '../components/Alert'
 import { Text, TouchableOpacity, View } from './Themed';
 import { ScrollView } from 'react-native'
@@ -19,6 +19,7 @@ import Multiselect from 'multiselect-react-dropdown';
 import { PreferredLanguageText } from '../helpers/LanguageContext';
 import alert from '../components/Alert';
 import { Ionicons } from '@expo/vector-icons';
+import FileUpload from './UploadFiles';
 
 const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -26,6 +27,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
     const [loadingChats, setLoadingChats] = useState(true)
     const [chats, setChats] = useState<any[]>([])
     const [userId, setUserId] = useState('')
+    const [avatar, setAvatar] = useState('')
     const [fullName, setFullName] = useState('')
     const [chat, setChat] = useState<any[]>([])
     const [showChat, setShowChat] = useState(false)
@@ -36,7 +38,10 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
     const [roleFilter, setRoleFilter] = useState('')
     const [gradeFilter, setGradeFilter] = useState('')
     const [sectionFilter, setSectionFilter] = useState('')
+
     const [channelFilter, setChannelFilter] = useState('')
+    const [filterChannelName, setFilterChannelName] = useState('')
+    const [filterChannelId, setFilterChannelId] = useState('')
 
     const grades = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
     const sections = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",]
@@ -52,6 +57,11 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
             user = JSON.parse(u)
             server = fetchAPI(user._id)
             setUserId(user._id)
+            if (user.avatar) {
+                setAvatar(user.avatar)
+            } else {
+                setAvatar('https://cues-files.s3.amazonaws.com/images/default.png')
+            }
             setFullName(user.fullName)
         } else {
             return
@@ -102,6 +112,11 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
         })
     }, [])
 
+    const reload = useCallback(() => {
+        loadUsers()
+        loadChats()
+    }, [loadUsers, loadChats])
+
     const loadGroupChat = useCallback(async (groupUsers, groupId) => {
         const u = await AsyncStorage.getItem('user')
         if (u) {
@@ -117,15 +132,38 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                 .then(res => {
                     const tempChat: any[] = []
                     res.data.message.getMessagesThread.map((msg: any) => {
-                        const { title } = htmlStringParser(msg.message)
+                        let text: any = ''
+                        if (msg.message[0] === '{' && msg.message[msg.message.length - 1] === '}') {
+                            const obj = JSON.parse(msg.message)
+                            text = <TouchableOpacity style={{ backgroundColor: '#2484FF' }}>
+                                <Text style={{
+                                    textDecorationLine: 'underline',
+                                    backgroundColor: '#2484FF',
+                                    color: '#fff'
+                                }}
+                                    onPress={() => {
+                                        if (Platform.OS === 'web' || Platform.OS === 'macos' || Platform.OS === 'windows') {
+                                            window.open(obj.url, '_blank')
+                                        } else {
+                                            Linking.openURL(obj.url)
+                                        }
+                                    }}
+                                >
+                                    {obj.title + '.' + obj.type}
+                                </Text>
+                            </TouchableOpacity>
+                        } else {
+                            const { title: t, subtitle: s } = htmlStringParser(msg.message)
+                            text = t
+                        }
                         tempChat.push({
                             _id: msg._id,
-                            text: title,
+                            text,
                             createdAt: msg.sentAt,
                             user: {
                                 _id: msg.sentBy,
                                 name: msg.displayName,
-                                avatar: msg.avatar,
+                                avatar: msg.avatar ? msg.avatar : 'https://cues-files.s3.amazonaws.com/images/default.png',
                             },
                         })
                     })
@@ -243,15 +281,38 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                 .then(res => {
                     const tempChat: any[] = []
                     res.data.message.getMessagesThread.map((msg: any) => {
-                        const { title } = htmlStringParser(msg.message)
+                        let text: any = ''
+                        if (msg.message[0] === '{' && msg.message[msg.message.length - 1] === '}') {
+                            const obj = JSON.parse(msg.message)
+                            text = <TouchableOpacity style={{ backgroundColor: '#2484FF' }}>
+                                <Text style={{
+                                    textDecorationLine: 'underline',
+                                    backgroundColor: '#2484FF',
+                                    color: '#fff'
+                                }}
+                                    onPress={() => {
+                                        if (Platform.OS === 'web' || Platform.OS === 'macos' || Platform.OS === 'windows') {
+                                            window.open(obj.url, '_blank')
+                                        } else {
+                                            Linking.openURL(obj.url)
+                                        }
+                                    }}
+                                >
+                                    {obj.title}
+                                </Text>
+                            </TouchableOpacity>
+                        } else {
+                            const { title: t, subtitle: s } = htmlStringParser(msg.message)
+                            text = t
+                        }
                         tempChat.push({
                             _id: msg._id,
-                            text: title,
+                            text,
                             createdAt: msg.sentAt,
                             user: {
                                 _id: msg.sentBy,
                                 name: msg.displayName,
-                                avatar: 'https://placeimg.com/140/140/any',
+                                avatar: msg.avatar ? msg.avatar : 'https://cues-files.s3.amazonaws.com/images/default.png',
                             },
                         })
                     })
@@ -274,28 +335,6 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                 // props.refreshUnreadMessagesCount()
             })
                 .catch(e => console.log(e))
-            // load the user
-            // server.query({
-            //     query: findUserById,
-            //     variables: {
-            //         id: userId
-            //     }
-            // }).then(res => {
-            //     if (res.data && res.data.user.findById) {
-            //         setLoadedChatWithUser(res.data.user.findById)
-            //         server.query({
-            //             query: isSubInactive,
-            //             variables: {
-            //                 userId: res.data.user.findById._id,
-            //                 channelId: props.channelId
-            //             }
-            //         }).then((res2: any) => {
-            //             if (res2.data && res2.data.subscription.isSubInactive) {
-            //                 setIsLoadedUserInactive(true)
-            //             }
-            //         }).catch((err) => console.log(err))
-            //     }
-            // })
         }
     }, [])
 
@@ -315,15 +354,38 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                 .then(res => {
                     const tempChat: any[] = []
                     res.data.message.getMessagesThread.map((msg: any) => {
-                        const { title } = htmlStringParser(msg.message)
+                        let text: any = ''
+                        if (msg.message[0] === '{' && msg.message[msg.message.length - 1] === '}') {
+                            const obj = JSON.parse(msg.message)
+                            text = <TouchableOpacity style={{ backgroundColor: '#2484FF' }}>
+                                <Text style={{
+                                    textDecorationLine: 'underline',
+                                    backgroundColor: '#2484FF',
+                                    color: '#fff'
+                                }}
+                                    onPress={() => {
+                                        if (Platform.OS === 'web' || Platform.OS === 'macos' || Platform.OS === 'windows') {
+                                            window.open(obj.url, '_blank')
+                                        } else {
+                                            Linking.openURL(obj.url)
+                                        }
+                                    }}
+                                >
+                                    {obj.title + '.' + obj.type}
+                                </Text>
+                            </TouchableOpacity>
+                        } else {
+                            const { title: t, subtitle: s } = htmlStringParser(msg.message)
+                            text = t
+                        }
                         tempChat.push({
                             _id: msg._id,
-                            text: title,
+                            text,
                             createdAt: msg.sentAt,
                             user: {
                                 _id: msg.sentBy,
                                 name: msg.displayName,
-                                avatar: 'https://placeimg.com/140/140/any',
+                                avatar: msg.avatar ? msg.avatar : 'https://cues-files.s3.amazonaws.com/images/default.png',
                             },
                         })
                     })
@@ -338,8 +400,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
     }, [])
 
     useEffect(() => {
-        loadUsers()
-        loadChats()
+        reload()
     }, [])
 
     let options = users.map((sub: any) => {
@@ -422,7 +483,8 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                         justifyContent: 'center',
                         display: 'flex',
                         flexDirection: 'column',
-                        backgroundColor: 'white'
+                        backgroundColor: 'white',
+                        marginTop: 50
                     }}>
                         <ActivityIndicator color={'#818385'} />
                     </View>
@@ -431,6 +493,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                         padding: 15,
                         paddingHorizontal: width < 768 ? 0 : 20,
                         width: '100%',
+                        marginTop: 7,
                         height: Dimensions.get('window').height - 230,
                         backgroundColor: 'white',
                         // overflow: 'scroll'
@@ -439,25 +502,40 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                             <View style={{ width: '100%', flexDirection: width < 768 ? 'column' : 'row' }}>
                                 <View style={{
                                     backgroundColor: 'white',
-                                    width: width < 768 ? '100%' : '40%',
+                                    width: width < 768 ? '100%' : '50%',
                                     paddingRight: width < 768 ? 0 : 20,
                                 }} key={showChat.toString()}>
-                                    <View style={{
-                                        flex: 1,
-                                        flexDirection: 'row'
-                                    }}>
+                                    <View>
                                         <Text style={{
-                                            fontSize: 25,
-                                            paddingBottom: width < 768 ? 20 : 40,
+                                            fontSize: 23,
+                                            paddingBottom: 20,
                                             paddingTop: 10,
                                             fontFamily: 'inter',
                                             flex: 1,
                                             flexDirection: 'row',
                                             lineHeight: 23,
-                                            color: '#2f2f3c'
+                                            color: '#43434f'
                                         }}>
-                                            <Ionicons name='chatbubble-outline' size={25} color='#3b64f8' /> Chats
+                                            Messages
                                         </Text>
+                                    </View>
+                                    <View style={{ flexDirection: 'row', width: '100%' }}>
+                                        <TouchableOpacity
+                                            onPress={() => reload()}
+                                            style={{
+                                                paddingRight: 20,
+                                                paddingTop: 15,
+                                                alignSelf: 'flex-start'
+                                            }}
+                                        >
+                                            <Text>
+                                                <Ionicons name='reload-outline' size={20} />
+                                            </Text>
+                                            <Text style={{ fontSize: 10, color: '#43434f', paddingTop: 5, backgroundColor: '#fff' }}>
+                                                Refresh
+                                            </Text>
+                                        </TouchableOpacity>
+                                        <View style={{ flexDirection: 'row', flex: 1 }} />
                                         <TouchableOpacity
                                             onPress={() => {
                                                 if (showChat || showNewGroup) {
@@ -472,14 +550,15 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                 height: 35,
                                                 marginTop: 5,
                                                 justifyContent: 'center',
-                                                flexDirection: 'row'
+                                                flexDirection: 'row',
+                                                alignSelf: 'flex-end'
                                             }}>
                                             <Text style={{
                                                 textAlign: 'center',
                                                 lineHeight: 30,
-                                                color: showNewGroup || showChat ? '#2f2f3c' : '#fff',
+                                                color: showNewGroup || showChat ? '#43434f' : '#fff',
                                                 fontSize: 12,
-                                                backgroundColor: showNewGroup || showChat ? '#F8F9FA' : '#53BE6D',
+                                                backgroundColor: showNewGroup || showChat ? '#f8f9fa' : '#53BE6D',
                                                 paddingHorizontal: 25,
                                                 fontFamily: 'inter',
                                                 height: 30,
@@ -505,7 +584,23 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                     onSend={messages => onSend(messages)}
                                                     user={{
                                                         _id: userId,
+                                                        avatar
                                                     }}
+                                                    renderActions={() => (
+                                                        <View style={{
+                                                            marginTop: -10
+                                                        }}>
+                                                            <FileUpload
+                                                                onUpload={(u: any, t: any) => {
+                                                                    const title = prompt('Enter title and click on OK to share.')
+                                                                    const obj = { url: u, type: t, title: (title + '.' + t) };
+                                                                    onSend([{
+                                                                        text: JSON.stringify(obj)
+                                                                    }])
+                                                                }}
+                                                            />
+                                                        </View>
+                                                    )}
                                                 />
                                             </View> :
                                             (
@@ -514,22 +609,11 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                         showsVerticalScrollIndicator={false}
                                                         keyboardDismissMode={'on-drag'}
                                                         style={{ flex: 1, paddingTop: 12 }}>
-                                                        {/* <Text
-                                                        ellipsizeMode="tail"
-                                                        style={{ fontSize: 11, color: '#818385', textTransform: 'uppercase' }}>
-                                                        {PreferredLanguageText('newGroup')}
-                                                    </Text> */}
                                                         <View style={{ flexDirection: 'column', marginTop: 25, overflow: 'scroll', marginBottom: 25 }}>
                                                             <View style={{ width: '90%', padding: 5, maxWidth: 500, minHeight: 200 }}>
                                                                 <Multiselect
                                                                     placeholder='Select users'
                                                                     displayValue='label'
-                                                                    // key={userDropdownOptions.toString()}
-                                                                    // style={{ width: '100%', color: '#2f2f3c', 
-                                                                    //     optionContainer: { // To change css for option container 
-                                                                    //         zIndex: 9999
-                                                                    //     }
-                                                                    // }}
                                                                     options={options} // Options to display in the dropdown
                                                                     selectedValues={selected} // Preselected value to persist in dropdown
                                                                     onSelect={(e, f) => {
@@ -594,9 +678,12 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                             horizontal={false}
                                                             // style={{ height: '100%' }}
                                                             contentContainerStyle={{
-                                                                // borderWidth: 2,
+                                                                borderWidth: 1,
+                                                                borderColor: '#eeeeee',
+                                                                borderRadius: 12,
                                                                 width: '100%',
                                                                 maxHeight: windowHeight - 200,
+                                                                overflow: 'hidden'
                                                             }}
                                                         >
                                                             {
@@ -609,23 +696,8 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                         }
                                                                     })
                                                                     const { title } = htmlStringParser(chat.lastMessage)
-                                                                    return <View style={{
-                                                                        width: '100%',
-                                                                        height: 70,
-                                                                        marginBottom: 15,
-                                                                        // flex: 1,
-                                                                        backgroundColor: 'white'
-                                                                    }} key={index}>
-                                                                        <SearchResultCard
-                                                                            style={{
-                                                                                height: '100%',
-                                                                                borderRadius: 15,
-                                                                                overflow: 'hidden',
-                                                                                windowHeight: '100%'
-                                                                            }}
-                                                                            unreadMessages={chat.unreadMessages}
-                                                                            title={fName}
-                                                                            subtitle={title}
+                                                                    return (
+                                                                        <TouchableOpacity
                                                                             onPress={
                                                                                 () => {
                                                                                     if (chat.userNames.length > 2) {
@@ -637,8 +709,85 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                                     }
                                                                                 }
                                                                             }
-                                                                        />
-                                                                    </View>
+                                                                            style={{
+                                                                                backgroundColor: '#f8f9fa',
+                                                                                flexDirection: 'row',
+                                                                                borderColor: '#eeeeee',
+                                                                                borderBottomWidth: index === chats.length - 1 ? 0 : 1,
+                                                                                minWidth: 600, // flex: 1,
+                                                                                width: '100%'
+                                                                            }}>
+                                                                            <View style={{ flex: 1, backgroundColor: '#f8f9fa', padding: 10 }}>
+                                                                                {
+                                                                                    chat.userNames.length > 2 ?
+                                                                                        <Text style={{
+                                                                                            fontFamily: 'inter', marginTop: 5,
+                                                                                            textAlign: 'center',
+                                                                                            marginBottom: 5,
+                                                                                        }} ellipsizeMode='tail'>
+                                                                                            <Ionicons name='people-circle-outline' size={40} />
+                                                                                        </Text>
+                                                                                        : <Image
+                                                                                            style={{
+                                                                                                height: 40,
+                                                                                                width: 40,
+                                                                                                marginTop: 5,
+                                                                                                marginBottom: 5,
+                                                                                                borderRadius: 75,
+                                                                                                // marginTop: 20,
+                                                                                                alignSelf: 'center'
+                                                                                            }}
+                                                                                            source={{ uri: (chat.users[0] === userId ? chat.users[1] : chat.users[0]).avatar ? (chat.users[0] === userId ? chat.users[1] : chat.users[0]).avatar : 'https://cues-files.s3.amazonaws.com/images/default.png' }}
+                                                                                        />
+                                                                                }
+                                                                            </View>
+                                                                            <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
+                                                                                <Text style={{ fontSize: 12, padding: 10, fontFamily: 'inter' }} ellipsizeMode='tail'>
+                                                                                    {fName}
+                                                                                </Text>
+                                                                            </View>
+                                                                            <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
+                                                                                <Text style={{ fontSize: 12, padding: 10 }} ellipsizeMode='tail'>
+                                                                                    {title}
+                                                                                </Text>
+                                                                            </View>
+                                                                            <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
+                                                                                <Text style={{ fontSize: 15, padding: 10, color: '#3b64f8' }} ellipsizeMode='tail'>
+                                                                                    <Ionicons name='chevron-forward-outline' size={20} />
+                                                                                </Text>
+                                                                            </View>
+                                                                        </TouchableOpacity>
+                                                                    )
+                                                                    // <View style={{
+                                                                    //     width: '100%',
+                                                                    //     height: 70,
+                                                                    //     marginBottom: 15,
+                                                                    //     // flex: 1,
+                                                                    //     backgroundColor: 'white'
+                                                                    // }} key={index}>
+                                                                    //     <SearchResultCard
+                                                                    //         style={{
+                                                                    //             height: '100%',
+                                                                    //             borderRadius: 12,
+                                                                    //             overflow: 'hidden',
+                                                                    //             windowHeight: '100%'
+                                                                    //         }}
+                                                                    //         unreadMessages={chat.unreadMessages}
+                                                                    //         title={fName}
+                                                                    //         subtitle={title}
+                                                                    //  onPress={
+                                                                    //     () => {
+                                                                    //         if (chat.userNames.length > 2) {
+                                                                    //             loadGroupChat(chat.users, chat._id)
+                                                                    //         } else {
+                                                                    //             loadChat(
+                                                                    //                 chat.users[0] === userId ? chat.users[1] : chat.users[0]
+                                                                    //                 , chat._id)
+                                                                    //         }
+                                                                    //     }
+                                                                    // }
+                                                                    //     />
+                                                                    // </View>
                                                                 })
                                                             }
                                                         </ScrollView>
@@ -647,36 +796,41 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                     }
                                 </View>
                                 <View style={{
-                                    backgroundColor: '#fff', width: width < 768 ? '100%' : '60%',
+                                    backgroundColor: '#fff', width: width < 768 ? '100%' : '50%',
                                     paddingLeft: width < 768 ? 0 : 20,
-                                    borderLeftWidth: width < 768 ? 0 : 1, borderLeftColor: '#dddddd'
+                                    borderLeftWidth: width < 768 ? 0 : 1, borderLeftColor: '#eeeeee',
                                 }}>
                                     <View style={{
-                                        flexDirection: width < 768 ? 'column' : 'row',
-                                        paddingBottom: width < 768 ? 75 : 0, flex: 1
+                                        marginBottom: 20
                                     }}>
                                         <Text style={{
-                                            fontSize: 25,
-                                            paddingBottom: width < 768 ? 20 : 40,
-                                            paddingTop: width < 768 ? 30 : 10,
+                                            fontSize: 23,
+                                            marginBottom: 37,
+                                            marginTop: 10,
                                             fontFamily: 'inter',
                                             flex: 1,
                                             flexDirection: 'row',
                                             lineHeight: 23,
-                                            color: '#2f2f3c'
+                                            color: '#43434f'
                                         }}>
-                                            <Ionicons name='folder-outline' size={25} color='#3b64f8' /> Directory
+                                            Contacts
                                         </Text>
-                                        <View style={{ flexDirection: 'row', flex: 1, justifyContent: width < 768 ? 'flex-start' : 'flex-end' }}>
-                                            <View style={{ backgroundColor: '#fff', paddingLeft: width < 768 ? 0 : 20 }}>
+                                        <View style={{ flex: 1 }}>
+                                            <View style={{ backgroundColor: '#fff' }}>
                                                 <View style={{ flexDirection: 'row', backgroundColor: '#fff' }}>
                                                     <Menu
-                                                        onSelect={(channel: any) => {
-
+                                                        onSelect={(sub: any) => {
+                                                            if (sub === '') {
+                                                                setFilterChannelName('')
+                                                                setFilterChannelId('')
+                                                            } else {
+                                                                setFilterChannelId(sub.channelId)
+                                                                setFilterChannelName(sub.channelName)
+                                                            }
                                                         }}>
                                                         <MenuTrigger>
-                                                            <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#2f2f3c' }}>
-                                                                Channel <Ionicons name='caret-down' size={14} />
+                                                            <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#43434f' }}>
+                                                                {filterChannelName === '' ? 'All' : filterChannelName} <Ionicons name='caret-down' size={14} />
                                                             </Text>
                                                         </MenuTrigger>
                                                         <MenuOptions customStyles={{
@@ -685,7 +839,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                 borderRadius: 15,
                                                                 shadowOpacity: 0,
                                                                 borderWidth: 1,
-                                                                borderColor: '#F8F9FA',
+                                                                borderColor: '#f8f9fa',
                                                                 overflow: 'scroll',
                                                                 maxHeight: '100%'
                                                             }
@@ -696,7 +850,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                     <View style={{
                                                                         width: 8,
                                                                         height: 8,
-                                                                        borderRadius: 10,
+                                                                        borderRadius: 12,
                                                                         marginTop: 1,
                                                                         backgroundColor: "#fff"
                                                                     }} />
@@ -713,7 +867,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                             <View style={{
                                                                                 width: 8,
                                                                                 height: 8,
-                                                                                borderRadius: 10,
+                                                                                borderRadius: 12,
                                                                                 marginTop: 1,
                                                                                 backgroundColor: subscription.colorCode
                                                                             }} />
@@ -727,209 +881,51 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                         </MenuOptions>
                                                     </Menu>
                                                 </View>
-                                                <Text style={{ fontSize: 10, color: '#2f2f3c', paddingTop: 7 }}>
+                                                <Text style={{ fontSize: 10, color: '#43434f', paddingTop: 7 }}>
                                                     Channel
                                                 </Text>
                                             </View>
-                                            {/* <View style={{ backgroundColor: 'white', paddingLeft: 25 }}>
-                                                <View style={{ flexDirection: 'row', justifyContent: 'flex-start', display: 'flex', backgroundColor: 'white', paddingLeft: 10 }}>
-                                                    <Menu
-                                                        onSelect={(role: any) => {
-                                                            setRoleFilter(role)
-                                                        }}>
-                                                        <MenuTrigger>
-                                                            <Text style={{ fontFamily: 'inter', fontSize: 15, color: '#2f2f3c' }}>
-                                                                {roleFilter === '' ? 'All' : roleFilter}<Ionicons name='caret-down' size={15} />
-                                                            </Text>
-                                                        </MenuTrigger>
-                                                        <MenuOptions customStyles={{
-                                                            optionsContainer: {
-                                                                padding: 10,
-                                                                borderRadius: 15,
-                                                                shadowOpacity: 0,
-                                                                borderWidth: 1,
-                                                                borderColor: '#F8F9FA',
-                                                                overflow: 'scroll',
-                                                                maxHeight: '100%'
-                                                            }
-                                                        }}>
-                                                            <MenuOption
-                                                                value={''}>
-                                                                <View style={{ display: 'flex', flexDirection: 'row', }}>
-                                                                    <Text style={{ marginLeft: 5 }}>
-                                                                        All
-                                                                    </Text>
-                                                                </View>
-                                                            </MenuOption>
-                                                            {
-                                                                roles.map((role: any) => {
-                                                                    return <MenuOption
-                                                                        value={role}>
-                                                                        <View style={{ display: 'flex', flexDirection: 'row', }}>
-                                                                            <Text style={{ marginLeft: 5 }}>
-                                                                                {role}
-                                                                            </Text>
-                                                                        </View>
-                                                                    </MenuOption>
-                                                                })
-                                                            }
-                                                        </MenuOptions>
-                                                    </Menu>
-                                                </View>
-                                                <Text style={{ fontSize: 10, color: '#2f2f3c', paddingTop: 7, backgroundColor: 'white' }}>
-                                                    Roles
-                                                </Text>
-                                            </View>
-                                            <View style={{ backgroundColor: 'white', paddingLeft: 20 }}>
-                                                <View style={{ flexDirection: 'row', justifyContent: 'center', display: 'flex', backgroundColor: 'white', paddingLeft: 30 }}>
-                                                    <Menu
-                                                        onSelect={(grade: any) => {
-                                                            setGradeFilter(grade)
-                                                        }}>
-                                                        <MenuTrigger>
-                                                            <Text style={{ fontFamily: 'inter', fontSize: 15, color: '#2f2f3c' }}>
-                                                                {gradeFilter === '' ? 'All' : gradeFilter}<Ionicons name='caret-down' size={15} />
-                                                            </Text>
-                                                        </MenuTrigger>
-                                                        <MenuOptions customStyles={{
-                                                            optionsContainer: {
-                                                                padding: 10,
-                                                                borderRadius: 15,
-                                                                shadowOpacity: 0,
-                                                                borderWidth: 1,
-                                                                borderColor: '#F8F9FA',
-                                                                overflow: 'scroll',
-                                                                maxHeight: '100%'
-                                                            }
-                                                        }}>
-                                                            <MenuOption
-                                                                value={'All'}>
-                                                                <View style={{ display: 'flex', flexDirection: 'row', }}>
-                                                                    <Text style={{ marginLeft: 5 }}>
-                                                                        All
-                                                                    </Text>
-                                                                </View>
-                                                            </MenuOption>
-                                                            {
-                                                                grades.map((role: any) => {
-                                                                    return <MenuOption
-                                                                        value={role}>
-                                                                        <View style={{ display: 'flex', flexDirection: 'row', }}>
-                                                                            <Text style={{ marginLeft: 5 }}>
-                                                                                {role}
-                                                                            </Text>
-                                                                        </View>
-                                                                    </MenuOption>
-                                                                })
-                                                            }
-                                                        </MenuOptions>
-                                                    </Menu>
-                                                </View>
-                                                <Text style={{ fontSize: 10, color: '#2f2f3c', paddingTop: 7, backgroundColor: 'white', paddingLeft: 20 }}>
-                                                    Grades
-                                                </Text>
-                                            </View>
-                                            <View style={{ backgroundColor: 'white', paddingLeft: 20 }}>
-                                                <View style={{ flexDirection: 'row', justifyContent: 'flex-start', display: 'flex', backgroundColor: 'white', paddingLeft: 30 }}>
-                                                    <Menu
-                                                        onSelect={(grade: any) => {
-                                                            setSectionFilter(grade)
-                                                        }}>
-                                                        <MenuTrigger>
-                                                            <Text style={{ fontFamily: 'inter', fontSize: 15, color: '#2f2f3c' }}>
-                                                                {sectionFilter === '' ? 'All' : sectionFilter}<Ionicons name='caret-down' size={15} />
-                                                            </Text>
-                                                        </MenuTrigger>
-                                                        <MenuOptions customStyles={{
-                                                            optionsContainer: {
-                                                                padding: 10,
-                                                                borderRadius: 15,
-                                                                shadowOpacity: 0,
-                                                                borderWidth: 1,
-                                                                borderColor: '#F8F9FA',
-                                                                overflow: 'scroll',
-                                                                maxHeight: '100%'
-                                                            }
-                                                        }}>
-                                                            <MenuOption
-                                                                value={'All'}>
-                                                                <View style={{ display: 'flex', flexDirection: 'row', }}>
-                                                                    <Text style={{ marginLeft: 5 }}>
-                                                                        All
-                                                                    </Text>
-                                                                </View>
-                                                            </MenuOption>
-                                                            {
-                                                                sections.map((section: any) => {
-                                                                    return <MenuOption
-                                                                        value={section}>
-                                                                        <View style={{ display: 'flex', flexDirection: 'row', }}>
-                                                                            <Text style={{ marginLeft: 5 }}>
-                                                                                {section}
-                                                                            </Text>
-                                                                        </View>
-                                                                    </MenuOption>
-                                                                })
-                                                            }
-                                                        </MenuOptions>
-                                                    </Menu>
-                                                </View>
-                                                <Text style={{ fontSize: 10, color: '#2f2f3c', paddingTop: 7, paddingLeft: 20 }}>
-                                                    Sections
-                                                </Text>
-                                            </View>
-                                             */}
                                         </View>
                                     </View>
-                                    <ScrollView
-                                        horizontal={true}
+                                    <View
+                                    // horizontal={true}
                                     // style={{ width: '100%' }}
                                     >
                                         <View style={{
                                             flex: 1, width: '100%', borderWidth: 1,
-                                            borderRadius: 5,
-                                            borderColor: '#eeeeee'
+                                            borderRadius: 12,
+                                            borderColor: '#eeeeee',
+                                            overflow: 'hidden'
                                         }}>
-                                            <View style={{ backgroundColor: '#fff', flexDirection: 'row', width: '100%', flex: 1, minWidth: 600 }}>
-                                                <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#F8F9FA', paddingLeft: 10 }}>
-                                                </View>
-                                                <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#F8F9FA', paddingLeft: 10 }}>
-                                                    <Text style={{
-                                                        flex: 1, flexDirection: 'row',
-                                                        fontSize: 20, lineHeight: 25, fontFamily: 'inter', paddingHorizontal: 20, paddingVertical: 5
-                                                    }} ellipsizeMode='tail'>
-                                                        Name
-                                                    </Text>
-                                                </View>
-                                                <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#F8F9FA', paddingLeft: 10 }}>
-                                                    <Text style={{
-                                                        flex: 1, flexDirection: 'row',
-                                                        fontSize: 20, lineHeight: 25, fontFamily: 'inter', paddingHorizontal: 20, paddingVertical: 5
-                                                    }} ellipsizeMode='tail'>
-                                                        Email
-                                                    </Text>
-                                                </View>
-                                            </View>
                                             <ScrollView contentContainerStyle={{
-                                                maxHeight: 500,
+                                                maxHeight: windowHeight - 200,
                                                 width: '100%',
-                                                flex: 1
+                                                borderRadius: 12,
+                                                // flex: 1
                                             }}>
                                                 {
-                                                    sectionFiltered.map((user: any) => {
+                                                    sectionFiltered.map((user: any, ind: any) => {
+                                                        if (filterChannelId !== '') {
+                                                            const id = user.channelIds
+                                                                ? user.channelIds.find((id: any) => {
+                                                                    return id === filterChannelId
+                                                                }) : undefined
+                                                            if (!id) {
+                                                                return null
+                                                            }
+                                                        }
                                                         return <TouchableOpacity
                                                             onPress={() => {
                                                                 loadNewChat(user._id)
                                                             }}
                                                             style={{
-                                                                backgroundColor: '#fff',
+                                                                backgroundColor: '#f8f9fa',
                                                                 flexDirection: 'row',
                                                                 borderColor: '#eeeeee',
-                                                                borderBottomWidth: 1,
-                                                                minWidth: 600, // flex: 1,
+                                                                borderBottomWidth: ind === sectionFiltered.length - 1 ? 0 : 1,
                                                                 width: '100%'
                                                             }}>
-                                                            <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
+                                                            <View style={{ flex: 1, backgroundColor: '#f8f9fa', padding: 10 }}>
                                                                 <Image
                                                                     style={{
                                                                         height: 40,
@@ -944,36 +940,26 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                 />
                                                             </View>
                                                             <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                                                <Text style={{ fontSize: 12, lineHeight: 25, paddingHorizontal: 20, fontFamily: 'inter' }} ellipsizeMode='tail'>
+                                                                <Text style={{ fontSize: 12, padding: 10, fontFamily: 'inter' }} ellipsizeMode='tail'>
                                                                     {user.fullName}
                                                                 </Text>
                                                             </View>
                                                             <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                                                <Text style={{ fontSize: 12, lineHeight: 25, paddingHorizontal: 20 }} ellipsizeMode='tail'>
+                                                                <Text style={{ fontSize: 12, padding: 10 }} ellipsizeMode='tail'>
                                                                     {user.email}
                                                                 </Text>
                                                             </View>
-                                                            {/* <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                                                <Text style={{ fontSize: 12, lineHeight: 25, paddingHorizontal: 20 }} ellipsizeMode='tail'>
-                                                                    {user.role}
+                                                            <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
+                                                                <Text style={{ fontSize: 15, padding: 10, color: '#3b64f8' }} ellipsizeMode='tail'>
+                                                                    <Ionicons name='chatbubble-ellipses-outline' size={20} />
                                                                 </Text>
                                                             </View>
-                                                            <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                                                <Text style={{ fontSize: 12, lineHeight: 25, paddingHorizontal: 20 }} ellipsizeMode='tail'>
-                                                                    {user.grade}
-                                                                </Text>
-                                                            </View>
-                                                            <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                                                <Text style={{ fontSize: 12, lineHeight: 25, paddingHorizontal: 20 }} ellipsizeMode='tail'>
-                                                                    {user.section}
-                                                                </Text>
-                                                            </View> */}
                                                         </TouchableOpacity>
                                                     })
                                                 }
                                             </ScrollView>
                                         </View>
-                                    </ScrollView>
+                                    </View>
                                 </View>
                             </View>
                         </View>

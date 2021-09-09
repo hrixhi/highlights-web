@@ -28,7 +28,7 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                         {/* <View style={{
                             width: 9,
                             height: 9,
-                            borderRadius: 10,
+                            borderRadius: 12,
                             // marginTop: 1,
                             backgroundColor: colorCode
                         }} /> */}
@@ -89,7 +89,7 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                             marginRight: 5,
                             marginTop: -5,
                             backgroundColor: colorScheme === 'light'
-                                ? (starred ? '#2f2f3c' : '#fff')
+                                ? (starred ? '#43434f' : '#fff')
                                 : (starred ? 'white' : '#fff'),
                         }}>
                             {
@@ -113,12 +113,12 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                         </Text> */}
                     </View>
                     <View style={{
-                        backgroundColor: '#F8F9FA',
+                        backgroundColor: '#f8f9fa',
                         width: '100%', flex: 1,
                         height: '100%',
                         flexDirection: 'row'
                     }}>
-                        <View style={{ flex: 1, backgroundColor: '#F8F9FA' }}>
+                        <View style={{ flex: 1, backgroundColor: '#f8f9fa' }}>
                             <Text
                                 ellipsizeMode={'tail'}
                                 numberOfLines={1}
@@ -135,7 +135,7 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                         </View>
                         {
                             props.style ?
-                                <View style={{ flexDirection: 'row', backgroundColor: '#F8F9FA' }}>
+                                <View style={{ flexDirection: 'row', backgroundColor: '#f8f9fa' }}>
                                     {
                                         props.unreadMessages !== undefined
                                             && props.unreadMessages !== 0
@@ -143,7 +143,7 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                                             <Text style={{
                                                 width: 20,
                                                 height: 20,
-                                                borderRadius: 10,
+                                                borderRadius: 12,
                                                 backgroundColor: '#3b64f8',
                                                 textAlign: 'center',
                                                 zIndex: 150,
@@ -163,7 +163,7 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                                 <Text style={{
                                     width: 20,
                                     height: 20,
-                                    borderRadius: 10,
+                                    borderRadius: 12,
                                     overflow: 'hidden',
                                     backgroundColor: '#d91d56',
                                     textAlign: 'center',
@@ -181,7 +181,7 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                                 <Text style={{
                                     width: 20,
                                     height: 20,
-                                    borderRadius: 10,
+                                    borderRadius: 12,
                                     overflow: 'hidden',
                                     backgroundColor: '#3b64f8',
                                     textAlign: 'center',
@@ -205,27 +205,27 @@ export default SearchResultCard
 const styles: any = (colorScheme: any) => StyleSheet.create({
     swiper: {
         height: '100%',
-        borderRadius: 15,
+        borderRadius: 12,
         overflow: 'hidden',
         maxWidth: 200
     },
     card: {
         // maxWidth: 200,
         height: '100%',
-        borderRadius: 15,
+        borderRadius: 12,
         padding: 12,
         paddingHorizontal: 15,
-        backgroundColor: '#F8F9FA',
+        backgroundColor: '#f8f9fa',
         borderWidth: 1,
         borderColor: '#eeeeee'
     },
     flipCard: {
         height: '100%',
         width: '100%',
-        borderRadius: 15,
+        borderRadius: 12,
         padding: 13,
         color: '#fff',
-        backgroundColor: colorScheme === 'light' ? '#2f2f3c' : 'white'
+        backgroundColor: colorScheme === 'light' ? '#43434f' : 'white'
     },
     descriptionFlip: {
         color: '#fff',
@@ -234,18 +234,18 @@ const styles: any = (colorScheme: any) => StyleSheet.create({
     },
     text: {
         // height: '100%',
-        backgroundColor: '#F8F9FA'
+        backgroundColor: '#f8f9fa'
     },
     flipText: {
         height: '100%',
         color: '#fff',
-        backgroundColor: colorScheme === 'light' ? '#2f2f3c' : '#F8F9FA'
+        backgroundColor: colorScheme === 'light' ? '#43434f' : '#f8f9fa'
     },
     dateContainer: {
         fontSize: 10,
         color: '#fff',
         // height: '25%',
-        backgroundColor: '#F8F9FA',
+        backgroundColor: '#f8f9fa',
         display: 'flex',
         flexDirection: 'row'
     },
@@ -255,17 +255,17 @@ const styles: any = (colorScheme: any) => StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         color: '#fff',
-        backgroundColor: colorScheme === 'light' ? '#2f2f3c' : '#F8F9FA'
+        backgroundColor: colorScheme === 'light' ? '#43434f' : '#f8f9fa'
     },
     date: {
         fontSize: 9,
-        color: colorScheme === 'light' ? '#F8F9FA' : '#333333',
+        color: colorScheme === 'light' ? '#f8f9fa' : '#333333',
         // marginLeft: 10,
         lineHeight: 10
     },
     date2: {
         fontSize: 9,
-        color: colorScheme === 'light' ? '#F8F9FA' : '#333333',
+        color: colorScheme === 'light' ? '#f8f9fa' : '#333333',
         marginLeft: 10,
         lineHeight: 10,
         textAlign: 'right',
@@ -277,13 +277,13 @@ const styles: any = (colorScheme: any) => StyleSheet.create({
         lineHeight: 20,
         // flex: 1,
         marginBottom: 10,
-        color: '##2f2f3c',
+        color: '##43434f',
         flexDirection: 'row', flex: 1,
         // height: '50%'
     },
     titleFlip: {
-        color: colorScheme === 'light' ? '#2f2f3c' : '#2f2f3c',
-        backgroundColor: colorScheme === 'light' ? '#F8F9FA' : '#F8F9FA',
+        color: colorScheme === 'light' ? '#43434f' : '#43434f',
+        backgroundColor: colorScheme === 'light' ? '#f8f9fa' : '#f8f9fa',
         fontFamily: 'inter',
         fontSize: 13,
         // ,

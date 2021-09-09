@@ -313,7 +313,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         // textTransform: "uppercase",
                         // paddingLeft: 10,
                         flex: 1,
-                        lineHeight: 25
+                        lineHeight: 50
                     }}>
                     {PreferredLanguageText('channels')}
                 </Text> */}
@@ -323,15 +323,15 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                 <View style={{ width: '100%', flexDirection: width < 768 ? 'column' : 'row' }}>
                     <View style={{ backgroundColor: 'white', width: width < 768 ? '100%' : '32%' }}>
                         <Text style={{
-                            fontSize: 25,
+                            fontSize: 23,
                             paddingBottom: 40,
                             paddingTop: 10,
                             fontFamily: 'inter',
                             // flex: 1,
                             lineHeight: 23,
-                            color: '#2f2f3c'
+                            color: '#43434f'
                         }}>
-                            <Ionicons name='create-outline' size={25} color='#3b64f8' /> Create
+                            Create
                         </Text>
                         {/* 
                             <View style={styles.colorBar}>
@@ -374,14 +374,14 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             <Text style={{
                                 fontSize: 15,
                                 fontFamily: 'inter',
-                                color: '#2f2f3c'
+                                color: '#43434f'
                             }}>
                                 {PreferredLanguageText('name')}
                             </Text>
                             <TextInput
                                 value={name}
                                 placeholder={''}
-                                autoCompleteType='off'
+                                autoCompleteType={'off'}
                                 onChangeText={val => {
                                     setName(val)
                                     setPasswordRequired(false)
@@ -397,13 +397,13 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     <Text style={{
                                         fontSize: 15,
                                         fontFamily: 'inter',
-                                        color: '#2f2f3c'
+                                        color: '#43434f'
                                     }}>
                                         {PreferredLanguageText('enrolmentPassword')}
                                     </Text>
                                     <TextInput
                                         value={password}
-                                        autoCompleteType='off'
+                                        autoCompleteType={'off'}
                                         placeholder={option === 'Subscribe' ? '' : `(${PreferredLanguageText('optional')})`}
                                         onChangeText={val => setPassword(val)}
                                         placeholderTextColor={'#818385'}
@@ -434,7 +434,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         <Text style={{
                                             fontSize: 15,
                                             fontFamily: 'inter',
-                                            color: '#2f2f3c'
+                                            color: '#43434f'
                                         }}>Temporary</Text>
                                     </View>
                                     <View
@@ -449,7 +449,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             onValueChange={() => setTemporary(!temporary)}
                                             style={{ height: 20 }}
                                             trackColor={{
-                                                false: "#F8F9FA",
+                                                false: "#f8f9fa",
                                                 true: "#3B64F8"
                                             }}
                                             activeThumbColor="white"
@@ -478,7 +478,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         <Text style={{
                                             fontSize: 15,
                                             fontFamily: 'inter',
-                                            color: '#2f2f3c'
+                                            color: '#43434f'
                                         }}>Color</Text>
                                     </View>
                                     <View style={{ width: '100%', backgroundColor: 'white' }}>
@@ -539,50 +539,55 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         borderLeftWidth: width < 768 ? 0 : 1, borderLeftColor: '#dddddd'
                     }}>
                         <Text style={{
-                            fontSize: 25,
+                            fontSize: 23,
                             paddingBottom: 40,
                             paddingTop: 10,
                             fontFamily: 'inter',
                             // flex: 1,
                             lineHeight: 23,
-                            color: '#2f2f3c'
+                            color: '#43434f'
                         }}>
-                            <Ionicons name='list-outline' size={25} color='#3b64f8' /> Subscribe
+                            Subscribe
                         </Text>
                         <View
                             style={{
-                                borderWidth: 1,
-                                borderColor: '#eeeeee'
+                                borderWidth: channels.length === 0 ? 0 : 1,
+                                borderColor: '#eeeeee',
+                                overflow: 'hidden',
+                                borderRadius: 12
                             }}
                         >
-                            <View style={{ backgroundColor: '#fff', flexDirection: 'row' }}>
-                                <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#F8F9FA', paddingLeft: 10 }}>
-                                    <Text style={{ fontSize: 20, lineHeight: 25, fontFamily: 'inter', paddingHorizontal: 20, paddingVertical: 5 }} ellipsizeMode='tail'>
+                            {/* <View style={{ backgroundColor: '#fff', flexDirection: 'row' }}>
+                                <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#f8f9fa', paddingLeft: 10 }}>
+                                    <Text style={{ fontSize: 20, lineHeight: 50, fontFamily: 'inter', paddingHorizontal: 20, paddingVertical: 5 }} ellipsizeMode='tail'>
                                         Name
                                     </Text>
                                 </View>
-                                <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#F8F9FA', paddingLeft: 10 }}>
-                                    <Text style={{ fontSize: 20, lineHeight: 25, fontFamily: 'inter', paddingHorizontal: 20, paddingVertical: 5 }} ellipsizeMode='tail'>
+                                <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#f8f9fa', paddingLeft: 10 }}>
+                                    <Text style={{ fontSize: 20, lineHeight: 50, fontFamily: 'inter', paddingHorizontal: 20, paddingVertical: 5 }} ellipsizeMode='tail'>
                                         Instructor
                                     </Text>
                                 </View>
-                                <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#F8F9FA', paddingLeft: 10 }}>
+                                <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#f8f9fa', paddingLeft: 10 }}>
 
                                 </View>
-                            </View>
+                            </View> */}
                             <ScrollView contentContainerStyle={{
-                                maxHeight: 500
+                                maxHeight: 550
                             }}>
                                 {
-                                    channels.map((channel: any) => {
-                                        return <View style={{ backgroundColor: '#fff', flexDirection: 'row', borderColor: '#eeeeee', borderBottomWidth: 1 }}>
-                                            <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                                <Text style={{ fontSize: 12, lineHeight: 25, paddingHorizontal: 20, fontFamily: 'inter' }} ellipsizeMode='tail'>
+                                    channels.map((channel: any, ind: any) => {
+                                        return <View style={{
+                                            backgroundColor: '#fff', flexDirection: 'row', borderColor: '#eeeeee',
+                                            borderBottomWidth: ind === channels.length - 1 ? 0 : 1
+                                        }}>
+                                            <View style={{ flex: 1, backgroundColor: '#f8f9fa', paddingLeft: 10 }}>
+                                                <Text style={{ fontSize: 12, padding: 20, fontFamily: 'inter' }} ellipsizeMode='tail'>
                                                     {channel.name}
                                                 </Text>
                                             </View>
                                             <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                                <Text style={{ fontSize: 12, lineHeight: 25, paddingHorizontal: 20 }} ellipsizeMode='tail'>
+                                                <Text style={{ fontSize: 12, lineHeight: 50, paddingHorizontal: 20 }} ellipsizeMode='tail'>
                                                     {channel.createdByUsername}
                                                 </Text>
                                             </View>
@@ -590,7 +595,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 <TouchableOpacity
                                                     onPress={() => handleSub(channel.name)}
                                                 >
-                                                    <Text style={{ textAlign: 'center', fontSize: 12, lineHeight: 25, paddingHorizontal: 20, color: '#3b64f8' }} ellipsizeMode='tail'>
+                                                    <Text style={{ textAlign: 'center', fontSize: 12, padding: 20, color: '#3b64f8' }} ellipsizeMode='tail'>
                                                         Join
                                                     </Text>
                                                 </TouchableOpacity>
@@ -618,7 +623,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
     },
     outline: {
-        borderRadius: 10,
+        borderRadius: 12,
         borderWidth: 1,
         borderColor: '#818385'
     },
@@ -634,8 +639,8 @@ const styles = StyleSheet.create({
         color: '#fff',
         height: 22,
         paddingHorizontal: 10,
-        backgroundColor: '#2f2f3c',
-        borderRadius: 10,
+        backgroundColor: '#43434f',
+        borderRadius: 12,
     },
     colorBar: {
         width: '100%',
@@ -647,7 +652,7 @@ const styles = StyleSheet.create({
     },
     input: {
         width: '100%',
-        borderBottomColor: '#F8F9FA',
+        borderBottomColor: '#f8f9fa',
         borderBottomWidth: 1,
         fontSize: 15,
         paddingTop: 13,

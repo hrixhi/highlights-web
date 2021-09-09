@@ -98,7 +98,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   const [filterEnd, setFilterEnd] = useState<any>(null)
 
   const [option, setOption] = useState('Home')
-  const [options] = useState(['Home', 'Content', 'Inbox', 'Performance', 'Channels', 'Account', 'Help'])
+  const [options] = useState(['Home', 'Content', 'Inbox', 'Performance'])
 
   const [menuCollapsed, setMenuCollapsed] = useState(true)
 
@@ -903,6 +903,10 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           // delete cueInput.gradeWeight;
           // delete cueInput.submission;
           delete cueInput.comment;
+
+          // this change is propagated only when the user actively changes folder structure...
+          delete cueInput.folderId;
+
           delete cueInput.unreadThreads;
           // delete cueInput.createdBy;
           // delete cueInput.original;
@@ -1251,6 +1255,9 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     channelName={filterChoice}
                                     channelCreatedBy={channelCreatedBy}
                                     refreshMeetingStatus={refreshMeetingStatus}
+                                    closeModal={() => closeModal()}
+                                    filterChoice={filterChoice}
+                                    refreshUnreadDiscussionCount={() => refreshUnreadDiscussionCount()}
                                   />
                                     : null
                                 )
@@ -1331,7 +1338,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   const alertText = PreferredLanguageText('savedLocally');
 
   return (
-    <View style={styles(channelId).container} key={showHome.toString()}>
+    <View style={styles(channelId).container} key={showHome.toString() + option.toString()}>
       {
         showLoginWindow ? <View style={{
           width: '100%',
@@ -1365,7 +1372,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 resizeMode={'contain'}
               />
             </View>
-            {/* <Text style={{ fontSize: 20, color: '#2f2f3c', fontFamily: 'inter', paddingBottom: 15, maxWidth: 500, textAlign: 'center' }}>
+            {/* <Text style={{ fontSize: 20, color: '#43434F', fontFamily: 'inter', paddingBottom: 15, maxWidth: 500, textAlign: 'center' }}>
               {
                 showForgotPassword ? '' : PreferredLanguageText('login')
               }
@@ -1382,7 +1389,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               justifyContent: 'center',
               alignSelf: 'center'
             }}>
-              <Text style={{ color: '#2f2f3c', fontSize: 14, paddingBottom: 5, paddingTop: 10 }}>
+              <Text style={{ color: '#43434F', fontSize: 14, paddingBottom: 5, paddingTop: 10 }}>
                 {PreferredLanguageText('email')}
               </Text>
               <TextInput
@@ -1395,7 +1402,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               {
                 showForgotPassword ? null :
                   <View>
-                    <Text style={{ color: '#2f2f3c', fontSize: 14, paddingBottom: 5 }}>
+                    <Text style={{ color: '#43434F', fontSize: 14, paddingBottom: 5 }}>
                       {PreferredLanguageText('password')}
                     </Text>
                     <TextInput
@@ -1462,9 +1469,9 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                   <Text style={{
                     textAlign: 'center',
                     lineHeight: 35,
-                    color: '#2f2f3c',
+                    color: '#43434F',
                     fontSize: 12,
-                    backgroundColor: '#F8F9FA',
+                    backgroundColor: '#f8f9fa',
                     paddingHorizontal: 25,
                     fontFamily: 'inter',
                     height: 35,
@@ -1492,9 +1499,9 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                   <Text style={{
                     textAlign: 'center',
                     lineHeight: 35,
-                    color: '#2f2f3c',
+                    color: '#43434F',
                     fontSize: 12,
-                    backgroundColor: '#F8F9FA',
+                    backgroundColor: '#f8f9fa',
                     paddingHorizontal: 25,
                     fontFamily: 'inter',
                     height: 35,
@@ -1556,8 +1563,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 openModal('Profile')
               }}
               reloadData={() => {
-                loadData()
-                openModal('Walkthrough')
+                loadDataFromCloud()
               }}
               cues={dateFilteredCues}
               handleFilterChange={(choice: any) => handleFilterChange(choice)}
@@ -1573,6 +1579,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               openUpdate={(index: any, key: any, pageNumber: any, _id: any, by: any, cId: any) => openUpdate(index, key, pageNumber, _id, by, cId)}
               calendarCues={cues}
               openCueFromCalendar={openCueFromCalendar}
+              key={option.toString()}
               openDiscussionFromActivity={(channelId: string, createdBy: string) => {
                 setChannelId(channelId);
                 setChannelCreatedBy(createdBy);
@@ -1674,6 +1681,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     setShowHome(true)
                     setMenuCollapsed(true)
                   }}
+                  hideMenu={() => setMenuCollapsed(true)}
                   filterChoice={filterChoice}
                   handleFilterChange={(choice: any) => handleFilterChange(choice)}
                   key={Math.random()}
@@ -1687,6 +1695,20 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                   filterEnd={filterEnd}
                   setFilterStart={(s: any) => setFilterStart(s)}
                   setFilterEnd={(e: any) => setFilterEnd(e)}
+                  channelId={channelId}
+                  channelCreatedBy={channelCreatedBy}
+                  loadData={() => loadData()}
+                  // setChannelFilterChoice={(choice: any) => setChannelFilterChoice(choice)}
+                  openDiscussion={() => openModal('Discussion')}
+                  openSubscribers={() => openModal('Subscribers')}
+                  openGrades={() => openModal('Grades')}
+                  unsubscribe={() => unsubscribeChannel()}
+                  deleteChannel={() => deleteChannel()}
+                  openMeeting={() => openModal('Meeting')}
+                  openChannelSettings={() => openModal('ChannelSettings')}
+                  unreadDiscussionThreads={unreadDiscussionThreads}
+                  unreadMessages={unreadMessages}
+                  meetingOn={meetingOn}
                 />
                 <FilterBar
                   cues={dateFilteredCues}
@@ -1714,7 +1736,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                   setFilterStart={(s: any) => setFilterStart(s)}
                   setFilterEnd={(e: any) => setFilterEnd(e)}
                 />
-                <TopBar
+                {/* <TopBar
                   key={JSON.stringify(channelFilterChoice) + JSON.stringify(dateFilteredCues) + JSON.stringify(modalType) + JSON.stringify(filterChoice) + JSON.stringify(unreadDiscussionThreads) + JSON.stringify(unreadMessages) + JSON.stringify(meetingOn)}
                   openChannels={() => openModal('Channels')}
                   cues={dateFilteredCues}
@@ -1736,7 +1758,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                   unreadDiscussionThreads={unreadDiscussionThreads}
                   unreadMessages={unreadMessages}
                   meetingOn={meetingOn}
-                />
+                /> */}
                 {
                   reLoading ? <View style={[styles(channelId).activityContainer, styles(channelId).horizontal]}>
                     <ActivityIndicator color={'#818385'} />
@@ -1770,15 +1792,16 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     }}>
                     <Text style={{ textAlign: 'center' }}>
                       <Ionicons
-                        name='chevron-up-circle-outline'
-                        color="#2f2f3c"
+                        name='contract-outline'
+                        color="#43434F"
                         size={20}
                       // style={{ marginLeft: -10 }}
                       />
                     </Text>
                   </TouchableOpacity> :
                   <TouchableOpacity
-                    onPress={() => setMenuCollapsed(true)}
+                    disabled={true}
+                    // onPress={() => setMenuCollapsed(true)}
                     style={{
                       width: 30, backgroundColor: '#fff', justifyContent: 'center',
                       // borderLeftWidth: 1,
@@ -1787,12 +1810,12 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                       borderColor: '#eeeeee'
                     }}>
                     <Text style={{ textAlign: 'center' }}>
-                      <Ionicons
-                        name='chevron-back-circle-outline'
-                        color="#2f2f3c"
+                      {/* <Ionicons
+                        name='contract-outline'
+                        color="#43434F"
                         size={20}
                         style={{}}
-                      />
+                      /> */}
                     </Text>
                   </TouchableOpacity>
               }
@@ -1807,14 +1830,14 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 height: dimensions.window.width < 768 ? (menuCollapsed ? dimensions.window.height - 55 : 0) : dimensions.window.height,
                 // paddingHorizontal: dimensions.window.width < 1024 ? 0 : 30,
                 paddingTop: 10,
-                // backgroundColor: '#F8F9FA',
+                // backgroundColor: '#f8f9fa',
                 backgroundColor: '#fff',
                 position: dimensions.window.width < 1024 ? 'absolute' : 'relative'
               }}
             >
               {
                 dimensions.window.width < 1024 ? null : <View style={{ flexDirection: 'column', flex: 1, width: '100%', justifyContent: 'center', backgroundColor: '#fff' }}>
-                  <Text style={{ fontSize: 20, color: '##2f2f3c', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#fff' }}>
+                  <Text style={{ fontSize: 20, color: '##43434F', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#fff' }}>
                     Select cue to view.
                   </Text>
                 </View>
@@ -1829,7 +1852,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                   // paddingHorizontal: dimensions.window.width < 1024 ? 0 : 30,
                   paddingTop: 0,
                   // borderWidth: 1,
-                  // backgroundColor: '#F8F9FA',
+                  // backgroundColor: '#f8f9fa',
                   backgroundColor: '#fff',
                   position: 'relative'
                 }}>
@@ -1859,12 +1882,12 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     // closeModal()
                   }}
                   style={{ height: 50, backgroundColor: '#fff', borderTopWidth: 1, borderColor: '#818385' }}>
-                  <Text style={{ flex: 1, textAlign: 'center', fontSize: 16, lineHeight: 16, marginTop: 15, color: '#2f2f3c', fontFamily: 'inter', fontWeight: 'bold' }}>
+                  <Text style={{ flex: 1, textAlign: 'center', fontSize: 16, lineHeight: 16, marginTop: 15, color: '#43434F', fontFamily: 'inter', fontWeight: 'bold' }}>
                     <Ionicons name='chevron-back-outline' size={16} /> BACK
                   </Text>
                 </TouchableOpacity>
                 :
-                <View style={{ backgroundColor: '#F8F9FA', height: 0 }} />
+                <View style={{ backgroundColor: '#f8f9fa', height: 0 }} />
             } */}
               </View>)
         }
@@ -1880,7 +1903,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           <Text style={{ textAlign: 'center' }}>
             <Ionicons
               name={'chevron-up-outline'}
-              color="#2f2f3c"
+              color="#43434F"
               size={Dimensions.get('window').width < 768 ? 25 : 35}
             // style={{ marginLeft: -10 }}
             />
@@ -1904,7 +1927,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         }}
       >
         <Text style={{ color: '#fff', width: '100%', textAlign: 'center' }}>
-          <Ionicons name='add-outline' size={40} />
+          <Ionicons name='add-outline' size={38} />
         </Text>
       </TouchableOpacity>
       {/* </View>
@@ -1930,7 +1953,7 @@ const styles = (channelId: string) => StyleSheet.create({
     height: channelId === '' ? '83%' : '73%',
     width: '100%',
     justifyContent: "center",
-    backgroundColor: '#F8F9FA'
+    backgroundColor: '#f8f9fa'
   },
   horizontal: {
     flexDirection: "row",
@@ -1938,7 +1961,7 @@ const styles = (channelId: string) => StyleSheet.create({
   },
   input: {
     width: '100%',
-    borderBottomColor: '#F8F9FA',
+    borderBottomColor: '#f8f9fa',
     borderBottomWidth: 1,
     fontSize: 15,
     paddingTop: 13,
