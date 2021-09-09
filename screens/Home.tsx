@@ -1371,7 +1371,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 resizeMode={'contain'}
               />
             </View>
-            {/* <Text style={{ fontSize: 20, color: '#43434F', fontFamily: 'inter', paddingBottom: 15, maxWidth: 500, textAlign: 'center' }}>
+            {/* <Text style={{ fontSize: 20, color: '#43434f', fontFamily: 'inter', paddingBottom: 15, maxWidth: 500, textAlign: 'center' }}>
               {
                 showForgotPassword ? '' : PreferredLanguageText('login')
               }
@@ -1388,7 +1388,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               justifyContent: 'center',
               alignSelf: 'center'
             }}>
-              <Text style={{ color: '#43434F', fontSize: 14, paddingBottom: 5, paddingTop: 10 }}>
+              <Text style={{ color: '#43434f', fontSize: 14, paddingBottom: 5, paddingTop: 10 }}>
                 {PreferredLanguageText('email')}
               </Text>
               <TextInput
@@ -1401,7 +1401,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               {
                 showForgotPassword ? null :
                   <View>
-                    <Text style={{ color: '#43434F', fontSize: 14, paddingBottom: 5 }}>
+                    <Text style={{ color: '#43434f', fontSize: 14, paddingBottom: 5 }}>
                       {PreferredLanguageText('password')}
                     </Text>
                     <TextInput
@@ -1443,7 +1443,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     lineHeight: 35,
                     color: 'white',
                     fontSize: 12,
-                    backgroundColor: '#3B64F8',
+                    backgroundColor: '#6963e2',
                     paddingHorizontal: 25,
                     fontFamily: 'inter',
                     height: 35,
@@ -1468,9 +1468,9 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                   <Text style={{
                     textAlign: 'center',
                     lineHeight: 35,
-                    color: '#43434F',
+                    color: '#43434f',
                     fontSize: 12,
-                    backgroundColor: '#f8f9fa',
+                    backgroundColor: '#FBFBFC',
                     paddingHorizontal: 25,
                     fontFamily: 'inter',
                     height: 35,
@@ -1498,9 +1498,9 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                   <Text style={{
                     textAlign: 'center',
                     lineHeight: 35,
-                    color: '#43434F',
+                    color: '#43434f',
                     fontSize: 12,
-                    backgroundColor: '#f8f9fa',
+                    backgroundColor: '#FBFBFC',
                     paddingHorizontal: 25,
                     fontFamily: 'inter',
                     height: 35,
@@ -1792,7 +1792,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     <Text style={{ textAlign: 'center' }}>
                       <Ionicons
                         name='contract-outline'
-                        color="#43434F"
+                        color="#43434f"
                         size={20}
                       // style={{ marginLeft: -10 }}
                       />
@@ -1811,7 +1811,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     <Text style={{ textAlign: 'center' }}>
                       {/* <Ionicons
                         name='contract-outline'
-                        color="#43434F"
+                        color="#43434f"
                         size={20}
                         style={{}}
                       /> */}
@@ -1829,14 +1829,14 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 height: dimensions.window.width < 768 ? (menuCollapsed ? dimensions.window.height - 55 : 0) : dimensions.window.height,
                 // paddingHorizontal: dimensions.window.width < 1024 ? 0 : 30,
                 paddingTop: 10,
-                // backgroundColor: '#f8f9fa',
+                // backgroundColor: '#FBFBFC',
                 backgroundColor: '#fff',
                 position: dimensions.window.width < 1024 ? 'absolute' : 'relative'
               }}
             >
               {
                 dimensions.window.width < 1024 ? null : <View style={{ flexDirection: 'column', flex: 1, width: '100%', justifyContent: 'center', backgroundColor: '#fff' }}>
-                  <Text style={{ fontSize: 20, color: '##43434F', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#fff' }}>
+                  <Text style={{ fontSize: 20, color: '##43434f', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#fff' }}>
                     Select cue to view.
                   </Text>
                 </View>
@@ -1851,7 +1851,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                   // paddingHorizontal: dimensions.window.width < 1024 ? 0 : 30,
                   paddingTop: 0,
                   // borderWidth: 1,
-                  // backgroundColor: '#f8f9fa',
+                  // backgroundColor: '#FBFBFC',
                   backgroundColor: '#fff',
                   position: 'relative'
                 }}>
@@ -1881,12 +1881,12 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     // closeModal()
                   }}
                   style={{ height: 50, backgroundColor: '#fff', borderTopWidth: 1, borderColor: '#818385' }}>
-                  <Text style={{ flex: 1, textAlign: 'center', fontSize: 16, lineHeight: 16, marginTop: 15, color: '#43434F', fontFamily: 'inter', fontWeight: 'bold' }}>
+                  <Text style={{ flex: 1, textAlign: 'center', fontSize: 16, lineHeight: 16, marginTop: 15, color: '#43434f', fontFamily: 'inter', fontWeight: 'bold' }}>
                     <Ionicons name='chevron-back-outline' size={16} /> BACK
                   </Text>
                 </TouchableOpacity>
                 :
-                <View style={{ backgroundColor: '#f8f9fa', height: 0 }} />
+                <View style={{ backgroundColor: '#FBFBFC', height: 0 }} />
             } */}
               </View>)
         }
@@ -1902,7 +1902,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           <Text style={{ textAlign: 'center' }}>
             <Ionicons
               name={'chevron-up-outline'}
-              color="#43434F"
+              color="#43434f"
               size={Dimensions.get('window').width < 768 ? 25 : 35}
             // style={{ marginLeft: -10 }}
             />
@@ -1922,7 +1922,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           right: 0,
           justifyContent: 'center',
           alignSelf: 'flex-end',
-          width: 60, height: 60, borderRadius: 30, backgroundColor: '#3b64f8'
+          width: 60, height: 60, borderRadius: 30, backgroundColor: '#6963e2'
         }}
       >
         <Text style={{ color: '#fff', width: '100%', textAlign: 'center' }}>
@@ -1952,7 +1952,7 @@ const styles = (channelId: string) => StyleSheet.create({
     height: channelId === '' ? '83%' : '73%',
     width: '100%',
     justifyContent: "center",
-    backgroundColor: '#f8f9fa'
+    backgroundColor: '#FBFBFC'
   },
   horizontal: {
     flexDirection: "row",
@@ -1960,7 +1960,7 @@ const styles = (channelId: string) => StyleSheet.create({
   },
   input: {
     width: '100%',
-    borderBottomColor: '#f8f9fa',
+    borderBottomColor: '#FBFBFC',
     borderBottomWidth: 1,
     fontSize: 15,
     paddingTop: 13,

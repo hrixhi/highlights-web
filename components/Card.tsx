@@ -8,13 +8,13 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
-    const colorChoices: any[] = ['#d91d56', '#ED7D22', '#FFBA10', '#B8D41F', '#53BE6D'].reverse()
+    const colorChoices: any[] = ['#F53464', '#F8992A', '#F7C440', '#3EC57F', '#33A9F4'].reverse()
     const colorScheme = 'dark'
     const styleObject = styles(colorScheme, props.channelId, colorChoices[props.cue.color])
     const starred = props.cue.starred;
     const { title } = htmlStringParser(props.cue.channelId && props.cue.channelId !== '' ? props.cue.original : props.cue.cue)
     const [showScore, setShowScore] = useState(false);
-    const [colorCode, setColorCode] = useState('#43434F');
+    const [colorCode, setColorCode] = useState('#43434f');
     const [isOwner, setIsOwner] = useState(false)
 
     useEffect(() => {
@@ -84,7 +84,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         </Text> */}
                         {/* {
                             props.cue.submission ? <Text style={styleObject.date}>
-                                <Ionicons name='share-outline' size={9} color={props.cue.submittedAt && props.cue.submittedAt !== '' ? ('#3B64F8') : (colorScheme === 'light' ? '#fff' : '#333333')} style={{ marginRight: 10 }} />
+                                <Ionicons name='share-outline' size={9} color={props.cue.submittedAt && props.cue.submittedAt !== '' ? ('#6963e2') : (colorScheme === 'light' ? '#fff' : '#333333')} style={{ marginRight: 10 }} />
                             </Text> : null
                         }
                         {
@@ -96,7 +96,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         {
                             props.cue.graded && showScore && !isOwner ? <Text style={{
                                 fontSize: 9,
-                                color: '#3B64F8',
+                                color: '#6963e2',
                                 marginLeft: 10
                             }}>
                                 {props.cue.score}%
@@ -113,7 +113,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     width: '97%',
                                     zIndex: 20
                                 }}>
-                                    <Ionicons name='bookmark' size={18} color={starred ? '#d91d56' : '#fff'} />
+                                    <Ionicons name='bookmark' size={18} color={starred ? '#F53464' : '#fff'} />
                                 </Text>
                                 : null
                         }
@@ -126,12 +126,12 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             marginRight: 5,
                             marginTop: -5,
                             backgroundColor: colorScheme === 'light'
-                                ? (starred ? '#43434F' : '#fff')
+                                ? (starred ? '#43434f' : '#fff')
                                 : (starred ? 'white' : '#fff'),
                         }}>
                             {
                                 props.cue.submission ? <Text>
-                                    <Ionicons name='share-outline' size={11} color={props.cue.submittedAt && props.cue.submittedAt !== '' ? ('#3B64F8') : (colorScheme === 'light' ? '#fff' : '#333333')} style={{ marginRight: 10 }} />
+                                    <Ionicons name='share-outline' size={11} color={props.cue.submittedAt && props.cue.submittedAt !== '' ? ('#6963e2') : (colorScheme === 'light' ? '#fff' : '#333333')} style={{ marginRight: 10 }} />
                                 </Text> : null
                             }
                             {
@@ -167,7 +167,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     height: 20,
                                     borderRadius: 12,
                                     overflow: 'hidden',
-                                    backgroundColor: '#d91d56',
+                                    backgroundColor: '#F53464',
                                     textAlign: 'center',
                                     zIndex: 150,
                                     marginLeft: 10,
@@ -185,7 +185,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     height: 20,
                                     borderRadius: 12,
                                     overflow: 'hidden',
-                                    backgroundColor: '#3b64f8',
+                                    backgroundColor: '#6963e2',
                                     textAlign: 'center',
                                     zIndex: 150,
                                     marginLeft: 5,
@@ -229,7 +229,7 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
         borderRadius: 12,
         padding: 13,
         color: '#fff',
-        backgroundColor: colorScheme === 'light' ? '#43434F' : 'white'
+        backgroundColor: colorScheme === 'light' ? '#43434f' : 'white'
     },
     descriptionFlip: {
         color: '#fff',
@@ -243,7 +243,7 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
     flipText: {
         height: '100%',
         color: '#fff',
-        backgroundColor: colorScheme === 'light' ? '#43434F' : 'white'
+        backgroundColor: colorScheme === 'light' ? '#43434f' : 'white'
     },
     dateContainer: {
         fontSize: 10,
@@ -259,7 +259,7 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
         display: 'flex',
         flexDirection: 'row',
         color: '#fff',
-        backgroundColor: colorScheme === 'light' ? '#43434F' : 'white'
+        backgroundColor: colorScheme === 'light' ? '#43434f' : 'white'
     },
     date: {
         fontSize: 9,
@@ -284,8 +284,8 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
         color: col
     },
     titleFlip: {
-        color: colorScheme === 'light' ? '#fff' : '#43434F',
-        backgroundColor: colorScheme === 'light' ? '#43434F' : '#fff',
+        color: colorScheme === 'light' ? '#fff' : '#43434f',
+        backgroundColor: colorScheme === 'light' ? '#43434f' : '#fff',
         fontFamily: 'inter',
         fontSize: 13,
         // ,

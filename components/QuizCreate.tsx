@@ -745,7 +745,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                         <View style={{ flexDirection: 'row', paddingLeft: Dimensions.get('window').width < 768 ? 20 : 0  }}>
                                             <Ionicons
                                                 name='checkmark-circle-outline'
-                                                color={"#53BE6D"}
+                                                color={"#33A9F4"}
                                                 style={{
                                                     marginRight: 30
                                                 }}
@@ -759,7 +759,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
                                             <Ionicons
                                                 name='trash-outline'
-                                                color={"#D91D56"}
+                                                color={"#F53464"}
                                                 onPress={() => {
                                                     Alert(`Delete Question ${editQuestionNumber} ?`, "", [
                                                         {
@@ -783,7 +783,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                             />
                                         </View> : <Ionicons
                                         name='pencil-outline'
-                                        color={'#3B64F8'}
+                                        color={'#6963e2'}
                                         onPress={() => {
                                             if (isCurrentQuestionValid(editQuestionNumber - 1)) {
                                                 setEditQuestionNumber(index + 1)
@@ -1007,7 +1007,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     // paddingLeft: 20,
                                     flex: 1,
                                     lineHeight: 25,
-                                    color: '#3b64f8'
+                                    color: '#6963e2'
                                 }}>
                                 Add Option
                             </Text>
@@ -1043,7 +1043,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             lineHeight: 35,
                             color: "white",
                             fontSize: 12,
-                            backgroundColor: "#3B64F8",
+                            backgroundColor: "#6963e2",
                             borderRadius: 15,
                             paddingHorizontal: 25,
                             fontFamily: "inter",

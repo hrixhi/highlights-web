@@ -30,14 +30,14 @@ const ScoreCard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         {/* <Text style={{
                             fontSize: 11,
                             fontWeight: 'bold',
-                            color: '#43434F',
+                            color: '#43434f',
                             marginRight: 5,
                             flex: 1,
                             textAlign: 'right'
                         }}>
                            
                         </Text> */}
-                    </View> <View style={{ backgroundColor: '#f8f9fa', width: '100%', flexDirection: 'row', display: 'flex' }}>
+                    </View> <View style={{ backgroundColor: '#FBFBFC', width: '100%', flexDirection: 'row', display: 'flex' }}>
                         <Text ellipsizeMode={'tail'}
                             numberOfLines={1}
                             style={styleObject.title}>
@@ -49,7 +49,7 @@ const ScoreCard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     width: 20,
                                     height: 20,
                                     borderRadius: 12,
-                                    backgroundColor: '#d91d56',
+                                    backgroundColor: '#F53464',
                                     textAlign: 'center',
                                     zIndex: 150,
                                     marginLeft: 10,
@@ -90,13 +90,13 @@ const styles: any = () => StyleSheet.create({
         maxWidth: 500,
         borderRadius: 12,
         overflow: 'hidden',
-        backgroundColor: '#f8f9fa'
+        backgroundColor: '#FBFBFC'
     },
     badge: {
         width: 20,
         height: 20,
         borderRadius: 12,
-        backgroundColor: '#d91d56',
+        backgroundColor: '#F53464',
         textAlign: 'center',
         zIndex: 150,
         marginLeft: 10
@@ -106,18 +106,18 @@ const styles: any = () => StyleSheet.create({
         width: '100%',
         borderRadius: 12,
         padding: 13,
-        backgroundColor: '#f8f9fa',
+        backgroundColor: '#FBFBFC',
     },
     text: {
         display: 'flex',
         flexDirection: 'column',
         flex: 1,
-        backgroundColor: '#f8f9fa'
+        backgroundColor: '#FBFBFC'
     },
     dateContainer: {
         fontSize: 10,
         height: '22%',
-        backgroundColor: '#f8f9fa',
+        backgroundColor: '#FBFBFC',
         display: 'flex',
         flexDirection: 'row'
     },
@@ -130,7 +130,7 @@ const styles: any = () => StyleSheet.create({
         fontFamily: 'inter',
         fontSize: 13,
         paddingTop: 5,
-        color: '#43434F',
+        color: '#43434f',
         flex: 1
     },
     titleArrow: {
@@ -138,7 +138,7 @@ const styles: any = () => StyleSheet.create({
         fontSize: 13,
         lineHeight: 20,
         paddingTop: 5,
-        color: '#43434F',
+        color: '#43434f',
         marginLeft: 10
     },
     description: {

@@ -196,7 +196,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
         <View style={{ width: width < 768 ? '100%' : '50%', paddingRight: 30, borderRightWidth: width < 768 ? 0 : 1, borderColor: '#eeeeee' }}>
             <Text style={{
                 marginRight: 10,
-                color: '#43434F',
+                color: '#43434f',
                 fontSize: 23,
                 marginBottom: 40,
                 fontFamily: 'inter',
@@ -408,7 +408,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
         <View style={{ width: width < 768 ? '100%' : '50%', paddingLeft: width < 768 ? 0 : 30 }}>
             <Text style={{
                 marginRight: 10,
-                color: '#43434F',
+                color: '#43434f',
                 fontSize: 23,
                 paddingBottom: 20,
                 fontFamily: 'inter',

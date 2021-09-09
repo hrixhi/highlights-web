@@ -180,7 +180,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     height: 22,
                                     paddingHorizontal: 10,
                                     borderRadius: 12,
-                                    backgroundColor: "#3B64F8",
+                                    backgroundColor: "#6963e2",
                                     lineHeight: 20,
                                     paddingTop: 1
                                 }}>
@@ -195,13 +195,13 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     paddingHorizontal: 10,
                                     marginLeft: 10,
                                     borderRadius: 12,
-                                    backgroundColor: "#3B64F8",
+                                    backgroundColor: "#6963e2",
                                     lineHeight: 20,
                                     paddingTop: 1
                                 }}>
                                 {currentScore}/{totalPossible}
                             </Text>
-                            {props.isOwner ? <Text style={{ fontSize: 15, color: "#43434F", marginBottom: 10, paddingLeft: 20, lineHeight: 22, textTransform: 'uppercase' }}>
+                            {props.isOwner ? <Text style={{ fontSize: 15, color: "#43434f", marginBottom: 10, paddingLeft: 20, lineHeight: 22, textTransform: 'uppercase' }}>
                                 {props.partiallyGraded ? "In progress" : "Graded"}
                             </Text> : null}
                         </View>
@@ -367,11 +367,11 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         {
                             (!problem.questionType || problem.questionType === "trueFalse") && problem.options.map((option: any, i: any) => {
 
-                                let color = '#43434F'
+                                let color = '#43434f'
                                 if (option.isCorrect) {
-                                    color = '#3B64F8'
+                                    color = '#6963e2'
                                 } else if (!option.isCorrect && solutions[index].selected[i].isSelected) {
-                                    color = '#D91D56'
+                                    color = '#F53464'
                                 }
 
                                 return <View style={{ flexDirection: 'row' }} key={solutions.toString() + i.toString()}>
@@ -476,7 +476,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 }}
                             /> :
                                 <View style={{ flexDirection: 'row', width: '100%', marginTop: 20, marginBottom: 40 }}>
-                                    <Text style={{ color: '#3b64f8', fontSize: 13, }}>
+                                    <Text style={{ color: '#6963e2', fontSize: 13, }}>
                                         {problemComments[index]}
                                     </Text>
                                 </View>}
@@ -505,7 +505,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         minRows={3}
                     />
                 </View> :
-                    <Text style={{ color: '#3b64f8', fontSize: 15, width: '100%', textAlign: 'left', marginTop: 40 }}>
+                    <Text style={{ color: '#6963e2', fontSize: 15, width: '100%', textAlign: 'left', marginTop: 40 }}>
                         {comment}
                     </Text>
                 }
@@ -535,7 +535,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         lineHeight: 35,
                         color: 'white',
                         fontSize: 12,
-                        backgroundColor: '#3B64F8',
+                        backgroundColor: '#6963e2',
                         paddingHorizontal: 25,
                         fontFamily: 'inter',
                         height: 35

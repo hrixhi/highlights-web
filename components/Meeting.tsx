@@ -278,7 +278,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                         Linking.openURL(date.url)
                                     }
                                 }}
-                                style={{ flexDirection: 'row', backgroundColor: '#f8f9fa', width: '90%' }}>
+                                style={{ flexDirection: 'row', backgroundColor: '#FBFBFC', width: '90%' }}>
                                 <Image
                                     height={45}
                                     width={75}
@@ -286,7 +286,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                     source={{ uri: date.thumbnail }}
                                     resizeMode={'contain'}
                                 />
-                                <View style={{ backgroundColor: '#f8f9fa', width: '100%', flexDirection: 'row', display: 'flex', marginLeft: 20 }}>
+                                <View style={{ backgroundColor: '#FBFBFC', width: '100%', flexDirection: 'row', display: 'flex', marginLeft: 20 }}>
                                     <Text ellipsizeMode={'tail'}
                                         numberOfLines={1}
                                         style={styles.title}>
@@ -296,7 +296,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                             </TouchableOpacity>
                             {
                                 isOwner ?
-                                    <TouchableOpacity style={{ backgroundColor: '#f8f9fa', width: '10%', }}
+                                    <TouchableOpacity style={{ backgroundColor: '#FBFBFC', width: '10%', }}
                                         onPress={() => {
                                             Alert("Delete past lecture ?", "", [
                                                 {
@@ -330,7 +330,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                         }}
                                     >
                                         <Text style={{ width: '100%', color: '#818385', fontSize: 15, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
-                                            <Ionicons name='trash-outline' size={17} color="#d91d56" />
+                                            <Ionicons name='trash-outline' size={17} color="#F53464" />
                                         </Text>
                                     </TouchableOpacity>
                                     : null
@@ -398,9 +398,9 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                             lineHeight: 21,
                                             textAlign: 'center'
                                         }}>
-                                            <Ionicons name='copy-outline' size={19} color={'#43434F'} />
+                                            <Ionicons name='copy-outline' size={19} color={'#43434f'} />
                                         </Text>
-                                        <Text style={{ fontSize: 10, color: '#43434F', textAlign: 'center', width: '100%', }}>
+                                        <Text style={{ fontSize: 10, color: '#43434f', textAlign: 'center', width: '100%', }}>
                                             Host Link
                                         </Text>
                                     </TouchableOpacity>
@@ -431,9 +431,9 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                             lineHeight: 21,
                                             textAlign: 'center'
                                         }}>
-                                            <Ionicons name='copy-outline' size={19} color={'#43434F'} />
+                                            <Ionicons name='copy-outline' size={19} color={'#43434f'} />
                                         </Text>
-                                        <Text style={{ fontSize: 10, color: '#43434F', textAlign: 'center', width: '100%', }}>
+                                        <Text style={{ fontSize: 10, color: '#43434f', textAlign: 'center', width: '100%', }}>
                                             Guest Link
                                         </Text>
                                     </TouchableOpacity>
@@ -461,7 +461,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                 lineHeight: 30,
                                 color: '#fff',
                                 fontSize: 12,
-                                backgroundColor: '#53BE6D',
+                                backgroundColor: '#33A9F4',
                                 paddingHorizontal: 25,
                                 fontFamily: 'inter',
                                 height: 30,
@@ -601,7 +601,7 @@ const styles = StyleSheet.create({
         maxWidth: '100%',
         borderRadius: 15,
         padding: 13,
-        backgroundColor: '#f8f9fa',
+        backgroundColor: '#FBFBFC',
         flexDirection: 'row',
         justifyContent: 'space-between'
     },
@@ -609,14 +609,14 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'column',
         flex: 1,
-        backgroundColor: '#f8f9fa',
+        backgroundColor: '#FBFBFC',
     },
     title: {
         fontFamily: 'inter',
         fontSize: 13,
         width: '100%',
         paddingTop: 5,
-        color: '#43434F'
+        color: '#43434f'
     },
     description: {
         fontSize: 13,

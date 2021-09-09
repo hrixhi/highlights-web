@@ -341,7 +341,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                     ellipsizeMode="tail"
                                     style={{
                                         marginRight: 10,
-                                        color: '#43434F',
+                                        color: '#43434f',
                                         fontSize: 23,
                                         paddingBottom: 20,
                                         fontFamily: 'inter',
@@ -394,7 +394,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                 flexDirection: 'row',
                                                 flex: 1,
                                                 fontSize: 17,
-                                                color: item.isOpen ? '#3B64F8' : '#333333'
+                                                color: item.isOpen ? '#6963e2' : '#333333'
                                             }}>
                                                 {item.question}
                                             </Text>
@@ -437,7 +437,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     </View>
                 </View>
             </View>
-            <MessengerCustomerChat pageId="109965671259610" appId="746023139417168" themeColor="#3B64F8" />
+            <MessengerCustomerChat pageId="109965671259610" appId="746023139417168" themeColor="#6963e2" />
         </View >
     );
 }

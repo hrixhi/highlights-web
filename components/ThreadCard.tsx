@@ -40,7 +40,7 @@ const ThreadCard: React.FunctionComponent<{ [label: string]: any }> = (props: an
         if (u) {
             const unparsedUser = JSON.parse(u)
             if (props.channelCreatedBy.toString().trim() === props.thread.userId.toString().trim()) {
-                setColor('#3B64F8')
+                setColor('#6963e2')
             } else if (unparsedUser._id.toString().trim() === props.thread.userId.toString().trim()) {
                 setColor('#818385')
             }
@@ -94,7 +94,7 @@ const ThreadCard: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     </View>
                     {
                         imported ?
-                            <View style={{ backgroundColor: '#f8f9fa', flex: 1, flexDirection: 'row', paddingTop: 6 }}>
+                            <View style={{ backgroundColor: '#FBFBFC', flex: 1, flexDirection: 'row', paddingTop: 6 }}>
                                 <Text style={{ width: '100%', color: '#818385', fontSize: 15, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                                     <Ionicons name='document-outline' size={17} color='#818385' /> {title}.{type}
                                 </Text>
@@ -104,7 +104,7 @@ const ThreadCard: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     <Ionicons name="chevron-forward-outline" color="#818385" size={20} style={{ marginTop: 4 }} />
                                 </Text>
                             </View>
-                            : <View style={{ backgroundColor: '#f8f9fa', width: '100%', flexDirection: 'row', display: 'flex' }}>
+                            : <View style={{ backgroundColor: '#FBFBFC', width: '100%', flexDirection: 'row', display: 'flex' }}>
                                 <Text ellipsizeMode={'tail'}
                                     numberOfLines={1}
                                     style={styleObject.title}>
@@ -116,7 +116,7 @@ const ThreadCard: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                             width: 20,
                                             height: 20,
                                             borderRadius: 12,
-                                            backgroundColor: '#3b64f8',
+                                            backgroundColor: '#6963e2',
                                             textAlign: 'center',
                                             zIndex: 150,
                                             marginLeft: 10,
@@ -156,7 +156,7 @@ const styles: any = () => StyleSheet.create({
         width: 20,
         height: 20,
         borderRadius: 12,
-        backgroundColor: '#d91d56',
+        backgroundColor: '#F53464',
         textAlign: 'center',
         zIndex: 150,
         marginLeft: 10
@@ -166,7 +166,7 @@ const styles: any = () => StyleSheet.create({
         width: '100%',
         borderRadius: 12,
         padding: 13,
-        backgroundColor: '#f8f9fa',
+        backgroundColor: '#FBFBFC',
         borderWidth: 1,
         borderColor: '#eeeeee'
     },
@@ -174,12 +174,12 @@ const styles: any = () => StyleSheet.create({
         display: 'flex',
         flexDirection: 'column',
         flex: 1,
-        backgroundColor: '#f8f9fa'
+        backgroundColor: '#FBFBFC'
     },
     dateContainer: {
         fontSize: 10,
         height: '22%',
-        backgroundColor: '#f8f9fa',
+        backgroundColor: '#FBFBFC',
         display: 'flex',
         flexDirection: 'row'
     },
@@ -192,7 +192,7 @@ const styles: any = () => StyleSheet.create({
         fontFamily: 'inter',
         fontSize: 13,
         paddingTop: 5,
-        color: '#43434F',
+        color: '#43434f',
         flex: 1
     },
     titleArrow: {
@@ -200,7 +200,7 @@ const styles: any = () => StyleSheet.create({
         fontSize: 13,
         lineHeight: 20,
         paddingTop: 5,
-        color: '#43434F',
+        color: '#43434f',
         marginLeft: 10
     },
     description: {

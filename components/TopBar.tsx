@@ -47,19 +47,19 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
     return (
         <View style={styles.topbar} key={Math.random()}>
-            <View style={{ width: '100%', height: Dimensions.get('window').height * 0.15, backgroundColor: '#f8f9fa' }}>
+            <View style={{ width: '100%', height: Dimensions.get('window').height * 0.15, backgroundColor: '#FBFBFC' }}>
                 <View style={{
                     // height: '45%',
                     flexDirection: 'row',
                     display: 'flex',
                     paddingHorizontal: 25,
                     // paddingTop: 10,
-                    backgroundColor: '#f8f9fa'
+                    backgroundColor: '#FBFBFC'
                 }}>
                     {/* <TouchableOpacity
                         disabled={true}
                         // onPress={() => Linking.openURL('http://www.cuesapp.co')}
-                        style={{ backgroundColor: '#43434F' }}
+                        style={{ backgroundColor: '#43434f' }}
                     >
                         <Image
                             source={
@@ -77,35 +77,35 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     <View
                         key={JSON.stringify(props.cues)}
                         style={{
-                            flex: 1, flexDirection: 'row', backgroundColor: '#f8f9fa'
+                            flex: 1, flexDirection: 'row', backgroundColor: '#FBFBFC'
                         }}>
                         {
                             props.channelId !== '' ?
-                                <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'space-evenly', backgroundColor: '#f8f9fa' }}>
+                                <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'space-evenly', backgroundColor: '#FBFBFC' }}>
                                     <TouchableOpacity
-                                        style={{ marginRight: 15, backgroundColor: '#f8f9fa' }}
+                                        style={{ marginRight: 15, backgroundColor: '#FBFBFC' }}
                                         onPress={() => props.openMeeting()}>
                                         <Text style={styles.channelText}>
                                             <Ionicons
-                                                name='chatbubbles-outline' size={19} color={'#43434F'} />
+                                                name='chatbubbles-outline' size={19} color={'#43434f'} />
                                             {
                                                 props.meetingOn ?
                                                     <View style={styles.badge} /> : null
                                             }
                                         </Text>
-                                        <Text style={{ fontSize: 10, color: '#43434F', textAlign: 'center' }}>
+                                        <Text style={{ fontSize: 10, color: '#43434f', textAlign: 'center' }}>
                                             Classroom
                                         </Text>
                                     </TouchableOpacity>
                                     {
                                         isOwner ?
                                             <TouchableOpacity
-                                                style={{ marginRight: 0, backgroundColor: '#f8f9fa' }}
+                                                style={{ marginRight: 0, backgroundColor: '#FBFBFC' }}
                                                 onPress={() => props.openChannelSettings()}>
                                                 <Text style={styles.channelText}>
-                                                    <Ionicons name='hammer-outline' size={18} color={'#43434F'} />
+                                                    <Ionicons name='hammer-outline' size={18} color={'#43434f'} />
                                                 </Text>
-                                                <Text style={{ fontSize: 10, color: '#43434F', textAlign: 'center' }}>
+                                                <Text style={{ fontSize: 10, color: '#43434f', textAlign: 'center' }}>
                                                     Settings
                                                 </Text>
                                             </TouchableOpacity> : null
@@ -135,7 +135,7 @@ const styleObject: any = (channelId: any) => StyleSheet.create({
         paddingTop: 15,
         maxWidth: 550,
         alignSelf: 'center',
-        backgroundColor: '#f8f9fa'
+        backgroundColor: '#FBFBFC'
     },
     badge: {
         position: 'absolute',
@@ -145,13 +145,13 @@ const styleObject: any = (channelId: any) => StyleSheet.create({
         marginRight: -2,
         marginTop: 0,
         borderRadius: 15,
-        backgroundColor: '#d91d56',
+        backgroundColor: '#F53464',
         textAlign: 'center',
         zIndex: 50
     },
     text: {
         textAlign: 'right',
-        color: '#43434F',
+        color: '#43434f',
         fontSize: 15,
         paddingRight: 15
     },

@@ -549,7 +549,7 @@ export default Update
 const styles: any = StyleSheet.create({
     all: {
         fontSize: 13,
-        color: '#43434F',
+        color: '#43434f',
         height: 24,
         paddingHorizontal: 20,
         backgroundColor: '#fff',
@@ -562,7 +562,7 @@ const styles: any = StyleSheet.create({
         color: '#fff',
         paddingHorizontal: 20,
         borderRadius: 12,
-        backgroundColor: '#43434F',
+        backgroundColor: '#43434f',
         lineHeight: 24,
         height: 24,
         fontFamily: 'inter',
@@ -576,7 +576,7 @@ const styles: any = StyleSheet.create({
         marginRight: -2,
         marginTop: 0,
         borderRadius: 15,
-        backgroundColor: '#d91d56',
+        backgroundColor: '#F53464',
         textAlign: 'center',
         zIndex: 50
     },

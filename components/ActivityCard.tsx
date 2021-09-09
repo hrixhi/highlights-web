@@ -45,7 +45,7 @@ const ActivityCard: React.FunctionComponent<{ [label: string]: any }> = (props: 
                             }
                         </Text>
 
-                    </View> <View style={{ backgroundColor: '#f8f9fa', width: '100%', flexDirection: 'row', display: 'flex' }}>
+                    </View> <View style={{ backgroundColor: '#FBFBFC', width: '100%', flexDirection: 'row', display: 'flex' }}>
                         <Text ellipsizeMode={'tail'}
                             numberOfLines={1}
                             style={styleObject.title}>
@@ -57,7 +57,7 @@ const ActivityCard: React.FunctionComponent<{ [label: string]: any }> = (props: 
                                     width: 20,
                                     height: 20,
                                     borderRadius: 12,
-                                    backgroundColor: '#d91d56',
+                                    backgroundColor: '#F53464',
                                     textAlign: 'center',
                                     zIndex: 150,
                                     marginLeft: 10,
@@ -93,13 +93,13 @@ const styles: any = () => StyleSheet.create({
         maxWidth: 500,
         borderRadius: 12,
         overflow: 'hidden',
-        backgroundColor: '#f8f9fa',
+        backgroundColor: '#FBFBFC',
     },
     badge: {
         width: 20,
         height: 20,
         borderRadius: 12,
-        backgroundColor: '#d91d56',
+        backgroundColor: '#F53464',
         textAlign: 'center',
         zIndex: 150,
         marginLeft: 10
@@ -109,7 +109,7 @@ const styles: any = () => StyleSheet.create({
         width: '100%',
         borderRadius: 12,
         padding: 13,
-        backgroundColor: '#f8f9fa',
+        backgroundColor: '#FBFBFC',
         borderWidth: 1,
         borderColor: '#eeeeee'
     },
@@ -117,12 +117,12 @@ const styles: any = () => StyleSheet.create({
         display: 'flex',
         flexDirection: 'column',
         flex: 1,
-        backgroundColor: '#f8f9fa'
+        backgroundColor: '#FBFBFC'
     },
     dateContainer: {
         fontSize: 10,
         height: '22%',
-        backgroundColor: '#f8f9fa',
+        backgroundColor: '#FBFBFC',
         display: 'flex',
         flexDirection: 'row'
     },

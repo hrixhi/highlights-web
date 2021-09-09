@@ -63,10 +63,10 @@ const FilterBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
     return (
         <View style={styles.bottombar}>
             <View style={styles.colorBar}>
-                <View style={{ flexDirection: 'row', flex: 1, backgroundColor: '#f8f9fa' }}>
-                    <View style={{ paddingLeft: 10, flexDirection: 'row', backgroundColor: '#f8f9fa' }}>
-                        <View style={{ backgroundColor: '#f8f9fa' }}>
-                            <View style={{ flexDirection: 'row', display: 'flex', backgroundColor: '#f8f9fa', paddingLeft: 30 }}>
+                <View style={{ flexDirection: 'row', flex: 1, backgroundColor: '#FBFBFC' }}>
+                    <View style={{ paddingLeft: 10, flexDirection: 'row', backgroundColor: '#FBFBFC' }}>
+                        <View style={{ backgroundColor: '#FBFBFC' }}>
+                            <View style={{ flexDirection: 'row', display: 'flex', backgroundColor: '#FBFBFC', paddingLeft: 30 }}>
                                 <Menu
                                     onSelect={(subscription: any) => {
                                         if (subscription === 'All') {
@@ -90,7 +90,7 @@ const FilterBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         props.closeModal()
                                     }}>
                                     <MenuTrigger>
-                                        <Text style={{ fontFamily: 'inter', fontSize: 15, color: '#43434F' }}>
+                                        <Text style={{ fontFamily: 'inter', fontSize: 15, color: '#43434f' }}>
                                             {choice === 'MyCues' ? 'My Cues' : choice}<Ionicons name='caret-down' size={15} />
                                         </Text>
                                     </MenuTrigger>
@@ -100,7 +100,7 @@ const FilterBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             borderRadius: 15,
                                             shadowOpacity: 0,
                                             borderWidth: 1,
-                                            borderColor: '#f8f9fa',
+                                            borderColor: '#FBFBFC',
                                             overflow: 'scroll',
                                             maxHeight: '100%'
                                         }
@@ -157,21 +157,18 @@ const FilterBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     </MenuOptions>
                                 </Menu>
                             </View>
-                            <Text style={{ fontSize: 10, color: '#43434F', paddingTop: 7, backgroundColor: '#f8f9fa', paddingLeft: 30 }}>
+                            <Text style={{ fontSize: 10, color: '#43434f', paddingTop: 7, backgroundColor: '#FBFBFC', paddingLeft: 30 }}>
                                 Channel
                             </Text>
                         </View>
                     </View>
-                    <View style={{ paddingRight: 20, flexDirection: 'row', backgroundColor: '#f8f9fa', paddingLeft: 20 }}>
-                        <View style={{ backgroundColor: '#f8f9fa' }}>
-                            <View style={{ flexDirection: 'row', display: 'flex', backgroundColor: '#f8f9fa' }}>
-                                <Menu
-                                    onSelect={(category: any) => {
-                                        props.setChannelFilterChoice(category)
-                                    }}>
+                    <View style={{ flexDirection: 'row', backgroundColor: '#FBFBFC', paddingRight: 30, flex: 1, justifyContent: 'flex-end'}}>
+                        <View style={{ backgroundColor: '#FBFBFC' }}>
+                            <View style={{ flexDirection: 'row', display: 'flex', backgroundColor: '#FBFBFC' }}>
+                                <Menu>
                                     <MenuTrigger>
-                                        <Text style={{ fontFamily: 'inter', fontSize: 15, color: '#43434F', paddingLeft: 10 }}>
-                                            {filterChoice}<Ionicons name='caret-down' size={15} />
+                                        <Text style={{ fontFamily: 'inter', fontSize: 15, color: '#43434f', paddingLeft: 10 }}>
+                                            FILTER <Ionicons name='caret-down' size={15} />
                                         </Text>
                                     </MenuTrigger>
                                     <MenuOptions customStyles={{
@@ -180,67 +177,94 @@ const FilterBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             borderRadius: 15,
                                             shadowOpacity: 0,
                                             borderWidth: 1,
-                                            borderColor: '#f8f9fa',
+                                            borderColor: '#FBFBFC',
                                             overflow: 'scroll',
-                                            maxHeight: '100%'
+                                            maxHeight: '100%',
+                                            backgroundColor: '#fff'
                                         }
                                     }}>
-                                        <MenuOption
-                                            value={'All'}>
-                                            <Text>
-                                                All
+                                        <MenuOption>
+                                            <Menu
+                                                onSelect={(category: any) => {
+                                                    props.setChannelFilterChoice(category)
+                                                }}>
+                                                <MenuTrigger>
+                                                    <Text style={{ fontFamily: 'inter', fontSize: 15, color: '#43434f', paddingLeft: 10 }}>
+                                                        {filterChoice}<Ionicons name='caret-down' size={15} />
+                                                    </Text>
+                                                </MenuTrigger>
+                                                <MenuOptions customStyles={{
+                                                    optionsContainer: {
+                                                        padding: 10,
+                                                        borderRadius: 15,
+                                                        shadowOpacity: 0,
+                                                        borderWidth: 1,
+                                                        borderColor: '#FBFBFC',
+                                                        overflow: 'scroll',
+                                                        maxHeight: '100%'
+                                                    }
+                                                }}>
+                                                    <MenuOption
+                                                        value={'All'}>
+                                                        <Text>
+                                                            All
+                                                        </Text>
+                                                    </MenuOption>
+                                                    {
+                                                        channelCategories.map((category: any) => {
+                                                            return <MenuOption
+                                                                value={category}>
+                                                                <Text>
+                                                                    {category}
+                                                                </Text>
+                                                            </MenuOption>
+                                                        })
+                                                    }
+                                                </MenuOptions>
+                                            </Menu>
+                                            <Text style={{ fontSize: 10, color: '#43434f', paddingTop: 7, backgroundColor: '#fff', paddingLeft: 10 }}>
+                                                Category
                                             </Text>
                                         </MenuOption>
-                                        {
-                                            channelCategories.map((category: any) => {
-                                                return <MenuOption
-                                                    value={category}>
-                                                    <Text>
-                                                        {category}
-                                                    </Text>
-                                                </MenuOption>
-                                            })
-                                        }
+                                        <MenuOption>
+                                            <View style={{
+                                                flex: 1,
+                                                flexDirection: 'row',
+                                                justifyContent: 'flex-start',
+                                                backgroundColor: '#fff',
+                                                // paddingRight: 30
+                                            }}>
+                                                <DateRangePicker
+                                                    preventOverflow={true}
+                                                    size={'sm'}
+                                                    appearance={'subtle'}
+                                                    placeholder={'Filter  '}
+                                                    onChange={e => {
+                                                        console.log('dates start', e[0])
+                                                        console.log('dates end', e[1])
+                                                        if (e[0] > e[1]) {
+                                                            Alert('End date must be greater')
+                                                            return
+                                                        }
+                                                        else {
+
+                                                            props.setFilterStart(e[0])
+                                                            props.setFilterEnd(e[1])
+                                                        }
+                                                    }}
+                                                    defaultShow={true}
+                                                    showOneCalendar={true}
+                                                    value={[
+                                                        props.filterStart,
+                                                        props.filterEnd
+                                                    ]}
+                                                />
+                                            </View>
+                                        </MenuOption>
                                     </MenuOptions>
                                 </Menu>
                             </View>
-                            <Text style={{ fontSize: 10, color: '#43434F', paddingTop: 7, paddingLeft: 10 }}>
-                                Category
-                            </Text>
                         </View>
-                    </View>
-                    <View style={{
-                        flex: 1,
-                        flexDirection: 'row',
-                        justifyContent: 'flex-end',
-                        backgroundColor: '#f8f9fa',
-                        paddingRight: 30
-                    }}>
-                        <DateRangePicker
-                            preventOverflow={true}
-                            size={'sm'}
-                            appearance={'subtle'}
-                            placeholder={'Filter  '}
-                            onChange={e => {
-                                console.log('dates start', e[0])
-                                console.log('dates end', e[1])
-                                if (e[0] > e[1]) {
-                                    Alert('End date must be greater')
-                                    return
-                                }
-                                else {
-
-                                    props.setFilterStart(e[0])
-                                    props.setFilterEnd(e[1])
-                                }
-                            }}
-                            defaultShow={true}
-                            showOneCalendar={true}
-                            value={[
-                                props.filterStart,
-                                props.filterEnd
-                            ]}
-                        />
                     </View>
                 </View>
             </View>
@@ -258,7 +282,7 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
         paddingBottom: 10,
         // borderTopWidth: 1,
         borderColor: '#555555',
-        backgroundColor: '#f8f9fa'
+        backgroundColor: '#FBFBFC'
     },
     icons: {
         width: '33.33%',
@@ -266,7 +290,7 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
         justifyContent: 'center',
         flexDirection: 'column',
         overflow: 'hidden',
-        backgroundColor: '#f8f9fa'
+        backgroundColor: '#FBFBFC'
     },
     defaultFont: {
         fontFamily: 'system font'
@@ -276,13 +300,13 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
         // justifyContent: 'center',
         display: 'flex',
         textAlign: 'center',
-        backgroundColor: '#f8f9fa'
+        backgroundColor: '#FBFBFC'
     },
     colorBar: {
         width: '100%',
         height: '47%',
         paddingTop: 20,
-        backgroundColor: '#f8f9fa'
+        backgroundColor: '#FBFBFC'
     },
     iconContainer: {
         width: '20%',
@@ -297,14 +321,14 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
         marginBottom: 10,
         marginTop: -8,
         borderRadius: 12,
-        backgroundColor: '#d91d56',
+        backgroundColor: '#F53464',
         textAlign: 'center',
         zIndex: 50
     },
     outline: {
         borderRadius: 12,
-        backgroundColor: colorScheme === 'light' ? '#43434F' : 'white',
-        color: colorScheme === 'light' ? 'white' : '#43434F'
+        backgroundColor: colorScheme === 'light' ? '#43434f' : 'white',
+        color: colorScheme === 'light' ? 'white' : '#43434f'
     },
     cusCategory: {
         fontSize: 15,
@@ -314,16 +338,16 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
     },
     sub: {
         fontSize: 15,
-        color: colorScheme === 'light' ? '#43434F' : 'white',
+        color: colorScheme === 'light' ? '#43434f' : 'white',
         height: 22,
         paddingHorizontal: 10
     },
     subOutline: {
         fontSize: 15,
-        color: colorScheme === 'light' ? '#43434F' : 'white',
+        color: colorScheme === 'light' ? '#43434f' : 'white',
         height: 22,
         paddingHorizontal: 10,
         borderRadius: 12,
-        backgroundColor: colorScheme === 'light' ? '#43434F' : 'white',
+        backgroundColor: colorScheme === 'light' ? '#43434f' : 'white',
     }
 });

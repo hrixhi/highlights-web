@@ -55,8 +55,8 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     return (
         <Animated.View style={{
-            borderColor: '#f8f9fa',
-            backgroundColor: '#f8f9fa',
+            borderColor: '#FBFBFC',
+            backgroundColor: '#FBFBFC',
             // borderBottomWidth: 2,
             // borderTopWidth: 1,
             height: ((dimensions.window.height) * (0.83)),
@@ -69,7 +69,7 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 showsVerticalScrollIndicator={false}
                 horizontal={false}
                 contentContainerStyle={{
-                    backgroundColor: '#f8f9fa',
+                    backgroundColor: '#FBFBFC',
                     width: dimensions.window.width < 1024 ? dimensions.window.width - 50 : (dimensions.window.width * 0.23 - 51),
                     height: dimensions.window.width < 1024 ? '100%' : (((dimensions.window.height) * (0.83)) - 2),
                 }}
@@ -78,7 +78,7 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 {/* <View style={styles.marginSmall} /> */}
                 {
                     filteredCues.map((cue: any, index: number) => {
-                        return <View style={{ height: 65, marginBottom: 15, maxWidth: 500, backgroundColor: '#f8f9fa', alignSelf: 'center', width: '98%' }} key={index}>
+                        return <View style={{ height: 65, marginBottom: 15, maxWidth: 500, backgroundColor: '#FBFBFC', alignSelf: 'center', width: '98%' }} key={index}>
                             <Card
                                 fadeAnimation={props.fadeAnimation}
                                 updateModal={() => props.openUpdate(
@@ -97,11 +97,11 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     })
                 }
                 {
-                    filteredCues.length === 0 ? <Text style={{ fontSize: 20, color: '#818385', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#f8f9fa' }}>
+                    filteredCues.length === 0 ? <Text style={{ fontSize: 20, color: '#818385', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#FBFBFC' }}>
                         {PreferredLanguageText('noCuesCreated')}
                     </Text> : null
                 }
-                <View style={{ height: 15, backgroundColor: '#f8f9fa' }} />
+                <View style={{ height: 15, backgroundColor: '#FBFBFC' }} />
             </ScrollView>
         </Animated.View >
     );
@@ -135,7 +135,7 @@ const styleObject = (channelId: any) => {
             height: 20,
             marginTop: -2,
             borderRadius: 12,
-            backgroundColor: '#d91d56',
+            backgroundColor: '#F53464',
             textAlign: 'center',
             zIndex: 50
         },
@@ -147,7 +147,7 @@ const styleObject = (channelId: any) => {
             height: 20,
             marginTop: -2,
             borderRadius: 12,
-            backgroundColor: '#3B64F8',
+            backgroundColor: '#6963e2',
             textAlign: 'center',
             zIndex: 50
         },

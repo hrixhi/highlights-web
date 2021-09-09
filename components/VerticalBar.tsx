@@ -45,7 +45,7 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 flex: 1,
                 paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 0,
                 paddingTop: Dimensions.get('window').width < 768 ? 5 : 0,
-                backgroundColor: '#f8f9fa',
+                backgroundColor: '#FBFBFC',
                 flexDirection: Dimensions.get('window').width < 768 ? 'row' : 'column'
             }}>
                 <View style={styles.icons}>
@@ -58,10 +58,10 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             props.setChannelCreatedBy('')
                             props.closeModal()
                         }}
-                        style={{ backgroundColor: '#f8f9fa', width: '100%', paddingBottom: 20 }}
+                        style={{ backgroundColor: '#FBFBFC', width: '100%', paddingBottom: 20 }}
                     >
                         <Text style={{ lineHeight: 35, marginTop: Dimensions.get('window').width < 768 ? 20 : 15, width: '100%', textAlign: 'center' }}>
-                            <Ionicons name='arrow-back-outline' size={30} color={'#43434F'} />
+                            <Ionicons name='arrow-back-outline' size={30} color={'#43434f'} />
                         </Text>
                         {/* <Text style={{ fontSize: 10, color: '#fff', }}>
                             Dashboard
@@ -70,7 +70,7 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 </View>
                 <View
                     style={{
-                        flex: 1, backgroundColor: '#f8f9fa', width: '100%',
+                        flex: 1, backgroundColor: '#FBFBFC', width: '100%',
                         // borderWidth: 1,
                     }}>
 
@@ -78,7 +78,7 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         flex: 1,
                         // borderWidth: 1,
                         flexDirection: Dimensions.get('window').width < 768 ? 'row' : (props.menuCollapsed ? 'column' : 'row'),
-                        backgroundColor: '#f8f9fa', width: '100%',
+                        backgroundColor: '#FBFBFC', width: '100%',
                         paddingTop: Dimensions.get('window').width < 768 ? 7 : 0,
                         justifyContent: Dimensions.get('window').width < 768 ? 'space-evenly' : 'flex-start'
                     }}>
@@ -86,17 +86,17 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
 
                             props.channelId !== '' && (props.menuCollapsed === true) ?
                                 <TouchableOpacity
-                                    style={{ backgroundColor: '#f8f9fa', width: Dimensions.get('window').width < 768 ? 'auto' : '100%', paddingBottom: 20 }}
+                                    style={{ backgroundColor: '#FBFBFC', width: Dimensions.get('window').width < 768 ? 'auto' : '100%', paddingBottom: 20 }}
                                     onPress={() => props.openMeeting()}>
                                     <Text style={styles.channelText}>
                                         <Ionicons
-                                            name='chatbubbles-outline' size={19} color={'#43434F'} />
+                                            name='chatbubbles-outline' size={19} color={'#43434f'} />
                                         {
                                             props.meetingOn ?
                                                 <View style={styles.badge} /> : null
                                         }
                                     </Text>
-                                    <Text style={{ fontSize: 10, color: '#43434F', textAlign: 'center', width: Dimensions.get('window').width < 768 ? 'auto' : '100%' }}>
+                                    <Text style={{ fontSize: 10, color: '#43434f', textAlign: 'center', width: Dimensions.get('window').width < 768 ? 'auto' : '100%' }}>
                                         Classroom
                                     </Text>
                                 </TouchableOpacity>
@@ -106,15 +106,15 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             isOwner && props.channelId !== '' && (props.menuCollapsed === true) ?
                                 <TouchableOpacity
                                     style={{
-                                        backgroundColor: '#f8f9fa',
+                                        backgroundColor: '#FBFBFC',
                                         width: Dimensions.get('window').width < 768 ? 'auto' : '100%',
                                         paddingBottom: 20
                                     }}
                                     onPress={() => props.openChannelSettings()}>
                                     <Text style={styles.channelText}>
-                                        <Ionicons name='hammer-outline' size={19} color={'#43434F'} />
+                                        <Ionicons name='hammer-outline' size={19} color={'#43434f'} />
                                     </Text>
-                                    <Text style={{ fontSize: 10, color: '#43434F', textAlign: 'center', width: '100%', }}>
+                                    <Text style={{ fontSize: 10, color: '#43434f', textAlign: 'center', width: '100%', }}>
                                         Settings
                                     </Text>
                                 </TouchableOpacity> : null
@@ -122,17 +122,17 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         {
                             (props.menuCollapsed === true) ?
                                 <TouchableOpacity
-                                    style={{ backgroundColor: '#f8f9fa', width: Dimensions.get('window').width < 768 ? 'auto' : '100%', paddingBottom: 20 }}
+                                    style={{ backgroundColor: '#FBFBFC', width: Dimensions.get('window').width < 768 ? 'auto' : '100%', paddingBottom: 20 }}
                                     onPress={() => props.hideMenu()}>
                                     <Text style={styles.channelText}>
                                         <Ionicons
-                                            name='expand-outline' size={19} color={'#43434F'} />
+                                            name='expand-outline' size={19} color={'#43434f'} />
                                         {
                                             props.meetingOn ?
                                                 <View style={styles.badge} /> : null
                                         }
                                     </Text>
-                                    <Text style={{ fontSize: 10, color: '#43434F', textAlign: 'center', width: Dimensions.get('window').width < 768 ? 'auto' : '100%' }}>
+                                    <Text style={{ fontSize: 10, color: '#43434f', textAlign: 'center', width: Dimensions.get('window').width < 768 ? 'auto' : '100%' }}>
                                         Expand
                                     </Text>
                                 </TouchableOpacity> : null
@@ -156,7 +156,7 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         <Text style={{ textAlign: 'center' }}>
                             {/* <Ionicons
                                 name={'expand-outline'}
-                                color="#43434F"
+                                color="#43434f"
                                 size={20}
                                 style={{}}
                             /> */}
@@ -187,7 +187,7 @@ const styleObject: any = (colorScheme: any, mc: any) => StyleSheet.create({
         justifyContent: 'center',
         flexDirection: 'column',
         overflow: 'hidden',
-        backgroundColor: '#f8f9fa'
+        backgroundColor: '#FBFBFC'
     },
     defaultFont: {
         fontFamily: 'system font'
@@ -197,13 +197,13 @@ const styleObject: any = (colorScheme: any, mc: any) => StyleSheet.create({
         // justifyContent: 'center',
         display: 'flex',
         textAlign: 'left',
-        backgroundColor: '#43434F'
+        backgroundColor: '#43434f'
     },
     colorBar: {
         width: '100%',
         height: '47%',
         paddingTop: 20,
-        backgroundColor: '#43434F'
+        backgroundColor: '#43434f'
     },
     iconContainer: {
         width: '100%',
@@ -218,14 +218,14 @@ const styleObject: any = (colorScheme: any, mc: any) => StyleSheet.create({
         marginBottom: 10,
         marginTop: -4,
         borderRadius: 12,
-        backgroundColor: '#d91d56',
+        backgroundColor: '#F53464',
         textAlign: 'center',
         zIndex: 50
     },
     outline: {
         borderRadius: 12,
-        backgroundColor: colorScheme === 'light' ? '#43434F' : 'white',
-        color: colorScheme === 'light' ? 'white' : '#43434F'
+        backgroundColor: colorScheme === 'light' ? '#43434f' : 'white',
+        color: colorScheme === 'light' ? 'white' : '#43434f'
     },
     cusCategory: {
         fontSize: 15,
@@ -235,21 +235,21 @@ const styleObject: any = (colorScheme: any, mc: any) => StyleSheet.create({
     },
     sub: {
         fontSize: 15,
-        color: colorScheme === 'light' ? '#43434F' : 'white',
+        color: colorScheme === 'light' ? '#43434f' : 'white',
         height: 22,
         paddingHorizontal: 10
     },
     subOutline: {
         fontSize: 15,
-        color: colorScheme === 'light' ? '#43434F' : 'white',
+        color: colorScheme === 'light' ? '#43434f' : 'white',
         height: 22,
         paddingHorizontal: 10,
         borderRadius: 12,
-        backgroundColor: colorScheme === 'light' ? '#43434F' : 'white',
+        backgroundColor: colorScheme === 'light' ? '#43434f' : 'white',
     },
     text: {
         textAlign: 'right',
-        color: '#43434F',
+        color: '#43434f',
         fontSize: 15,
         paddingRight: 15
     },

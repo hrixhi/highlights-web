@@ -8,7 +8,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
-    const colorChoices: any[] = ['#d91d56', '#ED7D22', '#FFBA10', '#B8D41F', '#53BE6D'].reverse()
+    const colorChoices: any[] = ['#6963e2', '#F8992A', '#F7C440', '#3EC57F', '#33A9F4'].reverse()
     const colorScheme = 'dark'
     const styleObject = styles(colorScheme)
 
@@ -47,7 +47,7 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                         </Text> */}
                         {/* {
                             props.cue.submission ? <Text style={styleObject.date}>
-                                <Ionicons name='share-outline' size={9} color={props.cue.submittedAt && props.cue.submittedAt !== '' ? ('#3B64F8') : (colorScheme === 'light' ? '#fff' : '#333333')} style={{ marginRight: 10 }} />
+                                <Ionicons name='share-outline' size={9} color={props.cue.submittedAt && props.cue.submittedAt !== '' ? ('#6963e2') : (colorScheme === 'light' ? '#fff' : '#333333')} style={{ marginRight: 10 }} />
                             </Text> : null
                         }
                         {
@@ -59,7 +59,7 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                         {/* {
                             props.cue.graded && showScore && !isOwner ? <Text style={{
                                 fontSize: 9,
-                                color: '#3B64F8',
+                                color: '#6963e2',
                                 marginLeft: 10
                             }}>
                                 {props.cue.score}%
@@ -76,7 +76,7 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                                     width: '97%',
                                     zIndex: 20
                                 }}>
-                                    <Ionicons name='bookmark' size={18} color={starred ? '#d91d56' : '#fff'} />
+                                    <Ionicons name='bookmark' size={18} color={starred ? '#6963e2' : '#fff'} />
                                 </Text>
                                 : null
                         } */}
@@ -94,7 +94,7 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                         }}>
                             {
                                 props.cue.submission ? <Text>
-                                    <Ionicons name='share-outline' size={11} color={props.cue.submittedAt && props.cue.submittedAt !== '' ? ('#3B64F8') : (colorScheme === 'light' ? '#fff' : '#333333')} style={{ marginRight: 10 }} />
+                                    <Ionicons name='share-outline' size={11} color={props.cue.submittedAt && props.cue.submittedAt !== '' ? ('#6963e2') : (colorScheme === 'light' ? '#fff' : '#333333')} style={{ marginRight: 10 }} />
                                 </Text> : null
                             }
                             {
@@ -113,12 +113,12 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                         </Text> */}
                     </View>
                     <View style={{
-                        backgroundColor: '#f8f9fa',
+                        backgroundColor: '#FBFBFC',
                         width: '100%', flex: 1,
                         height: '100%',
                         flexDirection: 'row'
                     }}>
-                        <View style={{ flex: 1, backgroundColor: '#f8f9fa' }}>
+                        <View style={{ flex: 1, backgroundColor: '#FBFBFC' }}>
                             <Text
                                 ellipsizeMode={'tail'}
                                 numberOfLines={1}
@@ -135,7 +135,7 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                         </View>
                         {
                             props.style ?
-                                <View style={{ flexDirection: 'row', backgroundColor: '#f8f9fa' }}>
+                                <View style={{ flexDirection: 'row', backgroundColor: '#FBFBFC' }}>
                                     {
                                         props.unreadMessages !== undefined
                                             && props.unreadMessages !== 0
@@ -144,7 +144,7 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                                                 width: 20,
                                                 height: 20,
                                                 borderRadius: 12,
-                                                backgroundColor: '#3b64f8',
+                                                backgroundColor: '#6963e2',
                                                 textAlign: 'center',
                                                 zIndex: 150,
                                                 marginLeft: 10,
@@ -165,7 +165,7 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                                     height: 20,
                                     borderRadius: 12,
                                     overflow: 'hidden',
-                                    backgroundColor: '#d91d56',
+                                    backgroundColor: '#6963e2',
                                     textAlign: 'center',
                                     zIndex: 150,
                                     marginLeft: 10,
@@ -183,7 +183,7 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                                     height: 20,
                                     borderRadius: 12,
                                     overflow: 'hidden',
-                                    backgroundColor: '#3b64f8',
+                                    backgroundColor: '#6963e2',
                                     textAlign: 'center',
                                     zIndex: 150,
                                     marginLeft: 5,
@@ -215,7 +215,7 @@ const styles: any = (colorScheme: any) => StyleSheet.create({
         borderRadius: 12,
         padding: 12,
         paddingHorizontal: 15,
-        backgroundColor: '#f8f9fa',
+        backgroundColor: '#FBFBFC',
         borderWidth: 1,
         borderColor: '#eeeeee'
     },
@@ -234,18 +234,18 @@ const styles: any = (colorScheme: any) => StyleSheet.create({
     },
     text: {
         // height: '100%',
-        backgroundColor: '#f8f9fa'
+        backgroundColor: '#FBFBFC'
     },
     flipText: {
         height: '100%',
         color: '#fff',
-        backgroundColor: colorScheme === 'light' ? '#43434f' : '#f8f9fa'
+        backgroundColor: colorScheme === 'light' ? '#43434f' : '#FBFBFC'
     },
     dateContainer: {
         fontSize: 10,
         color: '#fff',
         // height: '25%',
-        backgroundColor: '#f8f9fa',
+        backgroundColor: '#FBFBFC',
         display: 'flex',
         flexDirection: 'row'
     },
@@ -255,17 +255,17 @@ const styles: any = (colorScheme: any) => StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         color: '#fff',
-        backgroundColor: colorScheme === 'light' ? '#43434f' : '#f8f9fa'
+        backgroundColor: colorScheme === 'light' ? '#43434f' : '#FBFBFC'
     },
     date: {
         fontSize: 9,
-        color: colorScheme === 'light' ? '#f8f9fa' : '#333333',
+        color: colorScheme === 'light' ? '#FBFBFC' : '#333333',
         // marginLeft: 10,
         lineHeight: 10
     },
     date2: {
         fontSize: 9,
-        color: colorScheme === 'light' ? '#f8f9fa' : '#333333',
+        color: colorScheme === 'light' ? '#FBFBFC' : '#333333',
         marginLeft: 10,
         lineHeight: 10,
         textAlign: 'right',
@@ -283,7 +283,7 @@ const styles: any = (colorScheme: any) => StyleSheet.create({
     },
     titleFlip: {
         color: colorScheme === 'light' ? '#43434f' : '#43434f',
-        backgroundColor: colorScheme === 'light' ? '#f8f9fa' : '#f8f9fa',
+        backgroundColor: colorScheme === 'light' ? '#FBFBFC' : '#FBFBFC',
         fontFamily: 'inter',
         fontSize: 13,
         // ,

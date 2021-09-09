@@ -202,7 +202,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 width: '100%',
                                 lineHeight: 23
                             }}>
-                                <Ionicons name='arrow-back-outline' size={23} color={'#43434F'} />
+                                <Ionicons name='arrow-back-outline' size={23} color={'#43434f'} />
                             </Text>
                         </TouchableOpacity>
                     </View>
@@ -280,7 +280,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         <RichEditor
                             disabled={false}
                             containerStyle={{
-                                backgroundColor: '#f8f9fa',
+                                backgroundColor: '#FBFBFC',
                                 borderRadius: 15,
                                 padding: 3,
                                 paddingTop: 5,
@@ -290,14 +290,14 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             ref={RichText}
                             style={{
                                 width: '100%',
-                                backgroundColor: '#f8f9fa',
+                                backgroundColor: '#FBFBFC',
                                 borderRadius: 15,
                                 minHeight: 100
                             }}
                             editorStyle={{
-                                backgroundColor: '#f8f9fa',
+                                backgroundColor: '#FBFBFC',
                                 placeholderColor: '#818385',
-                                color: '#43434F',
+                                color: '#43434f',
                                 contentCSSText: 'font-size: 13px;'
                             }}
                             initialContentHTML={props.message}
@@ -325,7 +325,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             !cueId && !parentId ?
                                 <View style={{ width: '33.33%', backgroundColor: 'white' }}>
                                     <View style={{ width: '100%', paddingTop: 40, paddingBottom: 10, backgroundColor: 'white' }}>
-                                        <Text style={{ fontSize: 11, color: '#43434F', textTransform: 'uppercase' }}>
+                                        <Text style={{ fontSize: 11, color: '#43434f', textTransform: 'uppercase' }}>
                                             {PreferredLanguageText('category')}
                                         </Text>
                                     </View>
@@ -357,7 +357,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                 borderRadius: 15,
                                                                 shadowOpacity: 0,
                                                                 borderWidth: 1,
-                                                                borderColor: '#f8f9fa',
+                                                                borderColor: '#FBFBFC',
                                                                 overflow: 'scroll',
                                                                 maxHeight: '100%'
                                                             }
@@ -413,7 +413,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     value={anonymous}
                                     onValueChange={() => setAnonymous(!anonymous)}
                                     trackColor={{
-                                        false: '#f8f9fa',
+                                        false: '#FBFBFC',
                                         true: '#818385'
                                     }}
                                     activeThumbColor='white'
@@ -426,7 +426,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                         parentId ? null :
                                             <View style={{ width: '33.33%', backgroundColor: 'white' }}>
                                                 <View style={{ width: '100%', paddingTop: 40, paddingBottom: 10, backgroundColor: 'white' }}>
-                                                    <Text style={{ fontSize: 11, color: '#43434F', textTransform: 'uppercase' }}>
+                                                    <Text style={{ fontSize: 11, color: '#43434f', textTransform: 'uppercase' }}>
                                                         {PreferredLanguageText('private')}
                                                     </Text>
                                                 </View>
@@ -434,7 +434,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                     value={isPrivate}
                                                     onValueChange={() => setIsPrivate(!isPrivate)}
                                                     trackColor={{
-                                                        false: '#f8f9fa',
+                                                        false: '#FBFBFC',
                                                         true: '#818385'
                                                     }}
                                                     activeThumbColor='white'
@@ -476,7 +476,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             lineHeight: 35,
                             color: 'white',
                             fontSize: 12,
-                            backgroundColor: '#3B64F8',
+                            backgroundColor: '#6963e2',
                             borderRadius: 15,
                             paddingHorizontal: 25,
                             overflow: 'hidden',
@@ -548,7 +548,7 @@ const styles: any = StyleSheet.create({
     },
     input: {
         width: '100%',
-        borderBottomColor: '#f8f9fa',
+        borderBottomColor: '#FBFBFC',
         borderBottomWidth: 1,
         fontSize: 12,
         paddingTop: 12,

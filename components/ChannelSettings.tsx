@@ -156,7 +156,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 borderRadius: 15,
                                 shadowOpacity: 0,
                                 borderWidth: 1,
-                                borderColor: '#f8f9fa',
+                                borderColor: '#FBFBFC',
                                 overflow: 'scroll',
                                 maxHeight: '100%'
                             }
@@ -213,7 +213,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 borderRadius: 15,
                                 shadowOpacity: 0,
                                 borderWidth: 1,
-                                borderColor: '#f8f9fa',
+                                borderColor: '#FBFBFC',
                                 overflow: 'scroll',
                                 maxHeight: '100%'
                             }
@@ -270,7 +270,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 borderRadius: 15,
                                 shadowOpacity: 0,
                                 borderWidth: 1,
-                                borderColor: '#f8f9fa',
+                                borderColor: '#FBFBFC',
                                 overflow: 'scroll',
                                 maxHeight: '100%'
                             }
@@ -765,7 +765,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 style={{ height: 20 }}
                                 trackColor={{
                                     false: "#f4f4f6",
-                                    true: "#3B64F8"
+                                    true: "#6963e2"
                                 }}
                                 activeThumbColor="white"
                             />
@@ -812,7 +812,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             style={{ height: 20 }}
                                             trackColor={{
                                                 false: "#f4f4f6",
-                                                true: "#3B64F8"
+                                                true: "#6963e2"
                                             }}
                                             activeThumbColor="white"
                                         />
@@ -860,7 +860,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             style={{ height: 20 }}
                                             trackColor={{
                                                 false: "#f4f4f6",
-                                                true: "#3B64F8"
+                                                true: "#6963e2"
                                             }}
                                             activeThumbColor="white"
                                         />
@@ -886,7 +886,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 lineHeight: 35,
                                 color: 'white',
                                 fontSize: 12,
-                                backgroundColor: '#3B64F8',
+                                backgroundColor: '#6963e2',
                                 paddingHorizontal: 25,
                                 fontFamily: 'inter',
                                 height: 35,
@@ -1084,7 +1084,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 lineHeight: 35,
                                 color: 'white',
                                 fontSize: 12,
-                                backgroundColor: '#3B64F8',
+                                backgroundColor: '#6963e2',
                                 paddingHorizontal: 25,
                                 fontFamily: 'inter',
                                 height: 35,
@@ -1138,7 +1138,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         lineHeight: 35,
                                         color: '#43434f',
                                         fontSize: 12,
-                                        backgroundColor: '#f8f9fa',
+                                        backgroundColor: '#FBFBFC',
                                         paddingHorizontal: 25,
                                         fontFamily: 'inter',
                                         height: 35,
@@ -1203,7 +1203,7 @@ const styles = StyleSheet.create({
     },
     input: {
         width: '100%',
-        borderBottomColor: '#f8f9fa',
+        borderBottomColor: '#FBFBFC',
         borderBottomWidth: 1,
         fontSize: 15,
         paddingTop: 13,

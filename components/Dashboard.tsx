@@ -281,7 +281,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     fontFamily: 'inter',
                     flex: 1,
                     lineHeight: 23,
-                    color: '#3b64f8'
+                    color: '#6963e2'
                 }}>
                     Results
                 </Text>
@@ -444,7 +444,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                 lineHeight: 30,
                                                                 color: '#fff',
                                                                 fontSize: 12,
-                                                                backgroundColor: '#53BE6D',
+                                                                backgroundColor: '#33A9F4',
                                                                 paddingHorizontal: 25,
                                                                 marginRight: 15,
                                                                 fontFamily: 'inter',
@@ -478,7 +478,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                             <Text style={{
                                                                 textAlign: 'center',
                                                                 lineHeight: 30,
-                                                                color: '#43434F',
+                                                                color: '#43434f',
                                                                 fontSize: 12,
                                                                 backgroundColor: '#f4f4f6',
                                                                 paddingHorizontal: 25,
@@ -505,7 +505,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                         setSelectedCategories(temp)
                                                                     }}>
                                                                     <MenuTrigger>
-                                                                        <Text style={{ fontFamily: 'inter', fontSize: 15, color: '#43434F', paddingTop: 5 }}>
+                                                                        <Text style={{ fontFamily: 'inter', fontSize: 15, color: '#43434f', paddingTop: 5 }}>
                                                                             {selectedCategories[key] === '' ? 'All' : selectedCategories[key]}<Ionicons name='caret-down' size={15} />
                                                                         </Text>
                                                                     </MenuTrigger>
@@ -515,7 +515,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                             borderRadius: 15,
                                                                             shadowOpacity: 0,
                                                                             borderWidth: 1,
-                                                                            borderColor: '#f8f9fa',
+                                                                            borderColor: '#FBFBFC',
                                                                             // overflow: 'scroll',
                                                                             maxHeight: '100%'
                                                                         }
@@ -541,7 +541,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                     </MenuOptions>
                                                                 </Menu>
                                                             </View>
-                                                            <Text style={{ fontSize: 10, color: '#43434F', paddingTop: 7 }}>
+                                                            <Text style={{ fontSize: 10, color: '#43434f', paddingTop: 7 }}>
                                                                 Category
                                                             </Text>
                                                         </View>
@@ -562,13 +562,13 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         >
                                                             <Text style={styles.channelText}>
                                                                 <Ionicons
-                                                                    name='hammer-outline' size={19} color={'#43434F'} />
+                                                                    name='hammer-outline' size={19} color={'#43434f'} />
                                                                 {
                                                                     props.meetingOn ?
                                                                         <View style={styles.badge} /> : null
                                                                 }
                                                             </Text>
-                                                            <Text style={{ fontSize: 10, color: '#43434F', textAlign: 'center' }}>
+                                                            <Text style={{ fontSize: 10, color: '#43434f', textAlign: 'center' }}>
                                                                 Settings
                                                             </Text>
                                                         </TouchableOpacity>
@@ -586,13 +586,13 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     }}>
                                                     <Text style={styles.channelText}>
                                                         <Ionicons
-                                                            name='chatbubbles-outline' size={19} color={'#43434F'} />
+                                                            name='chatbubbles-outline' size={19} color={'#43434f'} />
                                                         {
                                                             props.meetingOn ?
                                                                 <View style={styles.badge} /> : null
                                                         }
                                                     </Text>
-                                                    <Text style={{ fontSize: 10, color: '#43434F', textAlign: 'center' }}>
+                                                    <Text style={{ fontSize: 10, color: '#43434f', textAlign: 'center' }}>
                                                         Classroom
                                                     </Text>
                                                 </TouchableOpacity>
@@ -607,9 +607,9 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     <Text style={{
                                                         textAlign: 'center'
                                                     }}>
-                                                        <Ionicons name={collapseMap[key] ? 'contract-outline' : 'expand-outline'} size={19} color={'#43434F'} />
+                                                        <Ionicons name={collapseMap[key] ? 'contract-outline' : 'expand-outline'} size={19} color={'#43434f'} />
                                                     </Text>
-                                                    <Text style={{ fontSize: 10, color: '#43434F', textAlign: 'center' }}>
+                                                    <Text style={{ fontSize: 10, color: '#43434f', textAlign: 'center' }}>
                                                         {collapseMap[key] ? 'Hide' : 'Expand'}
                                                     </Text>
                                                 </TouchableOpacity>
@@ -623,14 +623,14 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             fontFamily: 'inter',
                                             flex: 1,
                                             lineHeight: 23,
-                                            color: '#3b64f8'
+                                            color: '#6963e2'
                                         }}>
                                             <View style={{
                                                 width: 18,
                                                 height: 18,
                                                 borderRadius: 9,
                                                 marginTop: 1,
-                                                backgroundColor: '#43434F'
+                                                backgroundColor: '#43434f'
                                             }} /> {key}
                                         </Text>
                                         <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', backgroundColor: '#fff', paddingTop: 10 }}>
@@ -645,7 +645,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                     setSelectedCategories(temp)
                                                                 }}>
                                                                 <MenuTrigger>
-                                                                    <Text style={{ fontFamily: 'inter', fontSize: 15, color: '#43434F', paddingTop: 5 }}>
+                                                                    <Text style={{ fontFamily: 'inter', fontSize: 15, color: '#43434f', paddingTop: 5 }}>
                                                                         {selectedCategories[key] === '' ? 'All' : selectedCategories[key]}<Ionicons name='caret-down' size={15} />
                                                                     </Text>
                                                                 </MenuTrigger>
@@ -655,7 +655,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                         borderRadius: 15,
                                                                         shadowOpacity: 0,
                                                                         borderWidth: 1,
-                                                                        borderColor: '#f8f9fa',
+                                                                        borderColor: '#FBFBFC',
                                                                         // overflow: 'scroll',
                                                                         maxHeight: '100%'
                                                                     }
@@ -681,7 +681,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                 </MenuOptions>
                                                             </Menu>
                                                         </View>
-                                                        <Text style={{ fontSize: 10, color: '#43434F', paddingTop: 7 }}>
+                                                        <Text style={{ fontSize: 10, color: '#43434f', paddingTop: 7 }}>
                                                             Category
                                                         </Text>
                                                     </View>
@@ -698,9 +698,9 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     <Text style={{
                                                         textAlign: 'center'
                                                     }}>
-                                                        <Ionicons name={collapseMap[key] ? 'contract-outline' : 'expand-outline'} size={19} color={'#43434F'} />
+                                                        <Ionicons name={collapseMap[key] ? 'contract-outline' : 'expand-outline'} size={19} color={'#43434f'} />
                                                     </Text>
-                                                    <Text style={{ fontSize: 10, color: '#43434F', textAlign: 'center' }}>
+                                                    <Text style={{ fontSize: 10, color: '#43434f', textAlign: 'center' }}>
                                                         {collapseMap[key] ? 'Hide' : 'Expand'}
                                                     </Text>
                                                 </TouchableOpacity>
@@ -740,7 +740,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                             return null
                                                                         } else {
                                                                             // return swiper
-                                                                            return <View style={{ width: 165, height: 190, alignSelf: 'flex-end', marginTop: 0 }}>
+                                                                            return <View style={{ width: 170, height: 190, alignSelf: 'flex-end', marginTop: 0 }}>
                                                                                 <Swiper
                                                                                     controlsProps={{
                                                                                         nextTitle: '>',
@@ -759,7 +759,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                     }}
                                                                                     containerStyle={{
                                                                                         height: 150,
-                                                                                        marginRight: 15,
+                                                                                        marginRight: 20,
                                                                                         marginBottom: 20,
                                                                                         width: 150,
                                                                                         backgroundColor: '#fff',
@@ -818,7 +818,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                     }
                                                                     return <View style={{
                                                                         height: 150,
-                                                                        marginRight: 15,
+                                                                        marginRight: 20,
                                                                         marginBottom: i === priorities.length - 1 ? 0 : 20,
                                                                         maxWidth: 150,
                                                                         backgroundColor: '#fff',
@@ -883,7 +883,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                 return null
                                                             } else {
                                                                 // return swiper
-                                                                return <View style={{ width: 165, height: 175, alignSelf: 'flex-end', marginTop: 25 }}>
+                                                                return <View style={{ width: 170, height: 175, alignSelf: 'flex-end', marginTop: 25 }}>
                                                                     <Swiper
                                                                         controlsProps={{
                                                                             nextTitle: '>',
@@ -902,7 +902,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                         }}
                                                                         containerStyle={{
                                                                             height: 150,
-                                                                            marginRight: 15,
+                                                                            marginRight: 20,
                                                                             width: 150,
                                                                             backgroundColor: '#fff',
                                                                             // alignSelf: 'center',
@@ -963,7 +963,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
                                                         return <View style={{
                                                             height: 150,
-                                                            marginRight: 15,
+                                                            marginRight: 20,
                                                             width: 150,
                                                             backgroundColor: '#fff',
                                                             alignSelf: 'center',
@@ -1025,7 +1025,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 <Text style={{
                                     textAlign: 'center', width: '100%'
                                 }}>
-                                    <Ionicons name={collapseMap[key] ? 'contract-outline' : 'expand-outline'} size={20} color={'#43434F'} />
+                                    <Ionicons name={collapseMap[key] ? 'contract-outline' : 'expand-outline'} size={20} color={'#43434f'} />
                                 </Text>
                             </TouchableOpacity> */}
                         </View>
@@ -1045,7 +1045,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
             maxHeight: '100%',
         }}>
             <View style={{
-                backgroundColor: '#f8f9fa',
+                backgroundColor: '#FBFBFC',
                 borderColor: '#eeeeee',
                 borderWidth: 1,
                 // borderWidth: 1,
@@ -1056,7 +1056,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 paddingBottom: 0,
                 width: '100%'
             }}>
-                <View style={{ flexDirection: 'row', flex: 1, backgroundColor: '#f8f9fa', }}>
+                <View style={{ flexDirection: 'row', flex: 1, backgroundColor: '#FBFBFC', }}>
                     <Image
                         source={logo}
                         style={{
@@ -1067,12 +1067,12 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     />
                     {
                         Dimensions.get('window').width < 768 ?
-                            <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end', backgroundColor: '#f8f9fa', }}>
+                            <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end', backgroundColor: '#FBFBFC', }}>
                                 <Menu
                                     onSelect={(op: any) => props.setOption(op)}>
                                     <MenuTrigger style={{ flexDirection: 'row' }}>
                                         <Text style={{
-                                            color: '#43434F',
+                                            color: '#43434f',
                                             paddingLeft: 10,
                                             textTransform: 'uppercase',
                                             flexDirection: 'row',
@@ -1081,7 +1081,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         }}>
                                             {props.option}
                                         </Text>
-                                        <Text style={{ color: '#43434F', paddingLeft: 10, flexDirection: 'row', lineHeight: 14, fontSize: 14, marginTop: 2 }}>
+                                        <Text style={{ color: '#43434f', paddingLeft: 10, flexDirection: 'row', lineHeight: 14, fontSize: 14, marginTop: 2 }}>
                                             <Ionicons name='menu-outline' size={25} />
                                         </Text>
                                     </MenuTrigger>
@@ -1091,7 +1091,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             borderRadius: 15,
                                             shadowOpacity: 0,
                                             borderWidth: 1,
-                                            borderColor: '#f8f9fa',
+                                            borderColor: '#FBFBFC',
                                             overflow: 'scroll',
                                             maxHeight: '100%',
                                         }
@@ -1109,12 +1109,12 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     </MenuOptions>
                                 </Menu>
                             </View>
-                            : <View style={{ flexDirection: 'row', paddingLeft: 30, flex: 1, backgroundColor: '#f8f9fa' }}>
+                            : <View style={{ flexDirection: 'row', paddingLeft: 30, flex: 1, backgroundColor: '#FBFBFC' }}>
                                 {
                                     props.options.map((op: any) => {
                                         return <TouchableOpacity
                                             style={{
-                                                backgroundColor: '#f8f9fa'
+                                                backgroundColor: '#FBFBFC'
                                             }}
                                             onPress={() => props.setOption(op)}>
                                             <Text style={op === props.option ? styles.allGrayFill : styles.all}>
@@ -1133,10 +1133,10 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     marginTop: Dimensions.get('window').width < 768 ? 25 : 0,
                     // flex: Dimensions.get('window').width < 768 ? 1 : 0,
                     // borderWidth: 1,
-                    backgroundColor: '#f8f9fa'
+                    backgroundColor: '#FBFBFC'
                 }}>
                     {/* {
-                        width < 768 ? <Ionicons name='search-outline' size={20} color='#43434F'
+                        width < 768 ? <Ionicons name='search-outline' size={20} color='#43434f'
                             style={{
                                 marginLeft: Dimensions.get('window').width < 768 ? 0 : 40,
                                 marginTop: 0
@@ -1172,7 +1172,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
                             }}>
                             <MenuTrigger>
-                                <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#43434F', paddingTop: 7 }}>
+                                <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#43434f', paddingTop: 7 }}>
                                     FILTER <Ionicons name="caret-down" size={14} />
                                 </Text>
                             </MenuTrigger>
@@ -1182,7 +1182,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     borderRadius: 15,
                                     shadowOpacity: 0,
                                     borderWidth: 1,
-                                    borderColor: '#f8f9fa',
+                                    borderColor: '#FBFBFC',
                                     overflow: 'scroll',
                                     maxHeight: '100%'
                                 }
@@ -1197,7 +1197,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     setSortBy(category)
                                                 }}>
                                                 <MenuTrigger>
-                                                    <Text style={{ fontFamily: 'inter', fontSize: 15, color: '#43434F' }}>
+                                                    <Text style={{ fontFamily: 'inter', fontSize: 15, color: '#43434f' }}>
                                                         {sortBy}<Ionicons name='caret-down' size={15} />
                                                     </Text>
                                                 </MenuTrigger>
@@ -1207,7 +1207,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         borderRadius: 15,
                                                         shadowOpacity: 0,
                                                         borderWidth: 1,
-                                                        borderColor: '#f8f9fa',
+                                                        borderColor: '#FBFBFC',
                                                         overflow: 'scroll',
                                                         maxHeight: '100%'
                                                     }
@@ -1233,7 +1233,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 </MenuOptions>
                                             </Menu>
                                         </View>
-                                        <Text style={{ fontSize: 10, color: '#43434F', paddingTop: 7, backgroundColor: '#fff' }}>
+                                        <Text style={{ fontSize: 10, color: '#43434f', paddingTop: 7, backgroundColor: '#fff' }}>
                                             Sort By
                                         </Text>
                                     </View>
@@ -1285,7 +1285,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         </Menu> : null
                     }
                     {/* {
-                        width < 768 ? null : <Ionicons name='search-outline' size={20} color='#43434F'
+                        width < 768 ? null : <Ionicons name='search-outline' size={20} color='#43434f'
                             style={{
                                 marginLeft: Dimensions.get('window').width < 768 ? 0 : 40,
                                 marginTop: 0
@@ -1313,7 +1313,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             placeholderTextColor={"#818385"}
                         />
                     }
-                    <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#f8f9fa' }} />
+                    <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#FBFBFC' }} />
                     <Menu
                         style={{ marginLeft: 30, right: 0, marginTop: -7 }}
                         onSelect={(op: any) => props.setOption(op)}>
@@ -1335,7 +1335,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 borderRadius: 15,
                                 shadowOpacity: 0,
                                 borderWidth: 1,
-                                borderColor: '#f8f9fa',
+                                borderColor: '#FBFBFC',
                                 overflow: 'scroll',
                                 maxHeight: '100%'
                             }
@@ -1428,10 +1428,10 @@ export default Dashboard
 const styleObject: any = () => StyleSheet.create({
     all: {
         fontSize: 13,
-        color: '#43434F',
+        color: '#43434f',
         height: 24,
         paddingHorizontal: 20,
-        backgroundColor: '#f8f9fa',
+        backgroundColor: '#FBFBFC',
         lineHeight: 24,
         fontFamily: 'inter',
         textTransform: 'uppercase'
@@ -1441,7 +1441,7 @@ const styleObject: any = () => StyleSheet.create({
         color: '#fff',
         paddingHorizontal: 20,
         borderRadius: 12,
-        backgroundColor: '#43434F',
+        backgroundColor: '#43434f',
         lineHeight: 24,
         height: 24,
         fontFamily: 'inter',
