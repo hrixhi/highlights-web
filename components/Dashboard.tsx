@@ -358,6 +358,16 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         <SearchResultCard
                                             title={t}
                                             subtitle={s}
+                                            onPress={() => {
+                                                if (option === 'Notes') {
+                                                    props.openCueFromCalendar(obj.channelId, obj._id, obj.createdBy)
+                                                } else if (option === '') {
+
+                                                } else {
+                                                    
+                                                }
+
+                                            }}
                                         />
                                     </View>
                                 })}

@@ -8,7 +8,7 @@ import {
     RichEditor
 } from "react-native-pell-rich-editor";
 import { fetchAPI } from '../graphql/FetchAPI';
-import { editPersonalMeeting, findUserById, getMessages, getPersonalMeetingLink, getPersonalMeetingLinkStatus, inviteByEmail, isSubInactive, makeSubActive, makeSubInactive, markMessagesAsRead, submitGrade, unsubscribe, getQuiz, gradeQuiz, editReleaseSubmission, personalMeetingRequest } from '../graphql/QueriesAndMutations';
+import { editPersonalMeeting, findUserById, getMessages, getPersonalMeetingLink, getPersonalMeetingLinkStatus, inviteByEmail, isSubInactive, makeSubActive, makeSubInactive, markMessagesAsRead, submitGrade, unsubscribe, getQuiz, gradeQuiz, editReleaseSubmission, personalMeetingRequest, updateAnnotation, modifyActiveAttemptQuiz } from '../graphql/QueriesAndMutations';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Alert from './Alert';
 import NewMessage from './NewMessage';
@@ -32,6 +32,7 @@ import {
     MenuOption,
     MenuTrigger,
 } from 'react-native-popup-menu';
+import parser from 'html-react-parser';
 
 const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -61,6 +62,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
     const [emails, setEmails] = useState('')
     const [showNewGroup, setShowNewGroup] = useState(false)
     const RichText: any = useRef()
+    const submissionViewerRef: any = useRef();
     const [selected, setSelected] = useState<any[]>([])
     const [expandMenu, setExpandMenu] = useState(false)
     const [comment, setComment] = useState('')
@@ -78,12 +80,18 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
     const [meetingLink, setMeetingLink] = useState('')
     const [loading, setLoading] = useState(false);
     const [releaseSubmission, setReleaseSubmission] = useState(false);
+    const [submissionAttempts, setSubmissionAttempts] = useState<any[]>([]);
+    const [viewSubmissionTab, setViewSubmissionTab] = useState('mySubmission');
+    const [quizAttempts, setQuizAttempts] = useState<any[]>([]);
+    const [activeQuizAttempt, setActiveQuizAttempt] = useState(0);
+    const [currentQuizAttempt, setCurrentQuizAttempt] = useState(0);
 
     // Quiz 
     const [problems, setProblems] = useState<any[]>([]);
     const [submittedAt, setSubmittedAt] = useState('');
     const [deadline, setDeadline] = useState('');
     const [isV0Quiz, setIsV0Quiz] = useState(false)
+    const [isV1Quiz, setIsV1Quiz] = useState(false);
     const [headers, setHeaders] = useState({})
     const [exportAoa, setExportAoa] = useState<any[]>()
 
@@ -172,111 +180,111 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
     })
 
     // PREPARE EXPORT DATA 
-    useEffect(() => {
+    // useEffect(() => {
 
-        if (problems.length === 0 || subscribers.length === 0) {
-            return;
-        }
+    //     if (problems.length === 0 || subscribers.length === 0) {
+    //         return;
+    //     }
 
-        const exportAoa = [];
+    //     const exportAoa = [];
 
-        // Add row 1 with Overall, problem Score, problem Comments,
-        let row1 = [""];
+    //     // Add row 1 with Overall, problem Score, problem Comments,
+    //     let row1 = [""];
 
-        // Add Graded 
-        row1.push("Graded")
+    //     // Add Graded 
+    //     row1.push("Graded")
 
-        // Add total
-        row1.push("Total score")
+    //     // Add total
+    //     row1.push("Total score")
 
-        problems.forEach((prob: any, index: number) => {
-            row1.push(`${index + 1}: ${prob.question} (${prob.points})`)
-            row1.push("Score + Remark")
-        })
+    //     problems.forEach((prob: any, index: number) => {
+    //         row1.push(`${index + 1}: ${prob.question} (${prob.points})`)
+    //         row1.push("Score + Remark")
+    //     })
 
-        row1.push("Submission Date")
+    //     row1.push("Submission Date")
 
-        row1.push("Feedback")
+    //     row1.push("Feedback")
 
-        exportAoa.push(row1);
+    //     exportAoa.push(row1);
 
-        // Row 2 should be correct answers
-        const row2 = ["", "", ""];
+    //     // Row 2 should be correct answers
+    //     const row2 = ["", "", ""];
 
-        problems.forEach((prob: any, i: number) => {
-            const { questionType, required, options = [], } = prob;
-            let type = questionType === "" ? "MCQ" : "Free Response";
+    //     problems.forEach((prob: any, i: number) => {
+    //         const { questionType, required, options = [], } = prob;
+    //         let type = questionType === "" ? "MCQ" : "Free Response";
 
-            let require = required ? "Required" : "Optional";
+    //         let require = required ? "Required" : "Optional";
 
-            let answer = "";
+    //         let answer = "";
 
-            if (questionType === "") {
-                answer += "Ans: "
-                options.forEach((opt: any, index: number) => {
-                    if (opt.isCorrect) {
-                        answer += ((index + 1) + ", ");
-                    }
-                })
-            }
+    //         if (questionType === "") {
+    //             answer += "Ans: "
+    //             options.forEach((opt: any, index: number) => {
+    //                 if (opt.isCorrect) {
+    //                     answer += ((index + 1) + ", ");
+    //                 }
+    //             })
+    //         }
 
-            row2.push(`${type} ${answer}`)
-            row2.push(`(${require})`)
-        })
+    //         row2.push(`${type} ${answer}`)
+    //         row2.push(`(${require})`)
+    //     })
 
-        exportAoa.push(row2)
+    //     exportAoa.push(row2)
 
-        // Subscribers
-        subscribers.forEach((sub: any) => {
+    //     // Subscribers
+    //     subscribers.forEach((sub: any) => {
 
-            const subscriberRow: any[] = [];
+    //         const subscriberRow: any[] = [];
 
-            const { displayName, submission, submittedAt, comment, graded, score } = sub;
+    //         const { displayName, submission, submittedAt, comment, graded, score } = sub;
 
-            subscriberRow.push(displayName);
-            subscriberRow.push(graded ? "Graded" : (submittedAt !== null ? "Submitted" : "Not Submitted"))
+    //         subscriberRow.push(displayName);
+    //         subscriberRow.push(graded ? "Graded" : (submittedAt !== null ? "Submitted" : "Not Submitted"))
 
-            if (!graded || !submittedAt) {
-                exportAoa.push(subscriberRow);
-                return;
-            }
+    //         if (!graded || !submittedAt) {
+    //             exportAoa.push(subscriberRow);
+    //             return;
+    //         }
 
-            subscriberRow.push(`${score}`)
+    //         subscriberRow.push(`${score}`)
 
-            const obj = JSON.parse(submission);
+    //         const obj = JSON.parse(submission);
 
-            const { solutions, problemScores, problemComments } = obj;
+    //         const { solutions, problemScores, problemComments } = obj;
 
-            solutions.forEach((sol: any, i: number) => {
-                let response = ''
-                if ("selected" in sol) {
-                    const options = sol["selected"];
+    //         solutions.forEach((sol: any, i: number) => {
+    //             let response = ''
+    //             if ("selected" in sol) {
+    //                 const options = sol["selected"];
 
-                    options.forEach((opt: any, index: number) => {
-                        if (opt.isSelected) response += ((index + 1) + " ")
-                    })
-                } else {
-                    response = sol["response"]
-                }
+    //                 options.forEach((opt: any, index: number) => {
+    //                     if (opt.isSelected) response += ((index + 1) + " ")
+    //                 })
+    //             } else {
+    //                 response = sol["response"]
+    //             }
 
-                subscriberRow.push(`${response}`);
-                subscriberRow.push(`${problemScores ? problemScores[i] : ""} - Remark: ${problemComments ? problemComments[i] : ''}`)
-
-
-            })
-
-            subscriberRow.push(moment(new Date(Number(submittedAt))).format("MMMM Do YYYY, h:mm a"))
-
-            subscriberRow.push(comment)
-
-            exportAoa.push(subscriberRow);
-
-        })
-
-        setExportAoa(exportAoa)
+    //             subscriberRow.push(`${response}`);
+    //             subscriberRow.push(`${problemScores ? problemScores[i] : ""} - Remark: ${problemComments ? problemComments[i] : ''}`)
 
 
-    }, [problems, subscribers])
+    //         })
+
+    //         subscriberRow.push(moment(new Date(Number(submittedAt))).format("MMMM Do YYYY, h:mm a"))
+
+    //         subscriberRow.push(comment)
+
+    //         exportAoa.push(subscriberRow);
+
+    //     })
+
+    //     setExportAoa(exportAoa)
+
+
+    // }, [problems, subscribers])
 
     useEffect(() => {
 
@@ -309,11 +317,49 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                 setIsQuiz(true)
                 setQuizSolutions(obj)
 
-            } else {
+            // This is old schema for submission
+            } else if (obj.url !== undefined && obj.title !== undefined && obj.type !== undefined) {
+
                 setImported(true)
                 setUrl(obj.url)
                 setType(obj.type)
                 setTitle(obj.title)
+            } else if (obj.attempts !== undefined && obj.submissionDraft !== undefined && obj.quizResponses === undefined) {
+
+                // Check if submission draft contains imported document
+                if (obj.submissionDraft[0] === '{' && obj.submissionDraft[obj.submissionDraft.length - 1] === '}') {
+                    let parse = JSON.parse(obj.submissionDraft);
+
+                    if (parse.url !== undefined && parse.title !== undefined && parse.type !== undefined) {
+                        setImported(true);
+                        setUrl(parse.url);
+                        setType(parse.type);
+                        setTitle(parse.title)
+                    } 
+
+                } 
+
+                setSubmissionAttempts(obj.attempts)
+            } else if (obj.attempts !== undefined && obj.quizResponses !== undefined) {
+                
+                setIsQuiz(true)
+                setIsV1Quiz(true)
+                setQuizAttempts(obj.attempts);
+
+                // Set solutions to the active quiz attempt
+                obj.attempts.map((attempt: any, index: number) => {
+
+                    if (attempt.isActive) {
+                        setActiveQuizAttempt(index)
+                        setCurrentQuizAttempt(index);
+                        setQuizSolutions(attempt)
+                        setInitiatedAt(attempt.initiatedAt)
+                        setSubmittedAt(attempt.submittedAt)
+                        setGraded(attempt.isFullyGraded)
+                        
+                    }
+                })
+
             }
 
             if (obj.initiatedAt) {
@@ -327,6 +373,74 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
             setTitle('')
         }
     }, [submission])
+
+    useEffect(() => {
+ 
+        if (submissionAttempts && submissionAttempts.length > 0 && submissionViewerRef && submissionViewerRef.current) {
+            const attempt = submissionAttempts[submissionAttempts.length - 1];
+
+            let url = attempt.html !== undefined ? attempt.annotationPDF : attempt.url;
+            
+            if (!url) {
+                return;
+            }
+
+            WebViewer(
+                {
+                    initialDoc: decodeURIComponent(url),
+                },
+                submissionViewerRef.current,
+            ).then(async (instance) => {
+                const { documentViewer, annotationManager } = instance.Core;
+
+                const u = await AsyncStorage.getItem("user");
+                if (u) {
+                    const user = JSON.parse(u);
+                    annotationManager.setCurrentUser(user.fullName)
+                }
+
+                documentViewer.addEventListener('documentLoaded', () => {
+                    // perform document operations
+
+                    const currAttempt = submissionAttempts[submissionAttempts.length - 1];
+
+                    const xfdfString = currAttempt.annotations;
+
+                    if (xfdfString !== "") {
+                        annotationManager.importAnnotations(xfdfString).then((annotations: any) => {
+                            annotations.forEach((annotation: any) => {
+                                annotationManager.redrawAnnotation(annotation);
+                            });
+                        });
+                    }
+                });
+
+                
+
+                annotationManager.addEventListener('annotationChanged', async (annotations: any, action: any, { imported }) => {
+                    // If the event is triggered by importing then it can be ignored
+                    // This will happen when importing the initial annotations
+                    // from the server or individual changes from other users
+                    if (imported) return;
+              
+                    const xfdfString = await annotationManager.exportAnnotations({ useDisplayAuthor: true });
+
+                    const currAttempt = submissionAttempts[submissionAttempts.length - 1];
+
+                    currAttempt.annotations = xfdfString;
+
+                    const allAttempts = [...submissionAttempts];
+
+                    allAttempts[allAttempts.length - 1] = currAttempt;
+
+                    await handleAnnotationsUpdate(allAttempts);
+
+                  });
+                
+            });
+        }
+
+    }, [submissionAttempts, submissionViewerRef, submissionViewerRef.current])
 
     useEffect(() => {
         if (quizSolutions) {
@@ -370,6 +484,25 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
         setSelected(value)
     }, [subscribers])
 
+    const handleAnnotationsUpdate = useCallback((attempts: any) => {
+
+        const server = fetchAPI('')
+        server.mutate({
+            mutation: updateAnnotation,
+            variables: {
+                cueId: props.cueId,
+                userId,
+                attempts: JSON.stringify(attempts)
+            }
+        }).then(res => {
+            if (res.data.cue.updateAnnotation) {
+                // props.reload()
+                // setShowSubmission(false)
+            }
+        })
+
+    }, [userId, props.cueId])
+
     const handleGradeSubmit = useCallback(() => {
         if (Number.isNaN(Number(score))) {
             return
@@ -385,8 +518,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
             }
         }).then(res => {
             if (res.data.cue.submitGrade) {
-                props.reload()
-                setShowSubmission(false)
+                props.reloadStatuses()
             }
         })
     }, [score, userId, props.cueId, comment])
@@ -693,6 +825,25 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
             Alert("Something went wrong.")
         })
     }, [users, userId, props.channelId, user])
+    
+    const modifyActiveQuizAttempt = () => {
+        const server = fetchAPI("");
+        server
+            .mutate({
+                mutation: modifyActiveAttemptQuiz,
+                variables: {
+                    cueId: props.cueId,
+                    userId,
+                    quizAttempt: currentQuizAttempt
+                }
+            })
+            .then(res => {
+                if (res.data && res.data.cue.modifyActiveAttemptQuiz) {
+                    props.reload()
+                }
+            });
+
+    }
 
     const onGradeQuiz = (problemScores: string[], problemComments: string[], score: number, comment: string) => {
         const server = fetchAPI("");
@@ -705,7 +856,8 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                     problemScores,
                     problemComments,
                     score,
-                    comment
+                    comment,
+                    quizAttempt: isV1Quiz ? currentQuizAttempt : null
                 }
             })
             .then(res => {
@@ -714,7 +866,6 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                     setShowSubmission(false)
                 }
             });
-
     }
 
     const exportScores = () => {
@@ -794,7 +945,65 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                 // perform document operations
             });
         });
-    }, [url, RichText, imported]);
+    }, [url, RichText, imported, type, submissionAttempts]);
+
+
+    const renderViewSubmission = () => {
+        const attempt = submissionAttempts[submissionAttempts.length - 1];
+
+        return (<View style={{ width: '100%', marginTop: 20 }}>
+            {/* Render Tabs to switch between original submission and Annotations only if submission was HTML and not a file upload */}
+            {attempt.url !== undefined ? null : <View style={{ flexDirection: "row", width: '100%', justifyContent: 'center' }}>
+                <TouchableOpacity
+                    style={{
+                        justifyContent: "center",
+                        flexDirection: "column"
+                    }}
+                    onPress={() => {
+                        setViewSubmissionTab("mySubmission");
+                    }}>
+                    <Text style={viewSubmissionTab === "mySubmission" ? styles.allGrayFill : styles.all}>
+                        View Submission
+                    </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={{
+                        justifyContent: "center",
+                        flexDirection: "column"
+                    }}
+                    onPress={() => {
+                        setViewSubmissionTab("instructorAnnotations");
+                    }}>
+                    <Text style={viewSubmissionTab === "instructorAnnotations" ? styles.allGrayFill : styles.all}>
+                        Annotations
+                    </Text>
+                </TouchableOpacity>
+            </View>}
+            {
+                attempt.url !== undefined ? 
+                    (attempt.type === 'mp4' || attempt.type === 'mp3' || attempt.type === 'mov' || attempt.type === 'mpeg' || attempt.type === 'mp2' || attempt.type === 'wav' ?
+                    <View style={{ width: '100%', marginTop: 25 }}>
+                        <ReactPlayer url={url} controls={true} /> 
+                    </View>
+                    : 
+                    <View style={{ width: '100%', marginTop: 25 }}>
+                        <div className="webviewer" ref={submissionViewerRef} style={{ height: "100vh" }}></div>
+                    </View>)
+                :
+                <View style={{ width: '100%', marginTop: 25 }}>
+                   {viewSubmissionTab === "mySubmission" ?  
+                    <View style={{ width: '100%' }}>
+                        {parser(attempt.html)}
+                    </View> : 
+                    <div className="webviewer" ref={submissionViewerRef} style={{ height: "100vh" }}></div>
+                }
+               </View>
+
+            }
+        </View>)
+
+
+    }
 
     const renderQuizSubmissions = () => {
 
@@ -871,6 +1080,9 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         setUsers([])
                                         props.reload()
                                     } else {
+                                        if (showSubmission) {
+                                            props.reloadStatuses()
+                                        }
                                         setShowSubmission(false)
                                         setStatus("")
                                         setScore("0")
@@ -1387,7 +1599,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 isQuiz && !isV0Quiz ?
                                     <View style={{ width: '100%', paddingBottom: 0 }}>
                                         {
-                                            submittedAt !== "" && deadline !== "" && submittedAt >= deadline ?
+                                            submittedAt !== "" && deadline !== "" && new Date(submittedAt) >= new Date(parseInt(deadline)) ?
                                                 <View style={{ width: '100%', }}>
                                                     <View style={{ borderRadius: 12, padding: 5, borderWidth: 1, borderColor: '#f94144', marginVertical: 10, width: 150, marginLeft: 'auto' }}>
                                                         <Text style={{ color: '#f94144', fontSize: 13, textAlign: 'center' }}>
@@ -1398,6 +1610,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 :
                                                 null
                                         }
+
                                         <QuizGrading
                                             loading={loading}
                                             problems={problems}
@@ -1409,6 +1622,23 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             isOwner={true}
                                             initiatedAt={initiatedAt}
                                             submittedAt={submittedAt}
+                                            attempts={quizAttempts}
+                                            activeQuizAttempt={activeQuizAttempt}
+                                            currentQuizAttempt={currentQuizAttempt}
+                                            modifyActiveQuizAttempt={modifyActiveQuizAttempt}
+                                            isV1Quiz={isV1Quiz}
+                                            onChangeQuizAttempt={(attempt: number) => {
+
+                                                setCurrentQuizAttempt(attempt);
+
+                                                quizAttempts.map((att: any, index: number) => {
+                                                    if (index === attempt) {
+                                                        setQuizSolutions(att)
+                                                        setGraded(att.isFullyGraded)
+                                                        setInitiatedAt(att.initiatedAt)
+                                                    }
+                                                })
+                                            }}
                                         />
                                     </View>
                                     :
@@ -1417,7 +1647,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             showsVerticalScrollIndicator={false}
                                             keyboardDismissMode={'on-drag'}
                                             contentContainerStyle={{
-                                                height: windowHeight - 132
+                                                // height: windowHeight - 132
                                             }}
                                             style={{ flex: 1, paddingTop: 12 }}>
                                             {
@@ -1432,6 +1662,14 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                     :
                                                     null
                                             }
+                                            <View style={{ width: '100%', marginBottom: 20 }}>
+                                                <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                                                    <Ionicons name='checkmark-outline' size={22} color={"#53BE68"} /> 
+                                                    <Text style={{ fontSize: 15, paddingLeft: 5 }}>
+                                                        Turned In at {moment(new Date(parseInt(submittedAt))).format('MMMM Do, h:mm a')}
+                                                    </Text>
+                                                </View> 
+                                            </View>
                                             <View style={{ flexDirection: 'row', flex: 1 }}>
                                                 <View style={{
                                                     width: '40%'
@@ -1441,7 +1679,16 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                     </Text>
                                                     <TextInput
                                                         value={score}
-                                                        style={styles.input}
+                                                        style={{
+                                                            width: 120,
+                                                            borderBottomColor: '#cccccc',
+                                                            borderBottomWidth: 1,
+                                                            fontSize: 15,
+                                                            paddingTop: 13,
+                                                            paddingBottom: 13,
+                                                            marginTop: 5,
+                                                            marginBottom: 20
+                                                        }}
                                                         placeholder={'0-100'}
                                                         onChangeText={val => setScore(val)}
                                                         placeholderTextColor={'#818385'}
@@ -1499,8 +1746,10 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 isQuiz && Object.keys(quizSolutions).length > 0 ?
                                                     renderQuizSubmissions() : null
                                             }
+                                            {submissionAttempts.length > 0 && !isQuiz ? renderViewSubmission() : null}
+                                            {/* Old Schema */}
                                             {
-                                                !imported && !isQuiz ?
+                                                submissionAttempts.length > 0 ? null : !imported && !isQuiz ?
                                                     <View style={{ position: 'relative', flex: 1, overflow: 'scroll', height: 20000 }}>
                                                         <View style={{ position: 'absolute', zIndex: 1, width: 800, height: 20000 }}>
                                                             <RichEditor
@@ -1753,6 +2002,24 @@ const styleObject = () => {
             borderWidth: 1,
             borderColor: '#818385',
             color: 'white'
-        }
+        },
+        all: {
+            fontSize: 14,
+            color: '#2f2f3c',
+            height: 22,
+            paddingHorizontal: 20,
+            backgroundColor: '#fff',
+            lineHeight: 22,
+            fontFamily: 'inter'
+        },
+        allGrayFill: {
+            fontSize: 14,
+            color: '#fff',
+            paddingHorizontal: 20,
+            borderRadius: 10,
+            backgroundColor: '#2f2f3c',
+            lineHeight: 22,
+            fontFamily: 'inter'
+        },
     })
 }

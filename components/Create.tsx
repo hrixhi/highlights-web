@@ -129,6 +129,11 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
   const [initialDuration, setInitialDuration] = useState(null);
 
   const [channelName, setChannelName] = useState("");
+  const [limitedShare, setLimitedShare] = useState(false);
+
+  // Submission allowed attempts
+  const [unlimitedAttempts, setUnlimitedAttempts] = useState(false);
+  const [attempts, setAttempts] = useState("1");
 
   const window = Dimensions.get("window");
   const screen = Dimensions.get("screen");
@@ -654,11 +659,11 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
         }
 
 
-        if (selected.length === 0) {
-          Alert(noStudentSelectedAlert, selectWhoToShareAlert);
-          setIsSubmitting(false);
-          return;
-        }
+        // if (selected.length === 0) {
+        //   Alert(noStudentSelectedAlert, selectWhoToShareAlert);
+        //   setIsSubmitting(false);
+        //   return;
+        // }
 
         if ((submission || isQuiz) && deadline < initiateAt) {
           Alert("Available from time must be set before deadline", "");
@@ -696,7 +701,9 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
               ? endPlayAt.toISOString()
               : "",
           shareWithUserIds:
-            selected.length === subscribers.length ? null : userIds,
+            !limitedShare ? null : userIds,
+          limitedShares: limitedShare,
+          allowedAttempts: attempts
         };
 
         server
@@ -1643,17 +1650,59 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                       </Menu>
                       <View
                         style={{
-                          width: "100%",
+                          // width: "100%",
                           borderRightWidth: 0,
                           borderColor: "#FBFBFC",
                         }}
                       >
-                        {channelId !== "" ? (
+                        {
+                          channelId !== "" ? (<View>
+                            <View
+                              style={{
+                                width: "100%",
+                                paddingTop: 40,
+                                paddingBottom: 15,
+                                backgroundColor: "white",
+                              }}
+                            >
+                              <Text
+                                style={{
+                                  fontSize: 15,
+                                  fontFamily: 'inter',
+                                  color: '#2f2f3c'
+                                }}
+                              >
+                                All subscribers
+                              </Text>
+                            </View>
+                            <View style={{ flexDirection: "row" }}>
+                              <View
+                                style={{
+                                  backgroundColor: "white",
+                                  height: 40,
+                                  marginRight: 10,
+                                }}
+                              >
+                                <Switch
+                                  value={!limitedShare}
+                                  onValueChange={() => {
+                                    setLimitedShare(!limitedShare);
+                                  }}
+                                  style={{ height: 20 }}
+                                  trackColor={{
+                                    false: "#F8F9FA",
+                                    true: "#818385",
+                                  }}
+                                  activeThumbColor="white"
+                                />
+                              </View>
+                            </View>
+                          </View>) : null
+                        }
+                        {channelId !== "" && limitedShare ? (
                           <View
                             style={{
                               flexDirection: "column",
-                              marginTop: 25,
-                              maxWidth: 500,
                               overflow: "scroll",
                             }}
                           >
@@ -1662,7 +1711,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                 placeholder="Share with..."
                                 displayValue="name"
                                 // key={userDropdownOptions.toString()}
-                                // style={{ width: '100%', color: '#43434f',
+                                // style={{ width: '100%', color: '#43434F',
                                 //     optionContainer: { // To change css for option container
                                 //         zIndex: 9999
                                 //     }
@@ -1873,6 +1922,93 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           </View>
                         ) : null}
                       </View>
+                    </View>
+                  </View>
+                ) : null}
+
+                {/* Allowed attempts */}
+
+                {submission && isQuiz ? (
+                  <View style={{ width: "100%" }}>
+                    <View
+                      style={{
+                        width: "100%",
+                        paddingTop: 40,
+                        paddingBottom: 15,
+                        backgroundColor: "white",
+                      }}
+                    >
+                      <Text
+                        style={{
+                          fontSize: 15,
+                          fontFamily: 'inter',
+                          color: '#2f2f3c'
+                        }}
+                      >
+                        Unlimited Attempts
+                      </Text>
+                    </View>
+                    <View style={{ flexDirection: "row" }}>
+                      <View
+                        style={{
+                          backgroundColor: "white",
+                          height: 40,
+                          marginRight: 10,
+                        }}
+                      >
+                        <Switch
+                          value={unlimitedAttempts}
+                          onValueChange={() => {
+                            if (!unlimitedAttempts) {
+                              setAttempts("")
+                            } else {
+                              setAttempts('1')
+                            }
+                            setUnlimitedAttempts(!unlimitedAttempts)
+                          }}
+                          style={{ height: 20 }}
+                          trackColor={{
+                            false: "#F8F9FA",
+                            true: "#818385",
+                          }}
+                          activeThumbColor="white"
+                        />
+                      </View>
+                    </View>
+                    <View>
+                      {!unlimitedAttempts ? (
+                        <View
+                          style={{
+                            width: "100%",
+                            display: "flex",
+                            flexDirection: "row",
+                            backgroundColor: "white",
+                            alignItems: 'center'
+                          }}
+                        >
+                          <Text style={styles.text}>
+                            Allowed attempts
+                          </Text>
+                          <TextInput
+                            value={attempts}
+                            style={{
+                              width: "25%",
+                              borderBottomColor: "#F8F9FA",
+                              borderBottomWidth: 1,
+                              fontSize: 15,
+                              padding: 15,
+                              paddingVertical: 12,
+                              marginTop: 0,
+                            }}
+                            placeholder={""}
+                            onChangeText={(val) => {
+                              if (Number.isNaN(Number(val))) return;
+                              setAttempts(val)
+                            }}
+                            placeholderTextColor={"#818385"}
+                          />
+                        </View>
+                      ) : null}
                     </View>
                   </View>
                 ) : null}
