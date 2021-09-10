@@ -324,7 +324,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         <View
                             style={{
                                 borderWidth: channels.length === 0 ? 0 : 1,
-                                borderColor: '#e1e9f0',
+                                borderColor: '#e4e7eb',
                                 overflow: 'hidden',
                                 borderRadius: 12
                             }}
@@ -350,7 +350,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 {
                                     channels.map((channel: any, ind: any) => {
                                         return <View style={{
-                                            backgroundColor: '#fff', flexDirection: 'row', borderColor: '#e1e9f0',
+                                            backgroundColor: '#fff', flexDirection: 'row', borderColor: '#e4e7eb',
                                             borderBottomWidth: ind === channels.length - 1 ? 0 : 1
                                         }}>
                                             <View style={{ flex: 1, backgroundColor: '#FBFBFC', paddingLeft: 10 }}>
@@ -383,7 +383,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         paddingLeft: width < 768 ? 0 : 20,
                         paddingTop: width < 768 ? 40 : 0,
                         marginLeft: width < 768 ? 0 : 20,
-                        borderLeftWidth: width < 768 ? 0 : 1, borderLeftColor: '#e1e9f0',
+                        borderLeftWidth: width < 768 ? 0 : 1, borderLeftColor: '#e4e7eb',
                         width: width < 768 ? '100%' : '50%'
                     }}>
                         <Text style={{

@@ -679,7 +679,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                             // style={{ height: '100%' }}
                                                             contentContainerStyle={{
                                                                 borderWidth: 1,
-                                                                borderColor: '#e1e9f0',
+                                                                borderColor: '#e4e7eb',
                                                                 borderRadius: 12,
                                                                 width: '100%',
                                                                 maxHeight: windowHeight - 200,
@@ -712,7 +712,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                             style={{
                                                                                 backgroundColor: '#FBFBFC',
                                                                                 flexDirection: 'row',
-                                                                                borderColor: '#e1e9f0',
+                                                                                borderColor: '#e4e7eb',
                                                                                 borderBottomWidth: index === chats.length - 1 ? 0 : 1,
                                                                                 // minWidth: 600, // flex: 1,
                                                                                 width: '100%'
@@ -798,7 +798,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                 <View style={{
                                     backgroundColor: '#fff', width: width < 768 ? '100%' : '50%',
                                     paddingLeft: width < 768 ? 0 : 20,
-                                    borderLeftWidth: width < 768 ? 0 : 1, borderLeftColor: '#e1e9f0',
+                                    borderLeftWidth: width < 768 ? 0 : 1, borderLeftColor: '#e4e7eb',
                                 }}>
                                     <View style={{
                                         marginBottom: 20,
@@ -895,7 +895,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                         <View style={{
                                             flex: 1, width: '100%', borderWidth: 1,
                                             borderRadius: 12,
-                                            borderColor: '#e1e9f0',
+                                            borderColor: '#e4e7eb',
                                             overflow: 'hidden'
                                         }}>
                                             <ScrollView contentContainerStyle={{
@@ -922,7 +922,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                             style={{
                                                                 backgroundColor: '#FBFBFC',
                                                                 flexDirection: 'row',
-                                                                borderColor: '#e1e9f0',
+                                                                borderColor: '#e4e7eb',
                                                                 borderBottomWidth: ind === sectionFiltered.length - 1 ? 0 : 1,
                                                                 width: '100%'
                                                             }}>

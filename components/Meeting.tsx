@@ -550,7 +550,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
             paddingLeft: width < 768 ? 0 : 20,
             marginTop: 20,
             marginBottom: 20,
-            borderLeftWidth: width < 768 ? 0 : 1, borderLeftColor: '#e1e9f0',
+            borderLeftWidth: width < 768 ? 0 : 1, borderLeftColor: '#e4e7eb',
         }}>
             <Discussion
                 channelId={props.channelId}

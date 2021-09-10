@@ -168,7 +168,7 @@ const styles: any = () => StyleSheet.create({
         padding: 13,
         backgroundColor: '#FBFBFC',
         borderWidth: 1,
-        borderColor: '#e1e9f0'
+        borderColor: '#e4e7eb'
     },
     text: {
         display: 'flex',

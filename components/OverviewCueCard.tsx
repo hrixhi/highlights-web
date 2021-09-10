@@ -232,7 +232,7 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
         height: '100%',
         borderRadius: 15,
         overflow: 'hidden',
-        maxWidth: 150,
+        maxWidth: 300,
         width: '100%',
         maxHeight: 150
     },
@@ -245,7 +245,7 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
         paddingHorizontal: 15,
         backgroundColor: '#FBFBFC',
         borderWidth: 1,
-        borderColor: '#e1e9f0',
+        borderColor: '#e4e7eb',
         maxHeight: 150
     },
     flipCard: {

@@ -912,6 +912,8 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         fontSize: 23,
                         paddingBottom: 40,
                         fontFamily: 'inter',
+                        maxWidth: 600,
+                        alignSelf: 'center',
                         // textTransform: "uppercase",
                         // paddingLeft: 10,
                         flex: 1,
@@ -926,6 +928,8 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                     contentContainerStyle={{
                         maxHeight: Dimensions.get('window').height - 95,
                         // height: 'auto',
+                        maxWidth: 600,
+                        alignSelf: 'center',
                         minHeight: 100,
                         paddingRight: 50
                     }}
@@ -1167,7 +1171,6 @@ const styles = StyleSheet.create({
         paddingRight: 20,
         paddingLeft: Dimensions.get('window').width < 1024 ? 20 : 0,
         width: '100%',
-        maxWidth: 500,
         height: Dimensions.get('window').height - 50,
         backgroundColor: 'white',
     },

@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useEffect } from 'react';
-import { StyleSheet } from 'react-native';
+import { Dimensions, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Text, View, TouchableOpacity } from '../components/Themed';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -83,6 +83,10 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
         activeColor = activeChannel[0].colorCode;
     }
 
+    const selectedChannel = props.subscriptions.find((sub: any) => {
+        return sub.channelId.toString().trim() === props.channelId.toString().trim()
+    })
+
     return (
         <View style={styles.bottombar}>
             <View style={{ display: 'flex', flexDirection: 'row', backgroundColor: '#FBFBFC' }}>
@@ -101,11 +105,32 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         <Text style={styles.channelText}>
                             <Ionicons name='arrow-back-outline' size={30} color={'#43434f'} />
                         </Text>
-                        {/* <Text style={{ fontSize: 10, color: '#fff', }}>
-                            Dashboard
-                        </Text> */}
                     </TouchableOpacity>
                 </View>
+                {
+                    selectedChannel ? <View style={styles.icons}>
+                        <Text style={{
+                            fontSize: 23,
+                            // paddingBottom: 20,
+                            // paddingTop: 10,
+                            fontFamily: 'inter',
+                            // flex: 1,
+                            paddingTop: 9,
+                            // lineHeight: 23,
+                            color: '#43434f'
+                        }}>
+                            <View style={{
+                                width: 18,
+                                height: 18,
+                                marginRight: 10,
+                                borderRadius: 9,
+                                marginTop: 3,
+                                backgroundColor: selectedChannel.colorCode
+                            }} /> {selectedChannel.channelName}
+                        </Text>
+                    </View> : null
+                }
+                <View style={{ backgroundColor: '#fbfbfc', flexDirection: 'row', flex: 1 }} />
                 {
                     props.channelId && props.channelId !== '' ?
                         <View style={styles.icons}>
@@ -137,7 +162,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             </TouchableOpacity>
                         </View>
                         : <View style={styles.icons} />}
-                <View style={styles.icons}>
+                <View style={styles.icons2}>
                     <TouchableOpacity
                         style={styles.center}
                         onPress={() => props.hideMenu()}>
@@ -163,13 +188,22 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
         width: '100%',
         display: 'flex',
         paddingBottom: 10,
+        paddingHorizontal: Dimensions.get('window').width < 1024 ? 20 : 40,
         backgroundColor: '#FBFBFC'
     },
     icons: {
-        width: '25%',
         display: 'flex',
         justifyContent: 'center',
         flexDirection: 'column',
+        paddingRight: 25,
+        overflow: 'hidden',
+        backgroundColor: '#FBFBFC'
+    },
+    icons2: {
+        display: 'flex',
+        justifyContent: 'center',
+        flexDirection: 'row',
+        paddingRight: 0,
         overflow: 'hidden',
         backgroundColor: '#FBFBFC'
     },

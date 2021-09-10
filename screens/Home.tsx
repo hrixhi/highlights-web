@@ -1207,7 +1207,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 closeModal()
               }}
             /> : (
-
               modalType === 'Discussion' ? <Discussion
                 closeModal={() => closeModal()}
                 channelId={channelId}
@@ -1604,19 +1603,19 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
       <View
         key={menuCollapsed.toString()}
         style={{
-          flexDirection: dimensions.window.width < 768 ? 'column' : 'row',
+          flexDirection: 'column',
           flex: 1,
           height: dimensions.window.height,
-          width: dimensions.window.width < 768 ? '100%' : 110
+          width: '100%'
         }}
       >
         {
           menuCollapsed ?
             // VERTICAL BAR
             <View style={{
-              height: dimensions.window.width < 768 ? (61) : dimensions.window.height,
-              borderBottomWidth: dimensions.window.width < 768 ? 1 : 0,
-              borderColor: '#e1e9f0'
+              height: 61,
+              borderBottomWidth: 1,
+              borderColor: '#e4e7eb'
             }}>
               <VerticalBar
                 menuCollapsed={menuCollapsed}
@@ -1658,18 +1657,15 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             :
             // FULL MENU
             <View style={{
-              width: dimensions.window.width < 1024 ? dimensions.window.width : (dimensions.window.width * 0.23),
+              width: dimensions.window.width,
               height: dimensions.window.height,
-              borderColor: '#e1e9f0',
-              borderRightWidth: Dimensions.get('window').width < 768 ? 0 : 1,
-              marginRight: dimensions.window.width < 1024 ? 0 : 25,
-              flexDirection: dimensions.window.width < 1024 ? 'column' : 'row',
+              borderColor: '#e4e7eb',
               backgroundColor: '#fff',
             }}>
               <View style={{
                 backgroundColor: '#fff',
-                width: dimensions.window.width < 1024 ? dimensions.window.width : (dimensions.window.width * 0.23 - 1),
-                height: dimensions.window.width < 1024 ? dimensions.window.height - 30 : dimensions.window.height,
+                width: dimensions.window.width,
+                height: dimensions.window.height - 30,
               }}>
                 <BottomBar
                   cues={dateFilteredCues}
@@ -1712,7 +1708,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                   unreadMessages={unreadMessages}
                   meetingOn={meetingOn}
                 />
-                <FilterBar
+                {/* <FilterBar
                   cues={dateFilteredCues}
                   openWalkthrough={() => openModal('Walkthrough')}
                   openCalendar={() => openModal('Calendar')}
@@ -1737,7 +1733,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                   filterEnd={filterEnd}
                   setFilterStart={(s: any) => setFilterStart(s)}
                   setFilterEnd={(e: any) => setFilterEnd(e)}
-                />
+                /> */}
                 {
                   reLoading ? <View style={[styles(channelId).activityContainer, styles(channelId).horizontal]}>
                     <ActivityIndicator color={'#818385'} />
@@ -1764,9 +1760,9 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           !menuCollapsed && dimensions.window.width < 768 ? null :
             (modalType === '' ? <View
               style={{
-                width: dimensions.window.width < 1024 ? 0 : (menuCollapsed ? dimensions.window.width - 110 : (dimensions.window.width * 0.77 - 30)),
+                width: dimensions.window.width < 1024 ? 0 : dimensions.window.width,
                 marginTop: dimensions.window.width < 1024 ? (menuCollapsed ? 60 : 0) : 0,
-                height: dimensions.window.width < 768 ? (menuCollapsed ? dimensions.window.height - 60 : 0) : dimensions.window.height,
+                height: (menuCollapsed ? dimensions.window.height - 60 : 0),
                 // paddingHorizontal: dimensions.window.width < 1024 ? 0 : 30,
                 paddingTop: 10,
                 // backgroundColor: '#FBFBFC',
@@ -1786,8 +1782,9 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               <View
                 key={menuCollapsed.toString()}
                 style={{
-                  width: dimensions.window.width < 1024 ? '100%' : (menuCollapsed ? dimensions.window.width - 110 : (dimensions.window.width * 0.77 - 30)),
-                  height: dimensions.window.width < 1024 ? (menuCollapsed ? (dimensions.window.height - 60) : dimensions.window.height) : dimensions.window.height,
+                  width: (dimensions.window.width),
+                  alignSelf: 'center',
+                  height: (menuCollapsed ? (dimensions.window.height - 60) : 0),
                   // paddingHorizontal: dimensions.window.width < 1024 ? 0 : 30,
                   paddingTop: 0,
                   backgroundColor: '#fff',
@@ -1796,11 +1793,13 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 {
                   // dimensions.window.width < 768 && !menuCollapsed ? null :
                   <View style={{
-                    flex: 1,
+                    // flex: 1,
+                    height: (menuCollapsed ? (dimensions.window.height - 60) : 0),
                     backgroundColor: 'white',
-                    paddingHorizontal: 0,
+                    paddingHorizontal: dimensions.window.width < 1024 ? 20 : 40,
+                    width: dimensions.window.width,
                     // dimensions.window.width < 1024 ? 0 : 25,
-                    marginRight: 0,
+                    // marginRight: 0,
                     // dimensions.window.width < 1024 ? 0 : 25,
                     borderTopLeftRadius: 0,
                     // dimensions.window.width < 1024 ? 0 : 20,
@@ -1816,6 +1815,17 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
       </View>
       <TouchableOpacity
         onPress={() => {
+          setCueId('')
+          setModalType('')
+          setCreatedBy('')
+          setChannelFilterChoice('All')
+          if (modalType === 'Create' || modalType === 'Update') {
+            fadeAnimation.setValue(0)
+            if (modalType === 'Update' && filterChoice === 'All-Channels') {
+              setChannelId('')
+            }
+          }
+          loadData(true)
           openModal('Create')
           setShowHome(false)
         }}
@@ -1854,7 +1864,7 @@ const styles = (channelId: string) => StyleSheet.create({
     borderColor: '#eeeeef',
     borderTopRightRadius: 15,
     borderTopLeftRadius: 15,
-    height: channelId === '' ? '83%' : '73%',
+    height: Dimensions.get('window').height - 60,
     width: '100%',
     justifyContent: "center",
     backgroundColor: '#FBFBFC'

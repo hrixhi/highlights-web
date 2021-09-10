@@ -18,7 +18,6 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const unparsedCues: any[] = JSON.parse(JSON.stringify(props.cues))
     const [cues] = useState<any[]>(unparsedCues.reverse())
 
-
     const [filterChoice] = useState(props.channelFilterChoice)
     let filteredCues: any[] = []
 
@@ -53,6 +52,14 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
         noChannelCuesAlert()
     }, [])
 
+    const categoryMap: any = { '': [] }
+
+    filteredCues.map((cue: any) => {
+        if (!categoryMap[cue.customCategory]) {
+            categoryMap[cue.customCategory] = 1
+        }
+    })
+
     return (
         <Animated.View style={{
             borderColor: '#FBFBFC',
@@ -61,47 +68,80 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
             // borderTopWidth: 1,
             height: ((dimensions.window.height) * (0.83)),
             opacity: props.fadeAnimation,
-            width: dimensions.window.width < 1024 ? dimensions.window.width : dimensions.window.width * 0.23 - 1,
-            paddingHorizontal: 25,
+            width: dimensions.window.width,
+            paddingHorizontal: dimensions.window.width < 768 ? 20 : 40,
             // paddingTop: 15
         }}>
             <ScrollView
-                showsVerticalScrollIndicator={false}
-                horizontal={false}
-                contentContainerStyle={{
-                    backgroundColor: '#FBFBFC',
-                    width: dimensions.window.width < 1024 ? dimensions.window.width - 50 : (dimensions.window.width * 0.23 - 51),
-                    height: dimensions.window.width < 1024 ? '100%' : (((dimensions.window.height) * (0.83)) - 2),
-                }}
-                style={{ paddingBottom: 15 }}
+                horizontal={true}
+                style={{ width: '100%', backgroundColor: '#fbfbfc', paddingTop: 20 }}
             >
-                {/* <View style={styles.marginSmall} /> */}
                 {
-                    filteredCues.map((cue: any, index: number) => {
-                        return <View style={{ height: 65, marginBottom: 15, maxWidth: 500, backgroundColor: '#FBFBFC', alignSelf: 'center', width: '98%' }} key={index}>
-                            <Card
-                                fadeAnimation={props.fadeAnimation}
-                                updateModal={() => props.openUpdate(
-                                    filteredCues[index].key,
-                                    filteredCues[index].index,
-                                    0,
-                                    filteredCues[index]._id,
-                                    (filteredCues[index].createdBy ? filteredCues[index].createdBy : ''),
-                                    (filteredCues[index].channelId ? filteredCues[index].channelId : '')
-                                )}
-                                cue={filteredCues[index]}
-                                channelId={props.channelId}
-                                subscriptions={props.subscriptions}
-                            />
+                    Object.keys(categoryMap).map((category: any, i: any) => {
+                        return <View style={{
+                            width: '100%',
+                            maxWidth: 300,
+                            backgroundColor: '#fbfbfc',
+                            marginRight: 25
+                        }}>
+                            <View style={{ backgroundColor: '#fbfbfc', paddingLeft: 23, marginBottom: 20 }}>
+                                <Text style={{
+                                    flex: 1, flexDirection: 'row',
+                                    color: '#818385',
+                                    fontSize: 20, lineHeight: 25,
+                                    fontFamily: 'inter'
+                                }} ellipsizeMode='tail'>
+                                    {category === '' ? 'None' : category}
+                                </Text>
+                            </View>
+                            <View
+                                // showsVerticalScrollIndicator={false}
+                                // horizontal={true}
+                                // style={{ height: '100%' }}
+                                style={{
+                                    // borderWidth: 1,
+                                    backgroundColor: '#fbfbfc'
+                                    // height: 190
+                                }}
+                                key={i.toString()}
+                            >
+                                {filteredCues.map((cue: any, index: any) => {
+                                    if (cue.customCategory.toString().trim() !== category.toString().trim()) {
+                                        return null
+                                    }
+                                    return <View style={{
+                                        // height: 150,
+                                        marginBottom: 20,
+                                        // marginBottom: i === priorities.length - 1 ? 0 : 20,
+                                        // maxWidth: 150,
+                                        backgroundColor: '#fbfbfc',
+                                        width: '100%'
+                                    }}
+                                        key={index}
+                                    >
+                                        <Card
+                                            // gray={true}
+                                            fadeAnimation={props.fadeAnimation}
+                                            updateModal={() => {
+                                                props.openUpdate(
+                                                    cue.key,
+                                                    cue.index,
+                                                    0,
+                                                    cue._id,
+                                                    (cue.createdBy ? cue.createdBy : ''),
+                                                    (cue.channelId ? cue.channelId : '')
+                                                )
+                                            }}
+                                            cue={cue}
+                                            channelId={props.channelId}
+                                            subscriptions={props.subscriptions}
+                                        />
+                                    </View>
+                                })}
+                            </View>
                         </View>
                     })
                 }
-                {
-                    filteredCues.length === 0 ? <Text style={{ fontSize: 20, color: '#818385', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#FBFBFC' }}>
-                        {PreferredLanguageText('noCuesCreated')}
-                    </Text> : null
-                }
-                <View style={{ height: 15, backgroundColor: '#FBFBFC' }} />
             </ScrollView>
         </Animated.View >
     );

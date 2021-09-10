@@ -1416,7 +1416,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                         // width: '100%',
                                                         borderRadius: 12,
                                                         borderWidth: 1,
-                                                        borderColor: '#e1e9f0',
+                                                        borderColor: '#e4e7eb',
                                                         maxHeight: props.cueId ? windowHeight - 220 : '100%',
                                                         marginBottom: props.cueId ? 20 : 0,
                                                         maxWidth: 450,
@@ -1487,7 +1487,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                 style={{
                                                                     backgroundColor: '#FBFBFC',
                                                                     flexDirection: 'row',
-                                                                    borderColor: '#e1e9f0',
+                                                                    borderColor: '#e4e7eb',
                                                                     borderBottomWidth: index === filteredSubscribers.length - 1 ? 0 : 1,
                                                                     // minWidth: 600, // flex: 1,
                                                                     width: '100%',
@@ -1786,7 +1786,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                                         url={url}
                                                                                         fullScreen={true}
                                                                                     /> */}
-                                                                                    <div className="webviewer" ref={RichText} style={{ height: "80vh", borderWidth: 1, borderColor: '#e1e9f0', borderRadius: 12 }}></div>
+                                                                                    <div className="webviewer" ref={RichText} style={{ height: "80vh", borderWidth: 1, borderColor: '#e4e7eb', borderRadius: 12 }}></div>
                                                                                 </View>
                                                                                 {/* <View style={{ position: 'absolute', zIndex: 1, flex: 1, width: 800, height: 20000, backgroundColor: 'rgb(0,0,0,0)' }}>
                                                                                     <Annotation

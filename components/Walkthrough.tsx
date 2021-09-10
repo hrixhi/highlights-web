@@ -323,7 +323,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         // paddingRight: Dimensions.get('window').width < 768 ? 0 : 25,
                         marginRight: Dimensions.get('window').width < 768 ? 0 : 20,
                         borderRightWidth: Dimensions.get('window').width < 768 ? 0 : 1,
-                        borderColor: '#e1e9f0'
+                        borderColor: '#e4e7eb'
                     }}>
                         <Profile
                             closeModal={() => props.closeModal()}
@@ -380,7 +380,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                         }}
                                         style={{
                                             backgroundColor: '#fff',
-                                            borderColor: '#e1e9f0',
+                                            borderColor: '#e4e7eb',
                                             borderBottomWidth: item.question === 'Planner' ? 0 : 1,
                                             width: '100%',
                                             paddingBottom: 20,

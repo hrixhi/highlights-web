@@ -4117,11 +4117,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 backgroundColor: "white",
                 borderTopLeftRadius: 0,
                 borderTopRightRadius: 0,
-                // paddingHorizontal: 20,
-                paddingLeft: Dimensions.get('window').width < 1024
-                    ? 20
-                    : 0,
-                paddingRight: 20,
+                // paddingHorizontal: 20
                 paddingBottom: 50
                 // overflow: 'hidden'
             }}>
@@ -4256,7 +4252,18 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 )}
                 {(props.showOptions || props.showComments || isOwner || props.showOriginal || props.viewStatus || !submission || isQuiz) ? null : renderSubmissionHistory()}
                 {
-                    props.showOptions || props.showComments || viewSubmission ? null :
+                    props.showOptions || props.showComments || viewSubmission ?
+                        <View
+                            style={{
+                                borderBottomWidth: ((props.cue.channelId && props.cue.channelId !== '' && !isOwner && props.showOriginal) || (props.showOriginal && showImportOptions) || isQuiz)
+                                    || (((props.cue.graded && submission && !isOwner) && !props.showOriginal) || (!props.showOriginal && showImportOptions))
+                                    || (!props.showOriginal && submissionImported) || (imported && props.showOriginal)
+                                    ? 0 : 1,
+                                marginTop: 20,
+                                borderBottomColor: '#e4e7eb'
+                            }}
+                        />
+                        :
                         <View
                             style={{
                                 width: "100%",
@@ -4269,7 +4276,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     || (((props.cue.graded && submission && !isOwner) && !props.showOriginal) || (!props.showOriginal && showImportOptions))
                                     || (!props.showOriginal && submissionImported) || (imported && props.showOriginal)
                                     ? 0 : 1,
-                                borderBottomColor: '#e1e9f0'
+                                borderBottomColor: '#e4e7eb'
                             }}
                             onTouchStart={() => Keyboard.dismiss()}>
                             <View

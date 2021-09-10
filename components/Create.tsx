@@ -873,10 +873,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
         backgroundColor: "white",
         borderTopLeftRadius: 0,
         borderTopRightRadius: 0,
-        paddingRight: 20,
-        paddingLeft: dimensions.window.width < 1024
-          ? 20
-          : 0,
         overflow: "scroll",
       }}
     >
@@ -932,7 +928,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
             marginTop: 0,
             backgroundColor: "white",
             borderBottomWidth: imported || isQuiz ? 0 : 1,
-            borderBottomColor: '#e1e9f0'
+            borderBottomColor: '#e4e7eb'
           }}
           onTouchStart={() => Keyboard.dismiss()}
         >
@@ -1416,7 +1412,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
               ) : (
                 <View key={url} style={{ flex: 1, maxHeight: 800 }}>
                   {/* <Webview key={url} url={url} /> */}
-                  <div className="webviewer" ref={RichText} style={{ height: "100vh", borderWidth: 1, borderColor: '#e1e9f0', borderRadius: 12 }}></div>
+                  <div className="webviewer" ref={RichText} style={{ height: "100vh", borderWidth: 1, borderColor: '#e4e7eb', borderRadius: 12 }}></div>
                 </View>
               )
             ) : null}
@@ -2621,7 +2617,7 @@ const styles: any = StyleSheet.create({
   },
   input: {
     width: "100%",
-    borderBottomColor: "#e1e9f0",
+    borderBottomColor: "#e4e7eb",
     borderBottomWidth: 1,
     fontSize: 15,
     paddingTop: 12,

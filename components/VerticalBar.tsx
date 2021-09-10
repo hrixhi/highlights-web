@@ -38,17 +38,21 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
 
     }, [props.channelCreatedBy])
 
+    const selectedChannel = props.subscriptions.find((sub: any) => {
+        return sub.channelId.toString().trim() === props.channelId.toString().trim()
+    })
+
     return (
         <View style={styles.bottombar}>
             <View style={{
                 display: 'flex',
                 flex: 1,
-                borderColor: '#e1e9f0',
-                borderRightWidth: Dimensions.get('window').width < 768 ? 0 : 1,
+                borderColor: '#e4e7eb',
+                // borderRightWidth: Dimensions.get('window').width < 768 ? 0 : 1,
                 // paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 0,
-                paddingTop: Dimensions.get('window').width < 768 ? 5 : 0,
+                paddingTop: 5,
                 backgroundColor: '#FBFBFC',
-                flexDirection: Dimensions.get('window').width < 768 ? 'row' : 'column'
+                flexDirection: 'row'
             }}>
                 <View style={styles.icons}>
                     <TouchableOpacity
@@ -65,11 +69,32 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         <Text style={{ lineHeight: 35, width: '100%', textAlign: 'center' }}>
                             <Ionicons name='arrow-back-outline' size={30} color={'#43434f'} />
                         </Text>
-                        {/* <Text style={{ fontSize: 10, color: '#fff', }}>
-                            Dashboard
-                        </Text> */}
                     </TouchableOpacity>
                 </View>
+                {
+                    selectedChannel ? <View style={styles.icons}>
+                        <Text style={{
+                            fontSize: 23,
+                            // paddingBottom: 20,
+                            // paddingTop: 10,
+                            fontFamily: 'inter',
+                            // flex: 1,
+                            paddingTop: 1,
+                            // lineHeight: 23,
+                            color: '#43434f'
+                        }}>
+                            <View style={{
+                                width: 18,
+                                height: 18,
+                                borderRadius: 9,
+                                marginRight: 10,
+                                marginTop: 3,
+                                backgroundColor: selectedChannel.colorCode
+                            }} /> {selectedChannel.channelName}
+                        </Text>
+                    </View> : null
+                }
+                <View style={{ backgroundColor: '#fbfbfc', flexDirection: 'row', flex: 1 }} />
                 <View style={styles.icons}>
                     {
                         props.channelId !== '' && (props.menuCollapsed === true) ?
@@ -106,9 +131,9 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             </TouchableOpacity> : null
                     }
                 </View>
-                <View style={styles.icons}>
+                <View style={styles.icons2}>
                     {
-                        (props.menuCollapsed === true) ?
+                        props.channelId !== '' && (props.menuCollapsed === true) ?
                             <TouchableOpacity
                                 style={{ backgroundColor: '#FBFBFC', width: Dimensions.get('window').width < 768 ? 'auto' : '100%', paddingBottom: 20 }}
                                 onPress={() => props.hideMenu()}>
@@ -131,9 +156,9 @@ export default VerticalBar
 
 const styleObject: any = (colorScheme: any, mc: any) => StyleSheet.create({
     bottombar: {
-        height: Dimensions.get('window').width < 768 ? (mc ? 59 : 59) : '100%',
-        width: Dimensions.get('window').width < 768 ? '100%' : 110,
-        paddingRight: Dimensions.get('window').width < 768 ? 0 : 25,
+        height: 59,
+        width: '100%',
+        paddingHorizontal: Dimensions.get('window').width < 1024 ? 20 : 40,
         // display: 'flex',
         //  paddingBottom: 10,
         // borderWidth: 1,
@@ -142,13 +167,21 @@ const styleObject: any = (colorScheme: any, mc: any) => StyleSheet.create({
         paddingTop: 10,
         flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row',
         // flex: 1,
-        backgroundColor: '#ffffff'
+        backgroundColor: '#fbfbfc'
     },
     icons: {
-        width: Dimensions.get('window').width < 768 ? '25%' : '100%',
         display: 'flex',
         justifyContent: 'center',
         flexDirection: 'row',
+        paddingRight: 25,
+        overflow: 'hidden',
+        backgroundColor: '#FBFBFC'
+    },
+    icons2: {
+        display: 'flex',
+        justifyContent: 'center',
+        flexDirection: 'row',
+        paddingRight: 0,
         overflow: 'hidden',
         backgroundColor: '#FBFBFC'
     },

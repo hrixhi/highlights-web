@@ -364,7 +364,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                 // style={{ height: '100%' }}
                                                 contentContainerStyle={{
                                                     borderWidth: 1,
-                                                    borderColor: '#e1e9f0',
+                                                    borderColor: '#e4e7eb',
                                                     borderRadius: 12,
                                                     width: '100%',
                                                     // height: windowHeight - 200,
@@ -388,7 +388,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                             style={{
                                                                 backgroundColor: '#FBFBFC',
                                                                 flexDirection: 'row',
-                                                                borderColor: '#e1e9f0',
+                                                                borderColor: '#e4e7eb',
                                                                 borderBottomWidth: ind === filteredThreads.length - 1 ? 0 : 1,
                                                                 // minWidth: 600, // flex: 1,
                                                                 width: '100%'

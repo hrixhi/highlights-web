@@ -8,7 +8,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
-    const colorChoices: any[] = ['#f94144', '#f3722c', '#f8961e', '#f9c74f', '#4c956c'].reverse()
+    const colorChoices: any[] = ['#f94144', '#f3722c', '#f8961e', '#f9c74f', '#43aa8b'].reverse()
     const colorScheme = 'dark'
     const styleObject = styles(colorScheme, props.channelId, colorChoices[props.cue.color])
     const starred = props.cue.starred;
@@ -62,37 +62,6 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 style={styleObject.card}>
                 <View style={styleObject.text}>
                     <View style={styleObject.dateContainer}>
-                        <View style={{
-                            width: 9,
-                            height: 9,
-                            borderRadius: 12,
-                            // marginTop: 1,
-                            backgroundColor: colorCode
-                        }} />
-
-                        <Text style={styleObject.date}>
-                            {props.cue.channelName ? props.cue.channelName : 'My Notes'}
-                        </Text>
-                        {/* {
-                            props.cue.channelName ?
-                                <Text style={styleObject.date}>
-                                    {props.cue.channelName}
-                                </Text> : null
-                        } */}
-                        {/* <Text style={styleObject.date}>
-                            {props.cue.customCategory}
-                        </Text> */}
-                        {/* {
-                            props.cue.submission ? <Text style={styleObject.date}>
-                                <Ionicons name='share-outline' size={9} color={props.cue.submittedAt && props.cue.submittedAt !== '' ? ('#560bad') : (colorScheme === 'light' ? '#fff' : '#333333')} style={{ marginRight: 10 }} />
-                            </Text> : null
-                        }
-                        {
-                            props.cue.frequency !== '0' ?
-                                <Text style={styleObject.date}>
-                                    <Ionicons name='notifications-outline' size={9} color={colorScheme === 'light' ? '#fff' : '#333333'} />
-                                </Text> : null
-                        } */}
                         {
                             props.cue.graded && showScore && !isOwner ? <Text style={{
                                 fontSize: 9,
@@ -117,30 +86,6 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 </Text>
                                 : null
                         }
-                        {/* <View style={{
-                            ...styleObject.date,
-                            display: 'flex',
-                            flexDirection: 'row',
-                            justifyContent: 'flex-end',
-                            flex: 1,
-                            marginRight: 5,
-                            marginTop: -5,
-                            backgroundColor: colorScheme === 'light'
-                                ? (starred ? '#43434f' : '#fff')
-                                : (starred ? 'white' : '#fff'),
-                        }}>
-                            {
-                                props.cue.submission ? <Text>
-                                    <Ionicons name='share-outline' size={11} color={props.cue.submittedAt && props.cue.submittedAt !== '' ? ('#560bad') : (colorScheme === 'light' ? '#fff' : '#333333')} style={{ marginRight: 10 }} />
-                                </Text> : null
-                            }
-                            {
-                                props.cue.frequency !== '0' ?
-                                    <Text>
-                                        <Ionicons name='notifications-outline' size={11} color={colorScheme === 'light' ? '#fff' : '#333333'} />
-                                    </Text> : null
-                            }
-                        </View> */}
                         <Text style={styleObject.date2}>
                             {
                                 (new Date(props.cue.date)).toString().split(' ')[1] +
@@ -211,17 +156,17 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
         height: '100%',
         borderRadius: 12,
         overflow: 'hidden',
-        maxWidth: 500
+        maxWidth: 350
     },
     card: {
-        maxWidth: 500,
+        maxWidth: 350,
         height: '100%',
         borderRadius: 12,
         padding: 12,
         paddingHorizontal: 15,
         backgroundColor: '#fff',
         borderWidth: 1,
-        borderColor: '#e1e9f0'
+        borderColor: '#e4e7eb'
     },
     flipCard: {
         height: '100%',
@@ -270,9 +215,9 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
     date2: {
         fontSize: 9,
         color: colorScheme === 'light' ? '#fff' : '#333333',
-        marginLeft: 10,
+        // marginLeft: 10,
         lineHeight: 10,
-        textAlign: 'right',
+        textAlign: 'left',
         flex: 1
     },
     title: {

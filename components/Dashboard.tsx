@@ -28,6 +28,7 @@ import Performance from './Performance';
 import SearchResultCard from './SearchResultCard';
 import { htmlStringParser } from '../helpers/HTMLParser';
 import Inbox from './Inbox';
+import Card from './Card';
 
 
 const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
@@ -410,7 +411,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     Object.keys(cueMap).map((key: any, ind: any) => {
                         return <View style={{
                             marginTop: 20, paddingBottom: 20,
-                            borderColor: '#e1e9f0',
+                            borderColor: '#e4e7eb',
                             borderBottomWidth: 1,
                         }}>
                             {
@@ -429,6 +430,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 height: 18,
                                                 borderRadius: 9,
                                                 marginTop: 1,
+                                                marginRight: 10,
                                                 backgroundColor: key.split('-SPLIT-')[3]
                                             }} /> {key.split('-SPLIT-')[0]}
                                         </Text>
@@ -667,16 +669,23 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             }
                             <View style={{ flexDirection: 'row' }} key={editFolderChannelId.toString() + cueIds.toString() + cueMap.toString()}>
                                 {
-                                    cueMap[key].length === 0 ?
+                                    cueMap[key].length === 0 && collapseMap[key] ?
                                         <Text style={{ fontSize: 15, color: '#818385', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#fff' }}>
                                             {PreferredLanguageText('noCuesCreated')}
                                         </Text> :
                                         (
                                             collapseMap[key] ?
-                                                <View style={{ width: '100%' }} key={editFolderChannelId.toString() + cueIds.toString() + cueMap.toString()}>
+                                                <ScrollView
+                                                    horizontal={true}
+                                                    style={{ width: '100%' }}
+                                                    key={editFolderChannelId.toString() + cueIds.toString() + cueMap.toString()}>
                                                     {
                                                         categoryMap[key].map((category: any, i: any) => {
-                                                            return <View>
+                                                            return <View style={{
+                                                                width: '100%',
+                                                                maxWidth: 300,
+                                                                marginRight: 25
+                                                            }}>
                                                                 <View style={{ backgroundColor: '#fff', paddingLeft: 23, marginBottom: 20 }}>
                                                                     <Text style={{
                                                                         flex: 1, flexDirection: 'row',
@@ -687,14 +696,14 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                         {category === '' ? 'None' : category}
                                                                     </Text>
                                                                 </View>
-                                                                <ScrollView
-                                                                    showsVerticalScrollIndicator={false}
-                                                                    horizontal={true}
+                                                                <View
+                                                                    // showsVerticalScrollIndicator={false}
+                                                                    // horizontal={true}
                                                                     // style={{ height: '100%' }}
-                                                                    contentContainerStyle={{
+                                                                    style={{
                                                                         // borderWidth: 1,
-                                                                        width: '100%',
-                                                                        height: 190
+
+                                                                        // height: 190
                                                                     }}
                                                                     key={i.toString() + key.toString()}
                                                                 >
@@ -789,14 +798,17 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                             }
                                                                         }
                                                                         return <View style={{
-                                                                            height: 150,
-                                                                            marginRight: 20,
-                                                                            marginBottom: i === priorities.length - 1 ? 0 : 20,
-                                                                            maxWidth: 150,
+                                                                            // height: 150,
+                                                                            marginBottom: 20,
+                                                                            // marginBottom: i === priorities.length - 1 ? 0 : 20,
+                                                                            // maxWidth: 150,
                                                                             backgroundColor: '#fff',
                                                                             width: '100%'
-                                                                        }} key={index}>
-                                                                            <OverviewCueCard
+                                                                        }}
+                                                                            key={index}
+                                                                        >
+                                                                            <Card
+                                                                                gray={true}
                                                                                 cueIds={cueIds}
                                                                                 onLongPress={() => {
                                                                                     setCueIds([])
@@ -838,157 +850,157 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                             />
                                                                         </View>
                                                                     })}
-                                                                </ScrollView>
+                                                                </View>
                                                             </View>
                                                         })
                                                     }
-                                                </View> :
-                                                <ScrollView
-                                                    showsVerticalScrollIndicator={false}
-                                                    horizontal={true}
-                                                    contentContainerStyle={{
-                                                        width: '100%',
-                                                    }}
-                                                >
-                                                    {cueMap[key].map((cue: any, index: any) => {
-                                                        if (cue.folderId && folderId !== cue.folderId) {
-                                                            if (folderIdsMap[cue.folderId][0] !== index) {
-                                                                return null
-                                                            } else {
-                                                                // return swiper
-                                                                return <View style={{ width: 170, height: 175, alignSelf: 'flex-end', marginTop: 25 }}>
-                                                                    <Swiper
-                                                                        controlsProps={{
-                                                                            nextTitle: '>',
-                                                                            prevTitle: '<',
-                                                                            prevTitleStyle: {
-                                                                                marginTop: 20,
-                                                                                fontFamily: 'inter',
-                                                                                color: '#560bad'
-                                                                            },
-                                                                            nextTitleStyle: {
-                                                                                marginTop: 20,
-                                                                                fontFamily: 'inter',
-                                                                                color: '#560bad'
-                                                                            },
-                                                                            dotsWrapperStyle: {
-                                                                                marginTop: 19
-                                                                            },
-                                                                            dotActiveStyle: {
-                                                                                backgroundColor: '#560bad'
-                                                                            }
-                                                                        }}
-                                                                        containerStyle={{
-                                                                            height: 150,
-                                                                            marginRight: 20,
-                                                                            width: 150,
-                                                                            backgroundColor: '#fff',
-                                                                            // alignSelf: 'center',
-                                                                            // borderWidth: 1
-                                                                        }}
-                                                                        // swipeAreaStyle={{ width: 150, }}
-                                                                        // innerContainerStyle={{ width: 150 }}
-                                                                        // slideWrapperStyle={{ width: 150 }}
-                                                                        key={index}
-                                                                        vertical={false}
-                                                                    >
-                                                                        {
-                                                                            folderIdsMap[cue.folderId].map((ind: any) => {
-                                                                                const swiperCue = cueMap[key][ind]
-                                                                                return <OverviewCueCard
-                                                                                    onLongPress={() => onSwiperLongPress(cue, key, swiperCue)}
-                                                                                    cueIds={cueIds}
-                                                                                    editFolderChannelId={editFolderChannelId}
-                                                                                    add={() => {
-                                                                                        const temp = JSON.parse(JSON.stringify(cueIds))
-                                                                                        const found = temp.find((i: any) => {
-                                                                                            return i === swiperCue._id
-                                                                                        })
-                                                                                        if (!found) {
-                                                                                            temp.push(swiperCue._id)
-                                                                                        }
-                                                                                        console.log(temp)
-                                                                                        setCueIds(temp)
-                                                                                    }}
-                                                                                    remove={() => {
-                                                                                        const temp = JSON.parse(JSON.stringify(cueIds))
-                                                                                        const upd = temp.filter((i: any) => {
-                                                                                            return i !== swiperCue._id
-                                                                                        })
-                                                                                        setCueIds(upd)
-                                                                                    }}
-                                                                                    fadeAnimation={props.fadeAnimation}
-                                                                                    updateModal={() => {
-                                                                                        props.openUpdate(
-                                                                                            swiperCue.key,
-                                                                                            swiperCue.index,
-                                                                                            0,
-                                                                                            swiperCue._id,
-                                                                                            (swiperCue.createdBy ? swiperCue.createdBy : ''),
-                                                                                            (swiperCue.channelId ? swiperCue.channelId : '')
-                                                                                        )
-                                                                                    }}
-                                                                                    cue={swiperCue}
-                                                                                    channelId={props.channelId}
-                                                                                    subscriptions={props.subscriptions}
-                                                                                />
-                                                                            })
-                                                                        }
-                                                                    </Swiper>
-                                                                </View>
-                                                            }
-                                                        }
+                                                </ScrollView> : null
+                                            // <ScrollView
+                                            //     showsVerticalScrollIndicator={false}
+                                            //     horizontal={true}
+                                            //     contentContainerStyle={{
+                                            //         width: '100%',
+                                            //     }}
+                                            // >
+                                            //     {cueMap[key].map((cue: any, index: any) => {
+                                            //         if (cue.folderId && folderId !== cue.folderId) {
+                                            //             if (folderIdsMap[cue.folderId][0] !== index) {
+                                            //                 return null
+                                            //             } else {
+                                            //                 // return swiper
+                                            //                 return <View style={{ width: 170, height: 175, alignSelf: 'flex-end', marginTop: 25 }}>
+                                            //                     <Swiper
+                                            //                         controlsProps={{
+                                            //                             nextTitle: '>',
+                                            //                             prevTitle: '<',
+                                            //                             prevTitleStyle: {
+                                            //                                 marginTop: 20,
+                                            //                                 fontFamily: 'inter',
+                                            //                                 color: '#560bad'
+                                            //                             },
+                                            //                             nextTitleStyle: {
+                                            //                                 marginTop: 20,
+                                            //                                 fontFamily: 'inter',
+                                            //                                 color: '#560bad'
+                                            //                             },
+                                            //                             dotsWrapperStyle: {
+                                            //                                 marginTop: 19
+                                            //                             },
+                                            //                             dotActiveStyle: {
+                                            //                                 backgroundColor: '#560bad'
+                                            //                             }
+                                            //                         }}
+                                            //                         containerStyle={{
+                                            //                             height: 150,
+                                            //                             marginRight: 20,
+                                            //                             width: 150,
+                                            //                             backgroundColor: '#fff',
+                                            //                             // alignSelf: 'center',
+                                            //                             // borderWidth: 1
+                                            //                         }}
+                                            //                         // swipeAreaStyle={{ width: 150, }}
+                                            //                         // innerContainerStyle={{ width: 150 }}
+                                            //                         // slideWrapperStyle={{ width: 150 }}
+                                            //                         key={index}
+                                            //                         vertical={false}
+                                            //                     >
+                                            //                         {
+                                            //                             folderIdsMap[cue.folderId].map((ind: any) => {
+                                            //                                 const swiperCue = cueMap[key][ind]
+                                            //                                 return <OverviewCueCard
+                                            //                                     onLongPress={() => onSwiperLongPress(cue, key, swiperCue)}
+                                            //                                     cueIds={cueIds}
+                                            //                                     editFolderChannelId={editFolderChannelId}
+                                            //                                     add={() => {
+                                            //                                         const temp = JSON.parse(JSON.stringify(cueIds))
+                                            //                                         const found = temp.find((i: any) => {
+                                            //                                             return i === swiperCue._id
+                                            //                                         })
+                                            //                                         if (!found) {
+                                            //                                             temp.push(swiperCue._id)
+                                            //                                         }
+                                            //                                         console.log(temp)
+                                            //                                         setCueIds(temp)
+                                            //                                     }}
+                                            //                                     remove={() => {
+                                            //                                         const temp = JSON.parse(JSON.stringify(cueIds))
+                                            //                                         const upd = temp.filter((i: any) => {
+                                            //                                             return i !== swiperCue._id
+                                            //                                         })
+                                            //                                         setCueIds(upd)
+                                            //                                     }}
+                                            //                                     fadeAnimation={props.fadeAnimation}
+                                            //                                     updateModal={() => {
+                                            //                                         props.openUpdate(
+                                            //                                             swiperCue.key,
+                                            //                                             swiperCue.index,
+                                            //                                             0,
+                                            //                                             swiperCue._id,
+                                            //                                             (swiperCue.createdBy ? swiperCue.createdBy : ''),
+                                            //                                             (swiperCue.channelId ? swiperCue.channelId : '')
+                                            //                                         )
+                                            //                                     }}
+                                            //                                     cue={swiperCue}
+                                            //                                     channelId={props.channelId}
+                                            //                                     subscriptions={props.subscriptions}
+                                            //                                 />
+                                            //                             })
+                                            //                         }
+                                            //                     </Swiper>
+                                            //                 </View>
+                                            //             }
+                                            //         }
 
-                                                        return <View style={{
-                                                            height: 150,
-                                                            marginRight: 20,
-                                                            width: 150,
-                                                            backgroundColor: '#fff',
-                                                            alignSelf: 'center',
-                                                        }} key={index}>
-                                                            <OverviewCueCard
-                                                                cueIds={cueIds}
-                                                                editFolderChannelId={editFolderChannelId}
-                                                                onLongPress={() => {
-                                                                    setCueIds([])
-                                                                    setEditFolderChannelId(cue.channelId ? cue.channelId : 'My Notes')
-                                                                    // alert(cue.channelId ? cue.channelId : 'My Notes')
-                                                                }}
-                                                                add={() => {
-                                                                    const temp = JSON.parse(JSON.stringify(cueIds))
-                                                                    const found = temp.find((i: any) => {
-                                                                        return i === cue._id
-                                                                    })
-                                                                    if (!found) {
-                                                                        temp.push(cue._id)
-                                                                    }
-                                                                    setCueIds(temp)
-                                                                }}
-                                                                remove={() => {
-                                                                    const temp = JSON.parse(JSON.stringify(cueIds))
-                                                                    const upd = temp.filter((i: any) => {
-                                                                        return i !== cue._id
-                                                                    })
-                                                                    setCueIds(upd)
-                                                                }}
-                                                                fadeAnimation={props.fadeAnimation}
-                                                                updateModal={() => {
-                                                                    props.openUpdate(
-                                                                        cue.key,
-                                                                        cue.index,
-                                                                        0,
-                                                                        cue._id,
-                                                                        (cue.createdBy ? cue.createdBy : ''),
-                                                                        (cue.channelId ? cue.channelId : '')
-                                                                    )
-                                                                }}
-                                                                cue={cue}
-                                                                channelId={props.channelId}
-                                                                subscriptions={props.subscriptions}
-                                                            />
-                                                        </View>
-                                                    })}
-                                                </ScrollView>
+                                            //         return <View style={{
+                                            //             height: 150,
+                                            //             marginRight: 20,
+                                            //             width: 150,
+                                            //             backgroundColor: '#fff',
+                                            //             alignSelf: 'center',
+                                            //         }} key={index}>
+                                            //             <OverviewCueCard
+                                            //                 cueIds={cueIds}
+                                            //                 editFolderChannelId={editFolderChannelId}
+                                            //                 onLongPress={() => {
+                                            //                     setCueIds([])
+                                            //                     setEditFolderChannelId(cue.channelId ? cue.channelId : 'My Notes')
+                                            //                     // alert(cue.channelId ? cue.channelId : 'My Notes')
+                                            //                 }}
+                                            //                 add={() => {
+                                            //                     const temp = JSON.parse(JSON.stringify(cueIds))
+                                            //                     const found = temp.find((i: any) => {
+                                            //                         return i === cue._id
+                                            //                     })
+                                            //                     if (!found) {
+                                            //                         temp.push(cue._id)
+                                            //                     }
+                                            //                     setCueIds(temp)
+                                            //                 }}
+                                            //                 remove={() => {
+                                            //                     const temp = JSON.parse(JSON.stringify(cueIds))
+                                            //                     const upd = temp.filter((i: any) => {
+                                            //                         return i !== cue._id
+                                            //                     })
+                                            //                     setCueIds(upd)
+                                            //                 }}
+                                            //                 fadeAnimation={props.fadeAnimation}
+                                            //                 updateModal={() => {
+                                            //                     props.openUpdate(
+                                            //                         cue.key,
+                                            //                         cue.index,
+                                            //                         0,
+                                            //                         cue._id,
+                                            //                         (cue.createdBy ? cue.createdBy : ''),
+                                            //                         (cue.channelId ? cue.channelId : '')
+                                            //                     )
+                                            //                 }}
+                                            //                 cue={cue}
+                                            //                 channelId={props.channelId}
+                                            //                 subscriptions={props.subscriptions}
+                                            //             />
+                                            //         </View>
+                                            //     })}
+                                            // </ScrollView>
                                         )
                                 }
                             </View>
@@ -1023,7 +1035,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
         }}>
             <View style={{
                 backgroundColor: '#FBFBFC',
-                borderColor: '#e1e9f0',
+                borderColor: '#e4e7eb',
                 borderWidth: 1,
                 // borderWidth: 1,
                 paddingTop: 20,
@@ -1075,11 +1087,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     }}>
                                         {
                                             props.options.map((op: any) => {
-                                                if (width >= 768) {
-                                                    if (op === 'Settings' || op === 'Channels') {
-                                                        return
-                                                    }
-                                                }
                                                 return <MenuOption
                                                     value={op}>
                                                     <Text style={{ textTransform: 'uppercase' }}>
@@ -1094,6 +1101,9 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             : <View style={{ flexDirection: 'row', paddingLeft: 30, flex: 1, backgroundColor: '#FBFBFC' }}>
                                 {
                                     props.options.map((op: any) => {
+                                        if (op === 'Settings' || op === 'Channels') {
+                                            return
+                                        }
                                         return <TouchableOpacity
                                             style={{
                                                 backgroundColor: '#FBFBFC'
@@ -1155,7 +1165,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             onSelect={(category: any) => {
                             }}>
                             <MenuTrigger>
-                                <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#43434f', paddingTop: 7, textAlign: 'right' }}>
+                                <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#43434f', paddingTop: 5, textAlign: 'right' }}>
                                     Filter <Ionicons name="caret-down" size={14} />
                                 </Text>
                             </MenuTrigger>
