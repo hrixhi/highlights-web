@@ -1910,12 +1910,10 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 {/* Allowed attempts */}
 
                 {submission && isQuiz ? (
-                  <View style={{ width: "100%" }}>
+                  <View style={{ width: "100%",  flexDirection: width < 768 ? 'column' : 'row', paddingTop: 40 }}>
                     <View
                       style={{
-                        width: "100%",
-                        paddingTop: 40,
-                        paddingBottom: 15,
+                        width: 300,
                         backgroundColor: "white",
                       }}
                     >
@@ -1929,7 +1927,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                         Unlimited Attempts
                       </Text>
                     </View>
-                    <View style={{ flexDirection: "row" }}>
+                    <View >
                       <View
                         style={{
                           backgroundColor: "white",
@@ -1955,8 +1953,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           activeThumbColor="white"
                         />
                       </View>
-                    </View>
-                    <View>
                       {!unlimitedAttempts ? (
                         <View
                           style={{
@@ -2443,7 +2439,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
               <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : 'row', paddingTop: 40 }}>
                 <View
                   style={{
-                    width: 30,
+                    width: 300,
                     paddingBottom: 15,
                     backgroundColor: "white",
                   }}
@@ -2687,6 +2683,7 @@ const styles: any = StyleSheet.create({
     color: "#818385",
     height: 22,
     paddingHorizontal: 10,
+    marginRight: 20,
     backgroundColor: "white",
     borderRadius: 12,
     borderWidth: 1,
