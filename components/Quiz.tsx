@@ -56,6 +56,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     const [showEquationEditor, setShowEquationEditor] = useState(false);
     const [reloadEditorKey, setReloadEditorKey] = useState(Math.random());
     const [showImportOptions, setShowImportOptions] = useState(false);
+    const [shuffleQuiz, setShuffleQuiz] = useState(props.shuffleQuiz);
 
     const regradeOptions = {
         'awardCorrectBoth': 'Award points for both corrected and previously correct answers (no scores will be reduced)',
@@ -356,6 +357,44 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 ) : null}
             </View>
         </View>
+    }
+
+    const renderShuffleQuizOption = () => {
+        return (<View>
+            <Text style={{
+                    color: "#43434f",
+                    fontSize: 11,
+                    lineHeight: 30,
+                    // paddingRight: 20,
+                    paddingTop: 20,
+                    textTransform: "uppercase",
+                }}>
+                    SHUFFLE QUIZ
+            </Text>
+            <View
+                style={{
+                    backgroundColor: "white",
+                    width: "100%",
+                    height: 40,
+                    marginRight: 10,
+                    flexDirection: 'row',
+                    justifyContent: 'flex-start'
+                }}
+            >
+                <Switch
+                    value={shuffleQuiz}
+                    onValueChange={() => {
+                        setShuffleQuiz(!shuffleQuiz);
+                    }}
+                    style={{ height: 20, marginRight: 20 }}
+                    trackColor={{
+                        false: "#f4f4f6",
+                        true: "#560bad",
+                    }}
+                    activeThumbColor="white"
+                />
+            </View>
+        </View>)
     }
 
 
@@ -835,6 +874,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 </View>
             } */}
             {props.isOwner ? renderTimer() : null}
+            {props.isOwner ? renderShuffleQuizOption() : null}
             {
                 (props.isOwner ?
                     <TextareaAutosize

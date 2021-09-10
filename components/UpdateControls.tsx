@@ -1116,6 +1116,13 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
         let tempOriginal = ''
         if (imported) {
+
+            if (title === "") {
+                Alert('Title cannot be empty');
+                setUpdatingCueContent(false);
+                return;
+            }
+
             const obj = {
                 type,
                 url,
@@ -1123,6 +1130,13 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             }
             tempOriginal = JSON.stringify(obj)
         } else if (isQuiz) {
+
+            if (title === "") {
+                Alert('Title cannot be empty');
+                setUpdatingCueContent(false);
+                return;
+            }
+            
             const parse = JSON.parse(original)
             const obj = {
                 quizId: parse.quizId,
@@ -1149,7 +1163,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         // Update initial Value for Editor 
         setInitialOriginal(tempOriginal);
         setUpdatingCueContent(false);
-    }, [title, original, imported, type, url])
+    }, [title, original, imported, type, url, isQuiz])
 
     const handleUpdateDetails = useCallback(async () => {
         setUpdatingCueDetails(true)
@@ -1177,6 +1191,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             submission,
             deadline: submission ? deadline.toISOString() : "",
             initiateAt: submission ? initiateAt.toISOString() : "",
+            allowedAttempts: unlimitedAttempts ? null : allowedAttempts
         }
 
         subCues[props.cueKey][props.cueIndex] = saveCue;
@@ -1187,7 +1202,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
         setUpdatingCueDetails(false)
 
-    }, [submission, deadline, initiateAt, gradeWeight, customCategory, endPlayAt, color, frequency, notify])
+    }, [submission, deadline, initiateAt, gradeWeight, customCategory, endPlayAt, color, frequency, notify, allowedAttempts, unlimitedAttempts])
 
     // Handle Delete Cue
     const handleDelete = useCallback(async () => {
@@ -1540,6 +1555,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 onPress: async () => {
                     setLoadingAfterModifyingQuiz(true)
                     const server = fetchAPI("");
+
+                    // Update title as well
+                    handleUpdateContent()
 
                     // VALIDATION:
                     // Check if any question without a correct answer
@@ -2557,7 +2575,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 |
             </Text> : null}
             {!isOwner ? <Text style={{ marginRight: 10, fontWeight: '700' }}>
-                {allowedAttempts && allowedAttempts !== null ? 'Remaining Attempts: ' + remainingAttempts : "Unlimited Attempts"}
+                {allowedAttempts && allowedAttempts !== null ? 'Remaining Attempts: ' + (remainingAttempts >= 0 ? remainingAttempts : '0') : "Unlimited Attempts"}
             </Text> : null}
         </View>)
 
@@ -2704,9 +2722,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const renderRichEditorOriginalCue = () => {
 
         if (!isOwner) {
-            return <View style={{ width: '100%' }}>
+            return <div className="mce-content-body" style={{ width: '100%', color: 'black' }}>
                 {parser(initialOriginal)}
-            </View>
+            </div>
         }
 
         return (<View style={{ width: '100%' }}>
@@ -2790,6 +2808,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         overflow: "hidden",
                                         height: 35,
                                         textTransform: "uppercase",
+                                        width: 160
                                     }}
                                 >
                                     {updatingCueContent
@@ -2850,9 +2869,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     :
                     <View style={{ width: '100%', marginTop: 25 }}>
                         {viewSubmissionTab === "mySubmission" ?
-                            <View style={{ width: '100%' }}>
+                            <div className="mce-content-body" style={{ width: '100%', color: 'black' }}>
                                 {parser(attempt.html)}
-                            </View> :
+                            </div> :
                             <div className="webviewer" ref={submissionViewerRef} style={{ height: "100vh" }}></div>
                         }
                     </View>
@@ -2926,99 +2945,101 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         {props.cue.channelId && props.cue.channelId !== "" ? "Shared with" : "Saved in"}
                     </Text>
                 </View>
-                {
-                    props.cue.channelId !== "" ? (<View>
-                        <View style={{ flexDirection: "row" }}>
+                <View>
+                    {
+                        props.cue.channelId !== "" ? (<View>
+                            <View style={{ flexDirection: "row" }}>
 
 
-                            <View
-                                style={{
-                                    backgroundColor: "white",
-                                    height: 40,
-                                    marginRight: 10,
-                                }}
-                            >
-                                <Switch
-                                    value={!limitedShares}
-                                    onValueChange={() => {
-                                        setLimitedShares(!limitedShares);
+                                <View
+                                    style={{
+                                        backgroundColor: "white",
+                                        height: 40,
+                                        marginRight: 10,
                                     }}
-                                    style={{ height: 20 }}
-                                    trackColor={{
-                                        false: "#F8F9FA",
-                                        true: "#818385",
-                                    }}
-                                    activeThumbColor="white"
-                                />
+                                >
+                                    <Switch
+                                        value={!limitedShares}
+                                        onValueChange={() => {
+                                            setLimitedShares(!limitedShares);
+                                        }}
+                                        style={{ height: 20 }}
+                                        trackColor={{
+                                            false: "#F8F9FA",
+                                            true: "#818385",
+                                        }}
+                                        activeThumbColor="white"
+                                    />
+                                </View>
+                                <Text style={{
+                                    fontSize: 12,
+                                    color: "#818385",
+                                    textAlign: "left",
+                                    paddingTop: 5
+                                }}>
+                                    All Subscribers
+                                </Text>
                             </View>
-                            <Text style={{
-                                fontSize: 12,
-                                color: "#818385",
-                                textAlign: "left",
-                                paddingTop: 5
-                            }}>
-                                All Subscribers
-                            </Text>
-                        </View>
-                    </View>) : null
-                }
-                {limitedShares ? <View
-                    style={{
-                        flexDirection: "column",
-                        overflow: "scroll",
-                        maxWidth: 500,
-                    }}>
-                    <View
+                        </View>) : null
+                    }
+                    {limitedShares ? <View
                         style={{
-                            width: "90%",
-                            padding: 5,
-                            height: "auto"
+                            flexDirection: "column",
+                            overflow: "scroll",
+                            maxWidth: 500,
                         }}>
-                        <Multiselect
-                            placeholder='Share with...'
-                            displayValue='name'
-                            // key={userDropdownOptions.toString()}
-                            // style={{ width: '100%', color: '#43434f', 
-                            //     optionContainer: { // To change css for option container 
-                            //         zIndex: 9999
-                            //     }
-                            // }}
-                            options={subscribers} // Options to display in the dropdown
-                            selectedValues={selected} // Preselected value to persist in dropdown
-                            disabledPreselected={true}
-                            onSelect={(e, f) => {
+                        <View
+                            style={{
+                                width: "90%",
+                                padding: 5,
+                                height: "auto"
+                            }}>
+                            <Multiselect
+                                placeholder='Share with...'
+                                displayValue='name'
+                                // key={userDropdownOptions.toString()}
+                                // style={{ width: '100%', color: '#43434f', 
+                                //     optionContainer: { // To change css for option container 
+                                //         zIndex: 9999
+                                //     }
+                                // }}
+                                options={subscribers} // Options to display in the dropdown
+                                selectedValues={selected} // Preselected value to persist in dropdown
+                                disabledPreselected={true}
+                                onSelect={(e, f) => {
 
-                                const server = fetchAPI("");
-                                server
-                                    .mutate({
-                                        mutation: shareCueWithMoreIds,
-                                        variables: {
-                                            cueId: props.cue._id,
-                                            userId: f.id
-                                        }
-                                    })
-                                    .then(res => {
-                                        if (res.data && res.data.cue.shareCueWithMoreIds) {
+                                    const server = fetchAPI("");
+                                    server
+                                        .mutate({
+                                            mutation: shareCueWithMoreIds,
+                                            variables: {
+                                                cueId: props.cue._id,
+                                                userId: f.id
+                                            }
+                                        })
+                                        .then(res => {
+                                            if (res.data && res.data.cue.shareCueWithMoreIds) {
 
-                                            loadChannelsAndSharedWith();
-                                        }
-                                    })
-                                    .catch(err => console.log(err));
+                                                loadChannelsAndSharedWith();
+                                            }
+                                        })
+                                        .catch(err => console.log(err));
 
-                                setSelected(e);
-                                return true
-                            }} // Function will trigger on select event
-                            onRemove={(e, f) => {
-                                const addBack = [...e];
-                                addBack.push(f)
-                                setSelected(addBack)
+                                    setSelected(e);
+                                    return true
+                                }} // Function will trigger on select event
+                                onRemove={(e, f) => {
+                                    const addBack = [...e];
+                                    addBack.push(f)
+                                    setSelected(addBack)
 
-                                Alert('Cannot un-share cue')
-                                return;
-                            }}
-                        />
-                    </View>
-                </View> : null}
+                                    Alert('Cannot un-share cue')
+                                    return;
+                                }}
+                            />
+                        </View>
+                    </View> : null}
+                </View>
             </View>
         ) : null;
     };
@@ -3041,7 +3062,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 <View>
                     <View style={{ flexDirection: "row" }}>
                         {isOwner ? (
-                            <View
+                            (isQuiz ? null : <View
                                 style={{
                                     backgroundColor: "white",
                                     height: 40,
@@ -3060,7 +3081,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     }}
                                     activeThumbColor="white"
                                 />
-                            </View>
+                            </View>)
                         ) : (
                             <View style={{ flex: 1, backgroundColor: "#fff" }}>
                                 <Text style={{ fontSize: 11, color: '#43434f', textTransform: 'uppercase' }}>{!submission ? PreferredLanguageText("no") : null}</Text>
@@ -3251,13 +3272,12 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     };
 
     const renderAttemptsOptions = () => {
-        return submission ? (
+        return isQuiz ? (
             (!isOwner ?
-                <View style={{ width: "100%" }}>
+                <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : 'row', paddingTop: 40, }}>
                     <View
                         style={{
-                            width: "100%",
-                            paddingTop: 40,
+                            width: 300,
                             paddingBottom: 15,
                             backgroundColor: "white",
                         }}
@@ -3293,11 +3313,10 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     </View>
                 </View>
                 :
-                <View style={{ width: "100%" }}>
+                <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : 'row', paddingTop: 40, }}>
                     <View
                         style={{
-                            width: "100%",
-                            paddingTop: 40,
+                            width: 300,
                             paddingBottom: 15,
                             backgroundColor: "white",
                         }}
@@ -3312,7 +3331,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             Unlimited Attempts
                         </Text>
                     </View>
-                    <View style={{ flexDirection: "row" }}>
+                    <View >
                         <View
                             style={{
                                 backgroundColor: "white",
@@ -3338,8 +3357,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 activeThumbColor="white"
                             />
                         </View>
-                    </View>
-                    <View>
+                   
                         {!unlimitedAttempts ? (
                             <View
                                 style={{
@@ -3777,7 +3795,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             backgroundColor: "white",
                             width: "100%",
                             height: 40,
-                            marginHorizontal: 10
                         }}>
                         <Switch
                             value={notify}
@@ -3820,7 +3837,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 style={{
                                     backgroundColor: "white",
                                     height: 40,
-                                    marginHorizontal: 10
                                 }}>
                                 <Switch
                                     value={!shuffle}
@@ -3917,12 +3933,11 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 color: '#43434f'
                             }}>Indefinite</Text>
                         </View>
-                        <View style={{ flexDirection: "row", paddingTop: 40 }}>
+                        <View style={{ flexDirection: "row", }}>
                             <View
                                 style={{
                                     backgroundColor: "white",
                                     height: 40,
-                                    marginHorizontal: 10
                                 }}>
                                 <Switch
                                     value={playChannelCueIndef}
@@ -4535,23 +4550,18 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         {renderShareWithOptions()}
                                         {renderSubmissionRequiredOptions()}
                                         {renderGradeOptions()}
+                                        {renderAttemptsOptions()}
                                     </View>
                                 ) : null}
-                                <View
-                                    style={{
-                                        display: "flex",
-                                        flexDirection: "column"
-                                    }}>
-                                    {renderShareWithOptions()}
-                                    {renderSubmissionRequiredOptions()}
-                                    {renderGradeOptions()}
-                                    {renderAttemptsOptions()}
-                                </View>
                             </View>
                             {renderReminderOptions()}
                             {isQuiz && isOwner ? <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : 'row', paddingTop: 40 }}>
-                                <View style={{ width: '100%', paddingBottom: 15, backgroundColor: 'white' }}>
-                                    <Text style={{ fontSize: 11, color: '#43434f', textTransform: 'uppercase' }}>
+                                <View style={{ width: 300, paddingBottom: 15, backgroundColor: 'white' }}>
+                                    <Text style={{
+                                        fontSize: 15,
+                                        fontFamily: 'inter',
+                                        color: '#2f2f3c'
+                                    }}>
                                         Shuffle Questions
                                     </Text>
                                 </View>
@@ -4611,6 +4621,7 @@ const styles: any = StyleSheet.create({
         display: "flex",
         flexDirection: "row",
         marginTop: 80,
+        marginBottom: 80,
         lineHeight: 18
     },
     colorContainer: {
