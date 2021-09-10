@@ -115,7 +115,7 @@ const EnglishBank: { [key: string]: string } = {
     noGraded: 'No graded assignments.',
     total: 'Total', // Done
     test: 'Test', // Done
-    discussion: 'Threads', // Done
+    discussion: 'Discussion', // Done
     send: 'Send',
     reply: 'Reply', // Done
     add: 'Add',

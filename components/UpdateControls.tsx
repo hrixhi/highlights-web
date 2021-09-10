@@ -2024,7 +2024,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     }}>
                     <Text style={props.showComments ? styles.allGrayFill : styles.all}>
                         Q&A
-                        {props.cue.unreadThreads > 0 ? <View style={styles.badge} /> : null}
+                        {/* {props.cue.unreadThreads > 0 ? <View style={styles.badge} /> : null} */}
                     </Text>
                 </TouchableOpacity>
                 {!submission || (isOwner && submission) || isQuiz ? null : (
@@ -4192,7 +4192,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     // paddingRight: 25,
                                     width: "100%"
                                 }}>
-                                <Ionicons name="bookmark" size={34} color={starred ? "#f94144" : "#818385"} />
+                                <Ionicons name="bookmark" size={40} color={starred ? "#f94144" : "#818385"} />
                             </Text>
                         </TouchableOpacity>
                     </View>

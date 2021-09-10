@@ -43,7 +43,9 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
             <View style={{
                 display: 'flex',
                 flex: 1,
-                paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 0,
+                borderColor: '#e1e9f0',
+                borderRightWidth: Dimensions.get('window').width < 768 ? 0 : 1,
+                // paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 0,
                 paddingTop: Dimensions.get('window').width < 768 ? 5 : 0,
                 backgroundColor: '#FBFBFC',
                 flexDirection: Dimensions.get('window').width < 768 ? 'row' : 'column'
@@ -60,7 +62,7 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         }}
                         style={{ backgroundColor: '#FBFBFC', width: '100%', paddingBottom: 20 }}
                     >
-                        <Text style={{ lineHeight: 35, marginTop: Dimensions.get('window').width < 768 ? 20 : 15, width: '100%', textAlign: 'center' }}>
+                        <Text style={{ lineHeight: 35, width: '100%', textAlign: 'center' }}>
                             <Ionicons name='arrow-back-outline' size={30} color={'#43434f'} />
                         </Text>
                         {/* <Text style={{ fontSize: 10, color: '#fff', }}>
@@ -68,101 +70,59 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         </Text> */}
                     </TouchableOpacity>
                 </View>
-                <View
-                    style={{
-                        flex: 1, backgroundColor: '#FBFBFC', width: '100%',
-                        // borderWidth: 1,
-                    }}>
-
-                    <View style={{
-                        flex: 1,
-                        // borderWidth: 1,
-                        flexDirection: Dimensions.get('window').width < 768 ? 'row' : (props.menuCollapsed ? 'column' : 'row'),
-                        backgroundColor: '#FBFBFC', width: '100%',
-                        paddingTop: Dimensions.get('window').width < 768 ? 7 : 0,
-                        justifyContent: Dimensions.get('window').width < 768 ? 'space-evenly' : 'flex-start'
-                    }}>
-                        {
-
-                            props.channelId !== '' && (props.menuCollapsed === true) ?
-                                <TouchableOpacity
-                                    style={{ backgroundColor: '#FBFBFC', width: Dimensions.get('window').width < 768 ? 'auto' : '100%', paddingBottom: 20 }}
-                                    onPress={() => props.openMeeting()}>
-                                    <Text style={styles.channelText}>
-                                        <Ionicons
-                                            name='chatbubbles-outline' size={19} color={'#43434f'} />
-                                        {
-                                            props.meetingOn ?
-                                                <View style={styles.badge} /> : null
-                                        }
-                                    </Text>
-                                    <Text style={{ fontSize: 10, color: '#43434f', textAlign: 'center', width: Dimensions.get('window').width < 768 ? 'auto' : '100%' }}>
-                                        Classroom
-                                    </Text>
-                                </TouchableOpacity>
-                                : null
-                        }
-                        {
-                            isOwner && props.channelId !== '' && (props.menuCollapsed === true) ?
-                                <TouchableOpacity
-                                    style={{
-                                        backgroundColor: '#FBFBFC',
-                                        width: Dimensions.get('window').width < 768 ? 'auto' : '100%',
-                                        paddingBottom: 20
-                                    }}
-                                    onPress={() => props.openChannelSettings()}>
-                                    <Text style={styles.channelText}>
-                                        <Ionicons name='hammer-outline' size={19} color={'#43434f'} />
-                                    </Text>
-                                    <Text style={{ fontSize: 10, color: '#43434f', textAlign: 'center', width: '100%', }}>
-                                        Settings
-                                    </Text>
-                                </TouchableOpacity> : null
-                        }
-                        {
-                            (props.menuCollapsed === true) ?
-                                <TouchableOpacity
-                                    style={{ backgroundColor: '#FBFBFC', width: Dimensions.get('window').width < 768 ? 'auto' : '100%', paddingBottom: 20 }}
-                                    onPress={() => props.hideMenu()}>
-                                    <Text style={styles.channelText}>
-                                        <Ionicons
-                                            name='expand-outline' size={19} color={'#43434f'} />
-                                        {
-                                            props.meetingOn ?
-                                                <View style={styles.badge} /> : null
-                                        }
-                                    </Text>
-                                    <Text style={{ fontSize: 10, color: '#43434f', textAlign: 'center', width: Dimensions.get('window').width < 768 ? 'auto' : '100%' }}>
-                                        Expand
-                                    </Text>
-                                </TouchableOpacity> : null
-                        }
-                    </View>
+                <View style={styles.icons}>
+                    {
+                        props.channelId !== '' && (props.menuCollapsed === true) ?
+                            <TouchableOpacity
+                                style={{ backgroundColor: '#FBFBFC', width: Dimensions.get('window').width < 768 ? 'auto' : '100%', paddingBottom: 20 }}
+                                onPress={() => props.openMeeting()}>
+                                <Text style={styles.channelText}>
+                                    <Ionicons
+                                        name='chatbubbles-outline' size={19} color={'#43434f'} />
+                                </Text>
+                                <Text style={{ fontSize: 10, color: '#43434f', textAlign: 'center', width: Dimensions.get('window').width < 768 ? 'auto' : '100%' }}>
+                                    Classroom
+                                </Text>
+                            </TouchableOpacity>
+                            : null
+                    }
+                </View>
+                <View style={styles.icons}>
+                    {
+                        isOwner && props.channelId !== '' && (props.menuCollapsed === true) ?
+                            <TouchableOpacity
+                                style={{
+                                    backgroundColor: '#FBFBFC',
+                                    width: Dimensions.get('window').width < 768 ? 'auto' : '100%',
+                                    paddingBottom: 20
+                                }}
+                                onPress={() => props.openChannelSettings()}>
+                                <Text style={styles.channelText}>
+                                    <Ionicons name='hammer-outline' size={19} color={'#43434f'} />
+                                </Text>
+                                <Text style={{ fontSize: 10, color: '#43434f', textAlign: 'center', width: '100%', }}>
+                                    Settings
+                                </Text>
+                            </TouchableOpacity> : null
+                    }
+                </View>
+                <View style={styles.icons}>
+                    {
+                        (props.menuCollapsed === true) ?
+                            <TouchableOpacity
+                                style={{ backgroundColor: '#FBFBFC', width: Dimensions.get('window').width < 768 ? 'auto' : '100%', paddingBottom: 20 }}
+                                onPress={() => props.hideMenu()}>
+                                <Text style={styles.channelText}>
+                                    <Ionicons
+                                        name='expand-outline' size={19} color={'#43434f'} />
+                                </Text>
+                                <Text style={{ fontSize: 10, color: '#43434f', textAlign: 'center', width: Dimensions.get('window').width < 768 ? 'auto' : '100%' }}>
+                                    Expand
+                                </Text>
+                            </TouchableOpacity> : null
+                    }
                 </View>
             </View>
-            {
-                Dimensions.get('window').width < 768 && (props.menuCollapsed === false) ? null :
-                    <TouchableOpacity
-                        onPress={() => props.hideMenu()}
-                        style={{
-                            width: Dimensions.get('window').width < 768 ? '100%' : 30,
-                            height: Dimensions.get('window').width < 768 ? 30 : '100%',
-                            backgroundColor: '#fff',
-                            justifyContent: 'center',
-                            borderColor: '#e1e9f0',
-                            borderTopWidth: Dimensions.get('window').width < 768 ? 1 : 0,
-                            borderLeftWidth: Dimensions.get('window').width < 768 ? 0 : 1,
-                        }}>
-                        <Text style={{ textAlign: 'center' }}>
-                            {/* <Ionicons
-                                name={'expand-outline'}
-                                color="#43434f"
-                                size={20}
-                                style={{}}
-                            /> */}
-                        </Text>
-                    </TouchableOpacity>
-            }
         </View>
     );
 }
@@ -171,21 +131,24 @@ export default VerticalBar
 
 const styleObject: any = (colorScheme: any, mc: any) => StyleSheet.create({
     bottombar: {
-        height: Dimensions.get('window').width < 768 ? (mc ? 90 : 55) : '100%',
+        height: Dimensions.get('window').width < 768 ? (mc ? 59 : 59) : '100%',
         width: Dimensions.get('window').width < 768 ? '100%' : 110,
+        paddingRight: Dimensions.get('window').width < 768 ? 0 : 25,
         // display: 'flex',
         //  paddingBottom: 10,
-        // borderTopWidth: 1,
-        // borderColor: '#555555',
+        // borderWidth: 1,
+        // borderColor: '#606060',
+        // marginTop: 8,
+        paddingTop: 10,
         flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row',
         // flex: 1,
         backgroundColor: '#ffffff'
     },
     icons: {
-        // width: '100%',
-        // display: 'flex',
+        width: Dimensions.get('window').width < 768 ? '25%' : '100%',
+        display: 'flex',
         justifyContent: 'center',
-        flexDirection: 'column',
+        flexDirection: 'row',
         overflow: 'hidden',
         backgroundColor: '#FBFBFC'
     },

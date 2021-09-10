@@ -714,7 +714,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                                 flexDirection: 'row',
                                                                                 borderColor: '#e1e9f0',
                                                                                 borderBottomWidth: index === chats.length - 1 ? 0 : 1,
-                                                                                minWidth: 600, // flex: 1,
+                                                                                // minWidth: 600, // flex: 1,
                                                                                 width: '100%'
                                                                             }}>
                                                                             <View style={{ flex: 1, backgroundColor: '#FBFBFC', padding: 10 }}>
@@ -742,17 +742,17 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                                 }
                                                                             </View>
                                                                             <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                                                                <Text style={{ fontSize: 12, padding: 10, fontFamily: 'inter' }} ellipsizeMode='tail'>
+                                                                                <Text style={{ fontSize: 13, padding: 10, fontFamily: 'inter' }} ellipsizeMode='tail'>
                                                                                     {fName}
                                                                                 </Text>
                                                                             </View>
                                                                             <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                                                                <Text style={{ fontSize: 12, padding: 10 }} ellipsizeMode='tail'>
+                                                                                <Text style={{ fontSize: 13, padding: 10 }} ellipsizeMode='tail'>
                                                                                     {title}
                                                                                 </Text>
                                                                             </View>
                                                                             <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                                                                <Text style={{ fontSize: 15, padding: 10, color: '#560bad' }} ellipsizeMode='tail'>
+                                                                                <Text style={{ fontSize: 15, padding: 10, color: '#560bad', textAlign: 'center' }} ellipsizeMode='tail'>
                                                                                     <Ionicons name='chevron-forward-outline' size={20} />
                                                                                 </Text>
                                                                             </View>
@@ -801,7 +801,8 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                     borderLeftWidth: width < 768 ? 0 : 1, borderLeftColor: '#e1e9f0',
                                 }}>
                                     <View style={{
-                                        marginBottom: 20
+                                        marginBottom: 20,
+                                        marginTop: width < 768 ? 30 : 0
                                     }}>
                                         <Text style={{
                                             fontSize: 23,
@@ -940,17 +941,17 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                 />
                                                             </View>
                                                             <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                                                <Text style={{ fontSize: 12, padding: 10, fontFamily: 'inter' }} ellipsizeMode='tail'>
+                                                                <Text style={{ fontSize: 13, padding: 10, fontFamily: 'inter' }} ellipsizeMode='tail'>
                                                                     {user.fullName}
                                                                 </Text>
                                                             </View>
                                                             <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                                                <Text style={{ fontSize: 12, padding: 10 }} ellipsizeMode='tail'>
+                                                                <Text style={{ fontSize: 13, padding: 10 }} ellipsizeMode='tail'>
                                                                     {user.email}
                                                                 </Text>
                                                             </View>
                                                             <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                                                <Text style={{ fontSize: 15, padding: 10, color: '#560bad' }} ellipsizeMode='tail'>
+                                                                <Text style={{ fontSize: 15, padding: 10, color: '#560bad', textAlign: 'center' }} ellipsizeMode='tail'>
                                                                     <Ionicons name='chatbubble-ellipses-outline' size={20} />
                                                                 </Text>
                                                             </View>

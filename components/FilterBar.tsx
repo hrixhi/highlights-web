@@ -168,7 +168,7 @@ const FilterBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 <Menu>
                                     <MenuTrigger>
                                         <Text style={{ fontFamily: 'inter', fontSize: 15, color: '#43434f', paddingLeft: 10 }}>
-                                            FILTER <Ionicons name='caret-down' size={15} />
+                                            Filter <Ionicons name='caret-down' size={15} />
                                         </Text>
                                     </MenuTrigger>
                                     <MenuOptions customStyles={{

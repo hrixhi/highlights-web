@@ -899,21 +899,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
           {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
         </Text>
         <View style={{ flexDirection: "row" }}>
-          <View style={{ backgroundColor: "white", flex: 1 }}>
-            <Text
-              style={{
-                fontSize: 23,
-                paddingBottom: 20,
-                fontFamily: "inter",
-                // textTransform: "uppercase",
-                // paddingLeft: 10,
-                flex: 1,
-                lineHeight: 25,
-              }}
-            >
-              {/* {PreferredLanguageText("new")} */}
-            </Text>
-          </View>
+          <View style={{ backgroundColor: "white", flex: 1 }} />
           <TouchableOpacity
             onPress={() => setStarred(!starred)}
             style={{
@@ -941,10 +927,9 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
           style={{
             width: "100%",
             display: "flex",
-            flexDirection:
-              dimensions.window.width < 768 ? "column-reverse" : "row",
+            flexDirection: dimensions.window.width < 768 ? "column-reverse" : "row",
             paddingBottom: 4,
-            marginTop: 20,
+            marginTop: 0,
             backgroundColor: "white",
             borderBottomWidth: imported || isQuiz ? 0 : 1,
             borderBottomColor: '#e1e9f0'

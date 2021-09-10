@@ -1318,7 +1318,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     <ScrollView
                         style={{
                             width: "100%",
-                            height: windowHeight - 125,
+                            height: windowHeight - (Dimensions.get('window').width < 768 ? 225 : 125),
                             backgroundColor: "white",
                             borderTopRightRadius: 0,
                             borderTopLeftRadius: 0
@@ -1954,7 +1954,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         width: '100%'
                                     }}>
                                     <View style={{ flex: 1, backgroundColor: '#FBFBFC', padding: 0, flexDirection: 'row' }}>
-                                        <Text style={{ fontSize: 12, padding: 20, fontFamily: 'inter' }} ellipsizeMode='tail'>
+                                        <Text style={{ fontSize: 12, padding: 10, fontFamily: 'inter' }} ellipsizeMode='tail'>
                                             <View style={{
                                                 width: 9,
                                                 height: 9,
@@ -1966,22 +1966,22 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         </Text>
                                     </View>
                                     <View style={{ flex: 1, backgroundColor: '#fff', padding: 0 }}>
-                                        <Text style={{ fontSize: 12, padding: 20, fontFamily: 'inter' }} ellipsizeMode='tail'>
+                                        <Text style={{ fontSize: 13, padding: 10, fontFamily: 'inter' }} ellipsizeMode='tail'>
                                             {act.title}
                                         </Text>
                                     </View>
                                     <View style={{ flex: 1, backgroundColor: '#fff', padding: 0 }}>
-                                        <Text style={{ fontSize: 12, padding: 20 }} ellipsizeMode='tail'>
+                                        <Text style={{ fontSize: 13, padding: 10 }} ellipsizeMode='tail'>
                                             {act.subtitle}
                                         </Text>
                                     </View>
                                     <View style={{ flex: 1, backgroundColor: '#fff', padding: 0 }}>
-                                        <Text style={{ fontSize: 12, padding: 20 }} ellipsizeMode='tail'>
+                                        <Text style={{ fontSize: 13, padding: 10 }} ellipsizeMode='tail'>
                                             {act.date.toString().split('T')[0]}
                                         </Text>
                                     </View>
                                     <View style={{ flex: 1, backgroundColor: '#fff', padding: 0 }}>
-                                        <Text style={{ fontSize: 18, padding: 20, color: '#560bad' }} ellipsizeMode='tail'>
+                                        <Text style={{ fontSize: 18, padding: 10, color: '#560bad' }} ellipsizeMode='tail'>
                                             <Ionicons name='chevron-forward-outline' size={20} /> {act.status === 'unread' ?
                                                 <Ionicons name='alert-circle-outline' color='#f94144' size={20} /> : null}
                                         </Text>

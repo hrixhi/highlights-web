@@ -88,10 +88,10 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         <Text style={styles.channelText}>
                                             <Ionicons
                                                 name='chatbubbles-outline' size={19} color={'#43434f'} />
-                                            {
+                                            {/* {
                                                 props.meetingOn ?
                                                     <View style={styles.badge} /> : null
-                                            }
+                                            } */}
                                         </Text>
                                         <Text style={{ fontSize: 10, color: '#43434f', textAlign: 'center' }}>
                                             Classroom

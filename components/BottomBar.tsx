@@ -107,7 +107,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     </TouchableOpacity>
                 </View>
                 {
-                    !props.channelId || props.channelId === '' ?
+                    props.channelId && props.channelId !== '' ?
                         <View style={styles.icons}>
                             <TouchableOpacity
                                 style={styles.center}

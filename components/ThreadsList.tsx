@@ -408,17 +408,17 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                                 />
                                                             </View> */}
                                                             <View style={{ flex: 1, backgroundColor: '#FBFBFC', paddingLeft: 10 }}>
-                                                                <Text style={{ fontSize: 12, padding: 10, fontFamily: 'inter' }} ellipsizeMode='tail'>
+                                                                <Text style={{ fontSize: 13, padding: 10, fontFamily: 'inter' }} ellipsizeMode='tail'>
                                                                     {thread.anonymous ? 'Anonymous' : thread.fullName}
                                                                 </Text>
                                                             </View>
                                                             <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                                                <Text style={{ fontSize: 12, padding: 10 }} ellipsizeMode='tail'>
+                                                                <Text style={{ fontSize: 13, padding: 10 }} ellipsizeMode='tail'>
                                                                     {title}
                                                                 </Text>
                                                             </View>
                                                             <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                                                <Text style={{ fontSize: 15, padding: 10, color: '#560bad' }} ellipsizeMode='tail'>
+                                                                <Text style={{ fontSize: 15, padding: 10, color: '#560bad', textAlign: 'center' }} ellipsizeMode='tail'>
                                                                     <Ionicons name='chevron-forward-outline' size={20} />
                                                                 </Text>
                                                             </View>

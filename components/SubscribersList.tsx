@@ -1107,42 +1107,6 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     </View> : null
                             }
                         </View>
-                        {/* {
-                            isOwner && !props.cueId && !showAddUsers && !showNewGroup && !showSubmission && users.length < 3
-                                ? <View style={{ flexDirection: 'row', flex: 1, paddingLeft: 43 }}>
-                                    {/* <TouchableOpacity
-                                        onPress={() => handleSubStatusChange()}
-                                    >
-                                        <Text style={{
-                                            color: '#818385',
-                                            fontSize: 11,
-                                            lineHeight: 30,
-                                            textAlign: 'right',
-                                            paddingRight: 20,
-                                            textTransform: 'uppercase'
-                                        }}>
-                                            {
-                                                isLoadedUserInactive ? PreferredLanguageText('makeActive') : PreferredLanguageText('makeInactive')
-                                            }
-                                        </Text>
-                                    </TouchableOpacity> 
-                                    <TouchableOpacity
-                                        onPress={() => handleDelete()}
-                                    >
-                                        <Text style={{
-                                            color: '#818385',
-                                            fontSize: 11,
-                                            lineHeight: 30,
-                                            textAlign: 'right',
-                                            paddingRight: 10,
-                                            textTransform: 'uppercase'
-                                        }}>
-                                            {PreferredLanguageText('removeFromChannel')}
-                                        </Text>
-                                    </TouchableOpacity>
-                                </View>
-                                : null
-                        } */}
                         {
                             showChat ? <View style={{ flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row', flex: 1 }}>
                                 <View style={{ backgroundColor: 'white' }}>

@@ -98,7 +98,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   const [filterEnd, setFilterEnd] = useState<any>(null)
 
   const [option, setOption] = useState('Home')
-  const [options] = useState(['Home', 'Content', 'Inbox', 'Performance'])
+  const [options] = useState(['Home', 'Content', 'Inbox', 'Performance', 'Channels', 'Settings'])
 
   const [menuCollapsed, setMenuCollapsed] = useState(true)
 
@@ -1614,7 +1614,9 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           menuCollapsed ?
             // VERTICAL BAR
             <View style={{
-              height: dimensions.window.width < 768 ? (90) : dimensions.window.height
+              height: dimensions.window.width < 768 ? (61) : dimensions.window.height,
+              borderBottomWidth: dimensions.window.width < 768 ? 1 : 0,
+              borderColor: '#e1e9f0'
             }}>
               <VerticalBar
                 menuCollapsed={menuCollapsed}
@@ -1656,17 +1658,17 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             :
             // FULL MENU
             <View style={{
-              width: dimensions.window.width < 1024 ? dimensions.window.width : (dimensions.window.width * 0.23 + 30),
+              width: dimensions.window.width < 1024 ? dimensions.window.width : (dimensions.window.width * 0.23),
               height: dimensions.window.height,
+              borderColor: '#e1e9f0',
+              borderRightWidth: Dimensions.get('window').width < 768 ? 0 : 1,
+              marginRight: dimensions.window.width < 1024 ? 0 : 25,
               flexDirection: dimensions.window.width < 1024 ? 'column' : 'row',
               backgroundColor: '#fff',
-              // position: 'absolute',
-              // borderRightColor: '#555555',
-              // borderRightWidth: 1,
             }}>
               <View style={{
                 backgroundColor: '#fff',
-                width: dimensions.window.width < 1024 ? dimensions.window.width : (dimensions.window.width * 0.23),
+                width: dimensions.window.width < 1024 ? dimensions.window.width : (dimensions.window.width * 0.23 - 1),
                 height: dimensions.window.width < 1024 ? dimensions.window.height - 30 : dimensions.window.height,
               }}>
                 <BottomBar
@@ -1736,29 +1738,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                   setFilterStart={(s: any) => setFilterStart(s)}
                   setFilterEnd={(e: any) => setFilterEnd(e)}
                 />
-                {/* <TopBar
-                  key={JSON.stringify(channelFilterChoice) + JSON.stringify(dateFilteredCues) + JSON.stringify(modalType) + JSON.stringify(filterChoice) + JSON.stringify(unreadDiscussionThreads) + JSON.stringify(unreadMessages) + JSON.stringify(meetingOn)}
-                  openChannels={() => openModal('Channels')}
-                  cues={dateFilteredCues}
-                  filterChoice={filterChoice}
-                  channelId={channelId}
-                  channelFilterChoice={channelFilterChoice}
-                  channelCreatedBy={channelCreatedBy}
-                  loadData={() => loadData()}
-                  // setChannelFilterChoice={(choice: any) => setChannelFilterChoice(choice)}
-                  openDiscussion={() => openModal('Discussion')}
-                  openSubscribers={() => openModal('Subscribers')}
-                  openGrades={() => openModal('Grades')}
-                  unsubscribe={() => unsubscribeChannel()}
-                  openWalkthrough={() => openModal('Walkthrough')}
-                  deleteChannel={() => deleteChannel()}
-                  openCalendar={() => openModal('Calendar')}
-                  openMeeting={() => openModal('Meeting')}
-                  openChannelSettings={() => openModal('ChannelSettings')}
-                  unreadDiscussionThreads={unreadDiscussionThreads}
-                  unreadMessages={unreadMessages}
-                  meetingOn={meetingOn}
-                /> */}
                 {
                   reLoading ? <View style={[styles(channelId).activityContainer, styles(channelId).horizontal]}>
                     <ActivityIndicator color={'#818385'} />
@@ -1779,46 +1758,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     </View>
                 }
               </View>
-              {
-                dimensions.window.width < 768 ?
-                  <TouchableOpacity
-                    onPress={() => setMenuCollapsed(true)}
-                    style={{
-                      height: 30,
-                      borderTopWidth: 1,
-                      borderColor: '#e1e9f0',
-                      backgroundColor: '#fff',
-                      justifyContent: 'center', width: '100%'
-                    }}>
-                    <Text style={{ textAlign: 'center' }}>
-                      <Ionicons
-                        name='contract-outline'
-                        color="#43434f"
-                        size={20}
-                      // style={{ marginLeft: -10 }}
-                      />
-                    </Text>
-                  </TouchableOpacity> :
-                  <TouchableOpacity
-                    disabled={true}
-                    // onPress={() => setMenuCollapsed(true)}
-                    style={{
-                      width: 30, backgroundColor: '#fff', justifyContent: 'center',
-                      // borderLeftWidth: 1,
-                      // borderRightWidth: 2,
-                      borderLeftWidth: 1,
-                      borderColor: '#e1e9f0'
-                    }}>
-                    <Text style={{ textAlign: 'center' }}>
-                      {/* <Ionicons
-                        name='contract-outline'
-                        color="#43434f"
-                        size={20}
-                        style={{}}
-                      /> */}
-                    </Text>
-                  </TouchableOpacity>
-              }
             </View >
         }
         {
@@ -1826,8 +1765,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             (modalType === '' ? <View
               style={{
                 width: dimensions.window.width < 1024 ? 0 : (menuCollapsed ? dimensions.window.width - 110 : (dimensions.window.width * 0.77 - 30)),
-                marginTop: dimensions.window.width < 1024 ? (menuCollapsed ? 55 : 0) : 0,
-                height: dimensions.window.width < 768 ? (menuCollapsed ? dimensions.window.height - 55 : 0) : dimensions.window.height,
+                marginTop: dimensions.window.width < 1024 ? (menuCollapsed ? 60 : 0) : 0,
+                height: dimensions.window.width < 768 ? (menuCollapsed ? dimensions.window.height - 60 : 0) : dimensions.window.height,
                 // paddingHorizontal: dimensions.window.width < 1024 ? 0 : 30,
                 paddingTop: 10,
                 // backgroundColor: '#FBFBFC',
@@ -1848,11 +1787,9 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 key={menuCollapsed.toString()}
                 style={{
                   width: dimensions.window.width < 1024 ? '100%' : (menuCollapsed ? dimensions.window.width - 110 : (dimensions.window.width * 0.77 - 30)),
-                  height: dimensions.window.width < 1024 ? (menuCollapsed ? (dimensions.window.height - 55) : dimensions.window.height) : dimensions.window.height,
+                  height: dimensions.window.width < 1024 ? (menuCollapsed ? (dimensions.window.height - 60) : dimensions.window.height) : dimensions.window.height,
                   // paddingHorizontal: dimensions.window.width < 1024 ? 0 : 30,
                   paddingTop: 0,
-                  // borderWidth: 1,
-                  // backgroundColor: '#FBFBFC',
                   backgroundColor: '#fff',
                   position: 'relative'
                 }}>
@@ -1862,7 +1799,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     flex: 1,
                     backgroundColor: 'white',
                     paddingHorizontal: 0,
-                    // marginTop: 0,
                     // dimensions.window.width < 1024 ? 0 : 25,
                     marginRight: 0,
                     // dimensions.window.width < 1024 ? 0 : 25,
@@ -1875,41 +1811,9 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     {modalContent}
                   </View>
                 }
-                {/* {
-              dimensions.window.width < 1024 ?
-                <TouchableOpacity
-                  onPress={() => {
-                    // closeModal()
-                  }}
-                  style={{ height: 50, backgroundColor: '#fff', borderTopWidth: 1, borderColor: '#818385' }}>
-                  <Text style={{ flex: 1, textAlign: 'center', fontSize: 16, lineHeight: 16, marginTop: 15, color: '#43434f', fontFamily: 'inter', fontWeight: 'bold' }}>
-                    <Ionicons name='chevron-back-outline' size={16} /> BACK
-                  </Text>
-                </TouchableOpacity>
-                :
-                <View style={{ backgroundColor: '#FBFBFC', height: 0 }} />
-            } */}
               </View>)
         }
       </View>
-      {/* {
-        dimensions.window.width < 768 && !menuCollapsed ? <TouchableOpacity
-          onPress={() => setMenuCollapsed(true)}
-          style={{
-            width: Dimensions.get('window').width < 768 ? '100%' : 50,
-            backgroundColor: '#fff',
-            justifyContent: 'center'
-          }}>
-          <Text style={{ textAlign: 'center' }}>
-            <Ionicons
-              name={'chevron-up-outline'}
-              color="#43434f"
-              size={Dimensions.get('window').width < 768 ? 25 : 35}
-            // style={{ marginLeft: -10 }}
-            />
-          </Text>
-        </TouchableOpacity> : null
-      } */}
       <TouchableOpacity
         onPress={() => {
           openModal('Create')
@@ -1919,7 +1823,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           position: 'absolute',
           marginRight: 30,
           marginBottom: 30,
-          zIndex: showLoginWindow ? 40 : 550,
+          zIndex: showLoginWindow ? 40 : 600,
           right: 0,
           justifyContent: 'center',
           alignSelf: 'flex-end',

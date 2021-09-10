@@ -305,23 +305,87 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
     return (
         <View style={styles.screen} key={1}>
             <View style={{ width: '100%', backgroundColor: 'white' }}>
-                {/* <Text
-                    style={{
-                        fontSize: 20,
-                        paddingBottom: 20,
-                        fontFamily: 'inter',
-                        // textTransform: "uppercase",
-                        // paddingLeft: 10,
-                        flex: 1,
-                        lineHeight: 50
-                    }}>
-                    {PreferredLanguageText('channels')}
-                </Text> */}
-                {/* <Text style={{ paddingVertical: 15, fontSize: 14, color: '#a2a2a2' }}>
-                    Users can store personal content in the 'My Cues' channel.{'\n\n'}
-                </Text> */}
                 <View style={{ width: '100%', flexDirection: width < 768 ? 'column' : 'row' }}>
-                    <View style={{ backgroundColor: 'white', width: width < 768 ? '100%' : '32%' }}>
+                    <View style={{
+                        backgroundColor: '#fff',
+                        width: width < 768 ? '100%' : '50%',
+                    }}>
+                        <Text style={{
+                            fontSize: 23,
+                            paddingBottom: 40,
+                            paddingTop: 10,
+                            fontFamily: 'inter',
+                            // flex: 1,
+                            lineHeight: 23,
+                            color: '#43434f'
+                        }}>
+                            Subscribe
+                        </Text>
+                        <View
+                            style={{
+                                borderWidth: channels.length === 0 ? 0 : 1,
+                                borderColor: '#e1e9f0',
+                                overflow: 'hidden',
+                                borderRadius: 12
+                            }}
+                        >
+                            {/* <View style={{ backgroundColor: '#fff', flexDirection: 'row' }}>
+                                <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#FBFBFC', paddingLeft: 10 }}>
+                                    <Text style={{ fontSize: 20, lineHeight: 50, fontFamily: 'inter', paddingHorizontal: 20, paddingVertical: 5 }} ellipsizeMode='tail'>
+                                        Name
+                                    </Text>
+                                </View>
+                                <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#FBFBFC', paddingLeft: 10 }}>
+                                    <Text style={{ fontSize: 20, lineHeight: 50, fontFamily: 'inter', paddingHorizontal: 20, paddingVertical: 5 }} ellipsizeMode='tail'>
+                                        Instructor
+                                    </Text>
+                                </View>
+                                <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#FBFBFC', paddingLeft: 10 }}>
+
+                                </View>
+                            </View> */}
+                            <ScrollView contentContainerStyle={{
+                                maxHeight: 550
+                            }}>
+                                {
+                                    channels.map((channel: any, ind: any) => {
+                                        return <View style={{
+                                            backgroundColor: '#fff', flexDirection: 'row', borderColor: '#e1e9f0',
+                                            borderBottomWidth: ind === channels.length - 1 ? 0 : 1
+                                        }}>
+                                            <View style={{ flex: 1, backgroundColor: '#FBFBFC', paddingLeft: 10 }}>
+                                                <Text style={{ fontSize: 12, padding: 10, fontFamily: 'inter' }} ellipsizeMode='tail'>
+                                                    {channel.name}
+                                                </Text>
+                                            </View>
+                                            <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
+                                                <Text style={{ fontSize: 12, padding: 10 }} ellipsizeMode='tail'>
+                                                    {channel.createdByUsername}
+                                                </Text>
+                                            </View>
+                                            <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
+                                                <TouchableOpacity
+                                                    onPress={() => handleSub(channel.name)}
+                                                >
+                                                    <Text style={{ textAlign: 'center', fontSize: 12, padding: 20, color: '#560bad' }} ellipsizeMode='tail'>
+                                                        Join
+                                                    </Text>
+                                                </TouchableOpacity>
+                                            </View>
+                                        </View>
+                                    })
+                                }
+                            </ScrollView>
+                        </View>
+                    </View>
+                    <View style={{
+                        backgroundColor: 'white',
+                        paddingLeft: width < 768 ? 0 : 20,
+                        paddingTop: width < 768 ? 40 : 0,
+                        marginLeft: width < 768 ? 0 : 20,
+                        borderLeftWidth: width < 768 ? 0 : 1, borderLeftColor: '#e1e9f0',
+                        width: width < 768 ? '100%' : '50%'
+                    }}>
                         <Text style={{
                             fontSize: 23,
                             paddingBottom: 40,
@@ -333,43 +397,6 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         }}>
                             Create
                         </Text>
-                        {/* 
-                            <View style={styles.colorBar}>
-                            <TouchableOpacity
-                                style={option === 'Subscribe' ? styles.allOutline : styles.all}
-                                onPress={() => {
-                                    setOption('Subscribe')
-                                }}>
-                                <Text style={{ color: option === 'Subscribe' ? '#fff' : '#818385', lineHeight: 20, fontSize: 12 }}>
-                                    {PreferredLanguageText('subscribe')}
-                                </Text>
-                            </TouchableOpacity>
-                            {
-                                role === 'student' && (school && school.allowStudentChannelCreation === false) ?
-                                    null :
-                                    <TouchableOpacity
-                                        style={option === 'Create' ? styles.allOutline : styles.all}
-                                        onPress={() => {
-                                            setOption('Create')
-                                        }}>
-                                        <Text style={{ color: option === 'Create' ? '#fff' : '#818385', lineHeight: 20, fontSize: 12 }}>
-                                            {PreferredLanguageText('create')}
-                                        </Text>
-                                    </TouchableOpacity>
-                            } */}
-                        {/* {
-                        role === 'instructor' ?
-                            <TouchableOpacity
-                                style={option === 'All' ? styles.allOutline : styles.all}
-                                onPress={() => {
-                                    setOption('All')
-                                }}>
-                                <Text style={{ color: option === 'All' ? '#fff' : '#818385', lineHeight: 20, fontSize: 12 }}>
-                                    All Channels
-                                </Text>
-                            </TouchableOpacity> : null
-                    } 
-                        </View>*/}
                         <View style={{ backgroundColor: 'white' }}>
                             <Text style={{
                                 fontSize: 15,
@@ -509,7 +536,8 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             borderRadius: 15,
                                             overflow: 'hidden',
                                             height: 35,
-                                            marginTop: 15
+                                            marginTop: 15,
+                                            marginBottom: 50
                                         }}
                                         disabled={isSubmitDisabled}
                                     >
@@ -528,82 +556,6 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         </Text>
                                     </TouchableOpacity>
                             }
-                        </View>
-                    </View>
-                    <View style={{
-                        backgroundColor: '#fff',
-                        width: width < 768 ? '100%' : '68%',
-                        paddingLeft: width < 768 ? 0 : 20,
-                        paddingTop: width < 768 ? 40 : 0,
-                        marginLeft: width < 768 ? 0 : 20,
-                        borderLeftWidth: width < 768 ? 0 : 1, borderLeftColor: '#e1e9f0'
-                    }}>
-                        <Text style={{
-                            fontSize: 23,
-                            paddingBottom: 40,
-                            paddingTop: 10,
-                            fontFamily: 'inter',
-                            // flex: 1,
-                            lineHeight: 23,
-                            color: '#43434f'
-                        }}>
-                            Subscribe
-                        </Text>
-                        <View
-                            style={{
-                                borderWidth: channels.length === 0 ? 0 : 1,
-                                borderColor: '#e1e9f0',
-                                overflow: 'hidden',
-                                borderRadius: 12
-                            }}
-                        >
-                            {/* <View style={{ backgroundColor: '#fff', flexDirection: 'row' }}>
-                                <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#FBFBFC', paddingLeft: 10 }}>
-                                    <Text style={{ fontSize: 20, lineHeight: 50, fontFamily: 'inter', paddingHorizontal: 20, paddingVertical: 5 }} ellipsizeMode='tail'>
-                                        Name
-                                    </Text>
-                                </View>
-                                <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#FBFBFC', paddingLeft: 10 }}>
-                                    <Text style={{ fontSize: 20, lineHeight: 50, fontFamily: 'inter', paddingHorizontal: 20, paddingVertical: 5 }} ellipsizeMode='tail'>
-                                        Instructor
-                                    </Text>
-                                </View>
-                                <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#FBFBFC', paddingLeft: 10 }}>
-
-                                </View>
-                            </View> */}
-                            <ScrollView contentContainerStyle={{
-                                maxHeight: 550
-                            }}>
-                                {
-                                    channels.map((channel: any, ind: any) => {
-                                        return <View style={{
-                                            backgroundColor: '#fff', flexDirection: 'row', borderColor: '#e1e9f0',
-                                            borderBottomWidth: ind === channels.length - 1 ? 0 : 1
-                                        }}>
-                                            <View style={{ flex: 1, backgroundColor: '#FBFBFC', paddingLeft: 10 }}>
-                                                <Text style={{ fontSize: 12, padding: 20, fontFamily: 'inter' }} ellipsizeMode='tail'>
-                                                    {channel.name}
-                                                </Text>
-                                            </View>
-                                            <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                                <Text style={{ fontSize: 12, lineHeight: 50, paddingHorizontal: 20 }} ellipsizeMode='tail'>
-                                                    {channel.createdByUsername}
-                                                </Text>
-                                            </View>
-                                            <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                                <TouchableOpacity
-                                                    onPress={() => handleSub(channel.name)}
-                                                >
-                                                    <Text style={{ textAlign: 'center', fontSize: 12, padding: 20, color: '#560bad' }} ellipsizeMode='tail'>
-                                                        Join
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            </View>
-                                        </View>
-                                    })
-                                }
-                            </ScrollView>
                         </View>
                     </View>
                 </View>

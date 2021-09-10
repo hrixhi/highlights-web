@@ -511,7 +511,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         }}>
                                         <Text style={styles.all}>
                                             Q&A
-                                            {props.cue.unreadThreads > 0 ? <View style={styles.badge} /> : null}
+                                            {/* {props.cue.unreadThreads > 0 ? <View style={styles.badge} /> : null} */}
                                         </Text>
                                     </TouchableOpacity>
                                     {
