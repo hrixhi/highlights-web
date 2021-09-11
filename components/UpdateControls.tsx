@@ -539,7 +539,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
         if (props.cue.channelId && props.cue.channelId !== "") {
             const data1 = original;
-            const data2 = cue;
+            const data2 = props.cue.cue;
             if (data2 && data2[0] && data2[0] === "{" && data2[data2.length - 1] === "}") {
                 const obj = JSON.parse(data2);
 
@@ -555,6 +555,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 }
 
             } else {
+                console.log("Submission setting to false")
                 setSubmissionImported(false);
                 setSubmissionUrl("");
                 setSubmissionType("");
@@ -665,7 +666,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 setTitle("");
             }
         } else {
-            const data = cue;
+            const data = props.cue.cue;
             if (data && data[0] && data[0] === "{" && data[data.length - 1] === "}") {
                 const obj = JSON.parse(data);
                 setSubmissionImported(true);
@@ -1060,7 +1061,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             cue: updatedCue,
             submittedAt: submitted ? submittedNow.toISOString() : props.cue.submittedAt,
         }
-
 
         subCues[props.cueKey][props.cueIndex] = saveCue;
 
@@ -1541,7 +1541,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         props.cue
     ]);
 
-    const updateQuiz = (instructions: string, problems: any, headers: any, modifiedCorrectAnswerProblems: boolean[], regradeChoices: string[], timer: boolean, duration: any) => {
+    const updateQuiz = (instructions: string, problems: any, headers: any, modifiedCorrectAnswerProblems: boolean[], regradeChoices: string[], timer: boolean, duration: any, shuffleQuiz: boolean) => {
         Alert("Update Quiz?", "", [
             {
                 text: "Cancel",
@@ -1655,6 +1655,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     problems: sanitizeProblems,
                                     headers: JSON.stringify(headers),
                                     duration: timer ? durationMinutes.toString() : null,
+                                    shuffleQuiz
                                 },
                                 modifiedCorrectAnswers: modifiedCorrectAnswerProblems.map((o: any) => o ? "yes" : "no"),
                                 regradeChoices: regradeChoices.map((choice: string) => choice === "" ? "none" : choice)
@@ -1679,6 +1680,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             setHeaders(res.data.quiz.getQuiz.headers ? JSON.parse(res.data.quiz.getQuiz.headers) : {})
                                             setLoadingAfterModifyingQuiz(false);
                                             setDuration(res.data.quiz.getQuiz.duration * 60);
+                                            setShuffleQuiz(res.data.quiz.getQuiz.shuffleQuiz ? res.data.quiz.getQuiz.shuffleQuiz : false)
                                             alert('Quiz updated successfully')
                                         }
                                     });
@@ -2460,7 +2462,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         ?
                         <View style={{ flexDirection: 'row', marginTop: 10, }}>
                             {viewSubmission ?
-                                <TouchableOpacity
+                                (props.cue.graded && props.cue.releaseSubmission ? null : <TouchableOpacity
                                     disabled={props.cue.graded && props.cue.releaseSubmission}
                                     onPress={async () => {
                                         setViewSubmission(false)
@@ -2478,7 +2480,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         lineHeight: 30,
                                         color: '#fff',
                                         fontSize: 12,
-                                        backgroundColor: '#53BE6D',
+                                        backgroundColor: '#4C956C',
                                         paddingHorizontal: 25,
                                         fontFamily: 'inter',
                                         height: 30,
@@ -2486,9 +2488,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         borderRadius: 15,
                                         textTransform: 'uppercase'
                                     }}>
-                                        {(props.cue.graded && props.cue.releaseSubmission) ? "GRADED" : "Re-Submit"}
+                                        {"Re-Submit"}
                                     </Text>
-                                </TouchableOpacity>
+                                </TouchableOpacity>)
                                 :
                                 <TouchableOpacity
                                     onPress={async () => {
@@ -2507,7 +2509,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         lineHeight: 30,
                                         color: '#fff',
                                         fontSize: 12,
-                                        backgroundColor: '#53BE6D',
+                                        backgroundColor: '#4C956C',
                                         paddingHorizontal: 25,
                                         fontFamily: 'inter',
                                         height: 30,
@@ -2698,7 +2700,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         {renderFooter()}
                     </View>
                 ) : (
-                    <View style={{}}>
+                    <View style={{}} key={JSON.stringify(submissionImported) + JSON.stringify(viewSubmission)}>
                         <div className="webviewer" ref={RichText} style={{ height: "100vh" }}></div>
                         {renderFooter()}
                     </View>
@@ -2924,7 +2926,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 // skin: useDarkMode ? 'oxide-dark' : 'oxide',
                 // content_css: useDarkMode ? 'dark' : 'default',
             }}
-            onChange={(e: any) => setCue(e.target.getContent())}
+            onChange={(e: any) => setSubmissionDraft(e.target.getContent())}
         />
     );
 
@@ -4554,37 +4556,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     </View>
                                 ) : null}
                             </View>
+                            {renderCategoryOptions()}
+                            {renderPriorityOptions()}
                             {renderReminderOptions()}
-                            {isQuiz && isOwner ? <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : 'row', paddingTop: 40 }}>
-                                <View style={{ width: 300, paddingBottom: 15, backgroundColor: 'white' }}>
-                                    <Text style={{
-                                        fontSize: 15,
-                                        fontFamily: 'inter',
-                                        color: '#2f2f3c'
-                                    }}>
-                                        Shuffle Questions
-                                    </Text>
-                                </View>
-                                <View style={{ flexDirection: 'row' }}>
-                                    <View style={{
-                                        backgroundColor: 'white',
-                                        height: 40,
-                                        marginRight: 10
-                                    }}>
-                                        <Switch
-                                            value={shuffleQuiz}
-                                            disabled={true}
-                                            onValueChange={() => setShuffleQuiz(!shuffleQuiz)}
-                                            style={{ height: 20 }}
-                                            trackColor={{
-                                                false: '#FBFBFC',
-                                                true: '#818385'
-                                            }}
-                                            activeThumbColor='white'
-                                        />
-                                    </View>
-                                </View>
-                            </View> : null}
                             {renderDeleteButtons()}
                         </Collapse>
                     </View>

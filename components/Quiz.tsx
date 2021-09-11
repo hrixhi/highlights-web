@@ -74,6 +74,10 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
     }, [props.headers, props.instructions])
 
+    useEffect(() => {
+        setShuffleQuiz(props.shuffleQuiz)
+    }, [props.shuffleQuiz])
+
     // Over here the solutions objeect for modification is first set and updated based on changes...
     useEffect(() => {
 
@@ -1385,7 +1389,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'center' }}>
                         <TouchableOpacity
                             onPress={() => {
-                                props.modifyQuiz(instructions, problems, headers, modifiedCorrectAnswerProblems, regradeChoices, timer, duration);
+                                props.modifyQuiz(instructions, problems, headers, modifiedCorrectAnswerProblems, regradeChoices, timer, duration, shuffleQuiz);
                             }}
                             style={{ backgroundColor: "white", borderRadius: 15, width: 150 }}>
                             <Text
