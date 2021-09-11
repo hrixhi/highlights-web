@@ -108,29 +108,31 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     </TouchableOpacity>
                 </View>
                 {
-                    selectedChannel ? <View style={styles.icons}>
-                        <Text style={{
-                            fontSize: 23,
-                            // paddingBottom: 20,
-                            // paddingTop: 10,
-                            fontFamily: 'inter',
-                            // flex: 1,
-                            paddingTop: 9,
-                            // lineHeight: 23,
-                            color: '#43434f'
-                        }}>
-                            <View style={{
-                                width: 18,
-                                height: 18,
-                                marginRight: 10,
-                                borderRadius: 9,
-                                marginTop: 3,
-                                backgroundColor: selectedChannel.colorCode
-                            }} /> {selectedChannel.channelName}
-                        </Text>
-                    </View> : null
+                    selectedChannel ? <TouchableOpacity
+                        onPress={() => props.showMenu()}
+                        style={{ backgroundColor: '#fbfbfc', flexDirection: 'row', flex: 1 }}>
+                        <View style={styles.icons}>
+                            <Text style={{
+                                fontSize: 23,
+                                fontFamily: 'inter',
+                                lineHeight: 35,
+                                color: '#43434f',
+                                marginTop: 12,
+                            }}>
+                                <View style={{
+                                    width: 18,
+                                    height: 18,
+                                    borderRadius: 9,
+                                    marginRight: 10,
+                                    marginTop: 7,
+                                    backgroundColor: selectedChannel.colorCode
+                                }} /> {selectedChannel.channelName}
+                            </Text>
+                        </View>
+                    </TouchableOpacity> :
+                        <View style={{ backgroundColor: '#fbfbfc', flexDirection: 'row', flex: 1 }} />
+
                 }
-                <View style={{ backgroundColor: '#fbfbfc', flexDirection: 'row', flex: 1 }} />
                 {
                     props.channelId && props.channelId !== '' ?
                         <View style={styles.icons}>
@@ -168,11 +170,11 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         onPress={() => props.hideMenu()}>
                         <Text style={styles.channelText}>
                             <Ionicons
-                                name='contract-outline' size={19} color={'#43434f'} />
+                                name='contract-outline' size={30} color={'#43434f'} />
                         </Text>
-                        <Text style={{ fontSize: 10, color: '#43434f', textAlign: 'center' }}>
+                        {/* <Text style={{ fontSize: 10, color: '#43434f', textAlign: 'center' }}>
                             Hide
-                        </Text>
+                        </Text> */}
                     </TouchableOpacity>
                 </View>
             </View>
@@ -184,7 +186,7 @@ export default BottomBar
 
 const styleObject: any = (colorScheme: any) => StyleSheet.create({
     bottombar: {
-        height: '8%',
+        height: 59,
         width: '100%',
         display: 'flex',
         paddingBottom: 10,
@@ -212,7 +214,6 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
     },
     center: {
         width: '100%',
-        // justifyContent: 'center',
         display: 'flex',
         textAlign: 'center',
         backgroundColor: '#FBFBFC'

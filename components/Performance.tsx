@@ -256,7 +256,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                     </Text>
                                 </View>
                             </View>
-                            <View style={{ flexDirection: 'row', flex: 1, paddingTop: 20 }}>
+                            <View style={{ flexDirection: 'row', flex: 1, paddingTop: 10 }}>
                                 <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
                                     <Text style={{
                                         flex: 1, flexDirection: 'row',
@@ -273,7 +273,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                     </Text>
                                 </View>
                             </View>
-                            <View style={{ flexDirection: 'row', flex: 1, marginTop: 20 }}>
+                            <View style={{ flexDirection: 'row', flex: 1, marginTop: 10 }}>
                                 <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
                                     <Text style={{
                                         flex: 1, flexDirection: 'row',
@@ -290,7 +290,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                     </Text>
                                 </View>
                             </View>
-                            <View style={{ flexDirection: 'row', flex: 1, paddingTop: 15 }}>
+                            <View style={{ flexDirection: 'row', flex: 1, paddingTop: 10 }}>
                                 <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 25 }}>
                                     <Text style={{
                                         flex: 1, flexDirection: 'row',
@@ -307,7 +307,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                     </Text>
                                 </View>
                             </View>
-                            <View style={{ flexDirection: 'row', flex: 1, paddingTop: 15 }}>
+                            <View style={{ flexDirection: 'row', flex: 1, paddingTop: 10 }}>
                                 <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 25 }}>
                                     <Text style={{
                                         flex: 1, flexDirection: 'row',
@@ -324,7 +324,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                     </Text>
                                 </View>
                             </View>
-                            <View style={{ flexDirection: 'row', flex: 1, paddingTop: 15 }}>
+                            <View style={{ flexDirection: 'row', flex: 1, paddingTop: 10 }}>
                                 <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 25 }}>
                                     <Text style={{
                                         flex: 1, flexDirection: 'row',
@@ -341,7 +341,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                     </Text>
                                 </View>
                             </View>
-                            <View style={{ flexDirection: 'row', flex: 1, paddingTop: 20 }}>
+                            <View style={{ flexDirection: 'row', flex: 1, paddingTop: 10 }}>
                                 <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
                                     <Text style={{
                                         flex: 1, flexDirection: 'row',
@@ -358,7 +358,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                     </Text>
                                 </View>
                             </View>
-                            <View style={{ flexDirection: 'row', flex: 1, paddingTop: 20 }}>
+                            <View style={{ flexDirection: 'row', flex: 1, paddingTop: 10 }}>
                                 <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
                                     <Text style={{
                                         flex: 1, flexDirection: 'row',

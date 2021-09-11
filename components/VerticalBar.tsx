@@ -75,12 +75,8 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     selectedChannel ? <View style={styles.icons}>
                         <Text style={{
                             fontSize: 23,
-                            // paddingBottom: 20,
-                            // paddingTop: 10,
                             fontFamily: 'inter',
-                            // flex: 1,
-                            paddingTop: 1,
-                            // lineHeight: 23,
+                            lineHeight: 30,
                             color: '#43434f'
                         }}>
                             <View style={{
@@ -88,7 +84,7 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 height: 18,
                                 borderRadius: 9,
                                 marginRight: 10,
-                                marginTop: 3,
+                                marginTop: 5,
                                 backgroundColor: selectedChannel.colorCode
                             }} /> {selectedChannel.channelName}
                         </Text>
@@ -134,15 +130,11 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 <View style={styles.icons2}>
                     {
                         props.channelId !== '' && (props.menuCollapsed === true) ?
-                            <TouchableOpacity
-                                style={{ backgroundColor: '#FBFBFC', width: Dimensions.get('window').width < 768 ? 'auto' : '100%', paddingBottom: 20 }}
+                            <TouchableOpacity style={{ backgroundColor: '#FBFBFC', width: '100%', paddingBottom: 20 }}
                                 onPress={() => props.hideMenu()}>
-                                <Text style={styles.channelText}>
+                                <Text style={{ lineHeight: 35, width: '100%', textAlign: 'center' }}>
                                     <Ionicons
-                                        name='expand-outline' size={19} color={'#43434f'} />
-                                </Text>
-                                <Text style={{ fontSize: 10, color: '#43434f', textAlign: 'center', width: Dimensions.get('window').width < 768 ? 'auto' : '100%' }}>
-                                    Expand
+                                        name='expand-outline' size={30} color={'#43434f'} />
                                 </Text>
                             </TouchableOpacity> : null
                     }
@@ -159,15 +151,9 @@ const styleObject: any = (colorScheme: any, mc: any) => StyleSheet.create({
         height: 59,
         width: '100%',
         paddingHorizontal: Dimensions.get('window').width < 1024 ? 20 : 40,
-        // display: 'flex',
-        //  paddingBottom: 10,
-        // borderWidth: 1,
-        // borderColor: '#606060',
-        // marginTop: 8,
         paddingTop: 10,
         flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row',
-        // flex: 1,
-        backgroundColor: '#fbfbfc'
+        backgroundColor: '#fbfbfc',
     },
     icons: {
         display: 'flex',

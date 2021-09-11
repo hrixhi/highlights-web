@@ -1483,34 +1483,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     }
                   </Text>
                 </TouchableOpacity>
-                {/* <TouchableOpacity
-                  onPress={() => {
-                    setShowLoginWindow(false)
-                    Alert(alertText);
-                  }}
-                  style={{
-                    backgroundColor: 'white',
-                    overflow: 'hidden',
-                    height: 35,
-                    marginTop: 15,
-                    width: '100%', justifyContent: 'center', flexDirection: 'row'
-                  }}>
-                  <Text style={{
-                    textAlign: 'center',
-                    lineHeight: 35,
-                    color: '#43434f',
-                    fontSize: 12,
-                    backgroundColor: '#FBFBFC',
-                    paddingHorizontal: 25,
-                    fontFamily: 'inter',
-                    height: 35,
-                    width: 180,
-                    borderRadius: 15,
-                    textTransform: 'uppercase'
-                  }}>
-                    {PreferredLanguageText('skipForNow')}
-                  </Text>
-                </TouchableOpacity> */}
               </View>
             </View>
             <View style={{ display: "flex", justifyContent: "flex-start", paddingLeft: 5, paddingBottom: 5, marginTop: 20 }}>
@@ -1639,7 +1611,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 channelId={channelId}
                 channelCreatedBy={channelCreatedBy}
                 loadData={() => loadData()}
-                // setChannelFilterChoice={(choice: any) => setChannelFilterChoice(choice)}
                 openDiscussion={() => openModal('Discussion')}
                 openSubscribers={() => openModal('Subscribers')}
                 openGrades={() => openModal('Grades')}
@@ -1680,6 +1651,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     setMenuCollapsed(true)
                   }}
                   hideMenu={() => setMenuCollapsed(true)}
+                  showMenu={() => setMenuCollapsed(false)}
                   filterChoice={filterChoice}
                   handleFilterChange={(choice: any) => handleFilterChange(choice)}
                   key={Math.random()}
@@ -1702,8 +1674,14 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                   openGrades={() => openModal('Grades')}
                   unsubscribe={() => unsubscribeChannel()}
                   deleteChannel={() => deleteChannel()}
-                  openMeeting={() => openModal('Meeting')}
-                  openChannelSettings={() => openModal('ChannelSettings')}
+                  openMeeting={() => {
+                    openModal('Meeting')
+                    setMenuCollapsed(true)
+                  }}
+                  openChannelSettings={() => {
+                    openModal('ChannelSettings')
+                    setMenuCollapsed(true)
+                  }}
                   unreadDiscussionThreads={unreadDiscussionThreads}
                   unreadMessages={unreadMessages}
                   meetingOn={meetingOn}
@@ -1747,7 +1725,10 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         channelId={channelId}
                         createdBy={channelCreatedBy}
                         filterChoice={filterChoice}
-                        openUpdate={(index: any, key: any, pageNumber: any, _id: any, by: any, cId: any) => openUpdate(index, key, pageNumber, _id, by, cId)}
+                        openUpdate={(index: any, key: any, pageNumber: any, _id: any, by: any, cId: any) => {
+                          openUpdate(index, key, pageNumber, _id, by, cId)
+                          setMenuCollapsed(true)
+                        }}
                         channelFilterChoice={channelFilterChoice}
                         subscriptions={subscriptions}
                       />
@@ -1798,13 +1779,11 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     backgroundColor: 'white',
                     paddingHorizontal: dimensions.window.width < 1024 ? 20 : 40,
                     width: dimensions.window.width,
-                    // dimensions.window.width < 1024 ? 0 : 25,
                     // marginRight: 0,
-                    // dimensions.window.width < 1024 ? 0 : 25,
+                    alignSelf: 'center',
                     borderTopLeftRadius: 0,
-                    // dimensions.window.width < 1024 ? 0 : 20,
                     borderTopRightRadius: 0,
-                    // dimensions.window.width < 1024 ? 0 : 20,
+                    maxWidth: modalType === 'Create' || modalType === 'Update' ? 1500 : dimensions.window.width,
                     overflow: 'hidden'
                   }}>
                     {modalContent}

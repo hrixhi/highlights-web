@@ -1007,12 +1007,13 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
             {!isQuiz ? (
               <Text
                 style={{
-                  color: "#43434f",
-                  fontSize: 11,
                   lineHeight: 30,
                   textAlign: "right",
                   paddingRight: 20,
                   textTransform: "uppercase",
+                  fontSize: 15,
+                  fontFamily: 'inter',
+                  color: '#43434f',
                 }}
                 onPress={() => setShowEquationEditor(!showEquationEditor)}
               >
@@ -1025,11 +1026,12 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
               <Text
                 style={{
                   color: "#43434f",
-                  fontSize: 11,
                   lineHeight: 30,
                   textAlign: "right",
                   paddingRight: 20,
-                  textTransform: "uppercase",
+                  fontSize: 15,
+                  fontFamily: 'inter',
+                  textTransform: 'uppercase'
                 }}
                 onPress={() => setShowImportOptions(true)}
               >
@@ -1039,11 +1041,12 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
             <Text
               style={{
                 color: "#43434f",
-                fontSize: 11,
                 lineHeight: 30,
                 textAlign: "right",
                 paddingRight: 10,
                 textTransform: "uppercase",
+                fontSize: 15,
+                fontFamily: 'inter',
               }}
               onPress={() => {
                 if (isQuiz) {
@@ -1524,7 +1527,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
               >
                 <View
                   style={{
-                    // width: 300,
                     flexDirection: width < 768 ? 'column' : "row",
                     borderRightWidth: 0,
                     borderColor: "#FBFBFC",
@@ -1533,7 +1535,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 >
                   <View
                     style={{
-                      width: 300,
+                      flex: 1, flexDirection: 'row',
                       paddingBottom: 15,
                       backgroundColor: "white",
                     }}
@@ -1542,18 +1544,16 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                       style={{
                         fontSize: 15,
                         fontFamily: 'inter',
-                        color: '#43434f'
+                        color: '#43434f',
+                        textTransform: 'uppercase'
                       }}
                     >
-                      {/* {PreferredLanguageText('channel')} */}
                       Share with
-                      {/* <Ionicons
-                                                name='school-outline' size={20} color={'#818385'} /> */}
                     </Text>
                   </View>
                   <View
                     style={{
-                      display: "flex",
+                      // display: "flex",
                       // flexDirection: "row",
                       backgroundColor: "white",
                     }}
@@ -1629,99 +1629,15 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           })}
                         </MenuOptions>
                       </Menu>
-                      <View
-                        style={{
-                          // width: "100%",
-                          borderRightWidth: 0,
-                          borderColor: "#FBFBFC",
-                        }}
-                      >
-                        {
-                          channelId !== "" ? (<View>
-                            <View
-                              style={{
-                                width: "100%",
-                                paddingTop: 40,
-                                paddingBottom: 15,
-                                backgroundColor: "white",
-                              }}
-                            >
-                              <Text
-                                style={{
-                                  fontSize: 15,
-                                  fontFamily: 'inter',
-                                  color: '#2f2f3c'
-                                }}
-                              >
-                                All subscribers
-                              </Text>
-                            </View>
-                            <View style={{ flexDirection: "row" }}>
-                              <View
-                                style={{
-                                  backgroundColor: "white",
-                                  height: 40,
-                                  marginRight: 10,
-                                }}
-                              >
-                                <Switch
-                                  value={!limitedShare}
-                                  onValueChange={() => {
-                                    setLimitedShare(!limitedShare);
-                                  }}
-                                  style={{ height: 20 }}
-                                  trackColor={{
-                                    false: "#F8F9FA",
-                                    true: "#818385",
-                                  }}
-                                  activeThumbColor="white"
-                                />
-                              </View>
-                            </View>
-                          </View>) : null
-                        }
-                        {channelId !== "" && limitedShare ? (
-                          <View
-                            style={{
-                              flexDirection: "column",
-                              overflow: "scroll",
-                            }}
-                          >
-                            <View style={{ width: "90%", padding: 5, height: "auto" }}>
-                              <Multiselect
-                                placeholder="Share with..."
-                                displayValue="name"
-                                // key={userDropdownOptions.toString()}
-                                // style={{ width: '100%', color: '#43434F',
-                                //     optionContainer: { // To change css for option container
-                                //         zIndex: 9999
-                                //     }
-                                // }}
-                                options={subscribers} // Options to display in the dropdown
-                                selectedValues={selected} // Preselected value to persist in dropdown
-                                onSelect={(e, f) => {
-                                  console.log('on select values', e)
-                                  setSelected(e);
-                                  return true;
-                                }} // Function will trigger on select event
-                                onRemove={(e, f) => {
-                                  setSelected(e);
-                                  return true;
-                                }}
-                              />
-                            </View>
-                          </View>
-                        ) : null}
-                      </View>
                     </View>
                   </View>
                 </View>
 
-                {channelId !== "" ? (
-                  <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : "row", paddingTop: 40 }}>
+                {
+                  channelId !== '' ? <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : "row", paddingTop: 40 }}>
                     <View
                       style={{
-                        width: 300,
+                        flex: 1, flexDirection: 'row',
                         paddingBottom: 15,
                         backgroundColor: "white",
                       }}
@@ -1730,7 +1646,88 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                         style={{
                           fontSize: 15,
                           fontFamily: 'inter',
-                          color: '#43434f'
+                          color: '#43434f',
+                          textTransform: 'uppercase'
+                        }}
+                      >
+                        SHARE WITH ALL
+                      </Text>
+                    </View>
+                    <View>
+                      <View
+                        style={{
+                          backgroundColor: "white",
+                          height: 40,
+                          marginRight: 10,
+                          flexDirection: 'row',
+                          justifyContent: 'flex-end'
+                        }}
+                      >
+                        <Switch
+                          value={!limitedShare}
+                          onValueChange={() => {
+                            setLimitedShare(!limitedShare);
+                          }}
+                          style={{ height: 20 }}
+                          trackColor={{
+                            false: "#F8F9FA",
+                            true: "#818385",
+                          }}
+                          activeThumbColor="white"
+                        />
+                      </View>
+                      {channelId !== "" && limitedShare ? (
+                        <View
+                          style={{
+                            flexDirection: "column",
+                            overflow: "scroll",
+                          }}
+                        >
+                          <View style={{ width: "100%", padding: 5, height: "auto", maxWidth: 350 }}>
+                            <Multiselect
+                              placeholder="Share with..."
+                              displayValue="name"
+                              // key={userDropdownOptions.toString()}
+                              // style={{ width: '100%', color: '#43434F',
+                              //     optionContainer: { // To change css for option container
+                              //         zIndex: 9999
+                              //     }
+                              // }}
+                              options={subscribers} // Options to display in the dropdown
+                              selectedValues={selected} // Preselected value to persist in dropdown
+                              onSelect={(e, f) => {
+                                console.log('on select values', e)
+                                setSelected(e);
+                                return true;
+                              }} // Function will trigger on select event
+                              onRemove={(e, f) => {
+                                setSelected(e);
+                                return true;
+                              }}
+                            />
+                          </View>
+                        </View>
+                      ) : null}
+                    </View>
+                  </View>
+                    : null
+                }
+
+                {channelId !== "" ? (
+                  <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : "row", paddingTop: 40 }}>
+                    <View
+                      style={{
+                        flex: 1, flexDirection: 'row',
+                        paddingBottom: 15,
+                        backgroundColor: "white",
+                      }}
+                    >
+                      <Text
+                        style={{
+                          fontSize: 15,
+                          fontFamily: 'inter',
+                          color: '#43434f',
+                          textTransform: 'uppercase'
                         }}
                       >
                         {PreferredLanguageText("submissionRequired")}
@@ -1742,6 +1739,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           backgroundColor: "white",
                           height: 40,
                           marginRight: 10,
+                          flexDirection: 'row',
+                          justifyContent: 'flex-end'
                         }}
                       >
                         <Switch
@@ -1759,7 +1758,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                         />
                       </View>
                       <View style={{ width: "100%", marginBottom: 15 }}>
-                        <View style={{ flexDirection: "row" }}>
+                        <View style={{}}>
                           {submission ? (
                             <View
                               style={{
@@ -1835,7 +1834,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : 'row', paddingTop: 40 }}>
                     <View
                       style={{
-                        width: 300,
+                        flex: 1, flexDirection: 'row',
                         paddingBottom: 15,
                         backgroundColor: "white",
                       }}
@@ -1847,16 +1846,18 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           color: '#43434f'
                         }}
                       >
-                        Grade Weight
+                        GRADE WEIGHT
                       </Text>
                     </View>
                     <View>
-                      <View style={{ flexDirection: "row" }}>
+                      <View>
                         <View
                           style={{
                             backgroundColor: "white",
                             height: 40,
                             marginRight: 10,
+                            flexDirection: 'row',
+                            justifyContent: 'flex-end'
                           }}
                         >
                           <Switch
@@ -1875,14 +1876,21 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                         {graded ? (
                           <View
                             style={{
-                              width: "100%",
-                              display: "flex",
-                              flexDirection: "row",
+                              // width: "100%",
+                              // display: "flex",
+                              flexDirection: 'row',
+                              justifyContent: 'flex-end',
                               backgroundColor: "white",
-                              alignItems: 'center'
+                              // alignItems: 'center'
                             }}
                           >
-                            <Text style={styles.text}>
+                            <Text style={{
+                              fontSize: 12,
+                              color: "#818385",
+                              textAlign: "left",
+                              paddingHorizontal: 10,
+                              paddingTop: 20
+                            }}>
                               {PreferredLanguageText("percentageOverall")}
                             </Text>
                             <TextInput
@@ -1910,10 +1918,10 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 {/* Allowed attempts */}
 
                 {submission && isQuiz ? (
-                  <View style={{ width: "100%",  flexDirection: width < 768 ? 'column' : 'row', paddingTop: 40 }}>
+                  <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : 'row', paddingTop: 40 }}>
                     <View
                       style={{
-                        width: 300,
+                        flex: 1, flexDirection: 'row',
                         backgroundColor: "white",
                       }}
                     >
@@ -1921,13 +1929,15 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                         style={{
                           fontSize: 15,
                           fontFamily: 'inter',
-                          color: '#2f2f3c'
+                          color: '#2f2f3c',
+                          textTransform: 'uppercase'
+
                         }}
                       >
                         Unlimited Attempts
                       </Text>
                     </View>
-                    <View >
+                    <View>
                       <View
                         style={{
                           backgroundColor: "white",
@@ -2007,7 +2017,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 <View style={{ width: "100%", backgroundColor: "white", flexDirection: width < 768 ? 'column' : 'row', paddingTop: 40 }}>
                   <View
                     style={{
-                      width: 300,
+                      flex: 1, flexDirection: 'row',
                       paddingBottom: 15,
                       backgroundColor: "white",
                     }}
@@ -2016,7 +2026,9 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                       style={{
                         fontSize: 15,
                         fontFamily: 'inter',
-                        color: '#43434f'
+                        color: '#43434f',
+                        textTransform: 'uppercase'
+
                       }}
                     >
                       {PreferredLanguageText("category")}
@@ -2025,7 +2037,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   <View
                     style={{
                       // width: "100%",
-                      display: "flex",
+                      // display: "flex",
                       flexDirection: "row",
                       backgroundColor: "white",
                     }}
@@ -2125,7 +2137,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
               >
                 <View
                   style={{
-                    width: 300,
+                    flex: 1, flexDirection: 'row',
                     paddingBottom: 15,
                     backgroundColor: "white",
                   }}
@@ -2134,6 +2146,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                     style={{
                       fontSize: 15,
                       fontFamily: 'inter',
+                      textTransform: 'uppercase',
                       color: '#43434f'
                     }}
                   >
@@ -2143,7 +2156,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 <View
                   style={{
                     // width: "100%",
-                    display: "flex",
+                    // display: "flex",
                     flexDirection: "row",
                     backgroundColor: "white",
                   }}
@@ -2193,7 +2206,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
               <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : 'row', paddingTop: 40 }}>
                 <View
                   style={{
-                    width: 300,
+                    flex: 1, flexDirection: 'row',
                     paddingBottom: 15,
                     backgroundColor: "white",
                   }}
@@ -2202,7 +2215,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                     style={{
                       fontSize: 15,
                       fontFamily: 'inter',
-                      color: '#43434f'
+                      color: '#43434f',
+                      textTransform: 'uppercase'
                     }}
                   >
                     Reminder
@@ -2211,7 +2225,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 <View
                   style={{
                     backgroundColor: "white",
-                    width: "100%",
+                    //  width: "100%",
                     height: 40,
                     marginRight: 10,
                   }}
@@ -2242,7 +2256,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : 'row', paddingTop: 40 }}>
                   <View
                     style={{
-                      width: 300,
+                      flex: 1, flexDirection: 'row',
                       paddingBottom: 15,
                       backgroundColor: "white",
                     }}
@@ -2251,7 +2265,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                       style={{
                         fontSize: 15,
                         fontFamily: 'inter',
-                        color: '#43434f'
+                        color: '#43434f',
+                        textTransform: 'uppercase'
                       }}
                     >
                       Recurring
@@ -2263,6 +2278,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                         backgroundColor: "white",
                         height: 40,
                         marginRight: 10,
+                        flexDirection: 'row',
+                        justifyContent: 'flex-end'
                       }}
                     >
                       <Switch
@@ -2367,7 +2384,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : 'row', paddingTop: 40 }}>
                   <View
                     style={{
-                      width: 300,
+                      flex: 1, flexDirection: 'row',
                       paddingBottom: 15,
                       backgroundColor: "white",
                     }}
@@ -2376,17 +2393,20 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                       style={{
                         fontSize: 15,
                         fontFamily: 'inter',
-                        color: '#43434f'
+                        color: '#43434f',
+                        textTransform: 'uppercase'
                       }}
                     >
                       Indefinite
                     </Text>
                   </View>
-                  <View style={{ flexDirection: "row" }}>
+                  <View style={{}}>
                     <View
                       style={{
                         backgroundColor: "white",
                         height: 40,
+                        flexDirection: 'row',
+                        justifyContent: 'flex-end',
                         marginRight: 10,
                       }}
                     >
@@ -2439,7 +2459,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
               <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : 'row', paddingTop: 40 }}>
                 <View
                   style={{
-                    width: 300,
+                    flex: 1, flexDirection: 'row',
                     paddingBottom: 15,
                     backgroundColor: "white",
                   }}
@@ -2447,6 +2467,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   <Text
                     style={{
                       fontSize: 15,
+                      textTransform: 'uppercase',
                       fontFamily: 'inter',
                       color: '#43434f'
                     }}
@@ -2454,11 +2475,13 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                     Shuffle Questions
                   </Text>
                 </View>
-                <View style={{ flexDirection: "row" }}>
+                <View>
                   <View
                     style={{
                       backgroundColor: "white",
                       height: 40,
+                      flexDirection: 'row',
+                      justifyContent: 'flex-end',
                       marginRight: 10,
                     }}
                   >

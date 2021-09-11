@@ -66,7 +66,7 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
             backgroundColor: '#FBFBFC',
             // borderBottomWidth: 2,
             // borderTopWidth: 1,
-            height: ((dimensions.window.height) * (0.83)),
+            height: ((dimensions.window.height) - 60),
             opacity: props.fadeAnimation,
             width: dimensions.window.width,
             paddingHorizontal: dimensions.window.width < 768 ? 20 : 40,
@@ -80,7 +80,7 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     Object.keys(categoryMap).map((category: any, i: any) => {
                         return <View style={{
                             width: '100%',
-                            maxWidth: 300,
+                            maxWidth: 250,
                             backgroundColor: '#fbfbfc',
                             marginRight: 25
                         }}>

@@ -417,23 +417,35 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             {
                                 ind !== 0 ?
                                     <View style={{ flexDirection: 'row', paddingBottom: 20 }}>
-                                        <Text style={{
-                                            fontSize: 23,
-                                            paddingBottom: 20,
-                                            paddingTop: 10,
-                                            fontFamily: 'inter',
-                                            flex: 1,
-                                            lineHeight: 23
-                                        }}>
-                                            <View style={{
-                                                width: 18,
-                                                height: 18,
-                                                borderRadius: 9,
-                                                marginTop: 1,
-                                                marginRight: 10,
-                                                backgroundColor: key.split('-SPLIT-')[3]
-                                            }} /> {key.split('-SPLIT-')[0]}
-                                        </Text>
+                                        <TouchableOpacity
+                                            style={{
+                                                flex: 1,
+                                                flexDirection: 'row'
+                                            }}
+                                            onPress={() => {
+                                                const tempCollapse = JSON.parse(JSON.stringify(collapseMap))
+                                                tempCollapse[key] = !collapseMap[key]
+                                                setCollapseMap(tempCollapse)
+                                            }}
+                                        >
+                                            <Text style={{
+                                                fontSize: 23,
+                                                paddingBottom: 20,
+                                                paddingTop: 10,
+                                                fontFamily: 'inter',
+                                                flex: 1,
+                                                lineHeight: 23
+                                            }}>
+                                                <View style={{
+                                                    width: 18,
+                                                    height: 18,
+                                                    borderRadius: 9,
+                                                    marginTop: 1,
+                                                    marginRight: 10,
+                                                    backgroundColor: key.split('-SPLIT-')[3]
+                                                }} /> {key.split('-SPLIT-')[0]}
+                                            </Text>
+                                        </TouchableOpacity>
                                         <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', backgroundColor: '#fff', paddingTop: 10 }}>
                                             <View style={{ flexDirection: 'row', justifyContent: 'center', display: 'flex', backgroundColor: '#fff' }}>
                                                 {
@@ -506,59 +518,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         </TouchableOpacity>
                                                         : null
                                                 }
-                                                {/* {
-                                                    collapseMap[key] ?
-                                                        <View style={{ backgroundColor: '#fff', marginTop: -5, paddingRight: 20 }}>
-                                                            <View style={{ flexDirection: 'row', justifyContent: 'flex-start', display: 'flex', backgroundColor: '#fff' }}>
-                                                                <Menu
-                                                                    onSelect={(cat: any) => {
-                                                                        const temp = JSON.parse(JSON.stringify(selectedCategories))
-                                                                        temp[key] = cat
-                                                                        setSelectedCategories(temp)
-                                                                    }}>
-                                                                    <MenuTrigger>
-                                                                        <Text style={{ fontFamily: 'inter', fontSize: 15, color: '#43434f', paddingTop: 5 }}>
-                                                                            {selectedCategories[key] === '' ? 'All' : selectedCategories[key]}<Ionicons name='caret-down' size={15} />
-                                                                        </Text>
-                                                                    </MenuTrigger>
-                                                                    <MenuOptions customStyles={{
-                                                                        optionsContainer: {
-                                                                            padding: 10,
-                                                                            borderRadius: 15,
-                                                                            shadowOpacity: 0,
-                                                                            borderWidth: 1,
-                                                                            borderColor: '#FBFBFC',
-                                                                            // overflow: 'scroll',
-                                                                            maxHeight: '100%'
-                                                                        }
-                                                                    }}>
-                                                                        <MenuOption
-                                                                            value={''}>
-                                                                            <Text>
-                                                                                All
-                                                                            </Text>
-                                                                        </MenuOption>
-                                                                        {
-                                                                            categoryMap[key].map((cat: any) => {
-                                                                                if (cat !== '') {
-                                                                                    return <MenuOption
-                                                                                        value={cat}>
-                                                                                        <Text>
-                                                                                            {cat}
-                                                                                        </Text>
-                                                                                    </MenuOption>
-                                                                                }
-                                                                            })
-                                                                        }
-                                                                    </MenuOptions>
-                                                                </Menu>
-                                                            </View>
-                                                            <Text style={{ fontSize: 10, color: '#43434f', paddingTop: 7 }}>
-                                                                Category
-                                                            </Text>
-                                                        </View>
-                                                        : null
-                                                } */}
                                                 {
                                                     key.split('-SPLIT-')[2] === userId ?
                                                         <TouchableOpacity
@@ -617,34 +576,44 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 // style={{ height: 25 }}
                                                 >
                                                     <Text style={{
-                                                        textAlign: 'center'
+                                                        textAlign: 'center',
+                                                        lineHeight: 35
                                                     }}>
-                                                        <Ionicons name={collapseMap[key] ? 'contract-outline' : 'expand-outline'} size={19} color={'#43434f'} />
-                                                    </Text>
-                                                    <Text style={{ fontSize: 10, color: '#43434f', textAlign: 'center' }}>
-                                                        {collapseMap[key] ? 'Hide' : 'Expand'}
+                                                        <Ionicons name={collapseMap[key] ? 'contract-outline' : 'expand-outline'} size={30} color={'#43434f'} />
                                                     </Text>
                                                 </TouchableOpacity>
                                             </View>
                                         </View>
                                     </View> : <View style={{ paddingBottom: 20, flexDirection: 'row', }}>
-                                        <Text style={{
-                                            fontSize: 23,
-                                            paddingBottom: 20,
-                                            paddingTop: 10,
-                                            fontFamily: 'inter',
-                                            flex: 1,
-                                            lineHeight: 23,
-                                            color: '#560bad'
-                                        }}>
-                                            <View style={{
-                                                width: 18,
-                                                height: 18,
-                                                borderRadius: 9,
-                                                marginTop: 1,
-                                                backgroundColor: '#43434f'
-                                            }} /> {key}
-                                        </Text>
+                                        <TouchableOpacity
+                                            style={{
+                                                flex: 1,
+                                                flexDirection: 'row'
+                                            }}
+                                            onPress={() => {
+                                                const tempCollapse = JSON.parse(JSON.stringify(collapseMap))
+                                                tempCollapse[key] = !collapseMap[key]
+                                                setCollapseMap(tempCollapse)
+                                            }}
+                                        >
+                                            <Text style={{
+                                                fontSize: 23,
+                                                paddingBottom: 20,
+                                                paddingTop: 10,
+                                                fontFamily: 'inter',
+                                                flex: 1,
+                                                lineHeight: 23,
+                                                color: '#560bad'
+                                            }}>
+                                                <View style={{
+                                                    width: 18,
+                                                    height: 18,
+                                                    borderRadius: 9,
+                                                    marginTop: 1,
+                                                    backgroundColor: '#43434f'
+                                                }} /> {key}
+                                            </Text>
+                                        </TouchableOpacity>
                                         <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', backgroundColor: '#fff', paddingTop: 10 }}>
                                             <View style={{ flexDirection: 'row', justifyContent: 'center', display: 'flex', backgroundColor: '#fff' }}>
                                                 <TouchableOpacity
@@ -655,12 +624,10 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     }}
                                                 >
                                                     <Text style={{
-                                                        textAlign: 'center'
+                                                        textAlign: 'center',
+                                                        lineHeight: 35
                                                     }}>
-                                                        <Ionicons name={collapseMap[key] ? 'contract-outline' : 'expand-outline'} size={19} color={'#43434f'} />
-                                                    </Text>
-                                                    <Text style={{ fontSize: 10, color: '#43434f', textAlign: 'center' }}>
-                                                        {collapseMap[key] ? 'Hide' : 'Expand'}
+                                                        <Ionicons name={collapseMap[key] ? 'contract-outline' : 'expand-outline'} size={30} color={'#43434f'} />
                                                     </Text>
                                                 </TouchableOpacity>
                                             </View>
@@ -683,7 +650,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         categoryMap[key].map((category: any, i: any) => {
                                                             return <View style={{
                                                                 width: '100%',
-                                                                maxWidth: 300,
+                                                                maxWidth: 250,
                                                                 marginRight: 25
                                                             }}>
                                                                 <View style={{ backgroundColor: '#fff', paddingLeft: 23, marginBottom: 20 }}>
@@ -1036,14 +1003,14 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
             <View style={{
                 backgroundColor: '#FBFBFC',
                 borderColor: '#e4e7eb',
-                borderWidth: 1,
+                borderBottomWidth: 1,
                 // borderWidth: 1,
                 paddingTop: 20,
                 paddingHorizontal: Dimensions.get('window').width < 768 ? 20 : 40,
                 flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row',
                 // flex: 1, 
                 paddingBottom: 0,
-                width: '100%'
+                width: '100%',
             }}>
                 <View style={{ flexDirection: 'row', flex: 1, backgroundColor: '#FBFBFC', }}>
                     <Image
@@ -1275,14 +1242,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             </MenuOptions>
                         </Menu> : <View style={{ width: 80, right: 0, backgroundColor: '#FBFBFC' }} />
                     }
-                    {/* {
-                        width < 768 ? null : <Ionicons name='search-outline' size={20} color='#43434f'
-                            style={{
-                                marginLeft: Dimensions.get('window').width < 768 ? 0 : 40,
-                                marginTop: 0
-                            }}
-                        />
-                    } */}
                     {
                         width < 768 ? null : <TextInput
                             value={searchTerm}
@@ -1295,8 +1254,8 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 paddingVertical: 12,
                                 marginTop: -25,
                                 flex: 1, flexDirection: 'row',
-                                marginLeft: 20,
-                                marginRight: 20
+                                marginLeft: 40,
+                                marginRight: 40
                             }}
                             placeholder={"🔍"}
                             onChangeText={(val) => setSearchTerm(val)}
@@ -1312,8 +1271,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     style={{
                                         height: 40,
                                         width: 40,
-                                        // marginTop: -20,
-                                        // marginRight: width < 768 ? 20 : 0,
                                         marginBottom: 5,
                                         borderRadius: 75,
                                     }}

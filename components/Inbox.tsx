@@ -520,57 +520,73 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                         </Text>
                                     </View>
                                     <View style={{ flexDirection: 'row', width: '100%' }}>
-                                        <TouchableOpacity
-                                            onPress={() => reload()}
-                                            style={{
-                                                paddingRight: 20,
-                                                paddingTop: 15,
-                                                alignSelf: 'flex-start'
-                                            }}
-                                        >
-                                            <Text>
-                                                <Ionicons name='reload-outline' size={20} />
-                                            </Text>
-                                            <Text style={{ fontSize: 10, color: '#43434f', paddingTop: 5, backgroundColor: '#fff' }}>
-                                                Refresh
-                                            </Text>
-                                        </TouchableOpacity>
+                                        {
+                                            showNewGroup || showChat ?
+                                                <TouchableOpacity
+                                                    onPress={() => {
+                                                        loadChats()
+                                                    }}
+                                                    style={{
+                                                        paddingRight: 20,
+                                                        paddingTop: 15,
+                                                        alignSelf: 'flex-start'
+                                                    }}
+                                                >
+                                                    <Text style={{ lineHeight: 35, width: '100%', textAlign: 'center' }}>
+                                                        <Ionicons name='arrow-back-outline' size={30} color={'#43434f'} />
+                                                    </Text>
+                                                </TouchableOpacity> :
+                                                <TouchableOpacity
+                                                    onPress={() => reload()}
+                                                    style={{
+                                                        paddingRight: 20,
+                                                        paddingTop: 15,
+                                                        alignSelf: 'flex-start'
+                                                    }}
+                                                >
+                                                    <Text>
+                                                        <Ionicons name='reload-outline' size={20} />
+                                                    </Text>
+                                                    <Text style={{ fontSize: 10, color: '#43434f', paddingTop: 5, backgroundColor: '#fff' }}>
+                                                        Refresh
+                                                    </Text>
+                                                </TouchableOpacity>
+                                        }
                                         <View style={{ flexDirection: 'row', flex: 1 }} />
-                                        <TouchableOpacity
-                                            onPress={() => {
-                                                if (showChat || showNewGroup) {
-                                                    loadChats()
-                                                } else {
-                                                    setShowNewGroup(!showNewGroup)
-                                                }
-                                            }}
-                                            style={{
-                                                backgroundColor: 'white',
-                                                overflow: 'hidden',
-                                                height: 35,
-                                                marginTop: 5,
-                                                justifyContent: 'center',
-                                                flexDirection: 'row',
-                                                alignSelf: 'flex-end'
-                                            }}>
-                                            <Text style={{
-                                                textAlign: 'center',
-                                                lineHeight: 30,
-                                                color: showNewGroup || showChat ? '#43434f' : '#fff',
-                                                fontSize: 12,
-                                                backgroundColor: showNewGroup || showChat ? '#FBFBFC' : '#4c956c',
-                                                paddingHorizontal: 25,
-                                                fontFamily: 'inter',
-                                                height: 30,
-                                                // width: 100,
-                                                borderRadius: 15,
-                                                textTransform: 'uppercase'
-                                            }}>
-                                                {showNewGroup || showChat ? <Ionicons name='arrow-back-outline' size={12} /> : null} {
-                                                    showNewGroup || showChat ? 'Back' : 'New group'
-                                                } {showNewGroup || showChat ? null : <Ionicons name='people-outline' size={12} />}
-                                            </Text>
-                                        </TouchableOpacity>
+                                        {
+                                            showNewGroup || showChat ? null :
+                                                <TouchableOpacity
+                                                    onPress={() => {
+                                                        setShowNewGroup(!showNewGroup)
+                                                    }}
+                                                    style={{
+                                                        backgroundColor: 'white',
+                                                        overflow: 'hidden',
+                                                        height: 35,
+                                                        marginTop: 5,
+                                                        justifyContent: 'center',
+                                                        flexDirection: 'row',
+                                                        alignSelf: 'flex-end'
+                                                    }}>
+                                                    <Text style={{
+                                                        textAlign: 'center',
+                                                        lineHeight: 30,
+                                                        color: showNewGroup || showChat ? '#43434f' : '#fff',
+                                                        fontSize: 12,
+                                                        backgroundColor: showNewGroup || showChat ? '#FBFBFC' : '#4c956c',
+                                                        paddingHorizontal: 25,
+                                                        fontFamily: 'inter',
+                                                        height: 30,
+                                                        // width: 100,
+                                                        borderRadius: 15,
+                                                        textTransform: 'uppercase'
+                                                    }}>
+                                                        {showNewGroup || showChat ? <Ionicons name='arrow-back-outline' size={12} /> : null} {
+                                                            showNewGroup || showChat ? 'Back' : 'New group'
+                                                        } {showNewGroup || showChat ? null : <Ionicons name='people-outline' size={12} />}
+                                                    </Text>
+                                                </TouchableOpacity>
+                                        }
                                     </View>
                                     {
                                         showChat ?

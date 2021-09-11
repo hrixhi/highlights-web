@@ -156,10 +156,10 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
         height: '100%',
         borderRadius: 12,
         overflow: 'hidden',
-        maxWidth: 350
+        maxWidth: 300
     },
     card: {
-        maxWidth: 350,
+        maxWidth: 300,
         height: '100%',
         borderRadius: 12,
         padding: 12,

@@ -2191,9 +2191,9 @@
     "@babel/runtime" "^7.7.2"
     regenerator-runtime "^0.13.3"
 
-"@mobiscroll/react@https://npm.mobiscroll.com/@mobiscroll/react-trial/-/react-trial-5.8.1.tgz":
-  version "5.8.1"
-  resolved "https://npm.mobiscroll.com/@mobiscroll/react-trial/-/react-trial-5.8.1.tgz#0512f6a9fa79a10f70637159bf046df2c2ed76d5"
+"@mobiscroll/react@https://npm.mobiscroll.com/@mobiscroll/react-trial/-/react-trial-5.9.1.tgz":
+  version "5.9.1"
+  resolved "https://npm.mobiscroll.com/@mobiscroll/react-trial/-/react-trial-5.9.1.tgz#6eb016eeefca00d74956635e4df3f97d6eaadb85"
 
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
