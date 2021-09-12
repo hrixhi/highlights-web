@@ -196,6 +196,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
       setImported(true);
       setUrl(obj.url);
       setType(obj.type);
+      setTitle(obj.title);
     } else {
       setImported(false);
       setUrl("");
@@ -208,6 +209,16 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
     if (url === '' || !url) {
       return
     }
+
+    if (type === "mp4" ||
+      type === "mp3" ||
+      type === "mov" ||
+      type === "mpeg" ||
+      type === "mp2" ||
+      type === "wav") {
+          return;
+    } 
+
     console.log(url)
     WebViewer(
       {
@@ -221,7 +232,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
         // perform document operations
       });
     });
-  }, [url, RichText, imported]);
+  }, [url, RichText, imported, type]);
 
   const createNewQuiz = useCallback(() => {
     setIsSubmitting(true);
@@ -505,7 +516,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
       return;
     }
     let saveCue = "";
-    // Current limitation - not able to save quizzes...
     if (imported) {
       const obj = {
         type,
@@ -1411,6 +1421,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   config={{
                     file: { attributes: { controlsList: "nodownload" } },
                   }}
+                  width={'100%'}
+                  height={'100%'}
                 />
               ) : (
                 <View key={url} style={{ flex: 1, maxHeight: 800 }}>
@@ -1943,6 +1955,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           backgroundColor: "white",
                           height: 40,
                           marginRight: 10,
+                          flexDirection: 'row',
+                          justifyContent: 'flex-end',
                         }}
                       >
                         <Switch
@@ -1970,6 +1984,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                             display: "flex",
                             flexDirection: "row",
                             backgroundColor: "white",
+                            justifyContent: 'flex-end',
                             alignItems: 'center'
                           }}
                         >

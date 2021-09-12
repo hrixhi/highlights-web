@@ -84,6 +84,31 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
 
     }, [])
 
+    // Load chat opened from Search
+    useEffect(() => {
+        (
+            async () => {
+              const chat = await AsyncStorage.getItem('openChat')
+              if (chat && chats.length !== 0) {
+                const parseChat: any = JSON.parse(chat)
+
+                // Clear the openChat
+
+                await AsyncStorage.removeItem('openChat')
+                
+                if (parseChat.users && parseChat.users.length > 2) {
+                    loadGroupChat(parseChat.users, parseChat._id)
+                } else {
+                    loadChat(
+                        parseChat.users[0] === userId ? parseChat.users[1] : parseChat.users[0]
+                        , parseChat._id)
+                }
+
+              } 
+            }
+          )()
+    }, [chats])
+
     const loadChats = useCallback(async () => {
         const u = await AsyncStorage.getItem('user')
         let server: any = null

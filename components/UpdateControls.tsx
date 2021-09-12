@@ -617,10 +617,11 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         }
                                     })
 
-                                    // Set remaining attempts 
-                                    if (props.cue.allowedAttempts !== null) {
-                                        setRemainingAttempts(solutionsObject.attempts ? (props.cue.allowedAttempts - solutionsObject.attempts.length) : props.cue.allowedAttempts)
-                                    }
+                                }
+
+                                // Set remaining attempts 
+                                if (props.cue.allowedAttempts !== null) {
+                                    setRemainingAttempts(solutionsObject.attempts ? (props.cue.allowedAttempts - solutionsObject.attempts.length) : props.cue.allowedAttempts)
                                 }
 
                                 setProblems(res.data.quiz.getQuiz.problems);
@@ -1744,7 +1745,16 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             if (url === '' || !url) {
                 return
             }
-            console.log(url)
+
+            if (type === "mp4" ||
+                type === "mp3" ||
+                type === "mov" ||
+                type === "mpeg" ||
+                type === "mp2" ||
+                type === "wav") {
+                    return;
+            } 
+
             WebViewer(
                 {
                     initialDoc: decodeURIComponent(url),
@@ -1836,6 +1846,16 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             if (submissionUrl === '' || !submissionUrl) {
                 return
             }
+
+            if (submissionType === "mp4" ||
+                submissionType === "mp3" ||
+                submissionType === "mov" ||
+                submissionType === "mpeg" ||
+                submissionType === "mp2" ||
+                submissionType === "wav") {
+                    return;
+            } 
+            
             console.log(submissionUrl)
             WebViewer(
                 {
@@ -1895,7 +1915,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 });
             });
         }
-    }, [url, RichText, imported, submissionImported, props.showOriginal, submissionUrl]);
+    }, [url, RichText, imported, submissionImported, props.showOriginal, submissionUrl, type, submissionType]);
 
 
     if (loading || loadingAfterModifyingQuiz) {
@@ -2157,14 +2177,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             </View>
                         ) : null
                     ) : null
-                ) : (imported &&
-                    (type === "mp4" ||
-                        type === "mp3" ||
-                        type === "mov" ||
-                        type === "mpeg" ||
-                        type === "mp2" ||
-                        type === "wav")) ||
-                    props.cue.graded ? null : (
+                ) : props.cue.graded ? null : (
                     <View
                         style={{
                             marginLeft: 25,
@@ -2672,17 +2685,23 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 )
             ) : imported ? (
                 type === "mp4" || type === "mp3" || type === "mov" || type === "mpeg" || type === "mp2" || type === "wav" ? (
-                    <ReactPlayer
-                        url={url}
-                        controls={true}
-                        onContextMenu={(e: any) => e.preventDefault()}
-                        config={{
-                            file: { attributes: { controlsList: "nodownload" } }
-                        }}
-                    />
+                    <View style={{ width: '100%' }}>
+                        <ReactPlayer
+                            url={url}
+                            controls={true}
+                            onContextMenu={(e: any) => e.preventDefault()}
+                            config={{
+                                file: { attributes: { controlsList: "nodownload" } }
+                            }}
+                            width={"100%"} 
+                            height={"100%"}
+                        />
+                        {renderSaveCueButton()}
+                    </View>
                 ) : (
                     <View key={url} style={{}}>
                         <div className="webviewer" ref={RichText} style={{ height: "100vh" }}></div>
+                        {renderSaveCueButton()}
                     </View>
                 )
             ) : (
@@ -2695,8 +2714,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     submissionType === "mpeg" ||
                     submissionType === "mp2" ||
                     submissionType === "wav" ? (
-                    <View style={{}}>
-                        <ReactPlayer url={submissionUrl} controls={true} />
+                    <View style={{ width: '100%'}}>
+                        <ReactPlayer url={submissionUrl} controls={true} width={"100%"} height={"100%"} />
                         {renderFooter()}
                     </View>
                 ) : (
@@ -2775,56 +2794,57 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 }}
                 onChange={(e: any) => setOriginal(e.target.getContent())}
             />
-            {
-                isOwner ?
-                    <View style={styles.footer}>
-                        <View
-                            style={{
-                                flex: 1,
-                                backgroundColor: "white",
-                                justifyContent: "center",
-                                display: "flex",
-                                flexDirection: "row",
-                                height: 50,
-                                paddingTop: 10,
-                            }}
-                        >
-                            <TouchableOpacity
-                                onPress={() => handleUpdateContent()}
-                                disabled={updatingCueContent}
-                                style={{
-                                    borderRadius: 15,
-                                    backgroundColor: "white",
-                                }}
-                            >
-                                <Text
-                                    style={{
-                                        textAlign: "center",
-                                        lineHeight: 35,
-                                        color: "white",
-                                        fontSize: 12,
-                                        backgroundColor: "#560bad",
-                                        borderRadius: 15,
-                                        paddingHorizontal: 25,
-                                        fontFamily: "inter",
-                                        overflow: "hidden",
-                                        height: 35,
-                                        textTransform: "uppercase",
-                                        width: 160
-                                    }}
-                                >
-                                    {updatingCueContent
-                                        ? 'Saving...'
-                                        : 'Save'}
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View> : null
-            }
+            {renderSaveCueButton()}
         </View>)
 
     }
 
+    const renderSaveCueButton = () => {
+        return isOwner ?
+                <View style={styles.footer}>
+                    <View
+                        style={{
+                            flex: 1,
+                            backgroundColor: "white",
+                            justifyContent: "center",
+                            display: "flex",
+                            flexDirection: "row",
+                            height: 50,
+                            paddingTop: 10,
+                        }}
+                    >
+                        <TouchableOpacity
+                            onPress={() => handleUpdateContent()}
+                            disabled={updatingCueContent}
+                            style={{
+                                borderRadius: 15,
+                                backgroundColor: "white",
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    textAlign: "center",
+                                    lineHeight: 35,
+                                    color: "white",
+                                    fontSize: 12,
+                                    backgroundColor: "#560bad",
+                                    borderRadius: 15,
+                                    paddingHorizontal: 25,
+                                    fontFamily: "inter",
+                                    overflow: "hidden",
+                                    height: 35,
+                                    textTransform: "uppercase",
+                                    width: 160
+                                }}
+                            >
+                                {updatingCueContent
+                                    ? 'Saving...'
+                                    : 'Save'}
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                </View> : null
+    }
     // Make sure that when the deadline has passed that the viewSubmission is set to true by default and that (Re-Submit button is not there)
 
     const renderViewSubmission = () => {
@@ -2862,7 +2882,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 attempt.url !== undefined ?
                     (attempt.type === 'mp4' || attempt.type === 'mp3' || attempt.type === 'mov' || attempt.type === 'mpeg' || attempt.type === 'mp2' || attempt.type === 'wav' ?
                         <View style={{ width: '100%', marginTop: 25 }}>
-                            <ReactPlayer url={url} controls={true} />
+                            <ReactPlayer url={url} controls={true} width={"100%"} height={"100%"} />
                         </View>
                         :
                         <View style={{ width: '100%', marginTop: 25 }}>
@@ -4386,7 +4406,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         </View>
                 }
                 {renderEquationEditor()}
-                {/* <ScrollView
+                <ScrollView
                     style={{
                         paddingBottom: 25,
                         height: "100%",
@@ -4398,8 +4418,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     scrollEventThrottle={1}
                     keyboardDismissMode={"on-drag"}
                     overScrollMode={"always"}
-                    nestedScrollEnabled={true}> */}
-                <View>
+                    nestedScrollEnabled={true}>
+                {/* <View> */}
                     {
                         props.showOptions || props.showComments ? null :
                             <View>
@@ -4562,7 +4582,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             {renderDeleteButtons()}
                         </Collapse>
                     </View>
-                </View>
+                </ScrollView>
             </Animated.View>
         </View>
     );
