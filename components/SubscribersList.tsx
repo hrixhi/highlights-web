@@ -39,7 +39,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
     const [filterChoice, setFilterChoice] = useState('All')
     const unparsedSubs: any[] = JSON.parse(JSON.stringify(props.subscribers))
     const [subscribers] = useState<any[]>(unparsedSubs.reverse())
-    const categories = ['All', 'Read', 'Submitted', 'Graded']
+    const categories = ['All', 'Unread', 'Read']
     const categoriesLanguageMap: { [label: string]: string } = {
         All: 'all',
         Read: 'read',
@@ -144,16 +144,16 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                 return item.fullName === 'read'
             })
             break;
-        case 'Delivered':
+        case 'Unread':
             filteredSubscribers = subscribers.filter(item => {
-                return item.fullName === 'delivered'
+                return item.fullName === 'delivered' || item.fullName === 'not-delivered'
             })
             break;
-        case 'Not Delivered':
-            filteredSubscribers = subscribers.filter(item => {
-                return item.fullName === 'not-delivered'
-            })
-            break;
+        // case 'Not Delivered':
+        //     filteredSubscribers = subscribers.filter(item => {
+        //         return item.fullName === 'not-delivered'
+        //     })
+        //     break;
         case 'Graded':
             filteredSubscribers = subscribers.filter(item => {
                 return item.fullName === 'graded'
@@ -1455,9 +1455,9 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                     }
                                                     {
                                                         filteredSubscribers.map((subscriber: any, index: any) => {
-                                                            if (subscriber.fullName !== 'submitted' && subscriber.fullName !== 'read' && subscriber.fullName !== 'graded') {
-                                                                return null
-                                                            }
+                                                            // if (subscr subscriber.fullName !== 'submitted' && subscriber.fullName !== 'read' && subscriber.fullName !== 'graded') {
+                                                            //     return null
+                                                            // }
                                                             return <TouchableOpacity
                                                                 onPress={() => {
                                                                     if (props.cueId && props.cueId !== null) {
@@ -1512,14 +1512,14 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                     </Text>
                                                                 </View>
                                                                 <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                                                    <Text style={{ fontSize: 12, padding: 10 }} ellipsizeMode='tail'>
-                                                                        {subscriber.fullName ? subscriber.fullName : ''}
+                                                                    <Text style={{ fontSize: 12, padding: 10, textTransform: 'capitalize' }} ellipsizeMode='tail'>
+                                                                        {subscriber.fullName ? (subscriber.fullName === "not-delivered" || subscriber.fullName === "delivered" ? "Unread" : null) : ''}
                                                                     </Text>
                                                                 </View>
                                                                 <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                                                    <Text style={{ fontSize: 15, padding: 10, color: '#560bad' }} ellipsizeMode='tail'>
+                                                                    {(subscriber.fullName === "not-delivered" || subscriber.fullName === "delivered" || subscriber.fullName === "read") ? null : <Text style={{ fontSize: 15, padding: 10, color: '#560bad' }} ellipsizeMode='tail'>
                                                                         <Ionicons name='chevron-forward-outline' size={20} />
-                                                                    </Text>
+                                                                    </Text>}
                                                                 </View>
                                                             </TouchableOpacity>
                                                             return <View style={styles.col} key={filterChoice + key + index}>
@@ -1561,7 +1561,13 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 ) :
                                 // is Quiz then show the Quiz Grading Component and new version with problemScores
                                 isQuiz && !isV0Quiz ?
-                                    <View style={{ width: '100%', paddingBottom: 0 }}>
+                                <ScrollView
+                                    showsVerticalScrollIndicator={false}
+                                    keyboardDismissMode={'on-drag'}
+                                    contentContainerStyle={{
+                                        // height: windowHeight - 132
+                                    }}
+                                    style={{ flex: 1, paddingTop: 12 }}>
                                         {
                                             submittedAt !== "" && deadline !== "" && new Date(submittedAt) >= new Date(parseInt(deadline)) ?
                                                 <View style={{ width: '100%', }}>
@@ -1604,7 +1610,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 })
                                             }}
                                         />
-                                    </View>
+                                    </ScrollView>
                                     :
                                     <View>
                                         <ScrollView

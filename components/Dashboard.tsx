@@ -359,14 +359,25 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         <SearchResultCard
                                             title={t}
                                             subtitle={s}
-                                            onPress={() => {
+                                            onPress={async () => {
                                                 if (option === 'Notes') {
                                                     props.openCueFromCalendar(obj.channelId, obj._id, obj.createdBy)
-                                                } else if (option === '') {
+                                                } else if (option === 'Threads') {
+                                                    props.openDiscussionFromActivity()
 
-                                                } else {
+                                                } else if (option === 'Messages') {
+                                                    
+                                                    // open chat and set Chat ID and users in Async storage to open that specific chat
 
+                                                    await AsyncStorage.setItem("openChat", JSON.stringify({
+                                                        _id: obj.groupId,
+                                                        users: obj.users
+                                                    }))
+
+                                                    props.setOption("Inbox")
                                                 }
+
+                                                setSearchTerm("")
 
                                             }}
                                         />
