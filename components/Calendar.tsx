@@ -25,7 +25,6 @@ import {
 import ActivityCard from "./ActivityCard";
 import { Eventcalendar } from "@mobiscroll/react";
 import "@mobiscroll/react/dist/css/mobiscroll.min.css";
-
 // Try New Calendar
 // import Scheduler, {SchedulerData, ViewTypes, DATE_FORMAT} from 'react-big-scheduler'
 // import 'react-big-scheduler/lib/css/style.css';
@@ -1281,6 +1280,17 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
         </React.Fragment>;
     });
 
+    function emailTimeDisplay(dbDate: string) {
+        let date = moment(dbDate);
+        var currentDate = moment();
+        if (currentDate.isSame(date, 'day'))
+            return date.format('h:mm a');
+        else if (currentDate.isSame(date, 'year'))
+            return date.format("MMM DD");
+        else
+            return date.format("MM/DD/YYYY");
+    }
+
 
     let eventForChannelName = ''
 
@@ -1356,6 +1366,10 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             <TouchableOpacity
                                 onPress={() => {
                                     setEditEvent(null)
+<<<<<<< HEAD
+=======
+
+>>>>>>> a9d69599ae73628c7f8cb6ce73e8f0f0c16065d2
                                     setShowAddEvent(!showAddEvent)
                                 }}
                                 style={{
@@ -1954,7 +1968,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         minWidth: 600, // flex: 1,
                                         width: '100%'
                                     }}>
-                                    <View style={{ flex: 1, backgroundColor: '#FBFBFC', padding: 0, flexDirection: 'row' }}>
+                                    <View style={{ flex: 1, backgroundColor: '#FBFBFC', padding: 0, flexDirection: 'column', justifyContent: 'center' }}>
                                         <Text style={{ fontSize: 12, padding: 10, fontFamily: 'inter' }} ellipsizeMode='tail'>
                                             <View style={{
                                                 width: 9,
@@ -1966,22 +1980,22 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             }} /> {act.channelName}
                                         </Text>
                                     </View>
-                                    <View style={{ flex: 1, backgroundColor: '#fff', padding: 0 }}>
+                                    <View style={{ flex: 1, backgroundColor: '#fff', padding: 0, flexDirection: 'column', justifyContent: 'center' }}>
                                         <Text style={{ fontSize: 13, padding: 10, fontFamily: 'inter' }} ellipsizeMode='tail'>
                                             {act.title}
                                         </Text>
                                     </View>
-                                    <View style={{ flex: 1, backgroundColor: '#fff', padding: 0 }}>
-                                        <Text style={{ fontSize: 13, padding: 10 }} ellipsizeMode='tail'>
+                                    <View style={{ flex: 1, backgroundColor: '#fff', padding: 0, flexDirection: 'column', justifyContent: 'center' }}>
+                                        <Text style={{ fontSize: 13, padding: 10, lineHeight: 20 }} ellipsizeMode='tail'>
                                             {act.subtitle}
                                         </Text>
                                     </View>
-                                    <View style={{ flex: 1, backgroundColor: '#fff', padding: 0 }}>
+                                    <View style={{ flex: 1, backgroundColor: '#fff', padding: 0, flexDirection: 'column', justifyContent: 'center' }}>
                                         <Text style={{ fontSize: 13, padding: 10 }} ellipsizeMode='tail'>
-                                            {act.date.toString().split('T')[0]}
+                                            {emailTimeDisplay(act.date)}
                                         </Text>
                                     </View>
-                                    <View style={{ flex: 1, backgroundColor: '#fff', padding: 0 }}>
+                                    <View style={{ flex: 1, backgroundColor: '#fff', padding: 0, flexDirection: 'column', justifyContent: 'center' }}>
                                         <Text style={{ fontSize: 18, padding: 10, color: '#560bad' }} ellipsizeMode='tail'>
                                             <Ionicons name='chevron-forward-outline' size={20} /> {act.status === 'unread' ?
                                                 <Ionicons name='alert-circle-outline' color='#f94144' size={20} /> : null}

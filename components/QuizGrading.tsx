@@ -133,6 +133,8 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
                     let minutes = duration !== 0 ? Math.floor((duration - hours * 3600) / 60) : 0;
 
+                    let seconds = duration !== 0 ?  Math.ceil(duration - (hours * 3600) - (minutes * 60)) : 0;
+
                     return (<View style={styles.row}>
                         <View style={styles.col}>
                             {attempt.isActive ? <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
@@ -153,7 +155,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             
                         </View>
                         <View style={styles.col}>
-                            {duration !== 0 ? `${hours !== 0 ? "" + hours + " H " : ""} ${minutes !== 0 ? "" + minutes + " min" : ""}` : "-"}
+                            {duration !== 0 ? `${hours !== 0 ? "" + hours + " H " : ""} ${minutes !== 0 ? "" + minutes + " min" : ""}  ${seconds !== 0 ? "" + seconds + " sec" : ""}` : "-"}
                         </View>
                         <View style={styles.col}>
                             {attempt.score} out of {totalPossible} 
@@ -575,7 +577,8 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     alignItems: 'center',
                     display: 'flex',
                     marginTop: 25,
-                    marginBottom: 25
+                    marginBottom: 25,
+                    paddingBottom: 100
                 }}>
 
                 {
