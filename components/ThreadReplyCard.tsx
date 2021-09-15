@@ -34,7 +34,7 @@ const ThreadReplyCard: React.FunctionComponent<{ [label: string]: any }> = (prop
         if (u) {
             const unparsedUser = JSON.parse(u)
             if (props.channelCreatedBy.toString().trim() === props.thread.userId.toString().trim()) {
-                setColor('#560bad')
+                setColor('#661CB0')
             } else if (unparsedUser._id.toString().trim() === props.thread.userId.toString().trim()) {
                 setColor('#818385')
             }
@@ -69,23 +69,23 @@ const ThreadReplyCard: React.FunctionComponent<{ [label: string]: any }> = (prop
                         {props.thread.anonymous ? 'Anonymous' : props.thread.fullName}
                     </Text>
                 </View>
-                <View style={{ flexDirection: 'row', backgroundColor: '#FBFBFC' }}>
-                    <View style={{ flex: 1, backgroundColor: '#FBFBFC' }}>
+                <View style={{ flexDirection: 'row', backgroundColor: '#f5f5f7' }}>
+                    <View style={{ flex: 1, backgroundColor: '#f5f5f7' }}>
                         {
                             imported ?
                                 <a download={true} href={url} style={{ textDecoration: 'none' }}>
-                                    <View style={{ backgroundColor: '#FBFBFC', flex: 1 }}>
+                                    <View style={{ backgroundColor: '#f5f5f7', flex: 1 }}>
                                         <Text style={{ width: '100%', color: '#818385', fontSize: 15, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                                             <Ionicons name='document-outline' size={17} color='#818385' /> {title}.{type}
                                         </Text>
                                     </View>
                                 </a>
-                                : <div dangerouslySetInnerHTML={{ __html: props.thread.message }} style={{ fontFamily: 'overpass', color: '#43434f', fontSize: 14 }} />
+                                : <div dangerouslySetInnerHTML={{ __html: props.thread.message }} style={{ fontFamily: 'overpass', color: '#1D1D20', fontSize: 14 }} />
                         }
                     </View>
                     {
                         props.isOwner ?
-                            <TouchableOpacity style={{ backgroundColor: '#FBFBFC' }}
+                            <TouchableOpacity style={{ backgroundColor: '#f5f5f7' }}
                                 onPress={() => props.deleteThread()}
                             >
                                 <Text style={{ width: '100%', color: '#818385', fontSize: 15, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
@@ -110,19 +110,19 @@ const styles: any = () => StyleSheet.create({
         borderRadius: 15,
         padding: 13,
         paddingBottom: 20,
-        backgroundColor: '#FBFBFC'
+        backgroundColor: '#f5f5f7'
     },
     text: {
         display: 'flex',
         flexDirection: 'column',
         flex: 1,
         fontWeight: 'bold',
-        backgroundColor: '#FBFBFC',
+        backgroundColor: '#f5f5f7',
     },
     dateContainer: {
         fontSize: 10,
         color: '#818385',
-        backgroundColor: '#FBFBFC',
+        backgroundColor: '#f5f5f7',
         display: 'flex',
         flexDirection: 'row',
         paddingBottom: 10

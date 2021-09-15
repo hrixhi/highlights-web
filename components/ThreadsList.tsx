@@ -233,7 +233,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
             {...props}
             wrapperStyle={{
               right: {
-                backgroundColor: '#560BAD'
+                backgroundColor: '#661CB0'
               }
             }}
           />
@@ -258,7 +258,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         ? <Text
                             ellipsizeMode="tail"
                             style={{
-                                fontSize: 23,
+                                fontSize: 24,
                                 paddingBottom: 20,
                                 fontFamily: 'inter',
                                 // textTransform: "uppercase",
@@ -283,7 +283,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             <Menu
                                 onSelect={(cat: any) => setFilterChoice(cat)}>
                                 <MenuTrigger>
-                                    <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#43434f' }}>
+                                    <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#1D1D20' }}>
                                         {filterChoice === '' ? 'All' : filterChoice}<Ionicons name='caret-down' size={14} />
                                     </Text>
                                 </MenuTrigger>
@@ -293,7 +293,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                         borderRadius: 15,
                                         shadowOpacity: 0,
                                         borderWidth: 1,
-                                        borderColor: '#FBFBFC',
+                                        borderColor: '#f5f5f7',
                                         overflow: 'scroll',
                                         maxHeight: '100%'
                                     }
@@ -316,7 +316,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                     }
                                 </MenuOptions>
                             </Menu>
-                            <Text style={{ fontSize: 10, color: '#43434f', width: '100%', paddingTop: 3 }}>
+                            <Text style={{ fontSize: 10, color: '#1D1D20', width: '100%', paddingTop: 3 }}>
                                 Topic
                             </Text>
                         </View> : null}
@@ -351,7 +351,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 textTransform: 'uppercase'
                             }}>
                                 POST <Ionicons name='chatbox-ellipses-outline' size={12} />
-                                {/* <Ionicons name='create-outline' size={20} color={'#43434f'} /> */}
+                                {/* <Ionicons name='create-outline' size={20} color={'#1D1D20'} /> */}
                             </Text>
                         </TouchableOpacity> : null
                 }
@@ -385,7 +385,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                     {
                                         threads.length === 0 ?
                                             <View style={{ backgroundColor: 'white', flex: 1 }}>
-                                                <Text style={{ width: '100%', color: '#818385', fontSize: 23, paddingTop: 100, paddingBottom: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                                <Text style={{ width: '100%', color: '#818385', fontSize: 24, paddingTop: 100, paddingBottom: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                                                     {
                                                         !props.cueId ? PreferredLanguageText('noPosts') : PreferredLanguageText('noComments')
                                                     }
@@ -397,8 +397,8 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                 // style={{ height: '100%' }}
                                                 contentContainerStyle={{
                                                     borderWidth: 1,
-                                                    borderColor: '#e4e7eb',
-                                                    borderRadius: 12,
+                                                    borderColor: '#f5f5f7',
+                                                    borderRadius: 1,
                                                     width: '100%',
                                                     // height: windowHeight - 200,
                                                 }}
@@ -419,14 +419,14 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                         return <TouchableOpacity
                                                             onPress={() => loadCueDiscussions(thread._id)}
                                                             style={{
-                                                                backgroundColor: '#FBFBFC',
+                                                                backgroundColor: '#f5f5f7',
                                                                 flexDirection: 'row',
-                                                                borderColor: '#e4e7eb',
+                                                                borderColor: '#f5f5f7',
                                                                 borderBottomWidth: ind === filteredThreads.length - 1 ? 0 : 1,
                                                                 // minWidth: 600, // flex: 1,
                                                                 width: '100%'
                                                             }}>
-                                                            {/* <View style={{ flex: 1, backgroundColor: '#FBFBFC', padding: 10 }}>
+                                                            {/* <View style={{ flex: 1, backgroundColor: '#f5f5f7', padding: 10 }}>
                                                                 <Image
                                                                     style={{
                                                                         height: 40,
@@ -440,7 +440,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                                     source={{ uri: user.avatar ? user.avatar : 'https://cues-files.s3.amazonaws.com/images/default.png' }}
                                                                 />
                                                             </View> */}
-                                                            <View style={{ flex: 1, backgroundColor: '#FBFBFC', paddingLeft: 10 }}>
+                                                            <View style={{ flex: 1, backgroundColor: '#f5f5f7', paddingLeft: 10 }}>
                                                                 <Text style={{ fontSize: 13, padding: 10, fontFamily: 'inter' }} ellipsizeMode='tail'>
                                                                     {thread.anonymous ? 'Anonymous' : thread.fullName}
                                                                 </Text>
@@ -451,7 +451,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                                 </Text>
                                                             </View>
                                                             <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                                                <Text style={{ fontSize: 15, padding: 10, color: '#560bad', textAlign: 'center' }} ellipsizeMode='tail'>
+                                                                <Text style={{ fontSize: 15, padding: 10, color: '#661CB0', textAlign: 'center' }} ellipsizeMode='tail'>
                                                                     <Ionicons name='chevron-forward-outline' size={20} />
                                                                 </Text>
                                                             </View>
@@ -595,7 +595,7 @@ const styleObject = () => {
             backgroundColor: 'white',
             paddingHorizontal: 10,
             height: 22,
-            borderRadius: 12,
+            borderRadius: 1,
             borderWidth: 1,
             borderColor: '#818385',
             color: 'white'

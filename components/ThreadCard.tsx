@@ -40,7 +40,7 @@ const ThreadCard: React.FunctionComponent<{ [label: string]: any }> = (props: an
         if (u) {
             const unparsedUser = JSON.parse(u)
             if (props.channelCreatedBy.toString().trim() === props.thread.userId.toString().trim()) {
-                setColor('#560bad')
+                setColor('#661CB0')
             } else if (unparsedUser._id.toString().trim() === props.thread.userId.toString().trim()) {
                 setColor('#818385')
             }
@@ -94,7 +94,7 @@ const ThreadCard: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     </View>
                     {
                         imported ?
-                            <View style={{ backgroundColor: '#FBFBFC', flex: 1, flexDirection: 'row', paddingTop: 6 }}>
+                            <View style={{ backgroundColor: '#f5f5f7', flex: 1, flexDirection: 'row', paddingTop: 6 }}>
                                 <Text style={{ width: '100%', color: '#818385', fontSize: 15, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                                     <Ionicons name='document-outline' size={17} color='#818385' /> {title}.{type}
                                 </Text>
@@ -104,7 +104,7 @@ const ThreadCard: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     <Ionicons name="chevron-forward-outline" color="#818385" size={20} style={{ marginTop: 4 }} />
                                 </Text>
                             </View>
-                            : <View style={{ backgroundColor: '#FBFBFC', width: '100%', flexDirection: 'row', display: 'flex' }}>
+                            : <View style={{ backgroundColor: '#f5f5f7', width: '100%', flexDirection: 'row', display: 'flex' }}>
                                 <Text ellipsizeMode={'tail'}
                                     numberOfLines={1}
                                     style={styleObject.title}>
@@ -115,8 +115,8 @@ const ThreadCard: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                         <Text style={{
                                             width: 20,
                                             height: 20,
-                                            borderRadius: 12,
-                                            backgroundColor: '#560bad',
+                                            borderRadius: 1,
+                                            backgroundColor: '#661CB0',
                                             textAlign: 'center',
                                             zIndex: 150,
                                             marginLeft: 10,
@@ -148,14 +148,14 @@ const styles: any = () => StyleSheet.create({
         height: '100%',
         width: '100%',
         maxWidth: 500,
-        borderRadius: 12,
+        borderRadius: 1,
         overflow: 'hidden',
         backgroundColor: 'white'
     },
     badge: {
         width: 20,
         height: 20,
-        borderRadius: 12,
+        borderRadius: 1,
         backgroundColor: '#f94144',
         textAlign: 'center',
         zIndex: 150,
@@ -164,22 +164,22 @@ const styles: any = () => StyleSheet.create({
     card: {
         height: '100%',
         width: '100%',
-        borderRadius: 12,
+        borderRadius: 1,
         padding: 13,
-        backgroundColor: '#FBFBFC',
+        backgroundColor: '#f5f5f7',
         borderWidth: 1,
-        borderColor: '#e4e7eb'
+        borderColor: '#f5f5f7'
     },
     text: {
         display: 'flex',
         flexDirection: 'column',
         flex: 1,
-        backgroundColor: '#FBFBFC'
+        backgroundColor: '#f5f5f7'
     },
     dateContainer: {
         fontSize: 10,
         height: '22%',
-        backgroundColor: '#FBFBFC',
+        backgroundColor: '#f5f5f7',
         display: 'flex',
         flexDirection: 'row'
     },
@@ -192,7 +192,7 @@ const styles: any = () => StyleSheet.create({
         fontFamily: 'inter',
         fontSize: 13,
         paddingTop: 5,
-        color: '#43434f',
+        color: '#1D1D20',
         flex: 1
     },
     titleArrow: {
@@ -200,7 +200,7 @@ const styles: any = () => StyleSheet.create({
         fontSize: 13,
         lineHeight: 20,
         paddingTop: 5,
-        color: '#43434f',
+        color: '#1D1D20',
         marginLeft: 10
     },
     description: {
@@ -211,7 +211,7 @@ const styles: any = () => StyleSheet.create({
     color: {
         width: 10,
         height: 10,
-        borderRadius: 12,
+        borderRadius: 1,
         marginTop: 1
     }
 });

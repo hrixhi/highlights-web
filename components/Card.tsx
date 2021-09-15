@@ -14,7 +14,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     const starred = props.cue.starred;
     const { title } = htmlStringParser(props.cue.channelId && props.cue.channelId !== '' ? props.cue.original : props.cue.cue)
     const [showScore, setShowScore] = useState(false);
-    const [colorCode, setColorCode] = useState('#43434f');
+    const [colorCode, setColorCode] = useState('#1D1D20');
     const [isOwner, setIsOwner] = useState(false)
 
     useEffect(() => {
@@ -87,7 +87,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         {
                             props.cue.graded && showScore && !isOwner ? <Text style={{
                                 fontSize: 9,
-                                color: '#560bad',
+                                color: '#661CB0',
                                 marginLeft: 10, textAlign: 'right'
                             }}>
                                 {props.cue.score}%
@@ -110,7 +110,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 <Text style={{
                                     width: 20,
                                     height: 20,
-                                    borderRadius: 12,
+                                    borderRadius: 1,
                                     overflow: 'hidden',
                                     backgroundColor: '#f94144',
                                     textAlign: 'center',
@@ -128,9 +128,9 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 <Text style={{
                                     width: 20,
                                     height: 20,
-                                    borderRadius: 12,
+                                    borderRadius: 1,
                                     overflow: 'hidden',
-                                    backgroundColor: '#560bad',
+                                    backgroundColor: '#661CB0',
                                     textAlign: 'center',
                                     zIndex: 150,
                                     marginLeft: 5,
@@ -154,27 +154,27 @@ export default React.memo(Card, (prev, next) => {
 const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.create({
     swiper: {
         height: '100%',
-        borderRadius: 12,
+        borderRadius: 1,
         overflow: 'hidden',
         maxWidth: 300
     },
     card: {
         maxWidth: 300,
         height: '100%',
-        borderRadius: 12,
+        borderRadius: 1,
         padding: 12,
         paddingHorizontal: 15,
         backgroundColor: '#fff',
         borderWidth: 1,
-        borderColor: '#e4e7eb'
+        borderColor: '#f5f5f7'
     },
     flipCard: {
         height: '100%',
         width: '100%',
-        borderRadius: 12,
+        borderRadius: 1,
         padding: 13,
         color: '#fff',
-        backgroundColor: colorScheme === 'light' ? '#43434f' : 'white'
+        backgroundColor: colorScheme === 'light' ? '#1D1D20' : 'white'
     },
     descriptionFlip: {
         color: '#fff',
@@ -188,7 +188,7 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
     flipText: {
         height: '100%',
         color: '#fff',
-        backgroundColor: colorScheme === 'light' ? '#43434f' : 'white'
+        backgroundColor: colorScheme === 'light' ? '#1D1D20' : 'white'
     },
     dateContainer: {
         fontSize: 10,
@@ -204,7 +204,7 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
         display: 'flex',
         flexDirection: 'row',
         color: '#fff',
-        backgroundColor: colorScheme === 'light' ? '#43434f' : 'white'
+        backgroundColor: colorScheme === 'light' ? '#1D1D20' : 'white'
     },
     date: {
         fontSize: 9,
@@ -229,8 +229,8 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
         color: col
     },
     titleFlip: {
-        color: colorScheme === 'light' ? '#fff' : '#43434f',
-        backgroundColor: colorScheme === 'light' ? '#43434f' : '#fff',
+        color: colorScheme === 'light' ? '#fff' : '#1D1D20',
+        backgroundColor: colorScheme === 'light' ? '#1D1D20' : '#fff',
         fontFamily: 'inter',
         fontSize: 13,
         // ,

@@ -200,7 +200,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             lineHeight: 30,
                             color: '#fff',
                             fontSize: 12,
-                            backgroundColor: '#4c956c',
+                            backgroundColor: '#4b956b',
                             paddingHorizontal: 25,
                             fontFamily: 'inter',
                             height: 30,
@@ -251,7 +251,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
         // PIE CHART FOR GRADE WEIGHTS
 
         // ADD MORE COLORS HERE LATER
-        const colors = ["#f94144", "#f3722c", "#f8961e", "#f9c74f", "#4c956c", "#f95d6a", "#ff7c43", "#ffa600"]
+        const colors = ["#f94144", "#f3722c", "#f8961e", "#f9c74f", "#4b956b", "#f95d6a", "#ff7c43", "#ffa600"]
 
         const nonZeroGradeWeight = cues.filter((cue: any) => cue.gradeWeight > 0)
 
@@ -328,7 +328,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 nestedScrollEnabled={true}
             >
                 <View style={{ width: '100%' }}>
-                    <Text style={{ textAlign: 'left', fontSize: 13, color: '#43434f', fontFamily: 'inter', paddingBottom: 20, paddingLeft: Dimensions.get('window').width < 768 ? 0 : 150 }}>
+                    <Text style={{ textAlign: 'left', fontSize: 13, color: '#1D1D20', fontFamily: 'inter', paddingBottom: 20, paddingLeft: Dimensions.get('window').width < 768 ? 0 : 150 }}>
                         Grade Weightage
                     </Text>
                     <PieChart
@@ -345,7 +345,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 </View>
 
                 {submissionStatistics.length > 0 ? <View style={{ width: '100%' }}>
-                    <Text style={{ textAlign: 'left', fontSize: 13, color: '#43434f', fontFamily: 'inter', paddingTop: 50, paddingBottom: 20, paddingLeft: Dimensions.get('window').width < 768 ? 0 : 150 }}>
+                    <Text style={{ textAlign: 'left', fontSize: 13, color: '#1D1D20', fontFamily: 'inter', paddingTop: 50, paddingBottom: 20, paddingLeft: Dimensions.get('window').width < 768 ? 0 : 150 }}>
                         Submissions
                     </Text>
                     <Chart
@@ -451,17 +451,17 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     cues.map((cue: any, col: number) => {
                                         const { title } = htmlStringParser(cue.cue)
                                         return <TouchableOpacity style={styles.col} key={col.toString()} onPress={() => props.openCueFromGrades(cue._id)}>
-                                            <Text style={{ textAlign: 'center', fontSize: 10, color: '#43434f', marginBottom: 5 }}>
+                                            <Text style={{ textAlign: 'center', fontSize: 10, color: '#1D1D20', marginBottom: 5 }}>
                                                 {
                                                     (new Date(cue.deadline)).toString().split(' ')[1] +
                                                     ' ' +
                                                     (new Date(cue.deadline)).toString().split(' ')[2]
                                                 }
                                             </Text>
-                                            <Text style={{ textAlign: 'center', fontSize: 13, color: '#43434f', fontFamily: 'inter', marginBottom: 5, height: 30, textAlignVertical: 'center' }} numberOfLines={2}>
+                                            <Text style={{ textAlign: 'center', fontSize: 13, color: '#1D1D20', fontFamily: 'inter', marginBottom: 5, height: 30, textAlignVertical: 'center' }} numberOfLines={2}>
                                                 {title}
                                             </Text>
-                                            <Text style={{ textAlign: 'center', fontSize: 10, color: '#43434f' }}>
+                                            <Text style={{ textAlign: 'center', fontSize: 10, color: '#1D1D20' }}>
                                                 {cue.gradeWeight}%
                                             </Text>
                                         </TouchableOpacity>
@@ -471,10 +471,10 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     cues.length === 0 ? null :
                                         <View style={styles.col} key={'total'}>
                                             <View style={{ height: 10, marginBottom: 5 }} />
-                                            <Text style={{ textAlign: 'center', fontSize: 13, color: '#43434f', fontFamily: 'inter', marginBottom: 5, height: 30, }}>
+                                            <Text style={{ textAlign: 'center', fontSize: 13, color: '#1D1D20', fontFamily: 'inter', marginBottom: 5, height: 30, }}>
                                                 {PreferredLanguageText('total')}
                                             </Text>
-                                            <Text style={{ textAlign: 'center', fontSize: 10, color: '#43434f' }}>
+                                            <Text style={{ textAlign: 'center', fontSize: 10, color: '#1D1D20' }}>
                                                 100%
                                             </Text>
                                         </View>
@@ -504,10 +504,10 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
                                             return <View style={styles.row} key={row}>
                                                 <View style={styles.col} >
-                                                    <Text style={{ textAlign: 'left', fontSize: 12, color: '#43434f', fontFamily: 'inter' }}>
+                                                    <Text style={{ textAlign: 'left', fontSize: 12, color: '#1D1D20', fontFamily: 'inter' }}>
                                                         {score.fullName}
                                                     </Text>
-                                                    {/* <Text style={{ textAlign: 'left', fontSize: 12, color: '#43434f' }}>
+                                                    {/* <Text style={{ textAlign: 'left', fontSize: 12, color: '#1D1D20' }}>
                                                         {score.displayName}
                                                     </Text> */}
                                                 </View>
@@ -527,7 +527,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                         onChangeText={val => {
                                                                             setActiveScore(val)
                                                                         }}
-                                                                        style={{ width: '50%', marginRight: 5, padding: 8, borderBottomColor: "#e4e7eb", borderBottomWidth: 1, fontSize: 12 }}
+                                                                        style={{ width: '50%', marginRight: 5, padding: 8, borderBottomColor: "#f5f5f7", borderBottomWidth: 1, fontSize: 12 }}
                                                                         placeholderTextColor={'#818385'}
                                                                     />
                                                                     <TouchableOpacity onPress={() => {
@@ -559,7 +559,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                 {scoreObject && scoreObject.graded ? scoreObject.score : (!scoreObject || !scoreObject.cueId ? "N/A" : "Missing")}
                                                             </Text>
                                                                 :
-                                                                <Text style={{ textAlign: 'center', fontSize: 11, color: scoreObject && new Date(parseInt(scoreObject.submittedAt)) >= (new Date(cue.deadline)) ? '#f3722c' : '#43434f', }}>
+                                                                <Text style={{ textAlign: 'center', fontSize: 11, color: scoreObject && new Date(parseInt(scoreObject.submittedAt)) >= (new Date(cue.deadline)) ? '#f3722c' : '#1D1D20', }}>
                                                                     {
                                                                         scoreObject && scoreObject.graded ? scoreObject.score : (scoreObject && new Date(parseInt(scoreObject.submittedAt)) >= (new Date(cue.deadline)) ? "Late" : '-')
                                                                     }
@@ -570,7 +570,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 {
                                                     cues.length === 0 ? null :
                                                         <View style={styles.col} key={'total'}>
-                                                            <Text style={{ textAlign: 'center', fontSize: 11, color: '#43434f', textTransform: 'uppercase' }}>
+                                                            <Text style={{ textAlign: 'center', fontSize: 11, color: '#1D1D20', textTransform: 'uppercase' }}>
                                                                 {totalScore !== 0 ? (totalPoints / totalScore).toFixed(2) : '0'}%
                                                             </Text>
                                                         </View>
@@ -599,7 +599,7 @@ const styles = StyleSheet.create({
     col: { width: 120, justifyContent: 'center', display: 'flex', flexDirection: 'column', padding: 7, },
     all: {
         fontSize: 14,
-        color: '#43434f',
+        color: '#1D1D20',
         height: 22,
         paddingHorizontal: 20,
         backgroundColor: '#fff',
@@ -611,7 +611,7 @@ const styles = StyleSheet.create({
         color: '#fff',
         paddingHorizontal: 20,
         borderRadius: 12,
-        backgroundColor: '#43434f',
+        backgroundColor: '#1D1D20',
         lineHeight: 22,
         fontFamily: 'inter'
     },
@@ -621,7 +621,7 @@ const styles = StyleSheet.create({
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: "white",
-        borderRadius: 12,
+        borderRadius: 1,
         borderWidth: 1,
         borderColor: "#818385",
         lineHeight: 20

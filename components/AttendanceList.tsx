@@ -214,7 +214,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
         }}
             key={JSON.stringify(pastMeetings)}
         >
-            {/* <Text style={{ textAlign: 'left', fontSize: 13, color: '#43434f', fontFamily: 'inter', paddingBottom: 20 }}>
+            {/* <Text style={{ textAlign: 'left', fontSize: 13, color: '#1D1D20', fontFamily: 'inter', paddingBottom: 20 }}>
                         Attendance By Lectures
             </Text> */}
             <ScrollView
@@ -279,7 +279,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                         fontSize: 15,
                         color: '#818385'
                     }}>
-                        <Ionicons name='arrow-back-outline' size={17} color={'#43434f'} style={{ marginRight: 10 }} /> {renderAttendanceStatsTabs()}
+                        <Ionicons name='arrow-back-outline' size={17} color={'#1D1D20'} style={{ marginRight: 10 }} /> {renderAttendanceStatsTabs()}
                     </Text>
                 </TouchableOpacity>
                 {unparsedPastMeetings.length === 0 || channelAttendances.length === 0 ? null : <View style={{ paddingRight: 20 }}>
@@ -322,7 +322,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                             lineHeight: 30,
                             color: '#fff',
                             fontSize: 12,
-                            backgroundColor: '#4c956c',
+                            backgroundColor: '#4b956b',
                             paddingHorizontal: 25,
                             fontFamily: 'inter',
                             height: 30,
@@ -369,7 +369,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                 <View style={{ minHeight: 70, flexDirection: 'row', overflow: 'hidden', paddingBottom: 10, borderBottomWidth: 1, borderBottomColor: 'black' }} key={"-"}>
                                     <View style={styles.col} key={'0,0'} />
                                     <View style={styles.col} key={'0,0'} >
-                                        <Text style={{ fontSize: 13, color: '#43434f', fontFamily: 'inter' }}>
+                                        <Text style={{ fontSize: 13, color: '#1D1D20', fontFamily: 'inter' }}>
                                             Total
                                         </Text>
                                     </View>
@@ -377,13 +377,13 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                         pastMeetings.map((meeting: any, col: number) => {
                                             const { title, start, end } = meeting
                                             return <View style={styles.col} key={col.toString()}>
-                                                <Text style={{ textAlign: 'center', fontSize: 13, color: '#43434f', fontFamily: 'inter' }}>
+                                                <Text style={{ textAlign: 'center', fontSize: 13, color: '#1D1D20', fontFamily: 'inter' }}>
                                                     {title}
                                                 </Text>
-                                                <Text style={{ textAlign: 'center', fontSize: 12, color: '#43434f', marginBottom: 5 }}>
+                                                <Text style={{ textAlign: 'center', fontSize: 12, color: '#1D1D20', marginBottom: 5 }}>
                                                     {moment(new Date(start)).format('MMMM Do')}
                                                 </Text>
-                                                <Text style={{ textAlign: 'center', fontSize: 12, color: '#43434f', marginBottom: 5 }}>
+                                                <Text style={{ textAlign: 'center', fontSize: 12, color: '#1D1D20', marginBottom: 5 }}>
                                                     {moment(new Date(start)).format('h:mm')} - {moment(new Date(end)).format('h:mm')}
                                                 </Text>
                                             </View>
@@ -407,12 +407,12 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
 
                                             return <View style={styles.row} key={row}>
                                                 <View style={styles.col} >
-                                                    <Text style={{ textAlign: 'left', fontSize: 13, color: '#43434f', fontFamily: 'inter' }}>
+                                                    <Text style={{ textAlign: 'left', fontSize: 13, color: '#1D1D20', fontFamily: 'inter' }}>
                                                         {channelAttendance.fullName}
                                                     </Text>
                                                 </View>
                                                 <View style={styles.col} >
-                                                    <Text style={{ textAlign: 'left', fontSize: 13, color: '#43434f', fontFamily: 'inter' }}>
+                                                    <Text style={{ textAlign: 'left', fontSize: 13, color: '#1D1D20', fontFamily: 'inter' }}>
                                                         {studentCount} / {pastMeetings.length}
                                                     </Text>
                                                 </View>
@@ -425,12 +425,12 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                                             <TouchableOpacity disabled={!props.isOwner} onPress={() => props.modifyAttendance(meeting.dateId, channelAttendance.userId, attendanceObject ? false : true)} style={{ marginBottom: 5, width: '100%', flexDirection: 'row', justifyContent: 'center' }}>
                                                                 {
                                                                     attendanceObject ?
-                                                                        <Ionicons name='checkmark-outline' size={20} color={'#560bad'} />
+                                                                        <Ionicons name='checkmark-outline' size={20} color={'#661CB0'} />
                                                                         :
                                                                         props.isOwner ? <Ionicons name='checkmark-outline' size={20} color={'#e0e0e0'} /> : '-'
                                                                 }
                                                             </TouchableOpacity>
-                                                            {attendanceObject ? <Text style={{ textAlign: 'center', fontSize: 12, color: '#43434f', width: '100%', }}>
+                                                            {attendanceObject ? <Text style={{ textAlign: 'center', fontSize: 12, color: '#1D1D20', width: '100%', }}>
                                                                 {attendanceObject.joinedAt ? moment(new Date(attendanceObject.joinedAt)).format('h:mm a') : ""}
                                                             </Text> : null}
                                                         </View>
@@ -451,7 +451,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                 
                                 <View style={styles.row} >
                                    <View style={styles.col} >
-                                        <Text style={{ textAlign: 'center', fontSize: 12, color: '#43434f' }}>
+                                        <Text style={{ textAlign: 'center', fontSize: 12, color: '#1D1D20' }}>
                                             Total
                                         </Text>                    
                                     </View>
@@ -463,7 +463,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                             return (
                                             <View style={styles.row} >
                                                 <View style={styles.col} >
-                                                    <Text style={{ textAlign: 'center', fontSize: 12, color: '#43434f' }}>
+                                                    <Text style={{ textAlign: 'center', fontSize: 12, color: '#1D1D20' }}>
                                                         {studentCount} / {pastMeetings.length}
                                                     </Text>                    
                                                 </View>
@@ -490,10 +490,10 @@ const styles = StyleSheet.create({
     },
     all: {
         fontSize: 14,
-        color: '#43434f',
+        color: '#1D1D20',
         height: 22,
         paddingHorizontal: 20,
-        backgroundColor: '#FBFBFC',
+        backgroundColor: '#f5f5f7',
         lineHeight: 22,
         fontFamily: 'inter'
     },
@@ -502,7 +502,7 @@ const styles = StyleSheet.create({
         color: '#fff',
         paddingHorizontal: 20,
         borderRadius: 12,
-        backgroundColor: '#43434f',
+        backgroundColor: '#1D1D20',
         lineHeight: 22,
         fontFamily: 'inter'
     },
@@ -512,7 +512,7 @@ const styles = StyleSheet.create({
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: "white",
-        borderRadius: 12,
+        borderRadius: 1,
         borderWidth: 1,
         borderColor: "#818385",
         lineHeight: 20

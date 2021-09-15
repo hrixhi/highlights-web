@@ -267,8 +267,8 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
             <ScrollView
                 contentContainerStyle={{
                     borderWidth: 1,
-                    borderColor: '#e4e7eb',
-                    borderRadius: 12,
+                    borderColor: '#f5f5f7',
+                    borderRadius: 1,
                     width: '100%',
                     maxHeight: windowHeight - 200,
                     overflow: 'hidden'
@@ -285,9 +285,9 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                 }
                             }}
                             style={{
-                                backgroundColor: '#FBFBFC',
+                                backgroundColor: '#f5f5f7',
                                 flexDirection: 'row',
-                                borderColor: '#e4e7eb',
+                                borderColor: '#f5f5f7',
                                 borderBottomWidth: index === pastMeetings.length - 1 ? 0 : 1,
                                 // minWidth: 600, // flex: 1,
                                 width: '100%',
@@ -378,7 +378,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                     <Text
                         ellipsizeMode="tail"
                         style={{
-                            fontSize: 23,
+                            fontSize: 24,
                             paddingBottom: 20,
                             fontFamily: 'inter',
                             // textTransform: "uppercase",
@@ -410,9 +410,9 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                             lineHeight: 21,
                                             textAlign: 'center'
                                         }}>
-                                            <Ionicons name='copy-outline' size={19} color={'#43434f'} />
+                                            <Ionicons name='copy-outline' size={19} color={'#1D1D20'} />
                                         </Text>
-                                        <Text style={{ fontSize: 10, color: '#43434f', textAlign: 'center', width: '100%', }}>
+                                        <Text style={{ fontSize: 10, color: '#1D1D20', textAlign: 'center', width: '100%', }}>
                                             Host Link
                                         </Text>
                                     </TouchableOpacity>
@@ -443,9 +443,9 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                             lineHeight: 21,
                                             textAlign: 'center'
                                         }}>
-                                            <Ionicons name='copy-outline' size={19} color={'#43434f'} />
+                                            <Ionicons name='copy-outline' size={19} color={'#1D1D20'} />
                                         </Text>
-                                        <Text style={{ fontSize: 10, color: '#43434f', textAlign: 'center', width: '100%', }}>
+                                        <Text style={{ fontSize: 10, color: '#1D1D20', textAlign: 'center', width: '100%', }}>
                                             Guest Link
                                         </Text>
                                     </TouchableOpacity>
@@ -473,7 +473,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                 lineHeight: 30,
                                 color: '#fff',
                                 fontSize: 12,
-                                backgroundColor: '#4c956c',
+                                backgroundColor: '#4b956b',
                                 paddingHorizontal: 25,
                                 fontFamily: 'inter',
                                 height: 30,
@@ -562,7 +562,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
             paddingLeft: width < 768 ? 0 : 20,
             marginTop: 20,
             marginBottom: 20,
-            borderLeftWidth: width < 768 ? 0 : 1, borderLeftColor: '#e4e7eb',
+            borderLeftWidth: width < 768 ? 0 : 1, borderLeftColor: '#f5f5f7',
         }}>
             <Discussion
                 channelId={props.channelId}
@@ -613,7 +613,7 @@ const styles = StyleSheet.create({
         maxWidth: '100%',
         borderRadius: 15,
         padding: 13,
-        backgroundColor: '#FBFBFC',
+        backgroundColor: '#f5f5f7',
         flexDirection: 'row',
         justifyContent: 'space-between'
     },
@@ -621,14 +621,14 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'column',
         flex: 1,
-        backgroundColor: '#FBFBFC',
+        backgroundColor: '#f5f5f7',
     },
     title: {
         fontFamily: 'inter',
         fontSize: 13,
         width: '100%',
         paddingTop: 5,
-        color: '#43434f'
+        color: '#1D1D20'
     },
     description: {
         fontSize: 13,

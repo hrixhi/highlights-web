@@ -63,10 +63,10 @@ const FilterBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
     return (
         <View style={styles.bottombar}>
             <View style={styles.colorBar}>
-                <View style={{ flexDirection: 'row', flex: 1, backgroundColor: '#FBFBFC' }}>
-                    <View style={{ paddingLeft: 10, flexDirection: 'row', backgroundColor: '#FBFBFC' }}>
-                        <View style={{ backgroundColor: '#FBFBFC' }}>
-                            <View style={{ flexDirection: 'row', display: 'flex', backgroundColor: '#FBFBFC', paddingLeft: 30 }}>
+                <View style={{ flexDirection: 'row', flex: 1, backgroundColor: '#f5f5f7' }}>
+                    <View style={{ paddingLeft: 10, flexDirection: 'row', backgroundColor: '#f5f5f7' }}>
+                        <View style={{ backgroundColor: '#f5f5f7' }}>
+                            <View style={{ flexDirection: 'row', display: 'flex', backgroundColor: '#f5f5f7', paddingLeft: 30 }}>
                                 <Menu
                                     onSelect={(subscription: any) => {
                                         if (subscription === 'All') {
@@ -90,7 +90,7 @@ const FilterBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         props.closeModal()
                                     }}>
                                     <MenuTrigger>
-                                        <Text style={{ fontFamily: 'inter', fontSize: 15, color: '#43434f' }}>
+                                        <Text style={{ fontFamily: 'inter', fontSize: 15, color: '#1D1D20' }}>
                                             {choice === 'MyCues' ? 'My Cues' : choice}<Ionicons name='caret-down' size={15} />
                                         </Text>
                                     </MenuTrigger>
@@ -100,7 +100,7 @@ const FilterBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             borderRadius: 15,
                                             shadowOpacity: 0,
                                             borderWidth: 1,
-                                            borderColor: '#FBFBFC',
+                                            borderColor: '#f5f5f7',
                                             overflow: 'scroll',
                                             maxHeight: '100%'
                                         }
@@ -111,7 +111,7 @@ const FilterBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 <View style={{
                                                     width: 8,
                                                     height: 8,
-                                                    borderRadius: 12,
+                                                    borderRadius: 1,
                                                     marginTop: 1,
                                                     backgroundColor: "#fff"
                                                 }} />
@@ -126,7 +126,7 @@ const FilterBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 <View style={{
                                                     width: 8,
                                                     height: 8,
-                                                    borderRadius: 12,
+                                                    borderRadius: 1,
                                                     marginTop: 1,
                                                     backgroundColor: "#000"
                                                 }} />
@@ -143,7 +143,7 @@ const FilterBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         <View style={{
                                                             width: 8,
                                                             height: 8,
-                                                            borderRadius: 12,
+                                                            borderRadius: 1,
                                                             marginTop: 1,
                                                             backgroundColor: subscription.colorCode
                                                         }} />
@@ -157,17 +157,17 @@ const FilterBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     </MenuOptions>
                                 </Menu>
                             </View>
-                            <Text style={{ fontSize: 10, color: '#43434f', paddingTop: 7, backgroundColor: '#FBFBFC', paddingLeft: 30 }}>
+                            <Text style={{ fontSize: 10, color: '#1D1D20', paddingTop: 7, backgroundColor: '#f5f5f7', paddingLeft: 30 }}>
                                 Channel
                             </Text>
                         </View>
                     </View>
-                    <View style={{ flexDirection: 'row', backgroundColor: '#FBFBFC', paddingRight: 30, flex: 1, justifyContent: 'flex-end'}}>
-                        <View style={{ backgroundColor: '#FBFBFC' }}>
-                            <View style={{ flexDirection: 'row', display: 'flex', backgroundColor: '#FBFBFC' }}>
+                    <View style={{ flexDirection: 'row', backgroundColor: '#f5f5f7', paddingRight: 30, flex: 1, justifyContent: 'flex-end'}}>
+                        <View style={{ backgroundColor: '#f5f5f7' }}>
+                            <View style={{ flexDirection: 'row', display: 'flex', backgroundColor: '#f5f5f7' }}>
                                 <Menu>
                                     <MenuTrigger>
-                                        <Text style={{ fontFamily: 'inter', fontSize: 15, color: '#43434f', paddingLeft: 10 }}>
+                                        <Text style={{ fontFamily: 'inter', fontSize: 15, color: '#1D1D20', paddingLeft: 10 }}>
                                             Filter <Ionicons name='caret-down' size={15} />
                                         </Text>
                                     </MenuTrigger>
@@ -177,7 +177,7 @@ const FilterBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             borderRadius: 15,
                                             shadowOpacity: 0,
                                             borderWidth: 1,
-                                            borderColor: '#FBFBFC',
+                                            borderColor: '#f5f5f7',
                                             overflow: 'scroll',
                                             maxHeight: '100%',
                                             backgroundColor: '#fff'
@@ -189,7 +189,7 @@ const FilterBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     props.setChannelFilterChoice(category)
                                                 }}>
                                                 <MenuTrigger>
-                                                    <Text style={{ fontFamily: 'inter', fontSize: 15, color: '#43434f', paddingLeft: 10 }}>
+                                                    <Text style={{ fontFamily: 'inter', fontSize: 15, color: '#1D1D20', paddingLeft: 10 }}>
                                                         {filterChoice}<Ionicons name='caret-down' size={15} />
                                                     </Text>
                                                 </MenuTrigger>
@@ -199,7 +199,7 @@ const FilterBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         borderRadius: 15,
                                                         shadowOpacity: 0,
                                                         borderWidth: 1,
-                                                        borderColor: '#FBFBFC',
+                                                        borderColor: '#f5f5f7',
                                                         overflow: 'scroll',
                                                         maxHeight: '100%'
                                                     }
@@ -222,7 +222,7 @@ const FilterBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     }
                                                 </MenuOptions>
                                             </Menu>
-                                            <Text style={{ fontSize: 10, color: '#43434f', paddingTop: 7, backgroundColor: '#fff', paddingLeft: 10 }}>
+                                            <Text style={{ fontSize: 10, color: '#1D1D20', paddingTop: 7, backgroundColor: '#fff', paddingLeft: 10 }}>
                                                 Category
                                             </Text>
                                         </MenuOption>
@@ -282,7 +282,7 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
         paddingBottom: 10,
         // borderTopWidth: 1,
         borderColor: '#555555',
-        backgroundColor: '#FBFBFC'
+        backgroundColor: '#f5f5f7'
     },
     icons: {
         width: '33.33%',
@@ -290,7 +290,7 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
         justifyContent: 'center',
         flexDirection: 'column',
         overflow: 'hidden',
-        backgroundColor: '#FBFBFC'
+        backgroundColor: '#f5f5f7'
     },
     defaultFont: {
         fontFamily: 'system font'
@@ -300,13 +300,13 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
         // justifyContent: 'center',
         display: 'flex',
         textAlign: 'center',
-        backgroundColor: '#FBFBFC'
+        backgroundColor: '#f5f5f7'
     },
     colorBar: {
         width: '100%',
         height: '47%',
         paddingTop: 20,
-        backgroundColor: '#FBFBFC'
+        backgroundColor: '#f5f5f7'
     },
     iconContainer: {
         width: '20%',
@@ -320,15 +320,15 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
         marginLeft: 8,
         marginBottom: 10,
         marginTop: -8,
-        borderRadius: 12,
+        borderRadius: 1,
         backgroundColor: '#f94144',
         textAlign: 'center',
         zIndex: 50
     },
     outline: {
-        borderRadius: 12,
-        backgroundColor: colorScheme === 'light' ? '#43434f' : 'white',
-        color: colorScheme === 'light' ? 'white' : '#43434f'
+        borderRadius: 1,
+        backgroundColor: colorScheme === 'light' ? '#1D1D20' : 'white',
+        color: colorScheme === 'light' ? 'white' : '#1D1D20'
     },
     cusCategory: {
         fontSize: 15,
@@ -338,16 +338,16 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
     },
     sub: {
         fontSize: 15,
-        color: colorScheme === 'light' ? '#43434f' : 'white',
+        color: colorScheme === 'light' ? '#1D1D20' : 'white',
         height: 22,
         paddingHorizontal: 10
     },
     subOutline: {
         fontSize: 15,
-        color: colorScheme === 'light' ? '#43434f' : 'white',
+        color: colorScheme === 'light' ? '#1D1D20' : 'white',
         height: 22,
         paddingHorizontal: 10,
-        borderRadius: 12,
-        backgroundColor: colorScheme === 'light' ? '#43434f' : 'white',
+        borderRadius: 1,
+        backgroundColor: colorScheme === 'light' ? '#1D1D20' : 'white',
     }
 });

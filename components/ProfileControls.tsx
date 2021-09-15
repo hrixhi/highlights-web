@@ -332,7 +332,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
       >
         <Text
           style={{
-            fontSize: 23,
+            fontSize: 24,
             paddingBottom: 30,
             fontFamily: 'inter',
             // textTransform: "uppercase",
@@ -369,7 +369,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                 <Text style={{
                   fontSize: 15,
                   fontFamily: 'inter',
-                  color: '#43434f'
+                  color: '#1D1D20'
                 }}>
                   {PreferredLanguageText('currentPassword')}
                 </Text>
@@ -383,7 +383,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                 <Text style={{
                   fontSize: 15,
                   fontFamily: 'inter',
-                  color: '#43434f'
+                  color: '#1D1D20'
                 }}>
                   {PreferredLanguageText('newPassword')}
                 </Text>
@@ -401,7 +401,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                 <Text style={{
                   fontSize: 15,
                   fontFamily: 'inter',
-                  color: '#43434f'
+                  color: '#1D1D20'
                 }}>
                   {PreferredLanguageText('confirmNewPassword')}
                 </Text>
@@ -472,7 +472,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                   marginTop: 20,
                   fontSize: 15,
                   fontFamily: 'inter',
-                  color: '#43434f'
+                  color: '#1D1D20'
                 }}>
                   {PreferredLanguageText('email')}
                 </Text>
@@ -488,7 +488,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                 <Text style={{
                   fontSize: 15,
                   fontFamily: 'inter',
-                  color: '#43434f'
+                  color: '#1D1D20'
                 }}>
                   {PreferredLanguageText('fullName')}
                 </Text>
@@ -502,7 +502,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                 <Text style={{
                   fontSize: 15,
                   fontFamily: 'inter',
-                  color: '#43434f'
+                  color: '#1D1D20'
                 }}>
                   {PreferredLanguageText('displayName')}
                 </Text>
@@ -519,7 +519,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                       style={{
                         fontSize: 15,
                         fontFamily: 'inter',
-                        color: '#43434f'
+                        color: '#1D1D20'
                       }}
                     >
                       {PreferredLanguageText('password')}
@@ -540,7 +540,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                       style={{
                         fontSize: 15,
                         fontFamily: 'inter',
-                        color: '#43434f'
+                        color: '#1D1D20'
                       }}
                     >
                       {PreferredLanguageText('confirmPassword')}
@@ -584,9 +584,9 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                     style={{
                       textAlign: "center",
                       lineHeight: 35,
-                      color: "#43434f",
+                      color: "#1D1D20",
                       fontSize: 12,
-                      backgroundColor: "#FBFBFC",
+                      backgroundColor: "#f5f5f7",
                       paddingHorizontal: 25,
                       fontFamily: "inter",
                       height: 35,
@@ -618,7 +618,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                     lineHeight: 35,
                     color: "white",
                     fontSize: 12,
-                    backgroundColor: "#560bad",
+                    backgroundColor: "#661CB0",
                     paddingHorizontal: 25,
                     fontFamily: "inter",
                     height: 35,
@@ -652,9 +652,9 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                   style={{
                     textAlign: "center",
                     lineHeight: 35,
-                    color: "#43434f",
+                    color: "#1D1D20",
                     fontSize: 12,
-                    backgroundColor: "#FBFBFC",
+                    backgroundColor: "#f5f5f7",
                     paddingHorizontal: 25,
                     fontFamily: "inter",
                     height: 35,
@@ -689,7 +689,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white"
   },
   outline: {
-    borderRadius: 12,
+    borderRadius: 1,
     borderWidth: 1,
     borderColor: "#818385"
   },
@@ -706,7 +706,7 @@ const styles = StyleSheet.create({
     height: 22,
     paddingHorizontal: 10,
     backgroundColor: "white",
-    borderRadius: 12,
+    borderRadius: 1,
     borderWidth: 1,
     borderColor: "#818385"
   },

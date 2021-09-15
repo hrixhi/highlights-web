@@ -10,7 +10,7 @@
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#43434F"
+      "backgroundColor": "#1D1D20"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -28,7 +28,7 @@
       "softwareKeyboardLayoutMode": "pan",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#43434F"
+        "backgroundColor": "#1D1D20"
       }
     },
     "web": {

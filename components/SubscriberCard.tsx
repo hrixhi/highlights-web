@@ -21,7 +21,7 @@ const SubscriberCard: React.FunctionComponent<{ [label: string]: any }> = (props
                 onPress={() => props.onPress()}
                 key={'textPage'}
                 style={styleObject.card}>
-                <View style={{ backgroundColor: '#FBFBFC', width: '100%', flexDirection: 'row', display: 'flex', height: '44%', minHeight: 25 }}>
+                <View style={{ backgroundColor: '#f5f5f7', width: '100%', flexDirection: 'row', display: 'flex', height: '44%', minHeight: 25 }}>
                     <Text ellipsizeMode={'tail'}
                         numberOfLines={1}
                         style={styleObject.title}>
@@ -29,7 +29,7 @@ const SubscriberCard: React.FunctionComponent<{ [label: string]: any }> = (props
                     </Text>
                     {
                         fullName === 'submitted' || fullName === 'graded' || props.chat ?
-                            <View style={{ flexDirection: 'row', backgroundColor: '#FBFBFC' }}>
+                            <View style={{ flexDirection: 'row', backgroundColor: '#f5f5f7' }}>
                                 {
                                     props.subscriber.unreadMessages !== undefined
                                         && props.subscriber !== null
@@ -38,8 +38,8 @@ const SubscriberCard: React.FunctionComponent<{ [label: string]: any }> = (props
                                         <Text style={{
                                             width: 20,
                                             height: 20,
-                                            borderRadius: 12,
-                                            backgroundColor: '#560bad',
+                                            borderRadius: 1,
+                                            backgroundColor: '#661CB0',
                                             textAlign: 'center',
                                             zIndex: 150,
                                             marginLeft: 10,
@@ -51,7 +51,7 @@ const SubscriberCard: React.FunctionComponent<{ [label: string]: any }> = (props
                                 }
                                 {
                                     submittedAt !== "" && deadline !== "" && submittedAt >= deadline ?
-                                    <View style={{ borderRadius: 12, padding: 5, borderWidth: 1, borderColor: '#f94144' }}>
+                                    <View style={{ borderRadius: 1, padding: 5, borderWidth: 1, borderColor: '#f94144' }}>
                                         <Text style={{ color: '#f94144',  fontSize: 13 }}>
                                             LATE
                                         </Text>
@@ -87,30 +87,30 @@ const styles: any = (status: any) => StyleSheet.create({
         height: '100%',
         width: '100%',
         maxWidth: 500,
-        borderRadius: 12,
+        borderRadius: 1,
         overflow: 'hidden',
         backgroundColor: 'white'
     },
     card: {
         height: '100%',
         width: '100%',
-        borderRadius: 12,
+        borderRadius: 1,
         padding: 13,
-        backgroundColor: '#FBFBFC',
+        backgroundColor: '#f5f5f7',
         borderWidth: 1,
-        borderColor: '#e4e7eb'
+        borderColor: '#f5f5f7'
     },
     text: {
         display: 'flex',
         flexDirection: 'column',
         flex: 1,
-        backgroundColor: '#FBFBFC',
+        backgroundColor: '#f5f5f7',
     },
     titleArrow: {
         fontFamily: 'inter',
         fontSize: 13,
         paddingTop: 5,
-        color: '#43434f',
+        color: '#1D1D20',
         marginLeft: 10
     },
     title: {
@@ -118,7 +118,7 @@ const styles: any = (status: any) => StyleSheet.create({
         fontSize: 13,
         width: '100%',
         paddingTop: 5,
-        color: '#43434f'
+        color: '#1D1D20'
     },
     description: {
         fontSize: 13,

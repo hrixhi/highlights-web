@@ -45,7 +45,7 @@ const ActivityCard: React.FunctionComponent<{ [label: string]: any }> = (props: 
                             }
                         </Text>
 
-                    </View> <View style={{ backgroundColor: '#FBFBFC', width: '100%', flexDirection: 'row', display: 'flex' }}>
+                    </View> <View style={{ backgroundColor: '#f5f5f7', width: '100%', flexDirection: 'row', display: 'flex' }}>
                         <Text ellipsizeMode={'tail'}
                             numberOfLines={1}
                             style={styleObject.title}>
@@ -56,7 +56,7 @@ const ActivityCard: React.FunctionComponent<{ [label: string]: any }> = (props: 
                                 <Text style={{
                                     width: 20,
                                     height: 20,
-                                    borderRadius: 12,
+                                    borderRadius: 1,
                                     backgroundColor: '#f94144',
                                     textAlign: 'center',
                                     zIndex: 150,
@@ -91,14 +91,14 @@ const styles: any = () => StyleSheet.create({
         height: '100%',
         width: '100%',
         maxWidth: 500,
-        borderRadius: 12,
+        borderRadius: 1,
         overflow: 'hidden',
-        backgroundColor: '#FBFBFC',
+        backgroundColor: '#f5f5f7',
     },
     badge: {
         width: 20,
         height: 20,
-        borderRadius: 12,
+        borderRadius: 1,
         backgroundColor: '#f94144',
         textAlign: 'center',
         zIndex: 150,
@@ -107,22 +107,22 @@ const styles: any = () => StyleSheet.create({
     card: {
         height: '100%',
         width: '100%',
-        borderRadius: 12,
+        borderRadius: 1,
         padding: 13,
-        backgroundColor: '#FBFBFC',
+        backgroundColor: '#f5f5f7',
         borderWidth: 1,
-        borderColor: '#e4e7eb'
+        borderColor: '#f5f5f7'
     },
     text: {
         display: 'flex',
         flexDirection: 'column',
         flex: 1,
-        backgroundColor: '#FBFBFC'
+        backgroundColor: '#f5f5f7'
     },
     dateContainer: {
         fontSize: 10,
         height: '22%',
-        backgroundColor: '#FBFBFC',
+        backgroundColor: '#f5f5f7',
         display: 'flex',
         flexDirection: 'row'
     },
@@ -135,7 +135,7 @@ const styles: any = () => StyleSheet.create({
         fontFamily: 'inter',
         fontSize: 13,
         paddingTop: 7,
-        color: '#43434f',
+        color: '#1D1D20',
         flex: 1
     },
     titleArrow: {
@@ -154,7 +154,7 @@ const styles: any = () => StyleSheet.create({
     color: {
         width: 10,
         height: 10,
-        borderRadius: 12,
+        borderRadius: 1,
         marginTop: 1
     }
 });

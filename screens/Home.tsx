@@ -1407,7 +1407,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 resizeMode={'contain'}
               />
             </View>
-            {/* <Text style={{ fontSize: 20, color: '#43434f', fontFamily: 'inter', paddingBottom: 15, maxWidth: 500, textAlign: 'center' }}>
+            {/* <Text style={{ fontSize: 20, color: '#1D1D20', fontFamily: 'inter', paddingBottom: 15, maxWidth: 500, textAlign: 'center' }}>
               {
                 showForgotPassword ? '' : PreferredLanguageText('login')
               }
@@ -1424,7 +1424,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               justifyContent: 'center',
               alignSelf: 'center'
             }}>
-              <Text style={{ color: '#43434f', fontSize: 14, paddingBottom: 5, paddingTop: 10 }}>
+              <Text style={{ color: '#1D1D20', fontSize: 14, paddingBottom: 5, paddingTop: 10 }}>
                 {PreferredLanguageText('email')}
               </Text>
               <TextInput
@@ -1437,7 +1437,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               {
                 showForgotPassword ? null :
                   <View>
-                    <Text style={{ color: '#43434f', fontSize: 14, paddingBottom: 5 }}>
+                    <Text style={{ color: '#1D1D20', fontSize: 14, paddingBottom: 5 }}>
                       {PreferredLanguageText('password')}
                     </Text>
                     <TextInput
@@ -1479,7 +1479,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     lineHeight: 35,
                     color: 'white',
                     fontSize: 12,
-                    backgroundColor: '#560bad',
+                    backgroundColor: '#661CB0',
                     paddingHorizontal: 25,
                     fontFamily: 'inter',
                     height: 35,
@@ -1504,9 +1504,9 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                   <Text style={{
                     textAlign: 'center',
                     lineHeight: 35,
-                    color: '#43434f',
+                    color: '#1D1D20',
                     fontSize: 12,
-                    backgroundColor: '#FBFBFC',
+                    backgroundColor: '#f5f5f7',
                     paddingHorizontal: 25,
                     fontFamily: 'inter',
                     height: 35,
@@ -1654,7 +1654,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             <View style={{
               height: 61,
               borderBottomWidth: 1,
-              borderColor: '#e4e7eb'
+              borderColor: '#f5f5f7'
             }}>
               <VerticalBar
                 menuCollapsed={menuCollapsed}
@@ -1697,7 +1697,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             <View style={{
               width: dimensions.window.width,
               height: dimensions.window.height,
-              borderColor: '#e4e7eb',
+              borderColor: '#f5f5f7',
               backgroundColor: '#fff',
             }}>
               <View style={{
@@ -1813,14 +1813,14 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 height: (menuCollapsed ? dimensions.window.height - 60 : 0),
                 // paddingHorizontal: dimensions.window.width < 1024 ? 0 : 30,
                 paddingTop: 10,
-                // backgroundColor: '#FBFBFC',
+                // backgroundColor: '#f5f5f7',
                 backgroundColor: '#fff',
                 position: dimensions.window.width < 1024 ? 'absolute' : 'relative'
               }}
             >
               {
                 dimensions.window.width < 1024 ? null : <View style={{ flexDirection: 'column', flex: 1, width: '100%', justifyContent: 'center', backgroundColor: '#fff' }}>
-                  <Text style={{ fontSize: 20, color: '##43434f', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#fff' }}>
+                  <Text style={{ fontSize: 20, color: '##1D1D20', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#fff' }}>
                     Select cue to view.
                   </Text>
                 </View>
@@ -1883,7 +1883,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           right: 0,
           justifyContent: 'center',
           alignSelf: 'flex-end',
-          width: 60, height: 60, borderRadius: 30, backgroundColor: '#560bad'
+          width: 60, height: 60, borderRadius: 30, backgroundColor: '#661CB0'
         }}
       >
         <Text style={{ color: '#fff', width: '100%', textAlign: 'center' }}>
@@ -1913,7 +1913,7 @@ const styles = (channelId: string) => StyleSheet.create({
     height: Dimensions.get('window').height - 60,
     width: '100%',
     justifyContent: "center",
-    backgroundColor: '#FBFBFC'
+    backgroundColor: '#f5f5f7'
   },
   horizontal: {
     flexDirection: "row",
@@ -1921,7 +1921,7 @@ const styles = (channelId: string) => StyleSheet.create({
   },
   input: {
     width: '100%',
-    borderBottomColor: '#FBFBFC',
+    borderBottomColor: '#f5f5f7',
     borderBottomWidth: 1,
     fontSize: 15,
     paddingTop: 13,

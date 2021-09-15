@@ -36,12 +36,12 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                         </Text> : null}
                     </View>
                     <View style={{
-                        backgroundColor: '#FBFBFC',
+                        backgroundColor: '#f5f5f7',
                         width: '100%', flex: 1,
                         height: '100%',
                         flexDirection: 'row'
                     }}>
-                        <View style={{ flex: 1, backgroundColor: '#FBFBFC' }}>
+                        <View style={{ flex: 1, backgroundColor: '#f5f5f7' }}>
                             <Text
                                 ellipsizeMode={'tail'}
                                 numberOfLines={1}
@@ -55,11 +55,11 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                                     {props.subtitle}
                                 </Text>
                                 : null}
-                            {props.option === "Channels" && !props.subscribed ?  <View style={{ flex: 1, paddingLeft: 10, backgroundColor: '#FBFBFC' }}>
+                            {props.option === "Channels" && !props.subscribed ?  <View style={{ flex: 1, paddingLeft: 10, backgroundColor: '#f5f5f7' }}>
                                 <TouchableOpacity
                                     onPress={() => props.handleSub()}
                                 >
-                                    <Text style={{ textAlign: 'center', fontSize: 12, paddingTop: 10, color: '#560bad', backgroundColor: '#FBFBFC' }} ellipsizeMode='tail'>
+                                    <Text style={{ textAlign: 'center', fontSize: 12, paddingTop: 10, color: '#661CB0', backgroundColor: '#f5f5f7' }} ellipsizeMode='tail'>
                                         Join
                                     </Text>
                                 </TouchableOpacity>
@@ -78,27 +78,27 @@ export default SearchResultCard
 const styles: any = (colorScheme: any) => StyleSheet.create({
     swiper: {
         height: '100%',
-        borderRadius: 12,
+        borderRadius: 1,
         overflow: 'hidden',
         maxWidth: 200
     },
     card: {
         // maxWidth: 200,
         height: '100%',
-        borderRadius: 12,
+        borderRadius: 1,
         padding: 12,
         paddingHorizontal: 15,
-        backgroundColor: '#FBFBFC',
+        backgroundColor: '#f5f5f7',
         borderWidth: 1,
-        borderColor: '#e4e7eb'
+        borderColor: '#f5f5f7'
     },
     flipCard: {
         height: '100%',
         width: '100%',
-        borderRadius: 12,
+        borderRadius: 1,
         padding: 13,
         color: '#fff',
-        backgroundColor: colorScheme === 'light' ? '#43434f' : 'white'
+        backgroundColor: colorScheme === 'light' ? '#1D1D20' : 'white'
     },
     descriptionFlip: {
         color: '#fff',
@@ -107,19 +107,19 @@ const styles: any = (colorScheme: any) => StyleSheet.create({
     },
     text: {
         // height: '100%',
-        backgroundColor: '#FBFBFC'
+        backgroundColor: '#f5f5f7'
     },
     flipText: {
         height: '100%',
         color: '#fff',
-        backgroundColor: colorScheme === 'light' ? '#43434f' : '#FBFBFC'
+        backgroundColor: colorScheme === 'light' ? '#1D1D20' : '#f5f5f7'
     },
     dateContainer: {
         fontSize: 10,
         marginBottom: 5,
         color: '#fff',
         // height: '25%',
-        backgroundColor: '#FBFBFC',
+        backgroundColor: '#f5f5f7',
         display: 'flex',
         flexDirection: 'row'
     },
@@ -129,17 +129,17 @@ const styles: any = (colorScheme: any) => StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         color: '#fff',
-        backgroundColor: colorScheme === 'light' ? '#43434f' : '#FBFBFC'
+        backgroundColor: colorScheme === 'light' ? '#1D1D20' : '#f5f5f7'
     },
     date: {
         fontSize: 9,
-        color: colorScheme === 'light' ? '#FBFBFC' : '#333333',
+        color: colorScheme === 'light' ? '#f5f5f7' : '#333333',
         marginLeft: 10,
         lineHeight: 10
     },
     date2: {
         fontSize: 9,
-        color: colorScheme === 'light' ? '#FBFBFC' : '#333333',
+        color: colorScheme === 'light' ? '#f5f5f7' : '#333333',
         marginLeft: 10,
         lineHeight: 10,
         textAlign: 'right',
@@ -151,13 +151,13 @@ const styles: any = (colorScheme: any) => StyleSheet.create({
         lineHeight: 20,
         // flex: 1,
         marginBottom: 10,
-        color: '##43434f',
+        color: '##1D1D20',
         flexDirection: 'row', flex: 1,
         // height: '50%'
     },
     titleFlip: {
-        color: colorScheme === 'light' ? '#43434f' : '#43434f',
-        backgroundColor: colorScheme === 'light' ? '#FBFBFC' : '#FBFBFC',
+        color: colorScheme === 'light' ? '#1D1D20' : '#1D1D20',
+        backgroundColor: colorScheme === 'light' ? '#f5f5f7' : '#f5f5f7',
         fontFamily: 'inter',
         fontSize: 13,
         // ,

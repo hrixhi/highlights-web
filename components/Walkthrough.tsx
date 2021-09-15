@@ -323,7 +323,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         // paddingRight: Dimensions.get('window').width < 768 ? 0 : 25,
                         marginRight: Dimensions.get('window').width < 768 ? 0 : 20,
                         borderRightWidth: Dimensions.get('window').width < 768 ? 0 : 1,
-                        borderColor: '#e4e7eb'
+                        borderColor: '#f5f5f7'
                     }}>
                         <Profile
                             closeModal={() => props.closeModal()}
@@ -341,8 +341,8 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                     ellipsizeMode="tail"
                                     style={{
                                         marginRight: 10,
-                                        color: '#43434f',
-                                        fontSize: 23,
+                                        color: '#1D1D20',
+                                        fontSize: 24,
                                         paddingBottom: 20,
                                         fontFamily: 'inter',
                                         flex: 1,
@@ -380,7 +380,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                         }}
                                         style={{
                                             backgroundColor: '#fff',
-                                            borderColor: '#e4e7eb',
+                                            borderColor: '#f5f5f7',
                                             borderBottomWidth: item.question === 'Planner' ? 0 : 1,
                                             width: '100%',
                                             paddingBottom: 20,
@@ -395,7 +395,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                 flexDirection: 'row',
                                                 flex: 1,
                                                 fontSize: 17,
-                                                color: item.isOpen ? '#560bad' : '#333333'
+                                                color: item.isOpen ? '#661CB0' : '#333333'
                                             }}>
                                                 {item.question}
                                             </Text>
@@ -438,7 +438,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     </View>
                 </View>
             </View>
-            <MessengerCustomerChat pageId="109965671259610" appId="746023139417168" themeColor="#560bad" />
+            <MessengerCustomerChat pageId="109965671259610" appId="746023139417168" themeColor="#4b956b" />
         </View >
     );
 }
