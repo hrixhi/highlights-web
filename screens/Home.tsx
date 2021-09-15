@@ -1150,7 +1150,43 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
   }
 
-  const closeModal = useCallback(() => {
+  const markCueAsRead = useCallback(async () => {
+
+    let subCues: any = {};
+    try {
+      const value = await AsyncStorage.getItem("cues");
+      if (value) {
+        subCues = JSON.parse(value);
+      }
+    } catch (e) { }
+    if (subCues[updateModalKey].length === 0) {
+      return;
+    }
+
+    const unmodified = subCues ? subCues[updateModalKey][updateModalIndex] : {};
+
+    if (!unmodified) return;
+
+    const modified = {
+      ...unmodified,
+      status: "read"
+    }
+
+    subCues[updateModalKey][updateModalIndex] = modified
+
+    const stringifiedCues = JSON.stringify(subCues);
+    await AsyncStorage.setItem("cues", stringifiedCues);
+    reloadCueListAfterUpdate();
+
+  }, [cues, updateModalKey, updateModalIndex])
+
+  const closeModal = useCallback(async () => {
+
+    // Mark as read
+    if (modalType === 'Update') {
+      await markCueAsRead()
+    }
+
     setCueId('')
     setModalType('')
     setCreatedBy('')
@@ -1555,7 +1591,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 setChannelId(channelId);
                 setChannelCreatedBy(createdBy);
                 setCreatedBy(createdBy)
-                openModal('Discussion')
+                openModal('Meeting')
                 setShowHome(false);
               }}
               openChannelFromActivity={(channelId: string, createdBy: string) => {
@@ -1567,6 +1603,37 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               openQAFromActivity={(channelId: any, cueId: string, by: string) => {
                 openCueFromCalendar(channelId, cueId, by)
                 setTarget('Q&A')
+              }}
+              openDiscussionFromSearch={(channelId: any) => {
+
+                // Find channel Created By from subscriptions
+                const match = subscriptions.filter((sub: any) => {
+                  return sub.channelId === channelId
+                })
+
+                if (match && match.length !== 0) {
+                  const createdBy = match[0].channelCreatedBy
+                  setChannelId(channelId);
+                  setChannelCreatedBy(createdBy);
+                  setCreatedBy(createdBy)
+                  openModal('Meeting')
+                  setShowHome(false);
+                }
+              }}
+              openClassroom={(channelId: any) => {
+                // Find channel Created By from subscriptions
+                const match = subscriptions.filter((sub: any) => {
+                  return sub.channelId === channelId
+                })
+
+                if (match && match.length !== 0) {
+                  const createdBy = match[0].channelCreatedBy
+                  setChannelId(channelId);
+                  setChannelCreatedBy(createdBy);
+                  setCreatedBy(createdBy)
+                  openModal('Meeting')
+                  setShowHome(false);
+                }
               }}
             />
           </View>

@@ -56,6 +56,7 @@ export const createCue = gql`
     $shareWithUserIds: [String!]
     $limitedShares: Boolean
     $allowedAttempts: String
+    $availableUntil: String
   ) {
     cue {
       create(
@@ -75,6 +76,7 @@ export const createCue = gql`
         shareWithUserIds: $shareWithUserIds
         limitedShares: $limitedShares
         allowedAttempts: $allowedAttempts
+        availableUntil: $availableUntil
       )
     }
   }
@@ -541,6 +543,7 @@ export const getCues = gql`
         active
         limitedShares
         allowedAttempts
+        availableUntil
       }
     }
   }
@@ -723,6 +726,7 @@ export const getCuesFromCloud = gql`
         limitedShares
         allowedAttempts
         annotations
+        availableUntil
       }
     }
   }

@@ -39,7 +39,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
     const [filterChoice, setFilterChoice] = useState('All')
     const unparsedSubs: any[] = JSON.parse(JSON.stringify(props.subscribers))
     const [subscribers] = useState<any[]>(unparsedSubs.reverse())
-    const categories = ['All', 'Unread', 'Read']
+    const categories = ['All', 'Read']
     const categoriesLanguageMap: { [label: string]: string } = {
         All: 'all',
         Read: 'read',
@@ -137,23 +137,15 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
     let filteredSubscribers: any = []
     switch (filterChoice) {
         case 'All':
-            filteredSubscribers = subscribers
+            filteredSubscribers = subscribers.filter(item => {
+                return item.fullName !== 'delivered' && item.fullName !== 'not-delivered'
+            })
             break;
         case 'Read':
             filteredSubscribers = subscribers.filter(item => {
                 return item.fullName === 'read'
             })
             break;
-        case 'Unread':
-            filteredSubscribers = subscribers.filter(item => {
-                return item.fullName === 'delivered' || item.fullName === 'not-delivered'
-            })
-            break;
-        // case 'Not Delivered':
-        //     filteredSubscribers = subscribers.filter(item => {
-        //         return item.fullName === 'not-delivered'
-        //     })
-        //     break;
         case 'Graded':
             filteredSubscribers = subscribers.filter(item => {
                 return item.fullName === 'graded'
@@ -991,14 +983,51 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                         </View>)
                     :
                     <View style={{ width: '100%', marginTop: 25 }}>
-                        {viewSubmissionTab === "mySubmission" ?
-                            <View style={{ width: '100%' }}>
-                                {parser(attempt.html)}
-                            </View> :
-                            <div className="webviewer" ref={submissionViewerRef} style={{ height: "100vh" }}></div>
-                        }
+                        {attempt.title !== "" ? <Text
+                                style={{
+                                    fontSize: 18,
+                                    paddingRight: 15,
+                                    paddingTop: 12,
+                                    paddingBottom: 12,
+                                    marginTop: 20,
+                                    marginBottom: 5,
+                                    maxWidth: "100%",
+                                    fontWeight: "600",
+                                    width: '100%'
+                                }}
+                            >
+                                {attempt.title}
+                            </Text> : null}
+                        <ReactPlayer url={url} controls={true} /> 
                     </View>
-
+                    : 
+                    <View style={{ width: '100%', marginTop: 25 }}>
+                        {attempt.title !== "" ? <Text
+                                style={{
+                                    fontSize: 18,
+                                    paddingRight: 15,
+                                    paddingTop: 12,
+                                    paddingBottom: 12,
+                                    marginTop: 20,
+                                    marginBottom: 5,
+                                    maxWidth: "100%",
+                                    fontWeight: "600",
+                                    width: '100%'
+                                }}
+                            >
+                                {attempt.title}
+                            </Text> : null}
+                        <div className="webviewer" ref={submissionViewerRef} style={{ height: "100vh" }}></div>
+                    </View>)
+                :
+                <View style={{ width: '100%', marginTop: 25 }}>
+                   {viewSubmissionTab === "mySubmission" ?  
+                    <div className="mce-content-body htmlParser" style={{ width: '100%' }}>
+                        {parser(attempt.html)}
+                    </div> : 
+                    <div className="webviewer" ref={submissionViewerRef} style={{ height: "100vh" }}></div>
+                }
+               </View>
             }
         </View>)
 
@@ -1458,7 +1487,9 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                             // if (subscr subscriber.fullName !== 'submitted' && subscriber.fullName !== 'read' && subscriber.fullName !== 'graded') {
                                                             //     return null
                                                             // }
+                                                            console.log("Subscriber", subscriber)
                                                             return <TouchableOpacity
+                                                                disabled={subscriber.fullName !== 'submitted' && subscriber.fullName !== 'graded'}
                                                                 onPress={() => {
                                                                     if (props.cueId && props.cueId !== null) {
                                                                         if (subscriber.fullName === 'submitted' || subscriber.fullName === 'graded') {
@@ -1506,22 +1537,35 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                     source={{ uri: user.avatar ? user.avatar : 'https://cues-files.s3.amazonaws.com/images/default.png' }}
                                                                 />
                                                             </View> */}
-                                                                <View style={{ flex: 1, backgroundColor: '#FBFBFC', paddingLeft: 10 }}>
+                                                                <View style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', flex: 1, backgroundColor: '#FBFBFC', paddingLeft: 10 }}>
                                                                     <Text style={{ fontSize: 12, padding: 10, fontFamily: 'inter' }} ellipsizeMode='tail'>
                                                                         {subscriber.displayName ? subscriber.displayName : ''}
                                                                     </Text>
                                                                 </View>
-                                                                <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
+                                                                <View style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
                                                                     <Text style={{ fontSize: 12, padding: 10, textTransform: 'capitalize' }} ellipsizeMode='tail'>
-                                                                        {subscriber.fullName ? (subscriber.fullName === "not-delivered" || subscriber.fullName === "delivered" ? "Unread" : null) : ''}
+                                                                        {subscriber.fullName}
                                                                     </Text>
                                                                 </View>
+                                                                {
+                                                                    subscriber.submittedAt && subscriber.submittedAt !== "" && subscriber.deadline && subscriber.deadline !== "" && subscriber.submittedAt >= subscriber.deadline ?
+                                                                    <View style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                                                                        <View style={{ borderRadius: 12, padding: 5, borderWidth: 1, borderColor: '#f94144' }}>
+                                                                            <Text style={{ color: '#f94144',  fontSize: 12 }}>
+                                                                                LATE
+                                                                            </Text>
+                                                                        </View>
+                                                                    </View>
+                                                                    :
+                                                                    null
+                                                                }
                                                                 <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
                                                                     {(subscriber.fullName === "not-delivered" || subscriber.fullName === "delivered" || subscriber.fullName === "read") ? null : <Text style={{ fontSize: 15, padding: 10, color: '#560bad' }} ellipsizeMode='tail'>
                                                                         <Ionicons name='chevron-forward-outline' size={20} />
                                                                     </Text>}
                                                                 </View>
                                                             </TouchableOpacity>
+
                                                             return <View style={styles.col} key={filterChoice + key + index}>
                                                                 <SubscriberCard
                                                                     chat={!props.cueId || props.cueId === '' ? true : false}
@@ -1622,7 +1666,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             style={{ flex: 1, paddingTop: 12 }}>
                                             {
                                                 submittedAt !== "" && deadline !== "" && submittedAt >= deadline ?
-                                                    <View style={{ width: '100%', maxWidth: 800, marginBottom: 30 }}>
+                                                    <View style={{ width: '100%', marginBottom: 30 }}>
                                                         <View style={{ borderRadius: 12, padding: 5, borderWidth: 1, borderColor: '#f94144', marginVertical: 10, width: 150, marginLeft: 'auto' }}>
                                                             <Text style={{ color: '#f94144', fontSize: 13, textAlign: 'center' }}>
                                                                 LATE SUBMISSION

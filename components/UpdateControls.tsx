@@ -53,6 +53,7 @@ import TextareaAutosize from 'react-textarea-autosize';
 import lodash from 'lodash';
 import { Editor } from '@tinymce/tinymce-react';
 import parser from 'html-react-parser';
+import Select from 'react-select';
 
 
 const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
@@ -104,6 +105,17 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 ? new Date()
                 : new Date(props.cue.initiateAt)
             : new Date();
+
+    const until = 
+        props.cue.availableUntil && props.cue.availableUntil !== "" 
+            ? props.cue.availableUntil === "Invalid Date"
+                ? new Date(current.getTime() + 1000 * 60 * 60 * 48)
+                : new Date(props.cue.availableUntil) 
+            : new Date(current.getTime() + 1000 * 60 * 60 * 48)
+
+    const [allowLateSubmission, setAllowLateSubmission] = useState(props.cue.availableUntil && props.cue.availableUntil !== "");
+            // By default one day after deadline
+    const [availableUntil, setAvailableUntil] = useState<Date>(until);
 
     const [deadline, setDeadline] = useState<Date>(dead);
     const [initiateAt, setInitiateAt] = useState<Date>(initiate)
@@ -369,6 +381,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     // from the server or individual changes from other users
                     if (imported) return;
 
+
                     const xfdfString = await annotationManager.exportAnnotations({ useDisplayAuthor: true });
 
                     let subCues: any = {};
@@ -442,14 +455,12 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         }
         const remainingTime = duration - diff_seconds(initiatedAt, current);
         if (remainingTime <= 0) {
-            // duration has been set correctly yet no time remaining
-            if (!props.cue.submittedAt || props.cue.submittedAt === "") {
-                handleSubmit();
-            }
+            // Submit quiz when time runs out 
+            submitQuizEndTime();
         } else {
             setInitDuration(remainingTime); // set remaining duration in seconds
         }
-    }, [initiatedAt, duration, deadline, isQuizTimed, props.cue.submittedAt, isOwner]);
+    }, [initiatedAt, duration, deadline, isQuizTimed, isOwner]);
 
     // Loads all the channel categories and list of people cue has been shared with
     const loadChannelsAndSharedWith = useCallback(async () => {
@@ -502,14 +513,16 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
                             const format = res.data.cue.getSharedWith.map((sub: any) => {
                                 return {
-                                    id: sub.value,
-                                    name: sub.label
+                                    value: sub.value,
+                                    label: sub.label,
+                                    isFixed: sub.isFixed,
+                                    visited: sub.isFixed,
                                 }
                             });
 
                             const subscriberwithoutOwner: any = [];
                             format.map((i: any) => {
-                                if (user._id !== i.id) {
+                                if (user._id !== i.value) {
                                     subscriberwithoutOwner.push(i);
                                 }
                             });
@@ -522,14 +535,16 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
                             const formatSel = sel.map((sub: any) => {
                                 return {
-                                    id: sub.value,
-                                    name: sub.label
+                                    value: sub.value,
+                                    label: sub.label,
+                                    isFixed: true,
+                                    visited: true,
                                 }
                             })
 
                             const withoutOwner: any = [];
                             formatSel.map((i: any) => {
-                                if (user._id !== i.id) {
+                                if (user._id !== i.value) {
                                     withoutOwner.push(i);
                                 }
                             });
@@ -540,6 +555,23 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             }
         }
     }, [props.cue, props.channelId]);
+
+    console.log("Subscribers", subscribers);
+    console.log("Selected", selected)
+
+    const reactSelectStyles = {
+        multiValue: (base: any, state: any) => {
+          return  { ...base, backgroundColor: '#0096Fb', borderRadius: 11 }
+        },
+        multiValueLabel: (base: any, state: any) => {
+          return state.data.isFixed
+            ? { ...base, fontWeight: 'bold', color: 'white', paddingRight: 6 }
+            : { ...base, color: 'white' };
+        },
+        multiValueRemove: (base: any, state: any) => {
+          return state.data.isFixed ? { ...base, display: 'none' } : base;
+        },
+      };
 
     // If cue contains a Quiz, then need to fetch the quiz and set State
     useEffect(() => {
@@ -692,6 +724,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     }, [props.cue, cue, loading, original]);
 
 
+    console.log("Submission draft", submissionDraft)
 
     // Initialize submission Draft + Submission import title, url, type for new SCHEMA
     useEffect(() => {
@@ -1188,6 +1221,20 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
         const currCue = subCues[props.cueKey][props.cueIndex]
 
+        // Perform validation for dates
+        if (submission && isOwner) {
+            if (initiateAt > deadline) {
+                Alert('Deadline must be after available date')
+                return;
+            }
+
+            if (allowLateSubmission && (availableUntil < deadline)) {
+                Alert('Late Submission date must be after deadline')
+                return;
+            }
+        }
+
+
         const saveCue = {
             ...currCue,
             color,
@@ -1199,7 +1246,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             submission,
             deadline: submission ? deadline.toISOString() : "",
             initiateAt: submission ? initiateAt.toISOString() : "",
-            allowedAttempts: unlimitedAttempts ? null : allowedAttempts
+            allowedAttempts: unlimitedAttempts ? null : allowedAttempts,
+            availableUntil: submission && allowLateSubmission ? availableUntil.toISOString() : "", 
         }
 
         subCues[props.cueKey][props.cueIndex] = saveCue;
@@ -1210,7 +1258,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
         setUpdatingCueDetails(false)
 
-    }, [submission, deadline, initiateAt, gradeWeight, customCategory, endPlayAt, color, frequency, notify, allowedAttempts, unlimitedAttempts])
+    }, [submission, deadline, initiateAt, gradeWeight, customCategory, endPlayAt, color, frequency, notify, allowedAttempts, unlimitedAttempts, allowLateSubmission, availableUntil])
 
     // Handle Delete Cue
     const handleDelete = useCallback(async () => {
@@ -1275,6 +1323,53 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         ]);
     }, [props.cueIndex, props.closeModal, props.cueKey, props.cue, isOwner]);
 
+    const submitQuizEndTime = useCallback(async () => {
+        const u: any = await AsyncStorage.getItem("user");
+            if (u) {
+                const parsedUser = JSON.parse(u);
+                    if (!parsedUser.email || parsedUser.email === "") {
+                        // cannot submit
+                        return;
+                    }
+                    const saveCue = JSON.stringify({
+                        solutions,
+                        initiatedAt
+                    });
+                   
+
+                    const server = fetchAPI("");
+                    server
+                        .mutate({
+                            mutation: submit,
+                            variables: {
+                                cue: saveCue,
+                                cueId: props.cue._id,
+                                userId: parsedUser._id,
+                                quizId
+                            }
+                        })
+                        .then(res => {
+                            if (res.data.cue.submitModification) {
+                                Alert(submissionCompleteAlert, new Date().toString(), [
+                                    {
+                                        text: "Okay",
+                                        onPress: () => window.location.reload()
+                                    }
+                                ]);
+                            }
+                        })
+                        .catch(err => {
+                            Alert(somethingWentWrongAlert, tryAgainLaterAlert);
+                        });
+                    }
+    }, [
+        cue,
+        props.cue,
+        isQuiz,
+        quizId,
+        initiatedAt,
+        solutions,])
+    
     // Handle Submit for Submissions and Quizzes
     const handleSubmit = useCallback(async () => {
         if (!isQuiz && submissionImported && submissionTitle === "") {
@@ -1372,11 +1467,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 if (res.data.cue.submitModification) {
                                     Alert(submissionCompleteAlert, new Date().toString(), [
                                         {
-                                            text: "Cancel",
-                                            style: "cancel",
-                                            onPress: () => window.location.reload()
-                                        },
-                                        {
                                             text: "Okay",
                                             onPress: () => window.location.reload()
                                         }
@@ -1401,7 +1491,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         quizId,
         initiatedAt,
         solutions,
-        deadline
+        deadline,
+        submissionDraft
     ]);
 
     // SET IS OWNER AND SETUP COMPLETE
@@ -1705,6 +1796,12 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         (value, { action, option, removedValue }) => {
             switch (action) {
                 case "remove-value":
+                case "pop-value":
+                    console.log("remove value", removedValue)
+                    if (removedValue.isFixed) {
+                        return;
+                    }
+                    break;
                 case "select-option":
                     const server = fetchAPI("");
                     server
@@ -1722,11 +1819,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         })
                         .catch(err => console.log(err));
                     return;
-                case "pop-value":
-                    if (removedValue.isFixed) {
-                        return;
-                    }
-                    break;
+                
                 case "clear":
                     value = subscribers.filter(v => v.isFixed);
                     break;
@@ -2185,8 +2278,15 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     key={initDuration}
                                     children={({ remainingTime }: any) => {
                                         if (!remainingTime || remainingTime === 0) {
-                                            handleSubmit();
+                                            submitQuizEndTime();
                                         }
+
+                                        console.log("Remaining time", remainingTime)
+
+                                        if (remainingTime === 120) {
+                                            Alert("Two minutes left. Quiz will auto-submit.")
+                                        } 
+
                                         const hours = Math.floor(remainingTime / 3600);
                                         const minutes = Math.floor((remainingTime % 3600) / 60);
                                         const seconds = remainingTime % 60;
@@ -2498,8 +2598,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         ?
                         <View style={{ flexDirection: 'row', marginTop: 10, }}>
                             {viewSubmission ?
-                                (props.cue.graded && props.cue.releaseSubmission ? null : <TouchableOpacity
-                                    disabled={props.cue.graded && props.cue.releaseSubmission}
+                                (props.cue.releaseSubmission || (!allowLateSubmission && new Date() > deadline) || (allowLateSubmission && new Date() > availableUntil)  ? null : <TouchableOpacity
                                     onPress={async () => {
                                         setViewSubmission(false)
                                     }}
@@ -2752,7 +2851,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             {
                 props.showOriginal ? null : <View style={{ width: '100%', paddingBottom: 50, display: 'flex', flexDirection: 'column', }}>
                     {!viewSubmission ? (submissionImported ? null : <View style={{}}>
-                        {renderRichEditorModified()}
+                        {props.cue.releaseSubmission || (!allowLateSubmission && new Date() > deadline) || (allowLateSubmission && new Date() > availableUntil) ? null : renderRichEditorModified()}
                         {renderFooter()}
                     </View>) : <View key={viewSubmissionTab}>
                         {renderViewSubmission()}
@@ -2766,7 +2865,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const renderRichEditorOriginalCue = () => {
 
         if (!isOwner) {
-            return <div className="mce-content-body" style={{ width: '100%', color: 'black' }}>
+            return <div className="mce-content-body htmlParser" style={{ width: '100%', color: 'black' }}>
                 {parser(initialOriginal)}
             </div>
         }
@@ -2873,6 +2972,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const renderViewSubmission = () => {
         const attempt = submissionAttempts[submissionAttempts.length - 1];
 
+        console.log(attempt)
+
         return (<View style={{ width: '100%', marginTop: 20 }}>
             {/* Render Tabs to switch between original submission and Annotations only if submission was HTML and not a file upload */}
             {attempt.url !== undefined ? null : <View style={{ flexDirection: "row", width: '100%', justifyContent: 'center' }}>
@@ -2905,16 +3006,47 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 attempt.url !== undefined ?
                     (attempt.type === 'mp4' || attempt.type === 'mp3' || attempt.type === 'mov' || attempt.type === 'mpeg' || attempt.type === 'mp2' || attempt.type === 'wav' ?
                         <View style={{ width: '100%', marginTop: 25 }}>
-                            <ReactPlayer url={url} controls={true} width={"100%"} height={"100%"} />
+                            {attempt.title !== "" ? <Text
+                                style={{
+                                    fontSize: 18,
+                                    paddingRight: 15,
+                                    paddingTop: 12,
+                                    paddingBottom: 12,
+                                    marginTop: 20,
+                                    marginBottom: 5,
+                                    maxWidth: "100%",
+                                    fontWeight: "600",
+                                    width: '100%'
+                                }}
+                            >
+                                {attempt.title}
+                            </Text> : null}
+                            <ReactPlayer url={attempt.url} controls={true} width={"100%"} height={"100%"} />
                         </View>
+
                         :
                         <View style={{ width: '100%', marginTop: 25 }}>
+                            {attempt.title !== "" ? <Text
+                                style={{
+                                    fontSize: 18,
+                                    paddingRight: 15,
+                                    paddingTop: 12,
+                                    paddingBottom: 12,
+                                    marginTop: 20,
+                                    marginBottom: 5,
+                                    maxWidth: "100%",
+                                    fontWeight: "600",
+                                    width: '100%'
+                                }}
+                            >
+                                {attempt.title}
+                            </Text> : null}
                             <div className="webviewer" ref={submissionViewerRef} style={{ height: "100vh" }}></div>
                         </View>)
                     :
                     <View style={{ width: '100%', marginTop: 25 }}>
                         {viewSubmissionTab === "mySubmission" ?
-                            <div className="mce-content-body" style={{ width: '100%', color: 'black' }}>
+                            <div className="mce-content-body htmlParser" style={{ width: '100%', color: 'black' }}>
                                 {parser(attempt.html)}
                             </div> :
                             <div className="webviewer" ref={submissionViewerRef} style={{ height: "100vh" }} key={viewSubmissionTab}></div>
@@ -2930,13 +3062,13 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         <Editor
             onInit={(evt, editor) => editorRef.current = editor}
             initialValue={initialSubmissionDraft}
-            disabled={props.cue.graded && props.cue.releaseSubmission && submission}
+            disabled={props.cue.releaseSubmission || (!allowLateSubmission && new Date() > deadline) || (allowLateSubmission && new Date() > availableUntil)}
             apiKey="ip4jckmpx73lbu6jgyw9oj53g0loqddalyopidpjl23fx7tl"
             init={{
                 skin: "snow",
                 branding: false,
                 placeholder: 'Content...',
-                readonly: props.cue.graded && submission,
+                readonly: props.cue.releaseSubmission || (!allowLateSubmission && new Date() > deadline) || (allowLateSubmission && new Date() > availableUntil),
                 min_height: 500,
                 paste_data_images: true,
                 images_upload_url: 'http://api.cuesapp.co/api/imageUploadEditor',
@@ -2955,7 +3087,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 },
                 // menubar: 'file edit view insert format tools table tc help',
                 menubar: false,
-                toolbar: props.cue.graded && submission ? false : 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat  pagebreak | table image media pageembed link | preview print | charmap emoticons |  ltr rtl | showcomments addcomment',
+                toolbar: props.cue.releaseSubmission || (!allowLateSubmission && new Date() > deadline) || (allowLateSubmission && new Date() > availableUntil) ? false : 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat  pagebreak | table image media pageembed link | preview print | charmap emoticons |  ltr rtl | showcomments addcomment',
                 importcss_append: true,
                 image_caption: true,
                 quickbars_selection_toolbar: 'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
@@ -3025,12 +3157,26 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             maxWidth: 350,
                         }}>
                         <View
+                            key={JSON.stringify(selected)}
                             style={{
                                 width: "90%",
                                 padding: 5,
-                                height: "auto"
+                                height: "auto",
+                                minWidth: 300
                             }}>
-                            <Multiselect
+                            <Select
+                                value={selected}
+                                isMulti
+                                styles={reactSelectStyles}
+                                isClearable={selected.some((v: any) => !v.isFixed)}
+                                name="Share With"
+                                className="basic-multi-select"
+                                classNamePrefix="select"
+                                onChange={onChange}
+                                options={subscribers}
+                            />
+
+                            {/* <Multiselect
                                 placeholder='Share with...'
                                 displayValue='name'
                                 // key={userDropdownOptions.toString()}
@@ -3043,7 +3189,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 selectedValues={selected} // Preselected value to persist in dropdown
                                 disabledPreselected={true}
                                 onSelect={(e, f) => {
-
+                                    console.log("Add back", f)
                                     const server = fetchAPI("");
                                     server
                                         .mutate({
@@ -3067,12 +3213,13 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 onRemove={(e, f) => {
                                     const addBack = [...e];
                                     addBack.push(f)
-                                    setSelected(addBack)
+                                    console.log("Add back", addBack)
+                                    setSelected([...addBack])
 
                                     Alert('Cannot un-share cue')
                                     return;
                                 }}
-                            />
+                            /> */}
                         </View>
                     </View> : null}
                 </View>
@@ -3147,10 +3294,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     appearance={'subtle'}
                                     preventOverflow={true}
                                     onChange={(event: any) => {
-
                                         const date = new Date(event);
-
-                                        if (date < new Date()) return;
                                         setInitiateAt(date);
                                     }}
                                 // isValidDate={disablePastDt}
@@ -3190,7 +3334,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     onChange={(event: any) => {
                                         const date = new Date(event);
 
-                                        if (date < new Date()) return;
+                                        if (date < initiateAt) return;
                                         setDeadline(date);
                                     }}
                                     size={'xs'}
@@ -3300,6 +3444,92 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             </View>
         ) : null;
     };
+
+    const renderLateSubmissionOptions = () => {
+        return submission ? (
+            <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : 'row', paddingTop: 40 }}>
+                <View
+                    style={{
+                        width: 300,
+                        paddingBottom: 15,
+                        backgroundColor: "white"
+                    }}>
+                    <Text style={{
+                        fontSize: 15,
+                        fontFamily: 'inter',
+                        color: '#43434f'
+                    }}>Late Submission</Text>
+                </View>
+                <View style={{}}>
+                    {isOwner ? <View style={{ flexDirection: "row" }}>
+                        <View
+                            style={{
+                                backgroundColor: "white",
+                                height: 40,
+                                marginRight: 10
+                            }}>
+                            <Switch
+                                disabled={!isOwner}
+                                value={allowLateSubmission}
+                                onValueChange={() => setAllowLateSubmission(!allowLateSubmission)}
+                                style={{ height: 20 }}
+                                trackColor={{
+                                    false: "#FBFBFC",
+                                    true: "#818385"
+                                }}
+                                activeThumbColor="white"
+                            />
+                        </View>
+                    </View> : null}
+                    {allowLateSubmission ? (
+                        <View
+                            style={{
+                                width: "100%",
+                                display: "flex",
+                                flexDirection: "row",
+                                backgroundColor: "white",
+                                alignItems: 'center'
+                            }}>
+                            <Text
+                                style={{
+                                    fontSize: 12,
+                                    color: "#818385",
+                                    textAlign: "left",
+                                    paddingRight: 10,
+                                }}>
+                                {!isOwner ? (allowLateSubmission ? "Available until  " + moment(new Date(availableUntil)).format('MMMM Do, h:mm a') : "No")  : "Available Until"} 
+                            </Text>
+                            {isOwner ? (
+                                <DatePicker
+                                    preventOverflow={true}
+                                    value={availableUntil}
+                                    appearance={'subtle'}
+                                    format="YYYY-MM-DD HH:mm"
+                                    onChange={(event: any) => {
+                                        const date = new Date(event);
+
+                                        if (date < deadline) return;
+                                        setAvailableUntil(date);
+                                    }}
+                                    size={'xs'}
+                                // isValidDate={disablePastDt}
+                                />
+                            ) : null}
+                        </View>
+                    ) :
+                        (!isOwner ? <Text
+                            style={{
+                                fontSize: 12,
+                                color: "#818385",
+                                textAlign: "left",
+                                paddingRight: 10,
+                            }}>
+                                No
+                            </Text> : null) }
+                </View>
+            </View>
+        ) : null;
+    }
 
     const renderAttemptsOptions = () => {
         return isQuiz ? (
@@ -4044,13 +4274,15 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     {!isOwner && props.cue.channelId && props.cue.channelId !== "" && submission ? (
                         <TouchableOpacity
                             disabled={
-                                // if user has not signed up
-                                !userSetupComplete ||
+                                // Late submission not allowed then no submission after deadline has passed
+                                (!allowLateSubmission && new Date() > deadline) ||
+                                // If late submission allowed, then available until should be the new deadline
+                                (allowLateSubmission && new Date() > availableUntil) ||
                                 // Once release Submission that means assignment should be locked
                                 (props.cue.releaseSubmission) ||
                                 // if timed quiz not initiated
                                 (isQuiz && isQuizTimed && !initiatedAt) ||
-                                // if quiz submitted already
+                                // If no more remaining attempts for quiz
                                 (isQuiz && remainingAttempts === 0)
                             }
                             onPress={() => handleSubmit()}
@@ -4069,15 +4301,10 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     height: 35,
                                     textTransform: 'uppercase'
                                 }}>
-                                {userSetupComplete
-                                    ? (props.cue.submittedAt && props.cue.submittedAt !== "") || submitted
-                                        ? (props.cue.graded && props.cue.releaseSubmission)
-                                            ? PreferredLanguageText("graded")
-                                            : (isQuiz && remainingAttempts === 0)
-                                                ? PreferredLanguageText("submitted")
-                                                : PreferredLanguageText("submit")
-                                        : PreferredLanguageText("submit")
-                                    : PreferredLanguageText("signupToSubmit")}
+                                {
+                                    (!allowLateSubmission && new Date() > deadline) || (allowLateSubmission && new Date() > availableUntil) || (isQuiz && remainingAttempts === 0) || (props.cue.releaseSubmission && !props.cue.graded)
+                                        ? "Submission Ended" : ((props.cue.graded && !isQuiz) ? PreferredLanguageText("graded") : PreferredLanguageText("submit"))
+                                }
                             </Text>
                         </TouchableOpacity>
                     ) : null}
@@ -4159,6 +4386,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             </View>
         </View>)
     }
+
+    console.log("Deadline", deadline);
+    console.log("Available until", props.cue);
 
     // if (isQuiz && props.cue.submission && props.cue.submittedAt !== null && !props.cue.releaseSubmission && !isOwner) {
     //     return (<View style={{ minHeight: Dimensions.get('window').height }}>
@@ -4319,7 +4549,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             style={{
                                 borderBottomWidth: ((props.cue.channelId && props.cue.channelId !== '' && !isOwner && props.showOriginal) || (props.showOriginal && showImportOptions) || isQuiz)
                                     || (((props.cue.graded && submission && !isOwner) && !props.showOriginal) || (!props.showOriginal && showImportOptions))
-                                    || (!props.showOriginal && submissionImported) || (imported && props.showOriginal)
+                                    || (!props.showOriginal && submissionImported) || (imported && props.showOriginal) || props.showOptions || props.showComments || viewSubmission
                                     ? 0 : 1,
                                 marginTop: 20,
                                 borderBottomColor: '#e4e7eb'
@@ -4336,7 +4566,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 marginTop: 20,
                                 borderBottomWidth: ((props.cue.channelId && props.cue.channelId !== '' && !isOwner && props.showOriginal) || (props.showOriginal && showImportOptions) || isQuiz)
                                     || (((props.cue.graded && submission && !isOwner) && !props.showOriginal) || (!props.showOriginal && showImportOptions))
-                                    || (!props.showOriginal && submissionImported) || (imported && props.showOriginal)
+                                    || (!props.showOriginal && submissionImported) || (imported && props.showOriginal) || props.showOptions || props.showComments || viewSubmission
                                     ? 0 : 1,
                                 borderBottomColor: '#e4e7eb'
                             }}
@@ -4370,7 +4600,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 ) : null}
                             </View>
                             <View style={{ backgroundColor: '#fff', flexDirection: 'row', marginBottom: 5 }}>
-                                {(!props.showOriginal && !submissionImported && !props.cue.graded)
+                                {(!props.showOriginal && !submissionImported && !props.cue.graded && !props.cue.releaseSubmission && !(!allowLateSubmission && new Date() > deadline) && !(allowLateSubmission && new Date() > availableUntil))
                                     || (props.showOriginal && isOwner && !imported && !isQuiz)
                                     ? (
                                         <Text
@@ -4392,7 +4622,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     currentDate < deadline &&
                                     !submissionImported &&
                                     !showImportOptions &&
-                                    !props.cue.graded && !isQuiz ? (
+                                    !props.cue.graded && !isQuiz && !props.cue.releaseSubmission && !(!allowLateSubmission && new Date() > deadline) && !(allowLateSubmission && new Date() > availableUntil) ? (
                                     <Text
                                         style={{
                                             color: "#43434f",
@@ -4413,6 +4643,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         (!props.showOriginal && submissionImported && !isOwner) ||  // submitted as non owner
                                         (!props.showOriginal && !submission && (props.cue.channelId && props.cue.channelId !== '')) ||  // my notes
                                         isQuiz
+                                        || (!props.showOriginal && (props.cue.releaseSubmission || (!allowLateSubmission && new Date() > deadline) || (allowLateSubmission && new Date() > availableUntil)))
                                         ? null :
                                         (
                                             <Text style={{
@@ -4581,7 +4812,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     headers={headers}
 
                                     attempts={quizAttempts}
-                                /> : ((remainingAttempts === 0 || props.cue.releaseSubmission) && !isOwner && isQuiz
+                                /> : ((remainingAttempts === 0 || props.cue.releaseSubmission || (!allowLateSubmission && new Date() > deadline) || (allowLateSubmission && new Date() > availableUntil)) && !isOwner && isQuiz
                                     ? renderQuizEndedMessage()
                                     :
                                     renderMainCueContent())}
@@ -4600,6 +4831,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         {renderShareWithOptions()}
                                         {renderSubmissionRequiredOptions()}
                                         {renderGradeOptions()}
+                                        {renderLateSubmissionOptions()}
                                         {renderAttemptsOptions()}
                                     </View>
                                 ) : null}

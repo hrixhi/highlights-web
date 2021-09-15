@@ -17,7 +17,7 @@ import {
     MenuTrigger,
 } from 'react-native-popup-menu';
 import { htmlStringParser } from '../helpers/HTMLParser';
-import { GiftedChat } from 'react-native-gifted-chat';
+import { GiftedChat, Bubble } from 'react-native-gifted-chat';
 import FileUpload from './UploadFiles';
 
 
@@ -62,6 +62,26 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
     const [threadChat, setThreadChat] = useState<any[]>([])
 
     const [userId, setUserId] = useState('')
+
+
+    // Load chat opened from Search
+    useEffect(() => {
+        (
+            async () => {
+              const tId = await AsyncStorage.getItem('openThread')
+              if (tId && tId !== "" && threads.length !== 0) {
+
+                // Clear the openChat
+
+                await AsyncStorage.removeItem('openThread')
+                
+                loadCueDiscussions(tId)
+
+              } 
+            }
+          )()
+    }, [threads])
+
 
     const onSend = useCallback(async (messages: any) => {
 
@@ -207,6 +227,19 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
         }).catch(e => Alert(somethingWentWrongAlert))
     }, [isOwner])
 
+    const renderBubble = (props: any) =>  {
+        return (
+          <Bubble
+            {...props}
+            wrapperStyle={{
+              right: {
+                backgroundColor: '#560BAD'
+              }
+            }}
+          />
+        )
+    }
+    
     const windowHeight = Dimensions.get('window').width < 1024 ? Dimensions.get('window').height - 30 : Dimensions.get('window').height;
     return (
         <View style={{
@@ -447,6 +480,8 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                             // key={threadChat.toString()}
                                         >
                                             <GiftedChat
+                                                renderUsernameOnMessage={true}
+                                                renderBubble={renderBubble}
                                                 messages={threadChat}
                                                 onSend={messages => onSend(messages)}
                                                 user={{
@@ -479,12 +514,14 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                 key={threadChat.toString()}
                                             >
                                                 <GiftedChat
+                                                    renderUsernameOnMessage={true}
                                                     messages={threadChat}
                                                     onSend={messages => onSend(messages)}
                                                     user={{
                                                         _id: userId,
                                                         avatar
                                                     }}
+                                                    renderBubble={renderBubble}
                                                     renderActions={() => (
                                                         <View style={{
                                                             marginTop: -10

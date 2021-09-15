@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { StyleSheet, Image, Dimensions, Linking, ScrollView } from 'react-native';
+import { ActivityIndicator, StyleSheet, Image, Dimensions, Linking, ScrollView } from 'react-native';
 import { View, Text, TouchableOpacity } from '../components/Themed';
 import { Ionicons } from '@expo/vector-icons';
 import _ from 'lodash'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { fetchAPI } from '../graphql/FetchAPI';
-import { creatFolder, getActivity, getOrganisation, getSearch, updateFolder } from '../graphql/QueriesAndMutations';
+import { creatFolder, getActivity, getOrganisation, getSearch, updateFolder, checkChannelStatus, subscribe } from '../graphql/QueriesAndMutations';
 import logo from './default-images/cues-logo-black-exclamation-hidden.jpg'
 import Profile from './Profile';
 import Walkthrough from './Walkthrough';
@@ -29,6 +29,7 @@ import SearchResultCard from './SearchResultCard';
 import { htmlStringParser } from '../helpers/HTMLParser';
 import Inbox from './Inbox';
 import Card from './Card';
+import Alert from '../components/Alert'
 
 
 const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
@@ -44,15 +45,16 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const [channelCategories, setChannelCategories] = useState<any>({})
     const [results, setResults] = useState<any>({
         'Channels': [],
-        'Notes': [],
+        'Content': [],
         'Messages': [],
         'Threads': []
     })
+    const [loadingSearchResults, setLoadingSearchResults] = useState(false);
 
     const [filterStart, setFilterStart] = useState<any>(new Date())
     const [filterEnd, setFilterEnd] = useState<any>(null)
 
-    const [searchOptions] = useState(['Channels', 'Notes', 'Messages', 'Threads'])
+    const [searchOptions] = useState(['Content', 'Messages', 'Threads', 'Channels',])
     const [sortBy, setSortBy] = useState('Date ↑')
 
     const [cueMap, setCueMap] = useState<any>({})
@@ -63,6 +65,14 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const [cueIds, setCueIds] = useState<any[]>([])
     const [folderIdsMap, setFolderIdsMap] = useState<any>({})
     const [folderId, setFolderId] = useState('')
+
+    const incorrectPasswordAlert = PreferredLanguageText('incorrectPassword');
+    const alreadySubscribedAlert = PreferredLanguageText('alreadySubscribed');
+    const somethingWrongAlert = PreferredLanguageText('somethingWentWrong');
+    const checkConnectionAlert = PreferredLanguageText('checkConnection')
+    const doesNotExistAlert = PreferredLanguageText('doesNotExists');
+    const invalidChannelNameAlert = PreferredLanguageText('invalidChannelName');
+    const nameAlreadyInUseAlert = PreferredLanguageText('nameAlreadyInUse');
 
     useEffect(() => {
         (
@@ -192,6 +202,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
         if (searchTerm.trim() === '') {
             return
         }
+        setLoadingSearchResults(true);
         const server = fetchAPI('')
         server.query({
             query: getSearch,
@@ -203,15 +214,17 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
             if (res.data && res.data.user.search) {
                 const r = JSON.parse(res.data.user.search)
                 const tempResults = {
-                    'Notes': [...r.personalCues, ...r.channelCues],
+                    'Content': [...r.personalCues, ...r.channelCues],
                     'Channels': r.channels,
                     'Threads': r.threads,
                     'Messages': r.messages
                 }
                 setResults(tempResults)
+                setLoadingSearchResults(false);
             }
         }).catch(err => {
             console.log(err)
+            setLoadingSearchResults(false);
         })
     }, [searchTerm, userId])
 
@@ -255,6 +268,90 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     }, [cueIds, folderId])
 
+    const handleSub = useCallback(async (cName) => {
+
+        const uString: any = await AsyncStorage.getItem('user')
+        const user = JSON.parse(uString)
+
+        const server = fetchAPI('')
+        server.query({
+            query: checkChannelStatus,
+            variables: {
+                name: cName
+            }
+        }).then(res => {
+            if (res.data.channel && res.data.channel.getChannelStatus) {
+                const channelStatus = res.data.channel.getChannelStatus
+                switch (channelStatus) {
+                    case "public":
+                        handleSubscribe(cName, '')
+                        break;
+                    case "private":
+                        let pass: any = prompt('Enter Password')
+                        if (!pass) {
+                            pass = ''
+                        }
+                        handleSubscribe(cName, pass)
+                        break;
+                    case "non-existant":
+                        Alert(doesNotExistAlert)
+                        break;
+                    default:
+                        Alert(somethingWrongAlert, checkConnectionAlert)
+                        break
+                }
+            }
+        }).catch(err => {
+            console.log(err)
+            Alert(somethingWrongAlert, checkConnectionAlert)
+        })
+
+    }, [])
+
+    const handleSubscribe = useCallback(async (nm, pass) => {
+
+        const uString: any = await AsyncStorage.getItem('user')
+        const user = JSON.parse(uString)
+
+        const server = fetchAPI('')
+        server.mutate({
+            mutation: subscribe,
+            variables: {
+                userId: user._id,
+                name: nm,
+                password: pass
+            }
+        })
+            .then(res => {
+                if (res.data.subscription && res.data.subscription.subscribe) {
+                    const subscriptionStatus = res.data.subscription.subscribe
+                    switch (subscriptionStatus) {
+                        case "subscribed":
+                            alert('Subscribed to ' + nm + '!')
+                            setSearchTerm('')
+                            props.reloadData()
+                            break;
+                        case "incorrect-password":
+                            Alert(incorrectPasswordAlert)
+                            break;
+                        case "already-subbed":
+                            Alert(alreadySubscribedAlert)
+                            break;
+                        case "error":
+                            Alert(somethingWrongAlert, checkConnectionAlert)
+                            break;
+                        default:
+                            Alert(somethingWrongAlert, checkConnectionAlert)
+                            break;
+                    }
+                }
+            })
+            .catch(err => {
+                Alert(somethingWrongAlert, checkConnectionAlert)
+            })
+
+    }, [props.closeModal])
+
     const searchResults = <View
         key={cueMap.toString()}
         style={{
@@ -287,9 +384,31 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     Results
                 </Text>
                 {
+                    (!loadingSearchResults && results && results[searchOptions[0]].length === 0  && results[searchOptions[1]].length === 0 && results[searchOptions[2]].length === 0 && results[searchOptions[3]].length === 0) ? <Text style={{ fontSize: 15,
+                        paddingBottom: 20,
+                        paddingTop: 10,
+                        fontFamily: 'inter',
+                        flex: 1,
+                        lineHeight: 23,
+                        backgroundColor: '#fff' }}>None</Text> : null  
+                }
+                {
+                    loadingSearchResults ? <View
+                        style={{
+                            width: "100%",
+                            flex: 1,
+                            justifyContent: "center",
+                            display: "flex",
+                            flexDirection: "column",
+                            backgroundColor: "white"
+                        }}>
+                        <ActivityIndicator color={"#a2a2ac"} />
+                    </View> : null
+                }
+                {
                     searchOptions.map((option: any) => {
 
-                        if (results[option].length === 0) {
+                        if (results[option].length === 0 || loadingSearchResults) {
                             return null
                         }
 
@@ -319,13 +438,35 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
                                     let t = ''
                                     let s = ''
+                                    let channelName = ''
+                                    let colorCode = ''
+                                    let subscribed = false;
 
-                                    if (option === 'Notes') {
+                                    if (option === 'Content') {
                                         const { title, subtitle } = htmlStringParser(obj.cue)
                                         t = title
                                         s = subtitle
+                                        const filterChannel = props.subscriptions.filter((channel: any) => {
+                                            return channel.channelId === obj.channelId
+                                        })
+
+                                        if (filterChannel && filterChannel.length !== 0) {
+                                            channelName = filterChannel[0].channelName
+                                            colorCode = filterChannel[0].colorCode
+                                        }
                                     } else if (option === 'Channels') {
                                         t = obj.name
+
+                                        channelName = obj.name
+                                        // Determine if already subscribed or not
+                                        const existingSubscription = props.subscriptions.filter((channel: any) => {
+                                            return channel.channelId === obj._id
+                                        })
+
+                                        if (existingSubscription && existingSubscription.length !== 0) {
+                                            subscribed = true
+                                        }
+
                                     } else if (option === 'Threads') {
                                         if (obj.message[0] === '{' && obj.message[obj.message.length - 1] === '}') {
                                             const o = JSON.parse(obj.message)
@@ -335,6 +476,14 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             const { title, subtitle } = htmlStringParser(obj.message)
                                             t = title
                                             s = subtitle
+                                        }
+                                        const filterChannel = props.subscriptions.filter((channel: any) => {
+                                            return channel.channelId === obj.channelId
+                                        })
+
+                                        if (filterChannel && filterChannel.length !== 0) {
+                                            channelName = filterChannel[0].channelName
+                                            colorCode = filterChannel[0].colorCode
                                         }
                                     } else if (option === 'Messages') {
                                         if (obj.message[0] === '{' && obj.message[obj.message.length - 1] === '}') {
@@ -349,7 +498,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     }
 
                                     return <View style={{
-                                        height: 70,
+                                        height: channelName !== "" ? 90 : 70,
                                         marginRight: 15,
                                         maxWidth: 175,
                                         backgroundColor: '#fff',
@@ -359,11 +508,22 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         <SearchResultCard
                                             title={t}
                                             subtitle={s}
+                                            channelName={channelName}
+                                            colorCode={colorCode}
+                                            option={option}
+                                            subscribed={subscribed}
+                                            handleSub={() => handleSub(channelName)}
                                             onPress={async () => {
-                                                if (option === 'Notes') {
+                                                if (option === 'Content') {
                                                     props.openCueFromCalendar(obj.channelId, obj._id, obj.createdBy)
+                                                    setSearchTerm("")
                                                 } else if (option === 'Threads') {
-                                                    props.openDiscussionFromActivity()
+
+                                                    await AsyncStorage.setItem("openThread", obj._id)
+
+                                                    props.openDiscussionFromSearch(obj.channelId)
+                                                    setSearchTerm("")
+
 
                                                 } else if (option === 'Messages') {
 
@@ -375,9 +535,17 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     }))
 
                                                     props.setOption("Inbox")
+
+                                                    setSearchTerm("")
+
+                                                } else if (option === "Channels") {
+
+                                                    if (subscribed) {
+                                                        // Open the channel meeting
+                                                        props.openClassroom(obj._id)
+                                                    }
                                                 }
 
-                                                setSearchTerm("")
 
                                             }}
                                         />
@@ -733,7 +901,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                                         if (!found) {
                                                                                                             temp.push(swiperCue._id)
                                                                                                         }
-                                                                                                        console.log(temp)
                                                                                                         setCueIds(temp)
                                                                                                     }}
                                                                                                     remove={() => {
@@ -1053,8 +1220,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             appearance={'subtle'}
                                             placeholder={'Filter  '}
                                             onChange={(e: any) => {
-                                                console.log('dates start', e[0])
-                                                console.log('dates end', e[1])
                                                 if (e[0] > e[1]) {
                                                     alert('End date must be greater')
                                                     return

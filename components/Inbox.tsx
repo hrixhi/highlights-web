@@ -8,7 +8,7 @@ import { getAllUsers, getChats, getGroups, getMessages, getSubscribers, markMess
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SearchResultCard from './SearchResultCard';
 import { htmlStringParser } from '../helpers/HTMLParser';
-import { GiftedChat } from 'react-native-gifted-chat'
+import { GiftedChat, Bubble } from 'react-native-gifted-chat'
 import {
     Menu,
     MenuOptions,
@@ -210,6 +210,8 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                 .catch(e => console.log(e))
         }
     }, [])
+
+    console.log("Chat users", chatUsers);
 
     const width = Dimensions.get('window').width
 
@@ -498,6 +500,19 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
 
     const windowHeight = Dimensions.get('window').width < 1024 ? Dimensions.get('window').height - 30 : Dimensions.get('window').height;
 
+    const renderBubble = (props: any) =>  {
+        return (
+          <Bubble
+            {...props}
+            wrapperStyle={{
+              right: {
+                backgroundColor: '#560BAD'
+              }
+            }}
+          />
+        )
+    }
+
     return (
         <View>
             {
@@ -621,12 +636,14 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                             }}>
                                                 <GiftedChat
                                                     // showUserAvatar={false}
+                                                    renderUsernameOnMessage={chatUsers.length > 2}
                                                     messages={chat}
                                                     onSend={messages => onSend(messages)}
                                                     user={{
                                                         _id: userId,
                                                         avatar
                                                     }}
+                                                    renderBubble={renderBubble}
                                                     renderActions={() => (
                                                         <View style={{
                                                             marginTop: -10

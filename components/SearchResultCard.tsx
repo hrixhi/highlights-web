@@ -7,8 +7,6 @@ import { htmlStringParser } from '../helpers/HTMLParser';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
-
-    const colorChoices: any[] = ['#560bad', '#f3722c', '#f8961e', '#f9c74f', '#4c956c'].reverse()
     const colorScheme = 'dark'
     const styleObject = styles(colorScheme)
 
@@ -25,92 +23,17 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                 style={styleObject.card}>
                 <View style={styleObject.text}>
                     <View style={styleObject.dateContainer}>
-                        {/* <View style={{
+                        {props.colorCode !== "" ? <View style={{
                             width: 9,
                             height: 9,
                             borderRadius: 12,
                             // marginTop: 1,
-                            backgroundColor: colorCode
-                        }} /> */}
+                            backgroundColor: props.colorCode
+                        }} /> : null}
 
-                        {/* <Text style={styleObject.date}>
-                            {props.cue.customCategory ? props.cue.customCategory : ''}
-                        </Text> */}
-                        {/* {
-                            props.cue.channelName ?
-                                <Text style={styleObject.date}>
-                                    {props.cue.channelName}
-                                </Text> : null
-                        } */}
-                        {/* <Text style={styleObject.date}>
-                            {props.cue.customCategory}
-                        </Text> */}
-                        {/* {
-                            props.cue.submission ? <Text style={styleObject.date}>
-                                <Ionicons name='share-outline' size={9} color={props.cue.submittedAt && props.cue.submittedAt !== '' ? ('#560bad') : (colorScheme === 'light' ? '#fff' : '#333333')} style={{ marginRight: 10 }} />
-                            </Text> : null
-                        }
-                        {
-                            props.cue.frequency !== '0' ?
-                                <Text style={styleObject.date}>
-                                    <Ionicons name='notifications-outline' size={9} color={colorScheme === 'light' ? '#fff' : '#333333'} />
-                                </Text> : null
-                        } */}
-                        {/* {
-                            props.cue.graded && showScore && !isOwner ? <Text style={{
-                                fontSize: 9,
-                                color: '#560bad',
-                                marginLeft: 10
-                            }}>
-                                {props.cue.score}%
-                            </Text> : null
-                        } */}
-                        {/* {
-                            props.cue.starred ?
-                                <Text style={{
-                                    textAlign: 'right',
-                                    lineHeight: 30,
-                                    marginTop: -20,
-                                    paddingRight: 30,
-                                    position: 'absolute',
-                                    width: '97%',
-                                    zIndex: 20
-                                }}>
-                                    <Ionicons name='bookmark' size={18} color={starred ? '#560bad' : '#fff'} />
-                                </Text>
-                                : null
-                        } */}
-                        {/* <View style={{
-                            ...styleObject.date,
-                            display: 'flex',
-                            flexDirection: 'row',
-                            justifyContent: 'flex-end',
-                            flex: 1,
-                            marginRight: 5,
-                            marginTop: -5,
-                            backgroundColor: colorScheme === 'light'
-                                ? (starred ? '#43434f' : '#fff')
-                                : (starred ? 'white' : '#fff'),
-                        }}>
-                            {
-                                props.cue.submission ? <Text>
-                                    <Ionicons name='share-outline' size={11} color={props.cue.submittedAt && props.cue.submittedAt !== '' ? ('#560bad') : (colorScheme === 'light' ? '#fff' : '#333333')} style={{ marginRight: 10 }} />
-                                </Text> : null
-                            }
-                            {
-                                props.cue.frequency !== '0' ?
-                                    <Text>
-                                        <Ionicons name='notifications-outline' size={11} color={colorScheme === 'light' ? '#fff' : '#333333'} />
-                                    </Text> : null
-                            }
-                        </View> */}
-                        {/* <Text style={styleObject.date2}>
-                            {
-                                (new Date(props.cue.date)).toString().split(' ')[1] +
-                                ' ' +
-                                (new Date(props.cue.date)).toString().split(' ')[2]
-                            }
-                        </Text> */}
+                        {props.channelName !== "" && props.option !== "Channels" ? <Text style={styleObject.date}>
+                            {props.channelName}
+                        </Text> : null}
                     </View>
                     <View style={{
                         backgroundColor: '#FBFBFC',
@@ -132,68 +55,18 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                                     {props.subtitle}
                                 </Text>
                                 : null}
+                            {props.option === "Channels" && !props.subscribed ?  <View style={{ flex: 1, paddingLeft: 10, backgroundColor: '#FBFBFC' }}>
+                                <TouchableOpacity
+                                    onPress={() => props.handleSub()}
+                                >
+                                    <Text style={{ textAlign: 'center', fontSize: 12, paddingTop: 10, color: '#560bad', backgroundColor: '#FBFBFC' }} ellipsizeMode='tail'>
+                                        Join
+                                    </Text>
+                                </TouchableOpacity>
+                            </View> : null}
                         </View>
-                        {
-                            props.style ?
-                                <View style={{ flexDirection: 'row', backgroundColor: '#FBFBFC' }}>
-                                    {
-                                        props.unreadMessages !== undefined
-                                            && props.unreadMessages !== 0
-                                            ?
-                                            <Text style={{
-                                                width: 20,
-                                                height: 20,
-                                                borderRadius: 12,
-                                                backgroundColor: '#560bad',
-                                                textAlign: 'center',
-                                                zIndex: 150,
-                                                marginLeft: 10,
-                                                marginTop: 5,
-                                                color: 'white', lineHeight: 20, fontSize: 10
-                                            }}>
-                                                {props.unreadMessages}
-                                            </Text> : null
-                                    }
-                                    <Ionicons name="chevron-forward-outline" color="#818385" size={20} style={{ marginTop: 3, marginLeft: 10 }} />
-                                </View> : null
-                        }
-                        {/* {
-                            props.cue.status && (props.cue.status !== 'read' && props.cue.status !== 'submitted')
-                                ?
-                                <Text style={{
-                                    width: 20,
-                                    height: 20,
-                                    borderRadius: 12,
-                                    overflow: 'hidden',
-                                    backgroundColor: '#560bad',
-                                    textAlign: 'center',
-                                    zIndex: 150,
-                                    marginLeft: 10,
-                                    marginTop: 12,
-                                    color: 'white', lineHeight: 20, fontSize: 10
-                                }}>
-                                    !
-                                </Text>
-                                : null
-                        }
-                        {
-                            props.cue.channelId && props.cue.unreadThreads !== 0 ?
-                                <Text style={{
-                                    width: 20,
-                                    height: 20,
-                                    borderRadius: 12,
-                                    overflow: 'hidden',
-                                    backgroundColor: '#560bad',
-                                    textAlign: 'center',
-                                    zIndex: 150,
-                                    marginLeft: 5,
-                                    marginTop: 12,
-                                    color: 'white', lineHeight: 20, fontSize: 10
-                                }}>
-                                    {props.cue.unreadThreads}
-                                </Text> : <Text style={{ width: 25 }} />
-                        } */}
                     </View>
+                    
                 </View>
             </TouchableOpacity>
         </View >
@@ -243,6 +116,7 @@ const styles: any = (colorScheme: any) => StyleSheet.create({
     },
     dateContainer: {
         fontSize: 10,
+        marginBottom: 5,
         color: '#fff',
         // height: '25%',
         backgroundColor: '#FBFBFC',
@@ -260,7 +134,7 @@ const styles: any = (colorScheme: any) => StyleSheet.create({
     date: {
         fontSize: 9,
         color: colorScheme === 'light' ? '#FBFBFC' : '#333333',
-        // marginLeft: 10,
+        marginLeft: 10,
         lineHeight: 10
     },
     date2: {

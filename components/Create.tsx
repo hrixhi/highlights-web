@@ -97,6 +97,10 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
     new Date(current.getTime() + 1000 * 60 * 60 * 24)
   );
   const [initiateAt, setInitiateAt] = useState(new Date(current.getTime()));
+  const [allowLateSubmission, setAllowLateSubmission] = useState(false);
+  // By default one day after deadline
+  const [availableUntil, setAvailableUntil] = useState(new Date(current.getTime() + 1000 * 60 * 60 * 48));
+
   const [gradeWeight, setGradeWeight] = useState<any>(0);
   const [graded, setGraded] = useState(false);
   const [imported, setImported] = useState(false);
@@ -723,9 +727,10 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
           shareWithUserIds:
             !limitedShare ? null : userIds,
           limitedShares: limitedShare,
-          allowedAttempts: attempts
+          allowedAttempts: attempts,
+          availableUntil: (submission || isQuiz) && allowLateSubmission ? availableUntil.toISOString() : ""
         };
-
+        
         server
           .mutate({
             mutation: createCue,
@@ -777,6 +782,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
       channelId,
       endPlayAt,
       playChannelCueIndef,
+      allowLateSubmission,
+      availableUntil
     ]
   );
 
@@ -1931,6 +1938,86 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                               placeholder={"0-100"}
                               onChangeText={(val) => setGradeWeight(val)}
                               placeholderTextColor={"#818385"}
+                            />
+                          </View>
+                        ) : null}
+                      </View>
+                    </View>
+                  </View>
+                ) : null}
+
+                {/* Late Submissions */}
+
+                {submission ? (
+                  <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : 'row', paddingTop: 40 }}>
+                    <View
+                      style={{
+                        flex: 1, flexDirection: 'row',
+                        paddingBottom: 15,
+                        backgroundColor: "white",
+                      }}
+                    >
+                      <Text
+                        style={{
+                          fontSize: 15,
+                          fontFamily: 'inter',
+                          color: '#43434f'
+                        }}
+                      >
+                        LATE SUBMISSION
+                      </Text>
+                    </View>
+                    <View>
+                      <View>
+                        <View
+                          style={{
+                            backgroundColor: "white",
+                            height: 40,
+                            marginRight: 10,
+                            flexDirection: 'row',
+                            justifyContent: 'flex-end'
+                          }}
+                        >
+                          <Switch
+                            value={allowLateSubmission}
+                            onValueChange={() => setAllowLateSubmission(!allowLateSubmission)}
+                            style={{ height: 20 }}
+                            trackColor={{
+                              false: "#FBFBFC",
+                              true: "#818385",
+                            }}
+                            activeThumbColor="white"
+                          />
+                        </View>
+                      </View>
+                      <View>
+                        {allowLateSubmission ? (
+                          <View
+                            style={{
+                              width: "100%",
+                              display: "flex",
+                              flexDirection: "row",
+                              backgroundColor: "white",
+                              alignItems: 'center'
+                              // marginLeft: 50,
+                            }}
+                          >
+                            <Text style={styles.text}>
+                              Available Until
+                            </Text>
+                            <DatePicker
+                              format="YYYY-MM-DD HH:mm"
+                              preventOverflow={true}
+                              appearance={'subtle'}
+                              value={availableUntil}
+                              onChange={(event: any) => {
+                                const date = new Date(event);
+                                if (date < deadline) return;
+                                const roundValue = roundSeconds(date)
+                                setAvailableUntil(roundValue);
+                              }}
+                              size={"xs"}
+                            // isValidDate={disablePastDt}
                             />
                           </View>
                         ) : null}
