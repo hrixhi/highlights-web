@@ -974,14 +974,6 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
             {
                 attempt.url !== undefined ?
                     (attempt.type === 'mp4' || attempt.type === 'mp3' || attempt.type === 'mov' || attempt.type === 'mpeg' || attempt.type === 'mp2' || attempt.type === 'wav' ?
-                        <View style={{ width: '100%', marginTop: 25 }}>
-                            <ReactPlayer url={url} controls={true} />
-                        </View>
-                        :
-                        <View style={{ width: '100%', marginTop: 25 }}>
-                            <div className="webviewer" ref={submissionViewerRef} style={{ height: "100vh" }}></div>
-                        </View>)
-                    :
                     <View style={{ width: '100%', marginTop: 25 }}>
                         {attempt.title !== "" ? <Text
                                 style={{
