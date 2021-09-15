@@ -1366,7 +1366,6 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             <TouchableOpacity
                                 onPress={() => {
                                     setEditEvent(null)
-
                                     setShowAddEvent(!showAddEvent)
                                 }}
                                 style={{

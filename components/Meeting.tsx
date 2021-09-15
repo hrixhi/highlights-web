@@ -264,21 +264,35 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                 </Text>
             </View>
             :
-            pastMeetings.map((date: any, index: any) => {
-                return <View style={styles.col} key={index}>
-                    <View style={styles.swiper}>
-                        <View
-                            key={'textPage'}
-                            style={styles.card}>
-                            <TouchableOpacity
-                                onPress={() => {
-                                    if (Platform.OS == 'web') {
-                                        window.open(date.url, '_blank');
-                                    } else {
-                                        Linking.openURL(date.url)
-                                    }
-                                }}
-                                style={{ flexDirection: 'row', backgroundColor: '#FBFBFC', width: '90%' }}>
+            <ScrollView
+                contentContainerStyle={{
+                    borderWidth: 1,
+                    borderColor: '#e4e7eb',
+                    borderRadius: 12,
+                    width: '100%',
+                    maxHeight: windowHeight - 200,
+                    overflow: 'hidden'
+                }}
+            >
+                {
+                    pastMeetings.map((date: any, index: any) => {
+                        return <TouchableOpacity
+                            onPress={() => {
+                                if (Platform.OS == 'web') {
+                                    window.open(date.url, '_blank');
+                                } else {
+                                    Linking.openURL(date.url)
+                                }
+                            }}
+                            style={{
+                                backgroundColor: '#FBFBFC',
+                                flexDirection: 'row',
+                                borderColor: '#e4e7eb',
+                                borderBottomWidth: index === pastMeetings.length - 1 ? 0 : 1,
+                                // minWidth: 600, // flex: 1,
+                                width: '100%',
+                            }}>
+                            <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10, padding: 10 }}>
                                 <Image
                                     height={45}
                                     width={75}
@@ -286,17 +300,15 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                     source={{ uri: date.thumbnail }}
                                     resizeMode={'contain'}
                                 />
-                                <View style={{ backgroundColor: '#FBFBFC', width: '100%', flexDirection: 'row', display: 'flex', marginLeft: 20 }}>
-                                    <Text ellipsizeMode={'tail'}
-                                        numberOfLines={1}
-                                        style={styles.title}>
-                                        {moment(new Date(date.startTime)).format('MMMM Do YYYY, h:mm a')}
-                                    </Text>
-                                </View>
-                            </TouchableOpacity>
+                            </View>
+                            <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
+                                <Text style={{ fontSize: 13, padding: 10 }} ellipsizeMode='tail'>
+                                    {moment(new Date(date.startTime)).format('MMMM Do YYYY, h:mm a')}
+                                </Text>
+                            </View>
                             {
                                 isOwner ?
-                                    <TouchableOpacity style={{ backgroundColor: '#FBFBFC', width: '10%', }}
+                                    <TouchableOpacity style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}
                                         onPress={() => {
                                             Alert("Delete past lecture ?", "", [
                                                 {
@@ -335,10 +347,10 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                     </TouchableOpacity>
                                     : null
                             }
-                        </View>
-                    </View>
-                </View >
-            }))
+                        </TouchableOpacity>
+                    })
+                }
+            </ScrollView>)
     }
 
     const mainClassroomView = (
@@ -469,7 +481,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                 borderRadius: 15,
                                 textTransform: 'uppercase'
                             }}>
-                                {PreferredLanguageText("enterClassroom")} <Ionicons name='videocam-outline'/>
+                                {PreferredLanguageText("enterClassroom")} <Ionicons name='videocam-outline' />
                             </Text>
                         </TouchableOpacity>
                     </View>

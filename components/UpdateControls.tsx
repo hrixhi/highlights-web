@@ -315,14 +315,22 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
     useEffect(() => {
 
+        console.log('jjj')
+
         if (submissionAttempts && submissionAttempts.length > 0 && submissionViewerRef && submissionViewerRef.current) {
             const attempt = submissionAttempts[submissionAttempts.length - 1];
 
             let url = attempt.html !== undefined ? attempt.annotationPDF : attempt.url;
 
-            if (!url) {
-                return;
-            }
+            console.log(attempt)
+
+            console.log('HHH')
+
+            // if (!url) {
+            //     return;
+            // }
+
+            console.log('Hrishi')
 
             WebViewer(
                 {
@@ -365,8 +373,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         });
                     }
                 });
-
-
+ 
 
                 annotationManager.addEventListener('annotationChanged', async (annotations: any, action: any, { imported }) => {
                     // If the event is triggered by importing then it can be ignored
@@ -428,7 +435,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             });
         }
 
-    }, [viewSubmission, submissionViewerRef, submissionViewerRef.current])
+    }, [viewSubmission, submissionViewerRef, submissionViewerRef.current, viewSubmissionTab, submissionAttempts])
 
     // Used to detect ongoing quiz and
     useEffect(() => {
@@ -1170,7 +1177,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 setUpdatingCueContent(false);
                 return;
             }
-            
+
             const parse = JSON.parse(original)
             const obj = {
                 quizId: parse.quizId,
@@ -1845,8 +1852,15 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 type === "mpeg" ||
                 type === "mp2" ||
                 type === "wav") {
+                return;
+            }
+
+
+            if (imported) {
+                if (!RichText.current) {
                     return;
-            } 
+                }
+            }
 
             WebViewer(
                 {
@@ -1946,10 +1960,16 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 submissionType === "mpeg" ||
                 submissionType === "mp2" ||
                 submissionType === "wav") {
+                return;
+            }
+
+
+            if (submissionImported) {
+                if (!RichText.current) {
                     return;
-            } 
-            
-            console.log(submissionUrl)
+                }
+            }
+
             WebViewer(
                 {
                     initialDoc: decodeURIComponent(submissionUrl),
@@ -2008,7 +2028,10 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 });
             });
         }
-    }, [url, RichText, imported, submissionImported, props.showOriginal, submissionUrl, type, submissionType]);
+    }, [url, RichText, imported,
+        submissionImported, props.showOriginal,
+        props.showOptions,
+        submissionUrl, type, submissionType]);
 
 
     if (loading || loadingAfterModifyingQuiz) {
@@ -2398,7 +2421,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
         return (<View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between' }}>
             <View>
-                <View
+                {/* <View
                     style={{
                         width: "100%",
                         paddingTop: 40,
@@ -2410,7 +2433,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         fontFamily: 'inter',
                         color: '#2f2f3c'
                     }}>Submission History</Text>
-                </View>
+                </View> */}
                 {quizAttempted
                     ?
                     <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
@@ -2533,7 +2556,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
         return (<View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between' }}>
             <View>
-                <View
+                {/* <View
                     style={{
                         width: "100%",
                         paddingTop: 40,
@@ -2545,7 +2568,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         fontFamily: 'inter',
                         color: '#2f2f3c'
                     }}>Submission History</Text>
-                </View>
+                </View> */}
                 {props.cue.submittedAt && props.cue.submittedAt !== ""
                     ?
                     <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
@@ -2792,14 +2815,14 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             config={{
                                 file: { attributes: { controlsList: "nodownload" } }
                             }}
-                            width={"100%"} 
+                            width={"100%"}
                             height={"100%"}
                         />
                         {renderSaveCueButton()}
                     </View>
                 ) : (
-                    <View key={url} style={{}}>
-                        <div className="webviewer" ref={RichText} style={{ height: "100vh" }}></div>
+                    <View key={url + props.showOriginal.toString()} style={{}}>
+                        <div className="webviewer" ref={RichText} style={{ height: "100vh" }} key={props.showOriginal + url + imported.toString()}></div>
                         {renderSaveCueButton()}
                     </View>
                 )
@@ -2813,12 +2836,12 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     submissionType === "mpeg" ||
                     submissionType === "mp2" ||
                     submissionType === "wav" ? (
-                    <View style={{ width: '100%'}}>
+                    <View style={{ width: '100%' }}>
                         <ReactPlayer url={submissionUrl} controls={true} width={"100%"} height={"100%"} />
                         {renderFooter()}
                     </View>
                 ) : (
-                    <View style={{}} key={JSON.stringify(submissionImported) + JSON.stringify(viewSubmission)}>
+                    <View style={{}} key={JSON.stringify(submissionImported) + JSON.stringify(viewSubmission) + JSON.stringify(viewSubmissionTab)}>
                         <div className="webviewer" ref={RichText} style={{ height: "100vh" }}></div>
                         {renderFooter()}
                     </View>
@@ -2830,7 +2853,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     {!viewSubmission ? (submissionImported ? null : <View style={{}}>
                         {props.cue.releaseSubmission || (!allowLateSubmission && new Date() > deadline) || (allowLateSubmission && new Date() > availableUntil) ? null : renderRichEditorModified()}
                         {renderFooter()}
-                    </View>) : <View>
+                    </View>) : <View key={viewSubmissionTab}>
                         {renderViewSubmission()}
                     </View>}
                 </View>
@@ -2861,7 +2884,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     placeholder: 'Content...',
                     min_height: 500,
                     paste_data_images: true,
-                    images_upload_url: 'http://api.cuesapp.co/api/imageUploadEditor',
+                    images_upload_url: 'https://api.cuesapp.co/api/imageUploadEditor',
                     mobile: {
                         plugins: !isOwner ? 'print preview' : 'print preview powerpaste casechange importcss tinydrive searchreplace autolink autosave save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount tinymcespellchecker a11ychecker textpattern noneditable help formatpainter pageembed charmap mentions quickbars linkchecker emoticons advtable autoresize'
                     },
@@ -2900,49 +2923,49 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
     const renderSaveCueButton = () => {
         return isOwner ?
-                <View style={styles.footer}>
-                    <View
+            <View style={styles.footer}>
+                <View
+                    style={{
+                        flex: 1,
+                        backgroundColor: "white",
+                        justifyContent: "center",
+                        display: "flex",
+                        flexDirection: "row",
+                        height: 50,
+                        paddingTop: 10,
+                    }}
+                >
+                    <TouchableOpacity
+                        onPress={() => handleUpdateContent()}
+                        disabled={updatingCueContent}
                         style={{
-                            flex: 1,
+                            borderRadius: 15,
                             backgroundColor: "white",
-                            justifyContent: "center",
-                            display: "flex",
-                            flexDirection: "row",
-                            height: 50,
-                            paddingTop: 10,
                         }}
                     >
-                        <TouchableOpacity
-                            onPress={() => handleUpdateContent()}
-                            disabled={updatingCueContent}
+                        <Text
                             style={{
+                                textAlign: "center",
+                                lineHeight: 35,
+                                color: "white",
+                                fontSize: 12,
+                                backgroundColor: "#560bad",
                                 borderRadius: 15,
-                                backgroundColor: "white",
+                                paddingHorizontal: 25,
+                                fontFamily: "inter",
+                                overflow: "hidden",
+                                height: 35,
+                                textTransform: "uppercase",
+                                width: 160
                             }}
                         >
-                            <Text
-                                style={{
-                                    textAlign: "center",
-                                    lineHeight: 35,
-                                    color: "white",
-                                    fontSize: 12,
-                                    backgroundColor: "#560bad",
-                                    borderRadius: 15,
-                                    paddingHorizontal: 25,
-                                    fontFamily: "inter",
-                                    overflow: "hidden",
-                                    height: 35,
-                                    textTransform: "uppercase",
-                                    width: 160
-                                }}
-                            >
-                                {updatingCueContent
-                                    ? 'Saving...'
-                                    : 'Save'}
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
-                </View> : null
+                            {updatingCueContent
+                                ? 'Saving...'
+                                : 'Save'}
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+            </View> : null
     }
     // Make sure that when the deadline has passed that the viewSubmission is set to true by default and that (Re-Submit button is not there)
 
@@ -3026,7 +3049,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             <div className="mce-content-body htmlParser" style={{ width: '100%', color: 'black' }}>
                                 {parser(attempt.html)}
                             </div> :
-                            <div className="webviewer" ref={submissionViewerRef} style={{ height: "100vh" }}></div>
+                            <div className="webviewer" ref={submissionViewerRef} style={{ height: "100vh" }} key={viewSubmissionTab}></div>
                         }
                     </View>
 
@@ -3089,12 +3112,13 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     style={{
                         paddingBottom: 15,
                         backgroundColor: "white",
-                        width: 300
+                        flex: 1, flexDirection: 'row',
                     }}>
                     <Text style={{
                         fontSize: 15,
                         fontFamily: 'inter',
-                        color: '#43434f'
+                        color: '#43434f',
+                        textTransform: 'uppercase'
                     }}>
                         {props.cue.channelId && props.cue.channelId !== "" ? "Shared with" : "Saved in"}
                     </Text>
@@ -3102,9 +3126,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 <View>
                     {
                         props.cue.channelId !== "" ? (<View>
-                            <View style={{ flexDirection: "row" }}>
-
-
+                            <View style={{ flexDirection: "row", justifyContent: 'flex-end' }}>
                                 <View
                                     style={{
                                         backgroundColor: "white",
@@ -3125,14 +3147,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         activeThumbColor="white"
                                     />
                                 </View>
-                                <Text style={{
-                                    fontSize: 12,
-                                    color: "#818385",
-                                    textAlign: "left",
-                                    paddingTop: 5
-                                }}>
-                                    All Subscribers
-                                </Text>
                             </View>
                         </View>) : null
                     }
@@ -3140,7 +3154,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         style={{
                             flexDirection: "column",
                             overflow: "scroll",
-                            maxWidth: 500,
+                            maxWidth: 350,
                         }}>
                         <View
                             key={JSON.stringify(selected)}
@@ -3218,18 +3232,19 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : 'row', paddingTop: 40 }}>
                 <View
                     style={{
-                        width: 300,
+                        flexDirection: 'row', flex: 1,
                         paddingBottom: 15,
                         backgroundColor: "white"
                     }}>
                     <Text style={{
                         fontSize: 15,
+                        textTransform: 'uppercase',
                         fontFamily: 'inter',
                         color: '#43434f'
                     }}>{PreferredLanguageText("submissionRequired")}</Text>
                 </View>
                 <View>
-                    <View style={{ flexDirection: "row" }}>
+                    <View style={{ flexDirection: "row", justifyContent: 'flex-end' }}>
                         {isOwner ? (
                             (isQuiz ? null : <View
                                 style={{
@@ -3261,17 +3276,12 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         <View
                             style={{
                                 width: "100%",
-                                display: "flex",
-                                flexDirection: "row",
-                                backgroundColor: "white",
-                                marginBottom: 10,
-                                alignItems: 'center'
                             }}>
                             <Text
                                 style={{
                                     fontSize: 12,
                                     color: "#818385",
-                                    textAlign: "left",
+                                    textAlign: "right",
                                     paddingRight: 10
                                 }}>
                                 Available
@@ -3305,16 +3315,12 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         <View
                             style={{
                                 width: "100%",
-                                display: "flex",
-                                flexDirection: "row",
-                                backgroundColor: "white",
-                                alignItems: 'center'
                             }}>
                             <Text
                                 style={{
                                     fontSize: 12,
                                     color: "#818385",
-                                    textAlign: "left",
+                                    textAlign: "right",
                                     paddingRight: 10
                                 }}>
                                 Deadline
@@ -3356,18 +3362,19 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : 'row', paddingTop: 40 }}>
                 <View
                     style={{
-                        width: 300,
+                        flexDirection: 'row', flex: 1,
                         paddingBottom: 15,
                         backgroundColor: "white"
                     }}>
                     <Text style={{
                         fontSize: 15,
                         fontFamily: 'inter',
-                        color: '#43434f'
+                        color: '#43434f',
+                        textTransform: 'uppercase'
                     }}>Grade Weight</Text>
                 </View>
                 <View style={{}}>
-                    {isOwner ? <View style={{ flexDirection: "row" }}>
+                    {isOwner ? <View style={{ flexDirection: "row", justifyContent: 'flex-end' }}>
                         <View
                             style={{
                                 backgroundColor: "white",
@@ -3394,7 +3401,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 display: "flex",
                                 flexDirection: "row",
                                 backgroundColor: "white",
-                                alignItems: 'center'
+                                justifyContent: 'flex-end'
                             }}>
                             <Text
                                 style={{
@@ -3402,6 +3409,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     color: "#818385",
                                     textAlign: "left",
                                     paddingRight: 10,
+                                    marginTop: 20
                                 }}>
                                 {!isOwner ? gradeWeight : null} {PreferredLanguageText("percentageOverall")}
                             </Text>
@@ -3529,7 +3537,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : 'row', paddingTop: 40, }}>
                     <View
                         style={{
-                            width: 300,
+                            flexDirection: 'row', flex: 1,
                             paddingBottom: 15,
                             backgroundColor: "white",
                         }}
@@ -3538,6 +3546,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             style={{
                                 fontSize: 15,
                                 fontFamily: 'inter',
+                                textTransform: 'uppercase',
                                 color: '#2f2f3c'
                             }}
                         >
@@ -3551,13 +3560,13 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             display: "flex",
                             flexDirection: "row",
                             backgroundColor: "white",
-                            alignItems: 'center'
+                            justifyContent: 'flex-end'
                         }}
                     >
                         <Text style={{
                             fontSize: 12,
                             color: "#818385",
-                            textAlign: "left",
+                            textAlign: "right",
                             paddingRight: 10,
                         }}>
                             {unlimitedAttempts ? "Unlimited" : allowedAttempts}
@@ -3568,7 +3577,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : 'row', paddingTop: 40, }}>
                     <View
                         style={{
-                            width: 300,
+                            flexDirection: 'row', flex: 1,
                             paddingBottom: 15,
                             backgroundColor: "white",
                         }}
@@ -3576,6 +3585,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         <Text
                             style={{
                                 fontSize: 15,
+                                textTransform: 'uppercase',
                                 fontFamily: 'inter',
                                 color: '#2f2f3c'
                             }}
@@ -3589,6 +3599,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 backgroundColor: "white",
                                 height: 40,
                                 marginRight: 10,
+                                flexDirection: 'row', justifyContent: 'flex-end'
                             }}
                         >
                             <Switch
@@ -3609,13 +3620,14 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 activeThumbColor="white"
                             />
                         </View>
-                   
+
                         {!unlimitedAttempts ? (
                             <View
                                 style={{
                                     width: "100%",
                                     display: "flex",
                                     flexDirection: "row",
+                                    justifyContent: 'flex-end',
                                     backgroundColor: "white",
                                     alignItems: 'center'
                                 }}
@@ -3662,12 +3674,13 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 }}>
                 <View
                     style={{
-                        width: 300,
+                        flexDirection: 'row', flex: 1,
                         paddingBottom: 15,
                         backgroundColor: "white"
                     }}>
                     <Text style={{
                         fontSize: 15,
+                        textTransform: 'uppercase',
                         fontFamily: 'inter',
                         color: '#43434f'
                     }}>{PreferredLanguageText("category")}</Text>
@@ -3700,7 +3713,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         <View
                             style={{
                                 width: "100%",
-                                display: "flex",
+                                // display: "flex",
                                 flexDirection: "row",
                                 backgroundColor: "white"
                             }}>
@@ -3797,24 +3810,26 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 }}>
                 <View
                     style={{
-                        width: 300,
+                        flexDirection: 'row',
+                        flex: 1,
                         paddingBottom: 15,
                         backgroundColor: "white"
                     }}>
                     <Text style={{
                         fontSize: 15,
                         fontFamily: 'inter',
+                        textTransform: 'uppercase',
                         color: '#43434f'
                     }}>{PreferredLanguageText("priority")}</Text>
                 </View>
                 <View
                     style={{
-                        width: "100%",
-                        display: "flex",
-                        flexDirection: "row",
+                        // width: "100%",
+                        // display: "flex",
+                        // flexDirection: "row",
                         backgroundColor: "white"
                     }}>
-                    <View style={{ width: "100%", backgroundColor: "white" }}>
+                    <View style={{ backgroundColor: "white" }}>
                         <ScrollView
                             style={{ ...styles.colorBar, height: 20 }}
                             horizontal={true}
@@ -3855,7 +3870,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 }}>
                 <View
                     style={{
-                        width: 300,
+                        flexDirection: 'row', flex: 1,
                         // paddingTop: 40,
                         paddingBottom: 15,
                         backgroundColor: "white"
@@ -3863,13 +3878,14 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     <Text style={{
                         fontSize: 15,
                         fontFamily: 'inter',
-                        color: '#43434f'
+                        color: '#43434f',
+                        textTransform: 'uppercase'
                     }}>Forward</Text>
                 </View>
                 <View
                     style={{
-                        width: "100%",
-                        display: "flex",
+                        //width: "100%",
+                        // display: "flex",
                         // paddingTop: 40,
                         // flexDirection: "row",
                         backgroundColor: "white"
@@ -4032,20 +4048,22 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : 'row', paddingTop: 40, }}>
                     <View
                         style={{
-                            width: 300,
+                            // width: 300,
+                            flexDirection: 'row', flex: 1,
                             paddingBottom: 15,
                             backgroundColor: "white"
                         }}>
                         <Text style={{
                             fontSize: 15,
                             fontFamily: 'inter',
+                            textTransform: 'uppercase',
                             color: '#43434f'
                         }}>Reminder</Text>
                     </View>
                     <View
                         style={{
                             backgroundColor: "white",
-                            width: "100%",
+                            // width: "100%",
                             height: 40,
                         }}>
                         <Switch
@@ -4074,14 +4092,16 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : 'row', paddingTop: 40 }}>
                         <View
                             style={{
-                                width: 300,
+                                // width: 300,
+                                flex: 1, flexDirection: 'row',
                                 paddingBottom: 15,
                                 backgroundColor: "white"
                             }}>
                             <Text style={{
                                 fontSize: 15,
                                 fontFamily: 'inter',
-                                color: '#43434f'
+                                color: '#43434f',
+                                textTransform: 'uppercase'
                             }}>Recurring</Text>
                         </View>
                         <View style={{}}>
@@ -4089,6 +4109,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 style={{
                                     backgroundColor: "white",
                                     height: 40,
+                                    alignSelf: 'flex-end'
                                 }}>
                                 <Switch
                                     value={!shuffle}
@@ -4175,21 +4196,25 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : 'row', paddingTop: 40, }}>
                         <View
                             style={{
-                                width: 300,
+                                flexDirection: 'row',
+                                flex: 1,
                                 paddingBottom: 15,
                                 backgroundColor: "white"
                             }}>
                             <Text style={{
                                 fontSize: 15,
+                                textTransform: 'uppercase',
                                 fontFamily: 'inter',
                                 color: '#43434f'
                             }}>Indefinite</Text>
                         </View>
-                        <View style={{ flexDirection: "row", }}>
+                        <View>
                             <View
                                 style={{
                                     backgroundColor: "white",
                                     height: 40,
+                                    justifyContent: 'flex-end',
+                                    flexDirection: 'row'
                                 }}>
                                 <Switch
                                     value={playChannelCueIndef}
@@ -4580,12 +4605,13 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     ? (
                                         <Text
                                             style={{
-                                                color: "#43434f",
-                                                fontSize: 11,
                                                 lineHeight: 30,
                                                 textAlign: "right",
                                                 paddingRight: 20,
-                                                textTransform: "uppercase"
+                                                textTransform: "uppercase",
+                                                fontSize: 15,
+                                                fontFamily: 'inter',
+                                                color: '#43434f',
                                             }}
                                             onPress={() => setShowEquationEditor(!showEquationEditor)}>
                                             {showEquationEditor ? PreferredLanguageText("hide") : PreferredLanguageText("formula")}
@@ -4600,11 +4626,12 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     <Text
                                         style={{
                                             color: "#43434f",
-                                            fontSize: 11,
                                             lineHeight: 30,
                                             textAlign: "right",
                                             // paddingRight: 10,
-                                            textTransform: "uppercase"
+                                            textTransform: "uppercase",
+                                            fontSize: 15,
+                                            fontFamily: 'inter',
                                         }}
                                         onPress={() => setShowImportOptions(true)}>
                                         {PreferredLanguageText("import")} {Dimensions.get("window").width < 768 ? "" : "   "}
@@ -4621,7 +4648,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         (
                                             <Text style={{
                                                 color: '#43434f',
-                                                fontSize: 11,
+                                                fontSize: 15,
+                                                fontFamily: 'inter',
                                                 lineHeight: 30,
                                                 textAlign: 'right',
                                                 // paddingRight: 10,
@@ -4650,7 +4678,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     keyboardDismissMode={"on-drag"}
                     overScrollMode={"always"}
                     nestedScrollEnabled={true}>
-                {/* <View> */}
+                    {/* <View> */}
                     {
                         props.showOptions || props.showComments ? null :
                             <View>

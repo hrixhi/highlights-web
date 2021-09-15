@@ -913,11 +913,13 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         paddingBottom: 40,
                         fontFamily: 'inter',
                         maxWidth: 600,
+                        width: '100%',
                         alignSelf: 'center',
                         // textTransform: "uppercase",
                         // paddingLeft: 10,
                         flex: 1,
-                        lineHeight: 25
+                        lineHeight: 25,
+                        textAlign: 'left'
                     }}>
                     Settings
                 </Text>
@@ -1155,6 +1157,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 : null
                         }
                     </View>
+                    <View style={{ height: 75 }} />
                     {/* <View style={{ height: 50, backgroundColor: '#fff' }} /> */}
                 </ScrollView>
             </View>

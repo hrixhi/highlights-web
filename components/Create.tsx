@@ -220,8 +220,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
       type === "mpeg" ||
       type === "mp2" ||
       type === "wav") {
-          return;
-    } 
+      return;
+    }
 
     console.log(url)
     WebViewer(
@@ -372,6 +372,16 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
     quizInstructions,
     headers,
   ]);
+
+  useEffect(() => {
+    (async () => {
+      const uString: any = await AsyncStorage.getItem("user");
+      const userId = JSON.parse(uString);
+      if (userId.role) {
+        setRole(userId.role)
+      }
+    })()
+  })
 
   const loadChannelCategoriesAndSubscribers = useCallback(async () => {
     const uString: any = await AsyncStorage.getItem("user");
@@ -1055,31 +1065,33 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 {PreferredLanguageText("import")}
               </Text>
             )}
-            <Text
-              style={{
-                color: "#43434f",
-                lineHeight: 30,
-                textAlign: "right",
-                paddingRight: 10,
-                textTransform: "uppercase",
-                fontSize: 15,
-                fontFamily: 'inter',
-              }}
-              onPress={() => {
-                if (isQuiz) {
-                  clearAll()
-                  return
-                }
-                if (channelId !== "") {
-                  setIsQuiz(true);
-                  setSubmission(true);
-                } else {
-                  Alert(quizAlert);
-                }
-              }}
-            >
-              {isQuiz ? 'CANCEL' : PreferredLanguageText("quiz")}
-            </Text>
+            {
+              role === 'instructor' ? <Text
+                style={{
+                  color: "#43434f",
+                  lineHeight: 30,
+                  textAlign: "right",
+                  paddingRight: 10,
+                  textTransform: "uppercase",
+                  fontSize: 15,
+                  fontFamily: 'inter',
+                }}
+                onPress={() => {
+                  if (isQuiz) {
+                    clearAll()
+                    return
+                  }
+                  if (channelId !== "") {
+                    setIsQuiz(true);
+                    setSubmission(true);
+                  } else {
+                    Alert(quizAlert);
+                  }
+                }}
+              >
+                {isQuiz ? 'CANCEL' : PreferredLanguageText("quiz")}
+              </Text> : null
+            }
           </View>
         </View>
         {showEquationEditor ? (

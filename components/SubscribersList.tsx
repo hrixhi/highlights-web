@@ -309,7 +309,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                 setIsQuiz(true)
                 setQuizSolutions(obj)
 
-            // This is old schema for submission
+                // This is old schema for submission
             } else if (obj.url !== undefined && obj.title !== undefined && obj.type !== undefined) {
 
                 setImported(true)
@@ -327,13 +327,13 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                         setUrl(parse.url);
                         setType(parse.type);
                         setTitle(parse.title)
-                    } 
+                    }
 
-                } 
+                }
 
                 setSubmissionAttempts(obj.attempts)
             } else if (obj.attempts !== undefined && obj.quizResponses !== undefined) {
-                
+
                 setIsQuiz(true)
                 setIsV1Quiz(true)
                 setQuizAttempts(obj.attempts);
@@ -348,7 +348,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                         setInitiatedAt(attempt.initiatedAt)
                         setSubmittedAt(attempt.submittedAt)
                         setGraded(attempt.isFullyGraded)
-                        
+
                     }
                 })
 
@@ -367,12 +367,12 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
     }, [submission])
 
     useEffect(() => {
- 
+
         if (submissionAttempts && submissionAttempts.length > 0 && submissionViewerRef && submissionViewerRef.current) {
             const attempt = submissionAttempts[submissionAttempts.length - 1];
 
             let url = attempt.html !== undefined ? attempt.annotationPDF : attempt.url;
-            
+
             if (!url) {
                 return;
             }
@@ -407,14 +407,14 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                     }
                 });
 
-                
+
 
                 annotationManager.addEventListener('annotationChanged', async (annotations: any, action: any, { imported }) => {
                     // If the event is triggered by importing then it can be ignored
                     // This will happen when importing the initial annotations
                     // from the server or individual changes from other users
                     if (imported) return;
-              
+
                     const xfdfString = await annotationManager.exportAnnotations({ useDisplayAuthor: true });
 
                     const currAttempt = submissionAttempts[submissionAttempts.length - 1];
@@ -427,12 +427,12 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
 
                     await handleAnnotationsUpdate(allAttempts);
 
-                  });
-                
+                });
+
             });
         }
 
-    }, [submissionAttempts, submissionViewerRef, submissionViewerRef.current])
+    }, [submissionAttempts, submissionViewerRef, submissionViewerRef.current, viewSubmissionTab])
 
     useEffect(() => {
         if (quizSolutions) {
@@ -817,7 +817,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
             Alert("Something went wrong.")
         })
     }, [users, userId, props.channelId, user])
-    
+
     const modifyActiveQuizAttempt = () => {
         const server = fetchAPI("");
         server
@@ -937,7 +937,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                 // perform document operations
             });
         });
-    }, [url, RichText, imported, type, submissionAttempts]);
+    }, [url, RichText, imported, type, submissionAttempts, viewSubmissionTab]);
 
 
     const renderViewSubmission = () => {
@@ -972,8 +972,16 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                 </TouchableOpacity>
             </View>}
             {
-                attempt.url !== undefined ? 
+                attempt.url !== undefined ?
                     (attempt.type === 'mp4' || attempt.type === 'mp3' || attempt.type === 'mov' || attempt.type === 'mpeg' || attempt.type === 'mp2' || attempt.type === 'wav' ?
+                        <View style={{ width: '100%', marginTop: 25 }}>
+                            <ReactPlayer url={url} controls={true} />
+                        </View>
+                        :
+                        <View style={{ width: '100%', marginTop: 25 }}>
+                            <div className="webviewer" ref={submissionViewerRef} style={{ height: "100vh" }}></div>
+                        </View>)
+                    :
                     <View style={{ width: '100%', marginTop: 25 }}>
                         {attempt.title !== "" ? <Text
                                 style={{
@@ -1020,7 +1028,6 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                     <div className="webviewer" ref={submissionViewerRef} style={{ height: "100vh" }}></div>
                 }
                </View>
-
             }
         </View>)
 
@@ -1598,13 +1605,13 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 ) :
                                 // is Quiz then show the Quiz Grading Component and new version with problemScores
                                 isQuiz && !isV0Quiz ?
-                                <ScrollView
-                                    showsVerticalScrollIndicator={false}
-                                    keyboardDismissMode={'on-drag'}
-                                    contentContainerStyle={{
-                                        // height: windowHeight - 132
-                                    }}
-                                    style={{ flex: 1, paddingTop: 12 }}>
+                                    <ScrollView
+                                        showsVerticalScrollIndicator={false}
+                                        keyboardDismissMode={'on-drag'}
+                                        contentContainerStyle={{
+                                            // height: windowHeight - 132
+                                        }}
+                                        style={{ flex: 1, paddingTop: 12 }}>
                                         {
                                             submittedAt !== "" && deadline !== "" && new Date(submittedAt) >= new Date(parseInt(deadline)) ?
                                                 <View style={{ width: '100%', }}>
@@ -1671,11 +1678,11 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             }
                                             <View style={{ width: '100%', marginBottom: 20 }}>
                                                 <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                                                    <Ionicons name='checkmark-outline' size={22} color={"#53BE68"} /> 
+                                                    <Ionicons name='checkmark-outline' size={22} color={"#53BE68"} />
                                                     <Text style={{ fontSize: 15, paddingLeft: 5 }}>
                                                         Turned In at {moment(new Date(parseInt(submittedAt))).format('MMMM Do, h:mm a')}
                                                     </Text>
-                                                </View> 
+                                                </View>
                                             </View>
                                             <View style={{ flexDirection: 'row', flex: 1 }}>
                                                 <View style={{
