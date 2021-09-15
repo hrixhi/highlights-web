@@ -169,12 +169,9 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             action={"audio/video"}
                             back={() => setShowImportOptions(false)}
                             onUpload={(u: any, t: any) => {
-                                console.log("url after upload", u)
                                 const obj = { url: u, type: t, content: '' };
                                 const newProbs = [...problems];
-                                console.log("New problems", newProbs);
                                 newProbs[index].question = JSON.stringify(obj);
-                                console.log("Update with object problems", newProbs);
                                 setProblems(newProbs)
                                 props.setProblems(newProbs)
                                 setShowImportOptions(false);
