@@ -74,11 +74,12 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
         }}>
             <ScrollView
                 horizontal={true}
+                nestedScrollEnabled={true}
                 style={{ width: '100%', backgroundColor: '#fbfbfc', paddingTop: 20 }}
             >
                 {
                     Object.keys(categoryMap).map((category: any, i: any) => {
-                        return <View style={{
+                        return <ScrollView style={{
                             width: '100%',
                             maxWidth: 250,
                             backgroundColor: '#fbfbfc',
@@ -139,7 +140,7 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     </View>
                                 })}
                             </View>
-                        </View>
+                        </ScrollView>
                     })
                 }
             </ScrollView>

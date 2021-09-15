@@ -63,15 +63,6 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 <View style={styleObject.text}>
                     <View style={styleObject.dateContainer}>
                         {
-                            props.cue.graded && showScore && !isOwner ? <Text style={{
-                                fontSize: 9,
-                                color: '#560bad',
-                                marginLeft: 10
-                            }}>
-                                {props.cue.score}%
-                            </Text> : null
-                        }
-                        {
                             props.cue.starred ?
                                 <Text style={{
                                     textAlign: 'right',
@@ -93,6 +84,15 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 (new Date(props.cue.date)).toString().split(' ')[2]
                             }
                         </Text>
+                        {
+                            props.cue.graded && showScore && !isOwner ? <Text style={{
+                                fontSize: 9,
+                                color: '#560bad',
+                                marginLeft: 10, textAlign: 'right'
+                            }}>
+                                {props.cue.score}%
+                            </Text> : null
+                        }
                     </View>
                     <View style={{
                         backgroundColor: '#fff',

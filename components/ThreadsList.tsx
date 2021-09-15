@@ -442,9 +442,9 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                         <View style={{
                                             width: '60%',
                                             paddingLeft: 20,
-                                            height: Dimensions.get('window').height - 230,
+                                            height: Dimensions.get('window').height - 300,
                                         }}
-                                            key={threadChat.toString()}
+                                            // key={threadChat.toString()}
                                         >
                                             <GiftedChat
                                                 messages={threadChat}
@@ -474,7 +474,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                             <View style={{
                                                 width: '50%',
                                                 paddingLeft: 20,
-                                                height: Dimensions.get('window').height - 230,
+                                                height: Dimensions.get('window').height - 300,
                                             }}
                                                 key={threadChat.toString()}
                                             >
