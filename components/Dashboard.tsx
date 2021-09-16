@@ -150,6 +150,9 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
             const key = sub.channelName + '-SPLIT-' + sub.channelId + '-SPLIT-' + sub.channelCreatedBy + '-SPLIT-' + sub.colorCode
             temp[key] = tempCues
             tempCollapse[key] = false
+            if (cat[''].length === 0) {
+                delete cat['']
+            }
             tempCat[key] = Object.keys(cat)
             tempSelected[key] = ''
         })
@@ -189,6 +192,9 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
         })
 
         temp['My Notes'] = mycues
+        if (cat[''].length === 0) {
+            delete cat['']
+        }
         tempCat['My Notes'] = Object.keys(cat)
         tempSelected['My Notes'] = ''
         setCueMap(temp)
@@ -363,7 +369,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
         }}>
         <View style={{
             width: '100%',
-            paddingHorizontal: Dimensions.get('window').width < 768 ? 20 : 40
+            paddingHorizontal: Dimensions.get('window').width < 1024 ? 20 : 40
         }}>
             <ScrollView
                 showsVerticalScrollIndicator={false}
@@ -379,18 +385,20 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     fontFamily: 'inter',
                     flex: 1,
                     lineHeight: 23,
-                    color: '#560bad'
+                    color: '#007AFF'
                 }}>
                     Results
                 </Text>
                 {
-                    (!loadingSearchResults && results && results[searchOptions[0]].length === 0  && results[searchOptions[1]].length === 0 && results[searchOptions[2]].length === 0 && results[searchOptions[3]].length === 0) ? <Text style={{ fontSize: 15,
+                    (!loadingSearchResults && results && results[searchOptions[0]].length === 0 && results[searchOptions[1]].length === 0 && results[searchOptions[2]].length === 0 && results[searchOptions[3]].length === 0) ? <Text style={{
+                        fontSize: 15,
                         paddingBottom: 20,
                         paddingTop: 10,
                         fontFamily: 'inter',
                         flex: 1,
                         lineHeight: 23,
-                        backgroundColor: '#fff' }}>None</Text> : null  
+                        backgroundColor: '#fff'
+                    }}>None</Text> : null
                 }
                 {
                     loadingSearchResults ? <View
@@ -590,7 +598,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     Object.keys(cueMap).map((key: any, ind: any) => {
                         return <View style={{
                             marginTop: 20, paddingBottom: 20,
-                            borderColor: '#e4e7eb',
+                            borderColor: '#e9e9ec',
                             borderBottomWidth: 1,
                         }}>
                             {
@@ -647,7 +655,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                 lineHeight: 30,
                                                                 color: '#fff',
                                                                 fontSize: 12,
-                                                                backgroundColor: '#4c956c',
+                                                                backgroundColor: '#3abb83',
                                                                 paddingHorizontal: 25,
                                                                 marginRight: 15,
                                                                 fontFamily: 'inter',
@@ -679,9 +687,9 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                             <Text style={{
                                                                 textAlign: 'center',
                                                                 lineHeight: 30,
-                                                                color: '#43434f',
+                                                                color: '#1D1D20',
                                                                 fontSize: 12,
-                                                                backgroundColor: '#f4f4f6',
+                                                                backgroundColor: '#F4F4F6',
                                                                 paddingHorizontal: 25,
                                                                 marginRight: 15,
                                                                 fontFamily: 'inter',
@@ -709,9 +717,9 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         >
                                                             <Text style={styles.channelText}>
                                                                 <Ionicons
-                                                                    name='hammer-outline' size={19} color={'#43434f'} />
+                                                                    name='hammer-outline' size={19} color={'#1D1D20'} />
                                                             </Text>
-                                                            <Text style={{ fontSize: 10, color: '#43434f', textAlign: 'center' }}>
+                                                            <Text style={{ fontSize: 10, color: '#1D1D20', textAlign: 'center' }}>
                                                                 Settings
                                                             </Text>
                                                         </TouchableOpacity>
@@ -729,9 +737,9 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     }}>
                                                     <Text style={styles.channelText}>
                                                         <Ionicons
-                                                            name='chatbubbles-outline' size={19} color={'#43434f'} />
+                                                            name='chatbubbles-outline' size={19} color={'#1D1D20'} />
                                                     </Text>
-                                                    <Text style={{ fontSize: 10, color: '#43434f', textAlign: 'center' }}>
+                                                    <Text style={{ fontSize: 10, color: '#1D1D20', textAlign: 'center' }}>
                                                         Classroom
                                                     </Text>
                                                 </TouchableOpacity>
@@ -745,9 +753,9 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
                                                     <Text style={{
                                                         textAlign: 'center',
-                                                        lineHeight: 35
+                                                        lineHeight: 30
                                                     }}>
-                                                        <Ionicons name={collapseMap[key] ? 'contract-outline' : 'expand-outline'} size={30} color={'#43434f'} />
+                                                        <Ionicons name={collapseMap[key] ? 'chevron-up-outline' : 'chevron-down-outline'} size={30} color={'#1D1D20'} />
                                                     </Text>
                                                 </TouchableOpacity>
                                             </View>
@@ -771,7 +779,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 fontFamily: 'inter',
                                                 flex: 1,
                                                 lineHeight: 23,
-                                                color: '#560bad'
+                                                color: '#007AFF'
                                             }}>
                                                 <View style={{
                                                     width: 18,
@@ -779,7 +787,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     marginRight: 10,
                                                     borderRadius: 9,
                                                     marginTop: 1,
-                                                    backgroundColor: '#43434f'
+                                                    backgroundColor: '#1D1D20'
                                                 }} /> {key}
                                             </Text>
                                         </TouchableOpacity>
@@ -794,9 +802,9 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 >
                                                     <Text style={{
                                                         textAlign: 'center',
-                                                        lineHeight: 35
+                                                        lineHeight: 30
                                                     }}>
-                                                        <Ionicons name={collapseMap[key] ? 'contract-outline' : 'expand-outline'} size={30} color={'#43434f'} />
+                                                        <Ionicons name={collapseMap[key] ? 'chevron-up-outline' : 'chevron-down-outline'} size={30} color={'#1D1D20'} />
                                                     </Text>
                                                 </TouchableOpacity>
                                             </View>
@@ -860,18 +868,18 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                             prevTitleStyle: {
                                                                                                 marginTop: 20,
                                                                                                 fontFamily: 'inter',
-                                                                                                color: '#560bad'
+                                                                                                color: '#007AFF'
                                                                                             },
                                                                                             nextTitleStyle: {
                                                                                                 marginTop: 20,
                                                                                                 fontFamily: 'inter',
-                                                                                                color: '#560bad'
+                                                                                                color: '#007AFF'
                                                                                             },
                                                                                             dotsWrapperStyle: {
                                                                                                 marginTop: 19
                                                                                             },
                                                                                             dotActiveStyle: {
-                                                                                                backgroundColor: '#560bad'
+                                                                                                backgroundColor: '#007AFF'
                                                                                             }
                                                                                         }}
                                                                                         containerStyle={{
@@ -1010,34 +1018,34 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
             maxHeight: '100%',
         }}>
             <View style={{
-                backgroundColor: '#FBFBFC',
-                borderColor: '#e4e7eb',
+                backgroundColor: '#F4F4F6',
+                borderColor: '#e9e9ec',
                 borderBottomWidth: 1,
                 // borderWidth: 1,
                 paddingTop: 20,
-                paddingHorizontal: Dimensions.get('window').width < 768 ? 20 : 40,
-                flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row',
+                paddingHorizontal: Dimensions.get('window').width < 1024 ? 20 : 40,
+                flexDirection: Dimensions.get('window').width < 1024 ? 'column' : 'row',
                 // flex: 1, 
                 paddingBottom: 0,
                 width: '100%',
             }}>
-                <View style={{ flexDirection: 'row', flex: 1, backgroundColor: '#FBFBFC', }}>
+                <View style={{ flexDirection: 'row', flex: 1, backgroundColor: '#F4F4F6', }}>
                     <Image
                         source={logo}
                         style={{
                             width: 80,
-                            height: 23
+                            height: 24
                         }}
                         resizeMode={'contain'}
                     />
                     {
-                        Dimensions.get('window').width < 768 ?
-                            <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end', backgroundColor: '#FBFBFC', }}>
+                        Dimensions.get('window').width < 1024 ?
+                            <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end', backgroundColor: '#F4F4F6', }}>
                                 <Menu
                                     onSelect={(op: any) => props.setOption(op)}>
                                     <MenuTrigger style={{ flexDirection: 'row' }}>
                                         <Text style={{
-                                            color: '#43434f',
+                                            color: '#1D1D20',
                                             paddingLeft: 10,
                                             textTransform: 'uppercase',
                                             flexDirection: 'row',
@@ -1046,7 +1054,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         }}>
                                             {props.option}
                                         </Text>
-                                        <Text style={{ color: '#43434f', paddingLeft: 10, flexDirection: 'row', lineHeight: 14, fontSize: 14, marginTop: 2 }}>
+                                        <Text style={{ color: '#1D1D20', paddingLeft: 10, flexDirection: 'row', lineHeight: 14, fontSize: 14, marginTop: 2 }}>
                                             <Ionicons name='menu-outline' size={25} />
                                         </Text>
                                     </MenuTrigger>
@@ -1056,7 +1064,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             borderRadius: 15,
                                             shadowOpacity: 0,
                                             borderWidth: 1,
-                                            borderColor: '#FBFBFC',
+                                            borderColor: '#e9e9ec',
                                             overflow: 'scroll',
                                             maxHeight: '100%',
                                         }
@@ -1074,7 +1082,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     </MenuOptions>
                                 </Menu>
                             </View>
-                            : <View style={{ flexDirection: 'row', paddingLeft: 30, flex: 1, backgroundColor: '#FBFBFC' }}>
+                            : <View style={{ flexDirection: 'row', paddingLeft: 30, flex: 1, backgroundColor: '#F4F4F6' }}>
                                 {
                                     props.options.map((op: any) => {
                                         if (op === 'Settings' || op === 'Channels') {
@@ -1082,7 +1090,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         }
                                         return <TouchableOpacity
                                             style={{
-                                                backgroundColor: '#FBFBFC'
+                                                backgroundColor: '#F4F4F6'
                                             }}
                                             onPress={() => props.setOption(op)}>
                                             <Text style={op === props.option ? styles.allGrayFill : styles.all}>
@@ -1096,23 +1104,23 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 </View>
                 <View style={{
                     flexDirection: 'row',
-                    width: Dimensions.get('window').width < 768 ? '100%' : 'auto',
-                    justifyContent: Dimensions.get('window').width < 768 ? 'flex-start' : 'flex-end',
-                    marginTop: Dimensions.get('window').width < 768 ? 25 : 0,
-                    // flex: Dimensions.get('window').width < 768 ? 1 : 0,
+                    width: Dimensions.get('window').width < 1024 ? '100%' : 'auto',
+                    justifyContent: Dimensions.get('window').width < 1024 ? 'flex-start' : 'flex-end',
+                    marginTop: Dimensions.get('window').width < 1024 ? 25 : 0,
+                    // flex: Dimensions.get('window').width < 1024 ? 1 : 0,
                     // borderWidth: 1,
-                    backgroundColor: '#FBFBFC'
+                    backgroundColor: '#F4F4F6'
                 }}>
                     {/* {
-                        width < 768 ? <Ionicons name='search-outline' size={20} color='#43434f'
+                        width < 1024 ? <Ionicons name='search-outline' size={20} color='#1D1D20'
                             style={{
-                                marginLeft: Dimensions.get('window').width < 768 ? 0 : 40,
+                                marginLeft: Dimensions.get('window').width < 1024 ? 0 : 40,
                                 marginTop: 0
                             }}
                         /> : null
                     } */}
                     {
-                        width < 768 ? <TextInput
+                        width < 1024 ? <TextInput
                             value={searchTerm}
                             style={{
                                 // width: "100%",
@@ -1120,8 +1128,8 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 borderBottomWidth: 1,
                                 fontSize: 15,
                                 padding: 5,
-                                paddingVertical: 12,
-                                marginTop: -25,
+                                paddingVertical: 10,
+                                marginTop: -20,
                                 flex: 1, flexDirection: 'row',
                                 marginLeft: 10,
                                 marginRight: 20,
@@ -1130,7 +1138,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 // borderWidth: 1,
                                 // marginLeft: 5,
                             }}
-                            placeholder={"🔍"}
+                            placeholder={"Search"}
                             onChangeText={(val) => setSearchTerm(val)}
                             placeholderTextColor={"#818385"}
                         /> : null
@@ -1141,7 +1149,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             onSelect={(category: any) => {
                             }}>
                             <MenuTrigger>
-                                <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#43434f', paddingTop: 5, textAlign: 'right' }}>
+                                <Text style={{ fontSize: 14, color: '#1D1D20', paddingTop: 5, textAlign: 'right' }}>
                                     Filter <Ionicons name="caret-down" size={14} />
                                 </Text>
                             </MenuTrigger>
@@ -1151,61 +1159,59 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     borderRadius: 15,
                                     shadowOpacity: 0,
                                     borderWidth: 1,
-                                    borderColor: '#FBFBFC',
+                                    borderColor: '#e9e9ec',
                                     overflow: 'scroll',
                                     maxHeight: '100%'
                                 }
                             }}>
                                 {(props.option === 'Content' ? <MenuOption
                                     // disabled={true}
+                                    // style={{ height: 300 }}
                                     value={'1'}>
-                                    <View style={{ backgroundColor: '#fff', paddingLeft: 10, flex: 1, zIndex: 50 }}>
-                                        <View style={{ flexDirection: 'row', display: 'flex', backgroundColor: '#fff' }}>
-                                            <Menu
-                                                onSelect={(category: any) => {
-                                                    setSortBy(category)
-                                                }}>
-                                                <MenuTrigger>
-                                                    <Text style={{ fontFamily: 'inter', fontSize: 15, color: '#43434f' }}>
-                                                        {sortBy}<Ionicons name='caret-down' size={15} />
-                                                    </Text>
-                                                </MenuTrigger>
-                                                <MenuOptions customStyles={{
-                                                    optionsContainer: {
-                                                        padding: 10,
-                                                        borderRadius: 15,
-                                                        shadowOpacity: 0,
-                                                        borderWidth: 1,
-                                                        borderColor: '#FBFBFC',
-                                                        overflow: 'scroll',
-                                                        maxHeight: '100%'
-                                                    }
-                                                }}>
-                                                    <MenuOption
-                                                        value={'Priority'}>
-                                                        <Text>
-                                                            Priority
-                                                        </Text>
-                                                    </MenuOption>
-                                                    <MenuOption
-                                                        value={'Date ↑'}>
-                                                        <Text>
-                                                            Date ↑
-                                                        </Text>
-                                                    </MenuOption>
-                                                    <MenuOption
-                                                        value={'Date ↓'}>
-                                                        <Text>
-                                                            Date ↓
-                                                        </Text>
-                                                    </MenuOption>
-                                                </MenuOptions>
-                                            </Menu>
-                                        </View>
-                                        <Text style={{ fontSize: 10, color: '#43434f', paddingTop: 7, backgroundColor: '#fff' }}>
-                                            Sort By
-                                        </Text>
-                                    </View>
+                                    <Menu
+                                        // style={{ height: 300 }}
+                                        onSelect={(category: any) => {
+                                            setSortBy(category)
+                                        }}>
+                                        <MenuTrigger>
+                                            <Text style={{ fontFamily: 'inter', fontSize: 15, color: '#1D1D20' }}>
+                                                {sortBy}<Ionicons name='caret-down' size={15} />
+                                            </Text>
+                                            <Text style={{ fontSize: 10, color: '#1D1D20', paddingTop: 7, backgroundColor: '#fff' }}>
+                                                Sort By
+                                            </Text>
+                                        </MenuTrigger>
+                                        <MenuOptions customStyles={{
+                                            optionsContainer: {
+                                                padding: 10,
+                                                borderRadius: 15,
+                                                shadowOpacity: 0,
+                                                borderWidth: 1,
+                                                borderColor: '#e9e9ec',
+                                                overflow: 'scroll',
+                                                maxHeight: '100%'
+                                            }
+                                        }}>
+                                            <MenuOption
+                                                value={'Priority'}>
+                                                <Text>
+                                                    Priority
+                                                </Text>
+                                            </MenuOption>
+                                            <MenuOption
+                                                value={'Date ↑'}>
+                                                <Text>
+                                                    Date ↑
+                                                </Text>
+                                            </MenuOption>
+                                            <MenuOption
+                                                value={'Date ↓'}>
+                                                <Text>
+                                                    Date ↓
+                                                </Text>
+                                            </MenuOption>
+                                        </MenuOptions>
+                                    </Menu>
                                 </MenuOption>
                                     : null
                                 )
@@ -1238,7 +1244,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             ]}
                                             style={{
                                                 marginTop: -4,
-                                                marginRight: width < 768 ? -20 : 0,
+                                                marginRight: width < 1024 ? -20 : 0,
                                                 // alignSelf: 'flex-end'
                                                 // paddingLeft: 40
                                             }}
@@ -1247,10 +1253,10 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         : null
                                 }
                             </MenuOptions>
-                        </Menu> : <View style={{ width: 80, right: 0, backgroundColor: '#FBFBFC' }} />
+                        </Menu> : <View style={{ width: 80, right: 0, backgroundColor: '#F4F4F6' }} />
                     }
                     {
-                        width < 768 ? null : <TextInput
+                        width < 1024 ? null : <TextInput
                             value={searchTerm}
                             style={{
                                 // width: "100%",
@@ -1258,19 +1264,19 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 borderBottomWidth: 1,
                                 fontSize: 15,
                                 padding: 5,
-                                paddingVertical: 12,
-                                marginTop: -25,
+                                paddingVertical: 10,
+                                marginTop: -20,
                                 flex: 1, flexDirection: 'row',
                                 marginLeft: 40,
                                 marginRight: 40
                             }}
-                            placeholder={"🔍"}
+                            placeholder={"Search"}
                             onChangeText={(val) => setSearchTerm(val)}
                             placeholderTextColor={"#818385"}
                         />
                     }
                     {
-                        width < 768 ? null : <Menu
+                        width < 1024 ? null : <Menu
                             style={{ marginLeft: 0, right: 0, marginTop: -7 }}
                             onSelect={(op: any) => props.setOption(op)}>
                             <MenuTrigger>
@@ -1290,7 +1296,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     borderRadius: 15,
                                     shadowOpacity: 0,
                                     borderWidth: 1,
-                                    borderColor: '#FBFBFC',
+                                    borderColor: '#e9e9ec',
                                     overflow: 'scroll',
                                     maxHeight: '100%'
                                 }
@@ -1315,7 +1321,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
             {
                 searchTerm === '' ? <View style={{
                     // paddingTop: Dimensions.get('window').width < 1024 ? 15 : 30,
-                    paddingHorizontal: Dimensions.get('window').width < 768 ? 20 : 40
+                    paddingHorizontal: Dimensions.get('window').width < 1024 ? 20 : 40
                 }}>
                     {
                         props.option === 'Settings' ?
@@ -1385,10 +1391,10 @@ export default Dashboard
 const styleObject: any = () => StyleSheet.create({
     all: {
         fontSize: 13,
-        color: '#43434f',
+        color: '#1D1D20',
         height: 24,
         paddingHorizontal: 20,
-        backgroundColor: '#FBFBFC',
+        backgroundColor: '#F4F4F6',
         lineHeight: 24,
         fontFamily: 'inter',
         textTransform: 'uppercase'
@@ -1398,7 +1404,7 @@ const styleObject: any = () => StyleSheet.create({
         color: '#fff',
         paddingHorizontal: 20,
         borderRadius: 12,
-        backgroundColor: '#43434f',
+        backgroundColor: '#1D1D20',
         lineHeight: 24,
         height: 24,
         fontFamily: 'inter',

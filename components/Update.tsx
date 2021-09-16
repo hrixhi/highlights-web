@@ -389,6 +389,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     >
                         {!viewStatus ? <ScrollView
                             nestedScrollEnabled={true}
+                            showsVerticalScrollIndicator={false}
                             horizontal={false}
                             style={{
                                 borderTopRightRadius: 0,
@@ -615,7 +616,7 @@ export default Update
 const styles: any = StyleSheet.create({
     all: {
         fontSize: 13,
-        color: '#43434f',
+        color: '#1D1D20',
         height: 24,
         paddingHorizontal: 20,
         backgroundColor: '#fff',
@@ -628,7 +629,7 @@ const styles: any = StyleSheet.create({
         color: '#fff',
         paddingHorizontal: 20,
         borderRadius: 12,
-        backgroundColor: '#43434f',
+        backgroundColor: '#1D1D20',
         lineHeight: 24,
         height: 24,
         fontFamily: 'inter',

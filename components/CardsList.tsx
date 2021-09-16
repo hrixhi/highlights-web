@@ -62,30 +62,30 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     return (
         <Animated.View style={{
-            borderColor: '#FBFBFC',
-            backgroundColor: '#FBFBFC',
+            borderColor: '#e9e9ec',
+            backgroundColor: '#F4F4F6',
             // borderBottomWidth: 2,
             // borderTopWidth: 1,
             height: ((dimensions.window.height) - 60),
             opacity: props.fadeAnimation,
             width: dimensions.window.width,
-            paddingHorizontal: dimensions.window.width < 768 ? 20 : 40,
+            paddingHorizontal: dimensions.window.width < 1024 ? 20 : 40,
             // paddingTop: 15
         }}>
             <ScrollView
                 horizontal={true}
                 nestedScrollEnabled={true}
-                style={{ width: '100%', backgroundColor: '#fbfbfc', paddingTop: 20 }}
+                style={{ width: '100%', backgroundColor: '#F4F4F6', paddingTop: 20 }}
             >
                 {
                     Object.keys(categoryMap).map((category: any, i: any) => {
                         return <ScrollView style={{
                             width: '100%',
                             maxWidth: 250,
-                            backgroundColor: '#fbfbfc',
+                            backgroundColor: '#F4F4F6',
                             marginRight: 25
                         }}>
-                            <View style={{ backgroundColor: '#fbfbfc', paddingLeft: 23, marginBottom: 20 }}>
+                            <View style={{ backgroundColor: '#F4F4F6', paddingLeft: 23, marginBottom: 20 }}>
                                 <Text style={{
                                     flex: 1, flexDirection: 'row',
                                     color: '#818385',
@@ -101,7 +101,7 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 // style={{ height: '100%' }}
                                 style={{
                                     // borderWidth: 1,
-                                    backgroundColor: '#fbfbfc'
+                                    backgroundColor: '#F4F4F6'
                                     // height: 190
                                 }}
                                 key={i.toString()}
@@ -115,7 +115,7 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         marginBottom: 20,
                                         // marginBottom: i === priorities.length - 1 ? 0 : 20,
                                         // maxWidth: 150,
-                                        backgroundColor: '#fbfbfc',
+                                        backgroundColor: '#F4F4F6',
                                         width: '100%'
                                     }}
                                         key={index}
@@ -175,7 +175,7 @@ const styleObject = (channelId: any) => {
             width: 20,
             height: 20,
             marginTop: -2,
-            borderRadius: 12,
+            borderRadius: 1,
             backgroundColor: '#f94144',
             textAlign: 'center',
             zIndex: 50
@@ -187,8 +187,8 @@ const styleObject = (channelId: any) => {
             marginRight: 25,
             height: 20,
             marginTop: -2,
-            borderRadius: 12,
-            backgroundColor: '#560bad',
+            borderRadius: 1,
+            backgroundColor: '#007AFF',
             textAlign: 'center',
             zIndex: 50
         },

@@ -243,19 +243,19 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
         backgroundColor: "white",
         borderTopRightRadius: 0,
         borderTopLeftRadius: 0,
-        flexDirection: width < 768 ? 'column' : 'row',
+        flexDirection: width < 1024 ? 'column' : 'row',
         paddingTop: 20
     }}>
         <View style={{ width: '100%', }}>
             {/* <Text style={{
                 marginRight: 10,
-                color: '#43434f',
+                color: '#1D1D20',
                 fontSize: 23,
                 marginBottom: 40,
                 fontFamily: 'inter',
                 // flex: 1,
                 lineHeight: 25,
-                height: width < 768 ? 30 : 65,
+                height: width < 1024 ? 30 : 65,
             }}>
                 Report
             </Text> */}
@@ -268,7 +268,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     props.subscriptions.map((sub: any, ind: any) => {
                         return <View style={{
                             backgroundColor: '#fff',
-                            borderColor: '#e4e7eb',
+                            borderColor: '#e9e9ec',
                             borderBottomWidth: 1,
                             paddingBottom: 20,
                             marginBottom: 20,
@@ -314,10 +314,10 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 >
                                     <Text style={{
                                         textAlign: 'center',
-                                        lineHeight: 35,
+                                        lineHeight: 30,
                                         paddingTop: 10
                                     }}>
-                                        <Ionicons name={!collapseMap[ind] ? 'contract-outline' : 'expand-outline'} size={30} color={'#43434f'} />
+                                        <Ionicons name={!collapseMap[ind] ? 'chevron-up-outline' : 'chevron-down-outline'} size={30} color={'#1D1D20'} />
                                     </Text>
                                 </TouchableOpacity>
                             </View>

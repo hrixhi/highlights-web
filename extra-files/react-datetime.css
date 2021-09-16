@@ -11,7 +11,7 @@
   z-index: 99999 !important;
   background: #fff;
   /* box-shadow: 0 1px 3px rgba(0,0,0,.1);
-  border: 1px solid #FBFBFC; */
+  border: 1px solid #F4F4F6; */
   color: #818385 !important;
   font-family: 'overpass';
 }
@@ -58,7 +58,7 @@
   content: '';
   display: inline-block;
   border-left: 7px solid transparent;
-  border-bottom: 7px solid #560bad;
+  border-bottom: 7px solid #007AFF;
   border-radius: 5px;
   border-top-color: rgba(0, 0, 0, 0.2);
   position: absolute;
@@ -67,7 +67,7 @@
 }
 .rdtPicker td.rdtActive,
 .rdtPicker td.rdtActive:hover {
-  background-color: #560bad;
+  background-color: #007AFF;
   border-radius: 10px;
   color: #fff;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
@@ -92,7 +92,7 @@
   cursor: not-allowed;
 }
 .rdtPicker th {
-  border-bottom: 1px solid #FBFBFC;
+  border-bottom: 1px solid #F4F4F6;
 }
 .rdtPicker .dow {
   width: 14.2857%;
@@ -133,7 +133,7 @@
 }
 
 .rdtPicker tfoot {
-  border-top: 1px solid #FBFBFC;
+  border-top: 1px solid #F4F4F6;
 }
 
 .rdtPicker button {
