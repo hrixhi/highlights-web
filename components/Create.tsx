@@ -82,7 +82,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
     "#f3722c",
     "#f8961e",
     "#f9c74f",
-    "#4b956b",
+    "#3abb83",
   ].reverse();
   const [modalAnimation] = useState(new Animated.Value(0));
   const [reloadEditorKey, setReloadEditorKey] = useState(Math.random());
@@ -730,7 +730,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
           allowedAttempts: attempts,
           availableUntil: (submission || isQuiz) && allowLateSubmission ? availableUntil.toISOString() : ""
         };
-        
+
         server
           .mutate({
             mutation: createCue,
@@ -890,7 +890,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
     return time
   }
   return (
-    <View
+    <ScrollView
       style={{
         width: "100%",
         height:
@@ -902,6 +902,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
         borderTopRightRadius: 0,
         overflow: "scroll",
       }}
+      showsVerticalScrollIndicator={false}
     >
       <Animated.View
         style={{
@@ -950,18 +951,18 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
           style={{
             width: "100%",
             display: "flex",
-            flexDirection: dimensions.window.width < 768 ? "column-reverse" : "row",
+            flexDirection: dimensions.window.width < 1024 ? "column-reverse" : "row",
             paddingBottom: 4,
             marginTop: 0,
             backgroundColor: "white",
             borderBottomWidth: imported || isQuiz ? 0 : 1,
-            borderBottomColor: '#f5f5f7'
+            borderBottomColor: '#F4F4F6'
           }}
           onTouchStart={() => Keyboard.dismiss()}
         >
           <View
             style={{
-              flexDirection: dimensions.window.width < 768 ? "column" : "row",
+              flexDirection: dimensions.window.width < 1024 ? "column" : "row",
               flex: 1,
             }}
           >
@@ -1098,13 +1099,13 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
           <View
             style={{
               width: "100%",
-              flexDirection: width < 768 ? "column" : "row",
+              flexDirection: width < 1024 ? "column" : "row",
               paddingBottom: 20,
             }}
           >
             <View
               style={{
-                borderColor: "#f5f5f7",
+                borderColor: "#e9e9ec",
                 borderWidth: 1,
                 borderRadius: 15,
                 padding: 10,
@@ -1156,16 +1157,16 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
             <View
               style={{
                 // display: "flex",
-                flexDirection: width < 768 ? "column" : "row",
+                flexDirection: width < 1024 ? "column" : "row",
                 overflow: "visible",
               }}
             >
               <View
                 style={{
-                  width: width < 768 ? "100%" : "50%",
+                  width: width < 1024 ? "100%" : "50%",
                   maxWidth: 400,
                   borderRightWidth: 0,
-                  borderColor: "#f5f5f7",
+                  borderColor: "#e9e9ec",
                   // paddingRight: 15,
                   // display: "flex",
                   paddingLeft: isQuiz && Dimensions.get('window').width > 768 ? 20 : 0,
@@ -1219,11 +1220,11 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
               {isQuiz ? (
                 <View
                   style={{
-                    width: width < 768 ? "100%" : "50%",
+                    width: width < 1024 ? "100%" : "50%",
                     borderRightWidth: 0,
                     flex: 1,
                     paddingLeft: 20,
-                    borderColor: "#f5f5f7",
+                    borderColor: "#e9e9ec",
                     paddingTop: 10,
                     paddingRight: 25
                   }}
@@ -1269,8 +1270,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                       }}
                       style={{ height: 20, marginRight: 20 }}
                       trackColor={{
-                        false: "#f5f5f7",
-                        true: "#661CB0",
+                        false: "#F4F4F6",
+                        true: "#007AFF",
                       }}
                       activeThumbColor="white"
                     />
@@ -1279,7 +1280,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                         style={{
                           borderRightWidth: 0,
                           paddingTop: 0,
-                          borderColor: "#f5f5f7",
+                          borderColor: "#e9e9ec",
                           flexDirection: 'row'
                         }}
                       >
@@ -1306,7 +1307,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                   borderRadius: 15,
                                   shadowOpacity: 0,
                                   borderWidth: 1,
-                                  borderColor: "#f5f5f7",
+                                  borderColor: "#e9e9ec",
                                   overflow: 'scroll',
                                   maxHeight: '100%'
                                 },
@@ -1345,7 +1346,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                   borderRadius: 15,
                                   shadowOpacity: 0,
                                   borderWidth: 1,
-                                  borderColor: "#f5f5f7",
+                                  borderColor: "#e9e9ec",
                                   overflow: 'scroll',
                                   maxHeight: '100%'
                                 },
@@ -1446,7 +1447,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
               ) : (
                 <View key={url} style={{ flex: 1, maxHeight: 800 }}>
                   {/* <Webview key={url} url={url} /> */}
-                  <div className="webviewer" ref={RichText} style={{ height: "100vh", borderWidth: 1, borderColor: '#f5f5f7', borderRadius: 1 }}></div>
+                  <div className="webviewer" ref={RichText} style={{ height: "100vh", borderWidth: 1, borderColor: '#e9e9ec', borderRadius: 1 }}></div>
                 </View>
               )
             ) : null}
@@ -1546,7 +1547,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
               flexDirection: "column",
               marginHorizontal: 10,
               maxWidth: 700, alignSelf: 'center',
-              // marginLeft: width < 768 ? 0 : 200
+              // marginLeft: width < 1024 ? 0 : 200
             }}
           >
             {channels.length !== 0 ? (
@@ -1558,9 +1559,9 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
               >
                 <View
                   style={{
-                    flexDirection: width < 768 ? 'column' : "row",
+                    flexDirection: width < 1024 ? 'column' : "row",
                     borderRightWidth: 0,
-                    borderColor: "#f5f5f7",
+                    borderColor: "#e9e9ec",
                     paddingTop: 40
                   }}
                 >
@@ -1642,7 +1643,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                               borderRadius: 15,
                               shadowOpacity: 0,
                               borderWidth: 1,
-                              borderColor: "#f5f5f7",
+                              borderColor: "#e9e9ec",
                               overflow: 'scroll',
                               maxHeight: '100%'
                             },
@@ -1665,7 +1666,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 </View>
 
                 {
-                  channelId !== '' ? <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : "row", paddingTop: 40 }}>
+                  channelId !== '' ? <View style={{ width: "100%", flexDirection: width < 1024 ? 'column' : "row", paddingTop: 40 }}>
                     <View
                       style={{
                         flex: 1, flexDirection: 'row',
@@ -1745,7 +1746,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 }
 
                 {channelId !== "" ? (
-                  <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : "row", paddingTop: 40 }}>
+                  <View style={{ width: "100%", flexDirection: width < 1024 ? 'column' : "row", paddingTop: 40 }}>
                     <View
                       style={{
                         flex: 1, flexDirection: 'row',
@@ -1782,7 +1783,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           }}
                           style={{ height: 20 }}
                           trackColor={{
-                            false: "#f5f5f7",
+                            false: "#F4F4F6",
                             true: "#818385",
                           }}
                           activeThumbColor="white"
@@ -1862,7 +1863,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   </View>
                 ) : null}
                 {submission ? (
-                  <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : 'row', paddingTop: 40 }}>
+                  <View style={{ width: "100%", flexDirection: width < 1024 ? 'column' : 'row', paddingTop: 40 }}>
                     <View
                       style={{
                         flex: 1, flexDirection: 'row',
@@ -1896,7 +1897,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                             onValueChange={() => setGraded(!graded)}
                             style={{ height: 20 }}
                             trackColor={{
-                              false: "#f5f5f7",
+                              false: "#F4F4F6",
                               true: "#818385",
                             }}
                             activeThumbColor="white"
@@ -1928,7 +1929,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                               value={gradeWeight}
                               style={{
                                 width: "25%",
-                                borderBottomColor: "#f5f5f7",
+                                borderBottomColor: "#F4F4F6",
                                 borderBottomWidth: 1,
                                 fontSize: 15,
                                 padding: 15,
@@ -1949,7 +1950,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 {/* Late Submissions */}
 
                 {submission ? (
-                  <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : 'row', paddingTop: 40 }}>
+                  <View style={{ width: "100%", flexDirection: width < 1024 ? 'column' : 'row', paddingTop: 40 }}>
                     <View
                       style={{
                         flex: 1, flexDirection: 'row',
@@ -1983,7 +1984,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                             onValueChange={() => setAllowLateSubmission(!allowLateSubmission)}
                             style={{ height: 20 }}
                             trackColor={{
-                              false: "#f5f5f7",
+                              false: "#F4F4F6",
                               true: "#818385",
                             }}
                             activeThumbColor="white"
@@ -2029,7 +2030,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 {/* Allowed attempts */}
 
                 {submission && isQuiz ? (
-                  <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : 'row', paddingTop: 40 }}>
+                  <View style={{ width: "100%", flexDirection: width < 1024 ? 'column' : 'row', paddingTop: 40 }}>
                     <View
                       style={{
                         flex: 1, flexDirection: 'row',
@@ -2125,10 +2126,10 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 style={{
                   width: "100%",
                   borderRightWidth: 0,
-                  borderColor: "#f5f5f7",
+                  borderColor: "#e9e9ec",
                 }}
               >
-                <View style={{ width: "100%", backgroundColor: "white", flexDirection: width < 768 ? 'column' : 'row', paddingTop: 40 }}>
+                <View style={{ width: "100%", backgroundColor: "white", flexDirection: width < 1024 ? 'column' : 'row', paddingTop: 40 }}>
                   <View
                     style={{
                       flex: 1, flexDirection: 'row',
@@ -2190,7 +2191,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                 borderRadius: 15,
                                 shadowOpacity: 0,
                                 borderWidth: 1,
-                                borderColor: "#f5f5f7",
+                                borderColor: "#e9e9ec",
                                 overflow: 'scroll',
                                 maxHeight: '100%'
                               },
@@ -2245,8 +2246,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 style={{
                   width: "100%",
                   borderRightWidth: 0,
-                  borderColor: "#f5f5f7",
-                  flexDirection: width < 768 ? 'column' : 'row', paddingTop: 40
+                  borderColor: "#e9e9ec",
+                  flexDirection: width < 1024 ? 'column' : 'row', paddingTop: 40
                 }}
               >
                 <View
@@ -2317,7 +2318,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 flexDirection: "column",
               }}
             >
-              <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : 'row', paddingTop: 40 }}>
+              <View style={{ width: "100%", flexDirection: width < 1024 ? 'column' : 'row', paddingTop: 40 }}>
                 <View
                   style={{
                     flex: 1, flexDirection: 'row',
@@ -2359,15 +2360,15 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                     }}
                     style={{ height: 20 }}
                     trackColor={{
-                      false: "#f5f5f7",
-                      true: "#661CB0",
+                      false: "#F4F4F6",
+                      true: "#007AFF",
                     }}
                     activeThumbColor="white"
                   />
                 </View>
               </View>
               {notify ? (
-                <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : 'row', paddingTop: 40 }}>
+                <View style={{ width: "100%", flexDirection: width < 1024 ? 'column' : 'row', paddingTop: 40 }}>
                   <View
                     style={{
                       flex: 1, flexDirection: 'row',
@@ -2401,7 +2402,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                         onValueChange={() => setShuffle(!shuffle)}
                         style={{ height: 20 }}
                         trackColor={{
-                          false: "#f5f5f7",
+                          false: "#F4F4F6",
                           true: "#818385",
                         }}
                         activeThumbColor="white"
@@ -2443,7 +2444,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                 borderRadius: 15,
                                 shadowOpacity: 0,
                                 borderWidth: 1,
-                                borderColor: "#f5f5f7",
+                                borderColor: "#e9e9ec",
                                 overflow: 'scroll',
                                 maxHeight: '100%'
                               },
@@ -2495,7 +2496,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 </View>
               ) : null}
               {notify && !shuffle ? (
-                <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : 'row', paddingTop: 40 }}>
+                <View style={{ width: "100%", flexDirection: width < 1024 ? 'column' : 'row', paddingTop: 40 }}>
                   <View
                     style={{
                       flex: 1, flexDirection: 'row',
@@ -2531,7 +2532,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                         }
                         style={{ height: 20 }}
                         trackColor={{
-                          false: "#f5f5f7",
+                          false: "#F4F4F6",
                           true: "#818385",
                         }}
                         activeThumbColor="white"
@@ -2570,7 +2571,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
             </View>
             {/* if Quiz then ask Shuffle */}
             {isQuiz ? (
-              <View style={{ width: "100%", flexDirection: width < 768 ? 'column' : 'row', paddingTop: 40 }}>
+              <View style={{ width: "100%", flexDirection: width < 1024 ? 'column' : 'row', paddingTop: 40 }}>
                 <View
                   style={{
                     flex: 1, flexDirection: 'row',
@@ -2604,7 +2605,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                       onValueChange={() => setShuffleQuiz(!shuffleQuiz)}
                       style={{ height: 20 }}
                       trackColor={{
-                        false: "#f5f5f7",
+                        false: "#F4F4F6",
                         true: "#818385",
                       }}
                       activeThumbColor="white"
@@ -2647,7 +2648,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                       lineHeight: 35,
                       color: "white",
                       fontSize: 12,
-                      backgroundColor: "#661CB0",
+                      backgroundColor: "#007AFF",
                       borderRadius: 15,
                       paddingHorizontal: 25,
                       fontFamily: "inter",
@@ -2667,7 +2668,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                       lineHeight: 35,
                       color: "white",
                       fontSize: 12,
-                      backgroundColor: "#661CB0",
+                      backgroundColor: "#007AFF",
                       borderRadius: 15,
                       paddingHorizontal: 25,
                       fontFamily: "inter",
@@ -2687,7 +2688,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
           {/* Collapsible ends here */}
         </View>
       </Animated.View>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -2711,7 +2712,7 @@ const styles: any = StyleSheet.create({
   },
   cuesInput: {
     width: "100%",
-    backgroundColor: "#f5f5f7",
+    backgroundColor: "#F4F4F6",
     borderRadius: 15,
     fontSize: 20,
     padding: 20,
@@ -2750,7 +2751,7 @@ const styles: any = StyleSheet.create({
   },
   input: {
     width: "100%",
-    borderBottomColor: "#f5f5f7",
+    borderBottomColor: "#F4F4F6",
     borderBottomWidth: 1,
     fontSize: 15,
     paddingTop: 12,

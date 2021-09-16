@@ -264,7 +264,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             />
                         </View>
                         <View>
-                            <Text style={{ width: '100%', color: '#818385', fontSize: 24, paddingVertical: 50, marginLeft: '10%', paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                            <Text style={{ width: '100%', color: '#818385', fontSize: 23, paddingVertical: 50, marginLeft: '10%', paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                                 <Ionicons name='document-outline' size={50} color='#818385' />
                             </Text>
                         </View>
@@ -279,7 +279,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         <RichEditor
                             disabled={false}
                             containerStyle={{
-                                backgroundColor: '#f5f5f7',
+                                backgroundColor: '#F4F4F6',
                                 borderRadius: 15,
                                 padding: 3,
                                 paddingTop: 5,
@@ -289,12 +289,12 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             ref={RichText}
                             style={{
                                 width: '100%',
-                                backgroundColor: '#f5f5f7',
+                                backgroundColor: '#F4F4F6',
                                 borderRadius: 15,
                                 minHeight: 100
                             }}
                             editorStyle={{
-                                backgroundColor: '#f5f5f7',
+                                backgroundColor: '#F4F4F6',
                                 placeholderColor: '#818385',
                                 color: '#1D1D20',
                                 contentCSSText: 'font-size: 13px;'
@@ -356,7 +356,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                 borderRadius: 15,
                                                                 shadowOpacity: 0,
                                                                 borderWidth: 1,
-                                                                borderColor: '#f5f5f7',
+                                                                borderColor: '#e9e9ec',
                                                                 overflow: 'scroll',
                                                                 maxHeight: '100%'
                                                             }
@@ -412,7 +412,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     value={anonymous}
                                     onValueChange={() => setAnonymous(!anonymous)}
                                     trackColor={{
-                                        false: '#f5f5f7',
+                                        false: '#F4F4F6',
                                         true: '#818385'
                                     }}
                                     activeThumbColor='white'
@@ -433,7 +433,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                     value={isPrivate}
                                                     onValueChange={() => setIsPrivate(!isPrivate)}
                                                     trackColor={{
-                                                        false: '#f5f5f7',
+                                                        false: '#F4F4F6',
                                                         true: '#818385'
                                                     }}
                                                     activeThumbColor='white'
@@ -475,7 +475,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             lineHeight: 35,
                             color: 'white',
                             fontSize: 12,
-                            backgroundColor: '#661CB0',
+                            backgroundColor: '#007AFF',
                             borderRadius: 15,
                             paddingHorizontal: 25,
                             overflow: 'hidden',
@@ -547,7 +547,7 @@ const styles: any = StyleSheet.create({
     },
     input: {
         width: '100%',
-        borderBottomColor: '#f5f5f7',
+        borderBottomColor: '#F4F4F6',
         borderBottomWidth: 1,
         fontSize: 12,
         paddingTop: 12,

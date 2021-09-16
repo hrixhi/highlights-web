@@ -212,11 +212,11 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
         return <View
             style={{
-                width: Dimensions.get('window').width < 768 ? "100%" : "50%",
+                width: Dimensions.get('window').width < 1024 ? "100%" : "50%",
                 borderRightWidth: 0,
                 flex: 1,
                 paddingLeft: 0,
-                borderColor: "#f5f5f7",
+                borderColor: "#e9e9ec",
                 paddingTop: 10,
                 paddingRight: 25
             }}
@@ -265,8 +265,8 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     }}
                     style={{ height: 20, marginRight: 20 }}
                     trackColor={{
-                        false: "#f5f5f7",
-                        true: "#661CB0",
+                        false: "#F4F4F6",
+                        true: "#007AFF",
                     }}
                     activeThumbColor="white"
                 />
@@ -275,7 +275,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         style={{
                             borderRightWidth: 0,
                             paddingTop: 0,
-                            borderColor: "#f5f5f7",
+                            borderColor: "#e9e9ec",
                             flexDirection: 'row'
                         }}
                     >
@@ -302,7 +302,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             borderRadius: 15,
                                             shadowOpacity: 0,
                                             borderWidth: 1,
-                                            borderColor: "#f5f5f7",
+                                            borderColor: "#e9e9ec",
                                             overflow: 'scroll',
                                             maxHeight: '100%'
                                         },
@@ -341,7 +341,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             borderRadius: 15,
                                             shadowOpacity: 0,
                                             borderWidth: 1,
-                                            borderColor: "#f5f5f7",
+                                            borderColor: "#e9e9ec",
                                             overflow: 'scroll',
                                             maxHeight: '100%'
                                         },
@@ -392,8 +392,8 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     }}
                     style={{ height: 20, marginRight: 20 }}
                     trackColor={{
-                        false: "#f5f5f7",
-                        true: "#661CB0",
+                        false: "#F4F4F6",
+                        true: "#007AFF",
                     }}
                     activeThumbColor="white"
                 />
@@ -477,7 +477,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     maxWidth: "100%",
                     borderBottom: '1px solid #cccccc',
                     // fontWeight: "600",
-                    width: Dimensions.get('window').width < 768 ? '100%' : '50%'
+                    width: Dimensions.get('window').width < 1024 ? '100%' : '50%'
                 }}
                 onChange={(e: any) => {
                     const currentHeaders = JSON.parse(JSON.stringify(headers))
@@ -672,7 +672,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 (showEquationEditor ?
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                         <View style={{
-                            borderColor: '#f5f5f7',
+                            borderColor: '#e9e9ec',
                             borderWidth: 1,
                             borderRadius: 15,
                             padding: 10,
@@ -947,7 +947,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     }
 
 
-                    return <View style={{ borderBottomColor: '#f5f5f7', borderBottomWidth: index === (problems.length - 1) ? 0 : 1, marginBottom: 25 }} key={index}>
+                    return <View style={{ borderBottomColor: '#F4F4F6', borderBottomWidth: index === (problems.length - 1) ? 0 : 1, marginBottom: 25 }} key={index}>
                         {renderHeader(index)}
                         {props.isOwner && modifiedCorrectAnswerProblems[index] ?
                             <View style={{ marginVertical: 10, flexDirection: 'row', alignItems: 'center', padding: 10, backgroundColor: '#f3f3f3', borderRadius: 1 }}>
@@ -957,7 +957,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 </Text>
                             </View>
                             : null}
-                        <View style={{ flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row' }}>
+                        <View style={{ flexDirection: Dimensions.get('window').width < 1024 ? 'column' : 'row' }}>
                             <View style={{ flexDirection: 'row', flex: 1 }}>
                                 <View style={{ paddingTop: 15 }}>
                                     <Text style={{ color: '#a2a2ac', fontSize: 15, paddingBottom: 25, marginRight: 10, paddingTop: 10 }}>
@@ -979,7 +979,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         (
                                             problem.question && problem.question.includes("formula:") ? (
                                                 <View style={{
-                                                    // borderColor: '#f5f5f7',
+                                                    // borderColor: '#e9e9ec',
                                                     // borderWidth: 1,
                                                     // borderRadius: 15,
                                                     padding: 10,
@@ -1057,7 +1057,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 }
 
                             </View>
-                            <View style={{ flexDirection: 'column', paddingTop: 15, marginBottom: Dimensions.get('window').width < 768 ? 30 : 0 }}>
+                            <View style={{ flexDirection: 'column', paddingTop: 15, marginBottom: Dimensions.get('window').width < 1024 ? 30 : 0 }}>
                                 <View
                                     style={{ flexDirection: 'row', height: 40, }}
                                 >
@@ -1073,7 +1073,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             marginBottom: 20,
                                             width: 150,
                                             maxHeight: 40,
-                                            paddingLeft: Dimensions.get('window').width < 768 ? 40 : 0,
+                                            paddingLeft: Dimensions.get('window').width < 1024 ? 40 : 0,
                                             fontWeight: props.isOwner && editQuestionNumber === (index + 1) ? 'normal' : '700',
                                             borderBottomColor: '#cccccc'
                                         }}
@@ -1097,7 +1097,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     }
                                     {
                                         props.isOwner ? (editQuestionNumber !== (index + 1) ?
-                                            (<TouchableOpacity onPress={() => setEditQuestionNumber(index + 1)} style={{ marginBottom: 20, paddingTop: 8, paddingLeft: 30, paddingRight: 5 }}> <Ionicons name='pencil-outline' size={25} color={'#661CB0'} /></TouchableOpacity>)
+                                            (<TouchableOpacity onPress={() => setEditQuestionNumber(index + 1)} style={{ marginBottom: 20, paddingTop: 8, paddingLeft: 30, paddingRight: 5 }}> <Ionicons name='pencil-outline' size={25} color={'#007AFF'} /></TouchableOpacity>)
                                             : (<TouchableOpacity style={{ marginBottom: 20, paddingTop: 8, paddingLeft: 30, paddingRight: 5 }}> <View style={{ width: 22 }} /></TouchableOpacity>))
                                             :
                                             null
@@ -1188,7 +1188,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                         ? <TextareaAutosize
                                                             value={option.option}
                                                             style={{
-                                                                width: Dimensions.get('window').width < 768 ? '80%' : '50%',
+                                                                width: Dimensions.get('window').width < 1024 ? '80%' : '50%',
                                                                 fontSize: 15,
                                                                 padding: 15,
                                                                 paddingTop: 12,
@@ -1209,7 +1209,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                         :
                                                         <Text
                                                             style={{
-                                                                width: Dimensions.get('window').width < 768 ? '80%' : '50%',
+                                                                width: Dimensions.get('window').width < 1024 ? '80%' : '50%',
                                                                 fontSize: 15,
                                                                 padding: 15,
                                                                 paddingTop: 12,
@@ -1304,7 +1304,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 borderColor: '#b9b9b9',
                                                 overflow: 'scroll',
                                                 maxHeight: '100%',
-                                                width: Dimensions.get('window').width < 768 ? 300 : 400
+                                                width: Dimensions.get('window').width < 1024 ? 300 : 400
                                             }
                                         }}>
                                             {
@@ -1338,7 +1338,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 lineHeight: 35,
                                                 color: "#1D1D20",
                                                 fontSize: 12,
-                                                backgroundColor: "#f5f5f7",
+                                                backgroundColor: "#F4F4F6",
                                                 borderRadius: 15,
                                                 paddingHorizontal: 25,
                                                 fontFamily: "inter",
@@ -1360,7 +1360,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 lineHeight: 35,
                                                 color: "#1D1D20",
                                                 fontSize: 12,
-                                                backgroundColor: "#f5f5f7",
+                                                backgroundColor: "#F4F4F6",
                                                 borderRadius: 15,
                                                 paddingHorizontal: 25,
                                                 fontFamily: "inter",
@@ -1398,7 +1398,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     lineHeight: 35,
                                     color: "white",
                                     fontSize: 12,
-                                    backgroundColor: "#661CB0",
+                                    backgroundColor: "#007AFF",
                                     borderRadius: 15,
                                     paddingHorizontal: 25,
                                     fontFamily: "inter",
@@ -1423,7 +1423,7 @@ export default Quiz;
 const styles = StyleSheet.create({
     input: {
         width: '50%',
-        // borderBottomColor: '#f5f5f7',
+        // borderBottomColor: '#F4F4F6',
         // borderBottomWidth: 1,
         fontSize: 15,
         paddingTop: 12,

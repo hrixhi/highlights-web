@@ -305,10 +305,10 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
     return (
         <View style={styles.screen} key={1}>
             <View style={{ width: '100%', backgroundColor: 'white' }}>
-                <View style={{ width: '100%', flexDirection: width < 768 ? 'column' : 'row' }}>
+                <View style={{ width: '100%', flexDirection: width < 1024 ? 'column' : 'row' }}>
                     <View style={{
                         backgroundColor: '#fff',
-                        width: width < 768 ? '100%' : '50%',
+                        width: width < 1024 ? '100%' : '50%',
                     }}>
                         <Text style={{
                             fontSize: 23,
@@ -330,17 +330,17 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             }}
                         >
                             {/* <View style={{ backgroundColor: '#fff', flexDirection: 'row' }}>
-                                <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#f5f5f7', paddingLeft: 10 }}>
+                                <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#F4F4F6', paddingLeft: 10 }}>
                                     <Text style={{ fontSize: 20, lineHeight: 50, fontFamily: 'inter', paddingHorizontal: 20, paddingVertical: 5 }} ellipsizeMode='tail'>
                                         Name
                                     </Text>
                                 </View>
-                                <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#f5f5f7', paddingLeft: 10 }}>
+                                <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#F4F4F6', paddingLeft: 10 }}>
                                     <Text style={{ fontSize: 20, lineHeight: 50, fontFamily: 'inter', paddingHorizontal: 20, paddingVertical: 5 }} ellipsizeMode='tail'>
                                         Instructor
                                     </Text>
                                 </View>
-                                <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#f5f5f7', paddingLeft: 10 }}>
+                                <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#F4F4F6', paddingLeft: 10 }}>
 
                                 </View>
                             </View> */}
@@ -353,7 +353,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             backgroundColor: '#fff', flexDirection: 'row', borderColor: '#D1D1D6',
                                             borderBottomWidth: ind === channels.length - 1 ? 0 : 1
                                         }}>
-                                            <View style={{ flex: 1, backgroundColor: '#f5f5f7', paddingLeft: 10 }}>
+                                            <View style={{ flex: 1, backgroundColor: '#F4F4F6', paddingLeft: 10 }}>
                                                 <Text style={{ fontSize: 12, padding: 10, fontFamily: 'inter' }} ellipsizeMode='tail'>
                                                     {channel.name}
                                                 </Text>
@@ -367,7 +367,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 <TouchableOpacity
                                                     onPress={() => handleSub(channel.name)}
                                                 >
-                                                    <Text style={{ textAlign: 'center', fontSize: 12, padding: 20, color: '#661CB0' }} ellipsizeMode='tail'>
+                                                    <Text style={{ textAlign: 'center', fontSize: 12, padding: 20, color: '#007AFF' }} ellipsizeMode='tail'>
                                                         Join
                                                     </Text>
                                                 </TouchableOpacity>
@@ -380,11 +380,11 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                     </View>
                     <View style={{
                         backgroundColor: 'white',
-                        paddingLeft: width < 768 ? 0 : 20,
-                        paddingTop: width < 768 ? 40 : 0,
-                        marginLeft: width < 768 ? 0 : 20,
-                        borderLeftWidth: width < 768 ? 0 : 1, borderLeftColor: '#D1D1D6',
-                        width: width < 768 ? '100%' : '50%'
+                        paddingLeft: width < 1024 ? 0 : 20,
+                        paddingTop: width < 1024 ? 40 : 0,
+                        marginLeft: width < 1024 ? 0 : 20,
+                        borderLeftWidth: width < 1024 ? 0 : 1, borderLeftColor: '#D1D1D6',
+                        width: width < 1024 ? '100%' : '50%'
                     }}>
                         <Text style={{
                             fontSize: 23,
@@ -476,8 +476,8 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             onValueChange={() => setTemporary(!temporary)}
                                             style={{ height: 20 }}
                                             trackColor={{
-                                                false: "#f5f5f7",
-                                                true: "#661CB0"
+                                                false: "#F4F4F6",
+                                                true: "#007AFF"
                                             }}
                                             activeThumbColor="white"
                                         />
@@ -546,7 +546,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             lineHeight: 35,
                                             color: 'white',
                                             fontSize: 12,
-                                            backgroundColor: '#661CB0',
+                                            backgroundColor: '#007AFF',
                                             paddingHorizontal: 25,
                                             fontFamily: 'inter',
                                             height: 35,
@@ -569,7 +569,7 @@ export default ChannelControls;
 const styles = StyleSheet.create({
     screen: {
         padding: 15,
-        paddingHorizontal: Dimensions.get('window').width < 768 ? 0 : 20,
+        paddingHorizontal: Dimensions.get('window').width < 1024 ? 0 : 20,
         width: '100%',
         height: Dimensions.get('window').height - 230,
         backgroundColor: 'white',
@@ -604,7 +604,7 @@ const styles = StyleSheet.create({
     },
     input: {
         width: '100%',
-        borderBottomColor: '#f5f5f7',
+        borderBottomColor: '#F4F4F6',
         borderBottomWidth: 1,
         fontSize: 15,
         paddingTop: 13,

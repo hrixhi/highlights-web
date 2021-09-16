@@ -45,7 +45,7 @@ const ActivityCard: React.FunctionComponent<{ [label: string]: any }> = (props: 
                             }
                         </Text>
 
-                    </View> <View style={{ backgroundColor: '#f5f5f7', width: '100%', flexDirection: 'row', display: 'flex' }}>
+                    </View> <View style={{ backgroundColor: '#F4F4F6', width: '100%', flexDirection: 'row', display: 'flex' }}>
                         <Text ellipsizeMode={'tail'}
                             numberOfLines={1}
                             style={styleObject.title}>
@@ -93,7 +93,7 @@ const styles: any = () => StyleSheet.create({
         maxWidth: 500,
         borderRadius: 1,
         overflow: 'hidden',
-        backgroundColor: '#f5f5f7',
+        backgroundColor: '#F4F4F6',
     },
     badge: {
         width: 20,
@@ -109,20 +109,20 @@ const styles: any = () => StyleSheet.create({
         width: '100%',
         borderRadius: 1,
         padding: 13,
-        backgroundColor: '#f5f5f7',
+        backgroundColor: '#F4F4F6',
         borderWidth: 1,
-        borderColor: '#f5f5f7'
+        borderColor: '#e9e9ec'
     },
     text: {
         display: 'flex',
         flexDirection: 'column',
         flex: 1,
-        backgroundColor: '#f5f5f7'
+        backgroundColor: '#F4F4F6'
     },
     dateContainer: {
         fontSize: 10,
         height: '22%',
-        backgroundColor: '#f5f5f7',
+        backgroundColor: '#F4F4F6',
         display: 'flex',
         flexDirection: 'row'
     },

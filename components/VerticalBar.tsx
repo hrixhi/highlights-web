@@ -47,11 +47,11 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
             <View style={{
                 display: 'flex',
                 flex: 1,
-                borderColor: '#f5f5f7',
-                // borderRightWidth: Dimensions.get('window').width < 768 ? 0 : 1,
-                // paddingHorizontal: Dimensions.get('window').width < 768 ? 15 : 0,
+                borderColor: '#e9e9ec',
+                // borderRightWidth: Dimensions.get('window').width < 1024 ? 0 : 1,
+                // paddingHorizontal: Dimensions.get('window').width < 1024 ? 15 : 0,
                 paddingTop: 5,
-                backgroundColor: '#f5f5f7',
+                backgroundColor: '#F4F4F6',
                 flexDirection: 'row'
             }}>
                 <View style={styles.icons}>
@@ -64,7 +64,7 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             props.setChannelCreatedBy('')
                             props.closeModal()
                         }}
-                        style={{ backgroundColor: '#f5f5f7', width: '100%', paddingBottom: 20 }}
+                        style={{ backgroundColor: '#F4F4F6', width: '100%', paddingBottom: 20 }}
                     >
                         <Text style={{ lineHeight: 35, width: '100%', textAlign: 'center' }}>
                             <Ionicons name='arrow-back-outline' size={30} color={'#1D1D20'} />
@@ -74,7 +74,7 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 {
                     selectedChannel ? <View style={styles.icons}>
                         <Text style={{
-                            fontSize: 24,
+                            fontSize: 23,
                             fontFamily: 'inter',
                             lineHeight: 30,
                             color: '#1D1D20'
@@ -90,18 +90,18 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         </Text>
                     </View> : null
                 }
-                <View style={{ backgroundColor: '#f5f5f7', flexDirection: 'row', flex: 1 }} />
+                <View style={{ backgroundColor: '#F4F4F6', flexDirection: 'row', flex: 1 }} />
                 <View style={styles.icons}>
                     {
                         props.channelId !== '' && (props.menuCollapsed === true) ?
                             <TouchableOpacity
-                                style={{ backgroundColor: '#f5f5f7', width: Dimensions.get('window').width < 768 ? 'auto' : '100%', paddingBottom: 20 }}
+                                style={{ backgroundColor: '#F4F4F6', width: Dimensions.get('window').width < 1024 ? 'auto' : '100%', paddingBottom: 20 }}
                                 onPress={() => props.openMeeting()}>
                                 <Text style={styles.channelText}>
                                     <Ionicons
                                         name='chatbubbles-outline' size={19} color={'#1D1D20'} />
                                 </Text>
-                                <Text style={{ fontSize: 10, color: '#1D1D20', textAlign: 'center', width: Dimensions.get('window').width < 768 ? 'auto' : '100%' }}>
+                                <Text style={{ fontSize: 10, color: '#1D1D20', textAlign: 'center', width: Dimensions.get('window').width < 1024 ? 'auto' : '100%' }}>
                                     Classroom
                                 </Text>
                             </TouchableOpacity>
@@ -113,8 +113,8 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         isOwner && props.channelId !== '' && (props.menuCollapsed === true) ?
                             <TouchableOpacity
                                 style={{
-                                    backgroundColor: '#f5f5f7',
-                                    width: Dimensions.get('window').width < 768 ? 'auto' : '100%',
+                                    backgroundColor: '#F4F4F6',
+                                    width: Dimensions.get('window').width < 1024 ? 'auto' : '100%',
                                     paddingBottom: 20
                                 }}
                                 onPress={() => props.openChannelSettings()}>
@@ -130,9 +130,9 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 <View style={styles.icons2}>
                     {
                         props.channelId !== '' && (props.menuCollapsed === true) ?
-                            <TouchableOpacity style={{ backgroundColor: '#f5f5f7', width: '100%', paddingBottom: 20 }}
+                            <TouchableOpacity style={{ backgroundColor: '#F4F4F6', width: '100%', paddingBottom: 20 }}
                                 onPress={() => props.hideMenu()}>
-                                <Text style={{ lineHeight: 35, width: '100%', textAlign: 'center' }}>
+                                <Text style={{ lineHeight: 30, width: '100%', textAlign: 'center' }}>
                                     <Ionicons
                                         name='chevron-down-outline' size={30} color={'#1D1D20'} />
                                 </Text>
@@ -148,12 +148,12 @@ export default VerticalBar
 
 const styleObject: any = (colorScheme: any, mc: any) => StyleSheet.create({
     bottombar: {
-        height: 59,
+        height: 60,
         width: '100%',
         paddingHorizontal: Dimensions.get('window').width < 1024 ? 20 : 40,
         paddingTop: 10,
-        flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row',
-        backgroundColor: '#f5f5f7',
+        flexDirection: Dimensions.get('window').width < 1024 ? 'column' : 'row',
+        backgroundColor: '#F4F4F6',
     },
     icons: {
         display: 'flex',
@@ -161,7 +161,7 @@ const styleObject: any = (colorScheme: any, mc: any) => StyleSheet.create({
         flexDirection: 'row',
         paddingRight: 25,
         overflow: 'hidden',
-        backgroundColor: '#f5f5f7'
+        backgroundColor: '#F4F4F6'
     },
     icons2: {
         display: 'flex',
@@ -169,7 +169,7 @@ const styleObject: any = (colorScheme: any, mc: any) => StyleSheet.create({
         flexDirection: 'row',
         paddingRight: 0,
         overflow: 'hidden',
-        backgroundColor: '#f5f5f7'
+        backgroundColor: '#F4F4F6'
     },
     defaultFont: {
         fontFamily: 'system font'

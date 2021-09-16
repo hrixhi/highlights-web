@@ -129,7 +129,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
             colorCode = matchSubscription.colorCode
         }
 
-        return <span style={{ color: colorCode, backgroundColor: '#f5f5f7', borderRadius: 1, padding: 20, overflow: 'hidden' }}>{event.title}</span>
+        return <span style={{ color: colorCode, backgroundColor: '#F4F4F6', borderRadius: 1, padding: 20, overflow: 'hidden' }}>{event.title}</span>
 
     }
 
@@ -254,7 +254,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
         return (<View style={{
             marginTop: 0,
             flexDirection: 'row',
-            // paddingTop: width < 768 ? 20 : 0
+            // paddingTop: width < 1024 ? 20 : 0
             // borderWidth: 1,
             // alignSelf: 'flex-start',
             // flex: 1
@@ -277,7 +277,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     borderRadius: 15,
                                     shadowOpacity: 0,
                                     borderWidth: 1,
-                                    borderColor: '#f5f5f7',
+                                    borderColor: '#e9e9ec',
                                     overflow: 'scroll',
                                     maxHeight: '100%'
                                 }
@@ -339,7 +339,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     borderRadius: 15,
                                     shadowOpacity: 0,
                                     borderWidth: 1,
-                                    borderColor: '#f5f5f7',
+                                    borderColor: '#e9e9ec',
                                     overflow: 'scroll',
                                     maxHeight: '100%'
                                 }
@@ -419,7 +419,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     borderRadius: 15,
                                     shadowOpacity: 0,
                                     borderWidth: 1,
-                                    borderColor: '#f5f5f7',
+                                    borderColor: '#e9e9ec',
                                     overflow: 'scroll',
                                     maxHeight: '100%'
                                 }
@@ -883,7 +883,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const renderRecurringOptions = () => (
         <View style={{}}>
             <View style={{ width: 300, display: "flex" }}>
-                <View style={{ width: "100%", paddingTop: width < 768 ? 40 : 40, paddingBottom: 15, backgroundColor: "white" }}>
+                <View style={{ width: "100%", paddingTop: width < 1024 ? 40 : 40, paddingBottom: 15, backgroundColor: "white" }}>
                     <Text style={{
                         fontSize: 15,
                         fontFamily: 'inter',
@@ -902,8 +902,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         onValueChange={() => setRecurring(!recurring)}
                         style={{ height: 20 }}
                         trackColor={{
-                            false: "#f5f5f7",
-                            true: "#661CB0"
+                            false: "#F4F4F6",
+                            true: "#007AFF"
                         }}
                         activeThumbColor="white"
                     />
@@ -911,7 +911,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
             </View>
 
             {recurring ? <View style={{ width: 300, display: "flex" }}>
-                <View style={{ width: "100%", paddingTop: width < 768 ? 20 : 40, paddingBottom: 15, backgroundColor: "white" }}>
+                <View style={{ width: "100%", paddingTop: width < 1024 ? 20 : 40, paddingBottom: 15, backgroundColor: "white" }}>
                     <Text
                         style={{
                             fontSize: 15,
@@ -942,7 +942,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 borderRadius: 15,
                                 shadowOpacity: 0,
                                 borderWidth: 1,
-                                borderColor: '#f5f5f7'
+                                borderColor: '#e9e9ec'
                             }
                         }}>
                             {eventFrequencyOptions.map((item: any, index: number) => {
@@ -963,7 +963,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
             </View> : null}
 
             {recurring ? <View style={{ width: 300, display: "flex" }}>
-                <View style={{ width: "100%", paddingTop: width < 768 ? 20 : 40, paddingBottom: 15, backgroundColor: "white" }}>
+                <View style={{ width: "100%", paddingTop: width < 1024 ? 20 : 40, paddingBottom: 15, backgroundColor: "white" }}>
                     <Text style={{
                         fontSize: 15,
                         fontFamily: 'inter',
@@ -1016,14 +1016,14 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     const renderMeetingOptions = () => {
         return channelId !== "" || editChannelName !== "" ? (
-            <DefaultView style={{ width: "100%", flexDirection: width < 768 ? "column" : "row", paddingBottom: 15 }}>
+            <DefaultView style={{ width: "100%", flexDirection: width < 1024 ? "column" : "row", paddingBottom: 15 }}>
                 {!editEvent ? <View
                     style={{
                         display: "flex",
                         flexDirection: "column",
-                        width: width < 768 ? "100%" : "33.33%"
+                        width: width < 1024 ? "100%" : "33.33%"
                     }}>
-                    <View style={{ width: "100%", paddingTop: width < 768 ? 40 : 30, paddingBottom: 15, backgroundColor: "white" }}>
+                    <View style={{ width: "100%", paddingTop: width < 1024 ? 40 : 30, paddingBottom: 15, backgroundColor: "white" }}>
                         <Text style={{
                             fontSize: 15,
                             fontFamily: 'inter',
@@ -1042,8 +1042,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             }}
                             style={{ height: 20 }}
                             trackColor={{
-                                false: "#f5f5f7",
-                                true: "#661CB0"
+                                false: "#F4F4F6",
+                                true: "#007AFF"
                             }}
                             disabled={editEvent}
                             activeThumbColor="white"
@@ -1055,9 +1055,9 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         style={{
                             display: "flex",
                             flexDirection: "column",
-                            width: width < 768 ? "100%" : "33.33%"
+                            width: width < 1024 ? "100%" : "33.33%"
                         }}>
-                        <View style={{ width: "100%", paddingTop: width < 768 ? 20 : 30, paddingBottom: 15, backgroundColor: "white" }}>
+                        <View style={{ width: "100%", paddingTop: width < 1024 ? 20 : 30, paddingBottom: 15, backgroundColor: "white" }}>
                             <Text style={{ fontSize: 11, color: '#818385', textTransform: 'uppercase', marginBottom: 5 }}>Record Lecture</Text>
                         </View>
                         <Switch
@@ -1067,7 +1067,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             }}
                             style={{ height: 20 }}
                             trackColor={{
-                                false: "#f5f5f7",
+                                false: "#F4F4F6",
                                 true: "#818385"
                             }}
                             activeThumbColor="white"
@@ -1081,7 +1081,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const renderEditChannelName = () => {
 
         return editChannelName && (
-            <View style={{ maxWidth: width < 768 ? "100%" : "33%" }}>
+            <View style={{ maxWidth: width < 1024 ? "100%" : "33%" }}>
                 <TouchableOpacity
                     key={Math.random()}
                     disabled={true}
@@ -1160,7 +1160,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 lineHeight: 35,
                                 color: 'white',
                                 fontSize: 12,
-                                backgroundColor: '#661CB0',
+                                backgroundColor: '#007AFF',
                                 paddingHorizontal: 25,
                                 fontFamily: "inter",
                                 height: 35,
@@ -1191,7 +1191,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         lineHeight: 35,
                         color: 'white',
                         fontSize: 12,
-                        backgroundColor: '#661CB0',
+                        backgroundColor: '#007AFF',
                         paddingHorizontal: 25,
                         fontFamily: "inter",
                         height: 35,
@@ -1220,7 +1220,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         lineHeight: 35,
                         color: "#1D1D20",
                         fontSize: 12,
-                        backgroundColor: "#f5f5f7",
+                        backgroundColor: "#F4F4F6",
                         paddingHorizontal: 25,
                         fontFamily: "inter",
                         height: 35,
@@ -1250,7 +1250,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         lineHeight: 35,
                         color: "#1D1D20",
                         fontSize: 12,
-                        backgroundColor: "#f5f5f7",
+                        backgroundColor: "#F4F4F6",
                         paddingHorizontal: 25,
                         fontFamily: "inter",
                         height: 35,
@@ -1316,19 +1316,19 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 overflow: 'hidden'
             }}>
             <View style={{
-                width: '100%', flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row',
+                width: '100%', flexDirection: Dimensions.get('window').width < 1024 ? 'column' : 'row',
                 paddingTop: 30
             }}>
                 <View style={{
-                    width: Dimensions.get('window').width < 768 ? '100%' : '50%',
-                    paddingRight: Dimensions.get('window').width < 768 ? 0 : 30,
-                    borderRightWidth: Dimensions.get('window').width < 768 ? 0 : 1,
-                    borderColor: '#f5f5f7'
+                    width: Dimensions.get('window').width < 1024 ? '100%' : '50%',
+                    paddingRight: Dimensions.get('window').width < 1024 ? 0 : 30,
+                    borderRightWidth: Dimensions.get('window').width < 1024 ? 0 : 1,
+                    borderColor: '#e9e9ec'
                 }}>
                     <ScrollView
                         style={{
                             width: "100%",
-                            height: windowHeight - (Dimensions.get('window').width < 768 ? 225 : 125),
+                            height: windowHeight - (Dimensions.get('window').width < 1024 ? 225 : 125),
                             backgroundColor: "white",
                             borderTopRightRadius: 0,
                             borderTopLeftRadius: 0
@@ -1340,13 +1340,13 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         overScrollMode={"never"}
                         nestedScrollEnabled={true}>
                         <View style={{ backgroundColor: "white", flexDirection: "row" }}>
-                            <View style={{ flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row', flex: 1 }}>
+                            <View style={{ flexDirection: Dimensions.get('window').width < 1024 ? 'column' : 'row', flex: 1 }}>
                                 <Text
                                     ellipsizeMode="tail"
                                     style={{
                                         marginRight: 10,
                                         color: '#1D1D20',
-                                        fontSize: 24,
+                                        fontSize: 23,
                                         paddingBottom: 20,
                                         fontFamily: 'inter',
                                         flex: 1,
@@ -1382,7 +1382,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     lineHeight: 30,
                                     color: showAddEvent ? '#1D1D20' : '#fff',
                                     fontSize: 12,
-                                    backgroundColor: showAddEvent ? '#f5f5f7' : '#4b956b',
+                                    backgroundColor: showAddEvent ? '#F4F4F6' : '#3abb83',
                                     paddingHorizontal: 25,
                                     fontFamily: 'inter',
                                     height: 30,
@@ -1490,7 +1490,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     // marginTop: 12,
                                                     paddingVertical: 15
                                                     // alignItems: 'center',
-                                                    // marginLeft: width < 768 ? 0 : 30
+                                                    // marginLeft: width < 1024 ? 0 : 30
                                                 }}>
                                                 <Text style={styles.text}>{PreferredLanguageText("end")}</Text>
                                                 <DatePicker
@@ -1510,7 +1510,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         <View
                                             style={{
                                                 marginBottom: 20,
-                                                borderColor: "#f5f5f7",
+                                                borderColor: "#e9e9ec",
                                                 // borderBottomWidth: 1,
                                                 paddingTop: 20
                                             }}>
@@ -1543,7 +1543,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                     borderRadius: 15,
                                                                     shadowOpacity: 0,
                                                                     borderWidth: 1,
-                                                                    borderColor: '#f5f5f7'
+                                                                    borderColor: '#e9e9ec'
                                                                 }
                                                             }}>
                                                                 <MenuOption
@@ -1602,7 +1602,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                             lineHeight: 35,
                                                             color: 'white',
                                                             fontSize: 12,
-                                                            backgroundColor: '#661CB0',
+                                                            backgroundColor: '#007AFF',
                                                             paddingHorizontal: 25,
                                                             fontFamily: "inter",
                                                             height: 35,
@@ -1638,9 +1638,9 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 height: 'auto',
                                                 overflow: 'hidden',
                                                 marginTop: 20,
-                                                marginBottom: Dimensions.get('window').width < 768 ? 20 : 0,
+                                                marginBottom: Dimensions.get('window').width < 1024 ? 20 : 0,
                                                 borderWidth: 1,
-                                                borderColor: '#f5f5f7'
+                                                borderColor: '#e9e9ec'
                                             }}
                                         >
                                             <Eventcalendar
@@ -1659,13 +1659,13 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         )}
                         {/* TEMPORARILY HIDDEN */}
                         <View style={{ backgroundColor: "white", display: 'none' }}>
-                            <View style={{ flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row', flex: 1, paddingTop: 40 }}>
+                            <View style={{ flexDirection: Dimensions.get('window').width < 1024 ? 'column' : 'row', flex: 1, paddingTop: 40 }}>
                                 <Text
                                     ellipsizeMode="tail"
                                     style={{
                                         marginRight: 10,
                                         color: '#1D1D20',
-                                        fontSize: 24,
+                                        fontSize: 23,
                                         paddingBottom: 20,
                                         fontFamily: 'inter',
                                         flex: 1,
@@ -1683,7 +1683,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     width: '100%',
                                     // borderWidth: 1,
                                     borderRadius: 1,
-                                    borderColor: '#f5f5f7',
+                                    borderColor: '#e9e9ec',
                                     marginBottom: 25,
                                 }}
                                 height="450"
@@ -1695,15 +1695,15 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     </ScrollView>
                 </View>
                 <View style={{
-                    width: Dimensions.get('window').width < 768 ? '100%' : '50%',
-                    paddingLeft: Dimensions.get('window').width < 768 ? 0 : 30,
-                    paddingTop: Dimensions.get('window').width < 768 ? 30 : 0
+                    width: Dimensions.get('window').width < 1024 ? '100%' : '50%',
+                    paddingLeft: Dimensions.get('window').width < 1024 ? 0 : 30,
+                    paddingTop: Dimensions.get('window').width < 1024 ? 30 : 0
                 }}>
                     <View style={{ flexDirection: 'row' }}>
                         <Text style={{
                             marginRight: 10,
                             color: '#1D1D20',
-                            fontSize: 24,
+                            fontSize: 23,
                             paddingBottom: 20,
                             fontFamily: 'inter',
                             // flex: 1,
@@ -1758,7 +1758,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             borderRadius: 15,
                                             shadowOpacity: 0,
                                             borderWidth: 1,
-                                            borderColor: '#f5f5f7',
+                                            borderColor: '#e9e9ec',
                                             overflow: 'scroll',
                                             maxHeight: '100%'
                                         }
@@ -1862,7 +1862,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         lineHeight: 30,
                                         color: unreadCount === 0 ? '#1D1D20' : '#fff',
                                         fontSize: 12,
-                                        backgroundColor: unreadCount === 0 ? '#f5f5f7' : '#4b956b',
+                                        backgroundColor: unreadCount === 0 ? '#F4F4F6' : '#3abb83',
                                         paddingHorizontal: 20,
                                         fontFamily: 'inter',
                                         height: 30,
@@ -1877,129 +1877,135 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         </View>
                     </View>
                     <ScrollView
-                        showsVerticalScrollIndicator={false}
-                        horizontal={false}
-                        // style={{ height: '100%' }}
-                        contentContainerStyle={{
-                            borderWidth: activity.length === 0 ? 0 : 1,
-                            width: '100%',
-                            // height: windowHeight - 100,
-                            borderRadius: 1,
-                            overflow: 'hidden',
-                            borderColor: '#f5f5f7'
-                        }}
+                        horizontal={true}
                     >
-                        {
-                            activity.map((act: any, index) => {
+                        <ScrollView
+                            showsVerticalScrollIndicator={false}
+                            horizontal={false}
+                            // style={{ height: '100%' }}
+                            contentContainerStyle={{
+                                borderWidth: activity.length === 0 ? 0 : 1,
+                                width: '100%',
+                                minWidth: width < 1024 ? 600 : 0,
+                                maxHeight: windowHeight - 250,
+                                borderRadius: 1,
+                                // overflow: 'hidden',
+                                borderColor: '#e9e9ec'
+                            }}
+                        >
+                            {
+                                activity.map((act: any, index) => {
 
-                                const { cueId, channelId, createdBy, target } = act;
+                                    const { cueId, channelId, createdBy, target } = act;
 
-                                if (activityChannelId !== '') {
-                                    if (activityChannelId !== act.channelId) {
-                                        return
+                                    if (activityChannelId !== '') {
+                                        if (activityChannelId !== act.channelId) {
+                                            return
+                                        }
                                     }
-                                }
 
-                                const date = new Date(act.date)
+                                    const date = new Date(act.date)
 
-                                if (props.filterStart && props.filterEnd) {
-                                    const start = new Date(props.filterStart)
-                                    if (date < start) {
-                                        return
+                                    if (props.filterStart && props.filterEnd) {
+                                        const start = new Date(props.filterStart)
+                                        if (date < start) {
+                                            return
+                                        }
+                                        const end = new Date(props.filterEnd)
+                                        if (date > end) {
+                                            return
+                                        }
                                     }
-                                    const end = new Date(props.filterEnd)
-                                    if (date > end) {
-                                        return
-                                    }
-                                }
 
 
-                                return <TouchableOpacity
-                                    onPress={async () => {
-                                        const uString: any = await AsyncStorage.getItem("user");
-                                        if (uString) {
-                                            const user = JSON.parse(uString);
-                                            const server = fetchAPI("");
-                                            server
-                                                .mutate({
-                                                    mutation: markActivityAsRead,
-                                                    variables: {
-                                                        activityId: act._id,
-                                                        userId: user._id,
-                                                        markAllRead: false
-                                                    }
-                                                })
-                                                .then(res => {
-                                                    if (res.data.activity.markActivityAsRead) {
-                                                        // setChannels(res.data.channel.findByUserId);
-                                                        console.log("Mark as read", res.data.activity.markActivityAsRead);
-                                                    }
-                                                })
-                                                .catch(err => { });
-                                        }
+                                    return <TouchableOpacity
+                                        onPress={async () => {
+                                            const uString: any = await AsyncStorage.getItem("user");
+                                            if (uString) {
+                                                const user = JSON.parse(uString);
+                                                const server = fetchAPI("");
+                                                server
+                                                    .mutate({
+                                                        mutation: markActivityAsRead,
+                                                        variables: {
+                                                            activityId: act._id,
+                                                            userId: user._id,
+                                                            markAllRead: false
+                                                        }
+                                                    })
+                                                    .then(res => {
+                                                        if (res.data.activity.markActivityAsRead) {
+                                                            // setChannels(res.data.channel.findByUserId);
+                                                            console.log("Mark as read", res.data.activity.markActivityAsRead);
+                                                        }
+                                                    })
+                                                    .catch(err => { });
+                                            }
 
-                                        // Opens the cue from the activity
-                                        if (cueId !== null && cueId !== "" && channelId !== "" && createdBy !== "" && (target === "CUE")) {
-                                            props.openCueFromCalendar(channelId, cueId, createdBy)
-                                        }
+                                            // Opens the cue from the activity
+                                            if (cueId !== null && cueId !== "" && channelId !== "" && createdBy !== "" && (target === "CUE")) {
+                                                props.openCueFromCalendar(channelId, cueId, createdBy)
+                                            }
 
-                                        if (target === "DISCUSSION") {
-                                            props.openDiscussion(channelId, createdBy)
-                                        }
+                                            if (target === "DISCUSSION") {
+                                                props.openDiscussion(channelId, createdBy)
+                                            }
 
-                                        if (target === "CHANNEL_SUBSCRIBED" || target === "CHANNEL_MODERATOR_ADDED" || target === "CHANNEL_MODERATOR_REMOVED") {
-                                            props.openChannel(channelId, createdBy)
-                                        }
+                                            if (target === "CHANNEL_SUBSCRIBED" || target === "CHANNEL_MODERATOR_ADDED" || target === "CHANNEL_MODERATOR_REMOVED") {
+                                                props.openChannel(channelId, createdBy)
+                                            }
 
-                                        if (target === "Q&A") {
-                                            props.openQA(channelId, cueId, createdBy)
-                                        }
+                                            if (target === "Q&A") {
+                                                props.openQA(channelId, cueId, createdBy)
+                                            }
 
-                                    }}
-                                    style={{
-                                        backgroundColor: '#f5f5f7',
-                                        flexDirection: 'row',
-                                        borderColor: '#f5f5f7',
-                                        borderBottomWidth: index === activity.length - 1 ? 0 : 1,
-                                        minWidth: 600, // flex: 1,
-                                        width: '100%'
-                                    }}>
-                                    <View style={{ flex: 1, backgroundColor: '#f5f5f7', padding: 0, flexDirection: 'column', justifyContent: 'center' }}>
-                                        <Text style={{ fontSize: 12, padding: 10, fontFamily: 'inter' }} ellipsizeMode='tail'>
-                                            <View style={{
-                                                width: 9,
-                                                height: 9,
-                                                borderRadius: 12,
-                                                marginRight: 5,
-                                                // marginTop: 1,
-                                                backgroundColor: act.colorCode
-                                            }} /> {act.channelName}
-                                        </Text>
-                                    </View>
-                                    <View style={{ flex: 1, backgroundColor: '#fff', padding: 0, flexDirection: 'column', justifyContent: 'center' }}>
-                                        <Text style={{ fontSize: 13, padding: 10, fontFamily: 'inter' }} ellipsizeMode='tail'>
-                                            {act.title}
-                                        </Text>
-                                    </View>
-                                    <View style={{ flex: 1, backgroundColor: '#fff', padding: 0, flexDirection: 'column', justifyContent: 'center' }}>
-                                        <Text style={{ fontSize: 13, padding: 10, lineHeight: 20 }} ellipsizeMode='tail'>
-                                            {act.subtitle}
-                                        </Text>
-                                    </View>
-                                    <View style={{ flex: 1, backgroundColor: '#fff', padding: 0, flexDirection: 'column', justifyContent: 'center' }}>
-                                        <Text style={{ fontSize: 13, padding: 10 }} ellipsizeMode='tail'>
-                                            {emailTimeDisplay(act.date)}
-                                        </Text>
-                                    </View>
-                                    <View style={{ flex: 1, backgroundColor: '#fff', padding: 0, flexDirection: 'column', justifyContent: 'center' }}>
-                                        <Text style={{ fontSize: 18, padding: 10, color: '#661CB0' }} ellipsizeMode='tail'>
-                                            <Ionicons name='chevron-forward-outline' size={20} /> {act.status === 'unread' ?
-                                                <Ionicons name='alert-circle-outline' color='#f94144' size={20} /> : null}
-                                        </Text>
-                                    </View>
-                                </TouchableOpacity>
-                            })
-                        }
+                                        }}
+                                        style={{
+                                            backgroundColor: '#F4F4F6',
+                                            flexDirection: 'row',
+                                            borderColor: '#e9e9ec',
+                                            borderRightWidth: 1,
+                                            borderBottomWidth: index === activity.length - 1 ? 0 : 1,
+                                            // minWidth: 600, // flex: 1,
+                                            width: '100%'
+                                        }}>
+                                        <View style={{ flex: 1, backgroundColor: '#F4F4F6', padding: 0, flexDirection: 'column', justifyContent: 'center' }}>
+                                            <Text style={{ fontSize: 12, padding: 10, fontFamily: 'inter' }} ellipsizeMode='tail'>
+                                                <View style={{
+                                                    width: 9,
+                                                    height: 9,
+                                                    borderRadius: 12,
+                                                    marginRight: 5,
+                                                    // marginTop: 1,
+                                                    backgroundColor: act.colorCode
+                                                }} /> {act.channelName}
+                                            </Text>
+                                        </View>
+                                        <View style={{ flex: 1, backgroundColor: '#fff', padding: 0, flexDirection: 'column', justifyContent: 'center' }}>
+                                            <Text style={{ fontSize: 13, padding: 10, fontFamily: 'inter' }} ellipsizeMode='tail'>
+                                                {act.title}
+                                            </Text>
+                                        </View>
+                                        <View style={{ flex: 1, backgroundColor: '#fff', padding: 0, flexDirection: 'column', justifyContent: 'center' }}>
+                                            <Text style={{ fontSize: 13, padding: 10, lineHeight: 20 }} ellipsizeMode='tail'>
+                                                {act.subtitle}
+                                            </Text>
+                                        </View>
+                                        <View style={{ flex: 1, backgroundColor: '#fff', padding: 0, flexDirection: 'column', justifyContent: 'center' }}>
+                                            <Text style={{ fontSize: 13, padding: 10 }} ellipsizeMode='tail'>
+                                                {emailTimeDisplay(act.date)}
+                                            </Text>
+                                        </View>
+                                        <View style={{ flex: 1, backgroundColor: '#fff', padding: 0, flexDirection: 'column', justifyContent: 'center' }}>
+                                            <Text style={{ fontSize: 18, padding: 10, color: '#007AFF' }} ellipsizeMode='tail'>
+                                                <Ionicons name='chevron-forward-outline' size={20} /> {act.status === 'unread' ?
+                                                    <Ionicons name='alert-circle-outline' color='#f94144' size={20} /> : null}
+                                            </Text>
+                                        </View>
+                                    </TouchableOpacity>
+                                })
+                            }
+                        </ScrollView>
                     </ScrollView>
                 </View>
             </View>
@@ -2012,7 +2018,7 @@ export default (CalendarX)
 const styles: any = StyleSheet.create({
     input: {
         width: "100%",
-        borderBottomColor: "#f5f5f7",
+        borderBottomColor: "#F4F4F6",
         borderBottomWidth: 1,
         fontSize: 15,
         paddingTop: 12,

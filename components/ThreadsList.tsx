@@ -233,7 +233,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
             {...props}
             wrapperStyle={{
               right: {
-                backgroundColor: '#661CB0'
+                backgroundColor: '#007AFF'
               }
             }}
           />
@@ -252,13 +252,13 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
             borderTopLeftRadius: props.cueId ? 0 : 30,
             paddingTop: props.cueId ? 0 : 0
         }}>
-            <View style={{ backgroundColor: 'white', flexDirection: 'row', paddingBottom: !props.cueId ? 0 : 0, width: Dimensions.get('window').width < 768 ? '100%' : '50%' }}>
+            <View style={{ backgroundColor: 'white', flexDirection: 'row', paddingBottom: !props.cueId ? 0 : 0, width: Dimensions.get('window').width < 1024 ? '100%' : '50%' }}>
                 {
                     !props.cueId
                         ? <Text
                             ellipsizeMode="tail"
                             style={{
-                                fontSize: 24,
+                                fontSize: 23,
                                 paddingBottom: 20,
                                 fontFamily: 'inter',
                                 // textTransform: "uppercase",
@@ -293,7 +293,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                         borderRadius: 15,
                                         shadowOpacity: 0,
                                         borderWidth: 1,
-                                        borderColor: '#f5f5f7',
+                                        borderColor: '#e9e9ec',
                                         overflow: 'scroll',
                                         maxHeight: '100%'
                                     }
@@ -385,7 +385,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                     {
                                         threads.length === 0 ?
                                             <View style={{ backgroundColor: 'white', flex: 1 }}>
-                                                <Text style={{ width: '100%', color: '#818385', fontSize: 24, paddingTop: 100, paddingBottom: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                                <Text style={{ width: '100%', color: '#818385', fontSize: 23, paddingTop: 100, paddingBottom: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                                                     {
                                                         !props.cueId ? PreferredLanguageText('noPosts') : PreferredLanguageText('noComments')
                                                     }
@@ -397,7 +397,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                 // style={{ height: '100%' }}
                                                 contentContainerStyle={{
                                                     borderWidth: 1,
-                                                    borderColor: '#f5f5f7',
+                                                    borderColor: '#e9e9ec',
                                                     borderRadius: 1,
                                                     width: '100%',
                                                     // height: windowHeight - 200,
@@ -419,14 +419,14 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                         return <TouchableOpacity
                                                             onPress={() => loadCueDiscussions(thread._id)}
                                                             style={{
-                                                                backgroundColor: '#f5f5f7',
+                                                                backgroundColor: '#F4F4F6',
                                                                 flexDirection: 'row',
-                                                                borderColor: '#f5f5f7',
+                                                                borderColor: '#e9e9ec',
                                                                 borderBottomWidth: ind === filteredThreads.length - 1 ? 0 : 1,
                                                                 // minWidth: 600, // flex: 1,
                                                                 width: '100%'
                                                             }}>
-                                                            {/* <View style={{ flex: 1, backgroundColor: '#f5f5f7', padding: 10 }}>
+                                                            {/* <View style={{ flex: 1, backgroundColor: '#F4F4F6', padding: 10 }}>
                                                                 <Image
                                                                     style={{
                                                                         height: 40,
@@ -440,7 +440,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                                     source={{ uri: user.avatar ? user.avatar : 'https://cues-files.s3.amazonaws.com/images/default.png' }}
                                                                 />
                                                             </View> */}
-                                                            <View style={{ flex: 1, backgroundColor: '#f5f5f7', paddingLeft: 10 }}>
+                                                            <View style={{ flex: 1, backgroundColor: '#F4F4F6', paddingLeft: 10 }}>
                                                                 <Text style={{ fontSize: 13, padding: 10, fontFamily: 'inter' }} ellipsizeMode='tail'>
                                                                     {thread.anonymous ? 'Anonymous' : thread.fullName}
                                                                 </Text>
@@ -451,7 +451,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                                 </Text>
                                                             </View>
                                                             <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                                                <Text style={{ fontSize: 15, padding: 10, color: '#661CB0', textAlign: 'center' }} ellipsizeMode='tail'>
+                                                                <Text style={{ fontSize: 15, padding: 10, color: '#007AFF', textAlign: 'center' }} ellipsizeMode='tail'>
                                                                     <Ionicons name='chevron-forward-outline' size={20} />
                                                                 </Text>
                                                             </View>

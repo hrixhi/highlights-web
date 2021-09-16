@@ -1479,7 +1479,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     lineHeight: 35,
                     color: 'white',
                     fontSize: 12,
-                    backgroundColor: '#661CB0',
+                    backgroundColor: '#007AFF',
                     paddingHorizontal: 25,
                     fontFamily: 'inter',
                     height: 35,
@@ -1506,7 +1506,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     lineHeight: 35,
                     color: '#1D1D20',
                     fontSize: 12,
-                    backgroundColor: '#f5f5f7',
+                    backgroundColor: '#F4F4F6',
                     paddingHorizontal: 25,
                     fontFamily: 'inter',
                     height: 35,
@@ -1654,7 +1654,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             <View style={{
               height: 61,
               borderBottomWidth: 1,
-              borderColor: '#f5f5f7'
+              borderColor: '#e9e9ec'
             }}>
               <VerticalBar
                 menuCollapsed={menuCollapsed}
@@ -1697,7 +1697,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             <View style={{
               width: dimensions.window.width,
               height: dimensions.window.height,
-              borderColor: '#f5f5f7',
+              borderColor: '#e9e9ec',
               backgroundColor: '#fff',
             }}>
               <View style={{
@@ -1805,7 +1805,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             </View >
         }
         {
-          !menuCollapsed && dimensions.window.width < 768 ? null :
+          !menuCollapsed && dimensions.window.width < 1024 ? null :
             (modalType === '' ? <View
               style={{
                 width: dimensions.window.width < 1024 ? 0 : dimensions.window.width,
@@ -1813,7 +1813,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 height: (menuCollapsed ? dimensions.window.height - 60 : 0),
                 // paddingHorizontal: dimensions.window.width < 1024 ? 0 : 30,
                 paddingTop: 10,
-                // backgroundColor: '#f5f5f7',
+                // backgroundColor: '#F4F4F6',
                 backgroundColor: '#fff',
                 position: dimensions.window.width < 1024 ? 'absolute' : 'relative'
               }}
@@ -1839,7 +1839,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                   position: 'relative'
                 }}>
                 {
-                  // dimensions.window.width < 768 && !menuCollapsed ? null :
+                  // dimensions.window.width < 1024 && !menuCollapsed ? null :
                   <View style={{
                     // flex: 1,
                     height: (menuCollapsed ? (dimensions.window.height - 60) : 0),
@@ -1883,7 +1883,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           right: 0,
           justifyContent: 'center',
           alignSelf: 'flex-end',
-          width: 60, height: 60, borderRadius: 30, backgroundColor: '#661CB0'
+          width: 60, height: 60, borderRadius: 30, backgroundColor: '#007AFF'
         }}
       >
         <Text style={{ color: '#fff', width: '100%', textAlign: 'center' }}>
@@ -1913,7 +1913,7 @@ const styles = (channelId: string) => StyleSheet.create({
     height: Dimensions.get('window').height - 60,
     width: '100%',
     justifyContent: "center",
-    backgroundColor: '#f5f5f7'
+    backgroundColor: '#F4F4F6'
   },
   horizontal: {
     flexDirection: "row",
@@ -1921,7 +1921,7 @@ const styles = (channelId: string) => StyleSheet.create({
   },
   input: {
     width: '100%',
-    borderBottomColor: '#f5f5f7',
+    borderBottomColor: '#F4F4F6',
     borderBottomWidth: 1,
     fontSize: 15,
     paddingTop: 13,

@@ -21,7 +21,7 @@ const SubscriberCard: React.FunctionComponent<{ [label: string]: any }> = (props
                 onPress={() => props.onPress()}
                 key={'textPage'}
                 style={styleObject.card}>
-                <View style={{ backgroundColor: '#f5f5f7', width: '100%', flexDirection: 'row', display: 'flex', height: '44%', minHeight: 25 }}>
+                <View style={{ backgroundColor: '#F4F4F6', width: '100%', flexDirection: 'row', display: 'flex', height: '44%', minHeight: 25 }}>
                     <Text ellipsizeMode={'tail'}
                         numberOfLines={1}
                         style={styleObject.title}>
@@ -29,7 +29,7 @@ const SubscriberCard: React.FunctionComponent<{ [label: string]: any }> = (props
                     </Text>
                     {
                         fullName === 'submitted' || fullName === 'graded' || props.chat ?
-                            <View style={{ flexDirection: 'row', backgroundColor: '#f5f5f7' }}>
+                            <View style={{ flexDirection: 'row', backgroundColor: '#F4F4F6' }}>
                                 {
                                     props.subscriber.unreadMessages !== undefined
                                         && props.subscriber !== null
@@ -39,7 +39,7 @@ const SubscriberCard: React.FunctionComponent<{ [label: string]: any }> = (props
                                             width: 20,
                                             height: 20,
                                             borderRadius: 1,
-                                            backgroundColor: '#661CB0',
+                                            backgroundColor: '#007AFF',
                                             textAlign: 'center',
                                             zIndex: 150,
                                             marginLeft: 10,
@@ -96,15 +96,15 @@ const styles: any = (status: any) => StyleSheet.create({
         width: '100%',
         borderRadius: 1,
         padding: 13,
-        backgroundColor: '#f5f5f7',
+        backgroundColor: '#F4F4F6',
         borderWidth: 1,
-        borderColor: '#f5f5f7'
+        borderColor: '#e9e9ec'
     },
     text: {
         display: 'flex',
         flexDirection: 'column',
         flex: 1,
-        backgroundColor: '#f5f5f7',
+        backgroundColor: '#F4F4F6',
     },
     titleArrow: {
         fontFamily: 'inter',

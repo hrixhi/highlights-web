@@ -89,7 +89,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     return (
         <View style={styles.bottombar}>
-            <View style={{ display: 'flex', flexDirection: 'row', backgroundColor: '#f5f5f7' }}>
+            <View style={{ display: 'flex', flexDirection: 'row', backgroundColor: '#F4F4F6' }}>
                 <View style={styles.icons}>
                     <TouchableOpacity
                         onPress={() => {
@@ -110,10 +110,10 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 {
                     selectedChannel ? <TouchableOpacity
                         onPress={() => props.showMenu()}
-                        style={{ backgroundColor: '#f5f5f7', flexDirection: 'row', flex: 1 }}>
+                        style={{ backgroundColor: '#F4F4F6', flexDirection: 'row', flex: 1 }}>
                         <View style={styles.icons}>
                             <Text style={{
-                                fontSize: 24,
+                                fontSize: 23,
                                 fontFamily: 'inter',
                                 lineHeight: 35,
                                 color: '#1D1D20',
@@ -130,7 +130,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             </Text>
                         </View>
                     </TouchableOpacity> :
-                        <View style={{ backgroundColor: '#f5f5f7', flexDirection: 'row', flex: 1 }} />
+                        <View style={{ backgroundColor: '#F4F4F6', flexDirection: 'row', flex: 1 }} />
 
                 }
                 {
@@ -191,7 +191,7 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
         display: 'flex',
         paddingBottom: 10,
         paddingHorizontal: Dimensions.get('window').width < 1024 ? 20 : 40,
-        backgroundColor: '#f5f5f7'
+        backgroundColor: '#F4F4F6'
     },
     icons: {
         display: 'flex',
@@ -199,7 +199,7 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
         flexDirection: 'column',
         paddingRight: 25,
         overflow: 'hidden',
-        backgroundColor: '#f5f5f7'
+        backgroundColor: '#F4F4F6'
     },
     icons2: {
         display: 'flex',
@@ -207,7 +207,7 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
         flexDirection: 'row',
         paddingRight: 0,
         overflow: 'hidden',
-        backgroundColor: '#f5f5f7'
+        backgroundColor: '#F4F4F6'
     },
     defaultFont: {
         fontFamily: 'system font'
@@ -216,13 +216,13 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
         width: '100%',
         display: 'flex',
         textAlign: 'center',
-        backgroundColor: '#f5f5f7'
+        backgroundColor: '#F4F4F6'
     },
     colorBar: {
         width: '100%',
         height: '47%',
         paddingTop: 20,
-        backgroundColor: '#f5f5f7'
+        backgroundColor: '#F4F4F6'
     },
     iconContainer: {
         width: '20%',
@@ -243,7 +243,7 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
     },
     outline: {
         borderRadius: 1,
-        backgroundColor: colorScheme === 'light' ? '#f5f5f7' : 'white',
+        backgroundColor: colorScheme === 'light' ? '#F4F4F6' : 'white',
         color: colorScheme === 'light' ? '#1D1D20' : '#1D1D20'
     },
     cusCategory: {
@@ -254,17 +254,17 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
     },
     sub: {
         fontSize: 15,
-        color: colorScheme === 'light' ? '#f5f5f7' : 'white',
+        color: colorScheme === 'light' ? '#F4F4F6' : 'white',
         height: 22,
         paddingHorizontal: 10
     },
     subOutline: {
         fontSize: 15,
-        color: colorScheme === 'light' ? '#f5f5f7' : 'white',
+        color: colorScheme === 'light' ? '#F4F4F6' : 'white',
         height: 22,
         paddingHorizontal: 10,
         borderRadius: 1,
-        backgroundColor: colorScheme === 'light' ? '#f5f5f7' : 'white',
+        backgroundColor: colorScheme === 'light' ? '#F4F4F6' : 'white',
     },
     channelText: {
         textAlign: 'center',

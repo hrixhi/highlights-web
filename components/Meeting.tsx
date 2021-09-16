@@ -267,7 +267,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
             <ScrollView
                 contentContainerStyle={{
                     borderWidth: 1,
-                    borderColor: '#f5f5f7',
+                    borderColor: '#e9e9ec',
                     borderRadius: 1,
                     width: '100%',
                     maxHeight: windowHeight - 200,
@@ -285,9 +285,9 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                 }
                             }}
                             style={{
-                                backgroundColor: '#f5f5f7',
+                                backgroundColor: '#F4F4F6',
                                 flexDirection: 'row',
-                                borderColor: '#f5f5f7',
+                                borderColor: '#e9e9ec',
                                 borderBottomWidth: index === pastMeetings.length - 1 ? 0 : 1,
                                 // minWidth: 600, // flex: 1,
                                 width: '100%',
@@ -378,7 +378,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                     <Text
                         ellipsizeMode="tail"
                         style={{
-                            fontSize: 24,
+                            fontSize: 23,
                             paddingBottom: 20,
                             fontFamily: 'inter',
                             // textTransform: "uppercase",
@@ -399,7 +399,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                     <TouchableOpacity
                                         style={{
                                             backgroundColor: '#fff',
-                                            width: Dimensions.get('window').width < 768 ? 'auto' : '100%',
+                                            width: Dimensions.get('window').width < 1024 ? 'auto' : '100%',
                                             paddingBottom: 20
                                         }}
                                         onPress={() => {
@@ -430,7 +430,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                     <TouchableOpacity
                                         style={{
                                             backgroundColor: '#fff',
-                                            width: Dimensions.get('window').width < 768 ? 'auto' : '100%',
+                                            width: Dimensions.get('window').width < 1024 ? 'auto' : '100%',
                                             paddingBottom: 20,
                                             marginLeft: 10,
                                             marginRight: 25
@@ -473,7 +473,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                 lineHeight: 30,
                                 color: '#fff',
                                 fontSize: 12,
-                                backgroundColor: '#4b956b',
+                                backgroundColor: '#3abb83',
                                 paddingHorizontal: 25,
                                 fontFamily: 'inter',
                                 height: 30,
@@ -549,20 +549,20 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
 
     const width = Dimensions.get('window').width
 
-    return <View style={{ width: '100%', flexDirection: width < 768 ? 'column' : 'row' }}>
+    return <View style={{ width: '100%', flexDirection: width < 1024 ? 'column' : 'row' }}>
         <View style={{
             backgroundColor: 'white',
-            width: width < 768 ? '100%' : '30%',
-            // paddingRight: width < 768 ? 0 : 20,
+            width: width < 1024 ? '100%' : '30%',
+            // paddingRight: width < 1024 ? 0 : 20,
         }}>
             {!viewChannelAttendance ? mainClassroomView : attendanceListView}
         </View>
         <View style={{
-            backgroundColor: '#fff', width: width < 768 ? '100%' : '70%',
-            paddingLeft: width < 768 ? 0 : 20,
+            backgroundColor: '#fff', width: width < 1024 ? '100%' : '70%',
+            paddingLeft: width < 1024 ? 0 : 20,
             marginTop: 20,
             marginBottom: 20,
-            borderLeftWidth: width < 768 ? 0 : 1, borderLeftColor: '#f5f5f7',
+            borderLeftWidth: width < 1024 ? 0 : 1, borderLeftColor: '#F4F4F6',
         }}>
             <Discussion
                 channelId={props.channelId}
@@ -613,7 +613,7 @@ const styles = StyleSheet.create({
         maxWidth: '100%',
         borderRadius: 15,
         padding: 13,
-        backgroundColor: '#f5f5f7',
+        backgroundColor: '#F4F4F6',
         flexDirection: 'row',
         justifyContent: 'space-between'
     },
@@ -621,7 +621,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'column',
         flex: 1,
-        backgroundColor: '#f5f5f7',
+        backgroundColor: '#F4F4F6',
     },
     title: {
         fontFamily: 'inter',

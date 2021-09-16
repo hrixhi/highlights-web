@@ -187,7 +187,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     (showEquationEditor ?
                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                             <View style={{
-                                borderColor: '#f5f5f7',
+                                borderColor: '#e9e9ec',
                                 borderWidth: 1,
                                 borderRadius: 15,
                                 padding: 10,
@@ -410,7 +410,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
             {index in headers
                 ?
                 <View style={{ flexDirection: 'row', width: '95%', marginTop: 50, paddingLeft: 20, marginBottom: 20 }}>
-                    <View style={{ width: Dimensions.get('window').width < 768 ? '95%' : '50%' }}>
+                    <View style={{ width: Dimensions.get('window').width < 1024 ? '95%' : '50%' }}>
                         <TextareaAutosize
                             style={{ maxWidth: '100%', marginBottom: 10, marginTop: 10, paddingTop: 13, paddingBottom: 13, fontSize: 15, borderBottom: '1px solid #cccccc', }}
                             value={headers[index]}
@@ -523,7 +523,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
             width: '100%', height: '100%', backgroundColor: 'white',
             borderTopLeftRadius: 0,
             borderTopRightRadius: 0,
-            borderTopColor: '#f5f5f7',
+            borderTopColor: '#F4F4F6',
             borderTopWidth: 1,
             marginTop: 35,
             paddingTop: 25,
@@ -553,7 +553,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     }
 
 
-                    return <View style={{ borderBottomColor: '#f5f5f7', borderBottomWidth: index === (problems.length - 1) ? 0 : 1, marginBottom: 25 }}>
+                    return <View style={{ borderBottomColor: '#F4F4F6', borderBottomWidth: index === (problems.length - 1) ? 0 : 1, marginBottom: 25 }}>
                         {renderHeaderOption(index)}
                         <View style={{ flexDirection: 'row' }}>
                             <View style={{ paddingTop: 15 }}>
@@ -561,8 +561,8 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     {index + 1}.
                                 </Text>
                             </View>
-                            <View style={{ flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row', width: '95%' }}>
-                                <View key={reloadEditorKey} style={{ width: Dimensions.get('window').width < 768 ? '95%' : (editQuestionNumber === (index + 1) ? '75%' : '65%') }}>
+                            <View style={{ flexDirection: Dimensions.get('window').width < 1024 ? 'column' : 'row', width: '95%' }}>
+                                <View key={reloadEditorKey} style={{ width: Dimensions.get('window').width < 1024 ? '95%' : (editQuestionNumber === (index + 1) ? '75%' : '65%') }}>
                                     {
                                         (editQuestionNumber === (index + 1) ? renderQuestionEditor(index) : (audioVideoQuestion ? <View>
                                             {renderAudioVideoPlayer(url, type)}
@@ -622,7 +622,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     </View> : null)}
                                 </View>
                                 {/* Add dropdown here */}
-                                <View style={{ flexDirection: (Dimensions.get('window').width < 768 || editQuestionNumber !== index + 1)  ? 'row' : 'column', alignItems: 'center', height: 40, paddingLeft: Dimensions.get('window').width > 768 ? 50 : 0, marginTop: 15  }}>
+                                <View style={{ flexDirection: (Dimensions.get('window').width < 1024 || editQuestionNumber !== index + 1)  ? 'row' : 'column', alignItems: 'center', height: 40, paddingLeft: Dimensions.get('window').width > 768 ? 50 : 0, marginTop: 15  }}>
                                         <DefaultTextInput
                                             value={editQuestionNumber === (index + 1) ? problem.points : ((problem.points === "" ? "Enter" : problem.points) + " " + (Number(problem.points) === 1 ? 'Point' : 'Points'))}
                                             editable={editQuestionNumber === (index + 1)}
@@ -634,7 +634,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 marginTop: 5,
                                                 width: 120,
                                                 textAlign: 'center',
-                                                marginBottom: (Dimensions.get('window').width < 768 || editQuestionNumber !== (index + 1)) ? 0 : 30,
+                                                marginBottom: (Dimensions.get('window').width < 1024 || editQuestionNumber !== (index + 1)) ? 0 : 30,
                                                 fontWeight: editQuestionNumber === (index + 1) ? 'normal' : '700',
                                                 borderBottomColor: '#cccccc',
                                                 borderBottomWidth: editQuestionNumber === (index + 1) ? 1 : 0,
@@ -654,7 +654,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                             display: 'flex',
                                             alignItems: 'center',
                                             flexDirection: 'row',
-                                            marginBottom: Dimensions.get('window').width < 768 ? 0 : 30,
+                                            marginBottom: Dimensions.get('window').width < 1024 ? 0 : 30,
                                         }}>
                                         <Menu
                                             onSelect={(questionType: any) => {
@@ -698,7 +698,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                         borderRadius: 15,
                                                         shadowOpacity: 0,
                                                         borderWidth: 1,
-                                                        borderColor: "#f5f5f7",
+                                                        borderColor: "#e9e9ec",
                                                         overflow: 'scroll',
                                                         maxHeight: '100%'
                                                     },
@@ -714,7 +714,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                             </MenuOptions>
                                         </Menu>
                                     </View> : null}
-                                    {editQuestionNumber === (index + 1) ? <View style={{ paddingTop: 15, flexDirection: 'row', alignItems: 'center', marginBottom: (Dimensions.get('window').width < 768 || editQuestionNumber !== (index + 1)) ? 0 : 30 }}>
+                                    {editQuestionNumber === (index + 1) ? <View style={{ paddingTop: 15, flexDirection: 'row', alignItems: 'center', marginBottom: (Dimensions.get('window').width < 1024 || editQuestionNumber !== (index + 1)) ? 0 : 30 }}>
                                         <input
                                             style={{ paddingRight: 20 }}
                                             type='checkbox'
@@ -737,9 +737,9 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 required
                                             </Text>))
                                         }
-                                    <View style={{ paddingTop: 10, paddingLeft: editQuestionNumber === (index + 1) ? 0 : 25, flexDirection: 'row', alignItems: 'center', marginBottom: (Dimensions.get('window').width < 768 || editQuestionNumber !== (index + 1)) ? 0 : 30, }}>
+                                    <View style={{ paddingTop: 10, paddingLeft: editQuestionNumber === (index + 1) ? 0 : 25, flexDirection: 'row', alignItems: 'center', marginBottom: (Dimensions.get('window').width < 1024 || editQuestionNumber !== (index + 1)) ? 0 : 30, }}>
                                         {editQuestionNumber === (index + 1) ? 
-                                        <View style={{ flexDirection: 'row', paddingLeft: Dimensions.get('window').width < 768 ? 20 : 0  }}>
+                                        <View style={{ flexDirection: 'row', paddingLeft: Dimensions.get('window').width < 1024 ? 20 : 0  }}>
                                             <Ionicons
                                                 name='checkmark-circle-outline'
                                                 color={"#4c956c"}
@@ -780,7 +780,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                             />
                                         </View> : <Ionicons
                                         name='pencil-outline'
-                                        color={'#661CB0'}
+                                        color={'#007AFF'}
                                         onPress={() => {
                                             if (isCurrentQuestionValid(editQuestionNumber - 1)) {
                                                 setEditQuestionNumber(index + 1)
@@ -830,7 +830,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                             disabled={editQuestionNumber !== (index + 1)}
                                         />
                                     </View>
-                                    <View style={{ width: Dimensions.get('window').width < 768 ? '100%' : '50%', paddingRight: 30 }}>
+                                    <View style={{ width: Dimensions.get('window').width < 1024 ? '100%' : '50%', paddingRight: 30 }}>
                                         {
                                             option.option && option.option.includes("image:") ?
                                                 <Image
@@ -846,11 +846,11 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 :
                                                 (option.option && option.option.includes("formula:") ?
                                                     <View style={{
-                                                        borderColor: '#f5f5f7',
+                                                        borderColor: '#e9e9ec',
                                                         borderWidth: 1,
                                                         borderRadius: 15,
                                                         padding: 10,
-                                                        width: Dimensions.get('window').width < 768 ? '100%' : '50%'
+                                                        width: Dimensions.get('window').width < 1024 ? '100%' : '50%'
                                                     }}>
                                                         <EquationEditor
                                                             value={option.option.split("formula:")[1]}
@@ -1004,7 +1004,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     // paddingLeft: 20,
                                     flex: 1,
                                     lineHeight: 25,
-                                    color: '#661CB0'
+                                    color: '#007AFF'
                                 }}>
                                 Add Option
                             </Text>
@@ -1040,7 +1040,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             lineHeight: 35,
                             color: "white",
                             fontSize: 12,
-                            backgroundColor: "#661CB0",
+                            backgroundColor: "#007AFF",
                             borderRadius: 15,
                             paddingHorizontal: 25,
                             fontFamily: "inter",
@@ -1061,7 +1061,7 @@ export default QuizCreate;
 const styles = StyleSheet.create({
     input: {
         width: '50%',
-        borderBottomColor: '#f5f5f7',
+        borderBottomColor: '#F4F4F6',
         borderBottomWidth: 1,
         fontSize: 15,
         paddingTop: 12,

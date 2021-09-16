@@ -190,19 +190,19 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
         backgroundColor: "white",
         borderTopRightRadius: 0,
         borderTopLeftRadius: 0,
-        flexDirection: width < 768 ? 'column' : 'row',
+        flexDirection: width < 1024 ? 'column' : 'row',
         paddingTop: 20
     }}>
         <View style={{ width: '100%', }}>
             {/* <Text style={{
                 marginRight: 10,
                 color: '#1D1D20',
-                fontSize: 24,
+                fontSize: 23,
                 marginBottom: 40,
                 fontFamily: 'inter',
                 // flex: 1,
                 lineHeight: 25,
-                height: width < 768 ? 30 : 65,
+                height: width < 1024 ? 30 : 65,
             }}>
                 Report
             </Text> */}
@@ -211,7 +211,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     props.subscriptions.map((sub: any, ind: any) => {
                         return <View style={{
                             backgroundColor: '#fff',
-                            borderColor: '#f5f5f7',
+                            borderColor: '#e9e9ec',
                             borderBottomWidth: 1,
                             paddingBottom: 20,
                             marginBottom: 20,
@@ -219,7 +219,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         }}>
                             <View style={{ flexDirection: 'row', flex: 1, marginBottom: 20 }}>
                                 <Text style={{
-                                    fontSize: 24,
+                                    fontSize: 23,
                                     paddingBottom: 20,
                                     paddingTop: 10,
                                     fontFamily: 'inter',
@@ -245,7 +245,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 >
                                     <Text style={{
                                         textAlign: 'center',
-                                        lineHeight: 35,
+                                        lineHeight: 30,
                                         paddingTop: 10
                                     }}>
                                         <Ionicons name={!collapseMap[ind] ? 'chevron-up-outline' : 'chevron-down-outline'} size={30} color={'#1D1D20'} />
@@ -266,7 +266,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                             </Text>
                                         </View>
                                         <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                            <Text style={{ fontSize: 24, lineHeight: 25, textAlign: 'right', fontFamily: 'inter' }} ellipsizeMode='tail'>
+                                            <Text style={{ fontSize: 23, lineHeight: 25, textAlign: 'right', fontFamily: 'inter' }} ellipsizeMode='tail'>
                                                 {attendance[sub.channelId] ? attendance[sub.channelId].length : 0} / {date[sub.channelId] ? date[sub.channelId].length : 0}
                                             </Text>
                                         </View>
@@ -283,7 +283,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                             </Text>
                                         </View>
                                         <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                            <Text style={{ fontSize: 24, lineHeight: 25, textAlign: 'right', fontFamily: 'inter' }} ellipsizeMode='tail'>
+                                            <Text style={{ fontSize: 23, lineHeight: 25, textAlign: 'right', fontFamily: 'inter' }} ellipsizeMode='tail'>
                                                 {thread[sub.channelId] ? thread[sub.channelId].length : 0}
                                             </Text>
                                         </View>
@@ -300,7 +300,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                             </Text>
                                         </View>
                                         <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                            <Text style={{ fontSize: 24, lineHeight: 25, textAlign: 'right', fontFamily: 'inter' }} ellipsizeMode='tail'>
+                                            <Text style={{ fontSize: 23, lineHeight: 25, textAlign: 'right', fontFamily: 'inter' }} ellipsizeMode='tail'>
                                                 {score[sub.channelId] ? score[sub.channelId].totalAssessments : 0}
                                             </Text>
                                         </View>
@@ -368,7 +368,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                             </Text>
                                         </View>
                                         <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                            <Text style={{ fontSize: 24, lineHeight: 25, textAlign: 'right', fontFamily: 'inter' }} ellipsizeMode='tail'>
+                                            <Text style={{ fontSize: 23, lineHeight: 25, textAlign: 'right', fontFamily: 'inter' }} ellipsizeMode='tail'>
                                                 {score[sub.channelId] ? score[sub.channelId].score : 0}%
                                             </Text>
                                         </View>
@@ -385,7 +385,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                             </Text>
                                         </View>
                                         <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                            <Text style={{ fontSize: 24, lineHeight: 25, textAlign: 'right', fontFamily: 'inter' }} ellipsizeMode='tail'>
+                                            <Text style={{ fontSize: 23, lineHeight: 25, textAlign: 'right', fontFamily: 'inter' }} ellipsizeMode='tail'>
                                                 {score[sub.channelId] ? score[sub.channelId].total : 0}%
                                             </Text>
                                         </View>

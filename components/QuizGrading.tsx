@@ -100,9 +100,9 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
     const renderAttemptHistory = () => {
 
-        return (<View style={{ width: Dimensions.get('window').width < 768 ? '100%' : '60%', marginTop: 40, marginBottom: 80 }}>
+        return (<View style={{ width: Dimensions.get('window').width < 1024 ? '100%' : '60%', marginTop: 40, marginBottom: 80 }}>
             <View style={{ marginBottom: 20 }}>
-                <Text style={{ fontSize: 24, fontWeight: 'bold'  }}>
+                <Text style={{ fontSize: 23, fontWeight: 'bold'  }}>
                     Attempt History
                 </Text>
             </View>
@@ -206,8 +206,8 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             justifyContent: 'flex-start'
         }}>
             {
-                props.isOwner ? <View style={{ display: 'flex', flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row', justifyContent: 'space-between', marginBottom: 20, borderBottomWidth: 1, borderBottomColor: "#cccccc", width: '100%' }}>
-                    <View style={{ display: 'flex', flexDirection: 'row', marginBottom: Dimensions.get('window').width < 768 ? 20 : 0  }}>
+                props.isOwner ? <View style={{ display: 'flex', flexDirection: Dimensions.get('window').width < 1024 ? 'column' : 'row', justifyContent: 'space-between', marginBottom: 20, borderBottomWidth: 1, borderBottomColor: "#cccccc", width: '100%' }}>
+                    <View style={{ display: 'flex', flexDirection: 'row', marginBottom: Dimensions.get('window').width < 1024 ? 20 : 0  }}>
                         <Text style={{ marginRight: 10, fontWeight: '700', fontSize: 15 }}>
                             {props.problems.length} {props.problems.length === 1 ? "Question" : "Questions"}
                         </Text>
@@ -229,7 +229,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     height: 22,
                                     paddingHorizontal: 10,
                                     borderRadius: 1,
-                                    backgroundColor: "#661CB0",
+                                    backgroundColor: "#007AFF",
                                     lineHeight: 20,
                                     paddingTop: 1
                                 }}>
@@ -244,7 +244,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     paddingHorizontal: 10,
                                     marginLeft: 10,
                                     borderRadius: 1,
-                                    backgroundColor: "#661CB0",
+                                    backgroundColor: "#007AFF",
                                     lineHeight: 20,
                                     paddingTop: 1
                                 }}>
@@ -262,7 +262,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             {renderAttemptHistory()}
 
             {props.isOwner ? <View style={{ marginBottom: 20 }}>
-                <Text style={{ fontSize: 24, fontWeight: 'bold'  }}>
+                <Text style={{ fontSize: 23, fontWeight: 'bold'  }}>
                     Attempt {props.currentQuizAttempt + 1}
                 </Text>
             </View> : null}
@@ -299,10 +299,10 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         type = parse.type;
                     }
 
-                    return <View style={{ borderBottomColor: '#f5f5f7', borderBottomWidth: index === (props.problems.length - 1) ? 0 : 1, marginBottom: 25 }} key={index}>
+                    return <View style={{ borderBottomColor: '#F4F4F6', borderBottomWidth: index === (props.problems.length - 1) ? 0 : 1, marginBottom: 25 }} key={index}>
                         {renderHeader(index)}
-                        <View style={{ flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row', width: '100%' }}>
-                                <View style={{ flexDirection: Dimensions.get('window').width < 768 ? 'column' : 'row', width: Dimensions.get('window').width > 768 ? '65%' : '100%' }}>
+                        <View style={{ flexDirection: Dimensions.get('window').width < 1024 ? 'column' : 'row', width: '100%' }}>
+                                <View style={{ flexDirection: Dimensions.get('window').width < 1024 ? 'column' : 'row', width: Dimensions.get('window').width > 768 ? '65%' : '100%' }}>
                                     <View style={{ flexDirection: 'row', paddingTop: 15, width: '100%' }}>
                                         <Text style={{ color: '#a2a2ac', fontSize: 15, paddingBottom: 25, marginRight: 10, paddingTop: 10 }}>
                                             {index + 1}.
@@ -322,7 +322,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 (
                                                     problem.question && problem.question.includes("formula:") ? (
                                                         <View style={{
-                                                            borderColor: '#f5f5f7',
+                                                            borderColor: '#e9e9ec',
                                                             borderWidth: 1,
                                                             borderRadius: 15,
                                                             padding: 10,
@@ -363,7 +363,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     }}
                                     style={{
                                         width: 120,
-                                        borderBottomColor: '#f5f5f7',
+                                        borderBottomColor: '#F4F4F6',
                                         borderBottomWidth: 1,
                                         fontSize: 15,
                                         padding: 15,
@@ -404,13 +404,13 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         !problem.required ?
                                             (<Text style={{
                                                 fontSize: 11, color: '#a2a2ac', marginBottom: 20, textAlign: 'left', paddingLeft: 35,
-                                                paddingTop: Dimensions.get('window').width < 768 ? 25 : 15
+                                                paddingTop: Dimensions.get('window').width < 1024 ? 25 : 15
                                             }}>
                                                 optional
                                             </Text>)
                                             : (<Text style={{
                                                 fontSize: 11, color: '#a2a2ac', marginBottom: 20, textAlign: 'left', paddingLeft: 35,
-                                                paddingTop: Dimensions.get('window').width < 768 ? 25 : 15
+                                                paddingTop: Dimensions.get('window').width < 1024 ? 25 : 15
                                             }}>
                                                 required
                                             </Text>)
@@ -427,7 +427,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
                                 let color = '#1D1D20'
                                 if (option.isCorrect) {
-                                    color = '#661CB0'
+                                    color = '#007AFF'
                                 } else if (!option.isCorrect && solutions[index].selected[i].isSelected) {
                                     color = '#f94144'
                                 }
@@ -464,7 +464,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             (
                                                 option.option && option.option.includes("formula:") ?
                                                     <View style={{
-                                                        borderColor: '#f5f5f7',
+                                                        borderColor: '#e9e9ec',
                                                         borderWidth: 1,
                                                         borderRadius: 15,
                                                         padding: 10,
@@ -479,7 +479,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                     </View> :
                                                     <Text
                                                         style={{
-                                                            width: Dimensions.get('window').width < 768 ? '80%' : '50%',
+                                                            width: Dimensions.get('window').width < 1024 ? '80%' : '50%',
                                                             fontSize: 15,
                                                             padding: 15,
                                                             paddingTop: 12,
@@ -534,7 +534,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 }}
                             /> :
                                 <View style={{ flexDirection: 'row', width: '100%', marginTop: 20, marginBottom: 40 }}>
-                                    <Text style={{ color: '#661CB0', fontSize: 13, }}>
+                                    <Text style={{ color: '#007AFF', fontSize: 13, }}>
                                         {problemComments[index]}
                                     </Text>
                                 </View>}
@@ -542,7 +542,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     </View>
                 })
             }
-            {!props.isOwner && !comment ? null : <View style={{ width: '100%', paddingVertical: 50, paddingHorizontal: 40, borderTopWidth: 1, borderColor: '#f5f5f7' }}>
+            {!props.isOwner && !comment ? null : <View style={{ width: '100%', paddingVertical: 50, paddingHorizontal: 40, borderTopWidth: 1, borderColor: '#e9e9ec' }}>
                 <Text style={{ width: '100%', textAlign: 'left' }}>
                     Feedback
                 </Text>
@@ -563,7 +563,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         minRows={3}
                     />
                 </View> :
-                    <Text style={{ color: '#661CB0', fontSize: 15, width: '100%', textAlign: 'left', marginTop: 40 }}>
+                    <Text style={{ color: '#007AFF', fontSize: 15, width: '100%', textAlign: 'left', marginTop: 40 }}>
                         {comment}
                     </Text>
                 }
@@ -622,7 +622,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         lineHeight: 35,
                         color: 'white',
                         fontSize: 12,
-                        backgroundColor: '#661CB0',
+                        backgroundColor: '#007AFF',
                         paddingHorizontal: 25,
                         fontFamily: 'inter',
                         height: 35,
@@ -643,7 +643,7 @@ export default Quiz;
 const styles = StyleSheet.create({
     input: {
         width: '50%',
-        // borderBottomColor: '#f5f5f7',
+        // borderBottomColor: '#F4F4F6',
         // borderBottomWidth: 1,
         fontSize: 15,
         paddingTop: 12,

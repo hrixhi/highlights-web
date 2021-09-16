@@ -34,7 +34,7 @@ const ThreadReplyCard: React.FunctionComponent<{ [label: string]: any }> = (prop
         if (u) {
             const unparsedUser = JSON.parse(u)
             if (props.channelCreatedBy.toString().trim() === props.thread.userId.toString().trim()) {
-                setColor('#661CB0')
+                setColor('#007AFF')
             } else if (unparsedUser._id.toString().trim() === props.thread.userId.toString().trim()) {
                 setColor('#818385')
             }
@@ -69,12 +69,12 @@ const ThreadReplyCard: React.FunctionComponent<{ [label: string]: any }> = (prop
                         {props.thread.anonymous ? 'Anonymous' : props.thread.fullName}
                     </Text>
                 </View>
-                <View style={{ flexDirection: 'row', backgroundColor: '#f5f5f7' }}>
-                    <View style={{ flex: 1, backgroundColor: '#f5f5f7' }}>
+                <View style={{ flexDirection: 'row', backgroundColor: '#F4F4F6' }}>
+                    <View style={{ flex: 1, backgroundColor: '#F4F4F6' }}>
                         {
                             imported ?
                                 <a download={true} href={url} style={{ textDecoration: 'none' }}>
-                                    <View style={{ backgroundColor: '#f5f5f7', flex: 1 }}>
+                                    <View style={{ backgroundColor: '#F4F4F6', flex: 1 }}>
                                         <Text style={{ width: '100%', color: '#818385', fontSize: 15, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                                             <Ionicons name='document-outline' size={17} color='#818385' /> {title}.{type}
                                         </Text>
@@ -85,7 +85,7 @@ const ThreadReplyCard: React.FunctionComponent<{ [label: string]: any }> = (prop
                     </View>
                     {
                         props.isOwner ?
-                            <TouchableOpacity style={{ backgroundColor: '#f5f5f7' }}
+                            <TouchableOpacity style={{ backgroundColor: '#F4F4F6' }}
                                 onPress={() => props.deleteThread()}
                             >
                                 <Text style={{ width: '100%', color: '#818385', fontSize: 15, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
@@ -110,19 +110,19 @@ const styles: any = () => StyleSheet.create({
         borderRadius: 15,
         padding: 13,
         paddingBottom: 20,
-        backgroundColor: '#f5f5f7'
+        backgroundColor: '#F4F4F6'
     },
     text: {
         display: 'flex',
         flexDirection: 'column',
         flex: 1,
         fontWeight: 'bold',
-        backgroundColor: '#f5f5f7',
+        backgroundColor: '#F4F4F6',
     },
     dateContainer: {
         fontSize: 10,
         color: '#818385',
-        backgroundColor: '#f5f5f7',
+        backgroundColor: '#F4F4F6',
         display: 'flex',
         flexDirection: 'row',
         paddingBottom: 10

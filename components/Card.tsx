@@ -8,7 +8,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
-    const colorChoices: any[] = ['#f94144', '#f3722c', '#f8961e', '#f9c74f', '#43aa8b'].reverse()
+    const colorChoices: any[] = ['#f94144', '#f3722c', '#f8961e', '#f9c74f', '#3abb83'].reverse()
     const colorScheme = 'dark'
     const styleObject = styles(colorScheme, props.channelId, colorChoices[props.cue.color])
     const starred = props.cue.starred;
@@ -87,7 +87,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         {
                             props.cue.graded && showScore && !isOwner ? <Text style={{
                                 fontSize: 9,
-                                color: '#661CB0',
+                                color: '#007AFF',
                                 marginLeft: 10, textAlign: 'right'
                             }}>
                                 {props.cue.score}%
@@ -110,7 +110,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 <Text style={{
                                     width: 20,
                                     height: 20,
-                                    borderRadius: 1,
+                                    borderRadius: 12,
                                     overflow: 'hidden',
                                     backgroundColor: '#f94144',
                                     textAlign: 'center',
@@ -128,9 +128,9 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 <Text style={{
                                     width: 20,
                                     height: 20,
-                                    borderRadius: 1,
+                                    borderRadius: 12,
                                     overflow: 'hidden',
-                                    backgroundColor: '#661CB0',
+                                    backgroundColor: '#007AFF',
                                     textAlign: 'center',
                                     zIndex: 150,
                                     marginLeft: 5,
@@ -166,7 +166,7 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
         paddingHorizontal: 15,
         backgroundColor: '#fff',
         borderWidth: 1,
-        borderColor: '#f5f5f7'
+        borderColor: '#e9e9ec'
     },
     flipCard: {
         height: '100%',

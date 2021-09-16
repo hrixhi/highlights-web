@@ -200,7 +200,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             lineHeight: 30,
                             color: '#fff',
                             fontSize: 12,
-                            backgroundColor: '#4b956b',
+                            backgroundColor: '#3abb83',
                             paddingHorizontal: 25,
                             fontFamily: 'inter',
                             height: 30,
@@ -251,7 +251,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
         // PIE CHART FOR GRADE WEIGHTS
 
         // ADD MORE COLORS HERE LATER
-        const colors = ["#f94144", "#f3722c", "#f8961e", "#f9c74f", "#4b956b", "#f95d6a", "#ff7c43", "#ffa600"]
+        const colors = ["#f94144", "#f3722c", "#f8961e", "#f9c74f", "#3abb83", "#f95d6a", "#ff7c43", "#ffa600"]
 
         const nonZeroGradeWeight = cues.filter((cue: any) => cue.gradeWeight > 0)
 
@@ -313,7 +313,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
             width: '100%',
             backgroundColor: 'white',
             flex: 1,
-            paddingLeft: Dimensions.get("window").width < 768 ? 0 : 50,
+            paddingLeft: Dimensions.get("window").width < 1024 ? 0 : 50,
             paddingTop: 30
         }}
             key={JSON.stringify(props.scores)}
@@ -328,29 +328,29 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 nestedScrollEnabled={true}
             >
                 <View style={{ width: '100%' }}>
-                    <Text style={{ textAlign: 'left', fontSize: 13, color: '#1D1D20', fontFamily: 'inter', paddingBottom: 20, paddingLeft: Dimensions.get('window').width < 768 ? 0 : 150 }}>
+                    <Text style={{ textAlign: 'left', fontSize: 13, color: '#1D1D20', fontFamily: 'inter', paddingBottom: 20, paddingLeft: Dimensions.get('window').width < 1024 ? 0 : 150 }}>
                         Grade Weightage
                     </Text>
                     <PieChart
                         data={pieChartData}
-                        width={Dimensions.get('window').width < 768 ? 350 : 500}
-                        height={Dimensions.get('window').width < 768 ? 150 : 200}
+                        width={Dimensions.get('window').width < 1024 ? 350 : 500}
+                        height={Dimensions.get('window').width < 1024 ? 150 : 200}
                         chartConfig={chartConfig}
                         accessor={"gradeWeight"}
                         backgroundColor={"transparent"}
-                        paddingLeft={Dimensions.get('window').width < 768 ? "10" : "50"}
+                        paddingLeft={Dimensions.get('window').width < 1024 ? "10" : "50"}
                         // center={[10, 50]}
                         hasLegend={true}
                     />
                 </View>
 
                 {submissionStatistics.length > 0 ? <View style={{ width: '100%' }}>
-                    <Text style={{ textAlign: 'left', fontSize: 13, color: '#1D1D20', fontFamily: 'inter', paddingTop: 50, paddingBottom: 20, paddingLeft: Dimensions.get('window').width < 768 ? 0 : 150 }}>
+                    <Text style={{ textAlign: 'left', fontSize: 13, color: '#1D1D20', fontFamily: 'inter', paddingTop: 50, paddingBottom: 20, paddingLeft: Dimensions.get('window').width < 1024 ? 0 : 150 }}>
                         Submissions
                     </Text>
                     <Chart
-                        width={Dimensions.get('window').width < 768 ? '350px' : '600px'}
-                        height={Dimensions.get('window').width < 768 ? '300px' : '400px'}
+                        width={Dimensions.get('window').width < 1024 ? '350px' : '600px'}
+                        height={Dimensions.get('window').width < 1024 ? '300px' : '400px'}
                         chartType="Bar"
                         loader={<div>Loading Chart</div>}
                         data={data}
@@ -527,7 +527,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                         onChangeText={val => {
                                                                             setActiveScore(val)
                                                                         }}
-                                                                        style={{ width: '50%', marginRight: 5, padding: 8, borderBottomColor: "#f5f5f7", borderBottomWidth: 1, fontSize: 12 }}
+                                                                        style={{ width: '50%', marginRight: 5, padding: 8, borderBottomColor: "#F4F4F6", borderBottomWidth: 1, fontSize: 12 }}
                                                                         placeholderTextColor={'#818385'}
                                                                     />
                                                                     <TouchableOpacity onPress={() => {

@@ -389,6 +389,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     >
                         {!viewStatus ? <ScrollView
                             nestedScrollEnabled={true}
+                            showsVerticalScrollIndicator={false}
                             horizontal={false}
                             style={{
                                 borderTopRightRadius: 0,

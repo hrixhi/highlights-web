@@ -76,7 +76,7 @@ const FileUpload: React.FC<any> = (props: any) => {
 
     return <View style={{
         paddingTop: 3.5,
-        paddingBottom: Dimensions.get('window').width < 768 ? 5 : 0
+        paddingBottom: Dimensions.get('window').width < 1024 ? 5 : 0
     }}>
         {
             uploading ? <Text style={{ fontSize: 11, color: '#1D1D20', textTransform: 'uppercase' }}>
