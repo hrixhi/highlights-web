@@ -750,6 +750,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         setCollapseMap(tempCollapse)
                                                     }}
                                                 >
+
                                                     <Text style={{
                                                         textAlign: 'center',
                                                         lineHeight: 30
@@ -1368,6 +1369,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 filterStart={filterStart}
                                 filterEnd={filterEnd}
                                 subscriptions={props.subscriptions}
+                                openCueFromGrades={props.openCueFromCalendar}
                             /> : null
                     }
                     {

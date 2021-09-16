@@ -274,7 +274,7 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     return (
         <ScrollView style={{
             width: '100%',
-            maxHeight: 600,
+            // maxHeight: 600,
             backgroundColor: 'white',
             borderTopRightRadius: 0,
             borderTopLeftRadius: 0
@@ -289,7 +289,7 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             <Animated.View style={{
                 opacity: modalAnimation,
                 width: '100%',
-                maxHeight: 600,
+                // maxHeight: 600,
                 backgroundColor: 'white',
                 borderTopRightRadius: 0,
                 borderTopLeftRadius: 0
@@ -304,13 +304,14 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             flexDirection: 'column',
                             backgroundColor: 'white',
                             borderTopRightRadius: 0,
-                            borderTopLeftRadius: 0
+                            borderTopLeftRadius: 0,
+                            paddingVertical: 100
                         }}>
                             <ActivityIndicator color={'#818385'} />
                         </View>
                         :
                         <GradesList
-                            key={JSON.stringify(scores)}
+                            key={JSON.stringify(scores) + JSON.stringify(props.activeTab)}
                             scores={scores}
                             cues={cues}
                             channelName={props.filterChoice}
@@ -327,6 +328,7 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             submissionStatistics={submissionStatistics}
                             modifyGrade={modifyGrade}
                             openCueFromGrades={props.openCueFromGrades}
+                            activeTab={props.activeTab}
                         />
                 }
             </Animated.View>

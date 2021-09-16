@@ -704,8 +704,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
           });
         }
 
-        // If limited shares then need to add the person making the cue to the list of sharedWith (Filtered out from dropdown)
-        userIds.push(user._id);
 
         const variables = {
           cue: saveCue,
