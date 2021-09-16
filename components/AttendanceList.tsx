@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, ScrollView, Switch, TouchableOpacity, Dimensions } from 'react-native';
+import React, { useState, useEffect, useCallback } from 'react';
+import { ActivityIndicator, StyleSheet, ScrollView, Switch, TouchableOpacity, Dimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { View, Text } from './Themed';
 import _ from 'lodash'
@@ -12,14 +12,32 @@ import {
 } from "react-native-chart-kit";
 import * as FileSaver from 'file-saver';
 import { DatePicker, DateRangePicker } from 'rsuite';
+import { fetchAPI } from "../graphql/FetchAPI";
+
+import {
+    getAttendancesForChannel,
+    getPastDates,
+    modifyAttendance
+} from "../graphql/QueriesAndMutations";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import Alert from './Alert';
 
 
 const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
-    const unparsedPastMeetings: any[] = JSON.parse(JSON.stringify(props.pastMeetings))
-    const unparsedChannelAttendances: any[] = JSON.parse(JSON.stringify(props.channelAttendances))
-    const [pastMeetings, setPastMeetings] = useState<any[]>(unparsedPastMeetings)
-    const [channelAttendances, setChannelAttendances] = useState<any[]>(unparsedChannelAttendances)
+    // Modify Attendance List to show in 
+
+    // const unparsedPastMeetings: any[] = JSON.parse(JSON.stringify(props.pastMeetings))
+    // const unparsedChannelAttendances: any[] = JSON.parse(JSON.stringify(props.channelAttendances))
+    const [fixedPastMeetings, setFixedPastMeetings] = useState<any[]>([]);
+    const [pastMeetings, setPastMeetings] = useState<any[]>([]);
+    const [channelAttendances, setChannelAttendances] = useState<any[]>([]);
+    // const [pastAttendances, setPastMeetings] = useState<any[]>([]);
+    const [loadingMeetings, setLoadingMeetings] = useState(false);
+    const [loadingAttendances, setLoadingAttendances] = useState(false);
+
+    const [isOwner, setIsOwner] = useState(false);
+
 
     const [enableFilter, setEnableFilter] = useState(false);
     const [end, setEnd] = useState(new Date());
@@ -30,6 +48,117 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
     const [showAttendanceStats, setShowAttendanceStats] = useState(false);
 
     const [exportAoa, setExportAoa] = useState<any[]>()
+
+
+    useEffect(() => {
+        loadChannelAttendances();
+        setPastMeetings([]);
+        loadPastSchedule();
+    }, [props.channelId]);
+
+
+    const loadChannelAttendances = useCallback(() => {
+        setLoadingAttendances(true)
+        const server = fetchAPI("");
+        server
+            .query({
+                query: getAttendancesForChannel,
+                variables: {
+                    channelId: props.channelId
+                }
+            })
+            .then(async res => {
+                if (res.data && res.data.attendance.getAttendancesForChannel) {
+                    const u = await AsyncStorage.getItem("user");
+                    if (u) {
+                        const user = JSON.parse(u);
+                        if (user._id.toString().trim() === props.channelCreatedBy.toString().trim()) {
+                            // all attendances
+                            setChannelAttendances(res.data.attendance.getAttendancesForChannel);
+                        } else {
+                            // only user's attendances
+                            const attendances = res.data.attendance.getAttendancesForChannel.find((u: any) => {
+                                return u.userId.toString().trim() === user._id.toString().trim();
+                            });
+                            const userAttendances = [{ ...attendances }];
+                            setChannelAttendances(userAttendances);
+                        }
+                        setLoadingAttendances(false)
+                    }
+                }
+            }).catch((e: any) => {
+                setLoadingAttendances(false)
+            })
+    }, [props.channelId]);
+
+    const loadPastSchedule = useCallback(() => {
+        setLoadingMeetings(true)
+        const server = fetchAPI("");
+        server
+            .query({
+                query: getPastDates,
+                variables: {
+                    channelId: props.channelId
+                }
+            })
+            .then(res => {
+                if (res.data && res.data.attendance.getPastDates) {
+                    setFixedPastMeetings(res.data.attendance.getPastDates)
+                    setPastMeetings(res.data.attendance.getPastDates);
+                }
+                setLoadingMeetings(false)
+            }).catch((e: any) => {
+                setLoadingMeetings(false)
+            });
+    }, [props.channelId]);
+
+    const onChangeAttendance = (dateId: String, userId: String, markPresent: Boolean) => {
+
+        Alert(markPresent ? "Mark Present?" : "Mark Absent?", "", [
+            {
+                text: "Cancel",
+                style: "cancel",
+                onPress: () => {
+                    return;
+                }
+            },
+            {
+                text: "Yes",
+                onPress: async () => {
+                    const server = fetchAPI("");
+                    server
+                        .mutate({
+                            mutation: modifyAttendance,
+                            variables: {
+                                dateId,
+                                userId,
+                                channelId: props.channelId,
+                                markPresent
+                            }
+                        })
+                        .then(res => {
+                            if (res.data && res.data.attendance.modifyAttendance) {
+                                loadChannelAttendances()
+                            }
+                        });
+                }
+            }
+        ]);
+
+
+    }
+
+    useEffect(() => {
+        (async () => {
+            const u = await AsyncStorage.getItem("user");
+            if (u) {
+                const user = JSON.parse(u);
+                if (user._id.toString().trim() === props.channelCreatedBy) {
+                    setIsOwner(true);
+                }
+            }
+        })();
+    }, [props.channelCreatedBy, props.channelId]);
 
     useEffect(() => {
 
@@ -107,7 +236,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
     useEffect(() => {
         if (enableFilter) {
 
-            const filteredPastMeetings = unparsedPastMeetings.filter(meeting => {
+            const filteredPastMeetings = fixedPastMeetings.filter(meeting => {
                 return (new Date(meeting.start) > start && new Date(meeting.end) < end)
             })
 
@@ -115,7 +244,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
 
         } else {
 
-            setPastMeetings(unparsedPastMeetings)
+            setPastMeetings(fixedPastMeetings)
         }
 
     }, [enableFilter, start, end])
@@ -134,37 +263,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
     }
 
     const width = Dimensions.get("window").width;
-
-    const renderAttendanceStatsTabs = () => {
-
-        if (!props.isOwner) return null;
-
-        return (<View style={{ flexDirection: "row" }}>
-            <TouchableOpacity
-                style={{
-                    justifyContent: "center",
-                    flexDirection: "column"
-                }}
-                onPress={() => {
-                    setShowAttendanceStats(false);
-                }}>
-                <Text style={!showAttendanceStats ? styles.allGrayFill : styles.all}>
-                    Students
-                </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-                style={{
-                    justifyContent: "center",
-                    flexDirection: "column"
-                }}
-                onPress={() => {
-                    setShowAttendanceStats(true);
-                }}>
-                <Text style={showAttendanceStats ? styles.allGrayFill : styles.all}>Lectures</Text>
-            </TouchableOpacity>
-        </View>)
-    }
-
+    
     const renderAttendanceChart = () => {
 
         const studentCount = channelAttendances.length;
@@ -256,7 +355,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
         <View style={{
             backgroundColor: 'white',
             width: '100%',
-            height: '100%',
+            // height: '100%',
             paddingHorizontal: 20,
             borderTopRightRadius: 0,
             borderTopLeftRadius: 0
@@ -264,25 +363,8 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
             <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 25 }}>
                 {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
             </Text>
-            <View style={{ backgroundColor: 'white', flexDirection: 'row', paddingBottom: 25 }}>
-                <TouchableOpacity
-                    key={Math.random()}
-                    style={{
-                        flex: 1,
-                        backgroundColor: 'white'
-                    }}
-                    onPress={() => {
-                        props.hideChannelAttendance()
-                    }}>
-                    <Text style={{
-                        width: '100%',
-                        fontSize: 15,
-                        color: '#818385'
-                    }}>
-                        <Ionicons name='arrow-back-outline' size={17} color={'#43434f'} style={{ marginRight: 10 }} /> {renderAttendanceStatsTabs()}
-                    </Text>
-                </TouchableOpacity>
-                {unparsedPastMeetings.length === 0 || channelAttendances.length === 0 ? null : <View style={{ paddingRight: 20 }}>
+            <View style={{ backgroundColor: 'white', flexDirection: 'row', paddingBottom: 25, width: '100%', justifyContent: 'flex-end' }}>
+                {pastMeetings.length === 0 || channelAttendances.length === 0 ? null : <View style={{ paddingRight: 20 }}>
                     <View style={{ display: 'flex', width: "100%", flexDirection: "row", marginBottom: 30, }} >
                         <DateRangePicker
                             preventOverflow={true}
@@ -303,7 +385,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                     </View>
                 </View>
                 }
-                {(pastMeetings.length === 0 || channelAttendances.length === 0 || !props.isOwner) ? null :
+                {(pastMeetings.length === 0 || channelAttendances.length === 0 || !isOwner) ? null :
                     <TouchableOpacity
                         style={{
                             backgroundColor: 'white',
@@ -337,20 +419,35 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
             </View>
 
             {
-                channelAttendances.length === 0 || pastMeetings.length === 0 ?
-                    <View style={{ backgroundColor: 'white' }}>
-                        <Text style={{ width: '100%', color: '#818385', fontSize: 20, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter' }}>
+                channelAttendances.length === 0 || pastMeetings.length === 0 || loadingAttendances || loadingMeetings ?
+                    ((loadingAttendances || loadingMeetings) ? 
+                    <View style={{
+                        width: '100%',
+                        flex: 1,
+                        justifyContent: 'center',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        backgroundColor: 'white',
+                        borderTopRightRadius: 0,
+                        borderTopLeftRadius: 0,
+                        paddingVertical: 100
+                    }}>
+                        <ActivityIndicator color={'#818385'} />
+                    </View>
+                    : <View style={{ backgroundColor: 'white' }}>
+                        <Text style={{ width: '100%', color: '#818385', fontSize: 20, paddingVertical: 100, paddingHorizontal: 5, fontFamily: 'inter', }}>
                             {
                                 pastMeetings.length === 0 ? "No past meetings" : "No Students"
                                 // PreferredLanguageText('noGraded') : PreferredLanguageText('noStudents')
                             }
                         </Text>
-                    </View>
+                    </View>)
                     :
                     (!showAttendanceStats ? <View style={{
                         width: '100%',
                         backgroundColor: 'white',
                         flex: 1,
+                        maxHeight: 500,
                         flexDirection: 'row'
                     }}
                         key={JSON.stringify(channelAttendances)}
@@ -422,12 +519,12 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                                             return s.dateId.toString().trim() === meeting.dateId.toString().trim()
                                                         })
                                                         return <View style={styles.col} key={row.toString() + '-' + col.toString()}>
-                                                            <TouchableOpacity disabled={!props.isOwner} onPress={() => props.modifyAttendance(meeting.dateId, channelAttendance.userId, attendanceObject ? false : true)} style={{ marginBottom: 5, width: '100%', flexDirection: 'row', justifyContent: 'center' }}>
+                                                            <TouchableOpacity disabled={!isOwner} onPress={() => onChangeAttendance(meeting.dateId, channelAttendance.userId, attendanceObject ? false : true)} style={{ marginBottom: 5, width: '100%', flexDirection: 'row', justifyContent: 'center' }}>
                                                                 {
                                                                     attendanceObject ?
                                                                         <Ionicons name='checkmark-outline' size={20} color={'#560bad'} />
                                                                         :
-                                                                        props.isOwner ? <Ionicons name='checkmark-outline' size={20} color={'#e0e0e0'} /> : '-'
+                                                                        isOwner ? <Ionicons name='checkmark-outline' size={20} color={'#e0e0e0'} /> : '-'
                                                                 }
                                                             </TouchableOpacity>
                                                             {attendanceObject ? <Text style={{ textAlign: 'center', fontSize: 12, color: '#43434f', width: '100%', }}>

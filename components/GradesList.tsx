@@ -159,7 +159,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
     const renderGradeStatsTabs = () => {
         return (<View style={{ flexDirection: "row" }}>
-            <TouchableOpacity
+            {/* <TouchableOpacity
                 style={{
                     justifyContent: "center",
                     flexDirection: "column"
@@ -180,8 +180,8 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     setShowStatistics(true);
                 }}>
                 <Text style={showStatistics ? styles.allGrayFill : styles.all}>Statistics</Text>
-            </TouchableOpacity>
-            <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
+            </TouchableOpacity> */}
+            <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end', width: '100%' }}>
                 {(scores.length === 0 || cues.length === 0 || !props.isOwner) ? null :
                     <TouchableOpacity
                         onPress={() => {
@@ -383,14 +383,14 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
             {
                 props.scores.length === 0 || cues.length === 0 ?
                     <View style={{ backgroundColor: 'white' }}>
-                        <Text style={{ width: '100%', color: '#818385', fontSize: 20, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter' }}>
+                        <Text style={{ width: '100%', color: '#818385', fontSize: 20, paddingVertical: 100, paddingHorizontal: 5, fontFamily: 'inter' }}>
                             {
                                 cues.length === 0 ? PreferredLanguageText('noGraded') : PreferredLanguageText('noStudents')
                             }
                         </Text>
                     </View>
                     :
-                    (!showStatistics ? <View style={{
+                    (props.activeTab === "scores" ? <View style={{
                         width: '100%',
                         backgroundColor: 'white',
                         // flex: 1,

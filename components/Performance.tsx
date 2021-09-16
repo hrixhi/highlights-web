@@ -10,12 +10,12 @@ import { PreferredLanguageText } from '../helpers/LanguageContext';
 import Chart from 'react-google-charts';
 import { Ionicons } from '@expo/vector-icons';
 import Grades from './Grades';
+import AttendanceList from './AttendanceList';
 
 const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
     const [scores, setScores] = useState<any[]>([])
     const [score, setScore] = useState<any>({})
-    const styleObject = styles();
     const [loading, setLoading] = useState(true);
     const [attendances, setAttendances] = useState<any[]>([])
     const [dates, setDates] = useState<any[]>([])
@@ -25,16 +25,25 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
     const [threads, setThreads] = useState<any[]>([])
 
     const [collapseMap, setCollpaseMap] = useState<any>({})
+    const [activeTabMap, setActiveTabMap] = useState<any>({})
+
+    useEffect(() => {
+        console.log('Collapse Map', collapseMap);
+
+    }, [collapseMap])
 
     useEffect(() => {
 
         // FILTERS PENDING
 
         const temp: any = {}
+        const tabMap: any = {}
         props.subscriptions.map((item: any, ind: any) => {
             temp[ind] = true
+            tabMap[ind] = 'scores'
         })
         setCollpaseMap(temp)
+        setActiveTabMap(tabMap)
 
         const tempSc: any = {}
         scores.map((sc: any) => {
@@ -152,7 +161,51 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
         data.push([score.channelName, Number(score.score) / Number(score.total), Number(score.total) - Number(score.score) / Number(score.total)])
     })
 
-    console.log(score)
+    const renderTabs = (index: number) => {
+
+        const activeTab = activeTabMap[index];
+
+        return (<View style={{ flexDirection: "row", marginTop: 20 }}>
+            <TouchableOpacity
+                style={{
+                    justifyContent: "center",
+                    flexDirection: "column"
+                }}
+                onPress={() => {
+                    const temp = JSON.parse(JSON.stringify(activeTabMap))
+                    temp[index] = 'scores'
+                    setActiveTabMap(temp)
+                }}>
+                <Text style={activeTab === 'scores' ? styles.allGrayFill : styles.all}>
+                    Scores
+                </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+                style={{
+                    justifyContent: "center",
+                    flexDirection: "column"
+                }}
+                onPress={() => {
+                    const temp = JSON.parse(JSON.stringify(activeTabMap))
+                    temp[index] = 'statistics'
+                    setActiveTabMap(temp)
+                }}>
+                <Text style={activeTab === 'statistics' ? styles.allGrayFill : styles.all}>Statistics</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+                style={{
+                    justifyContent: "center",
+                    flexDirection: "column"
+                }}
+                onPress={() => {
+                    const temp = JSON.parse(JSON.stringify(activeTabMap))
+                    temp[index] = 'attendance'
+                    setActiveTabMap(temp)
+                }}>
+                <Text style={activeTab === 'attendance' ? styles.allGrayFill : styles.all}>Attendance</Text>
+            </TouchableOpacity>
+        </View>)
+    }
 
     const chartConfig = {
         backgroundColor: '#000000',
@@ -206,7 +259,11 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
             }}>
                 Report
             </Text> */}
-            <ScrollView>
+            <ScrollView
+                style={{
+                    paddingRight: 20
+                }}
+            >
                 {
                     props.subscriptions.map((sub: any, ind: any) => {
                         return <View style={{
@@ -218,24 +275,36 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             width: '100%'
                         }}>
                             <View style={{ flexDirection: 'row', flex: 1, marginBottom: 20 }}>
-                                <Text style={{
-                                    fontSize: 23,
-                                    paddingBottom: 20,
-                                    paddingTop: 10,
-                                    fontFamily: 'inter',
-                                    flex: 1,
-                                    flexDirection: 'row',
-                                    lineHeight: 25,
-                                }}>
-                                    <View style={{
-                                        width: 18,
-                                        marginRight: 10,
-                                        height: 18,
-                                        borderRadius: 9,
-                                        marginTop: 1,
-                                        backgroundColor: sub.colorCode
-                                    }} /> {sub.channelName}
-                                </Text>
+                                <TouchableOpacity
+                                    style={{
+                                        flex: 1,
+                                        flexDirection: 'row'
+                                    }}
+                                    onPress={() => {
+                                        const temp = JSON.parse(JSON.stringify(collapseMap))
+                                        temp[ind] = !temp[ind]
+                                        setCollpaseMap(temp)
+                                    }}   
+                                >
+                                    <Text style={{
+                                        fontSize: 23,
+                                        paddingBottom: 20,
+                                        paddingTop: 10,
+                                        fontFamily: 'inter',
+                                        flex: 1,
+                                        flexDirection: 'row',
+                                        lineHeight: 25,
+                                    }}>
+                                        <View style={{
+                                            width: 18,
+                                            marginRight: 10,
+                                            height: 18,
+                                            borderRadius: 9,
+                                            marginTop: 1,
+                                            backgroundColor: sub.colorCode
+                                        }} /> {sub.channelName}
+                                    </Text>
+                                </TouchableOpacity>
                                 <TouchableOpacity
                                     onPress={() => {
                                         const temp = JSON.parse(JSON.stringify(collapseMap))
@@ -390,15 +459,24 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                             </Text>
                                         </View>
                                     </View>
-                                    <Grades
+
+                                    {/* Render Tabs to switch between Grades, Stats and Attendance */}
+                                    {renderTabs(ind)}
+
+                                    {activeTabMap[ind] === "scores" || activeTabMap[ind] === "statistics" ? <Grades
                                         closeModal={() => { }}
                                         channelId={sub.channelId}
                                         channelCreatedBy={sub.channelCreatedBy}
                                         filterChoice={sub.channelName}
                                         openCueFromGrades={(cueId: string) => {
-                                            // openCueFromCalendar(channelId, cueId, channelCreatedBy)
+                                            props.openCueFromGrades(sub.channelId, cueId, sub.channelCreatedBy)
                                         }}
-                                    />
+                                        activeTab={activeTabMap[ind]}
+                                    /> :
+                                    <AttendanceList 
+                                        channelId={sub.channelId}
+                                        channelCreatedBy={sub.channelCreatedBy}
+                                    />}
                                 </View> : null
                             }
                         </View>
@@ -411,11 +489,29 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
 
 export default Performance
 
-const styles: any = () => StyleSheet.create({
+const styles = StyleSheet.create({
     col: {
         width: '100%',
         height: 80,
         marginBottom: 15,
         backgroundColor: 'white'
+    },
+    all: {
+        fontSize: 14,
+        color: '#43434f',
+        height: 22,
+        paddingHorizontal: 20,
+        backgroundColor: '#fff',
+        lineHeight: 22,
+        fontFamily: 'inter'
+    },
+    allGrayFill: {
+        fontSize: 14,
+        color: '#fff',
+        paddingHorizontal: 20,
+        borderRadius: 12,
+        backgroundColor: '#43434f',
+        lineHeight: 22,
+        fontFamily: 'inter'
     },
 });
