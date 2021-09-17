@@ -1987,7 +1987,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         </View>
                                         <View style={{ flex: 1, backgroundColor: '#fff', padding: 0, flexDirection: 'column', justifyContent: 'center' }}>
                                             <View style={{ flexDirection: 'row', flex: 1, maxHeight: 25 }}>
-                                                <Text style={{ fontSize: 16, padding: 10, paddingTop: 15, fontFamily: 'inter', flex: 1, flexDirection: 'row' }} ellipsizeMode='tail'>
+                                                <Text style={{ fontSize: 16, padding: 10, paddingTop: 15, paddingBottom: 15, fontFamily: 'inter', flex: 1, flexDirection: 'row' }} ellipsizeMode='tail'>
                                                     {act.title}
                                                 </Text>
                                             </View>

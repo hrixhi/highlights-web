@@ -16,7 +16,7 @@ export default function useCachedResources() {
         await Font.loadAsync({
           ...Ionicons.font,
           'inter': require('../assets/fonts/Inter-ExtraBold.ttf'),
-          'overpass': require('../assets/fonts/gt-america-standard-regular.ttf')
+          'overpass': require('../assets/fonts/atlas-grotesk-regular.ttf')
         });
       } catch (e) {
         // We might want to provide this error information to an error reporting service
