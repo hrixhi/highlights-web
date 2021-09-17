@@ -2139,6 +2139,24 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
     const renderCueTabs = () => {
         return (
+            <View style={{ flexDirection: 'column', width: '100%' }}>
+            
+            {props.folderId !== "" || isOwner ? <View style={{ }}>
+                    <TouchableOpacity
+                        style={{
+                            justifyContent: 'center',
+                            flexDirection: 'column',
+                            marginRight: 20
+                        }}
+                        onPress={() => {
+                            props.setShowFolder(!props.showFolder)
+                        }}>
+                        <Text>
+                            <Ionicons name='menu-outline' size={24} color={'#000'} />
+                        </Text>
+                    </TouchableOpacity>
+            </View> : null}
+
             <View style={{ flexDirection: "row", flex: 1, justifyContent: 'center' }}>
                 <TouchableOpacity
                     style={{
@@ -2221,6 +2239,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     </TouchableOpacity>
                 )}
             </View>
+        </View>
         );
     };
 

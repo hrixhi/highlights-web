@@ -112,6 +112,7 @@
         "react-onesignal": "^1.7.0",
         "react-player": "^2.9.0",
         "react-select": "^4.3.0",
+        "react-sortable-hoc": "^2.0.0",
         "react-textarea-autosize": "^8.3.3",
         "reanimated-bottom-sheet": "^1.0.0-alpha.22",
         "rmc-date-picker": "^6.0.10",

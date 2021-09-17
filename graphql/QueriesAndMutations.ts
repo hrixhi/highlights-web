@@ -450,16 +450,40 @@ mutation($userId: String!, $users: [String!]!, $channelId: String!) {
 }
 `
 export const creatFolder = gql`
-mutation($cueIds: [String!]!) {
+mutation($title: String!, $cueIds: [String!]!) {
   folder {
-    create(cueIds: $cueIds)
+    create(title: $title, cueIds: $cueIds)
   }
 }
 `
 export const updateFolder = gql`
-mutation($cueIds: [String!]!, $folderId: String!) {
+mutation($title: String!, $cueIds: [String!]!, $folderId: String!) {
   folder {
-    update(cueIds: $cueIds, folderId: $folderId)
+    update(title: $title, cueIds: $cueIds, folderId: $folderId)
+  }
+}
+`
+
+export const addToFolder = gql`
+mutation($cueId: String!, $folderId: String!) {
+  folder {
+    addToFolder(cueId: $cueId, folderId: $folderId)
+  }
+}
+`
+
+export const removeFromFolder = gql`
+mutation($cueId: String!, $folderId: String!) {
+  folder {
+    removeFromFolder(cueId: $cueId, folderId: $folderId)
+  }
+}
+`
+
+export const deleteFolder = gql`
+mutation( $folderId: String!) {
+  folder {
+    delete(folderId: $folderId)
   }
 }
 `
@@ -1210,3 +1234,64 @@ export const getAllUsers = gql`
    }
  }
 `;
+
+export const getFolder = gql`
+  query($folderId: String!) {
+    folder {
+      findById(folderId: $folderId) {
+        title
+        cueIds
+      }
+    }
+  }
+`
+
+export const getChannelFolders = gql`
+  query($channelId: String!) {
+    folder {
+      getFoldersForChannel(channelId: $channelId) {
+        _id
+        title
+      }
+    }
+  }
+`
+
+
+export const getFolderCues = gql`
+  query($folderId: String!, $userId: String!) {
+    folder {
+      getCuesById(folderId: $folderId, userId: $userId) {
+        _id
+        cue
+        color
+        channelId
+        folderId
+        customCategory
+        frequency
+        date
+        unreadThreads
+        endPlayAt
+        channelName
+        starred
+        createdBy
+        shuffle
+        original
+        submission
+        deadline
+        initiateAt
+        gradeWeight
+        graded
+        score
+        comment
+        status
+        submittedAt
+        releaseSubmission
+        active
+        limitedShares
+        allowedAttempts
+        availableUntil
+      }
+    }
+  }
+`

@@ -359,6 +359,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             } else {
               allCues[item.channelId][index].unreadThreads = item.unreadThreads ? item.unreadThreads : 0;
               allCues[item.channelId][index].status = item.status;
+              allCues[item.channelId][index].folderId = item.folderId;
               if (!allCues[item.channelId][index].original) {
                 allCues[item.channelId][index].original = item.cue;
               }
@@ -1230,9 +1231,12 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         channelId={channelId}
         filterChoice={filterChoice}
         channelCreatedBy={channelCreatedBy}
+        channelCues={cues[channelId]}
         reloadCueListAfterUpdate={() => reloadCueListAfterUpdate()}
         reopenUpdateWindow={reopenUpdateWindow}
         target={target}
+        openCue={(cueId: string) => openCueFromCalendar(channelId, cueId, channelCreatedBy)}
+        refreshCues={loadNewChannelCues}
       />
         :
         (modalType === 'Walkthrough' ? <Walkthrough
