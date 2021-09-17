@@ -751,7 +751,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                         setEditQuestionNumber(0)
                                                     }
                                                 }}
-                                                size={24}
+                                                size={23}
                                             />
 
                                             <Ionicons
@@ -776,7 +776,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                         },
                                                     ])
                                                 }}
-                                                size={24}
+                                                size={23}
                                             />
                                         </View> : <Ionicons
                                         name='pencil-outline'
@@ -787,7 +787,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                             }
                                           
                                         }}
-                                        size={24}
+                                        size={23}
                                     />}
                                     </View>
                                 </View>

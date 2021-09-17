@@ -1354,7 +1354,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         lineHeight: 25,
                                         height: 65
                                     }}>
-                                    <Ionicons name='clipboard-outline' size={24} />
+                                    <Ionicons name='clipboard-outline' size={23} />
                                 </Text>
                                 {/* {!showAddEvent && width >= 768 ? renderFilterEvents() : null} */}
                             </View>
@@ -1712,7 +1712,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             lineHeight: 25,
                             height: 50
                         }}>
-                            <Ionicons name='notifications-outline' size={24} />
+                            <Ionicons name='notifications-outline' size={23} />
                         </Text>
                         {/* <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
                             {
@@ -1998,13 +1998,13 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         <View style={{ backgroundColor: '#fff', padding: 0, flexDirection: 'row', alignSelf: 'center' }} >
                                             <Text style={{ fontSize: 13, padding: 10, lineHeight: 13 }} ellipsizeMode='tail'>
                                                 {act.status === 'unread' ?
-                                                    <Ionicons name='alert-circle-outline' color='#f94144' size={24} /> : null}
+                                                    <Ionicons name='alert-circle-outline' color='#f94144' size={23} /> : null}
                                             </Text>
                                             <Text style={{ fontSize: 13, padding: 10, lineHeight: 13 }} ellipsizeMode='tail'>
                                                 {emailTimeDisplay(act.date)}
                                             </Text>
                                             <Text style={{ fontSize: 13, padding: 10, lineHeight: 13 }} ellipsizeMode='tail'>
-                                                <Ionicons name='chevron-forward-outline' size={24} color='#007AFF' />
+                                                <Ionicons name='chevron-forward-outline' size={23} color='#007AFF' />
                                             </Text>
                                         </View>
                                     </TouchableOpacity>

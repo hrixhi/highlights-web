@@ -344,7 +344,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                         lineHeight: 25,
                                         paddingTop: 10,
                                     }}>
-                                    <Ionicons name='settings-outline' size={24} />
+                                    <Ionicons name='settings-outline' size={23} />
                                 </Text>
                         }
                     </View>

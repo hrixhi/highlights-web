@@ -972,7 +972,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                                             {emailTimeDisplay(chat.lastMessageTime)}
                                                                                         </Text>
                                                                                         <Text style={{ fontSize: 13, padding: 10, lineHeight: 13 }} ellipsizeMode='tail'>
-                                                                                            <Ionicons name='chevron-forward-outline' size={24} color='#007AFF' />
+                                                                                            <Ionicons name='chevron-forward-outline' size={23} color='#007AFF' />
                                                                                         </Text>
                                                                                     </View>
                                                                                     {/* <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>

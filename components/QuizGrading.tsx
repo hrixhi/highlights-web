@@ -138,7 +138,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     return (<View style={styles.row}>
                         <View style={styles.col}>
                             {attempt.isActive ? <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                                <Ionicons name='checkmark-outline' size={24} color={"#53BE68"} /> 
+                                <Ionicons name='checkmark-outline' size={23} color={"#53BE68"} /> 
                                 <Text style={{ fontSize: 17, paddingLeft: 5 }}>
                                     KEPT
                                 </Text>

@@ -984,7 +984,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 {props.option}
                                             </Text>
                                             <Text style={{ color: '#1D1D20', paddingLeft: 10, flexDirection: 'row', lineHeight: 14, fontSize: 14, marginTop: 2 }}>
-                                                <Ionicons name='menu-outline' size={24} />
+                                                <Ionicons name='menu-outline' size={23} />
                                             </Text>
                                         </MenuTrigger>
                                         <MenuOptions customStyles={{
@@ -1211,7 +1211,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     <MenuOption
                                         value={'Settings'}>
                                         <Text>
-                                            ACCOUNT
+                                            SETTINGS
                                         </Text>
                                     </MenuOption>
                                 </MenuOptions>
