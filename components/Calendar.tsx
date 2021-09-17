@@ -1341,7 +1341,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         nestedScrollEnabled={true}>
                         <View style={{ backgroundColor: "white", flexDirection: "row" }}>
                             <View style={{ flexDirection: Dimensions.get('window').width < 1024 ? 'column' : 'row', flex: 1 }}>
-                                <Text
+                                {/* <Text
                                     ellipsizeMode="tail"
                                     style={{
                                         marginRight: 10,
@@ -1355,7 +1355,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         height: 65
                                     }}>
                                     <Ionicons name='clipboard-outline' size={23} />
-                                </Text>
+                                </Text> */}
                                 {/* {!showAddEvent && width >= 768 ? renderFilterEvents() : null} */}
                             </View>
                         </View>
@@ -1701,7 +1701,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     paddingTop: Dimensions.get('window').width < 1024 ? 30 : 0
                 }}>
                     <View style={{ flexDirection: 'row' }}>
-                        <Text style={{
+                        {/* <Text style={{
                             marginRight: 10,
                             color: '#1D1D20',
                             fontSize: 23,
@@ -1713,7 +1713,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             height: 50
                         }}>
                             <Ionicons name='notifications-outline' size={23} />
-                        </Text>
+                        </Text> */}
                         {/* <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
                             {
                                 unreadCount !== 0 ?
@@ -1735,7 +1735,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             }
                         </View> */}
                     </View>
-                    <View style={{ flexDirection: 'row', marginBottom: 35, marginTop: 15, flex: 1 }}>
+                    <View style={{ flexDirection: 'row', marginBottom: 35, marginTop: 0, flex: 1 }}>
                         <View style={{ backgroundColor: '#fff' }}>
                             <View style={{ flexDirection: 'row', backgroundColor: '#fff' }}>
                                 <Menu
