@@ -722,7 +722,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                 <Ionicons
                                                                     name='hammer-outline' size={19} color={'#1D1D20'} />
                                                             </Text>
-                                                            <Text style={{ fontSize: 10, color: '#1D1D20', textAlign: 'center' }}>
+                                                            <Text style={{ fontSize: 11, color: '#1D1D20', textAlign: 'center' }}>
                                                                 Settings
                                                             </Text>
                                                         </TouchableOpacity>
@@ -742,7 +742,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         <Ionicons
                                                             name='chatbubbles-outline' size={19} color={'#1D1D20'} />
                                                     </Text>
-                                                    <Text style={{ fontSize: 10, color: '#1D1D20', textAlign: 'center' }}>
+                                                    <Text style={{ fontSize: 11, color: '#1D1D20', textAlign: 'center' }}>
                                                         Classroom
                                                     </Text>
                                                 </TouchableOpacity>
@@ -1185,6 +1185,8 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             marginBottom: 5,
                                             marginTop: 5,
                                             borderRadius: 75,
+                                            borderWidth: 1,
+                                            borderColor: '#f0f0f2'
                                         }}
                                         source={{ uri: avatar ? avatar : 'https://cues-files.s3.amazonaws.com/images/default.png' }}
                                     />

@@ -2325,7 +2325,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             </View>
                             <Text
                                 style={{
-                                    fontSize: 9,
+                                    fontSize: 10,
                                     color: "#818385",
                                     textAlign: "center"
                                 }}>
@@ -2337,7 +2337,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 <Ionicons name="cloud-download-outline" color="#818385" size={20} />
                                 <Text
                                     style={{
-                                        fontSize: 9,
+                                        fontSize: 10,
                                         color: "#818385",
                                         textAlign: "center"
                                     }}>
@@ -2356,7 +2356,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     <Ionicons name="trash-outline" color="#818385" size={20} style={{ alignSelf: 'center' }} />
                                     <Text
                                         style={{
-                                            fontSize: 9,
+                                            fontSize: 10,
                                             color: "#818385",
                                             textAlign: "center"
                                         }}>
@@ -4747,7 +4747,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         </View>
                                         <Text
                                             style={{
-                                                fontSize: 9,
+                                                fontSize: 10,
                                                 color: "#818385",
                                                 textAlign: "center"
                                             }}>
@@ -4759,7 +4759,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                         <Ionicons name="cloud-download-outline" color="#818385" size={20} style={{ alignSelf: 'center' }} />
                                                         <Text
                                                             style={{
-                                                                fontSize: 9,
+                                                                fontSize: 10,
                                                                 color: "#818385",
                                                                 textAlign: "center"
                                                             }}>
@@ -4776,7 +4776,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                             <Ionicons name="trash-outline" color="#818385" size={20} />
                                                             <Text
                                                                 style={{
-                                                                    fontSize: 9,
+                                                                    fontSize: 10,
                                                                     color: "#818385",
                                                                     textAlign: "center"
                                                                 }}>
@@ -4794,7 +4794,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             <Ionicons name="trash-outline" color="#818385" size={20} style={{ alignSelf: 'center' }} />
                                             <Text
                                                 style={{
-                                                    fontSize: 9,
+                                                    fontSize: 10,
                                                     color: "#818385",
                                                     textAlign: "center"
                                                 }}>

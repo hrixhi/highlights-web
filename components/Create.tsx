@@ -1205,7 +1205,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                       />
                       <Text
                         style={{
-                          fontSize: 9,
+                          fontSize: 10,
                           color: "#818385",
                           textAlign: "center",
                         }}

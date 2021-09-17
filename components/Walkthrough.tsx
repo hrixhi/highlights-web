@@ -341,9 +341,10 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                         // flex: 1,
                                         maxWidth: 500, alignSelf: 'center',
                                         width: '100%',
-                                        lineHeight: 25
+                                        lineHeight: 25,
+                                        paddingTop: 10,
                                     }}>
-                                    <Ionicons name='person-outline' size={24} />
+                                    <Ionicons name='settings-outline' size={24} />
                                 </Text>
                         }
                     </View>

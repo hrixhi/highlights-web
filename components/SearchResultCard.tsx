@@ -132,13 +132,13 @@ const styles: any = (colorScheme: any) => StyleSheet.create({
         backgroundColor: colorScheme === 'light' ? '#1D1D20' : '#f8f8fa'
     },
     date: {
-        fontSize: 9,
+        fontSize: 10,
         color: colorScheme === 'light' ? '#f8f8fa' : '#333333',
         marginLeft: 10,
         lineHeight: 10
     },
     date2: {
-        fontSize: 9,
+        fontSize: 10,
         color: colorScheme === 'light' ? '#f8f8fa' : '#333333',
         marginLeft: 10,
         lineHeight: 10,

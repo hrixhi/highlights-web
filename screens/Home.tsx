@@ -1878,6 +1878,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           loadData(true)
           openModal('Create')
           setShowHome(false)
+          setMenuCollapsed(true)
         }}
         style={{
           position: 'absolute',

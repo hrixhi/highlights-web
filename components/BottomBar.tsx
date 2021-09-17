@@ -141,7 +141,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 <Text style={styles.channelText}>
                                     <Ionicons name='hammer-outline' size={19} color={'#1D1D20'} />
                                 </Text>
-                                <Text style={{ fontSize: 10, color: '#1D1D20', textAlign: 'center' }}>
+                                <Text style={{ fontSize: 11, color: '#1D1D20', textAlign: 'center' }}>
                                     Settings
                                 </Text>
                             </TouchableOpacity>
@@ -157,7 +157,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     <Ionicons
                                         name='chatbubbles-outline' size={19} color={'#1D1D20'} />
                                 </Text>
-                                <Text style={{ fontSize: 10, color: '#1D1D20', textAlign: 'center' }}>
+                                <Text style={{ fontSize: 11, color: '#1D1D20', textAlign: 'center' }}>
                                     Classroom
                                 </Text>
                             </TouchableOpacity>
@@ -189,7 +189,7 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
         width: '100%',
         display: 'flex',
         paddingBottom: 10,
-        paddingHorizontal: Dimensions.get('window').width < 1024 ? 20 : 40,
+        // paddingHorizontal: Dimensions.get('window').width < 1024 ? 20 : 20,
         backgroundColor: '#f8f8fa'
     },
     icons: {

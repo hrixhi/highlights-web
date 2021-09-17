@@ -107,7 +107,7 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 <Text style={styles.channelText}>
                                     <Ionicons name='hammer-outline' size={19} color={'#1D1D20'} />
                                 </Text>
-                                <Text style={{ fontSize: 10, color: '#1D1D20', textAlign: 'center', width: '100%', }}>
+                                <Text style={{ fontSize: 11, color: '#1D1D20', textAlign: 'center', width: '100%', }}>
                                     Settings
                                 </Text>
                             </TouchableOpacity> : null
@@ -123,7 +123,7 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                     <Ionicons
                                         name='chatbubbles-outline' size={19} color={'#1D1D20'} />
                                 </Text>
-                                <Text style={{ fontSize: 10, color: '#1D1D20', textAlign: 'center', width: Dimensions.get('window').width < 1024 ? 'auto' : '100%' }}>
+                                <Text style={{ fontSize: 11, color: '#1D1D20', textAlign: 'center', width: Dimensions.get('window').width < 1024 ? 'auto' : '100%' }}>
                                     Classroom
                                 </Text>
                             </TouchableOpacity>

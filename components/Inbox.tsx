@@ -587,7 +587,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                     <Text>
                                                         <Ionicons name='reload-outline' size={20} />
                                                     </Text>
-                                                    <Text style={{ fontSize: 10, color: '#1D1D20', paddingTop: 5, backgroundColor: '#fff' }}>
+                                                    <Text style={{ fontSize: 11, color: '#1D1D20', paddingTop: 5, backgroundColor: '#fff' }}>
                                                         Refresh
                                                     </Text>
                                                 </TouchableOpacity>
@@ -614,8 +614,8 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                         color: '#1D1D20',
                                                         fontSize: 12,
                                                         backgroundColor: '#f8f8fa',
-                                                        paddingHorizontal: 25,
-                                                        marginRight: 25,
+                                                        paddingHorizontal: 20,
+                                                        marginRight: 15,
                                                         fontFamily: 'inter',
                                                         height: 30,
                                                         // width: 100,
@@ -647,7 +647,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                         color: showNewGroup || showChat ? '#1D1D20' : '#fff',
                                                         fontSize: 12,
                                                         backgroundColor: showNewGroup || showChat ? '#f8f8fa' : '#35AC78',
-                                                        paddingHorizontal: 25,
+                                                        paddingHorizontal: 20,
                                                         fontFamily: 'inter',
                                                         height: 30,
                                                         // width: 100,

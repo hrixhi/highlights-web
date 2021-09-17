@@ -82,10 +82,10 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     Object.keys(categoryMap).map((category: any, i: any) => {
                         return <ScrollView style={{
                             width: '100%',
-                            maxWidth: 250,
+                            maxWidth: 225,
                             backgroundColor: '#f8f8fa',
                             // marginRight: 25,
-                            minWidth: 250
+                            minWidth: 225
                         }}>
                             <View style={{ backgroundColor: '#f8f8fa', paddingLeft: 23, marginBottom: 20 }}>
                                 <Text style={{

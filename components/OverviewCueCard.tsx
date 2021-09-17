@@ -110,7 +110,7 @@ const OverviewCueCard: React.FunctionComponent<{ [label: string]: any }> = (prop
                         } */}
                         {
                             props.cue.graded && showScore && !isOwner ? <Text style={{
-                                fontSize: 9,
+                                fontSize: 10,
                                 color: '#007AFF',
                                 marginLeft: 10
                             }}>
@@ -287,13 +287,13 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
         backgroundColor: colorScheme === 'light' ? '#1D1D20' : '#f8f8fa'
     },
     date: {
-        fontSize: 9,
+        fontSize: 10,
         color: colorScheme === 'light' ? '#f8f8fa' : '#333333',
         // marginLeft: 10,
         lineHeight: 10
     },
     date2: {
-        fontSize: 9,
+        fontSize: 10,
         color: colorScheme === 'light' ? '#f8f8fa' : '#333333',
         marginLeft: 10,
         lineHeight: 10,
