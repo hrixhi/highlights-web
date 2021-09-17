@@ -1589,7 +1589,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               openUpdate={(index: any, key: any, pageNumber: any, _id: any, by: any, cId: any) => openUpdate(index, key, pageNumber, _id, by, cId)}
               calendarCues={cues}
               openCueFromCalendar={openCueFromCalendar}
-              key={option.toString()}
+              // key={option.toString()}
               openDiscussionFromActivity={(channelId: string, createdBy: string) => {
                 setChannelId(channelId);
                 setChannelCreatedBy(createdBy);
