@@ -216,7 +216,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 borderRightWidth: 0,
                 flex: 1,
                 paddingLeft: 0,
-                borderColor: "#e9e9ec",
+                borderColor: "#f0f0f2",
                 paddingTop: 10,
                 paddingRight: 25
             }}
@@ -265,7 +265,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     }}
                     style={{ height: 20, marginRight: 20 }}
                     trackColor={{
-                        false: "#F4F4F6",
+                        false: "#f8f8fa",
                         true: "#007AFF",
                     }}
                     activeThumbColor="white"
@@ -275,7 +275,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         style={{
                             borderRightWidth: 0,
                             paddingTop: 0,
-                            borderColor: "#e9e9ec",
+                            borderColor: "#f0f0f2",
                             flexDirection: 'row'
                         }}
                     >
@@ -287,7 +287,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 <MenuTrigger>
                                     <Text
                                         style={{
-                                            fontFamily: "inter",
+                                            // fontFamily: "inter",
                                             fontSize: 14,
                                             color: "#1D1D20",
                                         }}
@@ -302,7 +302,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             borderRadius: 15,
                                             shadowOpacity: 0,
                                             borderWidth: 1,
-                                            borderColor: "#e9e9ec",
+                                            borderColor: "#f0f0f2",
                                             overflow: 'scroll',
                                             maxHeight: '100%'
                                         },
@@ -326,7 +326,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 <MenuTrigger>
                                     <Text
                                         style={{
-                                            fontFamily: "inter",
+                                            // fontFamily: "inter",
                                             fontSize: 14,
                                             color: "#1D1D20",
                                         }}
@@ -341,7 +341,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             borderRadius: 15,
                                             shadowOpacity: 0,
                                             borderWidth: 1,
-                                            borderColor: "#e9e9ec",
+                                            borderColor: "#f0f0f2",
                                             overflow: 'scroll',
                                             maxHeight: '100%'
                                         },
@@ -392,7 +392,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     }}
                     style={{ height: 20, marginRight: 20 }}
                     trackColor={{
-                        false: "#F4F4F6",
+                        false: "#f8f8fa",
                         true: "#007AFF",
                     }}
                     activeThumbColor="white"
@@ -672,7 +672,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 (showEquationEditor ?
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                         <View style={{
-                            borderColor: '#e9e9ec',
+                            borderColor: '#f0f0f2',
                             borderWidth: 1,
                             borderRadius: 15,
                             padding: 10,
@@ -947,7 +947,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     }
 
 
-                    return <View style={{ borderBottomColor: '#F4F4F6', borderBottomWidth: index === (problems.length - 1) ? 0 : 1, marginBottom: 25 }} key={index}>
+                    return <View style={{ borderBottomColor: '#f8f8fa', borderBottomWidth: index === (problems.length - 1) ? 0 : 1, marginBottom: 25 }} key={index}>
                         {renderHeader(index)}
                         {props.isOwner && modifiedCorrectAnswerProblems[index] ?
                             <View style={{ marginVertical: 10, flexDirection: 'row', alignItems: 'center', padding: 10, backgroundColor: '#f3f3f3', borderRadius: 1 }}>
@@ -979,7 +979,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         (
                                             problem.question && problem.question.includes("formula:") ? (
                                                 <View style={{
-                                                    // borderColor: '#e9e9ec',
+                                                    // borderColor: '#f0f0f2',
                                                     // borderWidth: 1,
                                                     // borderRadius: 15,
                                                     padding: 10,
@@ -1097,7 +1097,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     }
                                     {
                                         props.isOwner ? (editQuestionNumber !== (index + 1) ?
-                                            (<TouchableOpacity onPress={() => setEditQuestionNumber(index + 1)} style={{ marginBottom: 20, paddingTop: 8, paddingLeft: 30, paddingRight: 5 }}> <Ionicons name='pencil-outline' size={25} color={'#007AFF'} /></TouchableOpacity>)
+                                            (<TouchableOpacity onPress={() => setEditQuestionNumber(index + 1)} style={{ marginBottom: 20, paddingTop: 8, paddingLeft: 30, paddingRight: 5 }}> <Ionicons name='pencil-outline' size={24} color={'#007AFF'} /></TouchableOpacity>)
                                             : (<TouchableOpacity style={{ marginBottom: 20, paddingTop: 8, paddingLeft: 30, paddingRight: 5 }}> <View style={{ width: 22 }} /></TouchableOpacity>))
                                             :
                                             null
@@ -1291,7 +1291,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             setRegradeChoices(updateRegradeChoices);
                                         }}>
                                         <MenuTrigger>
-                                            <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#1D1D20', width: Dimensions.get('window').width > 768 ? '100%' : 200 }}>
+                                            <Text style={{ fontSize: 14, color: '#1D1D20', width: Dimensions.get('window').width > 768 ? '100%' : 200 }}>
                                                 {regradeChoices[index] === '' ? 'Select Option' : regradeOptions[regradeChoices[index]]}<Ionicons name='caret-down' size={14} />
                                             </Text>
                                         </MenuTrigger>
@@ -1338,7 +1338,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 lineHeight: 35,
                                                 color: "#1D1D20",
                                                 fontSize: 12,
-                                                backgroundColor: "#F4F4F6",
+                                                backgroundColor: "#f8f8fa",
                                                 borderRadius: 15,
                                                 paddingHorizontal: 25,
                                                 fontFamily: "inter",
@@ -1360,7 +1360,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 lineHeight: 35,
                                                 color: "#1D1D20",
                                                 fontSize: 12,
-                                                backgroundColor: "#F4F4F6",
+                                                backgroundColor: "#f8f8fa",
                                                 borderRadius: 15,
                                                 paddingHorizontal: 25,
                                                 fontFamily: "inter",
@@ -1423,7 +1423,7 @@ export default Quiz;
 const styles = StyleSheet.create({
     input: {
         width: '50%',
-        // borderBottomColor: '#F4F4F6',
+        // borderBottomColor: '#f8f8fa',
         // borderBottomWidth: 1,
         fontSize: 15,
         paddingTop: 12,

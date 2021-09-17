@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Dimensions, StyleSheet } from 'react-native';
+import { ActivityIndicator, Dimensions, Image, StyleSheet } from 'react-native';
 import { TextInput } from "./CustomTextInput";
 import { Text, View, TouchableOpacity } from './Themed';
 import { fetchAPI } from '../graphql/FetchAPI';
@@ -16,6 +16,7 @@ import { Ionicons } from '@expo/vector-icons';
 const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
     const [option, setOption] = useState('Create')
+    const [loading, setLoading] = useState(true)
     const [name, setName] = useState('')
     const [password, setPassword] = useState('')
     const [passwordRequired, setPasswordRequired] = useState(false)
@@ -23,6 +24,8 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
     const [fullName, setFullName] = useState('')
     const [temporary, setTemporary] = useState(false)
     const [userFound, setUserFound] = useState(false)
+    const [showCreate, setShowCreate] = useState(false)
+
     const [school, setSchool] = useState<any>(null)
     const [role, setRole] = useState('')
     const [colorCode, setColorCode] = useState("")
@@ -281,7 +284,10 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         return x
                     })
                     setChannels(c)
+                    setLoading(false)
                 }
+            }).catch(err => {
+                setLoading(false)
             })
         }
     }, [role, school])
@@ -300,103 +306,156 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
         </View>
     }
 
+    if (loading) {
+        return <View style={{
+            width: '100%',
+            height: '100%',
+            flex: 1,
+            justifyContent: 'center',
+            display: 'flex',
+            flexDirection: 'column',
+            backgroundColor: 'white',
+            alignSelf: 'center',
+            marginTop: 100,
+        }}>
+            <ActivityIndicator color={'#818385'} />
+        </View>
+    }
+
     const width = Dimensions.get('window').width
 
     return (
         <View style={styles.screen} key={1}>
-            <View style={{ width: '100%', backgroundColor: 'white' }}>
-                <View style={{ width: '100%', flexDirection: width < 1024 ? 'column' : 'row' }}>
+            <View style={{ width: '100%', maxWidth: 800 }}>
+                <View style={{ flexDirection: 'row', width: '100%', height: 50, marginBottom: 10 }}>
+                    <View style={{ flexDirection: 'row', flex: 1 }}>
+                        {
+                            showCreate ? <TouchableOpacity
+                                onPress={() => {
+                                    setShowCreate(false)
+                                }}
+                                style={{
+                                    paddingRight: 20,
+                                    paddingTop: 15,
+                                    alignSelf: 'flex-start'
+                                }}
+                            >
+                                <Text style={{ lineHeight: 35, width: '100%', textAlign: 'center' }}>
+                                    <Ionicons name='arrow-back-outline' size={30} color={'#1D1D20'} />
+                                </Text>
+                            </TouchableOpacity> :
+                                <Text style={{
+                                    fontSize: 23,
+                                    // paddingBottom: 40,
+                                    paddingTop: 10,
+                                    fontFamily: 'inter',
+                                    flex: 1,
+                                    lineHeight: 23,
+                                    color: '#1D1D20'
+                                }}>
+                                    <Ionicons name='school-outline' size={27} color={'#1D1D20'} />
+                                </Text>
+                        }
+                    </View>
+                    {
+                        showCreate ? null :
+                            <TouchableOpacity
+                                onPress={() => {
+                                    setShowCreate(true)
+                                }}
+                                style={{
+                                    backgroundColor: 'white',
+                                    overflow: 'hidden',
+                                    height: 35,
+                                    marginTop: 5,
+                                    justifyContent: 'center',
+                                    flexDirection: 'row',
+                                    // alignSelf: 'flex-end'
+                                }}>
+                                <Text style={{
+                                    textAlign: 'center',
+                                    lineHeight: 30,
+                                    color: '#fff',
+                                    fontSize: 12,
+                                    backgroundColor: '#35AC78',
+                                    paddingHorizontal: 25,
+                                    fontFamily: 'inter',
+                                    height: 30,
+                                    // width: 100,
+                                    borderRadius: 15,
+                                    textTransform: 'uppercase'
+                                }}>
+                                    Create <Ionicons name='add-outline' size={12} />
+                                </Text>
+                            </TouchableOpacity>
+                    }
+                </View>
+                {!showCreate ?
                     <View style={{
                         backgroundColor: '#fff',
-                        width: width < 1024 ? '100%' : '50%',
+                        width: '100%',
+                        // marginTop: 40
                     }}>
-                        <Text style={{
-                            fontSize: 23,
-                            paddingBottom: 40,
-                            paddingTop: 10,
-                            fontFamily: 'inter',
-                            // flex: 1,
-                            lineHeight: 23,
-                            color: '#1D1D20'
-                        }}>
-                            Subscribe
-                        </Text>
                         <View
                             style={{
                                 borderWidth: channels.length === 0 ? 0 : 1,
-                                borderColor: '#D1D1D6',
+                                borderColor: '#f0f0f2',
                                 overflow: 'hidden',
-                                borderRadius: 12
+                                borderRadius: 0
                             }}
                         >
-                            {/* <View style={{ backgroundColor: '#fff', flexDirection: 'row' }}>
-                                <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#F4F4F6', paddingLeft: 10 }}>
-                                    <Text style={{ fontSize: 20, lineHeight: 50, fontFamily: 'inter', paddingHorizontal: 20, paddingVertical: 5 }} ellipsizeMode='tail'>
-                                        Name
-                                    </Text>
-                                </View>
-                                <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#F4F4F6', paddingLeft: 10 }}>
-                                    <Text style={{ fontSize: 20, lineHeight: 50, fontFamily: 'inter', paddingHorizontal: 20, paddingVertical: 5 }} ellipsizeMode='tail'>
-                                        Instructor
-                                    </Text>
-                                </View>
-                                <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#F4F4F6', paddingLeft: 10 }}>
-
-                                </View>
-                            </View> */}
                             <ScrollView contentContainerStyle={{
-                                maxHeight: 550
+                                height: width < 1024 ? 600 :  Dimensions.get('window').height - 200,
+                                width: '100%',
                             }}>
                                 {
                                     channels.map((channel: any, ind: any) => {
-                                        return <View style={{
-                                            backgroundColor: '#fff', flexDirection: 'row', borderColor: '#D1D1D6',
-                                            borderBottomWidth: ind === channels.length - 1 ? 0 : 1
-                                        }}>
-                                            <View style={{ flex: 1, backgroundColor: '#F4F4F6', paddingLeft: 10 }}>
-                                                <Text style={{ fontSize: 12, padding: 10, fontFamily: 'inter' }} ellipsizeMode='tail'>
+                                        return <TouchableOpacity
+                                            onPress={() => handleSub(channel.name)}
+                                            style={{
+                                                backgroundColor: '#f8f8fa',
+                                                flexDirection: 'row',
+                                                borderColor: '#f0f0f2',
+                                                borderBottomWidth: ind === channels.length - 1 ? 0 : 1,
+                                                width: '100%'
+                                            }}>
+                                            <View style={{ backgroundColor: '#f8f8fa', padding: 10 }}>
+                                                <Image
+                                                    style={{
+                                                        height: 40,
+                                                        width: 40,
+                                                        marginTop: 5,
+                                                        marginBottom: 5,
+                                                        borderRadius: 75,
+                                                        // marginTop: 20,
+                                                        alignSelf: 'center'
+                                                    }}
+                                                    source={{ uri: channel.createdByAvatar ? channel.createdByAvatar : 'https://cues-files.s3.amazonaws.com/images/default.png' }}
+                                                />
+                                            </View>
+                                            <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
+                                                <Text style={{ fontSize: 13, padding: 10 }} ellipsizeMode='tail'>
+                                                    {channel.createdByUsername}
+                                                </Text>
+                                                <Text style={{ fontSize: 16, padding: 10, fontFamily: 'inter' }} ellipsizeMode='tail'>
                                                     {channel.name}
                                                 </Text>
                                             </View>
-                                            <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                                <Text style={{ fontSize: 12, padding: 10 }} ellipsizeMode='tail'>
-                                                    {channel.createdByUsername}
-                                                </Text>
-                                            </View>
-                                            <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                                <TouchableOpacity
-                                                    onPress={() => handleSub(channel.name)}
-                                                >
-                                                    <Text style={{ textAlign: 'center', fontSize: 12, padding: 20, color: '#007AFF' }} ellipsizeMode='tail'>
-                                                        Join
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            </View>
-                                        </View>
+                                        </TouchableOpacity>
                                     })
                                 }
                             </ScrollView>
                         </View>
                     </View>
+                    :
                     <View style={{
                         backgroundColor: 'white',
-                        paddingLeft: width < 1024 ? 0 : 20,
-                        paddingTop: width < 1024 ? 40 : 0,
-                        marginLeft: width < 1024 ? 0 : 20,
-                        borderLeftWidth: width < 1024 ? 0 : 1, borderLeftColor: '#D1D1D6',
-                        width: width < 1024 ? '100%' : '50%'
+                        // paddingTop: width < 1024 ? 40 : 0,
+                        width: '100%',
+                        maxWidth: 500,
+                        // marginTop: 40,
+                        alignSelf: 'center'
                     }}>
-                        <Text style={{
-                            fontSize: 23,
-                            paddingBottom: 40,
-                            paddingTop: 10,
-                            fontFamily: 'inter',
-                            // flex: 1,
-                            lineHeight: 23,
-                            color: '#1D1D20'
-                        }}>
-                            Create
-                        </Text>
                         <View style={{ backgroundColor: 'white' }}>
                             <Text style={{
                                 fontSize: 15,
@@ -476,7 +535,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             onValueChange={() => setTemporary(!temporary)}
                                             style={{ height: 20 }}
                                             trackColor={{
-                                                false: "#F4F4F6",
+                                                false: "#f8f8fa",
                                                 true: "#007AFF"
                                             }}
                                             activeThumbColor="white"
@@ -558,7 +617,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             }
                         </View>
                     </View>
-                </View>
+                }
             </View>
         </View>
     );
@@ -571,8 +630,10 @@ const styles = StyleSheet.create({
         padding: 15,
         paddingHorizontal: Dimensions.get('window').width < 1024 ? 0 : 20,
         width: '100%',
-        height: Dimensions.get('window').height - 230,
+        height: Dimensions.get('window').height - 150,
         backgroundColor: 'white',
+        justifyContent: 'center',
+        flexDirection: 'row'
     },
     outline: {
         borderRadius: 12,
@@ -604,7 +665,7 @@ const styles = StyleSheet.create({
     },
     input: {
         width: '100%',
-        borderBottomColor: '#F4F4F6',
+        borderBottomColor: '#f8f8fa',
         borderBottomWidth: 1,
         fontSize: 15,
         paddingTop: 13,

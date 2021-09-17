@@ -46,13 +46,14 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
         <View style={styles.bottombar}>
             <View style={{
                 display: 'flex',
-                flex: 1,
-                borderColor: '#e9e9ec',
+                width: '100%',
+                borderColor: '#f0f0f2',
                 // borderRightWidth: Dimensions.get('window').width < 1024 ? 0 : 1,
                 // paddingHorizontal: Dimensions.get('window').width < 1024 ? 15 : 0,
                 paddingTop: 5,
-                backgroundColor: '#F4F4F6',
-                flexDirection: 'row'
+                backgroundColor: '#f8f8fa',
+                flexDirection: 'row',
+                maxWidth: 1275,
             }}>
                 <View style={styles.icons}>
                     <TouchableOpacity
@@ -64,7 +65,7 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             props.setChannelCreatedBy('')
                             props.closeModal()
                         }}
-                        style={{ backgroundColor: '#F4F4F6', width: '100%', paddingBottom: 20 }}
+                        style={{ backgroundColor: '#f8f8fa', width: '100%', paddingBottom: 20 }}
                     >
                         <Text style={{ lineHeight: 35, width: '100%', textAlign: 'center' }}>
                             <Ionicons name='arrow-back-outline' size={30} color={'#1D1D20'} />
@@ -72,7 +73,7 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     </TouchableOpacity>
                 </View>
                 {
-                    selectedChannel ? <View style={styles.icons}>
+                    selectedChannel && Dimensions.get('window').width >= 1024 ? <View style={styles.icons}>
                         <Text style={{
                             fontSize: 23,
                             fontFamily: 'inter',
@@ -84,36 +85,21 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 height: 18,
                                 borderRadius: 9,
                                 marginRight: 10,
-                                marginTop: 5,
+                                marginTop: 8,
                                 backgroundColor: selectedChannel.colorCode
                             }} /> {selectedChannel.channelName}
                         </Text>
                     </View> : null
                 }
-                <View style={{ backgroundColor: '#F4F4F6', flexDirection: 'row', flex: 1 }} />
-                <View style={styles.icons}>
-                    {
-                        props.channelId !== '' && (props.menuCollapsed === true) ?
-                            <TouchableOpacity
-                                style={{ backgroundColor: '#F4F4F6', width: Dimensions.get('window').width < 1024 ? 'auto' : '100%', paddingBottom: 20 }}
-                                onPress={() => props.openMeeting()}>
-                                <Text style={styles.channelText}>
-                                    <Ionicons
-                                        name='chatbubbles-outline' size={19} color={'#1D1D20'} />
-                                </Text>
-                                <Text style={{ fontSize: 10, color: '#1D1D20', textAlign: 'center', width: Dimensions.get('window').width < 1024 ? 'auto' : '100%' }}>
-                                    Classroom
-                                </Text>
-                            </TouchableOpacity>
-                            : null
-                    }
-                </View>
+                <TouchableOpacity onPress={() => {
+                    props.hideMenu()
+                }} style={{ backgroundColor: '#f8f8fa', flexDirection: 'row', flex: 1 }} />
                 <View style={styles.icons}>
                     {
                         isOwner && props.channelId !== '' && (props.menuCollapsed === true) ?
                             <TouchableOpacity
                                 style={{
-                                    backgroundColor: '#F4F4F6',
+                                    backgroundColor: '#f8f8fa',
                                     width: Dimensions.get('window').width < 1024 ? 'auto' : '100%',
                                     paddingBottom: 20
                                 }}
@@ -127,14 +113,31 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             </TouchableOpacity> : null
                     }
                 </View>
+                <View style={styles.icons}>
+                    {
+                        props.channelId !== '' && (props.menuCollapsed === true) ?
+                            <TouchableOpacity
+                                style={{ backgroundColor: '#f8f8fa', width: Dimensions.get('window').width < 1024 ? 'auto' : '100%', paddingBottom: 20 }}
+                                onPress={() => props.openMeeting()}>
+                                <Text style={styles.channelText}>
+                                    <Ionicons
+                                        name='chatbubbles-outline' size={19} color={'#1D1D20'} />
+                                </Text>
+                                <Text style={{ fontSize: 10, color: '#1D1D20', textAlign: 'center', width: Dimensions.get('window').width < 1024 ? 'auto' : '100%' }}>
+                                    Classroom
+                                </Text>
+                            </TouchableOpacity>
+                            : null
+                    }
+                </View>
                 <View style={styles.icons2}>
                     {
                         props.channelId !== '' && (props.menuCollapsed === true) ?
-                            <TouchableOpacity style={{ backgroundColor: '#F4F4F6', width: '100%', paddingBottom: 20 }}
+                            <TouchableOpacity style={{ backgroundColor: '#f8f8fa', width: '100%', paddingBottom: 20 }}
                                 onPress={() => props.hideMenu()}>
                                 <Text style={{ lineHeight: 30, width: '100%', textAlign: 'center' }}>
                                     <Ionicons
-                                        name='chevron-down-outline' size={30} color={'#1D1D20'} />
+                                        name='chevron-down-outline' size={27} color={'#007AFF'} />
                                 </Text>
                             </TouchableOpacity> : null
                     }
@@ -152,8 +155,9 @@ const styleObject: any = (colorScheme: any, mc: any) => StyleSheet.create({
         width: '100%',
         paddingHorizontal: Dimensions.get('window').width < 1024 ? 20 : 40,
         paddingTop: 10,
-        flexDirection: Dimensions.get('window').width < 1024 ? 'column' : 'row',
-        backgroundColor: '#F4F4F6',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        backgroundColor: '#f8f8fa',
     },
     icons: {
         display: 'flex',
@@ -161,7 +165,7 @@ const styleObject: any = (colorScheme: any, mc: any) => StyleSheet.create({
         flexDirection: 'row',
         paddingRight: 25,
         overflow: 'hidden',
-        backgroundColor: '#F4F4F6'
+        backgroundColor: '#f8f8fa'
     },
     icons2: {
         display: 'flex',
@@ -169,7 +173,7 @@ const styleObject: any = (colorScheme: any, mc: any) => StyleSheet.create({
         flexDirection: 'row',
         paddingRight: 0,
         overflow: 'hidden',
-        backgroundColor: '#F4F4F6'
+        backgroundColor: '#f8f8fa'
     },
     defaultFont: {
         fontFamily: 'system font'
@@ -199,13 +203,13 @@ const styleObject: any = (colorScheme: any, mc: any) => StyleSheet.create({
         marginLeft: 4,
         marginBottom: 10,
         marginTop: -4,
-        borderRadius: 1,
+        borderRadius: 0,
         backgroundColor: '#f94144',
         textAlign: 'center',
         zIndex: 50
     },
     outline: {
-        borderRadius: 1,
+        borderRadius: 0,
         backgroundColor: colorScheme === 'light' ? '#1D1D20' : 'white',
         color: colorScheme === 'light' ? 'white' : '#1D1D20'
     },
@@ -226,7 +230,7 @@ const styleObject: any = (colorScheme: any, mc: any) => StyleSheet.create({
         color: colorScheme === 'light' ? '#1D1D20' : 'white',
         height: 22,
         paddingHorizontal: 10,
-        borderRadius: 1,
+        borderRadius: 0,
         backgroundColor: colorScheme === 'light' ? '#1D1D20' : 'white',
     },
     text: {

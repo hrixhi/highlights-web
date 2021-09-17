@@ -330,18 +330,6 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
         style={{ width: "100%", backgroundColor: "white" }}
         showsVerticalScrollIndicator={false}
       >
-        <Text
-          style={{
-            fontSize: 23,
-            paddingBottom: 30,
-            fontFamily: 'inter',
-            // textTransform: "uppercase",
-            // paddingLeft: 10,
-            // flex: 1,
-            lineHeight: 25
-          }}>
-          {PreferredLanguageText('profile')}
-        </Text>
         {/*}
         <Text
           style={{
@@ -449,9 +437,9 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                       <Text style={{
                         textAlign: 'center',
                         lineHeight: 30,
-                        color: '#fff',
+                        color: '#1D1D20',
                         fontSize: 12,
-                        backgroundColor: '#4c956c',
+                        backgroundColor: '#f8f8fa',
                         paddingHorizontal: 25,
                         fontFamily: 'inter',
                         height: 30,
@@ -459,7 +447,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                         borderRadius: 15,
                         textTransform: 'uppercase'
                       }}>
-                        REMOVE
+                        REMOVE <Ionicons name='close-outline' size={12} />
                       </Text>
                     </TouchableOpacity> : <FileUpload
                       onUpload={(u: any, t: any) => {
@@ -586,7 +574,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                       lineHeight: 35,
                       color: "#1D1D20",
                       fontSize: 12,
-                      backgroundColor: "#F4F4F6",
+                      backgroundColor: "#f8f8fa",
                       paddingHorizontal: 25,
                       fontFamily: "inter",
                       height: 35,
@@ -595,7 +583,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                       textTransform: "uppercase"
                     }}
                   >
-                    {showSavePassword ? PreferredLanguageText('back') : PreferredLanguageText('password')}
+                    {showSavePassword ? <Ionicons name='arrow-back-outline' size={12} /> : null} {showSavePassword ? PreferredLanguageText('back') : PreferredLanguageText('password')} {showSavePassword ? null : <Ionicons name='add-outline' size={12} />}
                   </Text>
                 </TouchableOpacity>
               ) : null}
@@ -627,7 +615,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                     textTransform: "uppercase"
                   }}
                 >
-                  {loggedIn ? (showSavePassword ? PreferredLanguageText('update') : PreferredLanguageText('save')) : PreferredLanguageText('signUp')}
+                  {loggedIn ? (showSavePassword ? PreferredLanguageText('update') : PreferredLanguageText('save')) : PreferredLanguageText('signUp')} <Ionicons name='arrow-forward-outline' size={12} />
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -654,7 +642,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                     lineHeight: 35,
                     color: "#1D1D20",
                     fontSize: 12,
-                    backgroundColor: "#F4F4F6",
+                    backgroundColor: "#f8f8fa",
                     paddingHorizontal: 25,
                     fontFamily: "inter",
                     height: 35,
@@ -663,7 +651,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                     textTransform: 'uppercase'
                   }}
                 >
-                  {loggedIn ? PreferredLanguageText('logout') : PreferredLanguageText('login')}
+                  {loggedIn ? PreferredLanguageText('logout') : PreferredLanguageText('login')} <Ionicons name='enter-outline' size={12} />
                 </Text>
               </TouchableOpacity>
               <View style={{ flexDirection: 'row', justifyContent: 'center', paddingBottom: 20, width: '100%', marginTop: 30, marginBottom: 100 }}>
@@ -673,7 +661,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
           </View>
         </View>
       </ScrollView>
-    </View>
+    </View >
   );
 };
 
@@ -683,13 +671,13 @@ const styles = StyleSheet.create({
   screen: {
     // paddingHorizontal: Dimensions.get("window").width < 1024 ? 0 : 20,
     width: "100%",
-    // maxWidth: 600,
+    maxWidth: 800,
     alignSelf: 'center',
     height: Dimensions.get("window").height - 110,
     backgroundColor: "white"
   },
   outline: {
-    borderRadius: 1,
+    borderRadius: 0,
     borderWidth: 1,
     borderColor: "#818385"
   },
@@ -706,7 +694,7 @@ const styles = StyleSheet.create({
     height: 22,
     paddingHorizontal: 10,
     backgroundColor: "white",
-    borderRadius: 1,
+    borderRadius: 0,
     borderWidth: 1,
     borderColor: "#818385"
   },

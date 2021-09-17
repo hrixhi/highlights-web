@@ -1189,6 +1189,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
     setCueId('')
     setModalType('')
+    setShowHome(true)
     setCreatedBy('')
     setChannelFilterChoice('All')
     if (modalType === 'Create' || modalType === 'Update') {
@@ -1506,7 +1507,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     lineHeight: 35,
                     color: '#1D1D20',
                     fontSize: 12,
-                    backgroundColor: '#F4F4F6',
+                    backgroundColor: '#f8f8fa',
                     paddingHorizontal: 25,
                     fontFamily: 'inter',
                     height: 35,
@@ -1540,19 +1541,21 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             backgroundColor: '#fff'
           }}
         >
-          <View style={{
-            position: 'absolute',
-            zIndex: 525,
-            display: 'flex',
-            alignSelf: 'center',
-            // justifyContent: 'center',
-            backgroundColor: 'white',
-            width: dimensions.window.width < 1024 ? '100%' : '100%',
-            height: dimensions.window.width < 1024 ? '100%' : dimensions.window.height,
-            borderRadius: dimensions.window.width < 1024 ? 0 : 0,
-            marginTop: dimensions.window.width < 1024 ? 0 : 0,
-            // paddingVertical: 20
-          }}>
+          <View
+            key={option}
+            style={{
+              position: 'absolute',
+              zIndex: 525,
+              display: 'flex',
+              alignSelf: 'center',
+              // justifyContent: 'center',
+              backgroundColor: 'white',
+              width: dimensions.window.width < 1024 ? '100%' : '100%',
+              height: dimensions.window.width < 1024 ? '100%' : dimensions.window.height,
+              borderRadius: dimensions.window.width < 1024 ? 0 : 0,
+              marginTop: dimensions.window.width < 1024 ? 0 : 0,
+              // paddingVertical: 20
+            }}>
             <Dashboard
               setOption={(op: any) => setOption(op)}
               option={option}
@@ -1654,7 +1657,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             <View style={{
               height: 61,
               borderBottomWidth: 1,
-              borderColor: '#e9e9ec'
+              borderColor: '#f0f0f2'
             }}>
               <VerticalBar
                 menuCollapsed={menuCollapsed}
@@ -1697,13 +1700,14 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             <View style={{
               width: dimensions.window.width,
               height: dimensions.window.height,
-              borderColor: '#e9e9ec',
-              backgroundColor: '#fff',
+              borderColor: '#f0f0f2',
+              backgroundColor: '#f8f8fa',
             }}>
               <View style={{
-                backgroundColor: '#fff',
+                backgroundColor: '#f8f8fa',
                 width: dimensions.window.width,
                 height: dimensions.window.height - 30,
+                maxWidth: 1275, alignSelf: 'center'
               }}>
                 <BottomBar
                   cues={dateFilteredCues}
@@ -1813,7 +1817,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 height: (menuCollapsed ? dimensions.window.height - 60 : 0),
                 // paddingHorizontal: dimensions.window.width < 1024 ? 0 : 30,
                 paddingTop: 10,
-                // backgroundColor: '#F4F4F6',
+                // backgroundColor: '#f8f8fa',
                 backgroundColor: '#fff',
                 position: dimensions.window.width < 1024 ? 'absolute' : 'relative'
               }}
@@ -1850,7 +1854,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     alignSelf: 'center',
                     borderTopLeftRadius: 0,
                     borderTopRightRadius: 0,
-                    maxWidth: modalType === 'Create' || modalType === 'Update' ? 1500 : dimensions.window.width,
+                    maxWidth: modalType === 'Create' || modalType === 'Update' ? 1275 : dimensions.window.width,
                     overflow: 'hidden'
                   }}>
                     {modalContent}
@@ -1912,8 +1916,9 @@ const styles = (channelId: string) => StyleSheet.create({
     borderTopLeftRadius: 15,
     height: Dimensions.get('window').height - 60,
     width: '100%',
+    // maxWidth: 1275,
     justifyContent: "center",
-    backgroundColor: '#F4F4F6'
+    backgroundColor: '#f8f8fa'
   },
   horizontal: {
     flexDirection: "row",
@@ -1921,7 +1926,7 @@ const styles = (channelId: string) => StyleSheet.create({
   },
   input: {
     width: '100%',
-    borderBottomColor: '#F4F4F6',
+    borderBottomColor: '#f8f8fa',
     borderBottomWidth: 1,
     fontSize: 15,
     paddingTop: 13,

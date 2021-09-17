@@ -404,7 +404,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                             lineHeight: 30,
                             color: '#fff',
                             fontSize: 12,
-                            backgroundColor: '#3abb83',
+                            backgroundColor: '#35AC78',
                             paddingHorizontal: 25,
                             fontFamily: 'inter',
                             height: 30,
@@ -590,7 +590,7 @@ const styles = StyleSheet.create({
         color: '#1D1D20',
         height: 22,
         paddingHorizontal: 20,
-        backgroundColor: '#F4F4F6',
+        backgroundColor: '#f8f8fa',
         lineHeight: 22,
         fontFamily: 'inter'
     },
@@ -609,7 +609,7 @@ const styles = StyleSheet.create({
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: "white",
-        borderRadius: 1,
+        borderRadius: 0,
         borderWidth: 1,
         borderColor: "#818385",
         lineHeight: 20

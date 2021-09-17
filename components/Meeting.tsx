@@ -39,6 +39,8 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
     const [showPastMeetings] = useState(true);
     const [reloadKey, setReloadKey] = useState(Math.random())
 
+    const [showMeeting, setShowMeeting] = useState(true)
+
     const classroomNotInSession = PreferredLanguageText("classroomNotInSession");
     const [guestLink, setGuestLink] = useState('')
     const [instructorLink, setInstructorLink] = useState('')
@@ -267,8 +269,8 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
             <ScrollView
                 contentContainerStyle={{
                     borderWidth: 1,
-                    borderColor: '#e9e9ec',
-                    borderRadius: 1,
+                    borderColor: '#f0f0f2',
+                    borderRadius: 0,
                     width: '100%',
                     maxHeight: windowHeight - 200,
                     overflow: 'hidden'
@@ -285,9 +287,9 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                 }
                             }}
                             style={{
-                                backgroundColor: '#F4F4F6',
+                                backgroundColor: '#f8f8fa',
                                 flexDirection: 'row',
-                                borderColor: '#e9e9ec',
+                                borderColor: '#f0f0f2',
                                 borderBottomWidth: index === pastMeetings.length - 1 ? 0 : 1,
                                 // minWidth: 600, // flex: 1,
                                 width: '100%',
@@ -357,7 +359,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
         <ScrollView
             style={{
                 width: "100%",
-                height: windowHeight,
+                maxHeight: windowHeight,
                 backgroundColor: "#fff",
                 borderTopLeftRadius: 0,
                 borderTopRightRadius: 0
@@ -368,27 +370,14 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                     backgroundColor: "white",
                     paddingRight: 20,
                     paddingTop: 20,
+                    paddingBottom: 50,
                     paddingLeft: Dimensions.get('window').width < 1024 ? 20 : 0,
                     opacity: modalAnimation,
                     borderTopLeftRadius: 0,
                     borderTopRightRadius: 0,
                     alignSelf: "center"
                 }}>
-                <View style={{ backgroundColor: "white", flexDirection: "row", paddingBottom: 20 }}>
-                    <Text
-                        ellipsizeMode="tail"
-                        style={{
-                            fontSize: 23,
-                            paddingBottom: 20,
-                            fontFamily: 'inter',
-                            // textTransform: "uppercase",
-                            // paddingLeft: 10,
-                            paddingTop: 2,
-                            flex: 1,
-                            lineHeight: 25
-                        }}>
-                        Meetings
-                    </Text>
+                <View style={{ backgroundColor: "white", flexDirection: "row", paddingBottom: 20, flex: 1 }}>
                     {
                         isOwner ? (
                             <View
@@ -455,7 +444,10 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                     }
                     <View
                         style={{
-                            backgroundColor: "white"
+                            backgroundColor: "white",
+                            flex: 1,
+                            flexDirection: 'row',
+                            justifyContent: 'flex-end'
                         }}>
                         <TouchableOpacity
                             onPress={handleEnterClassroom}
@@ -473,7 +465,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                 lineHeight: 30,
                                 color: '#fff',
                                 fontSize: 12,
-                                backgroundColor: '#3abb83',
+                                backgroundColor: '#35AC78',
                                 paddingHorizontal: 25,
                                 fontFamily: 'inter',
                                 height: 30,
@@ -549,29 +541,62 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
 
     const width = Dimensions.get('window').width
 
-    return <View style={{ width: '100%', flexDirection: width < 1024 ? 'column' : 'row' }}>
-        <View style={{
-            backgroundColor: 'white',
-            width: width < 1024 ? '100%' : '30%',
-            // paddingRight: width < 1024 ? 0 : 20,
+    return <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{
+            height: Dimensions.get('window').height - 100,
+            maxWidth: 800,
+            width: '100%',
+            alignSelf: 'center'
         }}>
-            {!viewChannelAttendance ? mainClassroomView : attendanceListView}
+        <View style={{ flexDirection: "row", width: '100%', justifyContent: 'center', paddingVertical: 30 }}>
+            <TouchableOpacity
+                style={{
+                    justifyContent: "center",
+                    flexDirection: "column"
+                }}
+                onPress={() => {
+                    setShowMeeting(true);
+                }}>
+                <Text style={showMeeting ? styles.allGrayFill : styles.all}>
+                    MEET
+                </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+                style={{
+                    justifyContent: "center",
+                    flexDirection: "column"
+                }}
+                onPress={() => {
+                    setShowMeeting(false);
+                }}>
+                <Text style={!showMeeting ? styles.allGrayFill : styles.all}>
+                    DISCUSS
+                </Text>
+            </TouchableOpacity>
         </View>
-        <View style={{
-            backgroundColor: '#fff', width: width < 1024 ? '100%' : '70%',
-            paddingLeft: width < 1024 ? 0 : 20,
-            marginTop: 20,
-            marginBottom: 20,
-            borderLeftWidth: width < 1024 ? 0 : 1, borderLeftColor: '#F4F4F6',
-        }}>
-            <Discussion
-                channelId={props.channelId}
-                filterChoice={props.filterChoice}
-                channelCreatedBy={props.channelCreatedBy}
-                refreshUnreadDiscussionCount={() => props.refreshUnreadDiscussionCount()}
-            />
-        </View>
-    </View>;
+        {
+            showMeeting ? <View style={{
+                backgroundColor: 'white',
+                width: '100%',
+            }}>
+                {mainClassroomView}
+            </View>
+                : <View style={{
+                    backgroundColor: '#fff', width: '100%',
+                    paddingLeft: width < 1024 ? 0 : 20,
+                    marginTop: 20,
+                    marginBottom: 20,
+                }}>
+                    <Discussion
+                        channelId={props.channelId}
+                        filterChoice={props.filterChoice}
+                        channelCreatedBy={props.channelCreatedBy}
+                        refreshUnreadDiscussionCount={() => props.refreshUnreadDiscussionCount()}
+                    />
+                </View>
+        }
+    </ScrollView>
 };
 
 export default Meeting;
@@ -613,7 +638,7 @@ const styles = StyleSheet.create({
         maxWidth: '100%',
         borderRadius: 15,
         padding: 13,
-        backgroundColor: '#F4F4F6',
+        backgroundColor: '#f8f8fa',
         flexDirection: 'row',
         justifyContent: 'space-between'
     },
@@ -621,7 +646,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'column',
         flex: 1,
-        backgroundColor: '#F4F4F6',
+        backgroundColor: '#f8f8fa',
     },
     title: {
         fontFamily: 'inter',
@@ -633,6 +658,24 @@ const styles = StyleSheet.create({
     description: {
         fontSize: 13,
         color: '#818385',
-    }
+    },
+    all: {
+        fontSize: 11,
+        color: '#2f2f3c',
+        height: 22,
+        paddingHorizontal: 10,
+        backgroundColor: '#fff',
+        lineHeight: 22,
+        fontFamily: 'inter'
+    },
+    allGrayFill: {
+        fontSize: 11,
+        color: '#fff',
+        paddingHorizontal: 10,
+        borderRadius: 12,
+        backgroundColor: '#2f2f3c',
+        lineHeight: 22,
+        fontFamily: 'inter'
+    },
 
 });

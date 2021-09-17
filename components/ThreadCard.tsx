@@ -94,7 +94,7 @@ const ThreadCard: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     </View>
                     {
                         imported ?
-                            <View style={{ backgroundColor: '#F4F4F6', flex: 1, flexDirection: 'row', paddingTop: 6 }}>
+                            <View style={{ backgroundColor: '#f8f8fa', flex: 1, flexDirection: 'row', paddingTop: 6 }}>
                                 <Text style={{ width: '100%', color: '#818385', fontSize: 15, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                                     <Ionicons name='document-outline' size={17} color='#818385' /> {title}.{type}
                                 </Text>
@@ -104,7 +104,7 @@ const ThreadCard: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     <Ionicons name="chevron-forward-outline" color="#818385" size={20} style={{ marginTop: 4 }} />
                                 </Text>
                             </View>
-                            : <View style={{ backgroundColor: '#F4F4F6', width: '100%', flexDirection: 'row', display: 'flex' }}>
+                            : <View style={{ backgroundColor: '#f8f8fa', width: '100%', flexDirection: 'row', display: 'flex' }}>
                                 <Text ellipsizeMode={'tail'}
                                     numberOfLines={1}
                                     style={styleObject.title}>
@@ -115,7 +115,7 @@ const ThreadCard: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                         <Text style={{
                                             width: 20,
                                             height: 20,
-                                            borderRadius: 1,
+                                            borderRadius: 0,
                                             backgroundColor: '#007AFF',
                                             textAlign: 'center',
                                             zIndex: 150,
@@ -148,14 +148,14 @@ const styles: any = () => StyleSheet.create({
         height: '100%',
         width: '100%',
         maxWidth: 500,
-        borderRadius: 1,
+        borderRadius: 0,
         overflow: 'hidden',
         backgroundColor: 'white'
     },
     badge: {
         width: 20,
         height: 20,
-        borderRadius: 1,
+        borderRadius: 0,
         backgroundColor: '#f94144',
         textAlign: 'center',
         zIndex: 150,
@@ -164,22 +164,22 @@ const styles: any = () => StyleSheet.create({
     card: {
         height: '100%',
         width: '100%',
-        borderRadius: 1,
+        borderRadius: 0,
         padding: 13,
-        backgroundColor: '#F4F4F6',
+        backgroundColor: '#f8f8fa',
         borderWidth: 1,
-        borderColor: '#e9e9ec'
+        borderColor: '#d0d0d2'
     },
     text: {
         display: 'flex',
         flexDirection: 'column',
         flex: 1,
-        backgroundColor: '#F4F4F6'
+        backgroundColor: '#f8f8fa'
     },
     dateContainer: {
         fontSize: 10,
         height: '22%',
-        backgroundColor: '#F4F4F6',
+        backgroundColor: '#f8f8fa',
         display: 'flex',
         flexDirection: 'row'
     },
@@ -211,7 +211,7 @@ const styles: any = () => StyleSheet.create({
     color: {
         width: 10,
         height: 10,
-        borderRadius: 1,
+        borderRadius: 0,
         marginTop: 1
     }
 });

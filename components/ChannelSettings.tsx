@@ -146,7 +146,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             setActiveRole(role)
                         }}>
                         <MenuTrigger>
-                            <Text style={{ fontFamily: 'inter', fontSize: 15, color: '#1D1D20' }}>
+                            <Text style={{ fontSize: 15, color: '#1D1D20' }}>
                                 {activeRole}<Ionicons name='caret-down' size={15} />
                             </Text>
                         </MenuTrigger>
@@ -156,7 +156,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 borderRadius: 15,
                                 shadowOpacity: 0,
                                 borderWidth: 1,
-                                borderColor: '#e9e9ec',
+                                borderColor: '#f0f0f2',
                                 overflow: 'scroll',
                                 maxHeight: '100%'
                             }
@@ -167,7 +167,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     <View style={{
                                         width: 8,
                                         height: 8,
-                                        borderRadius: 1,
+                                        borderRadius: 0,
                                         marginTop: 1,
                                         backgroundColor: "#fff"
                                     }} />
@@ -203,7 +203,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             setActiveGrade(grade)
                         }}>
                         <MenuTrigger>
-                            <Text style={{ fontFamily: 'inter', fontSize: 15, color: '#1D1D20' }}>
+                            <Text style={{ fontSize: 15, color: '#1D1D20' }}>
                                 {activeGrade}<Ionicons name='caret-down' size={15} />
                             </Text>
                         </MenuTrigger>
@@ -213,7 +213,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 borderRadius: 15,
                                 shadowOpacity: 0,
                                 borderWidth: 1,
-                                borderColor: '#e9e9ec',
+                                borderColor: '#f0f0f2',
                                 overflow: 'scroll',
                                 maxHeight: '100%'
                             }
@@ -224,7 +224,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     <View style={{
                                         width: 8,
                                         height: 8,
-                                        borderRadius: 1,
+                                        borderRadius: 0,
                                         marginTop: 1,
                                         backgroundColor: "#fff"
                                     }} />
@@ -260,7 +260,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             setActiveSection(grade)
                         }}>
                         <MenuTrigger>
-                            <Text style={{ fontFamily: 'inter', fontSize: 15, color: '#1D1D20' }}>
+                            <Text style={{ fontSize: 15, color: '#1D1D20' }}>
                                 {activeSection}<Ionicons name='caret-down' size={15} />
                             </Text>
                         </MenuTrigger>
@@ -270,7 +270,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 borderRadius: 15,
                                 shadowOpacity: 0,
                                 borderWidth: 1,
-                                borderColor: '#e9e9ec',
+                                borderColor: '#f0f0f2',
                                 overflow: 'scroll',
                                 maxHeight: '100%'
                             }
@@ -281,7 +281,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     <View style={{
                                         width: 8,
                                         height: 8,
-                                        borderRadius: 1,
+                                        borderRadius: 0,
                                         marginTop: 1,
                                         backgroundColor: "#fff"
                                     }} />
@@ -764,7 +764,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 onValueChange={() => setDuplicateChannelTemporary(!duplicateChannelTemporary)}
                                 style={{ height: 20 }}
                                 trackColor={{
-                                    false: "#F4F4F6",
+                                    false: "#f8f8fa",
                                     true: "#007AFF"
                                 }}
                                 activeThumbColor="white"
@@ -811,7 +811,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             }}
                                             style={{ height: 20 }}
                                             trackColor={{
-                                                false: "#F4F4F6",
+                                                false: "#f8f8fa",
                                                 true: "#007AFF"
                                             }}
                                             activeThumbColor="white"
@@ -859,7 +859,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             }}
                                             style={{ height: 20 }}
                                             trackColor={{
-                                                false: "#F4F4F6",
+                                                false: "#f8f8fa",
                                                 true: "#007AFF"
                                             }}
                                             activeThumbColor="white"
@@ -906,34 +906,19 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
 
     return (
         <View style={styles.screen} >
-            <View style={{ width: '100%', backgroundColor: 'white', paddingTop: 10 }}>
-                <Text
-                    style={{
-                        fontSize: 23,
-                        paddingBottom: 40,
-                        fontFamily: 'inter',
-                        maxWidth: 600,
-                        width: '100%',
-                        alignSelf: 'center',
-                        // textTransform: "uppercase",
-                        // paddingLeft: 10,
-                        flex: 1,
-                        lineHeight: 25,
-                        textAlign: 'left'
-                    }}>
-                    Settings
-                </Text>
+            <View style={{ width: '100%', backgroundColor: 'white', paddingTop: 30 }}>
                 <ScrollView
                     onScroll={() => {
                         Keyboard.dismiss()
                     }}
+                    showsVerticalScrollIndicator={false}
                     contentContainerStyle={{
                         maxHeight: Dimensions.get('window').height - 95,
                         // height: 'auto',
-                        maxWidth: 600,
+                        maxWidth: 500,
                         alignSelf: 'center',
                         minHeight: 100,
-                        paddingRight: 50
+                        // paddingRight: 50
                     }}
                 >
                     <View style={{ backgroundColor: 'white' }}>
@@ -1117,7 +1102,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 lineHeight: 35,
                                 color: '#1D1D20',
                                 fontSize: 12,
-                                backgroundColor: '#F4F4F6',
+                                backgroundColor: '#f8f8fa',
                                 paddingHorizontal: 25,
                                 fontFamily: 'inter',
                                 height: 35,
@@ -1144,7 +1129,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         lineHeight: 35,
                                         color: '#1D1D20',
                                         fontSize: 12,
-                                        backgroundColor: '#F4F4F6',
+                                        backgroundColor: '#f8f8fa',
                                         paddingHorizontal: 25,
                                         fontFamily: 'inter',
                                         height: 35,
@@ -1178,7 +1163,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
     },
     outline: {
-        borderRadius: 1,
+        borderRadius: 0,
         borderWidth: 1,
         borderColor: '#818385'
     },
@@ -1195,7 +1180,7 @@ const styles = StyleSheet.create({
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: 'white',
-        borderRadius: 1,
+        borderRadius: 0,
         borderWidth: 1,
         borderColor: '#818385'
     },
@@ -1209,7 +1194,7 @@ const styles = StyleSheet.create({
     },
     input: {
         width: '100%',
-        borderBottomColor: '#F4F4F6',
+        borderBottomColor: '#f8f8fa',
         borderBottomWidth: 1,
         fontSize: 15,
         paddingTop: 13,
@@ -1234,7 +1219,7 @@ const styles = StyleSheet.create({
         marginLeft: 7,
         paddingHorizontal: 4,
         backgroundColor: 'white',
-        borderRadius: 1,
+        borderRadius: 0,
         borderWidth: 1,
         borderColor: '#818385'
     },

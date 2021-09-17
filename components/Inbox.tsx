@@ -20,6 +20,7 @@ import { PreferredLanguageText } from '../helpers/LanguageContext';
 import alert from '../components/Alert';
 import { Ionicons } from '@expo/vector-icons';
 import FileUpload from './UploadFiles';
+import moment from 'moment';
 
 const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -42,6 +43,8 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
     const [channelFilter, setChannelFilter] = useState('')
     const [filterChannelName, setFilterChannelName] = useState('')
     const [filterChannelId, setFilterChannelId] = useState('')
+
+    const [showDirectory, setShowDirectory] = useState<any>(false)
 
     const grades = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
     const sections = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",]
@@ -88,25 +91,25 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
     useEffect(() => {
         (
             async () => {
-              const chat = await AsyncStorage.getItem('openChat')
-              if (chat && chats.length !== 0) {
-                const parseChat: any = JSON.parse(chat)
+                const chat = await AsyncStorage.getItem('openChat')
+                if (chat && chats.length !== 0) {
+                    const parseChat: any = JSON.parse(chat)
 
-                // Clear the openChat
+                    // Clear the openChat
 
-                await AsyncStorage.removeItem('openChat')
-                
-                if (parseChat.users && parseChat.users.length > 2) {
-                    loadGroupChat(parseChat.users, parseChat._id)
-                } else {
-                    loadChat(
-                        parseChat.users[0] === userId ? parseChat.users[1] : parseChat.users[0]
-                        , parseChat._id)
+                    await AsyncStorage.removeItem('openChat')
+
+                    if (parseChat.users && parseChat.users.length > 2) {
+                        loadGroupChat(parseChat.users, parseChat._id)
+                    } else {
+                        loadChat(
+                            parseChat.users[0] === userId ? parseChat.users[1] : parseChat.users[0]
+                            , parseChat._id)
+                    }
+
                 }
-
-              } 
             }
-          )()
+        )()
     }, [chats])
 
     const loadChats = useCallback(async () => {
@@ -131,6 +134,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                 setChats(res.data.group.getChats)
                 setShowChat(false)
                 setShowNewGroup(false)
+                setShowDirectory(false)
             }
         }).catch((err: any) => {
             console.log(err)
@@ -500,17 +504,28 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
 
     const windowHeight = Dimensions.get('window').width < 1024 ? Dimensions.get('window').height - 30 : Dimensions.get('window').height;
 
-    const renderBubble = (props: any) =>  {
+    const renderBubble = (props: any) => {
         return (
-          <Bubble
-            {...props}
-            wrapperStyle={{
-              right: {
-                backgroundColor: '#007AFF'
-              }
-            }}
-          />
+            <Bubble
+                {...props}
+                wrapperStyle={{
+                    right: {
+                        backgroundColor: '#007AFF'
+                    }
+                }}
+            />
         )
+    }
+
+    function emailTimeDisplay(dbDate: string) {
+        let date = moment(dbDate);
+        var currentDate = moment();
+        if (currentDate.isSame(date, 'day'))
+            return date.format('h:mm a');
+        else if (currentDate.isSame(date, 'year'))
+            return date.format("MMM DD");
+        else
+            return date.format("MM/DD/YYYY");
     }
 
     return (
@@ -539,29 +554,14 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                         // overflow: 'scroll'
                     }} key={1}>
                         <View style={{ width: '100%', backgroundColor: 'white' }}>
-                            <View style={{ width: '100%', flexDirection: width < 1024 ? 'column' : 'row' }}>
+                            <View style={{ width: '100%', maxWidth: 800, alignSelf: 'center' }}>
                                 <View style={{
-                                    backgroundColor: 'white',
-                                    width: width < 1024 ? '100%' : '50%',
-                                    paddingRight: width < 1024 ? 0 : 20,
-                                }} key={showChat.toString()}>
-                                    <View>
-                                        <Text style={{
-                                            fontSize: 23,
-                                            paddingBottom: 20,
-                                            paddingTop: 10,
-                                            fontFamily: 'inter',
-                                            flex: 1,
-                                            flexDirection: 'row',
-                                            lineHeight: 23,
-                                            color: '#1D1D20'
-                                        }}>
-                                            Messages
-                                        </Text>
-                                    </View>
+                                    backgroundColor: '#fff', width: '100%',
+                                    marginBottom: width < 1024 ? 20 : 0
+                                }}>
                                     <View style={{ flexDirection: 'row', width: '100%' }}>
                                         {
-                                            showNewGroup || showChat ?
+                                            showNewGroup || showChat || showDirectory ?
                                                 <TouchableOpacity
                                                     onPress={() => {
                                                         loadChats()
@@ -594,7 +594,40 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                         }
                                         <View style={{ flexDirection: 'row', flex: 1 }} />
                                         {
-                                            showNewGroup || showChat ? null :
+                                            showNewGroup || showChat || showDirectory ? null :
+                                                <TouchableOpacity
+                                                    onPress={() => {
+                                                        setShowDirectory(!showDirectory)
+                                                    }}
+                                                    style={{
+                                                        backgroundColor: 'white',
+                                                        overflow: 'hidden',
+                                                        height: 35,
+                                                        marginTop: 5,
+                                                        justifyContent: 'center',
+                                                        flexDirection: 'row',
+                                                        alignSelf: 'flex-end'
+                                                    }}>
+                                                    <Text style={{
+                                                        textAlign: 'center',
+                                                        lineHeight: 30,
+                                                        color: '#1D1D20',
+                                                        fontSize: 12,
+                                                        backgroundColor: '#f8f8fa',
+                                                        paddingHorizontal: 25,
+                                                        marginRight: 25,
+                                                        fontFamily: 'inter',
+                                                        height: 30,
+                                                        // width: 100,
+                                                        borderRadius: 15,
+                                                        textTransform: 'uppercase'
+                                                    }}>
+                                                        Directory {<Ionicons name='book-outline' size={12} />}
+                                                    </Text>
+                                                </TouchableOpacity>
+                                        }
+                                        {
+                                            showNewGroup || showChat || showDirectory ? null :
                                                 <TouchableOpacity
                                                     onPress={() => {
                                                         setShowNewGroup(!showNewGroup)
@@ -613,7 +646,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                         lineHeight: 30,
                                                         color: showNewGroup || showChat ? '#1D1D20' : '#fff',
                                                         fontSize: 12,
-                                                        backgroundColor: showNewGroup || showChat ? '#F4F4F6' : '#3abb83',
+                                                        backgroundColor: showNewGroup || showChat ? '#f8f8fa' : '#35AC78',
                                                         paddingHorizontal: 25,
                                                         fontFamily: 'inter',
                                                         height: 30,
@@ -626,6 +659,78 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                         } {showNewGroup || showChat ? null : <Ionicons name='people-outline' size={12} />}
                                                     </Text>
                                                 </TouchableOpacity>
+                                        }
+                                        {
+                                            showDirectory ?
+                                                <View style={{ backgroundColor: '#fff', paddingTop: 15 }}>
+                                                    <View style={{ flexDirection: 'row', backgroundColor: '#fff' }}>
+                                                        <Menu
+                                                            onSelect={(sub: any) => {
+                                                                if (sub === '') {
+                                                                    setFilterChannelName('')
+                                                                    setFilterChannelId('')
+                                                                } else {
+                                                                    setFilterChannelId(sub.channelId)
+                                                                    setFilterChannelName(sub.channelName)
+                                                                }
+                                                            }}>
+                                                            <MenuTrigger>
+                                                                <Text style={{ fontSize: 14, color: '#1D1D20' }}>
+                                                                    {filterChannelName === '' ? 'All' : filterChannelName} <Ionicons name='caret-down' size={14} />
+                                                                </Text>
+                                                            </MenuTrigger>
+                                                            <MenuOptions customStyles={{
+                                                                optionsContainer: {
+                                                                    padding: 10,
+                                                                    borderRadius: 15,
+                                                                    shadowOpacity: 0,
+                                                                    borderWidth: 1,
+                                                                    borderColor: '#f0f0f2',
+                                                                    overflow: 'scroll',
+                                                                    maxHeight: '100%'
+                                                                }
+                                                            }}>
+                                                                <MenuOption
+                                                                    value={''}>
+                                                                    <View style={{ display: 'flex', flexDirection: 'row', }}>
+                                                                        <View style={{
+                                                                            width: 8,
+                                                                            height: 8,
+                                                                            borderRadius: 0,
+                                                                            marginTop: 1,
+                                                                            backgroundColor: "#fff"
+                                                                        }} />
+                                                                        <Text style={{ marginLeft: 5 }}>
+                                                                            All
+                                                                        </Text>
+                                                                    </View>
+                                                                </MenuOption>
+                                                                {
+                                                                    props.subscriptions.map((subscription: any) => {
+                                                                        return <MenuOption
+                                                                            value={subscription}>
+                                                                            <View style={{ display: 'flex', flexDirection: 'row', }}>
+                                                                                <View style={{
+                                                                                    width: 8,
+                                                                                    height: 8,
+                                                                                    borderRadius: 0,
+                                                                                    marginTop: 1,
+                                                                                    backgroundColor: subscription.colorCode
+                                                                                }} />
+                                                                                <Text style={{ marginLeft: 5 }}>
+                                                                                    {subscription.channelName}
+                                                                                </Text>
+                                                                            </View>
+                                                                        </MenuOption>
+                                                                    })
+                                                                }
+                                                            </MenuOptions>
+                                                        </Menu>
+                                                    </View>
+                                                    <Text style={{ fontSize: 10, color: '#1D1D20', paddingTop: 7 }}>
+                                                        Channel
+                                                    </Text>
+                                                </View> : null
                                         }
                                     </View>
                                     {
@@ -711,314 +816,208 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                 CREATE
                                                             </Text>
                                                         </TouchableOpacity>
-                                                        {/* <View style={{ backgroundColor: 'white' }}>
-                                                            <NewMessage
-                                                                cueId={props.cueId}
-                                                                channelId={props.channelId}
-                                                                parentId={null}
-                                                                users={group}
-                                                                addUserId={true}
-                                                                back={() => {
-                                                                    props.reload()
-                                                                    setShowChat(false)
-                                                                    setIsLoadedUserInactive(false)
-                                                                    setLoadedChatWithUser({})
-                                                                    setShowNewGroup(false)
-                                                                }}
-                                                                placeholder={`${PreferredLanguageText('message')}...`}
-                                                            />
-                                                        </View> */}
                                                     </ScrollView>
                                                 </View> :
-                                                    <View style={{ backgroundColor: '#fff', paddingTop: 20 }}>
-                                                        <ScrollView
-                                                            showsVerticalScrollIndicator={false}
-                                                            horizontal={false}
-                                                            // style={{ height: '100%' }}
-                                                            contentContainerStyle={{
-                                                                borderWidth: 1,
-                                                                borderColor: '#e9e9ec',
-                                                                borderRadius: 1,
-                                                                width: '100%',
-                                                                maxHeight: windowHeight - 200,
-                                                                overflow: 'hidden'
-                                                            }}
-                                                        >
-                                                            {
-                                                                chats.map((chat: any, index) => {
-                                                                    let fName = ''
-                                                                    chat.userNames.map((u: any, i: any) => {
-                                                                        console.log(u)
-                                                                        if (u.fullName !== fullName) {
-                                                                            fName += (u.fullName + (i === chat.userNames.length - 2 ? '' : ', '))
-                                                                        }
-                                                                    })
-                                                                    const { title } = htmlStringParser(chat.lastMessage)
-                                                                    return (
-                                                                        <TouchableOpacity
-                                                                            onPress={
-                                                                                () => {
-                                                                                    if (chat.userNames.length > 2) {
-                                                                                        loadGroupChat(chat.users, chat._id)
-                                                                                    } else {
-                                                                                        loadChat(
-                                                                                            chat.users[0] === userId ? chat.users[1] : chat.users[0]
-                                                                                            , chat._id)
-                                                                                    }
+                                                    (
+                                                        showDirectory ?
+                                                            <View style={{
+                                                                flex: 1, width: '100%', borderWidth: 1,
+                                                                borderRadius: 0,
+                                                                borderColor: '#f0f0f2',
+                                                                overflow: 'hidden',
+                                                                marginTop: 30
+                                                            }}>
+                                                                <ScrollView contentContainerStyle={{
+                                                                    maxHeight: windowHeight - 250,
+                                                                    width: '100%',
+                                                                    borderRadius: 0,
+                                                                    // flex: 1
+                                                                }}>
+                                                                    {
+                                                                        sectionFiltered.map((user: any, ind: any) => {
+                                                                            if (filterChannelId !== '') {
+                                                                                const id = user.channelIds
+                                                                                    ? user.channelIds.find((id: any) => {
+                                                                                        return id === filterChannelId
+                                                                                    }) : undefined
+                                                                                if (!id) {
+                                                                                    return null
                                                                                 }
                                                                             }
-                                                                            style={{
-                                                                                backgroundColor: '#F4F4F6',
-                                                                                flexDirection: 'row',
-                                                                                borderColor: '#e9e9ec',
-                                                                                borderBottomWidth: index === chats.length - 1 ? 0 : 1,
-                                                                                // minWidth: 600, // flex: 1,
-                                                                                width: '100%'
-                                                                            }}>
-                                                                            <View style={{ flex: 1, backgroundColor: '#F4F4F6', padding: 10 }}>
-                                                                                {
-                                                                                    chat.userNames.length > 2 ?
-                                                                                        <Text style={{
-                                                                                            fontFamily: 'inter', marginTop: 5,
-                                                                                            textAlign: 'center',
+                                                                            return <TouchableOpacity
+                                                                                onPress={() => {
+                                                                                    loadNewChat(user._id)
+                                                                                }}
+                                                                                style={{
+                                                                                    backgroundColor: '#f8f8fa',
+                                                                                    flexDirection: 'row',
+                                                                                    borderColor: '#f0f0f2',
+                                                                                    borderBottomWidth: ind === sectionFiltered.length - 1 ? 0 : 1,
+                                                                                    width: '100%'
+                                                                                }}>
+                                                                                <View style={{ backgroundColor: '#f8f8fa', padding: 10 }}>
+                                                                                    <Image
+                                                                                        style={{
+                                                                                            height: 40,
+                                                                                            width: 40,
+                                                                                            marginTop: 5,
                                                                                             marginBottom: 5,
-                                                                                        }} ellipsizeMode='tail'>
-                                                                                            <Ionicons name='people-circle-outline' size={40} />
-                                                                                        </Text>
-                                                                                        : <Image
-                                                                                            style={{
-                                                                                                height: 40,
-                                                                                                width: 40,
-                                                                                                marginTop: 5,
-                                                                                                marginBottom: 5,
-                                                                                                borderRadius: 75,
-                                                                                                // marginTop: 20,
-                                                                                                alignSelf: 'center'
-                                                                                            }}
-                                                                                            source={{ uri: (chat.users[0] === userId ? chat.users[1] : chat.users[0]).avatar ? (chat.users[0] === userId ? chat.users[1] : chat.users[0]).avatar : 'https://cues-files.s3.amazonaws.com/images/default.png' }}
-                                                                                        />
-                                                                                }
-                                                                            </View>
-                                                                            <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                                                                <Text style={{ fontSize: 13, padding: 10, fontFamily: 'inter' }} ellipsizeMode='tail'>
-                                                                                    {fName}
-                                                                                </Text>
-                                                                            </View>
-                                                                            <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                                                                <Text style={{ fontSize: 13, padding: 10 }} ellipsizeMode='tail'>
-                                                                                    {title}
-                                                                                </Text>
-                                                                            </View>
-                                                                            <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                                                                <Text style={{ fontSize: 15, padding: 10, color: '#007AFF', textAlign: 'center' }} ellipsizeMode='tail'>
-                                                                                    <Ionicons name='chevron-forward-outline' size={20} />
-                                                                                </Text>
-                                                                            </View>
-                                                                        </TouchableOpacity>
-                                                                    )
-                                                                    // <View style={{
-                                                                    //     width: '100%',
-                                                                    //     height: 70,
-                                                                    //     marginBottom: 15,
-                                                                    //     // flex: 1,
-                                                                    //     backgroundColor: 'white'
-                                                                    // }} key={index}>
-                                                                    //     <SearchResultCard
-                                                                    //         style={{
-                                                                    //             height: '100%',
-                                                                    //             borderRadius: 1,
-                                                                    //             overflow: 'hidden',
-                                                                    //             windowHeight: '100%'
-                                                                    //         }}
-                                                                    //         unreadMessages={chat.unreadMessages}
-                                                                    //         title={fName}
-                                                                    //         subtitle={title}
-                                                                    //  onPress={
-                                                                    //     () => {
-                                                                    //         if (chat.userNames.length > 2) {
-                                                                    //             loadGroupChat(chat.users, chat._id)
-                                                                    //         } else {
-                                                                    //             loadChat(
-                                                                    //                 chat.users[0] === userId ? chat.users[1] : chat.users[0]
-                                                                    //                 , chat._id)
-                                                                    //         }
-                                                                    //     }
-                                                                    // }
-                                                                    //     />
-                                                                    // </View>
-                                                                })
-                                                            }
-                                                        </ScrollView>
-                                                    </View>
-                                            )
-                                    }
-                                </View>
-                                <View style={{
-                                    backgroundColor: '#fff', width: width < 1024 ? '100%' : '50%',
-                                    paddingLeft: width < 1024 ? 0 : 20,
-                                    borderLeftWidth: width < 1024 ? 0 : 1, borderLeftColor: '#F4F4F6',
-                                }}>
-                                    <View style={{
-                                        marginBottom: 20,
-                                        marginTop: width < 1024 ? 30 : 0
-                                    }}>
-                                        <Text style={{
-                                            fontSize: 23,
-                                            marginBottom: 37,
-                                            marginTop: 10,
-                                            fontFamily: 'inter',
-                                            flex: 1,
-                                            flexDirection: 'row',
-                                            lineHeight: 23,
-                                            color: '#1D1D20'
-                                        }}>
-                                            Contacts
-                                        </Text>
-                                        <View style={{ flex: 1 }}>
-                                            <View style={{ backgroundColor: '#fff' }}>
-                                                <View style={{ flexDirection: 'row', backgroundColor: '#fff' }}>
-                                                    <Menu
-                                                        onSelect={(sub: any) => {
-                                                            if (sub === '') {
-                                                                setFilterChannelName('')
-                                                                setFilterChannelId('')
-                                                            } else {
-                                                                setFilterChannelId(sub.channelId)
-                                                                setFilterChannelName(sub.channelName)
-                                                            }
-                                                        }}>
-                                                        <MenuTrigger>
-                                                            <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#1D1D20' }}>
-                                                                {filterChannelName === '' ? 'All' : filterChannelName} <Ionicons name='caret-down' size={14} />
-                                                            </Text>
-                                                        </MenuTrigger>
-                                                        <MenuOptions customStyles={{
-                                                            optionsContainer: {
-                                                                padding: 10,
-                                                                borderRadius: 15,
-                                                                shadowOpacity: 0,
-                                                                borderWidth: 1,
-                                                                borderColor: '#e9e9ec',
-                                                                overflow: 'scroll',
-                                                                maxHeight: '100%'
-                                                            }
-                                                        }}>
-                                                            <MenuOption
-                                                                value={''}>
-                                                                <View style={{ display: 'flex', flexDirection: 'row', }}>
-                                                                    <View style={{
-                                                                        width: 8,
-                                                                        height: 8,
-                                                                        borderRadius: 1,
-                                                                        marginTop: 1,
-                                                                        backgroundColor: "#fff"
-                                                                    }} />
-                                                                    <Text style={{ marginLeft: 5 }}>
-                                                                        All
-                                                                    </Text>
-                                                                </View>
-                                                            </MenuOption>
-                                                            {
-                                                                props.subscriptions.map((subscription: any) => {
-                                                                    return <MenuOption
-                                                                        value={subscription}>
-                                                                        <View style={{ display: 'flex', flexDirection: 'row', }}>
-                                                                            <View style={{
-                                                                                width: 8,
-                                                                                height: 8,
-                                                                                borderRadius: 1,
-                                                                                marginTop: 1,
-                                                                                backgroundColor: subscription.colorCode
-                                                                            }} />
-                                                                            <Text style={{ marginLeft: 5 }}>
-                                                                                {subscription.channelName}
-                                                                            </Text>
-                                                                        </View>
-                                                                    </MenuOption>
-                                                                })
-                                                            }
-                                                        </MenuOptions>
-                                                    </Menu>
-                                                </View>
-                                                <Text style={{ fontSize: 10, color: '#1D1D20', paddingTop: 7 }}>
-                                                    Channel
-                                                </Text>
-                                            </View>
-                                        </View>
-                                    </View>
-                                    <View
-                                    // horizontal={true}
-                                    // style={{ width: '100%' }}
-                                    >
-                                        <View style={{
-                                            flex: 1, width: '100%', borderWidth: 1,
-                                            borderRadius: 1,
-                                            borderColor: '#e9e9ec',
-                                            overflow: 'hidden'
-                                        }}>
-                                            <ScrollView contentContainerStyle={{
-                                                maxHeight: windowHeight - 200,
-                                                width: '100%',
-                                                borderRadius: 1,
-                                                // flex: 1
-                                            }}>
-                                                {
-                                                    sectionFiltered.map((user: any, ind: any) => {
-                                                        if (filterChannelId !== '') {
-                                                            const id = user.channelIds
-                                                                ? user.channelIds.find((id: any) => {
-                                                                    return id === filterChannelId
-                                                                }) : undefined
-                                                            if (!id) {
-                                                                return null
-                                                            }
-                                                        }
-                                                        return <TouchableOpacity
-                                                            onPress={() => {
-                                                                loadNewChat(user._id)
-                                                            }}
-                                                            style={{
-                                                                backgroundColor: '#F4F4F6',
-                                                                flexDirection: 'row',
-                                                                borderColor: '#e9e9ec',
-                                                                borderBottomWidth: ind === sectionFiltered.length - 1 ? 0 : 1,
-                                                                width: '100%'
-                                                            }}>
-                                                            <View style={{ flex: 1, backgroundColor: '#F4F4F6', padding: 10 }}>
-                                                                <Image
-                                                                    style={{
-                                                                        height: 40,
-                                                                        width: 40,
-                                                                        marginTop: 5,
-                                                                        marginBottom: 5,
-                                                                        borderRadius: 75,
-                                                                        // marginTop: 20,
-                                                                        alignSelf: 'center'
-                                                                    }}
-                                                                    source={{ uri: user.avatar ? user.avatar : 'https://cues-files.s3.amazonaws.com/images/default.png' }}
-                                                                />
-                                                            </View>
-                                                            <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                                                <Text style={{ fontSize: 13, padding: 10, fontFamily: 'inter' }} ellipsizeMode='tail'>
-                                                                    {user.fullName}
-                                                                </Text>
-                                                            </View>
-                                                            <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                                                <Text style={{ fontSize: 13, padding: 10 }} ellipsizeMode='tail'>
-                                                                    {user.email}
-                                                                </Text>
-                                                            </View>
-                                                            <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
+                                                                                            borderRadius: 75,
+                                                                                            // marginTop: 20,
+                                                                                            alignSelf: 'center'
+                                                                                        }}
+                                                                                        source={{ uri: user.avatar ? user.avatar : 'https://cues-files.s3.amazonaws.com/images/default.png' }}
+                                                                                    />
+                                                                                </View>
+                                                                                <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
+                                                                                    <Text style={{ fontSize: 16, padding: 10, fontFamily: 'inter' }} ellipsizeMode='tail'>
+                                                                                        {user.fullName}
+                                                                                    </Text>
+                                                                                    <Text style={{ fontSize: 13, padding: 10 }} ellipsizeMode='tail'>
+                                                                                        {user.email}
+                                                                                    </Text>
+                                                                                </View>
+                                                                                {/* <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
                                                                 <Text style={{ fontSize: 15, padding: 10, color: '#007AFF', textAlign: 'center' }} ellipsizeMode='tail'>
                                                                     <Ionicons name='chatbubble-ellipses-outline' size={20} />
                                                                 </Text>
+                                                            </View> */}
+                                                                            </TouchableOpacity>
+                                                                        })
+                                                                    }
+                                                                </ScrollView>
                                                             </View>
-                                                        </TouchableOpacity>
-                                                    })
-                                                }
-                                            </ScrollView>
-                                        </View>
-                                    </View>
+                                                            :
+                                                            <View style={{ backgroundColor: '#fff', paddingTop: 20 }}>
+                                                                <ScrollView
+                                                                    showsVerticalScrollIndicator={false}
+                                                                    horizontal={false}
+                                                                    // style={{ height: '100%' }}
+                                                                    contentContainerStyle={{
+                                                                        borderWidth: 1,
+                                                                        borderColor: '#f0f0f2',
+                                                                        borderRadius: 0,
+                                                                        width: '100%',
+                                                                        maxHeight: windowHeight - 200,
+                                                                        overflow: 'hidden'
+                                                                    }}
+                                                                >
+                                                                    {
+                                                                        chats.map((chat: any, index) => {
+                                                                            let fName = ''
+                                                                            chat.userNames.map((u: any, i: any) => {
+                                                                                console.log(u)
+                                                                                if (u.fullName !== fullName) {
+                                                                                    fName += (u.fullName + (i === chat.userNames.length - 2 ? '' : ', '))
+                                                                                }
+                                                                            })
+                                                                            const { title } = htmlStringParser(chat.lastMessage)
+                                                                            return (
+                                                                                <TouchableOpacity
+                                                                                    onPress={
+                                                                                        () => {
+                                                                                            if (chat.userNames.length > 2) {
+                                                                                                loadGroupChat(chat.users, chat._id)
+                                                                                            } else {
+                                                                                                loadChat(
+                                                                                                    chat.users[0] === userId ? chat.users[1] : chat.users[0]
+                                                                                                    , chat._id)
+                                                                                            }
+                                                                                        }
+                                                                                    }
+                                                                                    style={{
+                                                                                        backgroundColor: '#fff',
+                                                                                        flexDirection: 'row',
+                                                                                        borderColor: '#f0f0f2',
+                                                                                        borderBottomWidth: index === chats.length - 1 ? 0 : 1,
+                                                                                        // minWidth: 600, // flex: 1,
+                                                                                        width: '100%'
+                                                                                    }}>
+                                                                                    <View style={{ backgroundColor: '#f8f8fa', padding: 10 }}>
+                                                                                        {
+                                                                                            chat.userNames.length > 2 ?
+                                                                                                <Text style={{
+                                                                                                    fontFamily: 'inter', marginTop: 5,
+                                                                                                    textAlign: 'center',
+                                                                                                    marginBottom: 5,
+                                                                                                }} ellipsizeMode='tail'>
+                                                                                                    <Ionicons name='people-circle-outline' size={40} />
+                                                                                                </Text>
+                                                                                                : <Image
+                                                                                                    style={{
+                                                                                                        height: 40,
+                                                                                                        width: 40,
+                                                                                                        marginTop: 5,
+                                                                                                        marginBottom: 5,
+                                                                                                        borderRadius: 75,
+                                                                                                        // marginTop: 20,
+                                                                                                        alignSelf: 'center'
+                                                                                                    }}
+                                                                                                    source={{ uri: (chat.users[0] === userId ? chat.users[1] : chat.users[0]).avatar ? (chat.users[0] === userId ? chat.users[1] : chat.users[0]).avatar : 'https://cues-files.s3.amazonaws.com/images/default.png' }}
+                                                                                                />
+                                                                                        }
+                                                                                    </View>
+                                                                                    <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
+                                                                                        <Text style={{ fontSize: 13, padding: 10 }} ellipsizeMode='tail'>
+                                                                                            {fName}
+                                                                                        </Text>
+                                                                                        <View style={{ flexDirection: 'row', flex: 1 }}>
+                                                                                            <Text style={{ flex: 1, flexDirection: 'row', fontSize: 16, padding: 10, fontFamily: 'inter' }} ellipsizeMode='tail'>
+                                                                                                {title}
+                                                                                            </Text>
+                                                                                        </View>
+                                                                                    </View>
+                                                                                    <View style={{ backgroundColor: '#fff', padding: 0, flexDirection: 'row', alignSelf: 'center' }} >
+                                                                                        <Text style={{ fontSize: 13, padding: 10, lineHeight: 13 }} ellipsizeMode='tail'>
+                                                                                            {emailTimeDisplay(chat.lastMessageTime)}
+                                                                                        </Text>
+                                                                                        <Text style={{ fontSize: 13, padding: 10, lineHeight: 13 }} ellipsizeMode='tail'>
+                                                                                            <Ionicons name='chevron-forward-outline' size={24} color='#007AFF' />
+                                                                                        </Text>
+                                                                                    </View>
+                                                                                    {/* <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
+                                                                                <Text style={{ fontSize: 15, padding: 10, color: '#007AFF', textAlign: 'center' }} ellipsizeMode='tail'>
+                                                                                    <Ionicons name='chevron-forward-outline' size={20} />
+                                                                                </Text>
+                                                                            </View> */}
+                                                                                </TouchableOpacity>
+                                                                            )
+                                                                            // <View style={{
+                                                                            //     width: '100%',
+                                                                            //     height: 70,
+                                                                            //     marginBottom: 15,
+                                                                            //     // flex: 1,
+                                                                            //     backgroundColor: 'white'
+                                                                            // }} key={index}>
+                                                                            //     <SearchResultCard
+                                                                            //         style={{
+                                                                            //             height: '100%',
+                                                                            //             borderRadius: 0,
+                                                                            //             overflow: 'hidden',
+                                                                            //             windowHeight: '100%'
+                                                                            //         }}
+                                                                            //         unreadMessages={chat.unreadMessages}
+                                                                            //         title={fName}
+                                                                            //         subtitle={title}
+                                                                            //  onPress={
+                                                                            //     () => {
+                                                                            //         if (chat.userNames.length > 2) {
+                                                                            //             loadGroupChat(chat.users, chat._id)
+                                                                            //         } else {
+                                                                            //             loadChat(
+                                                                            //                 chat.users[0] === userId ? chat.users[1] : chat.users[0]
+                                                                            //                 , chat._id)
+                                                                            //         }
+                                                                            //     }
+                                                                            // }
+                                                                            //     />
+                                                                            // </View>
+                                                                        })
+                                                                    }
+                                                                </ScrollView>
+                                                            </View>)
+                                            )
+                                    }
                                 </View>
                             </View>
                         </View>

@@ -365,11 +365,13 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
             height: Dimensions.get("window").height - 80,
             width: '100%',
             overflow: 'hidden',
+            justifyContent: 'center',
             paddingTop: 20
         }}>
         <View style={{
             width: '100%',
-            paddingHorizontal: Dimensions.get('window').width < 1024 ? 20 : 40
+            maxWidth: 1275,
+            paddingHorizontal: 20
         }}>
             <ScrollView
                 showsVerticalScrollIndicator={false}
@@ -420,15 +422,16 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             return null
                         }
 
-                        return <View style={{ marginBottom: 40, backgroundColor: '#fff' }}>
+                        return <View style={{ marginBottom: 20, backgroundColor: '#fff' }}>
                             <Text style={{
-                                fontSize: 15,
                                 paddingBottom: 20,
-                                paddingTop: 10,
-                                fontFamily: 'inter',
+                                // paddingTop: 10,
                                 flex: 1,
-                                lineHeight: 23,
-                                backgroundColor: '#fff'
+                                backgroundColor: '#fff',
+                                color: '#818385',
+                                fontSize: 15,
+                                lineHeight: 25,
+                                fontFamily: 'inter'
                             }}>
                                 {option}
                             </Text>
@@ -578,7 +581,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
     }, [folderIdsMap])
 
     const overview = <View
-        key={cueMap.toString()}
+        key={collapseMap.toString()}
         style={{
             flexDirection: 'row',
             height: Dimensions.get("window").height - 80,
@@ -598,12 +601,12 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     Object.keys(cueMap).map((key: any, ind: any) => {
                         return <View style={{
                             marginTop: 20, paddingBottom: 20,
-                            borderColor: '#e9e9ec',
+                            borderColor: '#f0f0f2',
                             borderBottomWidth: 1,
                         }}>
                             {
                                 ind !== 0 ?
-                                    <View style={{ flexDirection: 'row', paddingBottom: 20 }}>
+                                    <View style={{ flexDirection: 'row', paddingBottom: !collapseMap[key] ? 0 : 20, maxWidth: 1275, alignSelf: 'center', width: '100%' }}>
                                         <TouchableOpacity
                                             style={{
                                                 flex: 1,
@@ -655,7 +658,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                 lineHeight: 30,
                                                                 color: '#fff',
                                                                 fontSize: 12,
-                                                                backgroundColor: '#3abb83',
+                                                                backgroundColor: '#35AC78',
                                                                 paddingHorizontal: 25,
                                                                 marginRight: 15,
                                                                 fontFamily: 'inter',
@@ -689,7 +692,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                 lineHeight: 30,
                                                                 color: '#1D1D20',
                                                                 fontSize: 12,
-                                                                backgroundColor: '#F4F4F6',
+                                                                backgroundColor: '#f8f8fa',
                                                                 paddingHorizontal: 25,
                                                                 marginRight: 15,
                                                                 fontFamily: 'inter',
@@ -705,7 +708,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 {
                                                     key.split('-SPLIT-')[2] === userId ?
                                                         <TouchableOpacity
-                                                            style={{ marginRight: 20 }}
+                                                            style={{ marginRight: 15 }}
                                                             onPress={() => {
                                                                 props.setChannelFilterChoice('All')
                                                                 props.handleFilterChange(key.split('-SPLIT-')[0])
@@ -726,7 +729,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         : null
                                                 }
                                                 <TouchableOpacity
-                                                    style={{ marginRight: 20, backgroundColor: '#fff' }}
+                                                    style={{ marginRight: 15, backgroundColor: '#fff' }}
                                                     onPress={() => {
                                                         props.setChannelFilterChoice('All')
                                                         props.handleFilterChange(key.split('-SPLIT-')[0])
@@ -750,17 +753,16 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         setCollapseMap(tempCollapse)
                                                     }}
                                                 >
-
                                                     <Text style={{
                                                         textAlign: 'center',
                                                         lineHeight: 30
                                                     }}>
-                                                        <Ionicons name={collapseMap[key] ? 'chevron-up-outline' : 'chevron-down-outline'} size={30} color={'#1D1D20'} />
+                                                        <Ionicons name={collapseMap[key] ? 'chevron-up-outline' : 'chevron-down-outline'} size={27} color={'#007AFF'} />
                                                     </Text>
                                                 </TouchableOpacity>
                                             </View>
                                         </View>
-                                    </View> : <View style={{ paddingBottom: 20, flexDirection: 'row', }}>
+                                    </View> : <View style={{ flexDirection: 'row', paddingBottom: !collapseMap[key] ? 0 : 20, maxWidth: 1275, alignSelf: 'center', width: '100%' }}>
                                         <TouchableOpacity
                                             style={{
                                                 flex: 1,
@@ -804,37 +806,39 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         textAlign: 'center',
                                                         lineHeight: 30
                                                     }}>
-                                                        <Ionicons name={collapseMap[key] ? 'chevron-up-outline' : 'chevron-down-outline'} size={30} color={'#1D1D20'} />
+                                                        <Ionicons name={collapseMap[key] ? 'chevron-up-outline' : 'chevron-down-outline'} size={27} color={'#007AFF'} />
                                                     </Text>
                                                 </TouchableOpacity>
                                             </View>
                                         </View>
                                     </View>
                             }
-                            <View style={{ flexDirection: 'row' }} key={editFolderChannelId.toString() + cueIds.toString() + cueMap.toString()}>
+                            <View style={{ flexDirection: 'row', justifyContent: 'center' }} key={collapseMap.toString()}>
                                 {
                                     cueMap[key].length === 0 && collapseMap[key] ?
-                                        <Text style={{ fontSize: 15, color: '#818385', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#fff' }}>
+                                        <Text style={{ fontSize: 15, color: '#818385', textAlign: 'left', fontFamily: 'inter', backgroundColor: '#fff' }}>
                                             {PreferredLanguageText('noCuesCreated')}
                                         </Text> :
                                         (
                                             collapseMap[key] ?
                                                 <ScrollView
                                                     horizontal={true}
-                                                    style={{ width: '100%' }}
+                                                    contentContainerStyle={{
+                                                        maxWidth: '100%'
+                                                    }}
                                                     key={editFolderChannelId.toString() + cueIds.toString() + cueMap.toString()}>
                                                     {
                                                         categoryMap[key].map((category: any, i: any) => {
                                                             return <View style={{
                                                                 width: '100%',
-                                                                maxWidth: 250,
+                                                                maxWidth: 225,
                                                                 marginRight: 25
                                                             }}>
                                                                 <View style={{ backgroundColor: '#fff', paddingLeft: 23, marginBottom: 20 }}>
                                                                     <Text style={{
                                                                         flex: 1, flexDirection: 'row',
                                                                         color: '#818385',
-                                                                        fontSize: 20, lineHeight: 25,
+                                                                        fontSize: 15, lineHeight: 25,
                                                                         fontFamily: 'inter'
                                                                     }} ellipsizeMode='tail'>
                                                                         {category === '' ? ' ' : category}
@@ -846,7 +850,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                     // style={{ height: '100%' }}
                                                                     style={{
                                                                         // borderWidth: 1,
-
+                                                                        maxWidth: 225
                                                                         // height: 190
                                                                     }}
                                                                     key={i.toString() + key.toString()}
@@ -855,98 +859,14 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                         if (cue.customCategory.toString().trim() !== category.toString().trim()) {
                                                                             return null
                                                                         }
-                                                                        if (cue.folderId && folderId !== cue.folderId) {
-                                                                            if (folderIdsMap[cue.folderId][0] !== index) {
-                                                                                return null
-                                                                            } else {
-                                                                                // return swiper
-                                                                                return <View style={{ width: 170, height: 190, alignSelf: 'flex-end', marginTop: 0 }}>
-                                                                                    <Swiper
-                                                                                        controlsProps={{
-                                                                                            nextTitle: '>',
-                                                                                            prevTitle: '<',
-                                                                                            prevTitleStyle: {
-                                                                                                marginTop: 20,
-                                                                                                fontFamily: 'inter',
-                                                                                                color: '#007AFF'
-                                                                                            },
-                                                                                            nextTitleStyle: {
-                                                                                                marginTop: 20,
-                                                                                                fontFamily: 'inter',
-                                                                                                color: '#007AFF'
-                                                                                            },
-                                                                                            dotsWrapperStyle: {
-                                                                                                marginTop: 19
-                                                                                            },
-                                                                                            dotActiveStyle: {
-                                                                                                backgroundColor: '#007AFF'
-                                                                                            }
-                                                                                        }}
-                                                                                        containerStyle={{
-                                                                                            height: 150,
-                                                                                            marginRight: 20,
-                                                                                            marginBottom: 20,
-                                                                                            width: 150,
-                                                                                            backgroundColor: '#fff',
-                                                                                            alignSelf: 'center'
-                                                                                        }}
-                                                                                        // swipeAreaStyle={{ width: 150, maxWidth: 150 }}
-                                                                                        // innerContainerStyle={{ width: 150 }}
-                                                                                        // slideWrapperStyle={{ width: 150 }}
-                                                                                        vertical={false}
-                                                                                    >
-                                                                                        {
-                                                                                            folderIdsMap[cue.folderId].map((ind: any) => {
-                                                                                                const swiperCue = cueMap[key][ind]
-                                                                                                return <OverviewCueCard
-                                                                                                    cueIds={cueIds}
-                                                                                                    editFolderChannelId={editFolderChannelId}
-                                                                                                    onLongPress={() => onSwiperLongPress(cue, key, swiperCue)}
-                                                                                                    add={() => {
-                                                                                                        const temp = JSON.parse(JSON.stringify(cueIds))
-                                                                                                        const found = temp.find((i: any) => {
-                                                                                                            return i === swiperCue._id
-                                                                                                        })
-                                                                                                        if (!found) {
-                                                                                                            temp.push(swiperCue._id)
-                                                                                                        }
-                                                                                                        setCueIds(temp)
-                                                                                                    }}
-                                                                                                    remove={() => {
-                                                                                                        const temp = JSON.parse(JSON.stringify(cueIds))
-                                                                                                        const upd = temp.filter((i: any) => {
-                                                                                                            return i !== swiperCue._id
-                                                                                                        })
-                                                                                                        setCueIds(upd)
-                                                                                                    }}
-                                                                                                    fadeAnimation={props.fadeAnimation}
-                                                                                                    updateModal={() => {
-                                                                                                        props.openUpdate(
-                                                                                                            swiperCue.key,
-                                                                                                            swiperCue.index,
-                                                                                                            0,
-                                                                                                            swiperCue._id,
-                                                                                                            (swiperCue.createdBy ? swiperCue.createdBy : ''),
-                                                                                                            (swiperCue.channelId ? swiperCue.channelId : '')
-                                                                                                        )
-                                                                                                    }}
-                                                                                                    cue={swiperCue}
-                                                                                                    channelId={props.channelId}
-                                                                                                    subscriptions={props.subscriptions}
-                                                                                                />
-                                                                                            })
-                                                                                        }
-                                                                                    </Swiper>
-                                                                                </View>
-                                                                            }
-                                                                        }
                                                                         return <View style={{
                                                                             // height: 150,
                                                                             marginBottom: 20,
                                                                             // marginBottom: i === priorities.length - 1 ? 0 : 20,
                                                                             // maxWidth: 150,
                                                                             backgroundColor: '#fff',
-                                                                            width: '100%'
+                                                                            // width: '100%',
+                                                                            maxWidth: 225
                                                                         }}
                                                                             key={index}
                                                                         >
@@ -1018,167 +938,52 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
             maxHeight: '100%',
         }}>
             <View style={{
-                backgroundColor: '#F4F4F6',
-                borderColor: '#e9e9ec',
+                backgroundColor: '#f8f8fa',
+                borderColor: '#f0f0f2',
                 borderBottomWidth: 1,
                 // borderWidth: 1,
                 paddingTop: 20,
                 paddingHorizontal: Dimensions.get('window').width < 1024 ? 20 : 40,
-                flexDirection: Dimensions.get('window').width < 1024 ? 'column' : 'row',
+                flexDirection: 'row',
+                justifyContent: 'center',
                 // flex: 1, 
                 paddingBottom: 0,
                 width: '100%',
             }}>
-                <View style={{ flexDirection: 'row', flex: 1, backgroundColor: '#F4F4F6', }}>
-                    <Image
-                        source={logo}
-                        style={{
-                            width: 80,
-                            height: 24
-                        }}
-                        resizeMode={'contain'}
-                    />
-                    {
-                        Dimensions.get('window').width < 1024 ?
-                            <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end', backgroundColor: '#F4F4F6', }}>
-                                <Menu
-                                    onSelect={(op: any) => props.setOption(op)}>
-                                    <MenuTrigger style={{ flexDirection: 'row' }}>
-                                        <Text style={{
-                                            color: '#1D1D20',
-                                            paddingLeft: 10,
-                                            textTransform: 'uppercase',
-                                            flexDirection: 'row',
-                                            lineHeight: 14,
-                                            fontSize: 14, marginTop: 3, fontFamily: 'inter'
-                                        }}>
-                                            {props.option}
-                                        </Text>
-                                        <Text style={{ color: '#1D1D20', paddingLeft: 10, flexDirection: 'row', lineHeight: 14, fontSize: 14, marginTop: 2 }}>
-                                            <Ionicons name='menu-outline' size={25} />
-                                        </Text>
-                                    </MenuTrigger>
-                                    <MenuOptions customStyles={{
-                                        optionsContainer: {
-                                            padding: 10,
-                                            borderRadius: 15,
-                                            shadowOpacity: 0,
-                                            borderWidth: 1,
-                                            borderColor: '#e9e9ec',
-                                            overflow: 'scroll',
-                                            maxHeight: '100%',
-                                        }
-                                    }}>
-                                        {
-                                            props.options.map((op: any) => {
-                                                return <MenuOption
-                                                    value={op}>
-                                                    <Text style={{ textTransform: 'uppercase' }}>
-                                                        {op}
-                                                    </Text>
-                                                </MenuOption>
-                                            })
-                                        }
-                                    </MenuOptions>
-                                </Menu>
-                            </View>
-                            : <View style={{ flexDirection: 'row', paddingLeft: 30, flex: 1, backgroundColor: '#F4F4F6' }}>
-                                {
-                                    props.options.map((op: any) => {
-                                        if (op === 'Settings' || op === 'Channels') {
-                                            return
-                                        }
-                                        return <TouchableOpacity
-                                            style={{
-                                                backgroundColor: '#F4F4F6'
-                                            }}
-                                            onPress={() => props.setOption(op)}>
-                                            <Text style={op === props.option ? styles.allGrayFill : styles.all}>
-                                                {op}
-                                            </Text>
-                                        </TouchableOpacity>
-                                    })
-                                }
-                            </View>
-                    }
-                </View>
                 <View style={{
-                    flexDirection: 'row',
-                    width: Dimensions.get('window').width < 1024 ? '100%' : 'auto',
-                    justifyContent: Dimensions.get('window').width < 1024 ? 'flex-start' : 'flex-end',
-                    marginTop: Dimensions.get('window').width < 1024 ? 25 : 0,
-                    // flex: Dimensions.get('window').width < 1024 ? 1 : 0,
-                    // borderWidth: 1,
-                    backgroundColor: '#F4F4F6'
+                    flexDirection: Dimensions.get('window').width < 1024 ? 'column' : 'row',
+                    width: '100%',
+                    maxWidth: 1275, alignSelf: 'center',
+                    backgroundColor: '#f8f8fa'
                 }}>
-                    {/* {
-                        width < 1024 ? <Ionicons name='search-outline' size={20} color='#1D1D20'
+                    <View style={{ flexDirection: 'row', flex: 1, backgroundColor: '#f8f8fa', }}>
+                        <Image
+                            source={logo}
                             style={{
-                                marginLeft: Dimensions.get('window').width < 1024 ? 0 : 40,
-                                marginTop: 0
+                                width: 65,
+                                height: 25,
+                                marginRight: 7
                             }}
-                        /> : null
-                    } */}
-                    {
-                        width < 1024 ? <TextInput
-                            value={searchTerm}
-                            style={{
-                                // width: "100%",
-                                borderColor: "#bbbbbb",
-                                borderBottomWidth: 1,
-                                fontSize: 15,
-                                padding: 5,
-                                paddingVertical: 10,
-                                marginTop: -20,
-                                flex: 1, flexDirection: 'row',
-                                marginLeft: 10,
-                                marginRight: 20,
-                                // width: 175,
-                                // maxWidth: 150,
-                                // borderWidth: 1,
-                                // marginLeft: 5,
-                            }}
-                            placeholder={"Search"}
-                            onChangeText={(val) => setSearchTerm(val)}
-                            placeholderTextColor={"#818385"}
-                        /> : null
-                    }
-                    {props.option === 'Home' || props.option === 'Content' ?
-                        <Menu
-                            style={{ flex: 1 }}
-                            onSelect={(category: any) => {
-                            }}>
-                            <MenuTrigger>
-                                <Text style={{ fontSize: 14, color: '#1D1D20', paddingTop: 5, textAlign: 'right' }}>
-                                    Filter <Ionicons name="caret-down" size={14} />
-                                </Text>
-                            </MenuTrigger>
-                            <MenuOptions customStyles={{
-                                optionsContainer: {
-                                    padding: 10,
-                                    borderRadius: 15,
-                                    shadowOpacity: 0,
-                                    borderWidth: 1,
-                                    borderColor: '#e9e9ec',
-                                    overflow: 'scroll',
-                                    maxHeight: '100%'
-                                }
-                            }}>
-                                {(props.option === 'Content' ? <MenuOption
-                                    // disabled={true}
-                                    // style={{ height: 300 }}
-                                    value={'1'}>
+                            resizeMode={'contain'}
+                        />
+                        {
+                            Dimensions.get('window').width < 1024 ?
+                                <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end', backgroundColor: '#f8f8fa', }}>
                                     <Menu
-                                        // style={{ height: 300 }}
-                                        onSelect={(category: any) => {
-                                            setSortBy(category)
-                                        }}>
-                                        <MenuTrigger>
-                                            <Text style={{ fontFamily: 'inter', fontSize: 15, color: '#1D1D20' }}>
-                                                {sortBy}<Ionicons name='caret-down' size={15} />
+                                        onSelect={(op: any) => props.setOption(op)}>
+                                        <MenuTrigger style={{ flexDirection: 'row' }}>
+                                            <Text style={{
+                                                color: '#1D1D20',
+                                                paddingLeft: 10,
+                                                textTransform: 'uppercase',
+                                                flexDirection: 'row',
+                                                lineHeight: 14,
+                                                fontSize: 12, marginTop: 3, fontFamily: 'inter'
+                                            }}>
+                                                {props.option}
                                             </Text>
-                                            <Text style={{ fontSize: 10, color: '#1D1D20', paddingTop: 7, backgroundColor: '#fff' }}>
-                                                Sort By
+                                            <Text style={{ color: '#1D1D20', paddingLeft: 10, flexDirection: 'row', lineHeight: 14, fontSize: 14, marginTop: 2 }}>
+                                                <Ionicons name='menu-outline' size={24} />
                                             </Text>
                                         </MenuTrigger>
                                         <MenuOptions customStyles={{
@@ -1187,141 +992,238 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 borderRadius: 15,
                                                 shadowOpacity: 0,
                                                 borderWidth: 1,
-                                                borderColor: '#e9e9ec',
+                                                borderColor: '#f0f0f2',
                                                 overflow: 'scroll',
-                                                maxHeight: '100%'
+                                                maxHeight: '100%',
                                             }
                                         }}>
+                                            {
+                                                props.options.map((op: any) => {
+                                                    return <MenuOption
+                                                        value={op}>
+                                                        <Text style={{ textTransform: 'uppercase' }}>
+                                                            {op}
+                                                        </Text>
+                                                    </MenuOption>
+                                                })
+                                            }
+                                        </MenuOptions>
+                                    </Menu>
+                                </View>
+                                : <View style={{ flexDirection: 'row', paddingLeft: 30, flex: 1, backgroundColor: '#f8f8fa' }}>
+                                    {
+                                        props.options.map((op: any) => {
+                                            if (op === 'Settings' || op === 'Channels') {
+                                                return
+                                            }
+                                            return <TouchableOpacity
+                                                style={{
+                                                    backgroundColor: '#f8f8fa'
+                                                }}
+                                                onPress={() => props.setOption(op)}>
+                                                <Text style={op === props.option ? styles.allGrayFill : styles.all}>
+                                                    {op}
+                                                </Text>
+                                            </TouchableOpacity>
+                                        })
+                                    }
+                                </View>
+                        }
+                    </View>
+                    <View style={{
+                        flexDirection: 'row',
+                        width: Dimensions.get('window').width < 1024 ? '100%' : 'auto',
+                        justifyContent: Dimensions.get('window').width < 1024 ? 'flex-start' : 'flex-end',
+                        marginTop: Dimensions.get('window').width < 1024 ? 25 : 0,
+                        // flex: Dimensions.get('window').width < 1024 ? 1 : 0,
+                        // borderWidth: 1,
+                        backgroundColor: '#f8f8fa'
+                    }}>
+                        {/* {
+                        width < 1024 ? <Ionicons name='search-outline' size={20} color='#1D1D20'
+                            style={{
+                                marginLeft: Dimensions.get('window').width < 1024 ? 0 : 40,
+                                marginTop: 0
+                            }}
+                        /> : null
+                    } */}
+                        {
+                            width < 1024 ? <TextInput
+                                value={searchTerm}
+                                style={{
+                                    // width: "100%",
+                                    borderColor: "#d0d0d2",
+                                    borderBottomWidth: 1,
+                                    fontSize: 12,
+                                    padding: 5,
+                                    paddingVertical: 7,
+                                    marginTop: -10,
+                                    flex: 1, flexDirection: 'row',
+                                    marginLeft: 10,
+                                    marginRight: 20,
+                                    // width: 175,
+                                    // maxWidth: 150,
+                                    // borderWidth: 1,
+                                    // marginLeft: 5,
+                                }}
+                                placeholder={"🔍"}
+                                onChangeText={(val) => setSearchTerm(val)}
+                                placeholderTextColor={"#818385"}
+                            /> : null
+                        }
+                        {props.option === 'Home' || props.option === 'Content' ?
+                            <Menu
+                                style={{ flex: 1 }}
+                                onSelect={(category: any) => {
+                                    setSortBy(category)
+                                }}>
+                                <MenuTrigger>
+                                    <Text style={{ fontSize: 14, color: '#1D1D20', paddingTop: 5, textAlign: 'right' }}>
+                                        Filter <Ionicons name="caret-down" size={14} />
+                                    </Text>
+                                </MenuTrigger>
+                                <MenuOptions customStyles={{
+                                    optionsContainer: {
+                                        padding: 10,
+                                        borderRadius: 15,
+                                        shadowOpacity: 0,
+                                        borderWidth: 1,
+                                        borderColor: '#f0f0f2',
+                                        overflow: 'scroll',
+                                        maxHeight: '100%'
+                                    }
+                                }}>
+                                    {(props.option === 'Content' ?
+                                        <>
                                             <MenuOption
                                                 value={'Priority'}>
                                                 <Text>
-                                                    Priority
+                                                    Priority {sortBy === 'Priority' ? <Ionicons name='checkmark-outline' /> : null}
                                                 </Text>
                                             </MenuOption>
                                             <MenuOption
                                                 value={'Date ↑'}>
                                                 <Text>
-                                                    Date ↑
+                                                    Date ↑ {sortBy === 'Date ↑' ? <Ionicons name='checkmark-outline' /> : null}
                                                 </Text>
                                             </MenuOption>
                                             <MenuOption
                                                 value={'Date ↓'}>
                                                 <Text>
-                                                    Date ↓
+                                                    Date ↓ {sortBy === 'Date ↓' ? <Ionicons name='checkmark-outline' /> : null}
                                                 </Text>
                                             </MenuOption>
-                                        </MenuOptions>
-                                    </Menu>
-                                </MenuOption>
-                                    : null
-                                )
-                                }
-                                {
-                                    props.option === 'Content' || props.option === 'Home' ? <MenuOption
-                                        disabled={true}
-                                        value={'2'}>
-                                        <DateRangePicker
-                                            // key={Math.random()}
-                                            preventOverflow={true}
-                                            size={'sm'}
-                                            appearance={'subtle'}
-                                            placeholder={'Filter  '}
-                                            onChange={(e: any) => {
-                                                if (e[0] > e[1]) {
-                                                    alert('End date must be greater')
-                                                    return
-                                                }
-                                                else {
-                                                    setFilterStart(e[0])
-                                                    setFilterEnd(e[1])
-                                                }
-                                            }}
-                                            defaultShow={true}
-                                            showOneCalendar={true}
-                                            value={[
-                                                filterStart,
-                                                filterEnd
-                                            ]}
-                                            style={{
-                                                marginTop: -4,
-                                                marginRight: width < 1024 ? -20 : 0,
-                                                // alignSelf: 'flex-end'
-                                                // paddingLeft: 40
-                                            }}
-                                        />
-                                    </MenuOption>
+                                        </>
                                         : null
-                                }
-                            </MenuOptions>
-                        </Menu> : <View style={{ width: 80, right: 0, backgroundColor: '#F4F4F6' }} />
-                    }
-                    {
-                        width < 1024 ? null : <TextInput
-                            value={searchTerm}
-                            style={{
-                                // width: "100%",
-                                borderColor: "#bbbbbb",
-                                borderBottomWidth: 1,
-                                fontSize: 15,
-                                padding: 5,
-                                paddingVertical: 10,
-                                marginTop: -20,
-                                flex: 1, flexDirection: 'row',
-                                marginLeft: 40,
-                                marginRight: 40
-                            }}
-                            placeholder={"Search"}
-                            onChangeText={(val) => setSearchTerm(val)}
-                            placeholderTextColor={"#818385"}
-                        />
-                    }
-                    {
-                        width < 1024 ? null : <Menu
-                            style={{ marginLeft: 0, right: 0, marginTop: -7 }}
-                            onSelect={(op: any) => props.setOption(op)}>
-                            <MenuTrigger>
-                                <Image
-                                    style={{
-                                        height: 40,
-                                        width: 40,
-                                        marginBottom: 5,
-                                        borderRadius: 75,
-                                    }}
-                                    source={{ uri: avatar ? avatar : 'https://cues-files.s3.amazonaws.com/images/default.png' }}
-                                />
-                            </MenuTrigger>
-                            <MenuOptions customStyles={{
-                                optionsContainer: {
-                                    padding: 10,
-                                    borderRadius: 15,
-                                    shadowOpacity: 0,
-                                    borderWidth: 1,
-                                    borderColor: '#e9e9ec',
-                                    overflow: 'scroll',
-                                    maxHeight: '100%'
-                                }
-                            }}>
-                                <MenuOption
-                                    value={'Channels'}>
-                                    <Text>
-                                        CHANNELS
-                                    </Text>
-                                </MenuOption>
-                                <MenuOption
-                                    value={'Settings'}>
-                                    <Text>
-                                        ACCOUNT
-                                    </Text>
-                                </MenuOption>
-                            </MenuOptions>
-                        </Menu>
-                    }
+                                    )}
+                                    {
+                                        props.option === 'Content' || props.option === 'Home' ? <MenuOption
+                                            disabled={true}
+                                            value={'2'}>
+                                            <DateRangePicker
+                                                preventOverflow={true}
+                                                size={'sm'}
+                                                appearance={'subtle'}
+                                                placeholder={'Filter  '}
+                                                onChange={(e: any) => {
+                                                    if (e[0] > e[1]) {
+                                                        alert('End date must be greater')
+                                                        return
+                                                    }
+                                                    else {
+                                                        setFilterStart(e[0])
+                                                        setFilterEnd(e[1])
+                                                    }
+                                                }}
+                                                defaultShow={true}
+                                                showOneCalendar={true}
+                                                value={[
+                                                    filterStart,
+                                                    filterEnd
+                                                ]}
+                                                style={{
+                                                    marginTop: -4,
+                                                    marginRight: width < 1024 ? -20 : 0
+                                                }}
+                                            />
+                                        </MenuOption>
+                                            : null
+                                    }
+                                </MenuOptions>
+                            </Menu> : <View style={{ width: 80, right: 0, backgroundColor: '#f8f8fa' }} />
+                        }
+                        {
+                            width < 1024 ? null : <TextInput
+                                value={searchTerm}
+                                style={{
+                                    // width: "100%",
+                                    borderColor: "#d0d0d2",
+                                    borderBottomWidth: 1,
+                                    fontSize: 12,
+                                    padding: 5,
+                                    paddingVertical: 7,
+                                    marginTop: -10,
+                                    flex: 1, flexDirection: 'row',
+                                    marginLeft: 40,
+                                    marginRight: 40
+                                }}
+                                placeholder={"🔍"}
+                                onChangeText={(val) => setSearchTerm(val)}
+                                placeholderTextColor={"#818385"}
+                            />
+                        }
+                        {
+                            width < 1024 ? null : <Menu
+                                style={{ marginLeft: 0, right: 0, marginTop: -7 }}
+                                onSelect={(op: any) => props.setOption(op)}>
+                                <MenuTrigger>
+                                    <Image
+                                        style={{
+                                            height: 35,
+                                            width: 35,
+                                            marginBottom: 5,
+                                            marginTop: 5,
+                                            borderRadius: 75,
+                                        }}
+                                        source={{ uri: avatar ? avatar : 'https://cues-files.s3.amazonaws.com/images/default.png' }}
+                                    />
+                                </MenuTrigger>
+                                <MenuOptions customStyles={{
+                                    optionsContainer: {
+                                        padding: 10,
+                                        borderRadius: 15,
+                                        shadowOpacity: 0,
+                                        borderWidth: 1,
+                                        borderColor: '#f0f0f2',
+                                        overflow: 'scroll',
+                                        maxHeight: '100%'
+                                    }
+                                }}>
+                                    <MenuOption
+                                        value={'Channels'}>
+                                        <Text>
+                                            CHANNELS
+                                        </Text>
+                                    </MenuOption>
+                                    <MenuOption
+                                        value={'Settings'}>
+                                        <Text>
+                                            ACCOUNT
+                                        </Text>
+                                    </MenuOption>
+                                </MenuOptions>
+                            </Menu>
+                        }
+                    </View>
                 </View>
             </View>
             {
                 searchTerm === '' ? <View style={{
                     // paddingTop: Dimensions.get('window').width < 1024 ? 15 : 30,
-                    paddingHorizontal: Dimensions.get('window').width < 1024 ? 20 : 40
+                    paddingHorizontal: Dimensions.get('window').width < 1024 ? 20 : 40,
+                    maxWidth: 1275,
+                    alignSelf: 'center',
+                    width: '100%'
                 }}>
                     {
                         props.option === 'Settings' ?
@@ -1394,7 +1296,7 @@ const styleObject: any = () => StyleSheet.create({
         color: '#1D1D20',
         height: 24,
         paddingHorizontal: 20,
-        backgroundColor: '#F4F4F6',
+        backgroundColor: '#f8f8fa',
         lineHeight: 24,
         fontFamily: 'inter',
         textTransform: 'uppercase'

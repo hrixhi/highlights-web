@@ -69,12 +69,12 @@ const ThreadReplyCard: React.FunctionComponent<{ [label: string]: any }> = (prop
                         {props.thread.anonymous ? 'Anonymous' : props.thread.fullName}
                     </Text>
                 </View>
-                <View style={{ flexDirection: 'row', backgroundColor: '#F4F4F6' }}>
-                    <View style={{ flex: 1, backgroundColor: '#F4F4F6' }}>
+                <View style={{ flexDirection: 'row', backgroundColor: '#f8f8fa' }}>
+                    <View style={{ flex: 1, backgroundColor: '#f8f8fa' }}>
                         {
                             imported ?
                                 <a download={true} href={url} style={{ textDecoration: 'none' }}>
-                                    <View style={{ backgroundColor: '#F4F4F6', flex: 1 }}>
+                                    <View style={{ backgroundColor: '#f8f8fa', flex: 1 }}>
                                         <Text style={{ width: '100%', color: '#818385', fontSize: 15, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                                             <Ionicons name='document-outline' size={17} color='#818385' /> {title}.{type}
                                         </Text>
@@ -85,7 +85,7 @@ const ThreadReplyCard: React.FunctionComponent<{ [label: string]: any }> = (prop
                     </View>
                     {
                         props.isOwner ?
-                            <TouchableOpacity style={{ backgroundColor: '#F4F4F6' }}
+                            <TouchableOpacity style={{ backgroundColor: '#f8f8fa' }}
                                 onPress={() => props.deleteThread()}
                             >
                                 <Text style={{ width: '100%', color: '#818385', fontSize: 15, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
@@ -110,19 +110,19 @@ const styles: any = () => StyleSheet.create({
         borderRadius: 15,
         padding: 13,
         paddingBottom: 20,
-        backgroundColor: '#F4F4F6'
+        backgroundColor: '#f8f8fa'
     },
     text: {
         display: 'flex',
         flexDirection: 'column',
         flex: 1,
         fontWeight: 'bold',
-        backgroundColor: '#F4F4F6',
+        backgroundColor: '#f8f8fa',
     },
     dateContainer: {
         fontSize: 10,
         color: '#818385',
-        backgroundColor: '#F4F4F6',
+        backgroundColor: '#f8f8fa',
         display: 'flex',
         flexDirection: 'row',
         paddingBottom: 10

@@ -47,14 +47,14 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
     return (
         <View style={styles.topbar} key={Math.random()}>
-            <View style={{ width: '100%', height: Dimensions.get('window').height * 0.15, backgroundColor: '#F4F4F6' }}>
+            <View style={{ width: '100%', height: Dimensions.get('window').height * 0.15, backgroundColor: '#f8f8fa' }}>
                 <View style={{
                     // height: '45%',
                     flexDirection: 'row',
                     display: 'flex',
                     paddingHorizontal: 25,
                     // paddingTop: 10,
-                    backgroundColor: '#F4F4F6'
+                    backgroundColor: '#f8f8fa'
                 }}>
                     {/* <TouchableOpacity
                         disabled={true}
@@ -77,13 +77,13 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     <View
                         key={JSON.stringify(props.cues)}
                         style={{
-                            flex: 1, flexDirection: 'row', backgroundColor: '#F4F4F6'
+                            flex: 1, flexDirection: 'row', backgroundColor: '#f8f8fa'
                         }}>
                         {
                             props.channelId !== '' ?
-                                <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'space-evenly', backgroundColor: '#F4F4F6' }}>
+                                <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'space-evenly', backgroundColor: '#f8f8fa' }}>
                                     <TouchableOpacity
-                                        style={{ marginRight: 15, backgroundColor: '#F4F4F6' }}
+                                        style={{ marginRight: 15, backgroundColor: '#f8f8fa' }}
                                         onPress={() => props.openMeeting()}>
                                         <Text style={styles.channelText}>
                                             <Ionicons
@@ -100,7 +100,7 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     {
                                         isOwner ?
                                             <TouchableOpacity
-                                                style={{ marginRight: 0, backgroundColor: '#F4F4F6' }}
+                                                style={{ marginRight: 0, backgroundColor: '#f8f8fa' }}
                                                 onPress={() => props.openChannelSettings()}>
                                                 <Text style={styles.channelText}>
                                                     <Ionicons name='hammer-outline' size={18} color={'#1D1D20'} />
@@ -135,7 +135,7 @@ const styleObject: any = (channelId: any) => StyleSheet.create({
         paddingTop: 15,
         maxWidth: 550,
         alignSelf: 'center',
-        backgroundColor: '#F4F4F6'
+        backgroundColor: '#f8f8fa'
     },
     badge: {
         position: 'absolute',
@@ -161,7 +161,7 @@ const styleObject: any = (channelId: any) => StyleSheet.create({
         height: 22,
         paddingHorizontal: 10,
         lineHeight: 20,
-        borderRadius: 1,
+        borderRadius: 0,
         borderColor: '#818385',
         borderWidth: 1
     },

@@ -29,12 +29,12 @@ const EnglishBank: { [key: string]: string } = {
     noGroups: "No group chats.",
     formula: "Formula", // Done
     hide: "Hide", // Done
-    import: "import", // Done
+    import: "Import", // Done
     quiz: "Quiz", // Done
     title: 'Title', // Done
     myCues: 'My Cues', // Done
     category: "Category", // Done
-    priority: "Priority", // Done
+    priority: "Importance", // Done
     remindEvery: "Once every ", // Done
     remindOn: "", // Done
     remindTill: "Ends at ", // Done
@@ -64,7 +64,7 @@ const EnglishBank: { [key: string]: string } = {
     notDelivered: "Not delivered", // Done
     delivered: "Delivered", // Done
     all: "All", // Done
-    planner: "Planner", // DOne
+    planner: "To Do", // DOne
     event: "Event", // Done
     subscribe: 'Subscribe', // Done
     profile: "Profile", // DOne
@@ -115,7 +115,7 @@ const EnglishBank: { [key: string]: string } = {
     noGraded: 'No graded assignments.',
     total: 'Total', // Done
     test: 'Test', // Done
-    discussion: 'Discussion', // Done
+    discussion: 'Discuss', // Done
     send: 'Send',
     reply: 'Reply', // Done
     add: 'Add',
@@ -661,7 +661,7 @@ export function LanguageSelect() {
                     <Picker
                         selectedValue={language}
                         style={{
-                            height: 28, borderRadius: 1,
+                            height: 28, borderRadius: 0,
                             // border: "1px solid #818385",
                             fontSize: 12,
                             padding: '0px 5px'
@@ -683,7 +683,7 @@ export function LanguageSelect() {
                     :
                     (
                         <DefaultView style={{ width: '100%', flexDirection: 'row', justifyContent: 'center', backgroundColor: 'white' }}>
-                            <Ionicons name='language-outline' size={30} color={color} style={{ marginRight: 5 }} onPress={() => setShowLanguageDropdown(true)} />
+                            <Ionicons name='language-outline' size={27} color={color} style={{ marginRight: 5 }} onPress={() => setShowLanguageDropdown(true)} />
                         </DefaultView>
                     )}
             </DefaultView>)

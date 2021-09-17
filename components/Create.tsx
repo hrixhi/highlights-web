@@ -82,7 +82,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
     "#f3722c",
     "#f8961e",
     "#f9c74f",
-    "#3abb83",
+    "#35AC78",
   ].reverse();
   const [modalAnimation] = useState(new Animated.Value(0));
   const [reloadEditorKey, setReloadEditorKey] = useState(Math.random());
@@ -922,7 +922,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
         </Text>
         <View style={{ flexDirection: "row" }}>
           <View style={{ backgroundColor: "white", flex: 1 }} />
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={() => setStarred(!starred)}
             style={{
               backgroundColor: "white",
@@ -943,7 +943,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 color={starred ? "#f94144" : "#818385"}
               />
             </Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
         <View
           style={{
@@ -954,7 +954,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
             marginTop: 0,
             backgroundColor: "white",
             borderBottomWidth: imported || isQuiz ? 0 : 1,
-            borderBottomColor: '#F4F4F6'
+            borderBottomColor: '#f8f8fa'
           }}
           onTouchStart={() => Keyboard.dismiss()}
         >
@@ -1036,9 +1036,9 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   lineHeight: 30,
                   textAlign: "right",
                   paddingRight: 20,
-                  textTransform: "uppercase",
+                  // textTransform: "uppercase",
                   fontSize: 15,
-                  fontFamily: 'inter',
+                  // fontFamily: 'inter',
                   color: '#1D1D20',
                 }}
                 onPress={() => setShowEquationEditor(!showEquationEditor)}
@@ -1056,8 +1056,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   textAlign: "right",
                   paddingRight: 20,
                   fontSize: 15,
-                  fontFamily: 'inter',
-                  textTransform: 'uppercase'
+                  // fontFamily: 'inter',
+                  // textTransform: 'uppercase'
                 }}
                 onPress={() => setShowImportOptions(true)}
               >
@@ -1071,9 +1071,9 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   lineHeight: 30,
                   textAlign: "right",
                   paddingRight: 10,
-                  textTransform: "uppercase",
+                  // textTransform: "uppercase",
                   fontSize: 15,
-                  fontFamily: 'inter',
+                  // fontFamily: 'inter',
                 }}
                 onPress={() => {
                   if (isQuiz) {
@@ -1103,7 +1103,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
           >
             <View
               style={{
-                borderColor: "#e9e9ec",
+                borderColor: "#f0f0f2",
                 borderWidth: 1,
                 borderRadius: 15,
                 padding: 10,
@@ -1164,7 +1164,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   width: width < 1024 ? "100%" : "50%",
                   maxWidth: 400,
                   borderRightWidth: 0,
-                  borderColor: "#e9e9ec",
+                  borderColor: "#f0f0f2",
                   // paddingRight: 15,
                   // display: "flex",
                   paddingLeft: isQuiz && Dimensions.get('window').width > 768 ? 20 : 0,
@@ -1222,7 +1222,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                     borderRightWidth: 0,
                     flex: 1,
                     paddingLeft: 20,
-                    borderColor: "#e9e9ec",
+                    borderColor: "#f0f0f2",
                     paddingTop: 10,
                     paddingRight: 25
                   }}
@@ -1268,7 +1268,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                       }}
                       style={{ height: 20, marginRight: 20 }}
                       trackColor={{
-                        false: "#F4F4F6",
+                        false: "#f8f8fa",
                         true: "#007AFF",
                       }}
                       activeThumbColor="white"
@@ -1278,7 +1278,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                         style={{
                           borderRightWidth: 0,
                           paddingTop: 0,
-                          borderColor: "#e9e9ec",
+                          borderColor: "#f0f0f2",
                           flexDirection: 'row'
                         }}
                       >
@@ -1290,8 +1290,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                             <MenuTrigger>
                               <Text
                                 style={{
-                                  fontFamily: "inter",
-                                  fontSize: 14,
+                                  // fontFamily: "inter",
+                                  fontSize: 15,
                                   color: "#1D1D20",
                                 }}
                               >
@@ -1305,7 +1305,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                   borderRadius: 15,
                                   shadowOpacity: 0,
                                   borderWidth: 1,
-                                  borderColor: "#e9e9ec",
+                                  borderColor: "#f0f0f2",
                                   overflow: 'scroll',
                                   maxHeight: '100%'
                                 },
@@ -1329,8 +1329,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                             <MenuTrigger>
                               <Text
                                 style={{
-                                  fontFamily: "inter",
-                                  fontSize: 14,
+                                  // fontFamily: "inter",
+                                  fontSize: 15,
                                   color: "#1D1D20",
                                 }}
                               >
@@ -1344,7 +1344,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                   borderRadius: 15,
                                   shadowOpacity: 0,
                                   borderWidth: 1,
-                                  borderColor: "#e9e9ec",
+                                  borderColor: "#f0f0f2",
                                   overflow: 'scroll',
                                   maxHeight: '100%'
                                 },
@@ -1445,7 +1445,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
               ) : (
                 <View key={url} style={{ flex: 1, maxHeight: 800 }}>
                   {/* <Webview key={url} url={url} /> */}
-                  <div className="webviewer" ref={RichText} style={{ height: "100vh", borderWidth: 1, borderColor: '#e9e9ec', borderRadius: 1 }}></div>
+                  <div className="webviewer" ref={RichText} style={{ height: "80vh", borderWidth: 1, borderColor: '#f0f0f2', borderRadius: 0 }}></div>
                 </View>
               )
             ) : null}
@@ -1495,7 +1495,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
             /> */}
             {isQuiz || imported ? null : <Editor
               onInit={(evt, editor) => editorRef.current = editor}
-              initialValue={cueDraft !== "" ? cueDraft : "<h1>Title</h1>"}
+              initialValue={cueDraft !== "" ? cueDraft : "<h2>Title</h2>"}
               apiKey="ip4jckmpx73lbu6jgyw9oj53g0loqddalyopidpjl23fx7tl"
               init={{
                 skin: "snow",
@@ -1520,7 +1520,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 },
                 // menubar: 'file edit view insert format tools table tc help',
                 menubar: false,
-                toolbar: 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat  pagebreak | table image media pageembed link | preview print | charmap emoticons |  ltr rtl | showcomments addcomment',
+                toolbar: 'undo redo | bold italic underline strikethrough | fontselect fontSizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat  pagebreak | table image media pageembed link | preview print | charmap emoticons |  ltr rtl | showcomments addcomment',
                 importcss_append: true,
                 image_caption: true,
                 quickbars_selection_toolbar: 'bold italic underline | quicklink h2 h3 quickimage quicktable',
@@ -1544,7 +1544,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
               display: "flex",
               flexDirection: "column",
               marginHorizontal: 10,
-              maxWidth: 700, alignSelf: 'center',
+              maxWidth: 800, alignSelf: 'center',
               // marginLeft: width < 1024 ? 0 : 200
             }}
           >
@@ -1559,7 +1559,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   style={{
                     flexDirection: width < 1024 ? 'column' : "row",
                     borderRightWidth: 0,
-                    borderColor: "#e9e9ec",
+                    borderColor: "#f0f0f2",
                     paddingTop: 40
                   }}
                 >
@@ -1573,12 +1573,10 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                     <Text
                       style={{
                         fontSize: 15,
-                        fontFamily: 'inter',
-                        color: '#1D1D20',
-                        textTransform: 'uppercase'
+                        color: '#1D1D20'
                       }}
                     >
-                      Share with
+                      Share With
                     </Text>
                   </View>
                   <View
@@ -1625,8 +1623,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                         <MenuTrigger>
                           <Text
                             style={{
-                              fontFamily: "inter",
-                              fontSize: 14,
+                              // fontFamily: "inter",
+                              fontSize: 15,
                               color: "#1D1D20",
                             }}
                           >
@@ -1641,7 +1639,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                               borderRadius: 15,
                               shadowOpacity: 0,
                               borderWidth: 1,
-                              borderColor: "#e9e9ec",
+                              borderColor: "#f0f0f2",
                               overflow: 'scroll',
                               maxHeight: '100%'
                             },
@@ -1675,12 +1673,10 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                       <Text
                         style={{
                           fontSize: 15,
-                          fontFamily: 'inter',
-                          color: '#1D1D20',
-                          textTransform: 'uppercase'
+                          color: '#1D1D20'
                         }}
                       >
-                        SHARE WITH ALL
+                        Share With All
                       </Text>
                     </View>
                     <View>
@@ -1701,7 +1697,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           style={{ height: 20 }}
                           trackColor={{
                             false: "#F8F9FA",
-                            true: "#818385",
+                            true: "#007AFF",
                           }}
                           activeThumbColor="white"
                         />
@@ -1755,9 +1751,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                       <Text
                         style={{
                           fontSize: 15,
-                          fontFamily: 'inter',
-                          color: '#1D1D20',
-                          textTransform: 'uppercase'
+                          color: '#1D1D20'
                         }}
                       >
                         {PreferredLanguageText("submissionRequired")}
@@ -1781,8 +1775,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           }}
                           style={{ height: 20 }}
                           trackColor={{
-                            false: "#F4F4F6",
-                            true: "#818385",
+                            false: "#f8f8fa",
+                            true: "#007AFF",
                           }}
                           activeThumbColor="white"
                         />
@@ -1872,11 +1866,10 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                       <Text
                         style={{
                           fontSize: 15,
-                          fontFamily: 'inter',
                           color: '#1D1D20'
                         }}
                       >
-                        GRADE WEIGHT
+                        Grade Weight
                       </Text>
                     </View>
                     <View>
@@ -1895,7 +1888,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                             onValueChange={() => setGraded(!graded)}
                             style={{ height: 20 }}
                             trackColor={{
-                              false: "#F4F4F6",
+                              false: "#f8f8fa",
                               true: "#818385",
                             }}
                             activeThumbColor="white"
@@ -1927,7 +1920,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                               value={gradeWeight}
                               style={{
                                 width: "25%",
-                                borderBottomColor: "#F4F4F6",
+                                borderBottomColor: "#f8f8fa",
                                 borderBottomWidth: 1,
                                 fontSize: 15,
                                 padding: 15,
@@ -1959,11 +1952,10 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                       <Text
                         style={{
                           fontSize: 15,
-                          fontFamily: 'inter',
                           color: '#1D1D20'
                         }}
                       >
-                        LATE SUBMISSION
+                        Late Submission
                       </Text>
                     </View>
                     <View>
@@ -1982,7 +1974,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                             onValueChange={() => setAllowLateSubmission(!allowLateSubmission)}
                             style={{ height: 20 }}
                             trackColor={{
-                              false: "#F4F4F6",
+                              false: "#f8f8fa",
                               true: "#818385",
                             }}
                             activeThumbColor="white"
@@ -2038,10 +2030,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                       <Text
                         style={{
                           fontSize: 15,
-                          fontFamily: 'inter',
-                          color: '#2f2f3c',
-                          textTransform: 'uppercase'
-
+                          color: '#1D1D20'
                         }}
                       >
                         Unlimited Attempts
@@ -2124,7 +2113,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 style={{
                   width: "100%",
                   borderRightWidth: 0,
-                  borderColor: "#e9e9ec",
+                  borderColor: "#f0f0f2",
                 }}
               >
                 <View style={{ width: "100%", backgroundColor: "white", flexDirection: width < 1024 ? 'column' : 'row', paddingTop: 40 }}>
@@ -2138,10 +2127,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                     <Text
                       style={{
                         fontSize: 15,
-                        fontFamily: 'inter',
-                        color: '#1D1D20',
-                        textTransform: 'uppercase'
-
+                        color: '#1D1D20'
                       }}
                     >
                       {PreferredLanguageText("category")}
@@ -2173,8 +2159,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           <MenuTrigger>
                             <Text
                               style={{
-                                fontFamily: "inter",
-                                fontSize: 14,
+                                // fontFamily: "inter",
+                                fontSize: 15,
                                 color: "#1D1D20",
                               }}
                             >
@@ -2189,7 +2175,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                 borderRadius: 15,
                                 shadowOpacity: 0,
                                 borderWidth: 1,
-                                borderColor: "#e9e9ec",
+                                borderColor: "#f0f0f2",
                                 overflow: 'scroll',
                                 maxHeight: '100%'
                               },
@@ -2244,7 +2230,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 style={{
                   width: "100%",
                   borderRightWidth: 0,
-                  borderColor: "#e9e9ec",
+                  borderColor: "#f0f0f2",
                   flexDirection: width < 1024 ? 'column' : 'row', paddingTop: 40
                 }}
               >
@@ -2258,8 +2244,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   <Text
                     style={{
                       fontSize: 15,
-                      fontFamily: 'inter',
-                      textTransform: 'uppercase',
                       color: '#1D1D20'
                     }}
                   >
@@ -2327,9 +2311,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   <Text
                     style={{
                       fontSize: 15,
-                      fontFamily: 'inter',
-                      color: '#1D1D20',
-                      textTransform: 'uppercase'
+                      color: '#1D1D20'
                     }}
                   >
                     Reminder
@@ -2358,7 +2340,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                     }}
                     style={{ height: 20 }}
                     trackColor={{
-                      false: "#F4F4F6",
+                      false: "#f8f8fa",
                       true: "#007AFF",
                     }}
                     activeThumbColor="white"
@@ -2377,9 +2359,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                     <Text
                       style={{
                         fontSize: 15,
-                        fontFamily: 'inter',
-                        color: '#1D1D20',
-                        textTransform: 'uppercase'
+                        color: '#1D1D20'
                       }}
                     >
                       Recurring
@@ -2400,7 +2380,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                         onValueChange={() => setShuffle(!shuffle)}
                         style={{ height: 20 }}
                         trackColor={{
-                          false: "#F4F4F6",
+                          false: "#f8f8fa",
                           true: "#818385",
                         }}
                         activeThumbColor="white"
@@ -2426,8 +2406,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           <MenuTrigger>
                             <Text
                               style={{
-                                fontFamily: "inter",
-                                fontSize: 14,
+                                //  fontFamily: "inter",
+                                fontSize: 15,
                                 color: "#1D1D20",
                               }}
                             >
@@ -2442,7 +2422,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                 borderRadius: 15,
                                 shadowOpacity: 0,
                                 borderWidth: 1,
-                                borderColor: "#e9e9ec",
+                                borderColor: "#f0f0f2",
                                 overflow: 'scroll',
                                 maxHeight: '100%'
                               },
@@ -2505,9 +2485,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                     <Text
                       style={{
                         fontSize: 15,
-                        fontFamily: 'inter',
-                        color: '#1D1D20',
-                        textTransform: 'uppercase'
+                        color: '#1D1D20'
                       }}
                     >
                       Indefinite
@@ -2530,7 +2508,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                         }
                         style={{ height: 20 }}
                         trackColor={{
-                          false: "#F4F4F6",
+                          false: "#f8f8fa",
                           true: "#818385",
                         }}
                         activeThumbColor="white"
@@ -2580,8 +2558,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   <Text
                     style={{
                       fontSize: 15,
-                      textTransform: 'uppercase',
-                      fontFamily: 'inter',
                       color: '#1D1D20'
                     }}
                   >
@@ -2603,7 +2579,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                       onValueChange={() => setShuffleQuiz(!shuffleQuiz)}
                       style={{ height: 20 }}
                       trackColor={{
-                        false: "#F4F4F6",
+                        false: "#f8f8fa",
                         true: "#818385",
                       }}
                       activeThumbColor="white"
@@ -2657,7 +2633,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   >
                     {isSubmitting
                       ? 'Creating...'
-                      : 'Create'}
+                      : 'Create'} <Ionicons name='create-outline' size={12} />
                   </Text>
                 ) : (
                   <Text
@@ -2677,7 +2653,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   >
                     {isSubmitting
                       ? 'Creating...'
-                      : 'CREATE'}
+                      : 'CREATE'} <Ionicons name='create-outline' size={12} />
                   </Text>
                 )}
               </TouchableOpacity>
@@ -2698,7 +2674,7 @@ const styles: any = StyleSheet.create({
     fontSize: 15,
     height: 45,
     color: "#1D1D20",
-    borderRadius: 1,
+    borderRadius: 0,
     marginLeft: 10,
   },
   backgroundVideo: {
@@ -2710,7 +2686,7 @@ const styles: any = StyleSheet.create({
   },
   cuesInput: {
     width: "100%",
-    backgroundColor: "#F4F4F6",
+    backgroundColor: "#f8f8fa",
     borderRadius: 15,
     fontSize: 20,
     padding: 20,
@@ -2743,13 +2719,13 @@ const styles: any = StyleSheet.create({
     marginLeft: 7,
     paddingHorizontal: 4,
     backgroundColor: "white",
-    borderRadius: 1,
+    borderRadius: 10,
     borderWidth: 1,
     borderColor: "#818385",
   },
   input: {
     width: "100%",
-    borderBottomColor: "#F4F4F6",
+    borderBottomColor: "#f8f8fa",
     borderBottomWidth: 1,
     fontSize: 15,
     paddingTop: 12,
@@ -2810,7 +2786,7 @@ const styles: any = StyleSheet.create({
     color: "#FFF",
     height: 22,
     paddingHorizontal: 10,
-    borderRadius: 1,
+    borderRadius: 0,
     backgroundColor: "#1D1D20",
     marginBottom: 20,
   },
@@ -2821,7 +2797,7 @@ const styles: any = StyleSheet.create({
     paddingHorizontal: 10,
     marginRight: 20,
     backgroundColor: "white",
-    borderRadius: 1,
+    borderRadius: 0,
     borderWidth: 1,
     borderColor: "#818385",
   },
@@ -2841,7 +2817,7 @@ const styles: any = StyleSheet.create({
     backgroundColor: "#7FB1D3",
   },
   outline: {
-    borderRadius: 1,
+    borderRadius: 0,
     borderWidth: 1,
     borderColor: "#818385",
   },

@@ -200,7 +200,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             lineHeight: 30,
                             color: '#fff',
                             fontSize: 12,
-                            backgroundColor: '#3abb83',
+                            backgroundColor: '#35AC78',
                             paddingHorizontal: 25,
                             fontFamily: 'inter',
                             height: 30,
@@ -251,7 +251,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
         // PIE CHART FOR GRADE WEIGHTS
 
         // ADD MORE COLORS HERE LATER
-        const colors = ["#f94144", "#f3722c", "#f8961e", "#f9c74f", "#3abb83", "#f95d6a", "#ff7c43", "#ffa600"]
+        const colors = ["#f94144", "#f3722c", "#f8961e", "#f9c74f", "#35AC78", "#f95d6a", "#ff7c43", "#ffa600"]
 
         const nonZeroGradeWeight = cues.filter((cue: any) => cue.gradeWeight > 0)
 
@@ -527,7 +527,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                         onChangeText={val => {
                                                                             setActiveScore(val)
                                                                         }}
-                                                                        style={{ width: '50%', marginRight: 5, padding: 8, borderBottomColor: "#F4F4F6", borderBottomWidth: 1, fontSize: 12 }}
+                                                                        style={{ width: '50%', marginRight: 5, padding: 8, borderBottomColor: "#f8f8fa", borderBottomWidth: 1, fontSize: 12 }}
                                                                         placeholderTextColor={'#818385'}
                                                                     />
                                                                     <TouchableOpacity onPress={() => {
@@ -621,7 +621,7 @@ const styles = StyleSheet.create({
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: "white",
-        borderRadius: 1,
+        borderRadius: 0,
         borderWidth: 1,
         borderColor: "#818385",
         lineHeight: 20

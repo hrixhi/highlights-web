@@ -62,47 +62,47 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     return (
         <Animated.View style={{
-            borderColor: '#e9e9ec',
-            backgroundColor: '#F4F4F6',
+            borderColor: '#f0f0f2',
+            backgroundColor: '#f8f8fa',
             // borderBottomWidth: 2,
             // borderTopWidth: 1,
             height: ((dimensions.window.height) - 60),
             opacity: props.fadeAnimation,
-            width: dimensions.window.width,
+            flexDirection: 'row', justifyContent: 'center',
+            width: '100%',
             paddingHorizontal: dimensions.window.width < 1024 ? 20 : 40,
             // paddingTop: 15
         }}>
             <ScrollView
                 horizontal={true}
                 nestedScrollEnabled={true}
-                style={{ width: '100%', backgroundColor: '#F4F4F6', paddingTop: 20 }}
+                contentContainerStyle={{ width: '100%', backgroundColor: '#f8f8fa', paddingTop: 20, maxWidth: 1275 }}
             >
                 {
                     Object.keys(categoryMap).map((category: any, i: any) => {
                         return <ScrollView style={{
                             width: '100%',
                             maxWidth: 250,
-                            backgroundColor: '#F4F4F6',
-                            marginRight: 25
+                            backgroundColor: '#f8f8fa',
+                            // marginRight: 25,
+                            minWidth: 250
                         }}>
-                            <View style={{ backgroundColor: '#F4F4F6', paddingLeft: 23, marginBottom: 20 }}>
+                            <View style={{ backgroundColor: '#f8f8fa', paddingLeft: 23, marginBottom: 20 }}>
                                 <Text style={{
                                     flex: 1, flexDirection: 'row',
                                     color: '#818385',
-                                    fontSize: 20, lineHeight: 25,
+                                    fontSize: 15, lineHeight: 25,
                                     fontFamily: 'inter'
                                 }} ellipsizeMode='tail'>
                                     {category === '' ? 'None' : category}
                                 </Text>
                             </View>
                             <View
-                                // showsVerticalScrollIndicator={false}
-                                // horizontal={true}
-                                // style={{ height: '100%' }}
                                 style={{
                                     // borderWidth: 1,
-                                    backgroundColor: '#F4F4F6'
-                                    // height: 190
+                                    backgroundColor: '#f8f8fa',
+                                    // height: 190,
+                                    width: '100%'
                                 }}
                                 key={i.toString()}
                             >
@@ -115,8 +115,8 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         marginBottom: 20,
                                         // marginBottom: i === priorities.length - 1 ? 0 : 20,
                                         // maxWidth: 150,
-                                        backgroundColor: '#F4F4F6',
-                                        width: '100%'
+                                        backgroundColor: '#f8f8fa',
+                                        width: 225, // marginRight: 25
                                     }}
                                         key={index}
                                     >
@@ -175,7 +175,7 @@ const styleObject = (channelId: any) => {
             width: 20,
             height: 20,
             marginTop: -2,
-            borderRadius: 1,
+            borderRadius: 0,
             backgroundColor: '#f94144',
             textAlign: 'center',
             zIndex: 50
@@ -187,7 +187,7 @@ const styleObject = (channelId: any) => {
             marginRight: 25,
             height: 20,
             marginTop: -2,
-            borderRadius: 1,
+            borderRadius: 0,
             backgroundColor: '#007AFF',
             textAlign: 'center',
             zIndex: 50

@@ -8,7 +8,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const OverviewCueCard: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
-    const colorChoices: any[] = ['#f94144', '#f3722c', '#f8961e', '#f9c74f', '#3abb83'].reverse()
+    const colorChoices: any[] = ['#f94144', '#f3722c', '#f8961e', '#f9c74f', '#35AC78'].reverse()
     const colorScheme = 'dark'
     const styleObject = styles(colorScheme, props.channelId, colorChoices[props.cue.color])
     const starred = props.cue.starred;
@@ -80,7 +80,7 @@ const OverviewCueCard: React.FunctionComponent<{ [label: string]: any }> = (prop
                         {/* <View style={{
                             width: 9,
                             height: 9,
-                            borderRadius: 1,
+                            borderRadius: 0,
                             // marginTop: 1,
                             backgroundColor: colorCode
                         }} /> */}
@@ -141,11 +141,11 @@ const OverviewCueCard: React.FunctionComponent<{ [label: string]: any }> = (prop
                         </Text>
                     </View>
                     <View style={{
-                        backgroundColor: '#F4F4F6',
+                        backgroundColor: '#f8f8fa',
                         width: '100%', flex: 1, height: '80%'
                     }}>
                         <View
-                            style={{ flexDirection: 'row', height: '13%', backgroundColor: '#F4F4F6', justifyContent: 'flex-end' }}
+                            style={{ flexDirection: 'row', height: '13%', backgroundColor: '#f8f8fa', justifyContent: 'flex-end' }}
                         >
                             {
                                 props.editFolderChannelId === props.cue.channelId ?
@@ -163,7 +163,7 @@ const OverviewCueCard: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     <Text style={{
                                         width: 20,
                                         height: 20,
-                                        borderRadius: 1,
+                                        borderRadius: 0,
                                         overflow: 'hidden',
                                         backgroundColor: '#f94144',
                                         textAlign: 'center',
@@ -178,9 +178,9 @@ const OverviewCueCard: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         style={{
                                             width: 20,
                                             height: 20,
-                                            borderRadius: 1,
+                                            borderRadius: 0,
                                             overflow: 'hidden',
-                                            backgroundColor: '#F4F4F6',
+                                            backgroundColor: '#f8f8fa',
                                             zIndex: 150
                                         }}
                                     />
@@ -190,7 +190,7 @@ const OverviewCueCard: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     <Text style={{
                                         width: 20,
                                         height: 20,
-                                        borderRadius: 1,
+                                        borderRadius: 0,
                                         overflow: 'hidden',
                                         backgroundColor: '#007AFF',
                                         textAlign: 'center',
@@ -243,9 +243,9 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
         borderRadius: 15,
         padding: 12,
         paddingHorizontal: 15,
-        backgroundColor: '#F4F4F6',
+        backgroundColor: '#f8f8fa',
         borderWidth: 1,
-        borderColor: '#e9e9ec',
+        borderColor: '#f0f0f2',
         maxHeight: 150
     },
     flipCard: {
@@ -263,18 +263,18 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
     },
     text: {
         height: '100%',
-        backgroundColor: '#F4F4F6'
+        backgroundColor: '#f8f8fa'
     },
     flipText: {
         height: '100%',
         color: '#fff',
-        backgroundColor: colorScheme === 'light' ? '#1D1D20' : '#F4F4F6'
+        backgroundColor: colorScheme === 'light' ? '#1D1D20' : '#f8f8fa'
     },
     dateContainer: {
         fontSize: 10,
         color: '#fff',
         height: '20%',
-        backgroundColor: '#F4F4F6',
+        backgroundColor: '#f8f8fa',
         display: 'flex',
         flexDirection: 'row'
     },
@@ -284,17 +284,17 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
         display: 'flex',
         flexDirection: 'row',
         color: '#fff',
-        backgroundColor: colorScheme === 'light' ? '#1D1D20' : '#F4F4F6'
+        backgroundColor: colorScheme === 'light' ? '#1D1D20' : '#f8f8fa'
     },
     date: {
         fontSize: 9,
-        color: colorScheme === 'light' ? '#F4F4F6' : '#333333',
+        color: colorScheme === 'light' ? '#f8f8fa' : '#333333',
         // marginLeft: 10,
         lineHeight: 10
     },
     date2: {
         fontSize: 9,
-        color: colorScheme === 'light' ? '#F4F4F6' : '#333333',
+        color: colorScheme === 'light' ? '#f8f8fa' : '#333333',
         marginLeft: 10,
         lineHeight: 10,
         textAlign: 'right',
@@ -311,7 +311,7 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
     },
     titleFlip: {
         color: colorScheme === 'light' ? '#1D1D20' : '#1D1D20',
-        backgroundColor: colorScheme === 'light' ? '#F4F4F6' : '#F4F4F6',
+        backgroundColor: colorScheme === 'light' ? '#f8f8fa' : '#f8f8fa',
         fontFamily: 'inter',
         fontSize: 13,
         // ,

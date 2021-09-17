@@ -36,12 +36,12 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                         </Text> : null}
                     </View>
                     <View style={{
-                        backgroundColor: '#F4F4F6',
+                        backgroundColor: '#f8f8fa',
                         width: '100%', flex: 1,
                         height: '100%',
                         flexDirection: 'row'
                     }}>
-                        <View style={{ flex: 1, backgroundColor: '#F4F4F6' }}>
+                        <View style={{ flex: 1, backgroundColor: '#f8f8fa' }}>
                             <Text
                                 ellipsizeMode={'tail'}
                                 numberOfLines={1}
@@ -55,11 +55,11 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                                     {props.subtitle}
                                 </Text>
                                 : null}
-                            {props.option === "Channels" && !props.subscribed ?  <View style={{ flex: 1, paddingLeft: 10, backgroundColor: '#F4F4F6' }}>
+                            {props.option === "Channels" && !props.subscribed ?  <View style={{ flex: 1, paddingLeft: 10, backgroundColor: '#f8f8fa' }}>
                                 <TouchableOpacity
                                     onPress={() => props.handleSub()}
                                 >
-                                    <Text style={{ textAlign: 'center', fontSize: 12, paddingTop: 10, color: '#007AFF', backgroundColor: '#F4F4F6' }} ellipsizeMode='tail'>
+                                    <Text style={{ textAlign: 'center', fontSize: 12, paddingTop: 10, color: '#007AFF', backgroundColor: '#f8f8fa' }} ellipsizeMode='tail'>
                                         Join
                                     </Text>
                                 </TouchableOpacity>
@@ -78,24 +78,24 @@ export default SearchResultCard
 const styles: any = (colorScheme: any) => StyleSheet.create({
     swiper: {
         height: '100%',
-        borderRadius: 1,
+        borderRadius: 0,
         overflow: 'hidden',
         maxWidth: 200
     },
     card: {
         // maxWidth: 200,
         height: '100%',
-        borderRadius: 1,
+        borderRadius: 0,
         padding: 12,
         paddingHorizontal: 15,
-        backgroundColor: '#F4F4F6',
+        backgroundColor: '#f8f8fa',
         borderWidth: 1,
-        borderColor: '#e9e9ec'
+        borderColor: '#f0f0f2'
     },
     flipCard: {
         height: '100%',
         width: '100%',
-        borderRadius: 1,
+        borderRadius: 0,
         padding: 13,
         color: '#fff',
         backgroundColor: colorScheme === 'light' ? '#1D1D20' : 'white'
@@ -107,19 +107,19 @@ const styles: any = (colorScheme: any) => StyleSheet.create({
     },
     text: {
         // height: '100%',
-        backgroundColor: '#F4F4F6'
+        backgroundColor: '#f8f8fa'
     },
     flipText: {
         height: '100%',
         color: '#fff',
-        backgroundColor: colorScheme === 'light' ? '#1D1D20' : '#F4F4F6'
+        backgroundColor: colorScheme === 'light' ? '#1D1D20' : '#f8f8fa'
     },
     dateContainer: {
         fontSize: 10,
         marginBottom: 5,
         color: '#fff',
         // height: '25%',
-        backgroundColor: '#F4F4F6',
+        backgroundColor: '#f8f8fa',
         display: 'flex',
         flexDirection: 'row'
     },
@@ -129,17 +129,17 @@ const styles: any = (colorScheme: any) => StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         color: '#fff',
-        backgroundColor: colorScheme === 'light' ? '#1D1D20' : '#F4F4F6'
+        backgroundColor: colorScheme === 'light' ? '#1D1D20' : '#f8f8fa'
     },
     date: {
         fontSize: 9,
-        color: colorScheme === 'light' ? '#F4F4F6' : '#333333',
+        color: colorScheme === 'light' ? '#f8f8fa' : '#333333',
         marginLeft: 10,
         lineHeight: 10
     },
     date2: {
         fontSize: 9,
-        color: colorScheme === 'light' ? '#F4F4F6' : '#333333',
+        color: colorScheme === 'light' ? '#f8f8fa' : '#333333',
         marginLeft: 10,
         lineHeight: 10,
         textAlign: 'right',
@@ -157,7 +157,7 @@ const styles: any = (colorScheme: any) => StyleSheet.create({
     },
     titleFlip: {
         color: colorScheme === 'light' ? '#1D1D20' : '#1D1D20',
-        backgroundColor: colorScheme === 'light' ? '#F4F4F6' : '#F4F4F6',
+        backgroundColor: colorScheme === 'light' ? '#f8f8fa' : '#f8f8fa',
         fontFamily: 'inter',
         fontSize: 13,
         // ,

@@ -45,7 +45,7 @@ const ActivityCard: React.FunctionComponent<{ [label: string]: any }> = (props: 
                             }
                         </Text>
 
-                    </View> <View style={{ backgroundColor: '#F4F4F6', width: '100%', flexDirection: 'row', display: 'flex' }}>
+                    </View> <View style={{ backgroundColor: '#f8f8fa', width: '100%', flexDirection: 'row', display: 'flex' }}>
                         <Text ellipsizeMode={'tail'}
                             numberOfLines={1}
                             style={styleObject.title}>
@@ -56,7 +56,7 @@ const ActivityCard: React.FunctionComponent<{ [label: string]: any }> = (props: 
                                 <Text style={{
                                     width: 20,
                                     height: 20,
-                                    borderRadius: 1,
+                                    borderRadius: 0,
                                     backgroundColor: '#f94144',
                                     textAlign: 'center',
                                     zIndex: 150,
@@ -91,14 +91,14 @@ const styles: any = () => StyleSheet.create({
         height: '100%',
         width: '100%',
         maxWidth: 500,
-        borderRadius: 1,
+        borderRadius: 0,
         overflow: 'hidden',
-        backgroundColor: '#F4F4F6',
+        backgroundColor: '#f8f8fa',
     },
     badge: {
         width: 20,
         height: 20,
-        borderRadius: 1,
+        borderRadius: 0,
         backgroundColor: '#f94144',
         textAlign: 'center',
         zIndex: 150,
@@ -107,22 +107,22 @@ const styles: any = () => StyleSheet.create({
     card: {
         height: '100%',
         width: '100%',
-        borderRadius: 1,
+        borderRadius: 0,
         padding: 13,
-        backgroundColor: '#F4F4F6',
+        backgroundColor: '#f8f8fa',
         borderWidth: 1,
-        borderColor: '#e9e9ec'
+        borderColor: '#f0f0f2'
     },
     text: {
         display: 'flex',
         flexDirection: 'column',
         flex: 1,
-        backgroundColor: '#F4F4F6'
+        backgroundColor: '#f8f8fa'
     },
     dateContainer: {
         fontSize: 10,
         height: '22%',
-        backgroundColor: '#F4F4F6',
+        backgroundColor: '#f8f8fa',
         display: 'flex',
         flexDirection: 'row'
     },
@@ -154,7 +154,7 @@ const styles: any = () => StyleSheet.create({
     color: {
         width: 10,
         height: 10,
-        borderRadius: 1,
+        borderRadius: 0,
         marginTop: 1
     }
 });

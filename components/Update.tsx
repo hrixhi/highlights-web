@@ -204,6 +204,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 const statuses = res2.data.status.findByCueId
                                 statuses.map((status: any) => {
                                     subs.push({
+                                        avatar: status.avatar,
                                         displayName: status.fullName,
                                         _id: status.userId,
                                         fullName: status.status,
@@ -346,8 +347,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             //     useNativeDriver: true
             // }).start();
         })
-    }, [cueId]) 
-    
+    }, [cueId])
+
 
     useEffect(() => {
         loadThreadsAndStatuses()
@@ -438,6 +439,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             ref={scroll2}
                                             contentContainerStyle={{
                                                 width: '100%',
+                                                maxWidth: 800,
+                                                alignSelf: 'center',
                                                 height: '100%'
                                             }}
                                             contentOffset={{ x: 0, y: 1 }}
@@ -463,11 +466,11 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     )
                             }
                         </ScrollView>
-                            : <Fragment>
+                            : <View style={{ width: '100%' }}>
                                 <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 30, backgroundColor: 'white' }}>
                                     {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
                                 </Text>
-                                <View style={{ flexDirection: 'row' }}>
+                                <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'center' }}>
                                     <TouchableOpacity
                                         style={{
                                             justifyContent: 'center',
@@ -602,7 +605,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         </View>
                                         : null
                                 }
-                            </Fragment>}
+                            </View>}
 
                         {/* </Swiper> */}
                     </Animated.View>
@@ -615,19 +618,19 @@ export default Update
 
 const styles: any = StyleSheet.create({
     all: {
-        fontSize: 13,
+        fontSize: 11,
         color: '#1D1D20',
         height: 24,
-        paddingHorizontal: 20,
+        paddingHorizontal: 10,
         backgroundColor: '#fff',
         lineHeight: 24,
         fontFamily: 'inter',
         textTransform: 'uppercase'
     },
     allGrayFill: {
-        fontSize: 13,
+        fontSize: 11,
         color: '#fff',
-        paddingHorizontal: 20,
+        paddingHorizontal: 10,
         borderRadius: 12,
         backgroundColor: '#1D1D20',
         lineHeight: 24,

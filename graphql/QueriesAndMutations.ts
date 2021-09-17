@@ -584,6 +584,7 @@ export const getChannelThreads = gql`
         userId
         displayName
         fullName
+        avatar
         isPrivate
         anonymous
       }
@@ -605,6 +606,7 @@ export const getCueThreads = gql`
         userId
         displayName
         fullName
+        avatar
         isPrivate
         anonymous
       }
@@ -669,6 +671,7 @@ export const getStatuses = gql`
         userId
         status
         fullName
+        avatar
         email
         submission
         score
@@ -1132,6 +1135,7 @@ export const findBySchoolId = gql`
              password
              createdBy
              createdByUsername
+             createdByAvatar
              numSubs
              role
              meetingOn

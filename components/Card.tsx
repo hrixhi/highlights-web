@@ -8,7 +8,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
-    const colorChoices: any[] = ['#f94144', '#f3722c', '#f8961e', '#f9c74f', '#3abb83'].reverse()
+    const colorChoices: any[] = ['#f94144', '#f3722c', '#f8961e', '#f9c74f', '#35AC78'].reverse()
     const colorScheme = 'dark'
     const styleObject = styles(colorScheme, props.channelId, colorChoices[props.cue.color])
     const starred = props.cue.starred;
@@ -62,7 +62,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 style={styleObject.card}>
                 <View style={styleObject.text}>
                     <View style={styleObject.dateContainer}>
-                        {
+                        {/* {
                             props.cue.starred ?
                                 <Text style={{
                                     textAlign: 'right',
@@ -76,7 +76,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     <Ionicons name='bookmark' size={18} color={starred ? '#f94144' : '#fff'} />
                                 </Text>
                                 : null
-                        }
+                        } */}
                         <Text style={styleObject.date2}>
                             {
                                 (new Date(props.cue.date)).toString().split(' ')[1] +
@@ -154,24 +154,26 @@ export default React.memo(Card, (prev, next) => {
 const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.create({
     swiper: {
         height: '100%',
-        borderRadius: 1,
+        borderRadius: 0,
         overflow: 'hidden',
-        maxWidth: 300
+        maxWidth: 225,
+        width: '100%'
     },
     card: {
-        maxWidth: 300,
+        maxWidth: 225,
         height: '100%',
-        borderRadius: 1,
+        borderRadius: 0,
+        width: '100%',
         padding: 12,
         paddingHorizontal: 15,
         backgroundColor: '#fff',
         borderWidth: 1,
-        borderColor: '#e9e9ec'
+        borderColor: '#f0f0f2'
     },
     flipCard: {
         height: '100%',
         width: '100%',
-        borderRadius: 1,
+        borderRadius: 0,
         padding: 13,
         color: '#fff',
         backgroundColor: colorScheme === 'light' ? '#1D1D20' : 'white'
@@ -225,7 +227,7 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
         fontSize: 15,
         lineHeight: 20,
         flex: 1,
-        marginTop: 12,
+        marginTop: 5,
         color: col
     },
     titleFlip: {

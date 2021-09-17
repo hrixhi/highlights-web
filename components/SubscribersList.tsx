@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { StyleSheet, ScrollView, TextInput, Dimensions, Switch } from 'react-native';
+import { StyleSheet, ScrollView, TextInput, Dimensions, Switch, Image } from 'react-native';
 import { View, Text, TouchableOpacity } from './Themed';
 import _ from 'lodash'
 import { Ionicons } from '@expo/vector-icons';
@@ -955,7 +955,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                         setViewSubmissionTab("mySubmission");
                     }}>
                     <Text style={viewSubmissionTab === "mySubmission" ? styles.allGrayFill : styles.all}>
-                        View Submission
+                        Submission
                     </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -967,15 +967,15 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                         setViewSubmissionTab("instructorAnnotations");
                     }}>
                     <Text style={viewSubmissionTab === "instructorAnnotations" ? styles.allGrayFill : styles.all}>
-                        Annotations
+                        Feedback
                     </Text>
                 </TouchableOpacity>
             </View>}
             {
                 attempt.url !== undefined ?
                     (attempt.type === 'mp4' || attempt.type === 'mp3' || attempt.type === 'mov' || attempt.type === 'mpeg' || attempt.type === 'mp2' || attempt.type === 'wav' ?
-                    <View style={{ width: '100%', marginTop: 25 }}>
-                        {attempt.title !== "" ? <Text
+                        <View style={{ width: '100%', marginTop: 25 }}>
+                            {attempt.title !== "" ? <Text
                                 style={{
                                     fontSize: 18,
                                     paddingRight: 15,
@@ -990,36 +990,36 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                             >
                                 {attempt.title}
                             </Text> : null}
-                        <ReactPlayer url={url} controls={true} /> 
+                            <ReactPlayer url={url} controls={true} />
+                        </View>
+                        :
+                        <View style={{ width: '100%', marginTop: 25 }}>
+                            {attempt.title !== "" ? <Text
+                                style={{
+                                    fontSize: 18,
+                                    paddingRight: 15,
+                                    paddingTop: 12,
+                                    paddingBottom: 12,
+                                    marginTop: 20,
+                                    marginBottom: 5,
+                                    maxWidth: "100%",
+                                    fontWeight: "600",
+                                    width: '100%'
+                                }}
+                            >
+                                {attempt.title}
+                            </Text> : null}
+                            <div className="webviewer" ref={submissionViewerRef} style={{ height: "80vh" }}></div>
+                        </View>)
+                    :
+                    <View style={{ width: '100%', marginTop: 25 }}>
+                        {viewSubmissionTab === "mySubmission" ?
+                            <div className="mce-content-body htmlParser" style={{ width: '100%' }}>
+                                {parser(attempt.html)}
+                            </div> :
+                            <div className="webviewer" ref={submissionViewerRef} style={{ height: "80vh" }}></div>
+                        }
                     </View>
-                    : 
-                    <View style={{ width: '100%', marginTop: 25 }}>
-                        {attempt.title !== "" ? <Text
-                                style={{
-                                    fontSize: 18,
-                                    paddingRight: 15,
-                                    paddingTop: 12,
-                                    paddingBottom: 12,
-                                    marginTop: 20,
-                                    marginBottom: 5,
-                                    maxWidth: "100%",
-                                    fontWeight: "600",
-                                    width: '100%'
-                                }}
-                            >
-                                {attempt.title}
-                            </Text> : null}
-                        <div className="webviewer" ref={submissionViewerRef} style={{ height: "100vh" }}></div>
-                    </View>)
-                :
-                <View style={{ width: '100%', marginTop: 25 }}>
-                   {viewSubmissionTab === "mySubmission" ?  
-                    <div className="mce-content-body htmlParser" style={{ width: '100%' }}>
-                        {parser(attempt.html)}
-                    </div> : 
-                    <div className="webviewer" ref={submissionViewerRef} style={{ height: "100vh" }}></div>
-                }
-               </View>
             }
         </View>)
 
@@ -1085,8 +1085,8 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
             }
             {
                 showSubmission || showChat || showAddUsers || showNewGroup ?
-                    <View style={{ backgroundColor: 'white', paddingBottom: 15 }}>
-                        <View style={{ flexDirection: 'row' }}>
+                    <View style={{ backgroundColor: 'white', paddingBottom: 15, width: '100%', flexDirection: 'row', justifyContent: 'center' }}>
+                        <View style={{ flexDirection: 'row', width: '100%', maxWidth: 1275 }}>
                             <TouchableOpacity
                                 key={Math.random()}
                                 style={{
@@ -1116,7 +1116,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     width: '100%',
                                     lineHeight: 23,
                                 }}>
-                                    <Ionicons name='arrow-back-outline' size={23} color={'#1D1D20'} />
+                                    <Ionicons name='arrow-back-outline' size={30} color={'#1D1D20'} />
                                 </Text>
                             </TouchableOpacity>
                             {
@@ -1224,10 +1224,12 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
             }
             {
                 !showAddUsers && !showSubmission && props.cue && props.cue.submission ?
-                    <View style={{ backgroundColor: 'white', flexDirection: 'row', height: 40, width: '500px', justifyContent: 'space-between' }}>
+                    <View style={{ backgroundColor: 'white', flexDirection: 'row', height: 40, width: '100%', justifyContent: 'center' }}>
                         <View style={{
                             backgroundColor: 'white',
                             // marginTop: 20,
+                            width: '100%',
+                            maxWidth: 1275,
                             flexDirection: 'row'
                         }}>
                             <Switch
@@ -1235,7 +1237,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 onValueChange={() => updateReleaseSubmission()}
                                 style={{ height: 20, marginRight: 20 }}
                                 trackColor={{
-                                    false: '#F4F4F6',
+                                    false: '#f8f8fa',
                                     true: '#007AFF'
                                 }}
                                 activeThumbColor='white'
@@ -1270,7 +1272,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
             {
                 !showAddUsers ? (subscribers.length === 0 ?
                     <View style={{ backgroundColor: 'white', flex: 1 }}>
-                        <Text style={{ width: '100%', color: '#818385', fontSize: 23, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                        <Text style={{ width: '100%', color: '#818385', fontSize: 23, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1, textAlign: 'center' }}>
                             {
                                 props.cueId ? PreferredLanguageText('noStatuses') : PreferredLanguageText('noStudents')
                             }
@@ -1278,6 +1280,8 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                     </View> :
                     <View style={{
                         width: '100%',
+                        maxWidth: 1275,
+                        alignSelf: 'center',
                         backgroundColor: 'white',
                         flex: 1
                     }}
@@ -1297,7 +1301,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     <Menu
                                         onSelect={(cat: any) => setFilterChoice(cat)}>
                                         <MenuTrigger>
-                                            <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#1D1D20' }}>
+                                            <Text style={{ fontSize: 14, color: '#1D1D20' }}>
                                                 {filterChoice === '' ? 'All' : filterChoice}<Ionicons name='caret-down' size={14} />
                                             </Text>
                                         </MenuTrigger>
@@ -1307,7 +1311,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 borderRadius: 15,
                                                 shadowOpacity: 0,
                                                 borderWidth: 1,
-                                                borderColor: '#e9e9ec',
+                                                borderColor: '#f0f0f2',
                                                 overflow: 'scroll',
                                                 maxHeight: '100%'
                                             }
@@ -1434,18 +1438,19 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                     horizontal={false}
                                                     key={filterChoice + key}
                                                     contentContainerStyle={{
-                                                        // width: '100%',
-                                                        borderRadius: 1,
+                                                        width: '100%',
+                                                        borderRadius: 0,
                                                         borderWidth: 1,
-                                                        borderColor: '#e9e9ec',
-                                                        maxHeight: props.cueId ? windowHeight - 220 : '100%',
-                                                        marginBottom: props.cueId ? 20 : 0,
-                                                        maxWidth: 450,
+                                                        borderColor: '#f0f0f2',
+                                                        maxHeight: props.cueId ? windowHeight - 300 : '100%',
+                                                        // marginBottom: props.cueId ? 20 : 0,
+                                                        maxWidth: 1275,
+                                                        alignSelf: 'center'
                                                     }}
                                                 >
                                                     {
                                                         !props.cueId || props.cueId === '' ?
-                                                            <View style={{ backgroundColor: 'white', borderBottomWidth: 1, borderBottomColor: '#F4F4F6', marginBottom: 20 }}>
+                                                            <View style={{ backgroundColor: 'white', borderBottomWidth: 1, borderBottomColor: '#f8f8fa', marginBottom: 20 }}>
                                                                 {
                                                                     props.groups.length > 0 ? (props.groups.map((group: any, index: any) => {
                                                                         let displayName = ''
@@ -1508,89 +1513,51 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                     }
                                                                 }}
                                                                 style={{
-                                                                    backgroundColor: '#F4F4F6',
+                                                                    backgroundColor: '#f8f8fa',
                                                                     flexDirection: 'row',
-                                                                    borderColor: '#e9e9ec',
+                                                                    borderColor: '#f0f0f2',
                                                                     borderBottomWidth: index === filteredSubscribers.length - 1 ? 0 : 1,
                                                                     // minWidth: 600, // flex: 1,
                                                                     width: '100%',
                                                                 }}>
-                                                                {/* <View style={{ flex: 1, backgroundColor: '#F4F4F6', padding: 10 }}>
-                                                                <Image
-                                                                    style={{
-                                                                        height: 40,
-                                                                        width: 40,
-                                                                        marginTop: 5,
-                                                                        marginBottom: 5,
-                                                                        borderRadius: 75,
-                                                                        // marginTop: 20,
-                                                                        alignSelf: 'center'
-                                                                    }}
-                                                                    source={{ uri: user.avatar ? user.avatar : 'https://cues-files.s3.amazonaws.com/images/default.png' }}
-                                                                />
-                                                            </View> */}
-                                                                <View style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', flex: 1, backgroundColor: '#F4F4F6', paddingLeft: 10 }}>
-                                                                    <Text style={{ fontSize: 12, padding: 10, fontFamily: 'inter' }} ellipsizeMode='tail'>
+                                                                <View style={{ backgroundColor: '#f8f8fa', padding: 10 }}>
+                                                                    <Image
+                                                                        style={{
+                                                                            height: 40,
+                                                                            width: 40,
+                                                                            marginTop: 5,
+                                                                            marginBottom: 5,
+                                                                            borderRadius: 75,
+                                                                            // marginTop: 20,
+                                                                            alignSelf: 'center'
+                                                                        }}
+                                                                        source={{ uri: subscriber.avatar ? subscriber.avatar : 'https://cues-files.s3.amazonaws.com/images/default.png' }}
+                                                                    />
+                                                                </View>
+                                                                <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
+                                                                    <Text style={{ fontSize: 16, padding: 10, fontFamily: 'inter' }} ellipsizeMode='tail'>
                                                                         {subscriber.displayName ? subscriber.displayName : ''}
                                                                     </Text>
-                                                                </View>
-                                                                <View style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                                                    <Text style={{ fontSize: 12, padding: 10, textTransform: 'capitalize' }} ellipsizeMode='tail'>
+                                                                    <Text style={{ fontSize: 13, padding: 10 }} ellipsizeMode='tail'>
                                                                         {subscriber.fullName}
                                                                     </Text>
                                                                 </View>
-                                                                {
-                                                                    subscriber.submittedAt && subscriber.submittedAt !== "" && subscriber.deadline && subscriber.deadline !== "" && subscriber.submittedAt >= subscriber.deadline ?
-                                                                    <View style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                                                                        <View style={{ borderRadius: 1, padding: 5, borderWidth: 1, borderColor: '#f94144' }}>
-                                                                            <Text style={{ color: '#f94144',  fontSize: 12 }}>
-                                                                                LATE
-                                                                            </Text>
-                                                                        </View>
+                                                                <View style={{ justifyContent: 'center', flexDirection: 'column' }}>
+                                                                    <View style={{ flexDirection: 'row', backgroundColor: '#fff', paddingLeft: 10 }}>
+                                                                        <Text style={{ fontSize: 15, padding: 10, color: '#007AFF', textAlign: 'center' }} ellipsizeMode='tail'>
+                                                                            {
+                                                                                subscriber.submittedAt && subscriber.submittedAt !== "" && subscriber.deadline && subscriber.deadline !== "" && subscriber.submittedAt >= subscriber.deadline ?
+                                                                                    <Text style={{ color: '#f94144', fontSize: 12 }}>
+                                                                                        LATE
+                                                                                    </Text>
+                                                                                    :
+                                                                                    null
+                                                                            } {subscriber.fullName === 'submitted' || subscriber.fullName === 'graded' ? <Ionicons name='chevron-forward-outline' size={20} /> : null}
+                                                                        </Text>
                                                                     </View>
-                                                                    :
-                                                                    null
-                                                                }
-                                                                <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                                                    {(subscriber.fullName === "not-delivered" || subscriber.fullName === "delivered" || subscriber.fullName === "read") ? null : <Text style={{ fontSize: 15, padding: 10, color: '#007AFF' }} ellipsizeMode='tail'>
-                                                                        <Ionicons name='chevron-forward-outline' size={20} />
-                                                                    </Text>}
                                                                 </View>
-                                                            </TouchableOpacity>
 
-                                                            return <View style={styles.col} key={filterChoice + key + index}>
-                                                                <SubscriberCard
-                                                                    chat={!props.cueId || props.cueId === '' ? true : false}
-                                                                    fadeAnimation={props.fadeAnimation}
-                                                                    subscriber={subscriber}
-                                                                    onPress={() => {
-                                                                        if (props.cueId && props.cueId !== null) {
-                                                                            if (subscriber.fullName === 'submitted' || subscriber.fullName === 'graded') {
-                                                                                setSubmission(subscriber.submission)
-                                                                                setSubmittedAt(subscriber.submittedAt)
-                                                                                setDeadline(subscriber.deadline)
-                                                                                setShowSubmission(true)
-                                                                                setStatus(subscriber.fullName)
-                                                                                setScore(subscriber.score ? subscriber.score.toString() : '0')
-                                                                                setGraded(subscriber.graded)
-                                                                                setComment(subscriber.comment)
-                                                                                console.log(subscriber.comment)
-                                                                                try {
-                                                                                    const comm = JSON.parse(subscriber.comment)
-                                                                                    setAnnotation(comm.annotation)
-                                                                                    setAnnotations(comm.annotations)
-                                                                                } catch (e) {
-                                                                                    console.log('')
-                                                                                }
-                                                                                setUserId(subscriber.userId)
-                                                                            }
-                                                                        } else {
-                                                                            loadChat(subscriber._id, subscriber.groupId)
-                                                                        }
-                                                                    }}
-                                                                    status={!props.cueId ? false : true}
-                                                                />
-                                                            </View>
+                                                            </TouchableOpacity>
                                                         })
                                                     }
                                                 </ScrollView>)
@@ -1607,7 +1574,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         {
                                             submittedAt !== "" && deadline !== "" && new Date(submittedAt) >= new Date(parseInt(deadline)) ?
                                                 <View style={{ width: '100%', }}>
-                                                    <View style={{ borderRadius: 1, padding: 5, borderWidth: 1, borderColor: '#f94144', marginVertical: 10, width: 150, marginLeft: 'auto' }}>
+                                                    <View style={{ borderRadius: 0, padding: 5, borderWidth: 1, borderColor: '#f94144', marginVertical: 10, width: 150, marginLeft: 'auto' }}>
                                                         <Text style={{ color: '#f94144', fontSize: 13, textAlign: 'center' }}>
                                                             LATE SUBMISSION
                                                         </Text>
@@ -1659,7 +1626,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             {
                                                 submittedAt !== "" && deadline !== "" && submittedAt >= deadline ?
                                                     <View style={{ width: '100%', marginBottom: 30 }}>
-                                                        <View style={{ borderRadius: 1, padding: 5, borderWidth: 1, borderColor: '#f94144', marginVertical: 10, width: 150, marginLeft: 'auto' }}>
+                                                        <View style={{ borderRadius: 0, padding: 5, borderWidth: 1, borderColor: '#f94144', marginVertical: 10, width: 150, marginLeft: 'auto' }}>
                                                             <Text style={{ color: '#f94144', fontSize: 13, textAlign: 'center' }}>
                                                                 LATE SUBMISSION
                                                             </Text>
@@ -1762,7 +1729,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                 disabled={true}
                                                                 key={Math.random()}
                                                                 containerStyle={{
-                                                                    backgroundColor: '#F4F4F6',
+                                                                    backgroundColor: '#f8f8fa',
                                                                     padding: 3,
                                                                     paddingTop: 5,
                                                                     paddingBottom: 10,
@@ -1771,12 +1738,12 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                 ref={RichText}
                                                                 style={{
                                                                     width: '100%',
-                                                                    backgroundColor: '#F4F4F6',
+                                                                    backgroundColor: '#f8f8fa',
                                                                     borderRadius: 15,
                                                                     height: 20000
                                                                 }}
                                                                 editorStyle={{
-                                                                    backgroundColor: '#F4F4F6',
+                                                                    backgroundColor: '#f8f8fa',
                                                                     placeholderColor: '#818385',
                                                                     color: '#1D1D20',
                                                                     contentCSSText: 'font-size: 13px;'
@@ -1828,7 +1795,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                                         url={url}
                                                                                         fullScreen={true}
                                                                                     /> */}
-                                                                                    <div className="webviewer" ref={RichText} style={{ height: "80vh", borderWidth: 1, borderColor: '#e9e9ec', borderRadius: 1 }}></div>
+                                                                                    <div className="webviewer" ref={RichText} style={{ height: "80vh", borderWidth: 1, borderColor: '#f0f0f2', borderRadius: 0 }}></div>
                                                                                 </View>
                                                                                 {/* <View style={{ position: 'absolute', zIndex: 1, flex: 1, width: 800, height: 20000, backgroundColor: 'rgb(0,0,0,0)' }}>
                                                                                     <Annotation
@@ -1860,8 +1827,8 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                             value={emails}
                             style={{
                                 height: 200,
-                                backgroundColor: '#F4F4F6',
-                                borderRadius: 1,
+                                backgroundColor: '#f8f8fa',
+                                borderRadius: 0,
                                 fontSize: 15,
                                 padding: 15,
                                 paddingTop: 13,
@@ -1890,7 +1857,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 lineHeight: 35,
                                 color: '#1D1D20',
                                 fontSize: 12,
-                                backgroundColor: '#F4F4F6',
+                                backgroundColor: '#f8f8fa',
                                 paddingHorizontal: 25,
                                 fontFamily: 'inter',
                                 height: 35,
@@ -1919,7 +1886,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                             {
                                 filteredSubscribers.map((sub: any) => {
                                     return (<View style={{
-                                        backgroundColor: '#F4F4F6',
+                                        backgroundColor: '#f8f8fa',
                                         width: '100%',
                                         padding: 10,
                                         borderRadius: 8,
@@ -1979,7 +1946,7 @@ const styleObject = () => {
         },
         input: {
             width: '100%',
-            borderBottomColor: '#F4F4F6',
+            borderBottomColor: '#f8f8fa',
             borderBottomWidth: 1,
             fontSize: 15,
             paddingTop: 13,
@@ -1988,7 +1955,7 @@ const styleObject = () => {
             marginBottom: 20
         },
         outline: {
-            borderRadius: 1,
+            borderRadius: 0,
             borderWidth: 1,
             borderColor: '#818385',
             color: 'white'
@@ -2004,24 +1971,24 @@ const styleObject = () => {
             backgroundColor: 'white',
             paddingHorizontal: 10,
             height: 22,
-            borderRadius: 1,
+            borderRadius: 0,
             borderWidth: 1,
             borderColor: '#818385',
             color: 'white'
         },
         all: {
-            fontSize: 14,
+            fontSize: 11,
             color: '#2f2f3c',
             height: 22,
-            paddingHorizontal: 20,
+            paddingHorizontal: 10,
             backgroundColor: '#fff',
             lineHeight: 22,
             fontFamily: 'inter'
         },
         allGrayFill: {
-            fontSize: 14,
+            fontSize: 11,
             color: '#fff',
-            paddingHorizontal: 20,
+            paddingHorizontal: 10,
             borderRadius: 12,
             backgroundColor: '#2f2f3c',
             lineHeight: 22,
