@@ -622,7 +622,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                         borderRadius: 15,
                                                         textTransform: 'uppercase'
                                                     }}>
-                                                        Directory {<Ionicons name='book-outline' size={12} />}
+                                                        Contacts {<Ionicons name='list-outline' size={12} />}
                                                     </Text>
                                                 </TouchableOpacity>
                                         }
