@@ -816,7 +816,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             <View style={{ flexDirection: 'row', justifyContent: 'center' }} key={collapseMap.toString()}>
                                 {
                                     cueMap[key].length === 0 && collapseMap[key] ?
-                                        <Text style={{ fontSize: 15, color: '#818385', textAlign: 'left', fontFamily: 'inter', backgroundColor: '#fff' }}>
+                                        <Text style={{ fontSize: 15, color: '#818385', textAlign: 'left', fontFamily: 'inter', backgroundColor: '#fff', width: '100%' }}>
                                             {PreferredLanguageText('noCuesCreated')}
                                         </Text> :
                                         (
@@ -831,7 +831,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         categoryMap[key].map((category: any, i: any) => {
                                                             return <View style={{
                                                                 width: '100%',
-                                                                maxWidth: 225,
+                                                                maxWidth: 210,
                                                                 marginRight: 25
                                                             }}>
                                                                 <View style={{ backgroundColor: '#fff', paddingLeft: 23, marginBottom: 20 }}>
@@ -850,7 +850,8 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                     // style={{ height: '100%' }}
                                                                     style={{
                                                                         // borderWidth: 1,
-                                                                        maxWidth: 225
+                                                                        maxWidth: 210,
+                                                                        width: '100%'
                                                                         // height: 190
                                                                     }}
                                                                     key={i.toString() + key.toString()}
@@ -865,8 +866,8 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                             // marginBottom: i === priorities.length - 1 ? 0 : 20,
                                                                             // maxWidth: 150,
                                                                             backgroundColor: '#fff',
-                                                                            // width: '100%',
-                                                                            maxWidth: 225
+                                                                            width: '100%',
+                                                                            maxWidth: 210,
                                                                         }}
                                                                             key={index}
                                                                         >

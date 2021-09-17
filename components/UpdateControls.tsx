@@ -3273,14 +3273,15 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     {submission ? (
                         <View
                             style={{
-                                width: "100%",
+                                flexDirection: 'row'
                             }}>
                             <Text
                                 style={{
                                     fontSize: 12,
                                     color: "#818385",
                                     textAlign: "right",
-                                    paddingRight: 10
+                                    paddingRight: 10,
+                                    paddingTop: 5
                                 }}>
                                 Available
                             </Text>
@@ -3312,14 +3313,15 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     {submission ? (
                         <View
                             style={{
-                                width: "100%",
+                                flexDirection: 'row'
                             }}>
                             <Text
                                 style={{
                                     fontSize: 12,
                                     color: "#818385",
                                     textAlign: "right",
-                                    paddingRight: 10
+                                    paddingRight: 10,
+                                    paddingTop: 5
                                 }}>
                                 Deadline
                             </Text>
@@ -3724,7 +3726,13 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     <Menu
                                         onSelect={(cat: any) => setCustomCategory(cat)}>
                                         <MenuTrigger>
-                                            <Text style={{ fontSize: 15, color: '#1D1D20' }}>
+                                            <Text style={{
+                                                fontSize: 12,
+                                                color: "#818385",
+                                                textAlign: "right",
+                                                paddingRight: 10,
+                                                // paddingTop: 5
+                                            }}>
                                                 {customCategory === '' ? 'None' : customCategory}<Ionicons name='caret-down' size={14} />
                                             </Text>
                                         </MenuTrigger>
@@ -4114,14 +4122,26 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         flexDirection: "row",
                                         backgroundColor: "white"
                                     }}>
-                                    <Text style={styles.text}>{PreferredLanguageText("remindEvery")}</Text>
+                                    <Text style={{
+                                        fontSize: 12,
+                                        color: "#818385",
+                                        textAlign: "right",
+                                        paddingRight: 10,
+                                        paddingTop: 5
+                                    }}>{PreferredLanguageText("remindEvery")}</Text>
                                     <Menu
                                         onSelect={(cat: any) => {
                                             setFrequency(cat.value)
                                             setFrequencyName(cat.label)
                                         }}>
                                         <MenuTrigger>
-                                            <Text style={{ fontSize: 15, color: '#1D1D20' }}>
+                                            <Text style={{
+                                                fontSize: 12,
+                                                color: "#818385",
+                                                textAlign: "right",
+                                                paddingRight: 10,
+                                                paddingTop: 3
+                                            }}>
                                                 {frequencyName}<Ionicons name='caret-down' size={14} />
                                             </Text>
                                         </MenuTrigger>
@@ -4153,25 +4173,43 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 <View
                                     style={{
                                         width: "100%",
-                                        display: "flex",
+                                        flex: 1,
                                         flexDirection: "row",
                                         backgroundColor: "white"
                                     }}>
-                                    <Text style={styles.text}>{PreferredLanguageText("remindOn")}</Text>
-                                    <DatePicker
-                                        preventOverflow={true}
-                                        value={endPlayAt}
-                                        appearance={'subtle'}
-                                        format="YYYY-MM-DD HH:mm"
-                                        onChange={(event: any) => {
-                                            const date = new Date(event);
-                                            if (date < new Date()) return;
+                                    <View style={{ flex: 1 }}>
+                                        <View style={{
+                                            height: 5
+                                        }} />
+                                        <Text style={{
+                                            fontSize: 12,
+                                            color: "#818385",
+                                            textAlign: "right",
+                                            paddingRight: 10,
+                                            marginTop: 5,
+                                            // paddingTop: 5,
+                                            // lineHeight: 30,
+                                            // height: 30
+                                        }}>{PreferredLanguageText("remindOn")}
+                                        </Text>
+                                    </View>
+                                    <View>
+                                        <DatePicker
+                                            style={{}}
+                                            preventOverflow={true}
+                                            value={endPlayAt}
+                                            appearance={'subtle'}
+                                            format="YYYY-MM-DD HH:mm"
+                                            onChange={(event: any) => {
+                                                const date = new Date(event);
+                                                if (date < new Date()) return;
 
-                                            setEndPlayAt(date);
-                                        }}
-                                        // isValidDate={disablePastDt}
-                                        size={'xs'}
-                                    />
+                                                setEndPlayAt(date);
+                                            }}
+                                            // isValidDate={disablePastDt}
+                                            size={'xs'}
+                                        />
+                                    </View>
                                 </View>
                             )}
                         </View>
@@ -4878,8 +4916,8 @@ const styles: any = StyleSheet.create({
         marginLeft: 7,
         paddingHorizontal: 4,
         backgroundColor: "white",
-        borderRadius: 0,
-        borderWidth: 10,
+        borderRadius: 10,
+        borderWidth: 1,
         borderColor: "#818385"
     },
     input: {

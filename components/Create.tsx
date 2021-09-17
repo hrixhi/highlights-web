@@ -1624,8 +1624,11 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           <Text
                             style={{
                               // fontFamily: "inter",
-                              fontSize: 15,
-                              color: "#1D1D20",
+                              fontSize: 12,
+                              color: "#818385",
+                              textAlign: "right",
+                              paddingRight: 10,
+                              // paddingTop: 5
                             }}
                           >
                             {channelName === "" ? "My Cues" : channelName}
@@ -2159,9 +2162,11 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           <MenuTrigger>
                             <Text
                               style={{
-                                // fontFamily: "inter",
-                                fontSize: 15,
-                                color: "#1D1D20",
+                                fontSize: 12,
+                                color: "#818385",
+                                textAlign: "right",
+                                paddingRight: 10,
+                                paddingTop: 2
                               }}
                             >
                               {customCategory === "" ? "None" : customCategory}
@@ -2394,7 +2399,13 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           backgroundColor: "white",
                         }}
                       >
-                        <Text style={styles.text}>
+                        <Text style={{
+                          fontSize: 12,
+                          color: "#818385",
+                          textAlign: "right",
+                          paddingRight: 10,
+                          paddingTop: 5
+                        }}>
                           {PreferredLanguageText("remindEvery")}
                         </Text>
                         <Menu
@@ -2406,9 +2417,11 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           <MenuTrigger>
                             <Text
                               style={{
-                                //  fontFamily: "inter",
-                                fontSize: 15,
-                                color: "#1D1D20",
+                                fontSize: 12,
+                                color: "#818385",
+                                textAlign: "right",
+                                paddingRight: 10,
+                                paddingTop: 3
                               }}
                             >
                               {frequencyName}
@@ -2451,23 +2464,35 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           backgroundColor: "white",
                         }}
                       >
-                        <Text style={styles.text}>
-                          {PreferredLanguageText("RemindOn")}
-                        </Text>
-                        <DatePicker
-                          format="YYYY-MM-DD HH:mm"
-                          value={endPlayAt}
-                          preventOverflow={true}
-                          appearance={'subtle'}
-                          onChange={(event: any) => {
-                            const date = new Date(event);
-                            if (date < new Date()) return;
+                        <View>
+                          <Text style={
+                            {
+                              fontSize: 12,
+                              color: "#818385",
+                              textAlign: "right",
+                              paddingRight: 10,
+                              marginTop: 5
+                            }
+                          }>
+                            {PreferredLanguageText("RemindOn")}
+                          </Text>
+                        </View>
+                        <View>
+                          <DatePicker
+                            format="YYYY-MM-DD HH:mm"
+                            value={endPlayAt}
+                            preventOverflow={true}
+                            appearance={'subtle'}
+                            onChange={(event: any) => {
+                              const date = new Date(event);
+                              if (date < new Date()) return;
 
-                            setEndPlayAt(date);
-                          }}
-                          // isValidDate={disablePastDt}
-                          size={"xs"}
-                        />
+                              setEndPlayAt(date);
+                            }}
+                            // isValidDate={disablePastDt}
+                            size={"xs"}
+                          />
+                        </View>
                       </View>
                     )}
                   </View>
@@ -2712,7 +2737,7 @@ const styles: any = StyleSheet.create({
     backgroundColor: "white",
   },
   colorContainerOutline: {
-    lineHeight: 22,
+    lineHeight: 20,
     justifyContent: "center",
     display: "flex",
     flexDirection: "column",
@@ -2721,7 +2746,7 @@ const styles: any = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: "#818385",
+    borderColor: "#818385"
   },
   input: {
     width: "100%",

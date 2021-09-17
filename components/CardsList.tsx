@@ -116,7 +116,7 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         // marginBottom: i === priorities.length - 1 ? 0 : 20,
                                         // maxWidth: 150,
                                         backgroundColor: '#f8f8fa',
-                                        width: 225, // marginRight: 25
+                                        width: 210, // marginRight: 25
                                     }}
                                         key={index}
                                     >
