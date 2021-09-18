@@ -95,7 +95,7 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     props.hideMenu()
                 }} style={{ backgroundColor: '#f8f8fa', flexDirection: 'row', flex: 1 }} />
                 <View style={styles.icons}>
-                    {
+                    {/* {
                         isOwner && props.channelId !== '' && (props.menuCollapsed === true) ?
                             <TouchableOpacity
                                 style={{
@@ -111,10 +111,10 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                     Settings
                                 </Text>
                             </TouchableOpacity> : null
-                    }
+                    } */}
                 </View>
                 <View style={styles.icons}>
-                    {
+                    {/* {
                         props.channelId !== '' && (props.menuCollapsed === true) ?
                             <TouchableOpacity
                                 style={{ backgroundColor: '#f8f8fa', width: Dimensions.get('window').width < 1024 ? 'auto' : '100%', paddingBottom: 20 }}
@@ -128,7 +128,7 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 </Text>
                             </TouchableOpacity>
                             : null
-                    }
+                    } */}
                 </View>
                 <View style={styles.icons2}>
                     {
