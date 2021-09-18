@@ -42,7 +42,7 @@ import moment from "moment";
 import ReactPlayer from "react-player";
 // import Webview from "./Webview";
 import Multiselect from "multiselect-react-dropdown";
-import WebViewer from '@pdftron/webviewer';
+import WebViewer from '@pdftron/pdfjs-express';
 
 
 import {
@@ -226,6 +226,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
     console.log(url)
     WebViewer(
       {
+        licenseKey: 'xswED5JutJBccg0DZhBM',
         initialDoc: decodeURIComponent(url),
       },
       RichText.current,

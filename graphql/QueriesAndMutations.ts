@@ -521,6 +521,7 @@ export const findUserById = gql`
         sleepTo
         email
         currentDraft
+        role
       }
     }
   }

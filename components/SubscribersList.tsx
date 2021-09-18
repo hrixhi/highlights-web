@@ -21,7 +21,7 @@ import alert from './Alert';
 import Webview from './Webview'
 import QuizGrading from './QuizGrading';
 import Annotation from 'react-image-annotation'
-import WebViewer from '@pdftron/webviewer';
+import WebViewer from '@pdftron/pdfjs-express';
 import XLSX from "xlsx"
 import * as FileSaver from 'file-saver';
 import { htmlStringParser } from '../helpers/HTMLParser'
@@ -379,6 +379,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
 
             WebViewer(
                 {
+                    licenseKey: 'xswED5JutJBccg0DZhBM',
                     initialDoc: decodeURIComponent(url),
                 },
                 submissionViewerRef.current,
@@ -927,6 +928,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
         console.log(url)
         WebViewer(
             {
+                licenseKey: 'xswED5JutJBccg0DZhBM',
                 initialDoc: decodeURIComponent(url),
             },
             RichText.current,

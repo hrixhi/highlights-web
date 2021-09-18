@@ -19,6 +19,7 @@
         "@expo/webpack-config": "~0.12.45",
         "@flyerhq/react-native-keyboard-accessory-view": "^2.1.1",
         "@mobiscroll/react": "https://npm.mobiscroll.com/@mobiscroll/react-trial/-/react-trial-5.9.1.tgz",
+        "@pdftron/pdfjs-express": "^8.0.1",
         "@pdftron/webviewer": "^8.0.1",
         "@react-native-async-storage/async-storage": "^1.13.2",
         "@react-native-community/checkbox": "^0.5.7",

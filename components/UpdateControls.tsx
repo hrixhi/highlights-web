@@ -48,7 +48,7 @@ import {
     MenuTrigger,
 } from 'react-native-popup-menu';
 
-import WebViewer from '@pdftron/webviewer';
+import WebViewer from '@pdftron/pdfjs-express';
 import TextareaAutosize from 'react-textarea-autosize';
 import lodash from 'lodash';
 import { Editor } from '@tinymce/tinymce-react';
@@ -140,8 +140,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const [selected, setSelected] = useState<any[]>([]);
     const [subscribers, setSubscribers] = useState<any[]>([]);
     const [expandMenu] = useState(false);
-    const [original, setOriginal] = useState(props.cue.original)
-    const [initialOriginal, setInitialOriginal] = useState(props.cue.original)
+    const [original, setOriginal] = useState(!props.cue.channelId ? props.cue.cue : props.cue.original)
+    const [initialOriginal, setInitialOriginal] = useState(!props.cue.channelId ? props.cue.cue : props.cue.original)
     const [comment] = useState(props.cue.comment)
     const [shareWithChannelName, setShareWithChannelName] = useState('')
     const [unlimitedAttempts, setUnlimitedAttempts] = useState(!props.cue.allowedAttempts)
@@ -334,6 +334,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
             WebViewer(
                 {
+                    licenseKey: 'xswED5JutJBccg0DZhBM',
                     initialDoc: decodeURIComponent(url),
                 },
                 submissionViewerRef.current,
@@ -1864,6 +1865,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
             WebViewer(
                 {
+                    licenseKey: 'xswED5JutJBccg0DZhBM',
                     initialDoc: decodeURIComponent(url),
                 },
                 RichText.current,
@@ -1972,6 +1974,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
             WebViewer(
                 {
+                    licenseKey: 'xswED5JutJBccg0DZhBM',
                     initialDoc: decodeURIComponent(submissionUrl),
                 },
                 RichText.current,
@@ -4426,9 +4429,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             </View>
         </View>)
     }
-
-    console.log("Deadline", deadline);
-    console.log("Available until", props.cue);
 
     // if (isQuiz && props.cue.submission && props.cue.submittedAt !== null && !props.cue.releaseSubmission && !isOwner) {
     //     return (<View style={{ minHeight: Dimensions.get('window').height }}>
