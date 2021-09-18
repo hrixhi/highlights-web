@@ -41,7 +41,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const [channelOwner, setChannelOwner] = useState(false)
     const [viewStatus, setViewStatus] = useState(false);
     const [submission, setSubmission] = useState(props.cue.submission ? props.cue.submission : false)
-    const [showOriginal, setShowOriginal] = useState(props.cue.channelId && props.cue.channelId !== '' ? true : false)
+    const [showOriginal, setShowOriginal] = useState(true)
     const [isQuiz, setIsQuiz] = useState(false)
     const [showOptions, setShowOptions] = useState(false)
     const [showComments, setShowComments] = useState(false)

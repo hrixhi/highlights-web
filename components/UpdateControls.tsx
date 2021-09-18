@@ -315,22 +315,11 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
     useEffect(() => {
 
-        console.log('jjj')
 
         if (submissionAttempts && submissionAttempts.length > 0 && submissionViewerRef && submissionViewerRef.current) {
             const attempt = submissionAttempts[submissionAttempts.length - 1];
 
             let url = attempt.html !== undefined ? attempt.annotationPDF : attempt.url;
-
-            console.log(attempt)
-
-            console.log('HHH')
-
-            // if (!url) {
-            //     return;
-            // }
-
-            console.log('Hrishi')
 
             WebViewer(
                 {
@@ -557,8 +546,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         }
     }, [props.cue, props.channelId]);
 
-    console.log("Subscribers", subscribers);
-    console.log("Selected", selected)
 
     const reactSelectStyles = {
         multiValue: (base: any, state: any) => {
@@ -595,7 +582,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 }
 
             } else {
-                console.log("Submission setting to false")
                 setSubmissionImported(false);
                 setSubmissionUrl("");
                 setSubmissionType("");
@@ -725,7 +711,18 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     }, [props.cue, cue, loading, original]);
 
 
-    console.log("Submission draft", submissionDraft)
+    // Imports for local cues
+    useEffect(() => {
+        if (!props.cue.channelId) {
+            if (original && original[0] && original[0] === "{" && original[original.length - 1] === "}") {
+                const obj = JSON.parse(original);
+                setImported(true);
+                setUrl(obj.url);
+                setType(obj.type);
+                setTitle(obj.title);
+            }
+        }
+    }, [original])
 
     // Initialize submission Draft + Submission import title, url, type for new SCHEMA
     useEffect(() => {
@@ -1144,7 +1141,61 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     }, [starred])
 
     const handleUpdateContent = useCallback(async () => {
+        
         setUpdatingCueContent(true)
+
+        if (!props.cue.channelId) {
+
+            let subCues: any = {};
+            try {
+                const value = await AsyncStorage.getItem("cues");
+                if (value) {
+                    subCues = JSON.parse(value);
+                }
+            } catch (e) { }
+            if (subCues[props.cueKey].length === 0) {
+                return;
+            }
+
+            let tempOriginal = ''
+            if (imported) {
+
+                if (title === "") {
+                    Alert('Title cannot be empty');
+                    setUpdatingCueContent(false);
+                    return;
+                }
+
+                const obj = {
+                    type,
+                    url,
+                    title
+                }
+                tempOriginal = JSON.stringify(obj)
+            }  else {
+                tempOriginal = original
+            }
+
+            const currCue = subCues[props.cueKey][props.cueIndex]
+
+            const saveCue = {
+                ...currCue,
+                cue: tempOriginal,
+            }
+
+            subCues[props.cueKey][props.cueIndex] = saveCue;
+
+            const stringifiedCues = JSON.stringify(subCues);
+            await AsyncStorage.setItem("cues", stringifiedCues);
+            props.reloadCueListAfterUpdate();
+
+            // Update initial Value for Editor 
+            setInitialOriginal(tempOriginal);
+            setUpdatingCueContent(false);
+
+            return;
+        }
+
         let subCues: any = {};
         try {
             const value = await AsyncStorage.getItem("cues");
@@ -1547,8 +1598,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 text: "Clear",
                 onPress: () => {
                     if (props.showOriginal) {
-                        setImported(false)
                         setOriginal('')
+                        setInitialOriginal('')
+                        setImported(false)
                         setUrl('')
                         setType('')
                         setTitle('')
@@ -1798,7 +1850,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             switch (action) {
                 case "remove-value":
                 case "pop-value":
-                    console.log("remove value", removedValue)
                     if (removedValue.isFixed) {
                         return;
                     }
@@ -2251,7 +2302,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         return props.showOriginal && (imported || isQuiz) ? (
             <View style={{ flexDirection: "row", marginRight: 0, marginLeft: 0 }}>
                 <View style={{ width: Dimensions.get('window').width < 1024 ? "60%" : "40%", alignSelf: "flex-start" }}>
-                    {isOwner ? <TextareaAutosize
+                    {(isOwner || !props.cue.channelId) ? <TextareaAutosize
                         value={title}
                         // style={styles.input}
                         style={{
@@ -2302,8 +2353,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         if (!remainingTime || remainingTime === 0) {
                                             submitQuizEndTime();
                                         }
-
-                                        console.log("Remaining time", remainingTime)
 
                                         if (remainingTime === 120) {
                                             Alert("Two minutes left. Quiz will auto-submit.")
@@ -2368,7 +2417,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             </View>
                         </a> */}
                         {
-                            isOwner ?
+                            (isOwner || !props.cue.channelId) ?
                                 <TouchableOpacity
                                     style={{
                                         marginLeft: 15
@@ -2849,7 +2898,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     </View>
                 )
             ) : (
-                renderRichEditorOriginalCue()
+                renderRichEditorOriginalCue("ABC")
             )}
             {!props.showOriginal && submissionImported && !viewSubmission ? (
                 submissionType === "mp4" ||
@@ -2884,9 +2933,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         );
     }
 
-    const renderRichEditorOriginalCue = () => {
+    const renderRichEditorOriginalCue = (source: string) => {
 
-        if (!isOwner) {
+        if (!isOwner && props.cue.channelId && props.cue.channelId !== "") {
             return <div className="mce-content-body htmlParser" style={{ width: '100%', color: 'black' }}>
                 {parser(initialOriginal)}
             </div>
@@ -2894,23 +2943,23 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
         return (<View style={{ width: '100%' }}>
             <Editor
-                //   onInit={(evt, editor) => editorRef.current = editor}
+                  onInit={(evt, editor) => editorRef.current = editor}
                 initialValue={initialOriginal}
-                disabled={!isOwner}
+                disabled={(!isOwner && props.cue.channelId &&  props.cue.channelId !== "")}
                 apiKey="ip4jckmpx73lbu6jgyw9oj53g0loqddalyopidpjl23fx7tl"
                 init={{
                     skin: "snow",
                     // toolbar_sticky: true,
                     branding: false,
-                    readonly: !isOwner,
+                    readonly: (!isOwner && props.cue.channelId &&  props.cue.channelId !== ""),
                     placeholder: 'Content...',
                     min_height: 500,
                     paste_data_images: true,
                     images_upload_url: 'https://api.cuesapp.co/api/imageUploadEditor',
                     mobile: {
-                        plugins: !isOwner ? 'print preview' : 'print preview powerpaste casechange importcss tinydrive searchreplace autolink autosave save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount tinymcespellchecker a11ychecker textpattern noneditable help formatpainter pageembed charmap mentions quickbars linkchecker emoticons advtable autoresize'
+                        plugins: (!isOwner && props.cue.channelId &&  props.cue.channelId !== "") ? 'print preview' : 'print preview powerpaste casechange importcss tinydrive searchreplace autolink autosave save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount tinymcespellchecker a11ychecker textpattern noneditable help formatpainter pageembed charmap mentions quickbars linkchecker emoticons advtable autoresize'
                     },
-                    plugins: !isOwner ? 'print preview' : 'print preview powerpaste casechange importcss tinydrive searchreplace autolink autosave save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount tinymcespellchecker a11ychecker textpattern noneditable help formatpainter pageembed charmap mentions quickbars linkchecker emoticons advtable autoresize',
+                    plugins: (!isOwner && props.cue.channelId &&  props.cue.channelId !== "") ? 'print preview' : 'print preview powerpaste casechange importcss tinydrive searchreplace autolink autosave save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount tinymcespellchecker a11ychecker textpattern noneditable help formatpainter pageembed charmap mentions quickbars linkchecker emoticons advtable autoresize',
                     menu: { // this is the complete default configuration
                         file: { title: 'File', items: 'newdocument' },
                         edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall' },
@@ -2922,7 +2971,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     },
                     // menubar: 'file edit view insert format tools table tc help',
                     menubar: false,
-                    toolbar: !isOwner ? false : 'undo redo | bold italic underline strikethrough | fontselect fontSizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat  pagebreak | table image media pageembed link | preview print | charmap emoticons |  ltr rtl | showcomments addcomment',
+                    toolbar: (!isOwner && props.cue.channelId &&  props.cue.channelId !== "") ? false : 'undo redo | bold italic underline strikethrough | fontselect fontSizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat  pagebreak | table image media pageembed link | preview print | charmap emoticons |  ltr rtl | showcomments addcomment',
                     importcss_append: true,
                     image_caption: true,
                     quickbars_selection_toolbar: 'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
@@ -2944,7 +2993,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     }
 
     const renderSaveCueButton = () => {
-        return isOwner ?
+    
+        return (isOwner || !props.cue.channelId ) ?
             <View style={styles.footer}>
                 <View
                     style={{
@@ -2993,8 +3043,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
     const renderViewSubmission = () => {
         const attempt = submissionAttempts[submissionAttempts.length - 1];
-
-        console.log(attempt)
 
         return (<View style={{ width: '100%', marginTop: 20 }}>
             {/* Render Tabs to switch between original submission and Annotations only if submission was HTML and not a file upload */}
@@ -3080,8 +3128,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
     }
 
-    const renderRichEditorModified = () => (
-        <Editor
+    const renderRichEditorModified = () => {
+
+        return <Editor
             onInit={(evt, editor) => editorRef.current = editor}
             initialValue={initialSubmissionDraft}
             disabled={props.cue.releaseSubmission || (!allowLateSubmission && new Date() > deadline) || (allowLateSubmission && new Date() > availableUntil)}
@@ -3125,7 +3174,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             }}
             onChange={(e: any) => setSubmissionDraft(e.target.getContent())}
         />
-    );
+    };
 
     const renderShareWithOptions = () => {
         return props.cue.channelId !== "" && isOwner ? (
@@ -4302,6 +4351,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     };
 
     const renderFooter = () => {
+
         return (
             <View style={styles.footer}>
                 <View
@@ -4618,7 +4668,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 }}>
                                 {/* {renderRichToolbar()} */}
                                 {(!props.showOriginal && props.cue.submission && !submissionImported && showImportOptions)
-                                    || (props.showOriginal && showImportOptions && isOwner) ? (
+                                    || (props.showOriginal && showImportOptions && (isOwner || !props.cue.channelId)) ? (
                                     <FileUpload
                                         back={() => setShowImportOptions(false)}
                                         onUpload={(u: any, t: any) => {
@@ -4641,7 +4691,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             </View>
                             <View style={{ backgroundColor: '#fff', flexDirection: 'row', marginBottom: 5 }}>
                                 {(!props.showOriginal && !submissionImported && !props.cue.graded && !props.cue.releaseSubmission && !(!allowLateSubmission && new Date() > deadline) && !(allowLateSubmission && new Date() > availableUntil))
-                                    || (props.showOriginal && isOwner && !imported && !isQuiz)
+                                    || (props.showOriginal && (isOwner || !props.cue.channelId) && !imported && !isQuiz)
                                     ? (
                                         <Text
                                             style={{
@@ -4650,7 +4700,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                 paddingRight: 20,
                                                 // textTransform: "uppercase",
                                                 fontSize: 15,
-                                                fontFamily: 'inter',
+                                                // fontFamily: 'inter',
                                                 color: '#1D1D20',
                                             }}
                                             onPress={() => setShowEquationEditor(!showEquationEditor)}>
@@ -4677,8 +4727,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         {PreferredLanguageText("import")} {Dimensions.get("window").width < 1024 ? "" : "   "}
                                     </Text>
                                 ) : (
-                                    (props.showOriginal && !isOwner) || // viewing import as non import
-                                        (props.showOriginal && isOwner && imported) ||  // viewing import as owner
+                                    (props.showOriginal && !isOwner && props.cue.channelId && props.cue.channelId !== "") || // viewing import as non import (Channel cues)
+                                        (props.showOriginal && (isOwner && props.cue.channelId && props.cue.channelId !== "") && imported) ||  // viewing import as owner (Channel cues)
+                                        (props.showOriginal && !props.cue.channelId && imported) || // Local Cues
                                         (!props.showOriginal && isOwner && (props.cue.channelId && props.cue.channelId !== '')) || // no submission as owner
                                         (!props.showOriginal && submissionImported && !isOwner) ||  // submitted as non owner
                                         (!props.showOriginal && !submission && (props.cue.channelId && props.cue.channelId !== '')) ||  // my notes
