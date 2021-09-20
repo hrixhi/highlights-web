@@ -98,7 +98,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   const [filterEnd, setFilterEnd] = useState<any>(null)
 
   const [option, setOption] = useState('Home')
-  const [options] = useState(['Home', 'Content', 'Inbox', 'Performance', 'Channels', 'Settings'])
+  const [options] = useState(['Home', 'Classroom', 'Performance', 'Inbox', 'Channels', 'Settings'])
 
   const [menuCollapsed, setMenuCollapsed] = useState(true)
 
@@ -224,17 +224,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
   }, [channelId, channelCreatedBy, email])
 
-  const refreshUnreadDiscussionCount = useCallback(async () => {
-    if (channelId !== '') {
-      const u = await AsyncStorage.getItem('user')
-      if (u) {
-        const user = JSON.parse(u)
-        updateDiscussionNotidCounts(user._id)
-      }
 
-    }
-
-  }, [channelId])
 
   const refreshUnreadMessagesCount = useCallback(async () => {
     if (channelId !== '') {
@@ -265,24 +255,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
       })
     }
 
-  }, [channelId])
-
-
-  const updateDiscussionNotidCounts = useCallback((userId) => {
-
-    const server = fetchAPI('')
-    server.query({
-      query: totalUnreadDiscussionThreads,
-      variables: {
-        userId,
-        channelId
-      }
-    }).then(res => {
-      if (res.data.threadStatus.totalUnreadDiscussionThreads !== undefined && res.data.threadStatus.totalUnreadDiscussionThreads !== null) {
-        setUnreadDiscussionThreads(res.data.threadStatus.totalUnreadDiscussionThreads)
-      }
-    })
-      .catch(err => console.log(err))
   }, [channelId])
 
   const updateMessageNotifCounts = useCallback((userId) => {
@@ -1253,7 +1225,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 channelId={channelId}
                 filterChoice={filterChoice}
                 channelCreatedBy={channelCreatedBy}
-                refreshUnreadDiscussionCount={() => refreshUnreadDiscussionCount()}
+              // refreshUnreadDiscussionCount={() => refreshUnreadDiscussionCount()}
               />
                 : (
                   modalType === 'Subscribers' ? <Subscribers
@@ -1297,7 +1269,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     refreshMeetingStatus={refreshMeetingStatus}
                                     closeModal={() => closeModal()}
                                     filterChoice={filterChoice}
-                                    refreshUnreadDiscussionCount={() => refreshUnreadDiscussionCount()}
+                                  // refreshUnreadDiscussionCount={() => refreshUnreadDiscussionCount()}
                                   />
                                     : null
                                 )
@@ -1540,7 +1512,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             height: dimensions.window.height,
             flex: 1,
             position: 'absolute',
-            overflow: 'scroll',
+            // overflow: 'scroll',
             zIndex: 50,
             backgroundColor: '#fff'
           }}
@@ -1555,7 +1527,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               // justifyContent: 'center',
               backgroundColor: 'white',
               width: dimensions.window.width < 1024 ? '100%' : '100%',
-              height: dimensions.window.width < 1024 ? '100%' : dimensions.window.height,
+              height: dimensions.window.width < 1024 ? '100%' : '100%',
               borderRadius: dimensions.window.width < 1024 ? 0 : 0,
               marginTop: dimensions.window.width < 1024 ? 0 : 0,
               // paddingVertical: 20
@@ -1564,6 +1536,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               setOption={(op: any) => setOption(op)}
               option={option}
               options={options}
+              refreshSubscriptions={refreshSubscriptions}
               hideHome={() => {
                 setShowHome(false)
                 loadData()
@@ -1593,7 +1566,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               openUpdate={(index: any, key: any, pageNumber: any, _id: any, by: any, cId: any) => openUpdate(index, key, pageNumber, _id, by, cId)}
               calendarCues={cues}
               openCueFromCalendar={openCueFromCalendar}
-              // key={option.toString()}
+              key={option.toString() + showHome.toString()}
               openDiscussionFromActivity={(channelId: string, createdBy: string) => {
                 setChannelId(channelId);
                 setChannelCreatedBy(createdBy);
@@ -1612,7 +1585,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 setTarget('Q&A')
               }}
               openDiscussionFromSearch={(channelId: any) => {
-
                 // Find channel Created By from subscriptions
                 const match = subscriptions.filter((sub: any) => {
                   return sub.channelId === channelId
@@ -1632,7 +1604,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 const match = subscriptions.filter((sub: any) => {
                   return sub.channelId === channelId
                 })
-
                 if (match && match.length !== 0) {
                   const createdBy = match[0].channelCreatedBy
                   setChannelId(channelId);
@@ -1886,19 +1857,94 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         }}
         style={{
           position: 'absolute',
-          marginRight: 30,
-          marginBottom: 30,
+          marginRight: 20,
+          marginBottom: Dimensions.get('window').width < 1024 ? 90 : 20,
           zIndex: showLoginWindow ? 40 : 600,
           right: 0,
           justifyContent: 'center',
-          alignSelf: 'flex-end',
-          width: 60, height: 60, borderRadius: 30, backgroundColor: '#007AFF'
+          bottom: 0,
+          width: 54, height: 54, borderRadius: 27, backgroundColor: '#007AFF'
         }}
       >
         <Text style={{ color: '#fff', width: '100%', textAlign: 'center' }}>
-          <Ionicons name='add-outline' size={38} />
+          <Ionicons name='add-outline' size={35} />
         </Text>
       </TouchableOpacity>
+      {
+        Dimensions.get('window').width < 1024 && showHome ?
+          <View style={{
+            position: 'absolute',
+            zIndex: showLoginWindow ? 40 : 1000,
+            backgroundColor: '#f8f8fa',
+            borderColor: '#f0f0f2',
+            borderTopWidth: 1,
+            alignSelf: 'flex-end',
+            width: '100%',
+            paddingTop: 10,
+            paddingBottom: 10,
+            paddingHorizontal: Dimensions.get('window').width < 1024 ? 20 : 40,
+            flexDirection: 'row',
+            justifyContent: 'center'
+          }}>
+            <TouchableOpacity
+              style={{
+                backgroundColor: '#f8f8fa',
+                width: '25%'
+              }}
+              onPress={() => setOption('Home')}
+            >
+              <Text style={{ textAlign: 'center' }}>
+                <Ionicons name='home-outline' size={25} color={option === 'Home' ? '#007AFF' : '#1D1D20'} />
+              </Text>
+              <Text style={{ fontSize: 11, color: option === 'Home' ? '#007AFF' : '#1D1D20', paddingTop: 5, textAlign: 'center' }}>
+                Home
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                backgroundColor: '#f8f8fa',
+                width: '25%'
+              }}
+              onPress={() => setOption('Classroom')}
+            >
+              <Text style={{ textAlign: 'center' }}>
+                <Ionicons name='school-outline' size={25} color={option === 'Classroom' ? '#007AFF' : '#1D1D20'} />
+              </Text>
+              <Text style={{ fontSize: 11, color: option === 'Classroom' ? '#007AFF' : '#1D1D20', paddingTop: 5, textAlign: 'center' }}>
+                Classroom
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                backgroundColor: '#f8f8fa',
+                width: '25%'
+              }}
+              onPress={() => setOption('Performance')}
+            >
+              <Text style={{ textAlign: 'center' }}>
+                <Ionicons name='speedometer-outline' size={25} color={option === 'Performance' ? '#007AFF' : '#1D1D20'} />
+              </Text>
+              <Text style={{ fontSize: 11, color: option === 'Performance' ? '#007AFF' : '#1D1D20', paddingTop: 5, textAlign: 'center' }}>
+                Performance
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                backgroundColor: '#f8f8fa',
+                //marginHorizontal: 20,
+                width: '25%'
+              }}
+              onPress={() => setOption('Inbox')}
+            >
+              <Text style={{ textAlign: 'center' }}>
+                <Ionicons name='mail-outline' size={25} color={option === 'Inbox' ? '#007AFF' : '#1D1D20'} />
+              </Text>
+              <Text style={{ fontSize: 11, color: option === 'Inbox' ? '#007AFF' : '#1D1D20', paddingTop: 5, textAlign: 'center' }}>
+                Inbox
+              </Text>
+            </TouchableOpacity>
+          </View> : null
+      }
       {/* </View>
       </View> */}
     </View>
@@ -1911,7 +1957,7 @@ const styles = (channelId: string) => StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'row',
-    height: Dimensions.get('window').height,
+    height: "100vh",
   },
   activityContainer: {
     borderTopWidth: 0,

@@ -103,19 +103,19 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         style={styles.center}
                     >
                         <Text style={styles.channelText}>
-                            <Ionicons name='arrow-back-outline' size={30} color={'#1D1D20'} />
+                            <Ionicons name='arrow-back-outline' size={25} color={'#1D1D20'} style={{ marginTop: -5 }} />
                         </Text>
                     </TouchableOpacity>
                 </View>
                 {
-                    selectedChannel && Dimensions.get('window').width >= 1024 ? <TouchableOpacity
+                    selectedChannel ? <TouchableOpacity
                         onPress={() => props.showMenu()}
                         style={{ backgroundColor: '#f8f8fa', flexDirection: 'row', flex: 1 }}>
                         <View style={styles.icons}>
                             <Text style={{
-                                fontSize: 23,
+                                fontSize: 22,
                                 fontFamily: 'inter',
-                                lineHeight: 35,
+                                lineHeight: 33,
                                 color: '#1D1D20',
                                 marginTop: 12,
                             }}>
@@ -132,7 +132,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     </TouchableOpacity> :
                         <View style={{ backgroundColor: '#f8f8fa', flexDirection: 'row', flex: 1 }} />
                 }
-                {
+                {/* {
                     isOwner ?
                         <View style={styles.icons}>
                             <TouchableOpacity
@@ -162,14 +162,14 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 </Text>
                             </TouchableOpacity>
                         </View> : <View style={styles.icons} />
-                }
+                } */}
                 <View style={styles.icons2}>
                     <TouchableOpacity
                         style={styles.center}
                         onPress={() => props.hideMenu()}>
                         <Text style={styles.channelText}>
                             <Ionicons
-                                name='chevron-up-outline' size={27} color={'#007AFF'} />
+                                name='chevron-up-outline' size={25} color={'#007AFF'} />
                         </Text>
                         {/* <Text style={{ fontSize: 10, color: '#1D1D20', textAlign: 'center' }}>
                             Hide
@@ -185,7 +185,7 @@ export default BottomBar
 
 const styleObject: any = (colorScheme: any) => StyleSheet.create({
     bottombar: {
-        height: 59,
+        height: 60,
         width: '100%',
         display: 'flex',
         paddingBottom: 10,

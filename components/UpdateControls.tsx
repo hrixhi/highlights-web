@@ -1141,7 +1141,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     }, [starred])
 
     const handleUpdateContent = useCallback(async () => {
-        
+
         setUpdatingCueContent(true)
 
         if (!props.cue.channelId) {
@@ -1172,7 +1172,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     title
                 }
                 tempOriginal = JSON.stringify(obj)
-            }  else {
+            } else {
                 tempOriginal = original
             }
 
@@ -2194,8 +2194,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const renderCueTabs = () => {
         return (
             <View style={{ flexDirection: 'column', width: '100%' }}>
-            
-            {props.folderId !== "" || isOwner ? <View style={{ }}>
+
+                {props.folderId !== "" || isOwner ? <View style={{}}>
                     <TouchableOpacity
                         style={{
                             justifyContent: 'center',
@@ -2209,91 +2209,93 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             <Ionicons name='menu-outline' size={24} color={'#000'} />
                         </Text>
                     </TouchableOpacity>
-            </View> : null}
+                </View> : null}
 
-            <View style={{ flexDirection: "row", flex: 1, justifyContent: 'center' }}>
-                <TouchableOpacity
-                    style={{
-                        justifyContent: "center",
-                        flexDirection: "column"
-                    }}
-                    onPress={() => {
-                        props.setShowOriginal(true);
-                        props.setShowOptions(false)
-                        props.setShowComments(false)
-                    }}>
-                    <Text style={!props.showOptions && props.showOriginal && !props.showComments ? styles.allGrayFill : styles.all}>
-                        {PreferredLanguageText("viewShared")}
-                    </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={{
-                        justifyContent: "center",
-                        flexDirection: "column"
-                    }}
-                    onPress={() => {
-                        props.setShowOptions(true)
-                        props.setShowOriginal(true);
-                        props.setShowComments(false)
-                    }}>
-                    <Text style={props.showOptions ? styles.allGrayFill : styles.all}>
-                        Details
-                    </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={{
-                        justifyContent: "center",
-                        flexDirection: "column"
-                    }}
-                    onPress={() => {
-                        props.setShowComments(true)
-                        props.setShowOriginal(true);
-                        props.setShowOptions(false)
-                    }}>
-                    <Text style={props.showComments ? styles.allGrayFill : styles.all}>
-                        Q&A
-                        {/* {props.cue.unreadThreads > 0 ? <View style={styles.badge} /> : null} */}
-                    </Text>
-                </TouchableOpacity>
-                {!submission || (isOwner && submission) || isQuiz ? null : (
+                <View style={{ flexDirection: "row", flex: 1, justifyContent: 'center' }}>
                     <TouchableOpacity
                         style={{
                             justifyContent: "center",
                             flexDirection: "column"
                         }}
                         onPress={() => {
-                            props.setShowOriginal(false);
+                            props.setShowOriginal(true);
                             props.setShowOptions(false)
                             props.setShowComments(false)
-
-
-                            setInitialSubmissionDraft(submissionDraft);
-
                         }}>
-                        <Text style={!props.showOriginal && !props.viewStatus && !props.showComments && !props.showOptions ? styles.allGrayFill : styles.all}>
-                            {PreferredLanguageText("mySubmission")}
+                        <Text style={!props.showOptions && props.showOriginal && !props.showComments ? styles.allGrayFill : styles.all}>
+                            <Ionicons name='document-outline' size={20} />
                         </Text>
                     </TouchableOpacity>
-                )}
-                {/* Add Status button here */}
-                {!isOwner || !props.channelOwner ? null : (
                     <TouchableOpacity
                         style={{
                             justifyContent: "center",
                             flexDirection: "column"
                         }}
                         onPress={() => {
-                            props.setShowOriginal(false);
-                            setIsQuiz(false);
-                            props.setShowOptions(false)
-                            props.setShowComments(true)
-                            props.changeViewStatus();
+                            props.setShowOptions(true)
+                            props.setShowOriginal(true);
+                            props.setShowComments(false)
                         }}>
-                        <Text style={props.viewStatus ? styles.allGrayFill : styles.all}>Engagement</Text>
+                        <Text style={props.showOptions ? styles.allGrayFill : styles.all}>
+                            <Ionicons name='options-outline' size={20} />
+                        </Text>
                     </TouchableOpacity>
-                )}
+                    <TouchableOpacity
+                        style={{
+                            justifyContent: "center",
+                            flexDirection: "column"
+                        }}
+                        onPress={() => {
+                            props.setShowComments(true)
+                            props.setShowOriginal(true);
+                            props.setShowOptions(false)
+                        }}>
+                        <Text style={props.showComments ? styles.allGrayFill : styles.all}>
+                            <Ionicons name='chatbubbles-outline' size={20} />
+                            {/* {props.cue.unreadThreads > 0 ? <View style={styles.badge} /> : null} */}
+                        </Text>
+                    </TouchableOpacity>
+                    {!submission || (isOwner && submission) || isQuiz ? null : (
+                        <TouchableOpacity
+                            style={{
+                                justifyContent: "center",
+                                flexDirection: "column"
+                            }}
+                            onPress={() => {
+                                props.setShowOriginal(false);
+                                props.setShowOptions(false)
+                                props.setShowComments(false)
+
+
+                                setInitialSubmissionDraft(submissionDraft);
+
+                            }}>
+                            <Text style={!props.showOriginal && !props.viewStatus && !props.showComments && !props.showOptions ? styles.allGrayFill : styles.all}>
+                                <Ionicons name='document-attach-outline' size={20} />
+                            </Text>
+                        </TouchableOpacity>
+                    )}
+                    {/* Add Status button here */}
+                    {!isOwner || !props.channelOwner ? null : (
+                        <TouchableOpacity
+                            style={{
+                                justifyContent: "center",
+                                flexDirection: "column"
+                            }}
+                            onPress={() => {
+                                props.setShowOriginal(false);
+                                setIsQuiz(false);
+                                props.setShowOptions(false)
+                                props.setShowComments(true)
+                                props.changeViewStatus();
+                            }}>
+                            <Text style={props.viewStatus ? styles.allGrayFill : styles.all}>
+                                <Ionicons name='checkmark-done-outline' size={20} />
+                            </Text>
+                        </TouchableOpacity>
+                    )}
+                </View>
             </View>
-        </View>
         );
     };
 
@@ -2943,23 +2945,23 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
         return (<View style={{ width: '100%' }}>
             <Editor
-                  onInit={(evt, editor) => editorRef.current = editor}
+                onInit={(evt, editor) => editorRef.current = editor}
                 initialValue={initialOriginal}
-                disabled={(!isOwner && props.cue.channelId &&  props.cue.channelId !== "")}
+                disabled={(!isOwner && props.cue.channelId && props.cue.channelId !== "")}
                 apiKey="ip4jckmpx73lbu6jgyw9oj53g0loqddalyopidpjl23fx7tl"
                 init={{
                     skin: "snow",
                     // toolbar_sticky: true,
                     branding: false,
-                    readonly: (!isOwner && props.cue.channelId &&  props.cue.channelId !== ""),
+                    readonly: (!isOwner && props.cue.channelId && props.cue.channelId !== ""),
                     placeholder: 'Content...',
                     min_height: 500,
                     paste_data_images: true,
                     images_upload_url: 'https://api.cuesapp.co/api/imageUploadEditor',
                     mobile: {
-                        plugins: (!isOwner && props.cue.channelId &&  props.cue.channelId !== "") ? 'print preview' : 'print preview powerpaste casechange importcss tinydrive searchreplace autolink autosave save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount tinymcespellchecker a11ychecker textpattern noneditable help formatpainter pageembed charmap mentions quickbars linkchecker emoticons advtable autoresize'
+                        plugins: (!isOwner && props.cue.channelId && props.cue.channelId !== "") ? 'print preview' : 'print preview powerpaste casechange importcss tinydrive searchreplace autolink autosave save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount tinymcespellchecker a11ychecker textpattern noneditable help formatpainter pageembed charmap mentions quickbars linkchecker emoticons advtable autoresize'
                     },
-                    plugins: (!isOwner && props.cue.channelId &&  props.cue.channelId !== "") ? 'print preview' : 'print preview powerpaste casechange importcss tinydrive searchreplace autolink autosave save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount tinymcespellchecker a11ychecker textpattern noneditable help formatpainter pageembed charmap mentions quickbars linkchecker emoticons advtable autoresize',
+                    plugins: (!isOwner && props.cue.channelId && props.cue.channelId !== "") ? 'print preview' : 'print preview powerpaste casechange importcss tinydrive searchreplace autolink autosave save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount tinymcespellchecker a11ychecker textpattern noneditable help formatpainter pageembed charmap mentions quickbars linkchecker emoticons advtable autoresize',
                     menu: { // this is the complete default configuration
                         file: { title: 'File', items: 'newdocument' },
                         edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall' },
@@ -2971,7 +2973,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     },
                     // menubar: 'file edit view insert format tools table tc help',
                     menubar: false,
-                    toolbar: (!isOwner && props.cue.channelId &&  props.cue.channelId !== "") ? false : 'undo redo | bold italic underline strikethrough | fontselect fontSizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat  pagebreak | table image media pageembed link | preview print | charmap emoticons |  ltr rtl | showcomments addcomment',
+                    toolbar: (!isOwner && props.cue.channelId && props.cue.channelId !== "") ? false : 'undo redo | bold italic underline strikethrough | fontselect fontSizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat  pagebreak | table image media pageembed link | preview print | charmap emoticons |  ltr rtl | showcomments addcomment',
                     importcss_append: true,
                     image_caption: true,
                     quickbars_selection_toolbar: 'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
@@ -2993,8 +2995,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     }
 
     const renderSaveCueButton = () => {
-    
-        return (isOwner || !props.cue.channelId ) ?
+
+        return (isOwner || !props.cue.channelId) ?
             <View style={styles.footer}>
                 <View
                     style={{
@@ -4587,7 +4589,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             }}
                         >
                             <Text style={!props.showOptions ? styles.allGrayFill : styles.all}>
-                                {PreferredLanguageText("viewShared")}
+                                <Ionicons name='document-outline' size={20} />
                             </Text>
                         </TouchableOpacity>
                         <TouchableOpacity
@@ -4599,37 +4601,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 props.setShowOptions(true)
                             }}>
                             <Text style={props.showOptions ? styles.allGrayFill : styles.all}>
-                                Details
+                                <Ionicons name='options-outline' size={20} />
                             </Text>
                         </TouchableOpacity>
-                        {/* <View style={{ backgroundColor: "white", flex: 1 }}>
-                            <Text
-                                style={{
-                                    fontSize: 11,
-                                    paddingBottom: 20,
-                                    textTransform: "uppercase",
-                                    // paddingLeft: 10
-                                }}>
-                                {PreferredLanguageText("update")}
-                            </Text>
-                        </View> */}
-                        {/* <TouchableOpacity
-                            onPress={() => setStarred(!starred)}
-                            style={{
-                                backgroundColor: "white",
-                                flex: 1
-                            }}>
-                            <Text
-                                style={{
-                                    textAlign: "right",
-                                    lineHeight: 30,
-                                    marginTop: -31,
-                                    // paddingRight: 25,
-                                    width: "100%"
-                                }}>
-                                <Ionicons name="bookmark" size={34} color={starred ? "#f94144" : "#818385"} />
-                            </Text>
-                        </TouchableOpacity> */}
                     </View>
                 )}
                 {(props.showOptions || props.showComments || isOwner || props.showOriginal || props.viewStatus || !submission || isQuiz) ? null : renderSubmissionHistory()}
@@ -4699,7 +4673,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                 textAlign: "right",
                                                 paddingRight: 20,
                                                 // textTransform: "uppercase",
-                                                fontSize: 15,
+                                                fontSize: 12,
                                                 // fontFamily: 'inter',
                                                 color: '#1D1D20',
                                             }}
@@ -4720,7 +4694,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             textAlign: "right",
                                             // paddingRight: 10,
                                             // textTransform: "uppercase",
-                                            fontSize: 15,
+                                            fontSize: 12,
                                             // fontFamily: 'inter',
                                         }}
                                         onPress={() => setShowImportOptions(true)}>
@@ -4739,7 +4713,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         (
                                             <Text style={{
                                                 color: '#1D1D20',
-                                                fontSize: 15,
+                                                fontSize: 12,
                                                 // fontFamily: 'inter',
                                                 lineHeight: 30,
                                                 textAlign: 'right',
@@ -5058,25 +5032,24 @@ const styles: any = StyleSheet.create({
         paddingHorizontal: 10
     },
     all: {
-        fontSize: 11,
-        color: '#1D1D20',
-        height: 24,
+        fontSize: 25,
+        color: '#43434f',
+        height: 25,
         paddingHorizontal: 10,
         backgroundColor: '#fff',
-        lineHeight: 24,
-        fontFamily: 'inter',
-        textTransform: 'uppercase'
+        textTransform: 'uppercase',
+        lineHeight: 25,
+        fontFamily: 'inter'
     },
     allGrayFill: {
-        fontSize: 11,
-        color: '#fff',
+        fontSize: 25,
+        color: '#007AFF',
+        height: 25,
         paddingHorizontal: 10,
-        borderRadius: 12,
-        backgroundColor: '#1D1D20',
-        lineHeight: 24,
-        height: 24,
-        fontFamily: 'inter',
-        textTransform: 'uppercase'
+        backgroundColor: '#fff',
+        textTransform: 'uppercase',
+        lineHeight: 25,
+        fontFamily: 'inter'
     },
     allOutline: {
         fontSize: 12,

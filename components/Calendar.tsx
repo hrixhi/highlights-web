@@ -24,7 +24,8 @@ import {
 } from 'react-native-popup-menu';
 import ActivityCard from "./ActivityCard";
 import { Eventcalendar } from "@mobiscroll/react";
-import "@mobiscroll/react/dist/css/mobiscroll.min.css";
+import "@mobiscroll/react/dist/css/mobiscroll.react.min.css";
+import Swiper from "react-native-web-swiper";
 // Try New Calendar
 // import Scheduler, {SchedulerData, ViewTypes, DATE_FORMAT} from 'react-big-scheduler'
 // import 'react-big-scheduler/lib/css/style.css';
@@ -60,31 +61,22 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     // Used for filtering by channels
     const [eventChannels, setEventChannels] = useState<any[]>([]);
     const [allEvents, setAllEvents] = useState<any[]>([]);
-    const [filterByLectures, setFilterByLectures] = useState(false);
-    const [filterEventsType, setFilterEventsType] = useState('All');
-    const [filterByChannel, setFilterByChannel] = useState("All");
-    const [filterActivityByChannel, setFilterActivityByChannel] = useState("All");
-    const [activityChannelId, setActivityChannelId] = useState<any>('')
 
-    const [timeChoice, setTimeChoice] = useState('week')
-
-    const view: any = React.useMemo(() => {
-        if (calendarChoice === 'Calendar') {
-            return {
-                calendar: { type: 'month' },
-            };
-        }
-        if (calendarChoice === 'Schedule') {
-            return {
-                schedule: { type: 'week' },
-            };
-        }
-        if (calendarChoice === 'Agenda') {
-            return {
-                agenda: { type: 'week' },
-            };
-        }
-    }, [calendarChoice]);
+    const viewAgenda: any = React.useMemo(() => {
+        return {
+            agenda: { type: 'week' },
+        };
+    }, []);
+    const viewSchedule: any = React.useMemo(() => {
+        return {
+            schedule: { type: 'week' },
+        };
+    }, []);
+    const viewCalendar: any = React.useMemo(() => {
+        return {
+            calendar: { type: 'month' },
+        };
+    }, []);
 
     // const [viewModel, setViewModel] = useState<any>(new SchedulerData(new moment().format(DATE_FORMAT), ViewTypes.Week))
 
@@ -218,11 +210,11 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
         let total = [...allEvents];
 
         // Filter the meetings first 
-        if (filterEventsType === "Lectures") {
+        if (props.filterEventsType === "Lectures") {
             total = total.filter((e: any) => e.meeting)
-        } else if (filterEventsType === "Submissions") {
+        } else if (props.filterEventsType === "Submissions") {
             total = total.filter((e: any) => e.cueId !== "");
-        } else if (filterEventsType === "Events") {
+        } else if (props.filterEventsType === "Events") {
             total = total.filter((e: any) => e.cueId === "" && !e.meeting);
         }
 
@@ -239,15 +231,15 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
             })
         }
 
-        if (filterByChannel === "All") {
+        if (props.filterByChannel === "All") {
             setEvents(total);
         } else {
             const all = [...total];
-            const filter = all.filter((e: any) => filterByChannel === (e.channelName));
+            const filter = all.filter((e: any) => props.filterByChannel === (e.channelName));
             setEvents(filter)
         }
 
-    }, [filterByChannel, filterEventsType, props.filterStart, props.filterEnd])
+    }, [props.filterByChannel, props.filterEventsType, props.filterStart, props.filterEnd])
 
     const renderFilterEvents = () => {
 
@@ -259,157 +251,15 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
             // alignSelf: 'flex-start',
             // flex: 1
         }} key={JSON.stringify(eventChannels)}>
-            <View style={{ paddingRight: 40 }}>
-                <View style={{ backgroundColor: '#fff' }}>
-                    <View style={{}}>
-                        <Menu
-                            onSelect={(choice: any) => {
-                                setCalendarChoice(choice)
-                            }}>
-                            <MenuTrigger>
-                                <Text style={{ fontSize: 14, color: '#1D1D20' }}>
-                                    {calendarChoice}<Ionicons name='caret-down' size={14} />
-                                </Text>
-                            </MenuTrigger>
-                            <MenuOptions customStyles={{
-                                optionsContainer: {
-                                    padding: 10,
-                                    borderRadius: 15,
-                                    shadowOpacity: 0,
-                                    borderWidth: 1,
-                                    borderColor: '#f0f0f2',
-                                    overflow: 'scroll',
-                                    maxHeight: '100%'
-                                }
-                            }}>
-
-                                <MenuOption
-                                    value={'Agenda'}>
-                                    <View style={{ display: 'flex', flexDirection: 'row', }}>
-                                        <Text style={{ marginLeft: 5 }}>
-                                            Agenda
-                                        </Text>
-                                    </View>
-                                </MenuOption>
-                                <MenuOption
-                                    value={'Schedule'}>
-                                    <View style={{ display: 'flex', flexDirection: 'row', }}>
-                                        <Text style={{ marginLeft: 5 }}>
-                                            Schedule
-                                        </Text>
-                                    </View>
-                                </MenuOption>
-                                <MenuOption
-                                    value={'Calendar'}>
-                                    <View style={{ display: 'flex', flexDirection: 'row', }}>
-                                        <Text style={{ marginLeft: 5 }}>
-                                            Calendar
-                                        </Text>
-                                    </View>
-                                </MenuOption>
-                            </MenuOptions>
-                        </Menu>
-                        <Text style={{ fontSize: 10, color: '#1D1D20', paddingTop: 7 }}>
-                            View
-                        </Text>
-                    </View>
-                </View>
-            </View>
-            <View style={{ paddingRight: 40 }}>
-                <View style={{ backgroundColor: '#fff' }}>
-                    <View style={{ flexDirection: 'row', display: 'flex', backgroundColor: '#fff' }}>
-                        <Menu
-                            onSelect={(channel: any) => {
-                                if (channel === "All") {
-                                    setFilterByChannel("All")
-                                } else if (channel === "My Cues") {
-                                    setFilterByChannel("My Cues")
-                                } else {
-                                    setFilterByChannel(channel.channelName);
-                                }
-                            }}>
-                            <MenuTrigger>
-                                <Text style={{ fontSize: 14, color: '#1D1D20' }}>
-                                    {filterByChannel}<Ionicons name='caret-down' size={14} />
-                                </Text>
-                            </MenuTrigger>
-                            <MenuOptions customStyles={{
-                                optionsContainer: {
-                                    padding: 10,
-                                    borderRadius: 15,
-                                    shadowOpacity: 0,
-                                    borderWidth: 1,
-                                    borderColor: '#f0f0f2',
-                                    overflow: 'scroll',
-                                    maxHeight: '100%'
-                                }
-                            }}>
-                                <MenuOption
-                                    value={'All'}>
-                                    <View style={{ display: 'flex', flexDirection: 'row', }}>
-                                        <View style={{
-                                            width: 8,
-                                            height: 8,
-                                            borderRadius: 0,
-                                            marginTop: 1,
-                                            backgroundColor: "#fff"
-                                        }} />
-                                        <Text style={{ marginLeft: 5 }}>
-                                            All
-                                        </Text>
-                                    </View>
-                                </MenuOption>
-                                <MenuOption
-                                    value={'My Cues'}>
-                                    <View style={{ display: 'flex', flexDirection: 'row', }}>
-                                        <View style={{
-                                            width: 8,
-                                            height: 8,
-                                            borderRadius: 0,
-                                            marginTop: 1,
-                                            backgroundColor: "#000"
-                                        }} />
-                                        <Text style={{ marginLeft: 5 }}>
-                                            My Cues
-                                        </Text>
-                                    </View>
-                                </MenuOption>
-                                {
-                                    props.subscriptions.map((subscription: any) => {
-                                        return <MenuOption
-                                            value={subscription}>
-                                            <View style={{ display: 'flex', flexDirection: 'row', }}>
-                                                <View style={{
-                                                    width: 8,
-                                                    height: 8,
-                                                    borderRadius: 0,
-                                                    marginTop: 1,
-                                                    backgroundColor: subscription.colorCode
-                                                }} />
-                                                <Text style={{ marginLeft: 5 }}>
-                                                    {subscription.channelName}
-                                                </Text>
-                                            </View>
-                                        </MenuOption>
-                                    })
-                                }
-                            </MenuOptions>
-                        </Menu>
-                    </View>
-                    <Text style={{ fontSize: 10, color: '#1D1D20', paddingTop: 7 }}>
-                        Channel
-                    </Text>
-                </View>
-            </View>
             <View>
                 <View style={{ backgroundColor: '#fff' }}>
-                    <View style={{}}>
+                    {/* <View style={{}}>
                         <Menu
                             onSelect={(choice: any) => {
                                 setFilterEventsType(choice);
                             }}>
                             <MenuTrigger>
-                                <Text style={{  fontSize: 14, color: '#1D1D20' }}>
+                                <Text style={{ fontSize: 14, color: '#1D1D20' }}>
                                     {filterEventsType}<Ionicons name='caret-down' size={14} />
                                 </Text>
                             </MenuTrigger>
@@ -461,7 +311,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         <Text style={{ fontSize: 10, color: '#1D1D20', paddingTop: 7 }}>
                             Type
                         </Text>
-                    </View>
+                    </View> */}
                 </View>
             </View>
         </View>
@@ -1317,28 +1167,29 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
             }}>
             <View style={{
                 width: '100%', flexDirection: Dimensions.get('window').width < 1024 ? 'column' : 'row',
-                paddingTop: 30
+                paddingTop: 20
             }}>
                 <View style={{
                     width: Dimensions.get('window').width < 1024 ? '100%' : '50%',
                     paddingRight: Dimensions.get('window').width < 1024 ? 0 : 30,
-                    borderRightWidth: Dimensions.get('window').width < 1024 ? 0 : 1,
+                    // borderRightWidth: Dimensions.get('window').width < 1024 ? 0 : 1,
                     borderColor: '#f0f0f2'
                 }}>
-                    <ScrollView
+                    <View
                         style={{
                             width: "100%",
-                            height: windowHeight - (300),
+                            height: 550,
                             backgroundColor: "white",
                             borderTopRightRadius: 0,
                             borderTopLeftRadius: 0
                         }}
-                        showsVerticalScrollIndicator={false}
-                        scrollEnabled={true}
-                        scrollEventThrottle={1}
-                        keyboardDismissMode={"on-drag"}
-                        overScrollMode={"never"}
-                        nestedScrollEnabled={true}>
+                    // showsVerticalScrollIndicator={false}
+                    // scrollEnabled={true}
+                    // scrollEventThrottle={1}
+                    // keyboardDismissMode={"on-drag"}
+                    // overScrollMode={"never"}
+                    // nestedScrollEnabled={true}
+                    >
                         <View style={{ backgroundColor: "white", flexDirection: "row" }}>
                             <View style={{ flexDirection: Dimensions.get('window').width < 1024 ? 'column' : 'row', flex: 1 }}>
                                 {/* <Text
@@ -1382,15 +1233,15 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     lineHeight: 30,
                                     color: showAddEvent ? '#1D1D20' : '#fff',
                                     fontSize: 12,
-                                    backgroundColor: showAddEvent ? '#f8f8fa' : '#35AC78',
-                                    paddingHorizontal: 25,
+                                    // backgroundColor: showAddEvent ? '#f8f8fa' : '#35AC78',
+                                    // paddingHorizontal: 25,
                                     fontFamily: 'inter',
                                     height: 30,
                                     // width: 100,
                                     borderRadius: 15,
                                     textTransform: 'uppercase'
                                 }}>
-                                    {!showAddEvent ? null : <Ionicons name='arrow-back-outline' size={12} />} {showAddEvent ? PreferredLanguageText("back") : PreferredLanguageText("add")} {showAddEvent ? null : <Ionicons name='add-outline' size={12} />}
+                                    {showAddEvent ? <Ionicons name='arrow-back-outline' size={25} color='#007AFF' /> : <Ionicons name='add-outline' size={25} color='#007AFF' />}
                                 </Text>
                             </TouchableOpacity>
                         </View>
@@ -1420,11 +1271,42 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 }}>
                                 {showAddEvent ? (
                                     <View>
+                                        <TouchableOpacity
+                                            onPress={() => {
+                                                setEditEvent(null)
+                                                setShowAddEvent(!showAddEvent)
+                                            }}
+                                            style={{
+                                                backgroundColor: 'white',
+                                                overflow: 'hidden',
+                                                height: 35,
+                                                // marginLeft: 20,
+                                                // marginTop: 15,
+                                                justifyContent: 'flex-start',
+                                                flexDirection: 'row'
+                                            }}>
+                                            <Text style={{
+                                                textAlign: 'left',
+                                                lineHeight: 30,
+                                                color: showAddEvent ? '#1D1D20' : '#fff',
+                                                fontSize: 12,
+                                                // backgroundColor: showAddEvent ? '#f8f8fa' : '#35AC78',
+                                                // paddingHorizontal: 25,
+                                                fontFamily: 'inter',
+                                                height: 30,
+                                                // width: 100,
+                                                borderRadius: 15,
+                                                marginBottom: 20,
+                                                textTransform: 'uppercase'
+                                            }}>
+                                                {showAddEvent ? <Ionicons name='arrow-back-outline' size={25} color='#1D1D20' /> : <Ionicons name='add-outline' size={25} color='#007AFF' />}
+                                            </Text>
+                                        </TouchableOpacity>
                                         <View
                                             style={{
                                                 flexDirection: "column"
                                             }}>
-                                            <View style={{ width: 300 }}>
+                                            <View style={{ width: 300, paddingTop: 20 }}>
                                                 <Text
                                                     style={{
                                                         fontSize: 15,
@@ -1637,22 +1519,61 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 borderRadius: 0,
                                                 // height: 'auto',
                                                 // overflow: 'hidden',
-                                                marginTop: 20,
+                                                // marginTop: 20,
                                                 marginBottom: Dimensions.get('window').width < 1024 ? 20 : 0,
                                                 borderWidth: 1,
                                                 borderColor: '#f0f0f2',
-                                                maxHeight: 550
+                                                maxHeight: 500,
+                                                height: '100%'
                                             }}
                                         >
-                                            <Eventcalendar
-                                                key={Math.random()}
-                                                view={view}
-                                                data={events}
-                                                themeVariant="light"
-                                                // height={}
-                                                onEventClick={onSelectEvent}
-                                                renderEventContent={renderEventContent}
-                                            />
+                                            <Swiper
+                                                controlsProps={{
+                                                    prevTitle: (calendarChoice === 'Calendar' ? '← Schedule' : '← Agenda'),
+                                                    nextTitle: (calendarChoice === 'Agenda' ? 'Schedule →' : 'Calendar →'),
+                                                    prevTitleStyle: { fontFamily: 'inter', fontSize: 15, color: '#1D1D20' },
+                                                    nextTitleStyle: { fontFamily: 'inter', fontSize: 15, color: '#007aff' },
+                                                    dotActiveStyle: { backgroundColor: '#007aff' }
+                                                }}
+                                                onIndexChanged={e => {
+                                                    setCalendarChoice(
+                                                        e === 0 ? 'Agenda' : (e === 1 ? 'Schedule' : 'Calendar')
+                                                    )
+                                                }}
+                                                containerStyle={{ width: '100%', height: 500, maxHeight: 500 }}
+                                                swipeAreaStyle={{ width: '100%', height: 500, maxHeight: 500 }}
+                                                slideWrapperStyle={{ width: '100%', height: 500, maxHeight: 500 }}
+                                                innerContainerStyle={{ width: '100%', height: 500, maxHeight: 500 }}
+                                                from={calendarChoice === 'Agenda' ? 0 : (calendarChoice === 'Schedule' ? 1 : 2)}
+                                            >
+                                                <Eventcalendar
+                                                    key={Math.random()}
+                                                    view={viewAgenda}
+                                                    data={events}
+                                                    themeVariant="light"
+                                                    // height={}
+                                                    onEventClick={onSelectEvent}
+                                                    renderEventContent={renderEventContent}
+                                                />
+                                                <Eventcalendar
+                                                    key={Math.random()}
+                                                    view={viewSchedule}
+                                                    data={events}
+                                                    themeVariant="light"
+                                                    // height={}
+                                                    onEventClick={onSelectEvent}
+                                                    renderEventContent={renderEventContent}
+                                                />
+                                                <Eventcalendar
+                                                    key={Math.random()}
+                                                    view={viewCalendar}
+                                                    data={events}
+                                                    themeVariant="light"
+                                                    // height={}
+                                                    onEventClick={onSelectEvent}
+                                                    renderEventContent={renderEventContent}
+                                                />
+                                            </Swiper>
                                         </View>
                                         : null
                                 }
@@ -1693,118 +1614,14 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 allowFullScreen={true}
                             />
                         </View>
-                    </ScrollView>
+                    </View>
                 </View>
                 <View style={{
                     width: Dimensions.get('window').width < 1024 ? '100%' : '50%',
                     paddingLeft: Dimensions.get('window').width < 1024 ? 0 : 30,
-                    paddingTop: Dimensions.get('window').width < 1024 ? 30 : 0
+                    paddingTop: Dimensions.get('window').width < 1024 ? 0 : 0
                 }}>
-                    <View style={{ flexDirection: 'row' }}>
-                        {/* <Text style={{
-                            marginRight: 10,
-                            color: '#1D1D20',
-                            fontSize: 23,
-                            paddingBottom: 20,
-                            fontFamily: 'inter',
-                            // flex: 1,
-                            flexDirection: 'row',
-                            lineHeight: 25,
-                            height: 50
-                        }}>
-                            <Ionicons name='notifications-outline' size={23} />
-                        </Text> */}
-                        {/* <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
-                            {
-                                unreadCount !== 0 ?
-                                    <Text style={{
-                                        width: 32,
-                                        height: 32,
-                                        // flex: 1,
-                                        borderRadius: 25,
-                                        backgroundColor: '#f94144',
-                                        textAlign: 'center',
-                                        zIndex: 150,
-                                        marginLeft: 10,
-                                        fontFamily: 'inter',
-                                        // marginTop: -4,
-                                        color: 'white', lineHeight: 32, fontSize: 10
-                                    }}>
-                                        {unreadCount}
-                                    </Text> : null
-                            }
-                        </View> */}
-                    </View>
-                    <View style={{ flexDirection: 'row', marginBottom: 35, marginTop: 0, flex: 1 }}>
-                        <View style={{ backgroundColor: '#fff' }}>
-                            <View style={{ flexDirection: 'row', backgroundColor: '#fff' }}>
-                                <Menu
-                                    onSelect={(channel: any) => {
-                                        if (channel === "All") {
-                                            setFilterActivityByChannel("All")
-                                            setActivityChannelId('')
-                                        } else {
-                                            setFilterActivityByChannel(channel.channelName);
-                                            setActivityChannelId(channel.channelId)
-                                        }
-                                    }}>
-                                    <MenuTrigger>
-                                        <Text style={{ fontSize: 14, color: '#1D1D20', textAlign: 'center' }}>
-                                            {filterActivityByChannel}<Ionicons name='caret-down' size={14} />
-                                        </Text>
-                                    </MenuTrigger>
-                                    <MenuOptions customStyles={{
-                                        optionsContainer: {
-                                            padding: 10,
-                                            borderRadius: 15,
-                                            shadowOpacity: 0,
-                                            borderWidth: 1,
-                                            borderColor: '#f0f0f2',
-                                            overflow: 'scroll',
-                                            maxHeight: '100%'
-                                        }
-                                    }}>
-                                        <MenuOption
-                                            value={'All'}>
-                                            <View style={{ display: 'flex', flexDirection: 'row', }}>
-                                                <View style={{
-                                                    width: 8,
-                                                    height: 8,
-                                                    borderRadius: 0,
-                                                    marginTop: 1,
-                                                    backgroundColor: "#fff"
-                                                }} />
-                                                <Text style={{ marginLeft: 5 }}>
-                                                    All
-                                                </Text>
-                                            </View>
-                                        </MenuOption>
-                                        {
-                                            props.subscriptions.map((subscription: any) => {
-                                                return <MenuOption
-                                                    value={subscription}>
-                                                    <View style={{ display: 'flex', flexDirection: 'row', }}>
-                                                        <View style={{
-                                                            width: 8,
-                                                            height: 8,
-                                                            borderRadius: 12,
-                                                            marginTop: 1,
-                                                            backgroundColor: subscription.colorCode
-                                                        }} />
-                                                        <Text style={{ marginLeft: 5 }}>
-                                                            {subscription.channelName}
-                                                        </Text>
-                                                    </View>
-                                                </MenuOption>
-                                            })
-                                        }
-                                    </MenuOptions>
-                                </Menu>
-                            </View>
-                            <Text style={{ fontSize: 10, color: '#1D1D20', paddingTop: 7 }}>
-                                Channel
-                            </Text>
-                        </View>
+                    <View style={{ flexDirection: 'row', marginBottom: 20, marginTop: 0, flex: 1 }}>
                         <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
                             {unreadCount !== 0 ?
                                 <TouchableOpacity
@@ -1854,7 +1671,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         backgroundColor: 'white',
                                         overflow: 'hidden',
                                         height: 35,
-                                        // marginTop: 15,
+                                        paddingBottom: 50,
                                         justifyContent: 'center',
                                         flexDirection: 'row',
                                     }}>
@@ -1874,13 +1691,13 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         Read all {<Ionicons name='checkmark-done-outline' size={12} />}
                                     </Text>
                                 </TouchableOpacity>
-                                : null}
+                                : <View style={{ height: 50 }} />}
                         </View>
                     </View>
                     <ScrollView
                         horizontal={true}
                         contentContainerStyle={{
-                            width: '100%'
+                            width: '100%', paddingTop: width < 1024 ? 0 : 5
                         }}
                     >
                         <ScrollView
@@ -1903,8 +1720,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
                                     const { cueId, channelId, createdBy, target } = act;
 
-                                    if (activityChannelId !== '') {
-                                        if (activityChannelId !== act.channelId) {
+                                    if (props.activityChannelId !== '') {
+                                        if (props.activityChannelId !== act.channelId) {
                                             return
                                         }
                                     }

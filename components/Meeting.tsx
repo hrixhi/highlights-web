@@ -541,6 +541,8 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
 
     const width = Dimensions.get('window').width
 
+    return mainClassroomView
+
     return <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{

@@ -4,7 +4,7 @@ import Alert from '../components/Alert'
 import { View } from './Themed';
 import { ScrollView } from 'react-native-gesture-handler'
 import { fetchAPI } from '../graphql/FetchAPI';
-import { getChannelThreads } from '../graphql/QueriesAndMutations';
+import { getChannelThreads, totalUnreadDiscussionThreads } from '../graphql/QueriesAndMutations';
 import ThreadsList from './ThreadsList';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { PreferredLanguageText } from '../helpers/LanguageContext';
@@ -76,6 +76,36 @@ const Discussion: React.FunctionComponent<{ [label: string]: any }> = (props: an
         }
     }, [props.channelId, modalAnimation, props.channelCreatedBy])
 
+    const refreshUnreadDiscussionCount = useCallback(async () => {
+        if (props.channelId !== '') {
+            const u = await AsyncStorage.getItem('user')
+            if (u) {
+                const user = JSON.parse(u)
+                updateDiscussionNotidCounts(user._id)
+            }
+
+        }
+
+    }, [props.channelId])
+
+    const updateDiscussionNotidCounts = useCallback((userId) => {
+
+        const server = fetchAPI('')
+        server.query({
+            query: totalUnreadDiscussionThreads,
+            variables: {
+                userId,
+                channelId: props.channelId
+            }
+        }).then(res => {
+            if (res.data.threadStatus.totalUnreadDiscussionThreads !== undefined && res.data.threadStatus.totalUnreadDiscussionThreads !== null) {
+                // setUnreadDiscussionThreads(res.data.threadStatus.totalUnreadDiscussionThreads)
+            }
+        })
+            .catch(err => console.log(err))
+    }, [props.channelId])
+
+
     useEffect(() => {
         loadThreads()
     }, [props.channelId])
@@ -84,7 +114,8 @@ const Discussion: React.FunctionComponent<{ [label: string]: any }> = (props: an
     return (
         <ScrollView style={{
             width: '100%',
-            height: windowHeight,
+            height: '100%',
+            maxHeight: 600,
             backgroundColor: 'white',
             borderTopRightRadius: 0,
             borderTopLeftRadius: 0
@@ -99,7 +130,7 @@ const Discussion: React.FunctionComponent<{ [label: string]: any }> = (props: an
             <Animated.View style={{
                 opacity: modalAnimation,
                 width: '100%',
-                height: windowHeight,
+                height: '100%',
                 backgroundColor: 'white',
                 borderTopRightRadius: 0,
                 borderTopLeftRadius: 0
@@ -132,7 +163,7 @@ const Discussion: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             }}
                             channelCreatedBy={props.channelCreatedBy}
                             reload={() => loadThreads()}
-                            refreshUnreadDiscussionCount={() => props.refreshUnreadDiscussionCount()}
+                            refreshUnreadDiscussionCount={() => refreshUnreadDiscussionCount()}
                             type={"Discussion"}
                         />
                 }

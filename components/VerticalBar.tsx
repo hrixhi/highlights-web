@@ -67,25 +67,26 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         }}
                         style={{ backgroundColor: '#f8f8fa', width: '100%', paddingBottom: 20 }}
                     >
-                        <Text style={{ lineHeight: 35, width: '100%', textAlign: 'center' }}>
-                            <Ionicons name='arrow-back-outline' size={30} color={'#1D1D20'} />
+                        <Text style={{ lineHeight: 33, width: '100%', textAlign: 'center' }}>
+                            <Ionicons name='arrow-back-outline' size={25} color={'#1D1D20'} style={{ marginTop: -2 }} />
                         </Text>
                     </TouchableOpacity>
                 </View>
                 {
-                    selectedChannel && Dimensions.get('window').width >= 1024 ? <View style={styles.icons}>
+                    selectedChannel ? <View style={styles.icons}>
                         <Text style={{
-                            fontSize: 23,
+                            fontSize: 22,
                             fontFamily: 'inter',
-                            lineHeight: 30,
-                            color: '#1D1D20'
+                            lineHeight: 20,
+                            color: '#1D1D20',
+                            // marginTop: 1,
                         }}>
                             <View style={{
                                 width: 18,
                                 height: 18,
                                 borderRadius: 9,
                                 marginRight: 10,
-                                marginTop: 8,
+                                marginTop: 7,
                                 backgroundColor: selectedChannel.colorCode
                             }} /> {selectedChannel.channelName}
                         </Text>
@@ -137,7 +138,7 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 onPress={() => props.hideMenu()}>
                                 <Text style={{ lineHeight: 30, width: '100%', textAlign: 'center' }}>
                                     <Ionicons
-                                        name='chevron-down-outline' size={27} color={'#007AFF'} />
+                                        name='chevron-down-outline' size={25} color={'#007AFF'} />
                                 </Text>
                             </TouchableOpacity> : null
                     }
