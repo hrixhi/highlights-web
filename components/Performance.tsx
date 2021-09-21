@@ -324,7 +324,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                         lineHeight: 30,
                                         paddingTop: 10
                                     }}>
-                                        <Ionicons name={!collapseMap[ind] ? 'chevron-up-outline' : 'chevron-down-outline'} size={27} color={'#007AFF'} />
+                                        <Ionicons name={!collapseMap[ind] ? 'chevron-up-outline' : 'chevron-down-outline'} size={25} color={'#007AFF'} />
                                     </Text>
                                 </TouchableOpacity>
                             </View>

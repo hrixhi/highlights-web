@@ -2193,7 +2193,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
     const renderCueTabs = () => {
         return (
-            <View style={{ flexDirection: 'column', width: '100%' }}>
+            <View style={{ flexDirection: 'row', width: '100%' }}>
 
                 {props.folderId !== "" || isOwner ? <View style={{}}>
                     <TouchableOpacity
@@ -2210,7 +2210,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         </Text>
                     </TouchableOpacity>
                 </View> : null}
-
                 <View style={{ flexDirection: "row", flex: 1, justifyContent: 'center' }}>
                     <TouchableOpacity
                         style={{
@@ -3777,12 +3776,12 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     ) : (
                         <View
                             style={{
-                                width: "100%",
+                                // width: "100%",
                                 // display: "flex",
                                 flexDirection: "row",
                                 backgroundColor: "white"
                             }}>
-                            <View style={{ width: "80%", backgroundColor: "white" }}>
+                            <View style={{ backgroundColor: "white" }}>
                                 {addCustomCategory ? (
                                     <View style={styles.colorBar}>
                                         <TextInput
@@ -3840,7 +3839,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     </Menu>
                                 )}
                             </View>
-                            <View style={{ width: "20%", backgroundColor: "white", paddingRight: 20 }}>
+                            <View style={{ backgroundColor: "white", paddingRight: 20 }}>
                                 <TouchableOpacity
                                     onPress={() => {
                                         if (addCustomCategory) {
@@ -3954,10 +3953,10 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         //width: "100%",
                         // display: "flex",
                         // paddingTop: 40,
-                        // flexDirection: "row",
+                        flexDirection: "row",
                         backgroundColor: "white"
                     }}>
-                    <View style={{ width: "42.5%", backgroundColor: "white" }}>
+                    <View style={{ backgroundColor: "white", marginRight: 15 }}>
                         <Menu
                             onSelect={(own: any) => {
                                 setSelectedChannelOwner(own)
@@ -4013,7 +4012,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             </MenuOptions>
                         </Menu>
                     </View>
-                    <View style={{ width: "42.5%", backgroundColor: "white" }}>
+                    <View style={{ backgroundColor: "white", marginRight: 15 }}>
                         <Menu
                             onSelect={(channel: any) => {
                                 if (channel === '') {
@@ -4083,7 +4082,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             </MenuOptions>
                         </Menu>
                     </View>
-                    <View style={{ width: "15%", backgroundColor: "white" }}>
+                    <View style={{ backgroundColor: "white" }}>
                         <TouchableOpacity
                             disabled={shareWithChannelId === ""}
                             onPress={() => shareCue()}
@@ -4577,7 +4576,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         </TouchableOpacity> */}
                     </View>
                 ) : (
-                    <View style={{ flexDirection: "row" }}>
+                    <View style={{ flexDirection: "row", justifyContent: 'center' }}>
                         <TouchableOpacity
                             style={{
                                 justifyContent: "center",
@@ -4901,6 +4900,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     </View>
                                 ) : null}
                             </View>
+                            {renderForwardOptions()}
                             {renderCategoryOptions()}
                             {renderPriorityOptions()}
                             {renderReminderOptions()}

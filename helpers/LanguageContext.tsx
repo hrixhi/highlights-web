@@ -683,7 +683,7 @@ export function LanguageSelect() {
                     :
                     (
                         <DefaultView style={{ width: '100%', flexDirection: 'row', justifyContent: 'center', backgroundColor: 'white' }}>
-                            <Ionicons name='language-outline' size={27} color={color} style={{ marginRight: 5 }} onPress={() => setShowLanguageDropdown(true)} />
+                            <Ionicons name='language-outline' size={25} color={color} style={{ marginRight: 5 }} onPress={() => setShowLanguageDropdown(true)} />
                         </DefaultView>
                     )}
             </DefaultView>)

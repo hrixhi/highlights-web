@@ -668,21 +668,24 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
         setEditFolderChannelId(swiperCue.channelId ? swiperCue.channelId : 'My Notes')
     }, [folderIdsMap])
 
+    const width = Dimensions.get("window").width;
+    const windowHeight =
+        width < 1024 ? Dimensions.get("window").height - 30 : Dimensions.get("window").height;
+
     const overview = <View
         key={collapseMap.toString()}
         style={{
             flexDirection: 'row',
-            height: Dimensions.get("window").height - 80,
+            height: width < 1024 ? Dimensions.get("window").height - 120 : Dimensions.get("window").height - 80,
             width: '100%',
-            overflow: 'hidden',
-            // paddingTop: 20
+            overflow: 'scroll'
         }}>
         <View style={{ width: '100%' }}>
             <ScrollView
                 showsVerticalScrollIndicator={false}
                 horizontal={false}
                 contentContainerStyle={{
-                    width: '100%',
+                    width: '100%'
                 }}
             >
                 {
@@ -845,7 +848,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         textAlign: 'center',
                                                         lineHeight: 30
                                                     }}>
-                                                        <Ionicons name={collapseMap[key] ? 'chevron-up-outline' : 'chevron-down-outline'} size={27} color={'#007AFF'} />
+                                                        <Ionicons name={collapseMap[key] ? 'chevron-up-outline' : 'chevron-down-outline'} size={25} color={'#007AFF'} />
                                                     </Text>
                                                 </TouchableOpacity>
                                             </View>
@@ -894,7 +897,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         textAlign: 'center',
                                                         lineHeight: 30
                                                     }}>
-                                                        <Ionicons name={collapseMap[key] ? 'chevron-up-outline' : 'chevron-down-outline'} size={27} color={'#007AFF'} />
+                                                        <Ionicons name={collapseMap[key] ? 'chevron-up-outline' : 'chevron-down-outline'} size={25} color={'#007AFF'} />
                                                     </Text>
                                                 </TouchableOpacity>
                                             </View>
@@ -1056,10 +1059,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
         </View>
     </View>
 
-    const width = Dimensions.get("window").width;
-    const windowHeight =
-        width < 1024 ? Dimensions.get("window").height - 30 : Dimensions.get("window").height;
-
     return (
         <View style={{
             height: '100%',
@@ -1109,7 +1108,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     backgroundColor: '#f8f8fa'
                                                 }}
                                                 onPress={() => {
-                                                    if (op === 'Home') {
+                                                    if (op === 'To Do') {
                                                         setFilterEventsType('')
                                                         setFilterByChannel('')
                                                         setActivityChannelId('')
@@ -1135,7 +1134,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         // borderWidth: 1,
                         backgroundColor: '#f8f8fa'
                     }}>
-                        {props.option === 'Home' || props.option === 'Classroom' ?
+                        {props.option === 'To Do' || props.option === 'Classroom' ?
                             <Menu
                                 style={{ flex: 1 }}
                                 onSelect={(e: any) => {
@@ -1190,7 +1189,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         : null
                                     )}
                                     {
-                                        props.option === 'Classroom' || props.option === 'Home' ? <MenuOption
+                                        props.option === 'Classroom' || props.option === 'To Do' ? <MenuOption
                                             disabled={true}
                                             value={'2'}>
                                             <DateRangePicker
@@ -1222,7 +1221,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         </MenuOption>
                                             : null
                                     }
-                                    {(props.option === 'Home' ?
+                                    {(props.option === 'To Do' ?
                                         <>
                                             <MenuOption
                                                 disabled={true}
@@ -1370,13 +1369,13 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 <MenuOption
                                     value={'Channels'}>
                                     <Text>
-                                        CHANNELS
+                                        Channels
                                     </Text>
                                 </MenuOption>
                                 <MenuOption
                                     value={'Settings'}>
                                     <Text>
-                                        SETTINGS
+                                        Settings
                                     </Text>
                                 </MenuOption>
                             </MenuOptions>
@@ -1391,7 +1390,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     maxWidth: 1275,
                     alignSelf: 'center',
                     width: '100%',
-                    height: width < 1024 ? windowHeight - 100 : windowHeight - 85, overflow: width < 1024 ? 'hidden' : 'scroll'
+                    height: width < 1024 ? windowHeight - 120 : windowHeight - 80, overflow: 'scroll'
                 }}>
                     {
                         props.option === 'Settings' ?
@@ -1413,7 +1412,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             overview : null
                     }
                     {
-                        props.option === 'Home' ?
+                        props.option === 'To Do' ?
                             <CalendarX
                                 filterStart={filterStart}
                                 filterEnd={filterEnd}
@@ -1463,7 +1462,7 @@ export default Dashboard
 
 const styleObject: any = () => StyleSheet.create({
     all: {
-        fontSize: 13,
+        fontSize: 12,
         color: '#1D1D20',
         height: 24,
         paddingHorizontal: 20,
@@ -1473,7 +1472,7 @@ const styleObject: any = () => StyleSheet.create({
         textTransform: 'uppercase'
     },
     allGrayFill: {
-        fontSize: 13,
+        fontSize: 12,
         color: '#fff',
         paddingHorizontal: 20,
         borderRadius: 12,

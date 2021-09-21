@@ -353,7 +353,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     lineHeight: 23,
                                     color: '#1D1D20'
                                 }}>
-                                    <Ionicons name='school-outline' size={27} color={'#1D1D20'} />
+                                    <Ionicons name='school-outline' size={25} color={'#1D1D20'} />
                                 </Text>
                         }
                     </View>

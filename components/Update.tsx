@@ -1615,111 +1615,110 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     )
             }
         </ScrollView>
-            : <View style={{ width: '100%' }}>
-                <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 30, backgroundColor: 'white' }}>
-                    {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
-                </Text>
-                <View style={{ marginLeft: 20 }}>
-                    <TouchableOpacity
-                        style={{
-                            justifyContent: 'center',
-                            flexDirection: 'column',
-                            marginRight: 20
-                        }}
-                        onPress={() => {
-                            setShowFolder(!showFolder)
-                        }}>
-                        <Text>
-                            <Ionicons name='menu-outline' size={24} color={'#000'} />
-                        </Text>
-                    </TouchableOpacity>
-                </View>
+            : <View style={{ paddingTop: 30 }}>
+                <View style={{ width: '100%', flexDirection: 'row' }}>
+                    <View style={{ marginLeft: 20 }}>
+                        <TouchableOpacity
+                            style={{
+                                justifyContent: 'center',
+                                flexDirection: 'column',
+                                marginRight: 20
+                            }}
+                            onPress={() => {
+                                setShowFolder(!showFolder)
+                            }}>
+                            <Text>
+                                <Ionicons name='menu-outline' size={24} color={'#000'} />
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
 
-                <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'center' }}>
-                    <TouchableOpacity
-                        style={{
-                            justifyContent: 'center',
-                            flexDirection: 'column'
-                        }}
-                        onPress={() => {
-                            setShowOptions(false)
-                            setViewStatus(false)
-                            setShowOriginal(true)
-                            setShowComments(false)
-                        }}>
-                        <Text style={showOriginal ? styles.allGrayFill : styles.all}>
-                            <Ionicons name='document-outline' size={20} />
-                        </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={{
-                            justifyContent: "center",
-                            flexDirection: "column"
-                        }}
-                        onPress={() => {
-                            setShowOptions(true)
-                            setViewStatus(false)
-                            setShowOriginal(false)
-                            setShowComments(false)
-                        }}>
+                    <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'center' }}>
+                        <TouchableOpacity
+                            style={{
+                                justifyContent: 'center',
+                                flexDirection: 'column'
+                            }}
+                            onPress={() => {
+                                setShowOptions(false)
+                                setViewStatus(false)
+                                setShowOriginal(true)
+                                setShowComments(false)
+                            }}>
+                            <Text style={showOriginal ? styles.allGrayFill : styles.all}>
+                                <Ionicons name='document-outline' size={20} />
+                            </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={{
+                                justifyContent: "center",
+                                flexDirection: "column"
+                            }}
+                            onPress={() => {
+                                setShowOptions(true)
+                                setViewStatus(false)
+                                setShowOriginal(false)
+                                setShowComments(false)
+                            }}>
 
-                        <Text style={styles.all}>
-                            <Ionicons name='options-outline' size={20} />
-                        </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={{
-                            justifyContent: "center",
-                            flexDirection: "column"
-                        }}
-                        onPress={() => {
-                            setShowOptions(false)
-                            setViewStatus(false)
-                            setShowOriginal(false)
-                            setShowComments(true)
-                        }}>
-                        <Text style={styles.all}>
-                            <Ionicons name='chatbubbles-outline' size={20} />
-                            {/* {props.cue.unreadThreads > 0 ? <View style={styles.badge} /> : null} */}
-                        </Text>
-                    </TouchableOpacity>
-                    {
-                        !submission || (channelOwner && submission) || isQuiz ? null :
-                            <TouchableOpacity
-                                style={{
-                                    justifyContent: 'center',
-                                    flexDirection: 'column'
-                                }}
-                                onPress={() => {
-                                    setViewStatus(false)
-                                    setShowOriginal(false)
-                                    setShowComments(false)
-                                    setShowOptions(false)
-                                }}>
-                                <Text style={!showOriginal && !viewStatus && !showOptions && !showComments ? styles.allGrayFill : styles.all}>
-                                    <Ionicons name='document-attach-outline' size={20} />
-                                </Text>
-                            </TouchableOpacity>
-                    }
-                    {/* Add Status button here */}
-                    {
-                        !channelOwner ? null :
-                            <TouchableOpacity
-                                style={{
-                                    justifyContent: 'center',
-                                    flexDirection: 'column'
-                                }}
-                                onPress={() => {
-                                    setViewStatus(true)
-                                    setShowOriginal(false)
-                                    setShowComments(false)
-                                    setShowOptions(false)
-                                }}>
-                                <Text style={viewStatus ? styles.allGrayFill : styles.all}>
-                                    <Ionicons name='checkmark-done-outline' size={20} />
-                                </Text>
-                            </TouchableOpacity>
-                    }
+                            <Text style={styles.all}>
+                                <Ionicons name='options-outline' size={20} />
+                            </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={{
+                                justifyContent: "center",
+                                flexDirection: "column"
+                            }}
+                            onPress={() => {
+                                setShowOptions(false)
+                                setViewStatus(false)
+                                setShowOriginal(false)
+                                setShowComments(true)
+                            }}>
+                            <Text style={styles.all}>
+                                <Ionicons name='chatbubbles-outline' size={20} />
+                                {/* {props.cue.unreadThreads > 0 ? <View style={styles.badge} /> : null} */}
+                            </Text>
+                        </TouchableOpacity>
+                        {
+                            !submission || (channelOwner && submission) || isQuiz ? null :
+                                <TouchableOpacity
+                                    style={{
+                                        justifyContent: 'center',
+                                        flexDirection: 'column'
+                                    }}
+                                    onPress={() => {
+                                        setViewStatus(false)
+                                        setShowOriginal(false)
+                                        setShowComments(false)
+                                        setShowOptions(false)
+                                    }}>
+                                    <Text style={!showOriginal && !viewStatus && !showOptions && !showComments ? styles.allGrayFill : styles.all}>
+                                        <Ionicons name='document-attach-outline' size={20} />
+                                    </Text>
+                                </TouchableOpacity>
+                        }
+                        {/* Add Status button here */}
+                        {
+                            !channelOwner ? null :
+                                <TouchableOpacity
+                                    style={{
+                                        justifyContent: 'center',
+                                        flexDirection: 'column'
+                                    }}
+                                    onPress={() => {
+                                        setViewStatus(true)
+                                        setShowOriginal(false)
+                                        setShowComments(false)
+                                        setShowOptions(false)
+                                    }}>
+                                    <Text style={viewStatus ? styles.allGrayFill : styles.all}>
+                                        <Ionicons name='checkmark-done-outline' size={20} />
+                                    </Text>
+                                </TouchableOpacity>
+                        }
+                    </View>
                 </View>
                 {
                     channelOwner ?
@@ -1799,7 +1798,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     </View>
                     :
                     <View style={{ width: '100%', flexDirection: 'row' }}>
-                        {showFolder ? <View style={{ width: '20%', backgroundColor: 'white' }}>
+                        {showFolder ? <View style={{ width: 200, backgroundColor: 'white' }}>
                             {loadingFolder || loadingFolderCues ? <View style={{
                                 width: '100%',
                                 flex: 1,
@@ -1813,7 +1812,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 <ActivityIndicator color={'#818385'} />
                             </View> : FolderView}
                         </View> : null}
-                        <View style={{ paddingLeft: 30, width: showFolder ? '80%' : '100%', backgroundColor: 'white' }}>
+                        <View style={{ paddingLeft: showFolder ? 20 : 0, width: showFolder ? '80%' : '100%', backgroundColor: 'white' }}>
                             {ContentView}
                         </View>
 
