@@ -50,6 +50,22 @@
     cursor: pointer;
 }
 
+.customDropdown {
+    border: 0px;
+}
+
+.mbsc-ios.mbsc-form-control-wrapper:after, .mbsc-ios.mbsc-form-control-wrapper:before {
+    border: 0px !important;
+}
+
+.mbsc-ios {
+    font-family: 'Inter';
+}
+
+.mbsc-select {
+    /* width: 180px;
+    border-bottom: 1px solid #cccccc; */
+}
 
 /* .dropdown {
     position: relative;

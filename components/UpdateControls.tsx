@@ -68,7 +68,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const [color, setColor] = useState(props.cue.color);
     const [notify, setNotify] = useState(props.cue.frequency !== "0" ? true : false);
     const [frequency, setFrequency] = useState(props.cue.frequency);
-    const [customCategory, setCustomCategory] = useState(props.cue.customCategory);
+    const [customCategory, setCustomCategory] = useState(props.cue.customCategory === "" ? "None" : props.cue.customCategory);
     const [customCategories, setCustomCategories] = useState(props.customCategories);
     const [addCustomCategory, setAddCustomCategory] = useState(false);
     const [markedAsRead, setMarkedAsRead] = useState(false);
@@ -1295,7 +1295,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             color,
             shuffle,
             frequency,
-            customCategory,
+            customCategory: customCategory === "None" ? "" : customCategory,
             gradeWeight,
             endPlayAt: notify && (shuffle || !playChannelCueIndef) ? endPlayAt.toISOString() : "",
             submission,
@@ -1656,7 +1656,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     color: color.toString(),
                     channelId: shareWithChannelId,
                     frequency,
-                    customCategory,
+                    customCategory: customCategory === "None" ? "" : customCategory,
                     shuffle,
                     createdBy: selectedChannelOwner ? selectedChannelOwner.id : props.cue.createdBy,
                     gradeWeight: gradeWeight.toString(),
@@ -3437,7 +3437,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     {submission ? (
                         <View
                             style={{
-                                flexDirection: 'row'
+                                flexDirection: 'row',
+                                marginTop: 10
                             }}>
                             <Text
                                 style={{
@@ -3850,6 +3851,18 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     }
 
     const renderCategoryOptions = () => {
+
+        let categoriesOptions = [{ 
+            value: 'None', text: 'None'
+          }];
+        
+          customCategories.map((category: any) => {
+            categoriesOptions.push({
+              value: category,
+              text: category
+            })
+          })
+
         return (props.cue.channelId && props.cue.channelId !== "" && isOwner) ||
             !props.channelId ||
             props.channelId === "" ? (
@@ -3960,35 +3973,26 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     //         }
                                     //     </MenuOptions>
                                     // </Menu>
-                                    <label>
+                                    <label style={{ width: 180 }}>
                                         <MobiscrollSelect
-                                            inputClass="mobiscrollCategoryInput"
                                             value={customCategory}
                                             rows={customCategories.length + 1}
-                                            onSet={(event, inst) => {
-
-                                                if (!event.valueText) return;
-
-                                                setCustomCategory(inst.getVal())
-                                            }}
-                                            responsive={{
-                                                small: {
-                                                    display: 'bubble'
-                                                },
-                                                medium: {
-                                                    touchUi: false,
-                                                }
-                                            }}
-                                        >
-                                            <option value={''}>None</option>
-
-                                            {customCategories.map((category: any) => {
-                                                return (
-                                                    <option value={category}>{category}</option>
-                                                );
-                                            })}
-                                        </MobiscrollSelect>
-
+                                            data={categoriesOptions}
+                                            theme="ios"
+                                            themeVariant="light"
+                                            onChange={(val: any) => {
+                                                setCustomCategory(val.value)
+                                                }}
+                                                responsive={{
+                                                    small: {
+                                                        display: 'bubble'
+                                                    },
+                                                    medium: {
+                                                        touchUi: false,
+                                                    }
+                                                }}
+                                            />
+                                            
                                     </label>
                                 )}
                             </View>
@@ -3996,7 +4000,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 <TouchableOpacity
                                     onPress={() => {
                                         if (addCustomCategory) {
-                                            setCustomCategory("");
+                                            setCustomCategory("None");
                                             setAddCustomCategory(false);
                                         } else {
                                             setCustomCategory("");
@@ -4354,40 +4358,29 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         paddingRight: 10,
                                         paddingTop: 5
                                     }}>{PreferredLanguageText("remindEvery")}</Text>
-                                    <label>
-                                        <MobiscrollSelect
-                                            inputClass="mobiscrollFrequencyInput"
-                                            value={frequency}
-                                            rows={timedFrequencyOptions.length}
-                                            onSet={(event, inst) => {
-
-                                                if (!event.valueText) return;
-
-                                                // const match = timedFrequencyOptions.find((freq: any) => {
-                                                //   return freq.
-                                                // })
-                                                setFrequency(inst.getVal());
-                                                // setFrequencyName(cat.label);
-
-                                            }}
-                                            responsive={{
-                                                small: {
-                                                    display: 'bubble'
-                                                },
-                                                medium: {
-                                                    touchUi: false,
-                                                }
-                                            }}
-                                        >
-                                            {timedFrequencyOptions.map((item: any) => {
-                                                return (
-                                                    <option value={item.value} >
-                                                        {item.label}
-                                                    </option>
-                                                );
-                                            })}
-                                        </MobiscrollSelect>
-
+                                    <label style={{ width: 140 }}>
+                                    <MobiscrollSelect
+                                        themeVariant="light"
+                                        value={frequency}
+                                        rows={timedFrequencyOptions.length}
+                                        onChange={(val: any) => {
+                                        setFrequency(val.value);
+                                        }}
+                                        responsive={{
+                                        small: {
+                                            display: 'bubble'
+                                        },
+                                        medium: {
+                                            touchUi: false,
+                                        }
+                                        }}
+                                        data={timedFrequencyOptions.map((freq: any) => {
+                                        return {
+                                            value: freq.value,
+                                            text: freq.label
+                                            }
+                                        })}
+                                    />   
                                     </label>
                                     {/* <Menu
                                         onSelect={(cat: any) => {

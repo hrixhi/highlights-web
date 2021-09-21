@@ -34,14 +34,10 @@ import Discussion from './Discussion';
 import Meeting from './Meeting';
 import ChannelSettings from './ChannelSettings';
 
-import mobiscroll, { Form as MobiscrollForm, FormGroup, Button as MobiscrollButton, Popup, Optionlist, OptionItem, Listview, } from '@mobiscroll/react'
+import mobiscroll, { Form as MobiscrollForm, FormGroup, Button as MobiscrollButton, Popup, Optionlist, OptionItem, Listview,   } from '@mobiscroll/react'
 import '@mobiscroll/react/dist/css/mobiscroll.react.min.css';
 
 
-// mobiscroll.settings = {
-//     theme: 'ios',
-//     themeVariant: 'light'
-// };
 
 const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 

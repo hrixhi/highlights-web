@@ -35,10 +35,6 @@ import {
 import parser from 'html-react-parser';
 import mobiscroll, { Form as MobiscrollForm, FormGroup, Button as MobiscrollButton, Select, Input, FormGroupTitle  } from '@mobiscroll/react'
 
-// mobiscroll.settings = {
-//     theme: 'ios',
-//     themeVariant: 'light'
-// };
 
 
 const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
@@ -1341,14 +1337,14 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             }
                                         </MenuOptions>
                                     </Menu> */}
-                                    <label style={{ cursor: 'pointer' }}>
+                                     <label style={{ width: 150 }}>
                                         <Select
-                                            inputClass="mobiscrollCustomInput"
+                                            touchUi={true}
+                                            themeVariant="light"
                                             value={filterChoice}
-                                            onSet={(event, inst) => {
-                                                setFilterChoice(inst.getVal())  
+                                            onChange={(val: any) => {
+                                                setFilterChoice(val.value)  
                                             }}
-                                            rows={categories.length}
                                             responsive={{
                                                 small: {
                                                     display: 'bubble'
@@ -1357,18 +1353,16 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                     touchUi: false,
                                                 }
                                             }}
-                                        >
-                                                {
-                                                    categories.map((category: any) => {
-                                                        return <option value={category}>
-                                                            {category}
-                                                        </option>
-                                                    })
+                                            data={categories.map((category: any) => {
+                                                return {
+                                                    value: category,
+                                                    text: category
                                                 }
-                                            </Select>
+                                            })}
+                                        />
                                             
                                     </label>
-                                    <Text style={{ fontSize: 10, color: '#1D1D20' }}>
+                                    <Text style={{ fontSize: 10, color: '#1D1D20', marginLeft: 17 }}>
                                         Type
                                     </Text>
                                 </View>
