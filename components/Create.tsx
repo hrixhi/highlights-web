@@ -51,7 +51,7 @@ import mobiscroll, { Form as MobiscrollForm, FormGroup, Button as MobiscrollButt
 //     themeVariant: 'light'
 // };
 
-import '@mobiscroll/react/dist/css/mobiscroll.min.css';
+import '@mobiscroll/react/dist/css/mobiscroll.react.min.css';
 import '@mobiscroll/react5/dist/css/mobiscroll.min.css';
 
 import {
