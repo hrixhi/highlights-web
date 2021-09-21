@@ -39,8 +39,6 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
     const [customCategory, setCustomCategory] = useState('')
     const [addCustomCategory, setAddCustomCategory] = useState(false)
 
-    console.log("Threads", threads);
-
     const [isOwner, setIsOwner] = useState(false)
     const categories: any[] = []
     const categoryObject: any = {}
@@ -514,7 +512,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                         // marginTop: -10
                                                     }}>
 
-                                                        {customCategoryInput}
+                                                        {props.type === "Discussion" ? customCategoryInput : null}
 
                                                         {/* Add private option here only if not owner */}
                                                         {!isOwner ? <View style={{ paddingTop: 15, flexDirection: 'row', alignItems: 'center', marginBottom: 20 }}>

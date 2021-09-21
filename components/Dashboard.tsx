@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { ActivityIndicator, StyleSheet, Image, Dimensions, Linking, ScrollView } from 'react-native';
 import { View, Text, TouchableOpacity } from '../components/Themed';
 import { Ionicons } from '@expo/vector-icons';
@@ -34,6 +34,14 @@ import Discussion from './Discussion';
 import Meeting from './Meeting';
 import ChannelSettings from './ChannelSettings';
 
+import mobiscroll, { Form as MobiscrollForm, FormGroup, Button as MobiscrollButton, Popup, Optionlist, OptionItem, Listview,   } from '@mobiscroll/react'
+import '@mobiscroll/react/dist/css/mobiscroll.min.css';
+
+
+mobiscroll.settings = {
+    theme: 'ios',
+    themeVariant: 'light'
+};
 
 const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -43,6 +51,11 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const styles = styleObject()
     const [userId, setUserId] = useState('')
     const [avatar, setAvatar] = useState('')
+
+    const mobiRef : any = useRef(null);
+
+    const deskMobiRef : any = useRef(null);
+ 
 
     const [searchTerm, setSearchTerm] = useState('')
     const priorities = [4, 3, 2, 1, 0]
@@ -1059,6 +1072,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
         </View>
     </View>
 
+
     return (
         <View style={{
             height: '100%',
@@ -1097,7 +1111,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         />
                         {
                             Dimensions.get('window').width < 1024 ?
-                                null : <View style={{ flexDirection: 'row', paddingLeft: 30, flex: 1, backgroundColor: '#f8f8fa' }}>
                                     {
                                         props.options.map((op: any) => {
                                             if (op === 'Settings' || op === 'Channels') {
@@ -1320,6 +1333,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 </MenuOptions>
                             </Menu> : <View style={{ width: 80, right: 0, backgroundColor: '#f8f8fa' }} />
                         }
+
                         <TextInput
                             value={searchTerm}
                             style={{
@@ -1457,8 +1471,13 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
     );
 }
 
+export default React.memo(Dashboard, (prev, next) => {
+    console.log("Previous", prev);
+    console.log("Next", next)
+    return _.isEqual({ ...prev.cues }, { ...next.cues })
+});
 
-export default Dashboard
+// export default Dashboard
 
 const styleObject: any = () => StyleSheet.create({
     all: {

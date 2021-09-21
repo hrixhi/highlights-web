@@ -23,12 +23,21 @@ import {
     MenuTrigger,
 } from 'react-native-popup-menu';
 import ActivityCard from "./ActivityCard";
-import { Eventcalendar } from "@mobiscroll/react";
-import "@mobiscroll/react/dist/css/mobiscroll.react.min.css";
+import { Eventcalendar, Datepicker as MobiscrollDatePicker } from "@mobiscroll/react5";
+import '@mobiscroll/react/dist/css/mobiscroll.min.css';
+import '@mobiscroll/react5/dist/css/mobiscroll.min.css';
 import Swiper from "react-native-web-swiper";
+
 // Try New Calendar
 // import Scheduler, {SchedulerData, ViewTypes, DATE_FORMAT} from 'react-big-scheduler'
 // import 'react-big-scheduler/lib/css/style.css';
+import mobiscroll, { Form as MobiscrollForm, FormGroup, Button as MobiscrollButton, Select, Input, FormGroupTitle  } from '@mobiscroll/react'
+
+mobiscroll.settings = {
+    theme: 'ios',
+    themeVariant: 'light'
+};
+
 
 const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const [modalAnimation] = useState(new Animated.Value(1));
@@ -135,6 +144,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 const u = await AsyncStorage.getItem('user')
                 if (u) {
                     const user = JSON.parse(u)
+
+                    setUserId(user._id);
                     const server = fetchAPI(user._id)
                     server.query({
                         query: getActivity,
@@ -221,6 +232,10 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
         if (props.filterEnd && props.filterStart) {
             const end = new Date(props.filterEnd)
             total = total.filter((e: any) => {
+                if (!e.end) {
+                    const date = new Date(e.start)
+                    return date < end
+                }
                 const date = new Date(e.end)
                 return date < end
             })
@@ -241,7 +256,25 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     }, [props.filterByChannel, props.filterEventsType, props.filterStart, props.filterEnd])
 
+
+    
+
     const renderFilterEvents = () => {
+
+        const channels = props.subscriptions.map((subscription: any) => {
+            
+            return {
+                value: subscription.channelName,
+                text: subscription.channelName
+            }
+        })
+
+        const channelFilterData = [{ text: 'All', value: 'All' }, { text: 'My Events', value: 'My Events' }, ...channels]
+
+         
+        console.log("Channel Filter data", channelFilterData);
+
+        console.log("Filter By Channel", filterByChannel)
 
         return (<View style={{
             marginTop: 0,
@@ -547,7 +580,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             originalTitle: title,
                             title: e.channelName ? (title + ' - ' + e.channelName) : title,
                             start: new Date(e.start),
-                            end: new Date(e.end),
+                            end: datesEqual(e.start, e.end) ? null : new Date(e.end),
                             dateId: e.dateId,
                             description: e.description,
                             createdBy: e.createdBy,
@@ -557,7 +590,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             meeting: e.meeting,
                             channelId: e.channelId,
                             cueId: e.cueId,
-                            color: colorCode
+                            color: colorCode,
+                            submitted: e.submitted
                         });
 
 
@@ -778,7 +812,39 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         flexDirection: "row",
                         marginLeft: 0
                     }}>
-                    <Menu
+                    
+                     <label style={{ cursor: 'pointer' }}>
+                        <Select
+                            inputClass="mobiscrollCustomInput"
+                            value={frequency}
+                            onSet={(event, inst) => {
+
+                                const match = eventFrequencyOptions.find((f: any) => {
+                                    return f.label === event.valueText
+                                })
+
+                                setFrequency(match.value)
+                                // setCalendarChoice(event.valueText)
+                            }}
+                            rows={5}
+                            responsive={{
+                                small: {
+                                    display: 'bubble'
+                                },
+                                medium: {
+                                    touchUi: false,
+                                }
+                            }}
+                        >
+                            {eventFrequencyOptions.map((item: any, index: number) => {
+                                return <option value={item.value}>{item.label}</option>
+                            })}
+                        </Select>
+                                                        
+                    </label>
+                    
+
+                    {/* <Menu
                         onSelect={(itemValue: any) => {
                             setFrequency(itemValue)
                         }}>
@@ -809,7 +875,9 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 );
                             })}
                         </MenuOptions>
-                    </Menu>
+                    </Menu> */}
+
+
                 </View>
             </View> : null}
 
@@ -827,7 +895,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         flexDirection: "row",
                         marginLeft: 0
                     }}>
-                    <DatePicker
+                    {/* <DatePicker
                         format="YYYY-MM-DD HH:mm"
                         preventOverflow={true}
                         appearance={'subtle'}
@@ -840,6 +908,39 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         }}
                         size={'xs'}
                     // isValidDate={disablePastDt}
+                    /> */}
+                    <MobiscrollDatePicker 
+                        controls={['date', 'time']}
+                        touchUi={true}
+                        theme="ios"
+                        value={repeatTill}
+                        themeVariant="light"
+                        inputComponent="input"
+                        inputProps={{
+                            placeholder: 'Please Select...' 
+                        }}
+                        onChange={(event: any) => {
+                            const date = new Date(event.value);
+                            const roundOffDate = roundSeconds(date)
+                            setRepeatTill(roundOffDate);
+                        }}
+                        responsive={{
+                            xsmall: {
+                                controls: ['date', 'time'],
+                                display: 'bottom',
+                                touchUi: true
+                            },
+                            // small: {
+                            //     controls: ['date', 'time'],
+                            //     display: 'anchored',
+                            //     touchUi: true
+                            // },
+                            medium: {
+                                controls: ['date', 'time'],
+                                display: 'anchored',
+                                touchUi: false
+                            },
+                        }}
                     />
                 </View>
                 {/* <View
@@ -1120,12 +1221,21 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
         // Add buttons to view event, edit event, join meeting, etc
 
-        console.log("Event", data);
+        const assingmentDue = new Date() > new Date(data.original.end)
 
         return <React.Fragment>
             <div>{data.title}</div>
             <div className="md-custom-event-cont">
                 <div style={{ color: '#818385', fontSize: 14 }}>{data.original.description}</div>
+                {data.original.submitted !== null && userId !== "" && userId !== data.original.createdBy ? (<div><div style={{
+                    color: data.original.submitted ? '#35AC78' : (!assingmentDue ? '#007AFF' : '#F94144'),
+                    borderRadius: 12,
+                    padding: 4,
+                    fontSize: 11,
+                    borderWidth: 1,
+                }}>
+                    {data.original.submitted ? "SUBMITTED" : (assingmentDue ? "MISSING" : "NOT SUBMITTED")}
+                </div></div>) : null}
                 {/* <Button className="md-custom-event-btn" color="secondary" variant="outline" onClick={(domEvent) => add(domEvent, data.original)}>Add participant</Button> */}
             </div>
         </React.Fragment>;
@@ -1146,7 +1256,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     let eventForChannelName = ''
 
     if (channelId === "") {
-        eventForChannelName = "My Cues"
+        eventForChannelName = "My Events"
     } else {
         const filter = channels.filter((channel: any) => {
             return channel._id === channelId
@@ -1281,6 +1391,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     borderTopRightRadius: 0,
                                     borderTopLeftRadius: 0
                                 }}>
+
                                 {/* {!showAddEvent ? <Calendar
                                     onSelectEvent={(e: any) => onSelectEvent(e)}
                                     localizer={localizer}
@@ -1855,7 +1966,8 @@ const styles: any = StyleSheet.create({
     text: {
         fontSize: 15,
         fontFamily: 'inter',
-        color: '#1D1D20'
+        color: '#1D1D20',
+        marginBottom: 10
     },
     allBlack: {
         fontSize: 12,

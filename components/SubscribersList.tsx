@@ -33,13 +33,20 @@ import {
     MenuTrigger,
 } from 'react-native-popup-menu';
 import parser from 'html-react-parser';
+import mobiscroll, { Form as MobiscrollForm, FormGroup, Button as MobiscrollButton, Select, Input, FormGroupTitle  } from '@mobiscroll/react'
+
+mobiscroll.settings = {
+    theme: 'ios',
+    themeVariant: 'light'
+};
+
 
 const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
     const [filterChoice, setFilterChoice] = useState('All')
     const unparsedSubs: any[] = JSON.parse(JSON.stringify(props.subscribers))
     const [subscribers] = useState<any[]>(unparsedSubs.reverse())
-    const categories = ['All', 'Read']
+    const categories = ['All', 'Delivered', 'Read']
     const categoriesLanguageMap: { [label: string]: string } = {
         All: 'all',
         Read: 'read',
@@ -137,15 +144,18 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
     let filteredSubscribers: any = []
     switch (filterChoice) {
         case 'All':
-            filteredSubscribers = subscribers.filter(item => {
-                return item.fullName !== 'delivered' && item.fullName !== 'not-delivered'
-            })
+            filteredSubscribers = subscribers
             break;
         case 'Read':
             filteredSubscribers = subscribers.filter(item => {
                 return item.fullName === 'read'
             })
             break;
+        case 'Delivered':
+                filteredSubscribers = subscribers.filter(item => {
+                    return item.fullName === 'not-delivered' || item.fullName === 'delivered'
+                })
+                break;
         case 'Graded':
             filteredSubscribers = subscribers.filter(item => {
                 return item.fullName === 'graded'
@@ -1298,9 +1308,10 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     display: 'flex',
                                     justifyContent: 'center',
                                     flexDirection: 'column',
-                                    maxWidth: 500
+                                    maxWidth: 500,
+                                    marginBottom: 20
                                 }}>
-                                    <Menu
+                                    {/* <Menu
                                         onSelect={(cat: any) => setFilterChoice(cat)}>
                                         <MenuTrigger>
                                             <Text style={{ fontSize: 14, color: '#1D1D20' }}>
@@ -1318,12 +1329,6 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 maxHeight: '100%'
                                             }
                                         }}>
-                                            {/* <MenuOption
-                                                value={''}>
-                                                <Text>
-                                                    All
-                                                </Text>
-                                            </MenuOption> */}
                                             {
                                                 categories.map((category: any) => {
                                                     return <MenuOption
@@ -1335,8 +1340,35 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 })
                                             }
                                         </MenuOptions>
-                                    </Menu>
-                                    <Text style={{ fontSize: 10, color: '#1D1D20', paddingTop: 7 }}>
+                                    </Menu> */}
+                                    <label style={{ cursor: 'pointer' }}>
+                                        <Select
+                                            inputClass="mobiscrollCustomInput"
+                                            value={filterChoice}
+                                            onSet={(event, inst) => {
+                                                setFilterChoice(inst.getVal())  
+                                            }}
+                                            rows={categories.length}
+                                            responsive={{
+                                                small: {
+                                                    display: 'bubble'
+                                                },
+                                                medium: {
+                                                    touchUi: false,
+                                                }
+                                            }}
+                                        >
+                                                {
+                                                    categories.map((category: any) => {
+                                                        return <option value={category}>
+                                                            {category}
+                                                        </option>
+                                                    })
+                                                }
+                                            </Select>
+                                            
+                                    </label>
+                                    <Text style={{ fontSize: 10, color: '#1D1D20' }}>
                                         Type
                                     </Text>
                                 </View>
@@ -1541,7 +1573,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                         {subscriber.displayName ? subscriber.displayName : ''}
                                                                     </Text>
                                                                     <Text style={{ fontSize: 13, padding: 10 }} ellipsizeMode='tail'>
-                                                                        {subscriber.fullName}
+                                                                        {subscriber.fullName === "delivered" || subscriber.fullName === "not-delivered" ? "delivered" : subscriber.fullName}
                                                                     </Text>
                                                                 </View>
                                                                 <View style={{ justifyContent: 'center', flexDirection: 'column' }}>

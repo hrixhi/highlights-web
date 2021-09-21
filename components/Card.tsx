@@ -57,7 +57,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             style={styleObject.swiper}
         >
             <TouchableOpacity
-                key={'textPage'}
+                // key={'textPage'}
                 onPress={() => props.updateModal()}
                 style={styleObject.card}>
                 <View style={styleObject.text}>

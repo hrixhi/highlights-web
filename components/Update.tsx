@@ -1610,6 +1610,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 closeModal={() => props.closeModal()}
                                 reload={() => loadThreadsAndStatuses()}
                                 updateQAUnreadCount={() => updateQAUnreadCount()}
+                                type={"Q&A"}
                             />
                         </ScrollView> : null
                     )
