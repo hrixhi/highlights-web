@@ -48,10 +48,10 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const [userId, setUserId] = useState('')
     const [avatar, setAvatar] = useState('')
 
-    const mobiRef : any = useRef(null);
+    const mobiRef: any = useRef(null);
 
-    const deskMobiRef : any = useRef(null);
- 
+    const deskMobiRef: any = useRef(null);
+
 
     const [searchTerm, setSearchTerm] = useState('')
     const priorities = [4, 3, 2, 1, 0]
@@ -603,7 +603,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
         const activeTab = tabs[indexMap[key]];
 
-        return (<View style={{ flexDirection: "row", flex: 1, justifyContent: 'center', marginBottom: 30 }}>
+        return (<View style={{ flexDirection: "row", flex: 1, justifyContent: 'center', marginBottom: 40, paddingVertical: 10 }}>
             <TouchableOpacity
                 style={{
                     justifyContent: "center",
@@ -616,6 +616,9 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 }}>
                 <Text style={activeTab === 'Content' ? styles.allGrayFill1 : styles.all1}>
                     <Ionicons name='library-outline' size={20} />
+                </Text>
+                <Text style={activeTab === 'Content' ? styles.allGrayFill1 : styles.all1}>
+                    Library
                 </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -631,6 +634,9 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 <Text style={activeTab === 'Meet' ? styles.allGrayFill1 : styles.all1}>
                     <Ionicons name='videocam-outline' size={20} />
                 </Text>
+                <Text style={activeTab === 'Meet' ? styles.allGrayFill1 : styles.all1}>
+                    Meet
+                </Text>
             </TouchableOpacity>
             <TouchableOpacity
                 style={{
@@ -644,6 +650,9 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 }}>
                 <Text style={activeTab === 'Discuss' ? styles.allGrayFill1 : styles.all1}>
                     <Ionicons name='chatbubbles-outline' size={20} />
+                </Text>
+                <Text style={activeTab === 'Discuss' ? styles.allGrayFill1 : styles.all1}>
+                    Discuss
                 </Text>
             </TouchableOpacity>
             {
@@ -659,7 +668,10 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             setIndexMap(temp)
                         }}>
                         <Text style={activeTab === 'Settings' ? styles.allGrayFill1 : styles.all1}>
-                            <Ionicons name='settings-outline' size={20} />
+                            <Ionicons name='hammer-outline' size={20} />
+                        </Text>
+                        <Text style={activeTab === 'Settings' ? styles.allGrayFill1 : styles.all1}>
+                            Settings
                         </Text>
                     </TouchableOpacity>
                     : null
@@ -1499,24 +1511,26 @@ const styleObject: any = () => StyleSheet.create({
         textTransform: 'uppercase'
     },
     all1: {
-        fontSize: 20,
+        fontSize: 10,
         color: '#43434f',
         height: 25,
         paddingHorizontal: 10,
         backgroundColor: '#fff',
-        textTransform: 'uppercase',
+        // textTransform: 'uppercase',
         lineHeight: 25,
-        fontFamily: 'inter'
+        // fontFamily: 'inter',
+        textAlign: 'center'
     },
     allGrayFill1: {
-        fontSize: 20,
+        fontSize: 10,
         color: '#007AFF',
         height: 25,
         paddingHorizontal: 10,
         backgroundColor: '#fff',
-        textTransform: 'uppercase',
+        // textTransform: 'uppercase',
         lineHeight: 25,
-        fontFamily: 'inter'
+        // fontFamily: 'inter',
+        textAlign: 'center'
     },
     col: {
         width: '100%',

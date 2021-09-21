@@ -179,6 +179,9 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 <Text style={activeTab === 'overview' ? styles.allGrayFill : styles.all}>
                     <Ionicons name='clipboard-outline' size={20} />
                 </Text>
+                <Text style={activeTab === 'overview' ? styles.allGrayFill : styles.all}>
+                    Overview
+                </Text>
             </TouchableOpacity>
             <TouchableOpacity
                 style={{
@@ -192,6 +195,9 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 }}>
                 <Text style={activeTab === 'scores' ? styles.allGrayFill : styles.all}>
                     <Ionicons name='stats-chart-outline' size={20} />
+                </Text>
+                <Text style={activeTab === 'scores' ? styles.allGrayFill : styles.all}>
+                    Scores
                 </Text>
             </TouchableOpacity>
             {/* <TouchableOpacity
@@ -220,6 +226,9 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 }}>
                 <Text style={activeTab === 'attendance' ? styles.allGrayFill : styles.all}>
                     <Ionicons name='hand-left-outline' size={20} />
+                </Text>
+                <Text style={activeTab === 'attendance' ? styles.allGrayFill : styles.all}>
+                    Attendance
                 </Text>
             </TouchableOpacity>
         </View>)
@@ -507,23 +516,25 @@ const styles = StyleSheet.create({
         backgroundColor: 'white'
     },
     all: {
-        fontSize: 25,
+        fontSize: 10,
         color: '#43434f',
         height: 25,
         paddingHorizontal: 10,
         backgroundColor: '#fff',
-        textTransform: 'uppercase',
+        // textTransform: 'uppercase',
         lineHeight: 25,
-        fontFamily: 'inter'
+        textAlign: 'center'
+        // fontFamily: 'inter'
     },
     allGrayFill: {
-        fontSize: 25,
+        fontSize: 10,
         color: '#007AFF',
         height: 25,
         paddingHorizontal: 10,
         backgroundColor: '#fff',
-        textTransform: 'uppercase',
+        // textTransform: 'uppercase',
         lineHeight: 25,
-        fontFamily: 'inter'
+        textAlign: 'center'
+        // fontFamily: 'inter'
     },
 });

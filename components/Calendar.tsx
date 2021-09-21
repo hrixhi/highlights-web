@@ -31,7 +31,7 @@ import Swiper from "react-native-web-swiper";
 // Try New Calendar
 // import Scheduler, {SchedulerData, ViewTypes, DATE_FORMAT} from 'react-big-scheduler'
 // import 'react-big-scheduler/lib/css/style.css';
-import mobiscroll, { Form as MobiscrollForm, FormGroup, Button as MobiscrollButton, Select, Input, FormGroupTitle  } from '@mobiscroll/react'
+import mobiscroll, { Form as MobiscrollForm, FormGroup, Button as MobiscrollButton, Select, Input, FormGroupTitle } from '@mobiscroll/react'
 
 
 
@@ -257,12 +257,12 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     }, [props.filterByChannel, props.filterEventsType, props.filterStart, props.filterEnd])
 
 
-    
+
 
     const renderFilterEvents = () => {
 
         const channels = props.subscriptions.map((subscription: any) => {
-            
+
             return {
                 value: subscription.channelName,
                 text: subscription.channelName
@@ -833,7 +833,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         />
                                              
                     </label>
-                    
+
 
                     {/* <Menu
                         onSelect={(itemValue: any) => {
@@ -900,7 +900,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         size={'xs'}
                     // isValidDate={disablePastDt}
                     /> */}
-                    <MobiscrollDatePicker 
+                    <MobiscrollDatePicker
                         controls={['date', 'time']}
                         touchUi={true}
                         theme="ios"
@@ -1250,7 +1250,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     const renderTabs = (activeTab: any) => {
 
-        return (<View style={{ flexDirection: "row", flex: 1, justifyContent: 'center', marginBottom: 30, marginTop: 10 }}>
+        return (<View style={{ flexDirection: "row", flex: 1, justifyContent: 'center', marginBottom: 30, marginTop: 10, paddingVertical: 10 }}>
             <TouchableOpacity
                 style={{
                     justifyContent: "center",
@@ -1261,6 +1261,9 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 }}>
                 <Text style={activeTab === tabs[0] ? styles.allGrayFill1 : styles.all1}>
                     <Ionicons name='receipt-outline' size={20} />
+                </Text>
+                <Text style={activeTab === tabs[0] ? styles.allGrayFill1 : styles.all1}>
+                    Agenda
                 </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -1274,6 +1277,9 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 <Text style={activeTab === tabs[1] ? styles.allGrayFill1 : styles.all1}>
                     <Ionicons name='today-outline' size={20} />
                 </Text>
+                <Text style={activeTab === tabs[1] ? styles.allGrayFill1 : styles.all1}>
+                    Time Table
+                </Text>
             </TouchableOpacity>
             <TouchableOpacity
                 style={{
@@ -1285,6 +1291,9 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 }}>
                 <Text style={activeTab === tabs[2] ? styles.allGrayFill1 : styles.all1}>
                     <Ionicons name='calendar-outline' size={20} />
+                </Text>
+                <Text style={activeTab === tabs[2] ? styles.allGrayFill1 : styles.all1}>
+                    Calendar
                 </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -1298,6 +1307,9 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 <Text style={activeTab === tabs[3] ? styles.allGrayFill1 : styles.all1}>
                     <Ionicons name='notifications-outline' size={20} />
                 </Text>
+                <Text style={activeTab === tabs[3] ? styles.allGrayFill1 : styles.all1}>
+                    Activity
+                </Text>
             </TouchableOpacity>
             <TouchableOpacity
                 style={{
@@ -1309,6 +1321,9 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 }}>
                 <Text style={activeTab === tabs[4] ? styles.allGrayFill1 : styles.all1}>
                     <Ionicons name='add-outline' size={20} />
+                </Text>
+                <Text style={activeTab === tabs[4] ? styles.allGrayFill1 : styles.all1}>
+                    Event
                 </Text>
             </TouchableOpacity>
         </View>)
@@ -1410,7 +1425,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 borderWidth: tab !== 'Add' && tab !== 'Activity' ? 1 : 0,
                                                 borderColor: '#f0f0f2',
                                                 // maxHeight: 550,
-                                                height: '100%'
+                                                height: '100%',
+                                                backgroundColor: '#fff'
                                             }}
                                         >
                                             {
@@ -1431,6 +1447,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                 data={events}
                                                                 themeVariant="light"
                                                                 // height={}
+                                                                s
                                                                 onEventClick={onSelectEvent}
                                                                 renderEventContent={renderEventContent}
                                                             /> : (
@@ -2064,24 +2081,26 @@ const styles: any = StyleSheet.create({
         backgroundColor: "white"
     },
     all1: {
-        fontSize: 25,
+        fontSize: 10,
         color: '#43434f',
         height: 25,
         paddingHorizontal: 10,
         backgroundColor: '#fff',
-        textTransform: 'uppercase',
+        // textTransform: 'uppercase',
         lineHeight: 25,
-        fontFamily: 'inter'
+        textAlign: 'center',
+        // fontFamily: 'inter'
     },
     allGrayFill1: {
-        fontSize: 25,
+        fontSize: 10,
         color: '#007AFF',
         height: 25,
         paddingHorizontal: 10,
+        textAlign: 'center',
         backgroundColor: '#fff',
-        textTransform: 'uppercase',
+        // textTransform: 'uppercase',
         lineHeight: 25,
-        fontFamily: 'inter'
+        // fontFamily: 'inter'
     },
     col: {
         width: '100%',
