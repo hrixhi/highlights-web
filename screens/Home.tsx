@@ -100,6 +100,39 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   const [option, setOption] = useState('Home')
   const [options] = useState(['Home', 'Content', 'Inbox', 'Performance', 'Channels', 'Settings'])
 
+  const [navOptions] = useState([
+    {
+      id: 'Home',
+      text: 'Home',
+      icon: 'home'
+    },
+    {
+      id: 'Content',
+      text: 'Content',
+      icon: 'book'
+    },
+    {
+      id: 'Inbox',
+      text: 'Inbox',
+      icon: 'material-inbox'
+    },
+    {
+      id: 'Performance',
+      text: 'Performance',
+      icon: 'material-check'
+    },
+    {
+      id: 'Channels',
+      text: 'Channels',
+      icon: 'material-people'
+    },
+    {
+      id: 'Settings',
+      text: 'Settings',
+      icon: 'material-tune'
+    }
+  ])
+
   const [menuCollapsed, setMenuCollapsed] = useState(true)
 
   const [showHome, setShowHome] = useState(true)
@@ -985,7 +1018,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
       setSaveDataInProgress(false)
 
     }).catch(err => console.log(err))
-  }, [cues, setCues])
+  }, [cues])
 
   useEffect(() => {
 
@@ -1052,6 +1085,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   }, [subscriptions])
 
   const openUpdate = useCallback((key, index, pageNumber, _id, by, channId) => {
+
+    console.log("Open update")
     setUpdateModalKey(key)
     setUpdateModalIndex(index)
     setPageNumber(pageNumber)
@@ -1070,6 +1105,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     openModal('Update')
     setShowHome(false)
   }, [subscriptions])
+
+  console.log("")
 
   const reloadCueListAfterUpdate = useCallback(async () => {
     const unparsedCues = await AsyncStorage.getItem('cues')
@@ -1340,35 +1377,35 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     return 0;
   })
 
-  if (filterChoice === 'All') {
-    filteredCues = cuesCopy
-  } else if (filterChoice === 'MyCues') {
-    filteredCues = cuesCopy.filter((item) => {
-      return !item.channelId || item.channelId === ''
-    })
-  } else if (filterChoice === 'All-Channels') {
-    filteredCues = cuesCopy.filter((item) => {
-      return item.channelId && item.channeId !== ''
-    })
-  } else if (channelId !== '') {
-    filteredCues = cuesCopy.filter((item) => {
-      return item.channelName === filterChoice
-    })
-  } else {
-    filteredCues = cuesCopy.filter((item) => {
-      return item.customCategory === filterChoice
-    })
-  }
+  // if (filterChoice === 'All') {
+  //   filteredCues = cuesCopy
+  // } else if (filterChoice === 'MyCues') {
+  //   filteredCues = cuesCopy.filter((item) => {
+  //     return !item.channelId || item.channelId === ''
+  //   })
+  // } else if (filterChoice === 'All-Channels') {
+  //   filteredCues = cuesCopy.filter((item) => {
+  //     return item.channelId && item.channeId !== ''
+  //   })
+  // } else if (channelId !== '') {
+  //   filteredCues = cuesCopy.filter((item) => {
+  //     return item.channelName === filterChoice
+  //   })
+  // } else {
+  //   filteredCues = cuesCopy.filter((item) => {
+  //     return item.customCategory === filterChoice
+  //   })
+  // }
 
   let dateFilteredCues: any[] = []
   if (filterStart && filterEnd) {
-    dateFilteredCues = filteredCues.filter((item) => {
+    dateFilteredCues = cuesCopy.filter((item) => {
       const date = new Date(item.date)
       return date >= filterStart && date <= filterEnd
     })
 
   } else {
-    dateFilteredCues = filteredCues
+    dateFilteredCues = cuesCopy
   }
 
   if (!init) {
@@ -1376,6 +1413,9 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   }
 
   const alertText = PreferredLanguageText('savedLocally');
+
+  console.log("Show Home", showHome);
+  console.log("Option", option);
 
   return (
     <View style={styles(channelId).container} key={showHome.toString() + option.toString()}>
@@ -1564,6 +1604,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               setOption={(op: any) => setOption(op)}
               option={option}
               options={options}
+              navOptions={navOptions}
               hideHome={() => {
                 setShowHome(false)
                 loadData()

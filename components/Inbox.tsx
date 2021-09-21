@@ -21,6 +21,12 @@ import alert from '../components/Alert';
 import { Ionicons } from '@expo/vector-icons';
 import FileUpload from './UploadFiles';
 import moment from 'moment';
+import mobiscroll, { Form as MobiscrollForm, FormGroup, Button as MobiscrollButton, Select, Input, FormGroupTitle  } from '@mobiscroll/react'
+
+mobiscroll.settings = {
+    theme: 'ios',
+    themeVariant: 'light'
+};
 
 const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -664,11 +670,44 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                             showDirectory ?
                                                 <View style={{ backgroundColor: '#fff', paddingTop: 15 }}>
                                                     <View style={{ flexDirection: 'row', backgroundColor: '#fff' }}>
-                                                        <Menu
+                                                        
+                                                    <label style={{ cursor: 'pointer' }}>
+                                                        <Select
+                                                            inputClass="mobiscrollCustomInput"
+                                                            value={filterChannelId}
+                                                            onSet={(event, inst) => {
+
+                                                                if (!event.valueText) return;
+
+                                                                   setFilterChannelId(inst.getVal())
+                                                                }}
+                                                                responsive={{
+                                                                    small: {
+                                                                        display: 'bubble'
+                                                                    },
+                                                                    medium: {
+                                                                        touchUi: false,
+                                                                    }
+                                                                }}
+                                                            >
+                                                                <option value={''}>All</option>
+                                                                {
+                                                                    props.subscriptions.map((subscription: any) => {
+                                                                        return <option value={subscription.channelId}>
+                                                                            {subscription.channelName} 
+                                                                        </option>
+                                                                    })
+                                                                }
+                                                            </Select>
+                                                            
+                                                    </label>
+
+                                                        {/* <Menu
                                                             onSelect={(sub: any) => {
                                                                 if (sub === '') {
                                                                     setFilterChannelName('')
                                                                     setFilterChannelId('')
+
                                                                 } else {
                                                                     setFilterChannelId(sub.channelId)
                                                                     setFilterChannelName(sub.channelName)
@@ -725,9 +764,9 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                     })
                                                                 }
                                                             </MenuOptions>
-                                                        </Menu>
+                                                        </Menu> */}
                                                     </View>
-                                                    <Text style={{ fontSize: 10, color: '#1D1D20', paddingTop: 7 }}>
+                                                    <Text style={{ fontSize: 10, color: '#1D1D20', }}>
                                                         Channel
                                                     </Text>
                                                 </View> : null

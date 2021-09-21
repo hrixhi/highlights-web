@@ -9,6 +9,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import "react-datetime/css/react-datetime.css"
 import 'rsuite/dist/styles/rsuite-default.css'
 import './web/htmlParser.css';
+import './web/mobiscrollCustom.css'
 import { LanguageProvider } from "./helpers/LanguageContext";
 import { MenuProvider } from 'react-native-popup-menu';
 // import {DragDropContextProvider} from 'react-dnd';

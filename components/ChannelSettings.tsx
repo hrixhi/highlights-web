@@ -20,6 +20,16 @@ import {
 } from 'react-native-popup-menu';
 import { Ionicons } from '@expo/vector-icons';
 
+import mobiscroll, { Form as MobiscrollForm, FormGroup, Button as MobiscrollButton, Select, Input, FormGroupTitle  } from '@mobiscroll/react'
+import '@mobiscroll/react/dist/css/mobiscroll.min.css';
+
+mobiscroll.settings = {
+    theme: 'ios',
+    themeVariant: 'light'
+};
+
+
+
 const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
     const [loadingOrg, setLoadingOrg] = useState(true);
@@ -61,8 +71,13 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
     const [activeGrade, setActiveGrade] = useState('All');
     const [activeSection, setActiveSection] = useState('All');
 
+    // Store all selected values for new mobiscroll multiselect
+    const [selectedValues, setSelectedValues] = useState<any[]>([]);
+
     // Used to find out if any moderators are removed
     const [originalOwners, setOriginalOwners] = useState<any[]>([]);
+
+    const [selectedModerators, setSelectedModerators] = useState<any[]>([]);
 
     // Used to keep all users to filter
     const [allUsers, setAllUsers] = useState([]);
@@ -115,27 +130,64 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
 
         let filteredOptions = filteredUsers.map((user: any) => {
             return {
-                name: user.fullName,
-                id: user._id
+                group: user.fullName[0].toUpperCase(),
+                text: user.fullName,
+                value: user._id
             }
         })
 
-        setOptions(filteredOptions)
+        const sort = filteredOptions.sort((a, b) => {
+            if(a.group < b.group) { return -1; }
+            if(a.group > b.group) { return 1; }
+            return 0;
+        })
+
+        console.log("Sort", sort)
+
+        setOptions(sort)
 
     }, [activeRole, activeGrade, activeSection, channelCreator])
 
+    // Main owner is filtered out with this useEffect
+    // useEffect(() => {
+    //     if (channelCreator !== "") {
+    //         const subscribers = [...selected]
+
+    //         const filterOutMainOwner = subscribers.filter((sub: any) => {
+    //             return sub.id !== channelCreator
+    //         })
+
+
+    //         setSelectedValues(filterOutOwner);
+
+    //         setSelected(filterOutMainOwner)
+    //     }
+    // }, [channelCreator])
+
     useEffect(() => {
         if (channelCreator !== "") {
-            const subscribers = [...selected]
+            const subscribers = [...selectedValues]
 
-            const filterOutMainOwner = subscribers.filter((sub: any) => {
-                return sub.id !== channelCreator
+            const filterOutOwner = subscribers.filter((sub: any) => {
+                return sub !== channelCreator
             })
 
-            setSelected(filterOutMainOwner)
+            
+
+            // // Sort the values
+            // const sort = filterOutOwner.sort((a, b) => {
+            //     const one = options.find((o: any) => o.value === a);
+            //     const two = options.find((o: any) => o.value === b);
+
+            //     return one.text > two.text ? 1 : -1
+            // })
+
+            setSelectedValues(filterOutOwner);
+
         }
     }, [channelCreator])
 
+    // Selected needs to hold all the values in an array 
 
     const renderSubscriberFilters = () => {
         return (<View style={{ width: '100%', flexDirection: 'row', backgroundColor: 'white', marginTop: 25 }}>
@@ -373,9 +425,9 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
 
         let moderatorsPresentAsSubscribers = true;
 
-        owners.map((owner: any) => {
-            const presentInSubscriber = selected.find((sub: any) => {
-                return owner.id === sub.id;
+        selectedModerators.map((owner: any) => {
+            const presentInSubscriber = selectedValues.find((sub: any) => {
+                return owner === sub;
             })
 
             if (!presentInSubscriber) {
@@ -404,25 +456,25 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         password,
                         channelId: props.channelId,
                         temporary,
-                        owners: owners.map((item) => {
-                            return item.id
-                        }),
+                        owners: selectedModerators,
                         colorCode
                     }
                 }).then(res2 => {
                     if (res2.data && res2.data.channel.update) {
                         // added subs
-                        selected.map((sub: any) => {
+                        selectedValues.map((sub: any) => {
                             const og = originalSubs.find((o: any) => {
-                                return o.id === sub.id
+                                return o.id === sub
                             })
                             if (!og) {
+
+                                console.log("To Add User", sub)
                                 server.mutate({
                                     mutation: subscribe,
                                     variables: {
                                         name: name.trim(),
                                         password: password,
-                                        userId: sub.id
+                                        userId: sub
                                     }
                                 })
                             }
@@ -432,11 +484,12 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
 
                             if (o.id === channelCreator) return;
 
-                            const og = selected.find((sub: any) => {
-                                return o.id === sub.id
+                            const og = selectedValues.find((sub: any) => {
+                                return o.id === sub
                             })
 
                             if (!og) {
+                                console.log("To Remove User", o.id)
                                 server.mutate({
                                     mutation: unsubscribe,
                                     variables: {
@@ -457,7 +510,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         alert("Something went wrong.")
                     }
                 }).catch(err => {
-                    console.log(err)
+                    newFunction()(err)
                     alert("Something went wrong.")
                 })
             } else {
@@ -467,7 +520,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
             alert("Something went wrong.")
         })
     }, [name, password, props.channelId, options, originalSubs, owners,
-        temporary, selected, originalName, colorCode])
+        temporary, selected, originalName, colorCode, selectedValues, selectedModerators])
 
     const handleDelete = useCallback(() => {
         const server = fetchAPI('')
@@ -522,8 +575,9 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         const x = { ...item, selected: false, index }
                                         delete x.__typename
                                         tempUsers.push({
-                                            name: item.fullName,
-                                            id: item._id
+                                            group: item.fullName[0].toUpperCase(),
+                                            text: item.fullName,
+                                            value: item._id
                                         })
                                         return x
                                     })
@@ -546,7 +600,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 const ownerOptions: any[] = []
                                                 tempUsers.map((item: any) => {
                                                     const u = res.data.channel.findById.owners.find((i: any) => {
-                                                        return i === item.id
+                                                        return i === item.value
                                                     })
                                                     if (u) {
                                                         ownerOptions.push(item)
@@ -556,19 +610,38 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 // Filter out the main channel creator from the moderators list
 
                                                 const filterOutMainOwner = ownerOptions.filter((user: any) => {
-                                                    return user.id !== res.data.channel.findById.channelCreator
+                                                    return user.value !== res.data.channel.findById.channelCreator
                                                 })
+
+
+                                                const mod = filterOutMainOwner.map((user: any) => user.value)
 
                                                 setOriginalOwners(filterOutMainOwner)
 
                                                 setOwners(filterOutMainOwner)
+
+                                                console.log("Selected owners", filterOutMainOwner)
+
+                                                setSelectedModerators(mod)
 
                                                 setLoadingOrg(false)
                                             }
                                         }
                                     })
 
-                                    setOptions(tempUsers)
+                                    const sort = tempUsers.sort((a, b) => {
+                                        if(a.text < b.text) { return -1; }
+                                        if(a.text > b.text) { return 1; }
+                                        return 0;
+                                    })
+
+                                    console.log("Sort", sort)
+
+                            
+                                    setOptions(sort)
+                            
+
+                                    // setOptions(tempUsers)
                                 })
                             }
                         }
@@ -597,6 +670,14 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
 
                                 // add the user always 
                             })
+
+                            const tempSelectedValues: any[] = [] 
+
+                            res.data.user.findByChannelId.map((item: any, index: any) => {
+                                tempSelectedValues.push(item._id)
+                            })
+                            
+                            setSelectedValues(tempSelectedValues)
                             setOriginalSubs(tempUsers)
                             setSelected(tempUsers)
                             setLoadingUsers(false)
@@ -904,6 +985,19 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
 
     }
 
+    console.log("Options", selectedModerators);
+
+    const moderatorOptions = selectedValues.map((value: any) => {
+        const match = options.find((o: any) => {
+            return o.value === value;
+        })
+
+        return match
+    })
+
+
+    
+
     return (
         <View style={styles.screen} >
             <View style={{ width: '100%', backgroundColor: 'white', paddingTop: 30 }}>
@@ -991,7 +1085,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                     {renderSubscriberFilters()}
                     <View style={{ flexDirection: 'column', marginTop: 25, overflow: 'scroll' }}>
                         <View style={{ width: '90%', height: 'auto' }}>
-                            <Multiselect
+                            {/* <Multiselect
                                 placeholder='Select...'
                                 displayValue='name'
                                 // key={userDropdownOptions.toString()}
@@ -1020,7 +1114,42 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     setSelected(e);
                                     return true
                                 }}
-                            />
+                            /> */}
+
+                                <div >
+                                    <label>
+                                        <Select
+                                            style={{ width: 320 }}
+                                            select="multiple"
+                                            group={true}
+                                            groupLabel="&nbsp;"
+                                            inputClass="mobiscrollCustomMultiInput"
+                                            placeholder="Select..."
+                                            // minWidth={[60, 320]}
+                                            value={selectedValues}
+                                            data={options}
+                                            onSet={(event, inst) => {
+                                                console.log("on change", inst.getVal())
+                                                if (inst.getVal().length === selectedValues.length) return;
+
+                                                setSelectedValues(inst.getVal())
+
+                                                // Filter out any moderator if not part of the selected values
+
+                                            }}
+                                            responsive={{
+                                                small: {
+                                                    display: 'bubble'
+                                                },
+                                                medium: {
+                                                    touchUi: false,
+                                                }
+                                            }}
+                                              minWidth={[60, 320]}
+                                            // minWidth={[60, 320]}
+                                        />
+                                    </label>
+                                </div>
                         </View>
                     </View>
                     <Text style={{
@@ -1030,7 +1159,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                     }}>
                         Moderators
                     </Text>
-                    <View style={{ flexDirection: 'column', marginTop: 25, overflow: 'scroll' }}>
+                    {/* <View style={{ flexDirection: 'column', marginTop: 25, overflow: 'scroll' }}>
                         <View style={{ width: '90%', height: 'auto' }}>
                             <Multiselect
                                 placeholder='Select...'
@@ -1058,7 +1187,39 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 }}
                             />
                         </View>
-                    </View>
+                    </View> */}
+
+                        <label>
+                            <Select
+                                            select="multiple"
+                                            // group={true}
+                                            // groupLabel="&nbsp;"
+                                            // minWidth={[60, 320]}
+                                            placeholder="Select..."
+                                            inputClass="mobiscrollCustomMultiInput"
+                                            value={selectedModerators}
+                                            data={moderatorOptions}
+                                            onSet={(event, inst) => {
+                                                console.log("on change", inst.getVal())
+                                                if (inst.getVal().length === selectedModerators.length) return;
+
+                                                setSelectedModerators(inst.getVal())
+
+                                                // Filter out any moderator if not part of the selected values
+
+                                            }}
+                                            responsive={{
+                                                small: {
+                                                    display: 'bubble'
+                                                },
+                                                medium: {
+                                                    touchUi: false,
+                                                }
+                                            }}
+                                              minWidth={[60, 320]}
+                                            // minWidth={[60, 320]}
+                                        />
+                                    </label>
 
                     <View style={{ flexDirection: 'column', alignItems: 'center', marginTop: 50, paddingBottom: 50 }}>
                         <TouchableOpacity
@@ -1224,3 +1385,7 @@ const styles = StyleSheet.create({
         borderColor: '#818385'
     },
 });
+
+function newFunction() {
+    return console.log;
+}

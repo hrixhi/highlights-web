@@ -54,7 +54,10 @@ import lodash from 'lodash';
 import { Editor } from '@tinymce/tinymce-react';
 import parser from 'html-react-parser';
 import Select from 'react-select';
-
+import { Datepicker as MobiscrollDatePicker } from "@mobiscroll/react5";
+import '@mobiscroll/react/dist/css/mobiscroll.min.css';
+import '@mobiscroll/react5/dist/css/mobiscroll.min.css';
+import mobiscroll, { Form as MobiscrollForm, FormGroup, Button as MobiscrollButton, Select as MobiscrollSelect, Input, FormGroupTitle  } from '@mobiscroll/react'
 
 const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const current = new Date();
@@ -2507,14 +2510,14 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 </View> */}
                 {quizAttempted
                     ?
-                    <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                    <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: 15 }}>
                         <Ionicons name='checkmark-outline' size={22} color={"#53BE68"} />
                         <Text style={{ fontSize: 15, paddingLeft: 5 }}>
                             Submitted at {moment(new Date(latestSubmission.submittedAt)).format('MMMM Do, h:mm a')}
                         </Text>
                     </View>
                     :
-                    <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                    <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: 15  }}>
                         <Ionicons name='alert-circle-outline' size={22} color={"#D91D56"} />
                         <Text style={{ fontSize: 15, paddingLeft: 5 }}>
                             Not Attempted
@@ -2957,9 +2960,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     paste_data_images: true,
                     images_upload_url: 'https://api.cuesapp.co/api/imageUploadEditor',
                     mobile: {
-                        plugins: (!isOwner && props.cue.channelId &&  props.cue.channelId !== "") ? 'print preview' : 'print preview powerpaste casechange importcss tinydrive searchreplace autolink autosave save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount tinymcespellchecker a11ychecker textpattern noneditable help formatpainter pageembed charmap mentions quickbars linkchecker emoticons advtable autoresize'
+                        plugins: (!isOwner && props.cue.channelId &&  props.cue.channelId !== "") ? 'print preview' : 'print preview powerpaste casechange importcss tinydrive searchreplace autolink autosave save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount tinymcespellchecker a11ychecker textpattern noneditable help formatpainter pageembed charmap mentions linkchecker emoticons advtable autoresize'
                     },
-                    plugins: (!isOwner && props.cue.channelId &&  props.cue.channelId !== "") ? 'print preview' : 'print preview powerpaste casechange importcss tinydrive searchreplace autolink autosave save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount tinymcespellchecker a11ychecker textpattern noneditable help formatpainter pageembed charmap mentions quickbars linkchecker emoticons advtable autoresize',
+                    plugins: (!isOwner && props.cue.channelId &&  props.cue.channelId !== "") ? 'print preview' : 'print preview powerpaste casechange importcss tinydrive searchreplace autolink autosave save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount tinymcespellchecker a11ychecker textpattern noneditable help formatpainter pageembed charmap mentions linkchecker emoticons advtable autoresize',
                     menu: { // this is the complete default configuration
                         file: { title: 'File', items: 'newdocument' },
                         edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall' },
@@ -3144,9 +3147,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 paste_data_images: true,
                 images_upload_url: 'http://api.cuesapp.co/api/imageUploadEditor',
                 mobile: {
-                    plugins: 'print preview powerpaste casechange importcss tinydrive searchreplace autolink autosave save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount tinymcespellchecker a11ychecker textpattern noneditable help formatpainter pageembed charmap mentions quickbars linkchecker emoticons advtable autoresize'
+                    plugins: 'print preview powerpaste casechange importcss tinydrive searchreplace autolink autosave save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount tinymcespellchecker a11ychecker textpattern noneditable help formatpainter pageembed charmap mentions linkchecker emoticons advtable autoresize'
                 },
-                plugins: 'print preview powerpaste casechange importcss tinydrive searchreplace autolink autosave save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount tinymcespellchecker a11ychecker textpattern noneditable help formatpainter pageembed charmap mentions quickbars linkchecker emoticons advtable autoresize',
+                plugins: 'print preview powerpaste casechange importcss tinydrive searchreplace autolink autosave save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount tinymcespellchecker a11ychecker textpattern noneditable help formatpainter pageembed charmap mentions linkchecker emoticons advtable autoresize',
                 menu: { // this is the complete default configuration
                     file: { title: 'File', items: 'newdocument' },
                     edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall' },
@@ -3166,7 +3169,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 toolbar_mode: 'sliding',
                 tinycomments_mode: 'embedded',
                 content_style: '.mymention{ color: gray; }',
-                contextmenu: 'link image imagetools table configurepermanentpen',
+                // contextmenu: 'link image imagetools table configurepermanentpen',
                 a11y_advanced_options: true,
                 extended_valid_elements: "svg[*],defs[*],pattern[*],desc[*],metadata[*],g[*],mask[*],path[*],line[*],marker[*],rect[*],circle[*],ellipse[*],polygon[*],polyline[*],linearGradient[*],radialGradient[*],stop[*],image[*],view[*],text[*],textPath[*],title[*],tspan[*],glyph[*],symbol[*],switch[*],use[*]"
                 // skin: useDarkMode ? 'oxide-dark' : 'oxide',
@@ -3357,17 +3360,50 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 Available
                             </Text>
                             {isOwner ? (
-                                <DatePicker
-                                    format="YYYY-MM-DD HH:mm"
-                                    size={'xs'}
+                                // <DatePicker
+                                //     format="YYYY-MM-DD HH:mm"
+                                //     size={'xs'}
+                                //     value={initiateAt}
+                                //     appearance={'subtle'}
+                                //     preventOverflow={true}
+                                //     onChange={(event: any) => {
+                                //         const date = new Date(event);
+                                //         setInitiateAt(date);
+                                //     }}
+                                // // isValidDate={disablePastDt}
+                                // />
+                                <MobiscrollDatePicker 
+                                    controls={['date', 'time']}
+                                    touchUi={true}
+                                    theme="ios"
                                     value={initiateAt}
-                                    appearance={'subtle'}
-                                    preventOverflow={true}
+                                    themeVariant="light"
+                                    inputComponent="input"
+                                    inputProps={{
+                                        placeholder: 'Please Select...' 
+                                    }}
                                     onChange={(event: any) => {
-                                        const date = new Date(event);
+                                        const date = new Date(event.value);
                                         setInitiateAt(date);
                                     }}
-                                // isValidDate={disablePastDt}
+                                    responsive={{
+                                        xsmall: {
+                                            controls: ['date', 'time'],
+                                            display: 'bottom',
+                                            touchUi: true
+                                        },
+                                        // small: {
+                                        //     controls: ['date', 'time'],
+                                        //     display: 'anchored',
+                                        //     touchUi: true
+                                        // },
+                                        medium: {
+                                            controls: ['date', 'time'],
+                                            display: 'anchored',
+                                            touchUi: false
+                                        },
+                                    }}
+
                                 />
                             ) : (
                                 <Text
@@ -3397,19 +3433,54 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 Deadline
                             </Text>
                             {isOwner ? (
-                                <DatePicker
-                                    preventOverflow={true}
-                                    value={deadline}
-                                    appearance={'subtle'}
-                                    format="YYYY-MM-DD HH:mm"
+                                // <DatePicker
+                                //     preventOverflow={true}
+                                //     value={deadline}
+                                //     appearance={'subtle'}
+                                //     format="YYYY-MM-DD HH:mm"
+                                //     onChange={(event: any) => {
+                                //         const date = new Date(event);
+
+                                //         if (date < initiateAt) return;
+                                //         setDeadline(date);
+                                //     }}
+                                //     size={'xs'}
+                                // // isValidDate={disablePastDt}
+                                // />
+                                <MobiscrollDatePicker 
+                                    controls={['date', 'time']}
+                                    touchUi={true}
+                                    theme="ios"
+                                    value={initiateAt}
+                                    themeVariant="light"
+                                    inputComponent="input"
+                                    inputProps={{
+                                        placeholder: 'Please Select...' 
+                                    }}
                                     onChange={(event: any) => {
-                                        const date = new Date(event);
+                                        const date = new Date(event.value);
 
                                         if (date < initiateAt) return;
                                         setDeadline(date);
                                     }}
-                                    size={'xs'}
-                                // isValidDate={disablePastDt}
+                                    responsive={{
+                                        xsmall: {
+                                            controls: ['date', 'time'],
+                                            display: 'bottom',
+                                            touchUi: true
+                                        },
+                                        // small: {
+                                        //     controls: ['date', 'time'],
+                                        //     display: 'anchored',
+                                        //     touchUi: true
+                                        // },
+                                        medium: {
+                                            controls: ['date', 'time'],
+                                            display: 'anchored',
+                                            touchUi: false
+                                        },
+                                    }}
+
                                 />
                             ) : (
                                 <Text
@@ -3569,20 +3640,56 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 {!isOwner ? (allowLateSubmission ? "Available until  " + moment(new Date(availableUntil)).format('MMMM Do, h:mm a') : "No") : "Available Until"}
                             </Text>
                             {isOwner ? (
-                                <DatePicker
-                                    preventOverflow={true}
+                                // <DatePicker
+                                //     preventOverflow={true}
+                                //     value={availableUntil}
+                                //     appearance={'subtle'}
+                                //     format="YYYY-MM-DD HH:mm"
+                                //     onChange={(event: any) => {
+                                //         const date = new Date(event);
+
+                                //         if (date < deadline) return;
+                                //         setAvailableUntil(date);
+                                //     }}
+                                //     size={'xs'}
+                                // // isValidDate={disablePastDt}
+                                // />
+                                <MobiscrollDatePicker 
+                                    controls={['date', 'time']}
+                                    touchUi={true}
+                                    theme="ios"
                                     value={availableUntil}
-                                    appearance={'subtle'}
-                                    format="YYYY-MM-DD HH:mm"
+                                    themeVariant="light"
+                                    inputComponent="input"
+                                    inputProps={{
+                                        placeholder: 'Please Select...' 
+                                    }}
                                     onChange={(event: any) => {
-                                        const date = new Date(event);
+                                        const date = new Date(event.value);
 
                                         if (date < deadline) return;
                                         setAvailableUntil(date);
                                     }}
-                                    size={'xs'}
-                                // isValidDate={disablePastDt}
+                                    responsive={{
+                                        xsmall: {
+                                            controls: ['date', 'time'],
+                                            display: 'bottom',
+                                            touchUi: true
+                                        },
+                                        // small: {
+                                        //     controls: ['date', 'time'],
+                                        //     display: 'anchored',
+                                        //     touchUi: true
+                                        // },
+                                        medium: {
+                                            controls: ['date', 'time'],
+                                            display: 'anchored',
+                                            touchUi: false
+                                        },
+                                    }}
+
                                 />
+                                
                             ) : null}
                         </View>
                     ) :
@@ -3794,51 +3901,81 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         />
                                     </View>
                                 ) : (
-                                    <Menu
-                                        onSelect={(cat: any) => setCustomCategory(cat)}>
-                                        <MenuTrigger>
-                                            <Text style={{
-                                                fontSize: 12,
-                                                color: "#818385",
-                                                textAlign: "right",
-                                                paddingRight: 10,
-                                                // paddingTop: 5
-                                            }}>
-                                                {customCategory === '' ? 'None' : customCategory}<Ionicons name='caret-down' size={14} />
-                                            </Text>
-                                        </MenuTrigger>
-                                        <MenuOptions customStyles={{
-                                            optionsContainer: {
-                                                padding: 10,
-                                                borderRadius: 15,
-                                                shadowOpacity: 0,
-                                                borderWidth: 1,
-                                                borderColor: '#f0f0f2',
-                                                overflow: 'scroll',
-                                                maxHeight: '100%'
-                                            }
-                                        }}>
-                                            <MenuOption
-                                                value={''}>
-                                                <Text>
-                                                    None
-                                                </Text>
-                                            </MenuOption>
-                                            {
-                                                customCategories.map((category: any) => {
-                                                    return <MenuOption
-                                                        value={category}>
-                                                        <Text>
-                                                            {category}
-                                                        </Text>
-                                                    </MenuOption>
-                                                })
-                                            }
-                                        </MenuOptions>
-                                    </Menu>
+                                    // <Menu
+                                    //     onSelect={(cat: any) => setCustomCategory(cat)}>
+                                    //     <MenuTrigger>
+                                    //         <Text style={{
+                                    //             fontSize: 12,
+                                    //             color: "#818385",
+                                    //             textAlign: "right",
+                                    //             paddingRight: 10,
+                                    //             // paddingTop: 5
+                                    //         }}>
+                                    //             {customCategory === '' ? 'None' : customCategory}<Ionicons name='caret-down' size={14} />
+                                    //         </Text>
+                                    //     </MenuTrigger>
+                                    //     <MenuOptions customStyles={{
+                                    //         optionsContainer: {
+                                    //             padding: 10,
+                                    //             borderRadius: 15,
+                                    //             shadowOpacity: 0,
+                                    //             borderWidth: 1,
+                                    //             borderColor: '#f0f0f2',
+                                    //             overflow: 'scroll',
+                                    //             maxHeight: '100%'
+                                    //         }
+                                    //     }}>
+                                    //         <MenuOption
+                                    //             value={''}>
+                                    //             <Text>
+                                    //                 None
+                                    //             </Text>
+                                    //         </MenuOption>
+                                    //         {
+                                    //             customCategories.map((category: any) => {
+                                    //                 return <MenuOption
+                                    //                     value={category}>
+                                    //                     <Text>
+                                    //                         {category}
+                                    //                     </Text>
+                                    //                 </MenuOption>
+                                    //             })
+                                    //         }
+                                    //     </MenuOptions>
+                                    // </Menu>
+                                    <label>
+                                        <MobiscrollSelect
+                                            inputClass="mobiscrollCategoryInput"
+                                            value={customCategory}
+                                            rows={customCategories.length + 1}
+                                            onSet={(event, inst) => {
+
+                                                if (!event.valueText) return;
+
+                                                    setCustomCategory(inst.getVal())
+                                                }}
+                                                responsive={{
+                                                    small: {
+                                                        display: 'bubble'
+                                                    },
+                                                    medium: {
+                                                        touchUi: false,
+                                                    }
+                                                }}
+                                            >
+                                                <option value={''}>None</option>
+                                                
+                                                {customCategories.map((category: any) => {
+                                                return (
+                                                    <option value={category}>{category}</option>
+                                                );
+                                                })}
+                                            </MobiscrollSelect>
+                                            
+                                    </label>
                                 )}
                             </View>
-                            <View style={{ width: "20%", backgroundColor: "white", paddingRight: 20 }}>
+                            <View style={{ width: "20%", backgroundColor: "white",}}>
                                 <TouchableOpacity
                                     onPress={() => {
                                         if (addCustomCategory) {
@@ -4200,7 +4337,42 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         paddingRight: 10,
                                         paddingTop: 5
                                     }}>{PreferredLanguageText("remindEvery")}</Text>
-                                    <Menu
+                                    <label>
+                                        <MobiscrollSelect
+                                            inputClass="mobiscrollFrequencyInput"
+                                            value={frequency}
+                                            rows={timedFrequencyOptions.length}
+                                            onSet={(event, inst) => {
+
+                                                if (!event.valueText) return;
+
+                                                    // const match = timedFrequencyOptions.find((freq: any) => {
+                                                    //   return freq.
+                                                    // })
+                                                    setFrequency(inst.getVal());
+                                                    // setFrequencyName(cat.label);
+
+                                                }}
+                                                responsive={{
+                                                    small: {
+                                                        display: 'bubble'
+                                                    },
+                                                    medium: {
+                                                        touchUi: false,
+                                                    }
+                                                }}
+                                            >   
+                                                {timedFrequencyOptions.map((item: any) => {
+                                                return (
+                                                    <option value={item.value} >
+                                                    {item.label}
+                                                    </option>
+                                                );
+                                                })}
+                                            </MobiscrollSelect>
+                                            
+                                    </label>
+                                    {/* <Menu
                                         onSelect={(cat: any) => {
                                             setFrequency(cat.value)
                                             setFrequencyName(cat.label)
@@ -4238,7 +4410,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                 })
                                             }
                                         </MenuOptions>
-                                    </Menu>
+                                    </Menu> */}
                                 </View>
                             ) : (
                                 <View
@@ -4265,7 +4437,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         </Text>
                                     </View>
                                     <View>
-                                        <DatePicker
+                                        {/* <DatePicker
                                             style={{}}
                                             preventOverflow={true}
                                             value={endPlayAt}
@@ -4279,7 +4451,44 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             }}
                                             // isValidDate={disablePastDt}
                                             size={'xs'}
+                                        /> */}
+
+                                        <MobiscrollDatePicker 
+                                            controls={['date', 'time']}
+                                            touchUi={true}
+                                            theme="ios"
+                                            value={endPlayAt}
+                                            themeVariant="light"
+                                            inputComponent="input"
+                                            inputProps={{
+                                                placeholder: 'Please Select...' 
+                                            }}
+                                            onChange={(event: any) => {
+                                                const date = new Date(event.value);
+                                                if (date < new Date()) return;
+
+                                                setEndPlayAt(date);
+                                            }}
+                                            responsive={{
+                                                xsmall: {
+                                                    controls: ['date', 'time'],
+                                                    display: 'bottom',
+                                                    touchUi: true
+                                                },
+                                                // small: {
+                                                //     controls: ['date', 'time'],
+                                                //     display: 'anchored',
+                                                //     touchUi: true
+                                                // },
+                                                medium: {
+                                                    controls: ['date', 'time'],
+                                                    display: 'anchored',
+                                                    touchUi: false
+                                                },
+                                            }}
+
                                         />
+                                        
                                     </View>
                                 </View>
                             )}
@@ -4328,7 +4537,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         backgroundColor: "white"
                                     }}>
                                     <Text style={styles.text}>{PreferredLanguageText("remindTill")}</Text>
-                                    <DatePicker
+                                    {/* <DatePicker
                                         preventOverflow={true}
                                         format="YYYY-MM-DD HH:mm"
                                         appearance={'subtle'}
@@ -4340,7 +4549,44 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         }}
                                         value={endPlayAt}
                                         size={'xs'}
+                                    /> */}
+
+                                    <MobiscrollDatePicker 
+                                        controls={['date', 'time']}
+                                        touchUi={true}
+                                        theme="ios"
+                                        value={endPlayAt}
+                                        themeVariant="light"
+                                        inputComponent="input"
+                                        inputProps={{
+                                            placeholder: 'Please Select...' 
+                                        }}
+                                        onChange={(event: any) => {
+                                            const date = new Date(event.value);
+                                            if (date < new Date()) return;
+
+                                            setEndPlayAt(date);
+                                        }}
+                                        responsive={{
+                                            xsmall: {
+                                                controls: ['date', 'time'],
+                                                display: 'bottom',
+                                                touchUi: true
+                                            },
+                                            // small: {
+                                            //     controls: ['date', 'time'],
+                                            //     display: 'anchored',
+                                            //     touchUi: true
+                                            // },
+                                            medium: {
+                                                controls: ['date', 'time'],
+                                                display: 'anchored',
+                                                touchUi: false
+                                            },
+                                        }}
+
                                     />
+                                    
                                 </View>
                             )}
                         </View>

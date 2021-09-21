@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { ActivityIndicator, StyleSheet, Image, Dimensions, Linking, ScrollView } from 'react-native';
 import { View, Text, TouchableOpacity } from '../components/Themed';
 import { Ionicons } from '@expo/vector-icons';
@@ -31,6 +31,14 @@ import Inbox from './Inbox';
 import Card from './Card';
 import Alert from '../components/Alert'
 
+import mobiscroll, { Form as MobiscrollForm, FormGroup, Button as MobiscrollButton, Popup, Optionlist, OptionItem, Listview,   } from '@mobiscroll/react'
+import '@mobiscroll/react/dist/css/mobiscroll.min.css';
+
+
+mobiscroll.settings = {
+    theme: 'ios',
+    themeVariant: 'light'
+};
 
 const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -38,6 +46,11 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const styles = styleObject()
     const [userId, setUserId] = useState('')
     const [avatar, setAvatar] = useState('')
+
+    const mobiRef : any = useRef(null);
+
+    const deskMobiRef : any = useRef(null);
+ 
 
     const [searchTerm, setSearchTerm] = useState('')
     const priorities = [4, 3, 2, 1, 0]
@@ -933,6 +946,47 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const windowHeight =
         width < 1024 ? Dimensions.get("window").height - 30 : Dimensions.get("window").height;
 
+    const ListItem = (props: any) => {
+        return <li data-icon={props.item.icon} >{props.item.text}</li>;
+    }
+
+    const showPopup = useCallback(() => {
+
+        if (mobiRef.current) {
+            mobiRef.current.instance.show()
+        }
+    }, [mobiRef, mobiRef.current])
+
+    const selectOption = useCallback((event, inst) => {
+
+
+        if (mobiRef.current) {
+            mobiRef.current.instance.hide()
+        }
+
+        props.setOption(event.target.innerText)
+    }, [mobiRef, mobiRef.current])
+
+
+    const showPopupDesktop = useCallback(() => {
+
+        if (deskMobiRef.current) {
+            deskMobiRef.current.instance.show()
+        }
+    }, [deskMobiRef, deskMobiRef.current])
+
+    const selectOptionDesktop = useCallback((event, inst) => {
+
+        console.log("On Select", event)
+        if (deskMobiRef.current) {
+            deskMobiRef.current.instance.hide()
+        }
+
+        props.setOption(event.target.innerText)
+    }, [deskMobiRef, deskMobiRef.current])
+
+    
+
     return (
         <View style={{
             height: windowHeight - 85,
@@ -970,7 +1024,50 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         {
                             Dimensions.get('window').width < 1024 ?
                                 <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end', backgroundColor: '#f8f8fa', }}>
-                                    <Menu
+                                    {/* <MobiscrollForm>
+                                        <FormGroup>
+                                            <div >
+                                                <MobiscrollButton id="showVertical" onClick={() => {
+                                                    showPopup()
+                                                }}>
+                                                    <Text style={{ color: '#1D1D20', paddingLeft: 10, flexDirection: 'row', lineHeight: 14, fontSize: 14, marginTop: 2 }}>
+                                                        <Ionicons name='menu-outline' size={23} />
+                                                    </Text>
+                                                </MobiscrollButton>
+                                            </div>
+                                        </FormGroup>
+                                    </MobiscrollForm> */}
+                                    <div style={{ flexDirection: 'row', display: 'flex', alignItems: 'center', cursor: 'pointer' }} id="showVertical"  onClick={() => { showPopup() }}>
+                                            <Text style={{
+                                                color: '#1D1D20',
+                                                paddingLeft: 10,
+                                                textTransform: 'uppercase',
+                                                flexDirection: 'row',
+                                                lineHeight: 14,
+                                                fontSize: 12, fontFamily: 'inter'
+                                            }}>
+                                                {props.option}
+                                            </Text>
+                                            <Text style={{ color: '#1D1D20', paddingLeft: 10, flexDirection: 'row', lineHeight: 14, fontSize: 14, marginTop: 4 }}>
+                                                <Ionicons name='menu-outline' size={23} />
+                                            </Text>
+                                        </div >
+                                    <Popup 
+                                        ref={mobiRef}
+                                        display="bubble"
+                                        anchor="#showVertical"
+                                        buttons={[]}
+                                        cssClass="mbsc-no-padding md-vertical-list"
+                                    >
+                                        <Listview 
+                                            enhance={true}
+                                            swipe={false}
+                                            itemType={ListItem}
+                                            data={props.navOptions}
+                                            onItemTap={selectOption}
+                                        />
+                                    </Popup>
+                                    {/* <Menu
                                         onSelect={(op: any) => props.setOption(op)}>
                                         <MenuTrigger style={{ flexDirection: 'row' }}>
                                             <Text style={{
@@ -1009,7 +1106,9 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 })
                                             }
                                         </MenuOptions>
-                                    </Menu>
+                                    </Menu> */}
+
+
                                 </View>
                                 : <View style={{ flexDirection: 'row', paddingLeft: 30, flex: 1, backgroundColor: '#f8f8fa' }}>
                                     {
@@ -1174,48 +1273,89 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             />
                         }
                         {
-                            width < 1024 ? null : <Menu
-                                style={{ marginLeft: 0, right: 0, marginTop: -7 }}
-                                onSelect={(op: any) => props.setOption(op)}>
-                                <MenuTrigger>
-                                    <Image
-                                        style={{
-                                            height: 35,
-                                            width: 35,
-                                            marginBottom: 5,
-                                            marginTop: 5,
-                                            borderRadius: 75,
-                                            borderWidth: 1,
-                                            borderColor: '#f0f0f2'
-                                        }}
-                                        source={{ uri: avatar ? avatar : 'https://cues-files.s3.amazonaws.com/images/default.png' }}
-                                    />
-                                </MenuTrigger>
-                                <MenuOptions customStyles={{
-                                    optionsContainer: {
-                                        padding: 10,
-                                        borderRadius: 15,
-                                        shadowOpacity: 0,
+                            width < 1024 ? null : 
+                            // <Menu
+                            //     style={{ marginLeft: 0, right: 0, marginTop: -7 }}
+                            //     onSelect={(op: any) => props.setOption(op)}>
+                            //     <MenuTrigger>
+                            //         <Image
+                            //             style={{
+                            //                 height: 35,
+                            //                 width: 35,
+                            //                 marginBottom: 5,
+                            //                 marginTop: 5,
+                            //                 borderRadius: 75,
+                            //                 borderWidth: 1,
+                            //                 borderColor: '#f0f0f2'
+                            //             }}
+                            //             source={{ uri: avatar ? avatar : 'https://cues-files.s3.amazonaws.com/images/default.png' }}
+                            //         />
+                            //     </MenuTrigger>
+                            //     <MenuOptions customStyles={{
+                            //         optionsContainer: {
+                            //             padding: 10,
+                            //             borderRadius: 15,
+                            //             shadowOpacity: 0,
+                            //             borderWidth: 1,
+                            //             borderColor: '#f0f0f2',
+                            //             overflow: 'scroll',
+                            //             maxHeight: '100%'
+                            //         }
+                            //     }}>
+                            //         <MenuOption
+                            //             value={'Channels'}>
+                            //             <Text>
+                            //                 CHANNELS
+                            //             </Text>
+                            //         </MenuOption>
+                            //         <MenuOption
+                            //             value={'Settings'}>
+                            //             <Text>
+                            //                 SETTINGS
+                            //             </Text>
+                            //         </MenuOption>
+                            //     </MenuOptions>
+                            // </Menu>
+
+                            <div style={{  cursor: 'pointer' }} id="showVerticalDesktop"  onClick={() => { showPopupDesktop() }}>
+                                <Image
+                                    style={{
+                                        height: 35,
+                                        width: 35,
+                                        marginBottom: 5,
+                                        borderRadius: 75,
                                         borderWidth: 1,
-                                        borderColor: '#f0f0f2',
-                                        overflow: 'scroll',
-                                        maxHeight: '100%'
-                                    }
-                                }}>
-                                    <MenuOption
-                                        value={'Channels'}>
-                                        <Text>
-                                            CHANNELS
-                                        </Text>
-                                    </MenuOption>
-                                    <MenuOption
-                                        value={'Settings'}>
-                                        <Text>
-                                            SETTINGS
-                                        </Text>
-                                    </MenuOption>
-                                </MenuOptions>
-                            </Menu>
+                                        borderColor: '#f0f0f2'
+                                    }}
+                                    source={{ uri: avatar ? avatar : 'https://cues-files.s3.amazonaws.com/images/default.png' }}
+                                />
+                                <Popup 
+                                    ref={deskMobiRef}
+                                    display="bubble"
+                                    anchor="#showVerticalDesktop"
+                                    buttons={[]}
+                                    cssClass="mbsc-no-padding md-vertical-list"
+                                >
+                                    <Listview 
+                                        enhance={true}
+                                        swipe={false}
+                                        itemType={ListItem}
+                                        data={[
+                                            {
+                                                id: 'Channels',
+                                                text: 'Channels',
+                                                icon: 'material-people'
+                                              },
+                                              {
+                                                id: 'Settings',
+                                                text: 'Settings',
+                                                icon: 'material-tune'
+                                              }
+                                        ]}
+                                        onItemTap={selectOptionDesktop}
+                                    />
+                                </Popup>
+                            </div>
                         }
                     </View>
                 </View>
@@ -1290,8 +1430,13 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
     );
 }
 
+export default React.memo(Dashboard, (prev, next) => {
+    console.log("Previous", prev);
+    console.log("Next", next)
+    return _.isEqual({ ...prev.cues }, { ...next.cues })
+});
 
-export default Dashboard
+// export default Dashboard
 
 const styleObject: any = () => StyleSheet.create({
     all: {

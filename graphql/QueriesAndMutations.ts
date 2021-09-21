@@ -841,6 +841,7 @@ export const getEvents = gql`
         meeting
         channelId
         cueId
+        submitted
       }
     }
   }
