@@ -46,11 +46,6 @@ import WebViewer from '@pdftron/pdfjs-express';
 // import { Datepicker as MobiscrollDatePicker } from "@mobiscroll/react5";
 import mobiscroll, { Form as MobiscrollForm, FormGroup, Button as MobiscrollButton, Select, Input, FormGroupTitle } from '@mobiscroll/react'
 
-// mobiscroll.settings = {
-//     theme: 'ios',
-//     themeVariant: 'light'
-// };
-
 import '@mobiscroll/react/dist/css/mobiscroll.react.min.css';
 import '@mobiscroll/react5/dist/css/mobiscroll.min.css';
 
@@ -74,14 +69,16 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
   const [notify, setNotify] = useState(false);
   const [color, setColor] = useState(0);
   const [frequency, setFrequency] = useState("0");
-  const [customCategory, setCustomCategory] = useState("");
+  const [customCategory, setCustomCategory] = useState("None");
   const [localCustomCategories] = useState(props.customCategories);
   const [customCategories, setCustomCategories] = useState(
     props.customCategories
   );
   const [addCustomCategory, setAddCustomCategory] = useState(false);
   const [channels, setChannels] = useState<any[]>([]);
+  const [channelOptions, setChannelOptions] = useState<any[]>([]);
   const [channelId, setChannelId] = useState<any>("");
+  const [selectedChannel, setSelectedChannel] = useState<any>("My Notes")
   const [endPlayAt, setEndPlayAt] = useState(
     new Date(current.getTime() + 1000 * 60 * 60)
   );
@@ -529,6 +526,19 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
         .then((res) => {
           if (res.data.channel.findByUserId) {
             setChannels(res.data.channel.findByUserId);
+            const options = [{
+              value: 'My Notes',
+              text: 'My Notes'
+            }];
+
+            res.data.channel.findByUserId.map((channel: any) => {
+              options.push({
+                value: channel._id,
+                text: channel.name
+              })
+            })
+
+            setChannelOptions(options)
           }
         })
         .catch((err) => { });
@@ -664,7 +674,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
           shuffle,
           frequency,
           starred,
-          customCategory,
+          customCategory: customCategory === "None" ? "" : customCategory,
           endPlayAt:
             notify && (shuffle || !playChannelCueIndef)
               ? endPlayAt.toISOString()
@@ -726,7 +736,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
           color: color.toString(),
           channelId,
           frequency,
-          customCategory,
+          customCategory: customCategory === "None" ? "" : customCategory,
           shuffle,
           createdBy: user._id,
           gradeWeight: gradeWeight.toString(),
@@ -902,6 +912,20 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
     console.log('value returning', time)
     return time
   }
+
+
+  let categoriesOptions = [{ 
+    value: 'None', text: 'None'
+  }];
+
+  customCategories.map((category: any) => {
+    categoriesOptions.push({
+      value: category,
+      text: category
+    })
+  })
+
+
   return (
     <ScrollView
       style={{
@@ -1608,70 +1632,58 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                         display: "flex",
                       }}
                     >
-                      <label>
-                        <Select
-                          inputClass="mobiscrollCreateInput"
-                          value={channelId}
-                          rows={channels.length + 1}
-                          onSet={(event, inst) => {
+                      <label style={{ width: 180 }}>
+                                <Select
+                                    touchUi={true}
+                                    value={selectedChannel}
+                                    rows={channels.length + 1}
+                                    themeVariant="light"
+                                    onChange={(val) => {
 
-                            console.log("on change", inst.getVal())
+                                      const channel = val.value;
 
-                            const channel = inst.getVal();
-
-                            if (channel === channelId) return;
-
-                            if (channel === "") {
-                              setChannelId("");
-                              setCustomCategories(localCustomCategories);
-                              setCustomCategory("");
-                              setAddCustomCategory(false);
-                              setSubmission(false);
-                              setGradeWeight(0);
-                              setGraded(false);
-                              setSelected([]);
-                              setSubscribers([]);
-                              setProblems([]);
-                              setIsQuiz(false);
-                              setChannelName("");
-                              setTimer(false);
-                            } else {
-                              const match = channels.find((c: any) => {
-                                return c._id === channel
-                              })
-                              setChannelId(match._id);
-                              setChannelName(match.name);
-                              setAddCustomCategory(false);
-                              setCustomCategory("");
-                              setSubmission(isQuiz ? true : false);
-                              setGradeWeight(0);
-                              setGraded(false);
-                            }
-                          }}
-                          responsive={{
-                            small: {
-                              display: 'bubble'
-                            },
-                            medium: {
-                              touchUi: false
-                            }
-                          }}
-                        // data={channelFilterData}
-                        >
-                          <option value="">
-                            My Notes
-                          </option>
-
-                          {channels.map((channel: any) => {
-                            return (
-                              <option value={channel._id}>
-                                {channel.name}
-                              </option>
-                            );
-                          })}
-                        </Select>
-
-                      </label>
+                                      if (channel === "My Notes") {
+                                        setSelectedChannel("My Notes")
+                                        setChannelId("");
+                                        setCustomCategories(localCustomCategories);
+                                        setCustomCategory("None");
+                                        setAddCustomCategory(false);
+                                        setSubmission(false);
+                                        setGradeWeight(0);
+                                        setGraded(false);
+                                        setSelected([]);
+                                        setSubscribers([]);
+                                        setProblems([]);
+                                        setIsQuiz(false);
+                                        setChannelName("");
+                                        setTimer(false);
+                                      } else {
+                                        const match = channels.find((c: any) => {
+                                          return c._id === channel
+                                        })
+                                        setSelectedChannel(match._id)
+                                        setChannelId(match._id);
+                                        setChannelName(match.name);
+                                        setAddCustomCategory(false);
+                                        setCustomCategory("None");
+                                        setSubmission(isQuiz ? true : false);
+                                        setGradeWeight(0);
+                                        setGraded(false);
+                                      }
+                                    }}
+                                    responsive={{
+                                        small: {
+                                            display: 'bubble'
+                                        },
+                                        medium: {
+                                            touchUi: false
+                                        }
+                                    }}
+                                    data={channelOptions}
+                                />
+                                
+                                   
+                            </label>
                       {/* <Menu
                         onSelect={(channel: any) => {
                           if (channel === "") {
@@ -1816,35 +1828,28 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                               }}
                             /> */}
                             <label>
-                              <Select
-                                select="multiple"
-                                // group={true}
-                                // groupLabel="&nbsp;"
-                                // minWidth={[60, 320]}
-                                placeholder="Select..."
-                                inputClass="mobiscrollCustomMultiInput"
-                                value={selected}
-                                data={subscribers}
-                                onSet={(event, inst) => {
-                                  console.log("on change", inst.getVal())
-
-                                  setSelected(inst.getVal())
-
-                                  // Filter out any moderator if not part of the selected values
-
-                                }}
-                                responsive={{
-                                  small: {
-                                    display: 'bubble'
-                                  },
-                                  medium: {
-                                    touchUi: false,
-                                  }
-                                }}
-                                minWidth={[60, 320]}
-                              // minWidth={[60, 320]}
-                              />
-                            </label>
+                            <Select
+                             touchUi={true}
+                                            placeholder="Select..."
+                                            themeVariant="light"
+                                            value={selected}
+                                            data={subscribers}
+                                            selectMultiple={true}
+                                            onChange={(val: any) => {
+                                                setSelected(val.value)
+                                            }}
+                                            responsive={{
+                                                small: {
+                                                    display: 'bubble'
+                                                },
+                                                medium: {
+                                                    touchUi: false,
+                                                }
+                                            }}
+                                              minWidth={[60, 320]}
+                                            // minWidth={[60, 320]}
+                                        />
+                                    </label>
                           </View>
                         </View>
                       ) : null}
@@ -1925,7 +1930,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                               <MobiscrollDatePicker
                                 controls={['date', 'time']}
                                 touchUi={true}
-                                theme="ios"
                                 value={initiateAt}
                                 themeVariant="light"
                                 inputComponent="input"
@@ -2375,86 +2379,38 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           />
                         </View>
                       ) : (
-                        // <Menu onSelect={(cat: any) => setCustomCategory(cat)}>
-                        //   <MenuTrigger>
-                        //     <Text
-                        //       style={{
-                        //         fontSize: 12,
-                        //         color: "#818385",
-                        //         textAlign: "right",
-                        //         paddingRight: 10,
-                        //         paddingTop: 2
-                        //       }}
-                        //     >
-                        //       {customCategory === "" ? "None" : customCategory}
-                        //       <Ionicons name="caret-down" size={14} />
-                        //     </Text>
-                        //   </MenuTrigger>
-                        //   <MenuOptions
-                        //     customStyles={{
-                        //       optionsContainer: {
-                        //         padding: 10,
-                        //         borderRadius: 15,
-                        //         shadowOpacity: 0,
-                        //         borderWidth: 1,
-                        //         borderColor: "#f0f0f2",
-                        //         overflow: 'scroll',
-                        //         maxHeight: '100%'
-                        //       },
-                        //     }}
-                        //   >
-                        //     <MenuOption value={""}>
-                        //       <Text>None</Text>
-                        //     </MenuOption>
-                        //     {customCategories.map((category: any) => {
-                        //       return (
-                        //         <MenuOption value={category}>
-                        //           <Text>{category}</Text>
-                        //         </MenuOption>
-                        //       );
-                        //     })}
-                        //   </MenuOptions>
-                        // </Menu>
 
-                        <label>
-                          <Select
-                            inputClass="mobiscrollCategoryInput"
+                        <label style={{ width: 180 }}>
+                        <Select
+                            touchUi={true}
+                            cssClass="customDropdown"
                             value={customCategory}
                             rows={customCategories.length + 1}
-                            onSet={(event, inst) => {
-
-                              if (!event.valueText) return;
-
-                              setCustomCategory(inst.getVal())
-                            }}
-                            responsive={{
-                              small: {
-                                display: 'bubble'
-                              },
-                              medium: {
-                                touchUi: false,
-                              }
-                            }}
-                          >
-                            <option value={''}>None</option>
-
-                            {customCategories.map((category: any) => {
-                              return (
-                                <option value={category}>{category}</option>
-                              );
-                            })}
-                          </Select>
-
-                        </label>
+                            data={categoriesOptions}
+                            themeVariant="light"
+                            onChange={(val: any) => {
+                                  setCustomCategory(val.value)
+                                }}
+                                responsive={{
+                                    small: {
+                                        display: 'bubble'
+                                    },
+                                    medium: {
+                                        touchUi: false,
+                                    }
+                                }}
+                            />
+                            
+                    </label>
 
 
                       )}
                     </View>
-                    <View style={{ width: "15%", backgroundColor: "white" }}>
+                    <View style={{ width: "15%", backgroundColor: "white", paddingLeft: 20 }}>
                       <TouchableOpacity
                         onPress={() => {
                           if (addCustomCategory) {
-                            setCustomCategory("");
+                            setCustomCategory("None");
                             setAddCustomCategory(false);
                           } else {
                             setCustomCategory("");
@@ -2647,6 +2603,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           display: "flex",
                           flexDirection: "row",
                           backgroundColor: "white",
+                          alignItems: 'center'
                         }}
                       >
                         <Text style={{
@@ -2654,25 +2611,18 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           color: "#818385",
                           textAlign: "right",
                           paddingRight: 10,
-                          paddingTop: 5
+                          paddingBottom: 10
                         }}>
                           {PreferredLanguageText("remindEvery")}
                         </Text>
-                        <label>
-                          <Select
-                            inputClass="mobiscrollFrequencyInput"
+                        <label style={{ width: 140 }}>
+                        <Select
+                            touchUi={true}
+                            themeVariant="light"
                             value={frequency}
                             rows={timedFrequencyOptions.length}
-                            onSet={(event, inst) => {
-
-                              if (!event.valueText) return;
-
-                              // const match = timedFrequencyOptions.find((freq: any) => {
-                              //   return freq.
-                              // })
-                              setFrequency(inst.getVal());
-                              // setFrequencyName(cat.label);
-
+                            onChange={(val: any) => {
+                              setFrequency(val.value);
                             }}
                             responsive={{
                               small: {
@@ -2682,17 +2632,14 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                 touchUi: false,
                               }
                             }}
-                          >
-                            {timedFrequencyOptions.map((item: any) => {
-                              return (
-                                <option value={item.value} >
-                                  {item.label}
-                                </option>
-                              );
+                            data={timedFrequencyOptions.map((freq: any) => {
+                              return {
+                                value: freq.value,
+                                  text: freq.label
+                                }
                             })}
-                          </Select>
-
-                        </label>
+                        />   
+                    </label>
                         {/* <Menu
                           onSelect={(cat: any) => {
                             setFrequency(cat.value);
@@ -3175,7 +3122,8 @@ const styles: any = StyleSheet.create({
   allGrayOutline: {
     fontSize: 12,
     color: "#818385",
-    height: 22,
+    height: 25,
+    paddingVertical: 5,
     paddingHorizontal: 10,
     marginRight: 20,
     backgroundColor: "white",

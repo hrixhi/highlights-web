@@ -33,10 +33,6 @@ import Swiper from "react-native-web-swiper";
 // import 'react-big-scheduler/lib/css/style.css';
 import mobiscroll, { Form as MobiscrollForm, FormGroup, Button as MobiscrollButton, Select, Input, FormGroupTitle } from '@mobiscroll/react'
 
-// mobiscroll.settings = {
-//     theme: 'ios',
-//     themeVariant: 'light'
-// };
 
 
 const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
@@ -51,6 +47,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const [channels, setChannels] = useState<any[]>([]);
     const [showAddEvent, setShowAddEvent] = useState(false);
     const [channelId, setChannelId] = useState("");
+    const [selectedChannel, setSelectedChannel] = useState("My Events");
     const [calendarChoice, setCalendarChoice] = useState('Agenda')
     // v1
     const current = new Date();
@@ -809,35 +806,32 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         flexDirection: "row",
                         marginLeft: 0
                     }}>
-
-                    <label style={{ cursor: 'pointer' }}>
+                    
+                    <label style={{ width: 180 }}>
                         <Select
-                            inputClass="mobiscrollCustomInput"
+                            themeVariant="light"
+                            touchUi={true}
                             value={frequency}
-                            onSet={(event, inst) => {
-
-                                const match = eventFrequencyOptions.find((f: any) => {
-                                    return f.label === event.valueText
-                                })
-
-                                setFrequency(match.value)
-                                // setCalendarChoice(event.valueText)
+                            onChange={(val: any) => {
+                                setFrequency(val.value)
                             }}
-                            rows={5}
+                            rows={eventFrequencyOptions.length}
                             responsive={{
                                 small: {
-                                    display: 'bubble'
+                                    display: 'bubble',
                                 },
                                 medium: {
                                     touchUi: false,
                                 }
                             }}
-                        >
-                            {eventFrequencyOptions.map((item: any, index: number) => {
-                                return <option value={item.value}>{item.label}</option>
+                            data={eventFrequencyOptions.map((item: any, index: number) => {
+                                return {
+                                    value: item.value,
+                                    text: item.label
+                                }
                             })}
-                        </Select>
-
+                        />
+                                             
                     </label>
 
 
@@ -914,7 +908,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         themeVariant="light"
                         inputComponent="input"
                         inputProps={{
-                            placeholder: 'Please Select...'
+                            placeholder: 'Repeat till...' 
                         }}
                         onChange={(event: any) => {
                             const date = new Date(event.value);
@@ -1250,17 +1244,6 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     }
 
 
-    let eventForChannelName = ''
-
-    if (channelId === "") {
-        eventForChannelName = "My Events"
-    } else {
-        const filter = channels.filter((channel: any) => {
-            return channel._id === channelId
-        })
-
-        eventForChannelName = filter[0].name
-    }
 
     const tabs = ['Agenda', 'Schedule', 'Calendar', 'Activity', 'Add']
     const [tab, setTab] = useState('Agenda')
@@ -1345,6 +1328,20 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
             </TouchableOpacity>
         </View>)
     }
+
+    const channelOptions = [{
+        value: 'My Events',
+        text: 'My Events'
+    }]
+
+    channels.map((channel: any) => {
+        channelOptions.push({
+            value: channel._id,
+            text: channel.name
+        })
+    })
+
+    console.log("Channel options", channelOptions)
 
 
     return (
@@ -1766,7 +1763,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                                 // alignItems: 'center'
                                                                                             }}>
                                                                                             <Text style={styles.text}>{PreferredLanguageText("start")}</Text>
-                                                                                            <DatePicker
+                                                                                            {/* <DatePicker
                                                                                                 appearance={'subtle'}
                                                                                                 format="YYYY-MM-DD HH:mm"
                                                                                                 preventOverflow={true}
@@ -1777,6 +1774,39 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                                     setStart(roundOffDate);
                                                                                                 }}
                                                                                                 size={'xs'}
+                                                                                            /> */}
+                                                                                            <MobiscrollDatePicker 
+                                                                                                controls={['date', 'time']}
+                                                                                                touchUi={true}
+                                                                                                theme="ios"
+                                                                                                value={start}
+                                                                                                themeVariant="light"
+                                                                                                inputComponent="input"
+                                                                                                inputProps={{
+                                                                                                    placeholder: 'Select start...' 
+                                                                                                }}
+                                                                                                onChange={(event: any) => {
+                                                                                                    const date = new Date(event.value);
+                                                                                                    const roundOffDate = roundSeconds(date)
+                                                                                                    setStart(roundOffDate);
+                                                                                                }}
+                                                                                                responsive={{
+                                                                                                    xsmall: {
+                                                                                                        controls: ['date', 'time'],
+                                                                                                        display: 'bottom',
+                                                                                                        touchUi: true
+                                                                                                    },
+                                                                                                    // small: {
+                                                                                                    //     controls: ['date', 'time'],
+                                                                                                    //     display: 'anchored',
+                                                                                                    //     touchUi: true
+                                                                                                    // },
+                                                                                                    medium: {
+                                                                                                        controls: ['date', 'time'],
+                                                                                                        display: 'anchored',
+                                                                                                        touchUi: false
+                                                                                                    },
+                                                                                                }}
                                                                                             />
                                                                                         </View>
                                                                                         <View
@@ -1788,7 +1818,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                                 // marginLeft: width < 1024 ? 0 : 30
                                                                                             }}>
                                                                                             <Text style={styles.text}>{PreferredLanguageText("end")}</Text>
-                                                                                            <DatePicker
+                                                                                            {/* <DatePicker
                                                                                                 format="YYYY-MM-DD HH:mm"
                                                                                                 preventOverflow={true}
                                                                                                 value={end}
@@ -1799,6 +1829,40 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                                     setEnd(roundOffDate);
                                                                                                 }}
                                                                                                 size={'xs'}
+                                                                                            /> */}
+
+                                                                                            <MobiscrollDatePicker 
+                                                                                                controls={['date', 'time']}
+                                                                                                touchUi={true}
+                                                                                                theme="ios"
+                                                                                                value={end}
+                                                                                                themeVariant="light"
+                                                                                                inputComponent="input"
+                                                                                                inputProps={{
+                                                                                                    placeholder: 'Select end...' 
+                                                                                                }}
+                                                                                                onChange={(event: any) => {
+                                                                                                    const date = new Date(event.value);
+                                                                                                    const roundOffDate = roundSeconds(date)
+                                                                                                    setEnd(roundOffDate);
+                                                                                                }}
+                                                                                                responsive={{
+                                                                                                    xsmall: {
+                                                                                                        controls: ['date', 'time'],
+                                                                                                        display: 'bottom',
+                                                                                                        touchUi: true
+                                                                                                    },
+                                                                                                    // small: {
+                                                                                                    //     controls: ['date', 'time'],
+                                                                                                    //     display: 'anchored',
+                                                                                                    //     touchUi: true
+                                                                                                    // },
+                                                                                                    medium: {
+                                                                                                        controls: ['date', 'time'],
+                                                                                                        display: 'anchored',
+                                                                                                        touchUi: false
+                                                                                                    },
+                                                                                                }}
                                                                                             />
                                                                                         </View>
                                                                                     </View>
@@ -1823,7 +1887,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                                     </Text>
                                                                                                 </View>
                                                                                                 <View style={{ flexDirection: 'row', display: 'flex', backgroundColor: '#fff' }}>
-                                                                                                    <Menu
+                                                                                                    {/* <Menu
                                                                                                         onSelect={(channelId: any) => {
                                                                                                             setChannelId(channelId)
                                                                                                         }}>
@@ -1862,7 +1926,33 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                                                 })
                                                                                                             }
                                                                                                         </MenuOptions>
-                                                                                                    </Menu>
+                                                                                                    </Menu> */}
+                                                                                                     <label style={{ width: 180 }}>
+                                                                                                        <Select
+                                                                                                            touchUi={true}
+                                                                                                            themeVariant="light"
+                                                                                                            value={selectedChannel}
+                                                                                                            onChange={(val: any) => {
+
+                                                                                                                setSelectedChannel(val.value);
+
+                                                                                                                if (val.value === "My Events") {
+                                                                                                                    setChannelId('')
+                                                                                                                } else {
+                                                                                                                    setChannelId(val.value)
+                                                                                                                }
+                                                                                                            }}
+                                                                                                            responsive={{
+                                                                                                                small: {
+                                                                                                                    display: 'bubble'
+                                                                                                                },
+                                                                                                                medium: {
+                                                                                                                    touchUi: false,
+                                                                                                                }
+                                                                                                            }}
+                                                                                                            data={channelOptions}
+                                                                                                        />
+                                                                                                    </label>
                                                                                                 </View>
                                                                                             </View>
                                                                                         ) : null}

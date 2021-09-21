@@ -23,10 +23,6 @@ import FileUpload from './UploadFiles';
 import moment from 'moment';
 import mobiscroll, { Form as MobiscrollForm, FormGroup, Button as MobiscrollButton, Select, Input, FormGroupTitle } from '@mobiscroll/react'
 
-// mobiscroll.settings = {
-//     theme: 'ios',
-//     themeVariant: 'light'
-// };
 
 const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -48,7 +44,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
 
     const [channelFilter, setChannelFilter] = useState('')
     const [filterChannelName, setFilterChannelName] = useState('')
-    const [filterChannelId, setFilterChannelId] = useState('')
+    const [filterChannelId, setFilterChannelId] = useState('All')
 
     const [showDirectory, setShowDirectory] = useState<any>(false)
 
@@ -534,6 +530,16 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
             return date.format("MM/DD/YYYY");
     }
 
+    let channelOptions = [{ value: 'All', text: 'All' }]
+
+    props.subscriptions.map((subscription: any) => {
+
+        channelOptions.push({
+            value: subscription.channelId,
+            text: subscription.channelName
+        })
+
+    })
     return (
         <View>
             {
@@ -689,16 +695,14 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                             showDirectory ?
                                                 <View style={{ backgroundColor: '#fff', paddingTop: 15 }}>
                                                     <View style={{ flexDirection: 'row', backgroundColor: '#fff' }}>
-
-                                                        <label style={{ cursor: 'pointer' }}>
-                                                            <Select
-                                                                inputClass="mobiscrollCustomInput"
-                                                                value={filterChannelId}
-                                                                onSet={(event, inst) => {
-
-                                                                    if (!event.valueText) return;
-
-                                                                    setFilterChannelId(inst.getVal())
+                                                        
+                                                    <label style={{ width: 140 }}>
+                                                        <Select
+                                                            touchUi={true}
+                                                            themeVariant="light"
+                                                            value={filterChannelId}
+                                                            onChange={(val: any) => {
+                                                                   setFilterChannelId(val.value)
                                                                 }}
                                                                 responsive={{
                                                                     small: {
@@ -708,84 +712,13 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                         touchUi: false,
                                                                     }
                                                                 }}
-                                                            >
-                                                                <option value={''}>All</option>
-                                                                {
-                                                                    props.subscriptions.map((subscription: any) => {
-                                                                        return <option value={subscription.channelId}>
-                                                                            {subscription.channelName}
-                                                                        </option>
-                                                                    })
-                                                                }
-                                                            </Select>
+                                                                data={channelOptions}
+                                                            />
+                                                            
+                                                    </label>
 
-                                                        </label>
-
-                                                        {/* <Menu
-                                                            onSelect={(sub: any) => {
-                                                                if (sub === '') {
-                                                                    setFilterChannelName('')
-                                                                    setFilterChannelId('')
-
-                                                                } else {
-                                                                    setFilterChannelId(sub.channelId)
-                                                                    setFilterChannelName(sub.channelName)
-                                                                }
-                                                            }}>
-                                                            <MenuTrigger>
-                                                                <Text style={{ fontSize: 14, color: '#1D1D20' }}>
-                                                                    {filterChannelName === '' ? 'All' : filterChannelName} <Ionicons name='caret-down' size={14} />
-                                                                </Text>
-                                                            </MenuTrigger>
-                                                            <MenuOptions customStyles={{
-                                                                optionsContainer: {
-                                                                    padding: 10,
-                                                                    borderRadius: 15,
-                                                                    shadowOpacity: 0,
-                                                                    borderWidth: 1,
-                                                                    borderColor: '#f0f0f2',
-                                                                    overflow: 'scroll',
-                                                                    maxHeight: '100%'
-                                                                }
-                                                            }}>
-                                                                <MenuOption
-                                                                    value={''}>
-                                                                    <View style={{ display: 'flex', flexDirection: 'row', }}>
-                                                                        <View style={{
-                                                                            width: 8,
-                                                                            height: 8,
-                                                                            borderRadius: 0,
-                                                                            marginTop: 1,
-                                                                            backgroundColor: "#fff"
-                                                                        }} />
-                                                                        <Text style={{ marginLeft: 5 }}>
-                                                                            All
-                                                                        </Text>
-                                                                    </View>
-                                                                </MenuOption>
-                                                                {
-                                                                    props.subscriptions.map((subscription: any) => {
-                                                                        return <MenuOption
-                                                                            value={subscription}>
-                                                                            <View style={{ display: 'flex', flexDirection: 'row', }}>
-                                                                                <View style={{
-                                                                                    width: 8,
-                                                                                    height: 8,
-                                                                                    borderRadius: 0,
-                                                                                    marginTop: 1,
-                                                                                    backgroundColor: subscription.colorCode
-                                                                                }} />
-                                                                                <Text style={{ marginLeft: 5 }}>
-                                                                                    {subscription.channelName}
-                                                                                </Text>
-                                                                            </View>
-                                                                        </MenuOption>
-                                                                    })
-                                                                }
-                                                            </MenuOptions>
-                                                        </Menu> */}
                                                     </View>
-                                                    <Text style={{ fontSize: 10, color: '#1D1D20', }}>
+                                                    <Text style={{ fontSize: 10, color: '#1D1D20', paddingLeft: 17 }}>
                                                         Channel
                                                     </Text>
                                                 </View> : null
@@ -893,7 +826,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                 }}>
                                                                     {
                                                                         sectionFiltered.map((user: any, ind: any) => {
-                                                                            if (filterChannelId !== '') {
+                                                                            if (filterChannelId !== 'All') {
                                                                                 const id = user.channelIds
                                                                                     ? user.channelIds.find((id: any) => {
                                                                                         return id === filterChannelId
