@@ -3872,7 +3872,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     borderRightWidth: 0,
                     flexDirection: width < 1024 ? 'column' : 'row',
                     paddingTop: 40,
-                    borderColor: "#f0f0f2"
+                    borderColor: "#f0f0f2",
                 }}>
                 <View
                     style={{
@@ -3885,7 +3885,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         color: '#1D1D20'
                     }}>{PreferredLanguageText("category")}</Text>
                 </View>
-                <View style={{}}>
+                <View style={{ }}>
                     {props.cue.channelId && !props.channelOwner ? (
                         <View
                             style={{
@@ -3915,6 +3915,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 // width: "100%",
                                 // display: "flex",
                                 flexDirection: "row",
+                                alignItems: 'center',
                                 backgroundColor: "white"
                             }}>
                             <View style={{ backgroundColor: "white" }}>
@@ -3996,7 +3997,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     </label>
                                 )}
                             </View>
-                            <View style={{ backgroundColor: "white", paddingRight: 20 }}>
+                            <View style={{ backgroundColor: "white", paddingRight: 20,  paddingLeft: 20 }}>
                                 <TouchableOpacity
                                     onPress={() => {
                                         if (addCustomCategory) {

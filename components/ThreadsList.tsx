@@ -19,6 +19,7 @@ import {
 import { htmlStringParser } from '../helpers/HTMLParser';
 import { GiftedChat, Bubble } from 'react-native-gifted-chat';
 import FileUpload from './UploadFiles';
+import { Select } from '@mobiscroll/react'
 
 
 const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
@@ -325,7 +326,8 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                     })
                                 }
                             </MenuOptions>
-                        </Menu>}
+                        </Menu>
+                    }
             </View>
             <View style={{ width: '15%', backgroundColor: 'white' }}>
                 <TouchableOpacity
@@ -346,6 +348,18 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
             </View>
         </View>
     </View>)
+    
+    let categoryChoices = [{
+        value: 'All',
+        text: 'All'
+    }]
+
+    categories.map((cat: any) => {
+        categoryChoices.push({
+            value: cat,
+            text: cat
+        })
+    })
 
     return (
         <View style={{
@@ -371,7 +385,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                     // paddingTop: 7,
                                     backgroundColor: 'white',
                                 }}>
-                                    <Menu
+                                    {/* <Menu
                                         onSelect={(cat: any) => setFilterChoice(cat)}>
                                         <MenuTrigger>
                                             <Text style={{ fontSize: 14, color: '#1D1D20' }}>
@@ -406,8 +420,28 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                 })
                                             }
                                         </MenuOptions>
-                                    </Menu>
-                                    <Text style={{ fontSize: 10, color: '#1D1D20', width: '100%', paddingTop: 3 }}>
+                                    </Menu> */}
+                                    <label style={{ width: 140 }}>
+                                        <Select
+                                            touchUi={true}
+                                            themeVariant="light"
+                                            value={filterChoice}
+                                            onChange={(val: any) => {
+                                                setFilterChoice(val.value)  
+                                            }}
+                                            responsive={{
+                                                small: {
+                                                    display: 'bubble'
+                                                },
+                                                medium: {
+                                                    touchUi: false,
+                                                }
+                                            }}
+                                            data={categoryChoices}
+                                        />
+                                            
+                                    </label>
+                                    <Text style={{ fontSize: 10, color: '#1D1D20', width: '100%', paddingTop: 3, paddingLeft: 14 }}>
                                         Topic
                                     </Text>
                                 </View> : null}
