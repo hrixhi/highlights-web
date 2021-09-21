@@ -21,12 +21,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 
 import mobiscroll, { Form as MobiscrollForm, FormGroup, Button as MobiscrollButton, Select, Input, FormGroupTitle  } from '@mobiscroll/react'
-import '@mobiscroll/react/dist/css/mobiscroll.min.css';
-
-mobiscroll.settings = {
-    theme: 'ios',
-    themeVariant: 'light'
-};
+import '@mobiscroll/react/dist/css/mobiscroll.react.min.css';
 
 
 
@@ -1119,23 +1114,24 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 <div >
                                     <label>
                                         <Select
+                                            themeVariant="light"
                                             style={{ width: 320 }}
-                                            select="multiple"
+                                            selectMultiple={true}
                                             group={true}
                                             groupLabel="&nbsp;"
                                             inputClass="mobiscrollCustomMultiInput"
                                             placeholder="Select..."
+                                            touchUi={true}
                                             // minWidth={[60, 320]}
                                             value={selectedValues}
                                             data={options}
-                                            onSet={(event, inst) => {
-                                                console.log("on change", inst.getVal())
-                                                if (inst.getVal().length === selectedValues.length) return;
-
-                                                setSelectedValues(inst.getVal())
-
+                                            onChange={(val: any) => {
+                                                setSelectedValues(val.value)
                                                 // Filter out any moderator if not part of the selected values
 
+                                                let filterRemovedModerators = selectedModerators.filter((mod: any) => val.value.includes(mod))
+                                                
+                                                setSelectedModerators(filterRemovedModerators)
                                             }}
                                             responsive={{
                                                 small: {
@@ -1191,7 +1187,9 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
 
                         <label>
                             <Select
+                                            themeVariant="light"
                                             select="multiple"
+                                            selectMultiple={true}
                                             // group={true}
                                             // groupLabel="&nbsp;"
                                             // minWidth={[60, 320]}
@@ -1199,15 +1197,10 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             inputClass="mobiscrollCustomMultiInput"
                                             value={selectedModerators}
                                             data={moderatorOptions}
-                                            onSet={(event, inst) => {
-                                                console.log("on change", inst.getVal())
-                                                if (inst.getVal().length === selectedModerators.length) return;
-
-                                                setSelectedModerators(inst.getVal())
-
-                                                // Filter out any moderator if not part of the selected values
-
+                                            onChange={(val: any) => {
+                                                setSelectedModerators(val.value)
                                             }}
+                                            touchUi={true}
                                             responsive={{
                                                 small: {
                                                     display: 'bubble'
