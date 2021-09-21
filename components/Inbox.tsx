@@ -574,28 +574,28 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                     }}
                                                     style={{
                                                         paddingRight: 20,
-                                                        paddingTop: 15,
+                                                        paddingTop: 5,
                                                         alignSelf: 'flex-start'
                                                     }}
                                                 >
                                                     <Text style={{ lineHeight: 35, width: '100%', textAlign: 'center' }}>
-                                                        <Ionicons name='arrow-back-outline' size={30} color={'#1D1D20'} />
+                                                        <Ionicons name='arrow-back-outline' size={25} color={'#1D1D20'} />
                                                     </Text>
                                                 </TouchableOpacity> :
                                                 <TouchableOpacity
                                                     onPress={() => reload()}
                                                     style={{
                                                         paddingRight: 20,
-                                                        paddingTop: 15,
+                                                        paddingTop: 5,
                                                         alignSelf: 'flex-start'
                                                     }}
                                                 >
                                                     <Text>
-                                                        <Ionicons name='reload-outline' size={20} />
+                                                        <Ionicons name='reload-outline' size={20} color={'#007AFF'} />
                                                     </Text>
-                                                    <Text style={{ fontSize: 11, color: '#1D1D20', paddingTop: 5, backgroundColor: '#fff' }}>
+                                                    {/* <Text style={{ fontSize: 11, color: '#1D1D20', paddingTop: 5, backgroundColor: '#fff' }}>
                                                         Refresh
-                                                    </Text>
+                                                    </Text> */}
                                                 </TouchableOpacity>
                                         }
                                         <View style={{ flexDirection: 'row', flex: 1 }} />
@@ -617,9 +617,9 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                     <Text style={{
                                                         textAlign: 'center',
                                                         lineHeight: 30,
-                                                        color: '#1D1D20',
+                                                        // color: '#1D1D20',
                                                         fontSize: 12,
-                                                        backgroundColor: '#f8f8fa',
+                                                        // backgroundColor: '#f8f8fa',
                                                         paddingHorizontal: 20,
                                                         marginRight: 15,
                                                         fontFamily: 'inter',
@@ -628,7 +628,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                         borderRadius: 15,
                                                         textTransform: 'uppercase'
                                                     }}>
-                                                        Contacts {<Ionicons name='list-outline' size={12} />}
+                                                        <Ionicons name='list-outline' size={20} color={'#007AFF'} />
                                                     </Text>
                                                 </TouchableOpacity>
                                         }
@@ -650,19 +650,17 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                     <Text style={{
                                                         textAlign: 'center',
                                                         lineHeight: 30,
-                                                        color: showNewGroup || showChat ? '#1D1D20' : '#fff',
+                                                        // color: showNewGroup || showChat ? '#1D1D20' : '#fff',
                                                         fontSize: 12,
-                                                        backgroundColor: showNewGroup || showChat ? '#f8f8fa' : '#35AC78',
-                                                        paddingHorizontal: 20,
+                                                        // backgroundColor: showNewGroup || showChat ? '#f8f8fa' : '#35AC78',
+                                                        // paddingHorizontal: 20,
                                                         fontFamily: 'inter',
                                                         height: 30,
                                                         // width: 100,
                                                         borderRadius: 15,
                                                         textTransform: 'uppercase'
                                                     }}>
-                                                        {showNewGroup || showChat ? <Ionicons name='arrow-back-outline' size={12} /> : null} {
-                                                            showNewGroup || showChat ? 'Back' : 'New group'
-                                                        } {showNewGroup || showChat ? null : <Ionicons name='people-outline' size={12} />}
+                                                        <Ionicons name='people-circle-outline' size={20} color={'#007AFF'} />
                                                     </Text>
                                                 </TouchableOpacity>
                                         }

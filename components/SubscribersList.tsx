@@ -1128,7 +1128,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     width: '100%',
                                     lineHeight: 23,
                                 }}>
-                                    <Ionicons name='arrow-back-outline' size={30} color={'#1D1D20'} />
+                                    <Ionicons name='arrow-back-outline' size={25} color={'#1D1D20'} />
                                 </Text>
                             </TouchableOpacity>
                             {

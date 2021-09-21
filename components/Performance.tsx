@@ -165,7 +165,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
 
         const activeTab = activeTabMap[index];
 
-        return (<View style={{ flexDirection: "row", marginTop: 20, flex: 1, justifyContent: 'center', marginBottom: 20 }}>
+        return (<View style={{ flexDirection: "row", flex: 1, justifyContent: 'center', marginBottom: 20 }}>
             <TouchableOpacity
                 style={{
                     justifyContent: "center",
@@ -176,7 +176,9 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     temp[index] = 'overview'
                     setActiveTabMap(temp)
                 }}>
-                <Text style={activeTab === 'overview' ? styles.allGrayFill : styles.all}>Overview</Text>
+                <Text style={activeTab === 'overview' ? styles.allGrayFill : styles.all}>
+                    <Ionicons name='clipboard-outline' size={20} />
+                </Text>
             </TouchableOpacity>
             <TouchableOpacity
                 style={{
@@ -189,10 +191,10 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     setActiveTabMap(temp)
                 }}>
                 <Text style={activeTab === 'scores' ? styles.allGrayFill : styles.all}>
-                    Scores
+                    <Ionicons name='stats-chart-outline' size={20} />
                 </Text>
             </TouchableOpacity>
-            <TouchableOpacity
+            {/* <TouchableOpacity
                 style={{
                     justifyContent: "center",
                     flexDirection: "column"
@@ -202,8 +204,10 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     temp[index] = 'statistics'
                     setActiveTabMap(temp)
                 }}>
-                <Text style={activeTab === 'statistics' ? styles.allGrayFill : styles.all}>Statistics</Text>
-            </TouchableOpacity>
+                <Text style={activeTab === 'statistics' ? styles.allGrayFill : styles.all}>
+                    <Ionicons name='analytics-outline' size={25} />
+                </Text>
+            </TouchableOpacity> */}
             <TouchableOpacity
                 style={{
                     justifyContent: "center",
@@ -214,7 +218,9 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     temp[index] = 'attendance'
                     setActiveTabMap(temp)
                 }}>
-                <Text style={activeTab === 'attendance' ? styles.allGrayFill : styles.all}>Attendance</Text>
+                <Text style={activeTab === 'attendance' ? styles.allGrayFill : styles.all}>
+                    <Ionicons name='hand-left-outline' size={20} />
+                </Text>
             </TouchableOpacity>
         </View>)
     }
@@ -271,11 +277,11 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             backgroundColor: '#fff',
                             borderColor: '#f0f0f2',
                             borderBottomWidth: 1,
-                            paddingBottom: 20,
+                            paddingBottom: 17,
                             marginBottom: 20,
                             width: '100%'
                         }}>
-                            <View style={{ flexDirection: 'row', paddingBottom: collapseMap[ind] ? 0 : 20, maxWidth: 1275, alignSelf: 'center', width: '100%' }}>
+                            <View style={{ flexDirection: 'row', paddingBottom: collapseMap[ind] ? 0 : 0, maxWidth: 1275, alignSelf: 'center', width: '100%' }}>
                                 <TouchableOpacity
                                     style={{
                                         flex: 1,
@@ -294,7 +300,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                         fontFamily: 'inter',
                                         flex: 1,
                                         flexDirection: 'row',
-                                        lineHeight: 25,
+                                        lineHeight: 23,
                                     }}>
                                         <View style={{
                                             width: 18,
@@ -318,7 +324,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                         lineHeight: 30,
                                         paddingTop: 10
                                     }}>
-                                        <Ionicons name={!collapseMap[ind] ? 'chevron-up-outline' : 'chevron-down-outline'} size={27} color={'#007AFF'} />
+                                        <Ionicons name={!collapseMap[ind] ? 'chevron-up-outline' : 'chevron-down-outline'} size={25} color={'#007AFF'} />
                                     </Text>
                                 </TouchableOpacity>
                             </View>
@@ -501,23 +507,23 @@ const styles = StyleSheet.create({
         backgroundColor: 'white'
     },
     all: {
-        fontSize: 11,
+        fontSize: 25,
         color: '#43434f',
-        height: 22,
+        height: 25,
         paddingHorizontal: 10,
         backgroundColor: '#fff',
         textTransform: 'uppercase',
-        lineHeight: 22,
+        lineHeight: 25,
         fontFamily: 'inter'
     },
     allGrayFill: {
-        fontSize: 11,
-        color: '#fff',
+        fontSize: 25,
+        color: '#007AFF',
+        height: 25,
         paddingHorizontal: 10,
-        borderRadius: 12,
-        backgroundColor: '#43434f',
-        lineHeight: 22,
-        fontFamily: 'inter',
-        textTransform: 'uppercase'
+        backgroundColor: '#fff',
+        textTransform: 'uppercase',
+        lineHeight: 25,
+        fontFamily: 'inter'
     },
 });

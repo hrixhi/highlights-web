@@ -1194,6 +1194,13 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
+"@babel/runtime@^7.2.0":
+  version "7.15.4"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.15.4.tgz#fd17d16bfdf878e6dd02d19753a39fa8a8d9c84a"
+  integrity sha512-99catp6bHCaxr4sJ/DbTGgHS4+Rs2RVd2g7iOap6SLGPDknRK9ztKNsE/Fg6QhSeh1FGE5f6gHGQmvvn3I3xhw==
+  dependencies:
+    regenerator-runtime "^0.13.4"
+
 "@babel/template@^7.0.0", "@babel/template@^7.14.5", "@babel/template@^7.3.3", "@babel/template@^7.8.6":
   version "7.14.5"
   resolved "https://registry.yarnpkg.com/@babel/template/-/template-7.14.5.tgz#a9bc9d8b33354ff6e55a9c60d1109200a68974f4"
@@ -2191,9 +2198,14 @@
     "@babel/runtime" "^7.7.2"
     regenerator-runtime "^0.13.3"
 
-"@mobiscroll/react@https://npm.mobiscroll.com/@mobiscroll/react-trial/-/react-trial-5.9.1.tgz":
+"@mobiscroll/react@4.10.9":
+  version "4.10.9"
+  resolved "https://npm.mobiscroll.com/@mobiscroll%2freact/-/react-4.10.9.tgz#b231e5123b51d9b5b9f1db205ff2ddd9923401f5"
+  integrity sha512-Gksq6FsTRXG0qJIy2JOLDElMkbribzducbyMB/LLopoe19mHM5EJW+nfvdrkE263q7eSbSECPSNqLnN5v1/WPA==
+
+"@mobiscroll/react@file:./src/lib/mobiscroll-package/mobiscroll-react-v5.9.1.tgz":
   version "5.9.1"
-  resolved "https://npm.mobiscroll.com/@mobiscroll/react-trial/-/react-trial-5.9.1.tgz#6eb016eeefca00d74956635e4df3f97d6eaadb85"
+  resolved "file:./src/lib/mobiscroll-package/mobiscroll-react-v5.9.1.tgz#b57b544cbed681af87c19d417d9238dd25dc5608"
 
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
@@ -2223,6 +2235,11 @@
   dependencies:
     mkdirp "^1.0.4"
     rimraf "^3.0.2"
+
+"@pdftron/pdfjs-express@^8.0.1":
+  version "8.0.1"
+  resolved "https://registry.yarnpkg.com/@pdftron/pdfjs-express/-/pdfjs-express-8.0.1.tgz#48cd78919b55af3f6e6a3f8bdedde3f0805514fd"
+  integrity sha512-zSX8i2CwouW3bjrRHm7i1oeYPYWKQpUs3sprGm0qYcvMytpGJ2F2nKJ3iQLlUxyfgUJB3akolAmjlQuPjEwk2g==
 
 "@pdftron/webviewer@^8.0.1":
   version "8.0.1"
@@ -4598,7 +4615,7 @@ color@^3.0.0, color@^3.1.3:
 color@~3.1.2:
   version "3.1.4"
   resolved "https://registry.yarnpkg.com/color/-/color-3.1.4.tgz#8127592b1654abab663277265fb1df071ba99751"
-  integrity sha512-2fNuKrJPqa7+eBKhBqUjNZGmpf3wCdYiPCA0Dt+cVt8mf3tBleMiKf+Zgt6o/21Q6uOd5MqQc21wllmh1b1b9A==
+  integrity "sha1-gTUJKxZUq6tmMncmX7HfBxupl1E= sha512-2fNuKrJPqa7+eBKhBqUjNZGmpf3wCdYiPCA0Dt+cVt8mf3tBleMiKf+Zgt6o/21Q6uOd5MqQc21wllmh1b1b9A=="
   dependencies:
     color-convert "^1.9.1"
     color-string "^1.6.0"
@@ -12303,6 +12320,15 @@ react-slick@~0.25.2:
     lodash.debounce "^4.0.8"
     resize-observer-polyfill "^1.5.0"
 
+react-sortable-hoc@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/react-sortable-hoc/-/react-sortable-hoc-2.0.0.tgz#f6780d8aa4b922a21f3e754af542f032677078b7"
+  integrity sha512-JZUw7hBsAHXK7PTyErJyI7SopSBFRcFHDjWW5SWjcugY0i6iH7f+eJkY8cJmGMlZ1C9xz1J3Vjz0plFpavVeRg==
+  dependencies:
+    "@babel/runtime" "^7.2.0"
+    invariant "^2.2.4"
+    prop-types "^15.5.7"
+
 react-test-renderer@~16.11.0:
   version "16.11.0"
   resolved "https://registry.yarnpkg.com/react-test-renderer/-/react-test-renderer-16.11.0.tgz#72574566496462c808ac449b0287a4c0a1a7d8f8"
@@ -14929,7 +14955,7 @@ workbox-google-analytics@^3.6.3:
 workbox-navigation-preload@^3.6.3:
   version "3.6.3"
   resolved "https://registry.yarnpkg.com/workbox-navigation-preload/-/workbox-navigation-preload-3.6.3.tgz#a2c34eb7c17e7485b795127591215f757b3c4964"
-  integrity sha512-dd26xTX16DUu0i+MhqZK/jQXgfIitu0yATM4jhRXEmpMqQ4MxEeNvl2CgjDMOHBnCVMax+CFZQWwxMx/X/PqCw==
+  integrity "sha1-osNOt8F+dIW3lRJQkSFfdXs8SWQ= sha512-dd26xTX16DUu0i+MhqZK/jQXgfIitu0yATM4jhRXEmpMqQ4MxEeNvl2CgjDMOHBnCVMax+CFZQWwxMx/X/PqCw=="
   dependencies:
     workbox-core "^3.6.3"
 

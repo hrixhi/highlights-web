@@ -1052,7 +1052,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   textAlign: "right",
                   paddingRight: 20,
                   // textTransform: "uppercase",
-                  fontSize: 15,
+                  fontSize: 12,
                   // fontFamily: 'inter',
                   color: '#1D1D20',
                 }}
@@ -1070,7 +1070,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   lineHeight: 30,
                   textAlign: "right",
                   paddingRight: 20,
-                  fontSize: 15,
+                  fontSize: 12,
                   // fontFamily: 'inter',
                   // textTransform: 'uppercase'
                 }}
@@ -1087,7 +1087,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   textAlign: "right",
                   paddingRight: 10,
                   // textTransform: "uppercase",
-                  fontSize: 15,
+                  fontSize: 12,
                   // fontFamily: 'inter',
                 }}
                 onPress={() => {

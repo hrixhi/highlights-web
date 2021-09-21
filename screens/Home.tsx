@@ -97,8 +97,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   const [filterStart, setFilterStart] = useState<any>(new Date())
   const [filterEnd, setFilterEnd] = useState<any>(null)
 
-  const [option, setOption] = useState('Home')
-  const [options] = useState(['Home', 'Content', 'Inbox', 'Performance', 'Channels', 'Settings'])
+  const [option, setOption] = useState('To Do')
+  const [options] = useState(['To Do', 'Classroom', 'Performance', 'Inbox', 'Channels', 'Settings'])
 
   const [navOptions] = useState([
     {
@@ -257,17 +257,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
   }, [channelId, channelCreatedBy, email])
 
-  const refreshUnreadDiscussionCount = useCallback(async () => {
-    if (channelId !== '') {
-      const u = await AsyncStorage.getItem('user')
-      if (u) {
-        const user = JSON.parse(u)
-        updateDiscussionNotidCounts(user._id)
-      }
 
-    }
-
-  }, [channelId])
 
   const refreshUnreadMessagesCount = useCallback(async () => {
     if (channelId !== '') {
@@ -298,24 +288,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
       })
     }
 
-  }, [channelId])
-
-
-  const updateDiscussionNotidCounts = useCallback((userId) => {
-
-    const server = fetchAPI('')
-    server.query({
-      query: totalUnreadDiscussionThreads,
-      variables: {
-        userId,
-        channelId
-      }
-    }).then(res => {
-      if (res.data.threadStatus.totalUnreadDiscussionThreads !== undefined && res.data.threadStatus.totalUnreadDiscussionThreads !== null) {
-        setUnreadDiscussionThreads(res.data.threadStatus.totalUnreadDiscussionThreads)
-      }
-    })
-      .catch(err => console.log(err))
   }, [channelId])
 
   const updateMessageNotifCounts = useCallback((userId) => {
@@ -1231,7 +1203,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     setCreatedBy('')
     setChannelFilterChoice('All')
     if (modalType === 'Create' || modalType === 'Update') {
-      fadeAnimation.setValue(0)
+      // fadeAnimation.setValue(0)
       if (modalType === 'Update' && filterChoice === 'All-Channels') {
         setChannelId('')
       }
@@ -1290,7 +1262,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 channelId={channelId}
                 filterChoice={filterChoice}
                 channelCreatedBy={channelCreatedBy}
-                refreshUnreadDiscussionCount={() => refreshUnreadDiscussionCount()}
+              // refreshUnreadDiscussionCount={() => refreshUnreadDiscussionCount()}
               />
                 : (
                   modalType === 'Subscribers' ? <Subscribers
@@ -1334,7 +1306,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     refreshMeetingStatus={refreshMeetingStatus}
                                     closeModal={() => closeModal()}
                                     filterChoice={filterChoice}
-                                    refreshUnreadDiscussionCount={() => refreshUnreadDiscussionCount()}
+                                  // refreshUnreadDiscussionCount={() => refreshUnreadDiscussionCount()}
                                   />
                                     : null
                                 )
@@ -1422,7 +1394,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
       {
         showLoginWindow ? <View style={{
           width: '100%',
-          height: dimensions.window.height,
+          height: '100%',
           flex: 1,
           position: 'absolute',
           zIndex: 50,
@@ -1577,10 +1549,10 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           key={menuCollapsed.toString()}
           style={{
             width: '100%',
-            height: dimensions.window.height,
+            height: '100%',
             flex: 1,
             position: 'absolute',
-            overflow: 'scroll',
+            // overflow: 'scroll',
             zIndex: 50,
             backgroundColor: '#fff'
           }}
@@ -1595,95 +1567,100 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               // justifyContent: 'center',
               backgroundColor: 'white',
               width: dimensions.window.width < 1024 ? '100%' : '100%',
-              height: dimensions.window.width < 1024 ? '100%' : dimensions.window.height,
+              height: dimensions.window.width < 1024 ? '100%' : '100%',
               borderRadius: dimensions.window.width < 1024 ? 0 : 0,
               marginTop: dimensions.window.width < 1024 ? 0 : 0,
               // paddingVertical: 20
             }}>
-            <Dashboard
-              setOption={(op: any) => setOption(op)}
-              option={option}
-              options={options}
-              navOptions={navOptions}
-              hideHome={() => {
-                setShowHome(false)
-                loadData()
-              }}
-              closeModal={() => {
-                closeModal()
-              }}
-              saveDataInCloud={async () => await saveDataInCloud()}
-              reOpenProfile={() => {
-                setModalType('')
-                openModal('Profile')
-              }}
-              reloadData={() => {
-                loadDataFromCloud()
-              }}
-              cues={dateFilteredCues}
-              handleFilterChange={(choice: any) => handleFilterChange(choice)}
-              setChannelId={(id: string) => setChannelId(id)}
-              setChannelCreatedBy={(id: any) => setChannelCreatedBy(id)}
-              setChannelFilterChoice={(choice: string) => setChannelFilterChoice(choice)}
-              subscriptions={subscriptions}
-              openDiscussion={() => openModal('Discussion')}
-              openSubscribers={() => openModal('Subscribers')}
-              openGrades={() => openModal('Grades')}
-              openMeeting={() => openModal('Meeting')}
-              openChannelSettings={() => openModal('ChannelSettings')}
-              openUpdate={(index: any, key: any, pageNumber: any, _id: any, by: any, cId: any) => openUpdate(index, key, pageNumber, _id, by, cId)}
-              calendarCues={cues}
-              openCueFromCalendar={openCueFromCalendar}
-              // key={option.toString()}
-              openDiscussionFromActivity={(channelId: string, createdBy: string) => {
-                setChannelId(channelId);
-                setChannelCreatedBy(createdBy);
-                setCreatedBy(createdBy)
-                openModal('Meeting')
-                setShowHome(false);
-              }}
-              openChannelFromActivity={(channelId: string, createdBy: string) => {
-                setChannelId(channelId);
-                setChannelCreatedBy(createdBy);
-                setCreatedBy(createdBy);
-                setShowHome(false);
-              }}
-              openQAFromActivity={(channelId: any, cueId: string, by: string) => {
-                openCueFromCalendar(channelId, cueId, by)
-                setTarget('Q&A')
-              }}
-              openDiscussionFromSearch={(channelId: any) => {
 
-                // Find channel Created By from subscriptions
-                const match = subscriptions.filter((sub: any) => {
-                  return sub.channelId === channelId
-                })
+            {
+              reLoading ?
+                <View style={[styles(channelId).activityContainer, styles(channelId).horizontal]}>
+                  <ActivityIndicator color={'#818385'} />
+                </View> :
+                <Dashboard
+                  setOption={(op: any) => setOption(op)}
+                  option={option}
+                  options={options}
+                  refreshSubscriptions={refreshSubscriptions}
+                  hideHome={() => {
+                    setShowHome(false)
+                    loadData()
+                  }}
+                  closeModal={() => {
+                    closeModal()
+                  }}
+                  saveDataInCloud={async () => await saveDataInCloud()}
+                  reOpenProfile={() => {
+                    setModalType('')
+                    openModal('Profile')
+                  }}
+                  reloadData={() => {
+                    loadDataFromCloud()
+                  }}
+                  cues={dateFilteredCues}
+                  handleFilterChange={(choice: any) => handleFilterChange(choice)}
+                  setChannelId={(id: string) => setChannelId(id)}
+                  setChannelCreatedBy={(id: any) => setChannelCreatedBy(id)}
+                  setChannelFilterChoice={(choice: string) => setChannelFilterChoice(choice)}
+                  subscriptions={subscriptions}
+                  openDiscussion={() => openModal('Discussion')}
+                  openSubscribers={() => openModal('Subscribers')}
+                  openGrades={() => openModal('Grades')}
+                  openMeeting={() => openModal('Meeting')}
+                  openChannelSettings={() => openModal('ChannelSettings')}
+                  openUpdate={(index: any, key: any, pageNumber: any, _id: any, by: any, cId: any) => openUpdate(index, key, pageNumber, _id, by, cId)}
+                  calendarCues={cues}
+                  openCueFromCalendar={openCueFromCalendar}
+                  key={option.toString() + showHome.toString()}
+                  openDiscussionFromActivity={(channelId: string, createdBy: string) => {
+                    setChannelId(channelId);
+                    setChannelCreatedBy(createdBy);
+                    setCreatedBy(createdBy)
+                    openModal('Meeting')
+                    setShowHome(false);
+                  }}
+                  openChannelFromActivity={(channelId: string, createdBy: string) => {
+                    setChannelId(channelId);
+                    setChannelCreatedBy(createdBy);
+                    setCreatedBy(createdBy);
+                    setShowHome(false);
+                  }}
+                  openQAFromActivity={(channelId: any, cueId: string, by: string) => {
+                    openCueFromCalendar(channelId, cueId, by)
+                    setTarget('Q&A')
+                  }}
+                  openDiscussionFromSearch={(channelId: any) => {
+                    // Find channel Created By from subscriptions
+                    const match = subscriptions.filter((sub: any) => {
+                      return sub.channelId === channelId
+                    })
 
-                if (match && match.length !== 0) {
-                  const createdBy = match[0].channelCreatedBy
-                  setChannelId(channelId);
-                  setChannelCreatedBy(createdBy);
-                  setCreatedBy(createdBy)
-                  openModal('Meeting')
-                  setShowHome(false);
-                }
-              }}
-              openClassroom={(channelId: any) => {
-                // Find channel Created By from subscriptions
-                const match = subscriptions.filter((sub: any) => {
-                  return sub.channelId === channelId
-                })
-
-                if (match && match.length !== 0) {
-                  const createdBy = match[0].channelCreatedBy
-                  setChannelId(channelId);
-                  setChannelCreatedBy(createdBy);
-                  setCreatedBy(createdBy)
-                  openModal('Meeting')
-                  setShowHome(false);
-                }
-              }}
-            />
+                    if (match && match.length !== 0) {
+                      const createdBy = match[0].channelCreatedBy
+                      setChannelId(channelId);
+                      setChannelCreatedBy(createdBy);
+                      setCreatedBy(createdBy)
+                      openModal('Meeting')
+                      setShowHome(false);
+                    }
+                  }}
+                  openClassroom={(channelId: any) => {
+                    // Find channel Created By from subscriptions
+                    const match = subscriptions.filter((sub: any) => {
+                      return sub.channelId === channelId
+                    })
+                    if (match && match.length !== 0) {
+                      const createdBy = match[0].channelCreatedBy
+                      setChannelId(channelId);
+                      setChannelCreatedBy(createdBy);
+                      setCreatedBy(createdBy)
+                      openModal('Meeting')
+                      setShowHome(false);
+                    }
+                  }}
+                />
+            }
           </View>
         </View> : null
       }
@@ -1802,32 +1779,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                   unreadMessages={unreadMessages}
                   meetingOn={meetingOn}
                 />
-                {/* <FilterBar
-                  cues={dateFilteredCues}
-                  openWalkthrough={() => openModal('Walkthrough')}
-                  openCalendar={() => openModal('Calendar')}
-                  openCreate={() => openModal('Create')}
-                  openChannels={() => openModal('Channels')}
-                  openProfile={() => openModal('Profile')}
-                  closeModal={() => closeModal()}
-                  showHome={() => {
-                    setShowHome(true)
-                    setMenuCollapsed(true)
-                  }}
-                  filterChoice={filterChoice}
-                  handleFilterChange={(choice: any) => handleFilterChange(choice)}
-                  key={Math.random()}
-                  customCategories={customCategories}
-                  subscriptions={subscriptions}
-                  setChannelId={(id: string) => setChannelId(id)}
-                  setChannelCreatedBy={(id: any) => setChannelCreatedBy(id)}
-                  setChannelFilterChoice={(choice: string) => setChannelFilterChoice(choice)}
-                  channelFilterChoice={channelFilterChoice}
-                  filterStart={filterStart}
-                  filterEnd={filterEnd}
-                  setFilterStart={(s: any) => setFilterStart(s)}
-                  setFilterEnd={(e: any) => setFilterEnd(e)}
-                /> */}
                 {
                   reLoading ? <View style={[styles(channelId).activityContainer, styles(channelId).horizontal]}>
                     <ActivityIndicator color={'#818385'} />
@@ -1927,19 +1878,94 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         }}
         style={{
           position: 'absolute',
-          marginRight: 30,
-          marginBottom: 30,
+          marginRight: 20,
+          marginBottom: Dimensions.get('window').width < 1024 && (modalType !== 'Create' && modalType !== 'Update') ? 90 : 20,
           zIndex: showLoginWindow ? 40 : 600,
           right: 0,
           justifyContent: 'center',
-          alignSelf: 'flex-end',
-          width: 60, height: 60, borderRadius: 30, backgroundColor: '#007AFF'
+          bottom: 0,
+          width: 54, height: 54, borderRadius: 27, backgroundColor: '#007AFF'
         }}
       >
         <Text style={{ color: '#fff', width: '100%', textAlign: 'center' }}>
-          <Ionicons name='add-outline' size={38} />
+          <Ionicons name='add-outline' size={35} />
         </Text>
       </TouchableOpacity>
+      {
+        Dimensions.get('window').width < 1024 && showHome ?
+          <View style={{
+            position: 'absolute',
+            zIndex: showLoginWindow ? 40 : 1000,
+            backgroundColor: '#f8f8fa',
+            borderColor: '#f0f0f2',
+            borderTopWidth: 1,
+            alignSelf: 'flex-end',
+            width: '100%',
+            paddingTop: 10,
+            paddingBottom: 10,
+            paddingHorizontal: Dimensions.get('window').width < 1024 ? 20 : 40,
+            flexDirection: 'row',
+            justifyContent: 'center'
+          }}>
+            <TouchableOpacity
+              style={{
+                backgroundColor: '#f8f8fa',
+                width: '25%'
+              }}
+              onPress={() => setOption('To Do')}
+            >
+              <Text style={{ textAlign: 'center' }}>
+                <Ionicons name='journal-outline' size={25} color={option === 'To Do' ? '#007AFF' : '#1D1D20'} />
+              </Text>
+              <Text style={{ fontSize: 11, color: option === 'To Do' ? '#007AFF' : '#1D1D20', paddingTop: 5, textAlign: 'center' }}>
+                To Do
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                backgroundColor: '#f8f8fa',
+                width: '25%'
+              }}
+              onPress={() => setOption('Classroom')}
+            >
+              <Text style={{ textAlign: 'center' }}>
+                <Ionicons name='school-outline' size={25} color={option === 'Classroom' ? '#007AFF' : '#1D1D20'} />
+              </Text>
+              <Text style={{ fontSize: 11, color: option === 'Classroom' ? '#007AFF' : '#1D1D20', paddingTop: 5, textAlign: 'center' }}>
+                Classroom
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                backgroundColor: '#f8f8fa',
+                width: '25%'
+              }}
+              onPress={() => setOption('Performance')}
+            >
+              <Text style={{ textAlign: 'center' }}>
+                <Ionicons name='speedometer-outline' size={25} color={option === 'Performance' ? '#007AFF' : '#1D1D20'} />
+              </Text>
+              <Text style={{ fontSize: 11, color: option === 'Performance' ? '#007AFF' : '#1D1D20', paddingTop: 5, textAlign: 'center' }}>
+                Performance
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                backgroundColor: '#f8f8fa',
+                //marginHorizontal: 20,
+                width: '25%'
+              }}
+              onPress={() => setOption('Inbox')}
+            >
+              <Text style={{ textAlign: 'center' }}>
+                <Ionicons name='mail-outline' size={25} color={option === 'Inbox' ? '#007AFF' : '#1D1D20'} />
+              </Text>
+              <Text style={{ fontSize: 11, color: option === 'Inbox' ? '#007AFF' : '#1D1D20', paddingTop: 5, textAlign: 'center' }}>
+                Inbox
+              </Text>
+            </TouchableOpacity>
+          </View> : null
+      }
       {/* </View>
       </View> */}
     </View>
@@ -1952,7 +1978,7 @@ const styles = (channelId: string) => StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'row',
-    height: Dimensions.get('window').height,
+    height: "100%",
   },
   activityContainer: {
     borderTopWidth: 0,

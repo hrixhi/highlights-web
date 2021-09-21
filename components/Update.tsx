@@ -6,7 +6,7 @@ import Swiper from 'react-native-web-swiper'
 import UpdateControls from './UpdateControls';
 import { ScrollView } from 'react-native-gesture-handler'
 import { fetchAPI } from '../graphql/FetchAPI';
-import { getCueThreads, getStatuses, getUnreadQACount, creatFolder, getFolder, getFolderCues, getChannelFolders, updateFolder, addToFolder, deleteFolder, removeFromFolder  } from '../graphql/QueriesAndMutations';
+import { getCueThreads, getStatuses, getUnreadQACount, creatFolder, getFolder, getFolderCues, getChannelFolders, updateFolder, addToFolder, deleteFolder, removeFromFolder } from '../graphql/QueriesAndMutations';
 import ThreadsList from './ThreadsList';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SubscribersList from './SubscribersList';
@@ -18,7 +18,7 @@ import {
     SortableElement,
     SortableHandle,
     arrayMove
-  } from 'react-sortable-hoc';
+} from 'react-sortable-hoc';
 import { htmlStringParser, getContentIcon } from '../helpers/HTMLParser';
 import {
     Menu,
@@ -92,7 +92,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     useEffect(() => {
 
         if (!props.channelCues) return;
-        
+
         const filterExisting = props.channelCues.filter((cue: any) => {
             return cue.folderId === "" || !cue.folderId
         })
@@ -103,24 +103,24 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     const fetchChannelFolders = useCallback(async () => {
 
         const u = await AsyncStorage.getItem('user')
-            let parsedUser: any = {}
-            if (u) {
-                parsedUser = JSON.parse(u)
-            }
+        let parsedUser: any = {}
+        if (u) {
+            parsedUser = JSON.parse(u)
+        }
 
-            const server = fetchAPI(parsedUser._id)
-            server.query({
+        const server = fetchAPI(parsedUser._id)
+        server.query({
             query: getChannelFolders,
             variables: {
                 channelId: props.channelId
             }
-            }).then(res => {
-                if (res.data.folder.getFoldersForChannel) {
-                    setChannelFolders(res.data.folder.getFoldersForChannel)
-                }
-            }).catch((e) => {
+        }).then(res => {
+            if (res.data.folder.getFoldersForChannel) {
+                setChannelFolders(res.data.folder.getFoldersForChannel)
+            }
+        }).catch((e) => {
 
-            })
+        })
 
 
     }, [props.channelId])
@@ -133,7 +133,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     useEffect(() => {
 
         if (folderId !== "" && folder && folder !== null && folder.cueIds && folderCues && folderCues.length > 0) {
-            
+
             // const cuesInOrder = folder.cueIds.map((id: any) => {
             //     return folderCues.find((cue: any) => cue._id === id)
             // })
@@ -159,11 +159,11 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
             const server = fetchAPI(parsedUser._id)
             server.query({
-            query: getFolderCues,
-            variables: {
-                folderId,
-                userId: parsedUser._id
-            }
+                query: getFolderCues,
+                variables: {
+                    folderId,
+                    userId: parsedUser._id
+                }
             }).then(res => {
                 if (res.data.folder.getCuesById) {
                     setFolderCues(res.data.folder.getCuesById)
@@ -178,16 +178,16 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 variables: {
                     folderId,
                 }
-                }).then(res => {
-                    if (res.data.folder.findById) {
-                        setFolder(res.data.folder.findById)
-                        setLoadingFolder(false);
-                    }
-                }).catch((e) => {
+            }).then(res => {
+                if (res.data.folder.findById) {
+                    setFolder(res.data.folder.findById)
                     setLoadingFolder(false);
-                })
-        } 
-    }, [folderId]) 
+                }
+            }).catch((e) => {
+                setLoadingFolder(false);
+            })
+        }
+    }, [folderId])
 
     useEffect(() => {
         fetchFolderCues()
@@ -494,12 +494,12 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     }, [props.cueId, props.channelId])
 
 
-    const DragHandle = SortableHandle(() => (<Text style={{  marginRight: 10 }}> <Ionicons name='menu-outline' size={22} /> </Text> ))
+    const DragHandle = SortableHandle(() => (<Text style={{ marginRight: 10 }}> <Ionicons name='menu-outline' size={22} /> </Text>))
 
-    const SortableItem = SortableElement(({value, sortIndex} : any) => {
+    const SortableItem = SortableElement(({ value, sortIndex }: any) => {
 
         const { title } = htmlStringParser(value.channelId && value.channelId !== '' ? value.original : value.cue)
- 
+
         const colorChoices: any[] = ['#f94144', '#f3722c', '#f8961e', '#f9c74f', '#3abb83'].reverse()
 
         const col = colorChoices[value.color]
@@ -522,7 +522,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     borderColor: value._id === props.cue._id ? '#000' : '#e9e9ec',
                     flexDirection: 'row'
                 }}>
-                
+
                 <DragHandle />
 
                 <View style={{ flexDirection: 'column', justifyContent: 'center', marginRight: 10 }}>
@@ -554,28 +554,28 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
                         const sCues = selectedCues.filter((c: any) => c._id !== value._id)
                         setSelectedCues(sCues);
-                        
+
                     }}
                     style={{
-                    justifyContent: 'center',
-                    alignSelf: 'flex-end',
-                    width: 20, height: 20, borderRadius: 10, backgroundColor: '#f94144'
+                        justifyContent: 'center',
+                        alignSelf: 'flex-end',
+                        width: 20, height: 20, borderRadius: 10, backgroundColor: '#f94144'
                     }}
                 >
                     <Text style={{ color: '#fff', width: '100%', textAlign: 'center' }}>
-                        <Ionicons name='remove-circle-outline' size={22}  />
+                        <Ionicons name='remove-circle-outline' size={22} />
                     </Text>
                 </TouchableOpacity> : null}
-                
+
 
             </View>
         </View>)
     })
 
 
-    const SortableItemUpdate = SortableElement(({value, sortIndex} : any) => {
+    const SortableItemUpdate = SortableElement(({ value, sortIndex }: any) => {
         const { title } = htmlStringParser(value.channelId && value.channelId !== '' ? value.original : value.cue)
- 
+
         const colorChoices: any[] = ['#f94144', '#f3722c', '#f8961e', '#f9c74f', '#3abb83'].reverse()
 
         const col = colorChoices[value.color]
@@ -598,7 +598,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     borderColor: value._id === props.cue._id ? '#000' : '#e9e9ec',
                     flexDirection: 'row'
                 }}>
-                
+
                 <DragHandle />
 
                 <View style={{ flexDirection: 'column', justifyContent: 'center', marginRight: 10 }}>
@@ -630,66 +630,66 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
                         const sCues = folderCuesToDisplay.filter((c: any) => c._id !== value._id)
                         setFolderCuesToDisplay(sCues);
-                        
+
                     }}
                     style={{
-                    justifyContent: 'center',
-                    alignSelf: 'flex-end',
-                    width: 20, height: 20, borderRadius: 10, backgroundColor: '#f94144'
+                        justifyContent: 'center',
+                        alignSelf: 'flex-end',
+                        width: 20, height: 20, borderRadius: 10, backgroundColor: '#f94144'
                     }}
                 >
                     <Text style={{ color: '#fff', width: '100%', textAlign: 'center' }}>
-                        <Ionicons name='remove-circle-outline' size={22}  />
+                        <Ionicons name='remove-circle-outline' size={22} />
                     </Text>
                 </TouchableOpacity> : null}
-                
+
 
             </View>
         </View>)
     })
 
-      
-    const SortableList = SortableContainer(({items} : any) => {
+
+    const SortableList = SortableContainer(({ items }: any) => {
         return (
-          <ul style={{ padding: 0, margin: 0, marginTop: 20 }}>
-            {items.map((value: any, index: number) => (
-              <SortableItem
-                key={`item-${index}`}
-                index={index}
-                sortIndex={index}
-                value={value}
-              />
-            ))}
-          </ul>
+            <ul style={{ padding: 0, margin: 0, marginTop: 20 }}>
+                {items.map((value: any, index: number) => (
+                    <SortableItem
+                        key={`item-${index}`}
+                        index={index}
+                        sortIndex={index}
+                        value={value}
+                    />
+                ))}
+            </ul>
         );
-      });
+    });
 
-      const SortableListUpdate = SortableContainer(({items} : any) => {
+    const SortableListUpdate = SortableContainer(({ items }: any) => {
         return (
-          <ul style={{ padding: 0, margin: 0, marginTop: 20 }}>
-            {items.map((value: any, index: number) => (
-              <SortableItemUpdate
-                key={`item-${index}`}
-                index={index}
-                sortIndex={index}
-                value={value}
-              />
-            ))}
-          </ul>
+            <ul style={{ padding: 0, margin: 0, marginTop: 20 }}>
+                {items.map((value: any, index: number) => (
+                    <SortableItemUpdate
+                        key={`item-${index}`}
+                        index={index}
+                        sortIndex={index}
+                        value={value}
+                    />
+                ))}
+            </ul>
         );
-      });
+    });
 
 
-    const onSortEnd = ({oldIndex, newIndex} : any) => {
+    const onSortEnd = ({ oldIndex, newIndex }: any) => {
         setSelectedCues(arrayMove(selectedCues, oldIndex, newIndex))
     };
 
-    const onSortEndUpdate = ({oldIndex, newIndex} : any) => {
+    const onSortEndUpdate = ({ oldIndex, newIndex }: any) => {
         setFolderCuesToDisplay(arrayMove(folderCuesToDisplay, oldIndex, newIndex))
     };
 
     const renderCreateNewFolderOptions = () => {
-        
+
         return (<View>
             <View
                 style={{
@@ -717,216 +717,172 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 />
 
                 {/* Channel Cues  */}
-                {channelCues.length !== 0 ? 
+                {channelCues.length !== 0 ?
                     <ScrollView
-                                    style={{
-                                        width: "100%",
-                                        height: 300,
-                                        backgroundColor: "white",
-                                        borderTopLeftRadius: 0,
-                                        borderTopRightRadius: 0,
-                                        overflow: "scroll",
-                                        marginTop: 20
-                                    }}
-                                    showsVerticalScrollIndicator={false}
-                                >
-                                    {channelCues.map((cue: any) => {
-                                        const { title } = htmlStringParser(cue.channelId && cue.channelId !== '' ? cue.original : cue.cue)
-
-                                        const colorChoices: any[] = ['#f94144', '#f3722c', '#f8961e', '#f9c74f', '#3abb83'].reverse()
-
-                                        const col = colorChoices[cue.color]
-
-                                        return (<View
-                                            style={styles.swiper}
-                                        >
-                                            <View
-                                                key={'textPage'}
-                                                style={{
-                                                    maxWidth: 300,
-                                                    width: '100%',
-                                                    height: '100%',
-                                                    borderRadius: 1,
-                                                    padding: 15,
-                                                    paddingHorizontal: 20,
-                                                    backgroundColor: '#fff',
-                                                    borderWidth: 1,
-                                                    borderColor: cue._id === props.cue._id ? '#000' : '#e9e9ec',
-                                                    flexDirection: 'row'
-                                                }}>
-
-                                                <View style={{ flexDirection: 'column', justifyContent: 'center', marginRight: 10 }}>
-                                                    <Ionicons name={getContentIcon(cue.channelId && cue.channelId !== '' ? cue.original : cue.cue)} size={18} />
-                                                </View>
-
-                                                <Text
-                                                    ellipsizeMode={'tail'}
-                                                    numberOfLines={1}
-                                                    style={{
-                                                        fontFamily: 'inter',
-                                                        fontSize: 15,
-                                                        lineHeight: 20,
-                                                        flex: 1,
-                                                        marginTop: 4,
-                                                        color: col
-                                                    }}>
-                                                    {title}
-                                                </Text>
-
-                                                {/* Add button here */}
-
-                                                <TouchableOpacity
-                                                    onPress={() => {
-                                                        const temp = [...selectedCues];
-                                                        temp.push(cue);
-                                                        setSelectedCues(temp)
-
-                                                        // Remove from channel Cues
-                                                        const cCues = channelCues.filter((c: any) => c._id !== cue._id)
-                                                        setChannelCues(cCues)
-                                                    }}
-                                                    style={{
-                                                    justifyContent: 'center',
-                                                    alignSelf: 'flex-end',
-                                                    width: 20, height: 20, borderRadius: 10, backgroundColor: '#007AFF'
-                                                    }}
-                                                >
-                                                    <Text style={{ color: '#fff', width: '100%', textAlign: 'center' }}>
-                                                        <Ionicons name='add-outline' size={22} />
-                                                    </Text>
-                                                </TouchableOpacity>
-                                                
-
-                                            </View>
-                                        </View>)
-                                    }) }
-                                </ScrollView>
-                                :
-                                <View>
-                                    <Text style={{ fontSize: 15, color: '#818385', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#fff' }}>
-                                            No Cues
-                                    </Text>
-                                </View>}
-
-                        <View
-                            style={{
-                            // display: "flex",
-                            // flexDirection: "row",
+                        style={{
+                            width: "100%",
+                            height: 300,
                             backgroundColor: "white",
-                            marginVertical: 30
-                            }}
-                        >
-                            {
-                                selectedCues.length > 0 ? <SortableList  items={selectedCues} onSortEnd={onSortEnd} useDragHandle /> : <View >
-                                <Text style={{ fontSize: 15, color: '#818385', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#fff', }}>
-                                    No Selection
-                                </Text>
-                            </View>
-                            }
+                            borderTopLeftRadius: 0,
+                            borderTopRightRadius: 0,
+                            overflow: "scroll",
+                            marginTop: 20
+                        }}
+                        showsVerticalScrollIndicator={false}
+                    >
+                        {channelCues.map((cue: any) => {
+                            const { title } = htmlStringParser(cue.channelId && cue.channelId !== '' ? cue.original : cue.cue)
+
+                            const colorChoices: any[] = ['#f94144', '#f3722c', '#f8961e', '#f9c74f', '#3abb83'].reverse()
+
+                            const col = colorChoices[cue.color]
+
+                            return (<View
+                                style={styles.swiper}
+                            >
+                                <View
+                                    key={'textPage'}
+                                    style={{
+                                        maxWidth: 300,
+                                        width: '100%',
+                                        height: '100%',
+                                        borderRadius: 1,
+                                        padding: 15,
+                                        paddingHorizontal: 20,
+                                        backgroundColor: '#fff',
+                                        borderWidth: 1,
+                                        borderColor: cue._id === props.cue._id ? '#000' : '#e9e9ec',
+                                        flexDirection: 'row'
+                                    }}>
+
+                                    <View style={{ flexDirection: 'column', justifyContent: 'center', marginRight: 10 }}>
+                                        <Ionicons name={getContentIcon(cue.channelId && cue.channelId !== '' ? cue.original : cue.cue)} size={18} />
+                                    </View>
+
+                                    <Text
+                                        ellipsizeMode={'tail'}
+                                        numberOfLines={1}
+                                        style={{
+                                            fontFamily: 'inter',
+                                            fontSize: 15,
+                                            lineHeight: 20,
+                                            flex: 1,
+                                            marginTop: 4,
+                                            color: col
+                                        }}>
+                                        {title}
+                                    </Text>
+
+                                    {/* Add button here */}
+
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            const temp = [...selectedCues];
+                                            temp.push(cue);
+                                            setSelectedCues(temp)
+
+                                            // Remove from channel Cues
+                                            const cCues = channelCues.filter((c: any) => c._id !== cue._id)
+                                            setChannelCues(cCues)
+                                        }}
+                                        style={{
+                                            justifyContent: 'center',
+                                            alignSelf: 'flex-end',
+                                            width: 20, height: 20, borderRadius: 10, backgroundColor: '#007AFF'
+                                        }}
+                                    >
+                                        <Text style={{ color: '#fff', width: '100%', textAlign: 'center' }}>
+                                            <Ionicons name='add-outline' size={22} />
+                                        </Text>
+                                    </TouchableOpacity>
+
+
+                                </View>
+                            </View>)
+                        })}
+                    </ScrollView>
+                    :
+                    <View>
+                        <Text style={{ fontSize: 15, color: '#818385', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#fff' }}>
+                            No Cues
+                        </Text>
+                    </View>}
+
+                <View
+                    style={{
+                        // display: "flex",
+                        // flexDirection: "row",
+                        backgroundColor: "white",
+                        marginVertical: 30
+                    }}
+                >
+                    {
+                        selectedCues.length > 0 ? <SortableList items={selectedCues} onSortEnd={onSortEnd} useDragHandle /> : <View >
+                            <Text style={{ fontSize: 15, color: '#818385', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#fff', }}>
+                                No Selection
+                            </Text>
                         </View>
+                    }
+                </View>
 
             </View>
 
             <View style={styles.footer}>
-                    <View
-                        style={{
-                            flex: 1,
-                            backgroundColor: "white",
-                            justifyContent: "center",
-                            display: "flex",
-                            flexDirection: "row",
-                            height: 50,
-                            paddingTop: 10,
-                        }}
-                    >
-                        <TouchableOpacity
-                            onPress={async () => {
+                <View
+                    style={{
+                        flex: 1,
+                        backgroundColor: "white",
+                        justifyContent: "center",
+                        display: "flex",
+                        flexDirection: "row",
+                        height: 50,
+                        paddingTop: 10,
+                    }}
+                >
+                    <TouchableOpacity
+                        onPress={async () => {
 
-                                setCreatingFolder(true);
-                                
-                                const server = fetchAPI('')
+                            setCreatingFolder(true);
 
-                                server.mutate({
-                                    mutation: creatFolder,
-                                    variables: {
-                                        title: newFolderTitle,
-                                        cueIds: selectedCues.map((cue: any) => cue._id)
-                                    }
-                                }).then(async res => {
+                            const server = fetchAPI('')
 
-                                    // Update cue locally with the new Unread count so that the Unread count reflects in real time
+                            server.mutate({
+                                mutation: creatFolder,
+                                variables: {
+                                    title: newFolderTitle,
+                                    cueIds: selectedCues.map((cue: any) => cue._id)
+                                }
+                            }).then(async res => {
 
-                                    if (res.data.folder.create === null || res.data.folder.create === "") {
-                                        Alert("Could not create list. Try again.")
-                                        setCreatingFolder(false)
-                                        return;
-                                    } 
+                                // Update cue locally with the new Unread count so that the Unread count reflects in real time
 
-                                    setFolderId(res.data.folder.create);
-                                    setCreatingFolder(false);
-                                    setCreateNewFolder(false);
-
-                                    props.refreshCues()
-
-                                }).catch((e) => {
+                                if (res.data.folder.create === null || res.data.folder.create === "") {
                                     Alert("Could not create list. Try again.")
                                     setCreatingFolder(false)
-                                })
+                                    return;
+                                }
 
-                                
-                            }}
-                            disabled={selectedCues.length < 2 || creatingFolder}
-                            style={{
+                                setFolderId(res.data.folder.create);
+                                setCreatingFolder(false);
+                                setCreateNewFolder(false);
+
+                                props.refreshCues()
+
+                            }).catch((e) => {
+                                Alert("Could not create list. Try again.")
+                                setCreatingFolder(false)
+                            })
+
+
+                        }}
+                        disabled={selectedCues.length < 2 || creatingFolder}
+                        style={{
                             borderRadius: 15,
                             backgroundColor: "white",
-                            }}
-                        >
-                            <Text
-                                style={{
-                                textAlign: "center",
-                                lineHeight: 35,
-                                color: "white",
-                                fontSize: 12,
-                                backgroundColor: "#007AFF",
-                                borderRadius: 15,
-                                paddingHorizontal: 25,
-                                fontFamily: "inter",
-                                overflow: "hidden",
-                                height: 35,
-                                textTransform: "uppercase",
-                                }}
-                            >
-                                {creatingFolder
-                                ? 'Creating...'
-                                : 'Create'}
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
-
-                    <View
-                        style={{
-                            flex: 1,
-                            backgroundColor: "white",
-                            justifyContent: "center",
-                            display: "flex",
-                            flexDirection: "row",
-                            height: 50,
-                            paddingTop: 10,
                         }}
                     >
-                        <TouchableOpacity
-                            onPress={async () => {
-                                setNewFolderTitle('')
-                                setCreateNewFolder(false)
-                                setSelectedCues([])
-                            }}
+                        <Text
                             style={{
-                            borderRadius: 15,
-                            backgroundColor: "white",
-                            }}
-                        >
-                            <Text
-                                style={{
                                 textAlign: "center",
                                 lineHeight: 35,
                                 color: "white",
@@ -938,19 +894,63 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 overflow: "hidden",
                                 height: 35,
                                 textTransform: "uppercase",
-                                }}
-                            >
-                                {/* {isSubmitting
+                            }}
+                        >
+                            {creatingFolder
                                 ? 'Creating...'
-                                : 'Create'} */}
-                                Cancel
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
-                    
+                                : 'Create'}
+                        </Text>
+                    </TouchableOpacity>
                 </View>
 
-            
+                <View
+                    style={{
+                        flex: 1,
+                        backgroundColor: "white",
+                        justifyContent: "center",
+                        display: "flex",
+                        flexDirection: "row",
+                        height: 50,
+                        paddingTop: 10,
+                    }}
+                >
+                    <TouchableOpacity
+                        onPress={async () => {
+                            setNewFolderTitle('')
+                            setCreateNewFolder(false)
+                            setSelectedCues([])
+                        }}
+                        style={{
+                            borderRadius: 15,
+                            backgroundColor: "white",
+                        }}
+                    >
+                        <Text
+                            style={{
+                                textAlign: "center",
+                                lineHeight: 35,
+                                color: "white",
+                                fontSize: 12,
+                                backgroundColor: "#007AFF",
+                                borderRadius: 15,
+                                paddingHorizontal: 25,
+                                fontFamily: "inter",
+                                overflow: "hidden",
+                                height: 35,
+                                textTransform: "uppercase",
+                            }}
+                        >
+                            {/* {isSubmitting
+                                ? 'Creating...'
+                                : 'Create'} */}
+                            Cancel
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+
+            </View>
+
+
 
         </View>)
     }
@@ -959,7 +959,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
         if (folderCuesToDisplay.length === 0) {
             return <View >
-                <Text style={{ fontSize: 15, color: '#818385', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#fff',  }}>
+                <Text style={{ fontSize: 15, color: '#818385', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#fff', }}>
                     Fetching cues...
                 </Text>
             </View>
@@ -967,189 +967,189 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
         return channelOwner && editFolder ? <View style={{ width: '100%' }}>
 
-                <View>
-                    <TouchableOpacity onPress={async () => {
-                                setEditFolder(false)
+            <View>
+                <TouchableOpacity onPress={async () => {
+                    setEditFolder(false)
 
-                                // Set cues to display to original
-                                const cuesInOrder = folder.cueIds.map((id: any) => {
-                                    return folderCues.find((cue: any) => cue._id === id)
-                                })
-                    
-                                setFolderCuesToDisplay(cuesInOrder)
+                    // Set cues to display to original
+                    const cuesInOrder = folder.cueIds.map((id: any) => {
+                        return folderCues.find((cue: any) => cue._id === id)
+                    })
 
-                            }}>
-                        <Ionicons name='arrow-back-outline' size={22} color={'#1D1D20'} />
-                    </TouchableOpacity>
-                </View>
+                    setFolderCuesToDisplay(cuesInOrder)
 
-                <TextareaAutosize
-                    value={updateFolderTitle}
+                }}>
+                    <Ionicons name='arrow-back-outline' size={22} color={'#1D1D20'} />
+                </TouchableOpacity>
+            </View>
+
+            <TextareaAutosize
+                value={updateFolderTitle}
+                style={{
+                    width: 300,
+                    maxWidth: '100%',
+                    borderBottom: '1px solid #cccccc',
+                    fontSize: 15,
+                    paddingTop: 13,
+                    paddingBottom: 13,
+                    marginTop: 0,
+                    marginBottom: 15
+                }}
+                // style={styles.input}
+                minRows={1}
+                placeholder={PreferredLanguageText("title")}
+                onChange={(e: any) => setUpdateFolderTitle(e.target.value)}
+            />
+
+            {channelCues.length !== 0 ?
+                <ScrollView
                     style={{
-                        width: 300,
-                        maxWidth: '100%',
-                        borderBottom: '1px solid #cccccc',
-                        fontSize: 15,
-                        paddingTop: 13,
-                        paddingBottom: 13,
-                        marginTop: 0,
-                        marginBottom: 15
+                        width: "100%",
+                        height: 300,
+                        backgroundColor: "white",
+                        borderTopLeftRadius: 0,
+                        borderTopRightRadius: 0,
+                        overflow: "scroll",
+                        marginTop: 20
                     }}
-                    // style={styles.input}
-                    minRows={1}
-                    placeholder={PreferredLanguageText("title")}
-                    onChange={(e: any) => setUpdateFolderTitle(e.target.value)}
-                />
+                    showsVerticalScrollIndicator={false}
+                >
+                    {channelCues.map((cue: any) => {
+                        const { title } = htmlStringParser(cue.channelId && cue.channelId !== '' ? cue.original : cue.cue)
 
-                {channelCues.length !== 0 ? 
-                    <ScrollView
+                        const colorChoices: any[] = ['#f94144', '#f3722c', '#f8961e', '#f9c74f', '#3abb83'].reverse()
+
+                        const col = colorChoices[cue.color]
+
+                        return (<View
+                            style={styles.swiper}
+                        >
+                            <View
+                                key={'textPage'}
+                                style={{
+                                    maxWidth: 300,
+                                    width: '100%',
+                                    height: '100%',
+                                    borderRadius: 1,
+                                    padding: 15,
+                                    paddingHorizontal: 20,
+                                    backgroundColor: '#fff',
+                                    borderWidth: 1,
+                                    borderColor: cue._id === props.cue._id ? '#000' : '#e9e9ec',
+                                    flexDirection: 'row'
+                                }}>
+
+                                <View style={{ flexDirection: 'column', justifyContent: 'center', marginRight: 10 }}>
+                                    <Ionicons name={getContentIcon(cue.channelId && cue.channelId !== '' ? cue.original : cue.cue)} size={18} />
+                                </View>
+
+                                <Text
+                                    ellipsizeMode={'tail'}
+                                    numberOfLines={1}
                                     style={{
-                                        width: "100%",
-                                        height: 300,
-                                        backgroundColor: "white",
-                                        borderTopLeftRadius: 0,
-                                        borderTopRightRadius: 0,
-                                        overflow: "scroll",
-                                        marginTop: 20
+                                        fontFamily: 'inter',
+                                        fontSize: 15,
+                                        lineHeight: 20,
+                                        flex: 1,
+                                        marginTop: 4,
+                                        color: col
+                                    }}>
+                                    {title}
+                                </Text>
+
+                                {/* Add button here */}
+
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        const temp = [...folderCuesToDisplay];
+                                        temp.push(cue);
+                                        setFolderCuesToDisplay(temp)
+
+                                        // Remove from channel Cues
+                                        const cCues = channelCues.filter((c: any) => c._id !== cue._id)
+                                        setChannelCues(cCues)
                                     }}
-                                    showsVerticalScrollIndicator={false}
+                                    style={{
+                                        justifyContent: 'center',
+                                        alignSelf: 'flex-end',
+                                        width: 20, height: 20, borderRadius: 10, backgroundColor: '#007AFF'
+                                    }}
                                 >
-                                    {channelCues.map((cue: any) => {
-                                        const { title } = htmlStringParser(cue.channelId && cue.channelId !== '' ? cue.original : cue.cue)
-
-                                        const colorChoices: any[] = ['#f94144', '#f3722c', '#f8961e', '#f9c74f', '#3abb83'].reverse()
-
-                                        const col = colorChoices[cue.color]
-
-                                        return (<View
-                                            style={styles.swiper}
-                                        >
-                                            <View
-                                                key={'textPage'}
-                                                style={{
-                                                    maxWidth: 300,
-                                                    width: '100%',
-                                                    height: '100%',
-                                                    borderRadius: 1,
-                                                    padding: 15,
-                                                    paddingHorizontal: 20,
-                                                    backgroundColor: '#fff',
-                                                    borderWidth: 1,
-                                                    borderColor: cue._id === props.cue._id ? '#000' : '#e9e9ec',
-                                                    flexDirection: 'row'
-                                                }}>
-                                                
-                                                <View style={{ flexDirection: 'column', justifyContent: 'center', marginRight: 10 }}>
-                                                    <Ionicons name={getContentIcon(cue.channelId && cue.channelId !== '' ? cue.original : cue.cue)} size={18} />
-                                                </View>
-
-                                                <Text
-                                                    ellipsizeMode={'tail'}
-                                                    numberOfLines={1}
-                                                    style={{
-                                                        fontFamily: 'inter',
-                                                        fontSize: 15,
-                                                        lineHeight: 20,
-                                                        flex: 1,
-                                                        marginTop: 4,
-                                                        color: col
-                                                    }}>
-                                                    {title}
-                                                </Text>
-
-                                                {/* Add button here */}
-
-                                                <TouchableOpacity
-                                                    onPress={() => {
-                                                        const temp = [...folderCuesToDisplay];
-                                                        temp.push(cue);
-                                                        setFolderCuesToDisplay(temp)
-
-                                                        // Remove from channel Cues
-                                                        const cCues = channelCues.filter((c: any) => c._id !== cue._id)
-                                                        setChannelCues(cCues)
-                                                    }}
-                                                    style={{
-                                                    justifyContent: 'center',
-                                                    alignSelf: 'flex-end',
-                                                    width: 20, height: 20, borderRadius: 10, backgroundColor: '#007AFF'
-                                                    }}
-                                                >
-                                                    <Text style={{ color: '#fff', width: '100%', textAlign: 'center' }}>
-                                                        <Ionicons name='add-outline' size={22} />
-                                                    </Text>
-                                                </TouchableOpacity>
-                                                
-
-                                            </View>
-                                        </View>)
-                                    }) }
-                                </ScrollView>
-                                :
-                                <View>
-                                    <Text style={{ fontSize: 15, color: '#818385', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#fff' }}>
-                                            No Cues
+                                    <Text style={{ color: '#fff', width: '100%', textAlign: 'center' }}>
+                                        <Ionicons name='add-outline' size={22} />
                                     </Text>
-                                </View>}
+                                </TouchableOpacity>
+
+
+                            </View>
+                        </View>)
+                    })}
+                </ScrollView>
+                :
+                <View>
+                    <Text style={{ fontSize: 15, color: '#818385', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#fff' }}>
+                        No Cues
+                    </Text>
+                </View>}
 
             <SortableListUpdate items={folderCuesToDisplay} onSortEnd={onSortEndUpdate} useDragHandle />
 
             <View style={styles.footer}>
-                    <View
-                        style={{
-                            flex: 1,
-                            backgroundColor: "white",
-                            justifyContent: "center",
-                            display: "flex",
-                            flexDirection: "row",
-                            height: 50,
-                            paddingTop: 10,
-                        }}
-                    >
-                        <TouchableOpacity
-                            onPress={async () => {
+                <View
+                    style={{
+                        flex: 1,
+                        backgroundColor: "white",
+                        justifyContent: "center",
+                        display: "flex",
+                        flexDirection: "row",
+                        height: 50,
+                        paddingTop: 10,
+                    }}
+                >
+                    <TouchableOpacity
+                        onPress={async () => {
 
-                                const server = fetchAPI('')
+                            const server = fetchAPI('')
 
-                                setUpdatingFolder(true)
+                            setUpdatingFolder(true)
 
-                                server.mutate({
-                                    mutation: updateFolder,
-                                    variables: {
-                                        title: updateFolderTitle,
-                                        cueIds: folderCuesToDisplay.map((cue: any) => cue._id),
-                                        folderId
-                                    }
-                                }).then(async res => {
+                            server.mutate({
+                                mutation: updateFolder,
+                                variables: {
+                                    title: updateFolderTitle,
+                                    cueIds: folderCuesToDisplay.map((cue: any) => cue._id),
+                                    folderId
+                                }
+                            }).then(async res => {
 
-                                    // Update cue locally with the new Unread count so that the Unread count reflects in real time
-                                    if (res.data.folder.update === null || res.data.folder.update === undefined) {
-                                        Alert("Could not create list. Try again.")
-                                        setUpdatingFolder(false)
-                                        return;
-                                    } 
-
-                                    setUpdatingFolder(false);
-                                    setEditFolder(false);
-
-                                    await fetchFolderCues()
-
-                                    props.refreshCues()
-
-                                }).catch((e) => {
+                                // Update cue locally with the new Unread count so that the Unread count reflects in real time
+                                if (res.data.folder.update === null || res.data.folder.update === undefined) {
                                     Alert("Could not create list. Try again.")
                                     setUpdatingFolder(false)
-                                })
-                                
-                            }}
-                            disabled={folderCuesToDisplay.length < 2 || updatingFolder}
-                            style={{
+                                    return;
+                                }
+
+                                setUpdatingFolder(false);
+                                setEditFolder(false);
+
+                                await fetchFolderCues()
+
+                                props.refreshCues()
+
+                            }).catch((e) => {
+                                Alert("Could not create list. Try again.")
+                                setUpdatingFolder(false)
+                            })
+
+                        }}
+                        disabled={folderCuesToDisplay.length < 2 || updatingFolder}
+                        style={{
                             borderRadius: 15,
                             backgroundColor: "white",
-                            }}
-                        >
-                            <Text
-                                style={{
+                        }}
+                    >
+                        <Text
+                            style={{
                                 textAlign: "center",
                                 lineHeight: 35,
                                 color: "white",
@@ -1161,93 +1161,93 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 overflow: "hidden",
                                 height: 35,
                                 textTransform: "uppercase",
-                                }}
-                            >
-                                {creatingFolder
+                            }}
+                        >
+                            {creatingFolder
                                 ? 'Saving...'
                                 : 'Save'}
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
-
-                    
-
+                        </Text>
+                    </TouchableOpacity>
                 </View>
 
-            
 
-        </View> : 
-        <View style={{ width: '100%', marginTop: 10 }}>
-                <Text style={{ fontSize: 15, color: '#000', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#fff',  }}>
+
+            </View>
+
+
+
+        </View> :
+            <View style={{ width: '100%', marginTop: 10 }}>
+                <Text style={{ fontSize: 15, color: '#000', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#fff', }}>
                     {folder.title}
                 </Text>
-            <ScrollView
-                style={{
-                    width: "100%",
-                    // height: 300,
-                    backgroundColor: "white",
-                    borderTopLeftRadius: 0,
-                    borderTopRightRadius: 0,
-                    overflow: "scroll",
-                    marginTop: 20
-                }}
-                showsVerticalScrollIndicator={false}
+                <ScrollView
+                    style={{
+                        width: "100%",
+                        // height: 300,
+                        backgroundColor: "white",
+                        borderTopLeftRadius: 0,
+                        borderTopRightRadius: 0,
+                        overflow: "scroll",
+                        marginTop: 20
+                    }}
+                    showsVerticalScrollIndicator={false}
                 >
-                {folderCuesToDisplay.map((cue: any) => {
+                    {folderCuesToDisplay.map((cue: any) => {
 
-                    if (!cue || !cue.channelId) return;
+                        if (!cue || !cue.channelId) return;
 
-                    const { title } = htmlStringParser(cue.channelId && cue.channelId !== '' ? cue.original : cue.cue)
+                        const { title } = htmlStringParser(cue.channelId && cue.channelId !== '' ? cue.original : cue.cue)
 
-                    const colorChoices: any[] = ['#f94144', '#f3722c', '#f8961e', '#f9c74f', '#3abb83'].reverse()
+                        const colorChoices: any[] = ['#f94144', '#f3722c', '#f8961e', '#f9c74f', '#3abb83'].reverse()
 
-                    const col = colorChoices[cue.color]
+                        const col = colorChoices[cue.color]
 
-                    return (<View
-                        style={styles.swiper}
-                    >
-                        <TouchableOpacity
-                            onPress={() => props.openCue(cue._id)}
-                            key={'textPage'}
-                            style={{
-                                maxWidth: 300,
-                                width: '100%',
-                                height: '100%',
-                                borderRadius: 1,
-                                padding: 15,
-                                paddingHorizontal: 20,
-                                backgroundColor: '#fff',
-                                borderWidth: 1,
-                                borderColor: cue._id === props.cue._id ? '#000' : '#e9e9ec',
-                                flexDirection: 'row'
-                            }}>  
-
-                            <View style={{ flexDirection: 'column', justifyContent: 'center', marginRight: 10 }}>
-                                <Ionicons name={getContentIcon(cue.channelId && cue.channelId !== '' ? cue.original : cue.cue)} size={18} />
-                            </View>
-
-                            <Text
-                                ellipsizeMode={'tail'}
-                                numberOfLines={1}
+                        return (<View
+                            style={styles.swiper}
+                        >
+                            <TouchableOpacity
+                                onPress={() => props.openCue(cue._id)}
+                                key={'textPage'}
                                 style={{
-                                    fontFamily: 'inter',
-                                    fontSize: 15,
-                                    lineHeight: 20,
-                                    flex: 1,
-                                    marginTop: 4,
-                                    color: col
+                                    maxWidth: 300,
+                                    width: '100%',
+                                    height: '100%',
+                                    borderRadius: 1,
+                                    padding: 15,
+                                    paddingHorizontal: 20,
+                                    backgroundColor: '#fff',
+                                    borderWidth: 1,
+                                    borderColor: cue._id === props.cue._id ? '#000' : '#e9e9ec',
+                                    flexDirection: 'row'
                                 }}>
-                                {title}
-                            </Text>
 
-                                                    
+                                <View style={{ flexDirection: 'column', justifyContent: 'center', marginRight: 10 }}>
+                                    <Ionicons name={getContentIcon(cue.channelId && cue.channelId !== '' ? cue.original : cue.cue)} size={18} />
+                                </View>
 
-                        </TouchableOpacity>
-                    </View>)
-                }) }
-            </ScrollView>
+                                <Text
+                                    ellipsizeMode={'tail'}
+                                    numberOfLines={1}
+                                    style={{
+                                        fontFamily: 'inter',
+                                        fontSize: 15,
+                                        lineHeight: 20,
+                                        flex: 1,
+                                        marginTop: 4,
+                                        color: col
+                                    }}>
+                                    {title}
+                                </Text>
 
-            {channelOwner ? <View style={styles.footer}>
+
+
+                            </TouchableOpacity>
+                        </View>)
+                    })}
+                </ScrollView>
+
+                {channelOwner ? <View style={styles.footer}>
                     <View
                         style={{
                             flex: 1,
@@ -1264,23 +1264,23 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 setEditFolder(true)
                             }}
                             style={{
-                            borderRadius: 15,
-                            backgroundColor: "white",
+                                borderRadius: 15,
+                                backgroundColor: "white",
                             }}
                         >
                             <Text
                                 style={{
-                                textAlign: "center",
-                                lineHeight: 35,
-                                color: "white",
-                                fontSize: 12,
-                                backgroundColor: "#007AFF",
-                                borderRadius: 15,
-                                paddingHorizontal: 25,
-                                fontFamily: "inter",
-                                overflow: "hidden",
-                                height: 35,
-                                textTransform: "uppercase",
+                                    textAlign: "center",
+                                    lineHeight: 35,
+                                    color: "white",
+                                    fontSize: 12,
+                                    backgroundColor: "#007AFF",
+                                    borderRadius: 15,
+                                    paddingHorizontal: 25,
+                                    fontFamily: "inter",
+                                    overflow: "hidden",
+                                    height: 35,
+                                    textTransform: "uppercase",
                                 }}
                             >
 
@@ -1318,7 +1318,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         Alert("Could not delete list. Try again.")
                                         setDeletingFolder(false)
                                         return;
-                                    } 
+                                    }
 
                                     setDeletingFolder(false);
                                     setFolderId("")
@@ -1331,176 +1331,176 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 })
                             }}
                             style={{
-                            borderRadius: 15,
-                            backgroundColor: "white",
+                                borderRadius: 15,
+                                backgroundColor: "white",
                             }}
                         >
                             <Text
                                 style={{
-                                textAlign: "center",
-                                lineHeight: 35,
-                                color: "white",
-                                fontSize: 12,
-                                backgroundColor: "#007AFF",
-                                borderRadius: 15,
-                                paddingHorizontal: 25,
-                                fontFamily: "inter",
-                                overflow: "hidden",
-                                height: 35,
-                                textTransform: "uppercase",
+                                    textAlign: "center",
+                                    lineHeight: 35,
+                                    color: "white",
+                                    fontSize: 12,
+                                    backgroundColor: "#007AFF",
+                                    borderRadius: 15,
+                                    paddingHorizontal: 25,
+                                    fontFamily: "inter",
+                                    overflow: "hidden",
+                                    height: 35,
+                                    textTransform: "uppercase",
                                 }}
                             >
                                 {deletingFolder
-                                ? 'Deleting...'
-                                : 'Delete'}
-                                
+                                    ? 'Deleting...'
+                                    : 'Delete'}
+
                             </Text>
                         </TouchableOpacity>
                     </View>
 
                 </View> : null}
-        </View>
+            </View>
 
     }
 
-    
+
 
     const windowHeight = Dimensions.get('window').width < 1024 ? Dimensions.get('window').height - 30 : Dimensions.get('window').height;
 
 
     const FolderView = <ScrollView
-            nestedScrollEnabled={true}
-            showsVerticalScrollIndicator={false}
-            horizontal={false}
-            style={{
-                borderTopRightRadius: 0,
-                borderTopLeftRadius: 0,
-            }}
-            contentContainerStyle={{
-                borderTopRightRadius: 0,
-                borderTopLeftRadius: 0,
-                // minHeight: windowHeight
-            }}
-        >
+        nestedScrollEnabled={true}
+        showsVerticalScrollIndicator={false}
+        horizontal={false}
+        style={{
+            borderTopRightRadius: 0,
+            borderTopLeftRadius: 0,
+        }}
+        contentContainerStyle={{
+            borderTopRightRadius: 0,
+            borderTopLeftRadius: 0,
+            // minHeight: windowHeight
+        }}
+    >
         <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 30, backgroundColor: 'white' }}>
-                    {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
+            {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
         </Text>
         {!createNewFolder && folderId === "" ? <View style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <Menu
-            onSelect={async (choice: any) => {
-                // setCalendarChoice(choice)
+            <Menu
+                onSelect={async (choice: any) => {
+                    // setCalendarChoice(choice)
 
-                if (addingToFolder) {
-                    return;
-                }
-                // Add to folder and if successful set folder id to the folder added to
-
-                const server = fetchAPI('')
-
-                setAddingToFolder(true)
-
-                server.mutate({
-                    mutation: addToFolder,
-                    variables: {
-                        cueId: props.cue._id,
-                        folderId: choice
+                    if (addingToFolder) {
+                        return;
                     }
-                }).then(async res => {
+                    // Add to folder and if successful set folder id to the folder added to
 
-                    // Update cue locally with the new Unread count so that the Unread count reflects in real time
-                    if (!res.data.folder.addToFolder) {
+                    const server = fetchAPI('')
+
+                    setAddingToFolder(true)
+
+                    server.mutate({
+                        mutation: addToFolder,
+                        variables: {
+                            cueId: props.cue._id,
+                            folderId: choice
+                        }
+                    }).then(async res => {
+
+                        // Update cue locally with the new Unread count so that the Unread count reflects in real time
+                        if (!res.data.folder.addToFolder) {
+                            Alert("Could not add to list. Try again.")
+                            setAddingToFolder(false)
+                            return;
+                        }
+
+                        setAddingToFolder(false);
+                        setFolderId(choice)
+
+                    }).catch((e) => {
                         Alert("Could not add to list. Try again.")
                         setAddingToFolder(false)
-                        return;
-                    } 
-
-                    setAddingToFolder(false);
-                    setFolderId(choice)
-
-                }).catch((e) => {
-                    Alert("Could not add to list. Try again.")
-                    setAddingToFolder(false)
-                })
-
-                
-            }}>
-            <MenuTrigger>
-                <View
-                    // onPress={async () => {
-                        
-                    // }}
-                    style={{
-                        backgroundColor: 'white',
-                        overflow: 'hidden',
-                        height: 35,
-                        // marginTop: 15,
-                        justifyContent: 'center',
-                        flexDirection: 'row',
-                    }}>
-                    <Text style={{
-                        textAlign: 'center',
-                        lineHeight: 30,
-                        color: '#fff',
-                        fontSize: 12,
-                        backgroundColor: '#3abb83',
-                        paddingHorizontal: 20,
-                        fontFamily: 'inter',
-                        height: 30,
-                        // width: 100,
-                        borderRadius: 15,
-                        textTransform: 'uppercase'
-                    }}>
-                        Add to List {<Ionicons name='caret-forward-outline' size={12} />}
-                    </Text>
-                </View>
-            </MenuTrigger>
-            <MenuOptions customStyles={{
-                optionsContainer: {
-                    padding: 10,
-                    borderRadius: 15,
-                    shadowOpacity: 0,
-                    borderWidth: 1,
-                    borderColor: '#e9e9ec',
-                    overflow: 'scroll',
-                    maxHeight: '100%'
-                }
-            }}>
-
-                {
-                    channelFolders.map((folder: any) => {
-                        return (<MenuOption
-                            key={folder._id}
-                            value={folder._id}>
-                            <View style={{ display: 'flex', flexDirection: 'row', }}>
-                                <Text style={{ marginLeft: 5 }}>
-                                    {folder.title}
-                                </Text>
-                            </View>
-                        </MenuOption>)
                     })
-                }
-            </MenuOptions>
-        </Menu>
 
-        <TouchableOpacity
-            onPress={() => {
-                setCreateNewFolder(true)  
 
-                // Add the current one to the selected list
+                }}>
+                <MenuTrigger>
+                    <View
+                        // onPress={async () => {
 
-                setSelectedCues([props.cue]);
+                        // }}
+                        style={{
+                            backgroundColor: 'white',
+                            overflow: 'hidden',
+                            height: 35,
+                            // marginTop: 15,
+                            justifyContent: 'center',
+                            flexDirection: 'row',
+                        }}>
+                        <Text style={{
+                            textAlign: 'center',
+                            lineHeight: 30,
+                            color: '#fff',
+                            fontSize: 12,
+                            backgroundColor: '#3abb83',
+                            paddingHorizontal: 20,
+                            fontFamily: 'inter',
+                            height: 30,
+                            // width: 100,
+                            borderRadius: 15,
+                            textTransform: 'uppercase'
+                        }}>
+                            Add to List {<Ionicons name='caret-forward-outline' size={12} />}
+                        </Text>
+                    </View>
+                </MenuTrigger>
+                <MenuOptions customStyles={{
+                    optionsContainer: {
+                        padding: 10,
+                        borderRadius: 15,
+                        shadowOpacity: 0,
+                        borderWidth: 1,
+                        borderColor: '#e9e9ec',
+                        overflow: 'scroll',
+                        maxHeight: '100%'
+                    }
+                }}>
 
-                const filter = props.channelCues.filter((cue: any) => cue._id !== props.cue._id)
-                setChannelCues(filter)
-            }}
-            style={{
-                backgroundColor: 'white',
-                overflow: 'hidden',
-                height: 35,
-                marginTop: 15,
-                justifyContent: 'center',
-                flexDirection: 'row',
-            }}>
+                    {
+                        channelFolders.map((folder: any) => {
+                            return (<MenuOption
+                                key={folder._id}
+                                value={folder._id}>
+                                <View style={{ display: 'flex', flexDirection: 'row', }}>
+                                    <Text style={{ marginLeft: 5 }}>
+                                        {folder.title}
+                                    </Text>
+                                </View>
+                            </MenuOption>)
+                        })
+                    }
+                </MenuOptions>
+            </Menu>
+
+            <TouchableOpacity
+                onPress={() => {
+                    setCreateNewFolder(true)
+
+                    // Add the current one to the selected list
+
+                    setSelectedCues([props.cue]);
+
+                    const filter = props.channelCues.filter((cue: any) => cue._id !== props.cue._id)
+                    setChannelCues(filter)
+                }}
+                style={{
+                    backgroundColor: 'white',
+                    overflow: 'hidden',
+                    height: 35,
+                    marginTop: 15,
+                    justifyContent: 'center',
+                    flexDirection: 'row',
+                }}>
                 <Text style={{
                     textAlign: 'center',
                     lineHeight: 30,
@@ -1518,13 +1518,13 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 </Text>
             </TouchableOpacity>
         </View> : null}
-        
+
         {createNewFolder ? renderCreateNewFolderOptions() : null}
 
-        {folderId !== "" ? renderFolderCues() : null }
+        {folderId !== "" ? renderFolderCues() : null}
 
     </ScrollView>
-    
+
     const ContentView = <Animated.View style={{
         width: '100%',
         height: windowHeight,
@@ -1616,111 +1616,110 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     )
             }
         </ScrollView>
-            : <View style={{ width: '100%' }}>
-                <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 30, backgroundColor: 'white' }}>
-                    {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
-                </Text>
-                <View style={{ marginLeft: 20 }}>
-                    <TouchableOpacity
-                        style={{
-                            justifyContent: 'center',
-                            flexDirection: 'column',
-                            marginRight: 20
-                        }}
-                        onPress={() => {
-                            setShowFolder(!showFolder)
-                        }}>
-                        <Text>
-                            <Ionicons name='menu-outline' size={24} color={'#000'} />
-                        </Text>
-                    </TouchableOpacity>
-                </View>
+            : <View style={{ paddingTop: 30 }}>
+                <View style={{ width: '100%', flexDirection: 'row' }}>
+                    <View style={{ marginLeft: 20 }}>
+                        <TouchableOpacity
+                            style={{
+                                justifyContent: 'center',
+                                flexDirection: 'column',
+                                marginRight: 20
+                            }}
+                            onPress={() => {
+                                setShowFolder(!showFolder)
+                            }}>
+                            <Text>
+                                <Ionicons name='menu-outline' size={24} color={'#000'} />
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
 
-                <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'center' }}>
-                    <TouchableOpacity
-                        style={{
-                            justifyContent: 'center',
-                            flexDirection: 'column'
-                        }}
-                        onPress={() => {
-                            setShowOptions(false)
-                            setViewStatus(false)
-                            setShowOriginal(true)
-                            setShowComments(false)
-                        }}>
-                        <Text style={showOriginal ? styles.allGrayFill : styles.all}>
-                            {PreferredLanguageText('viewShared')}
-                        </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={{
-                            justifyContent: "center",
-                            flexDirection: "column"
-                        }}
-                        onPress={() => {
-                            setShowOptions(true)
-                            setViewStatus(false)
-                            setShowOriginal(false)
-                            setShowComments(false)
-                        }}>
+                    <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'center' }}>
+                        <TouchableOpacity
+                            style={{
+                                justifyContent: 'center',
+                                flexDirection: 'column'
+                            }}
+                            onPress={() => {
+                                setShowOptions(false)
+                                setViewStatus(false)
+                                setShowOriginal(true)
+                                setShowComments(false)
+                            }}>
+                            <Text style={showOriginal ? styles.allGrayFill : styles.all}>
+                                <Ionicons name='document-outline' size={20} />
+                            </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={{
+                                justifyContent: "center",
+                                flexDirection: "column"
+                            }}
+                            onPress={() => {
+                                setShowOptions(true)
+                                setViewStatus(false)
+                                setShowOriginal(false)
+                                setShowComments(false)
+                            }}>
 
-                        <Text style={styles.all}>
-                            Details
-                        </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={{
-                            justifyContent: "center",
-                            flexDirection: "column"
-                        }}
-                        onPress={() => {
-                            setShowOptions(false)
-                            setViewStatus(false)
-                            setShowOriginal(false)
-                            setShowComments(true)
-                        }}>
-                        <Text style={styles.all}>
-                            Q&A
-                            {/* {props.cue.unreadThreads > 0 ? <View style={styles.badge} /> : null} */}
-                        </Text>
-                    </TouchableOpacity>
-                    {
-                        !submission || (channelOwner && submission) || isQuiz ? null :
-                            <TouchableOpacity
-                                style={{
-                                    justifyContent: 'center',
-                                    flexDirection: 'column'
-                                }}
-                                onPress={() => {
-                                    setViewStatus(false)
-                                    setShowOriginal(false)
-                                    setShowComments(false)
-                                    setShowOptions(false)
-                                }}>
-                                <Text style={!showOriginal && !viewStatus && !showOptions && !showComments ? styles.allGrayFill : styles.all}>
-                                    {PreferredLanguageText('mySubmission')}
-                                </Text>
-                            </TouchableOpacity>
-                    }
-                    {/* Add Status button here */}
-                    {
-                        !channelOwner ? null :
-                            <TouchableOpacity
-                                style={{
-                                    justifyContent: 'center',
-                                    flexDirection: 'column'
-                                }}
-                                onPress={() => {
-                                    setViewStatus(true)
-                                    setShowOriginal(false)
-                                    setShowComments(false)
-                                    setShowOptions(false)
-                                }}>
-                                <Text style={viewStatus ? styles.allGrayFill : styles.all}>
-                                    ENGAGEMENT
-                                </Text>
-                            </TouchableOpacity>
-                    }
+                            <Text style={styles.all}>
+                                <Ionicons name='options-outline' size={20} />
+                            </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={{
+                                justifyContent: "center",
+                                flexDirection: "column"
+                            }}
+                            onPress={() => {
+                                setShowOptions(false)
+                                setViewStatus(false)
+                                setShowOriginal(false)
+                                setShowComments(true)
+                            }}>
+                            <Text style={styles.all}>
+                                <Ionicons name='chatbubbles-outline' size={20} />
+                                {/* {props.cue.unreadThreads > 0 ? <View style={styles.badge} /> : null} */}
+                            </Text>
+                        </TouchableOpacity>
+                        {
+                            !submission || (channelOwner && submission) || isQuiz ? null :
+                                <TouchableOpacity
+                                    style={{
+                                        justifyContent: 'center',
+                                        flexDirection: 'column'
+                                    }}
+                                    onPress={() => {
+                                        setViewStatus(false)
+                                        setShowOriginal(false)
+                                        setShowComments(false)
+                                        setShowOptions(false)
+                                    }}>
+                                    <Text style={!showOriginal && !viewStatus && !showOptions && !showComments ? styles.allGrayFill : styles.all}>
+                                        <Ionicons name='document-attach-outline' size={20} />
+                                    </Text>
+                                </TouchableOpacity>
+                        }
+                        {/* Add Status button here */}
+                        {
+                            !channelOwner ? null :
+                                <TouchableOpacity
+                                    style={{
+                                        justifyContent: 'center',
+                                        flexDirection: 'column'
+                                    }}
+                                    onPress={() => {
+                                        setViewStatus(true)
+                                        setShowOriginal(false)
+                                        setShowComments(false)
+                                        setShowOptions(false)
+                                    }}>
+                                    <Text style={viewStatus ? styles.allGrayFill : styles.all}>
+                                        <Ionicons name='checkmark-done-outline' size={20} />
+                                    </Text>
+                                </TouchableOpacity>
+                        }
+                    </View>
                 </View>
                 {
                     channelOwner ?
@@ -1799,9 +1798,9 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         <ActivityIndicator color={'#818385'} />
                     </View>
                     :
-                    <View style={{ width: '100%', flexDirection: 'row'}}>
-                        {showFolder ? <View style={{ width: '20%', backgroundColor: 'white' }}>
-                                    {loadingFolder || loadingFolderCues ? <View style={{
+                    <View style={{ width: '100%', flexDirection: 'row' }}>
+                        {showFolder ? <View style={{ width: 200, backgroundColor: 'white' }}>
+                            {loadingFolder || loadingFolderCues ? <View style={{
                                 width: '100%',
                                 flex: 1,
                                 justifyContent: 'center',
@@ -1814,11 +1813,11 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 <ActivityIndicator color={'#818385'} />
                             </View> : FolderView}
                         </View> : null}
-                        <View style={{ paddingLeft: 30, width: showFolder ? '80%' : '100%', backgroundColor: 'white' }}>   
-                            {ContentView}   
+                        <View style={{ paddingLeft: showFolder ? 20 : 0, width: showFolder ? '80%' : '100%', backgroundColor: 'white' }}>
+                            {ContentView}
                         </View>
-                        
-                    </View> 
+
+                    </View>
             }
         </View >
     );
@@ -1828,25 +1827,24 @@ export default Update
 
 const styles: any = StyleSheet.create({
     all: {
-        fontSize: 11,
-        color: '#1D1D20',
-        height: 24,
+        fontSize: 25,
+        color: '#43434f',
+        height: 25,
         paddingHorizontal: 10,
         backgroundColor: '#fff',
-        lineHeight: 24,
-        fontFamily: 'inter',
-        textTransform: 'uppercase'
+        textTransform: 'uppercase',
+        lineHeight: 25,
+        fontFamily: 'inter'
     },
     allGrayFill: {
-        fontSize: 11,
-        color: '#fff',
+        fontSize: 25,
+        color: '#007AFF',
+        height: 25,
         paddingHorizontal: 10,
-        borderRadius: 12,
-        backgroundColor: '#1D1D20',
-        lineHeight: 24,
-        height: 24,
-        fontFamily: 'inter',
-        textTransform: 'uppercase'
+        backgroundColor: '#fff',
+        textTransform: 'uppercase',
+        lineHeight: 25,
+        fontFamily: 'inter'
     },
     badge: {
         position: 'absolute',
