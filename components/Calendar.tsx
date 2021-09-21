@@ -67,6 +67,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     // Used for filtering by channels
     const [eventChannels, setEventChannels] = useState<any[]>([]);
     const [allEvents, setAllEvents] = useState<any[]>([]);
+    const [filterByChannel, setFilterByChannel] = useState("All");
+    const [filterEventsType, setFilterEventsType] = useState('All');
 
     const [userId, setUserId] = useState('');
 
@@ -221,11 +223,11 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
         let total = [...allEvents];
 
         // Filter the meetings first 
-        if (props.filterEventsType === "Lectures") {
+        if (filterEventsType === "Lectures") {
             total = total.filter((e: any) => e.meeting)
-        } else if (props.filterEventsType === "Submissions") {
+        } else if (filterEventsType === "Submissions") {
             total = total.filter((e: any) => e.cueId !== "");
-        } else if (props.filterEventsType === "Events") {
+        } else if (filterEventsType === "Events") {
             total = total.filter((e: any) => e.cueId === "" && !e.meeting);
         }
 
@@ -246,15 +248,15 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
             })
         }
 
-        if (props.filterByChannel === "All") {
+        if (filterByChannel === "All") {
             setEvents(total);
         } else {
             const all = [...total];
-            const filter = all.filter((e: any) => props.filterByChannel === (e.channelName));
+            const filter = all.filter((e: any) => filterByChannel === (e.channelName));
             setEvents(filter)
         }
 
-    }, [props.filterByChannel, props.filterEventsType, props.filterStart, props.filterEnd])
+    }, [filterByChannel, filterEventsType, props.filterStart, props.filterEnd])
 
 
 
@@ -1343,6 +1345,90 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     console.log("Channel options", channelOptions)
 
+    const renderEventFilters = () => {
+
+
+        if (loading || tab === tabs[3] || tab === tabs[4]) {
+            return null;
+        }
+
+        const channelOptions = [{ value: 'All', text: 'All' }, { value: 'My Events', text: 'My Events'}]
+
+        props.subscriptions.map((sub: any) => {
+            channelOptions.push({
+                value: sub.channelName,
+                text: sub.channelName
+            })
+        })
+
+        const typeOptions = [{ value: 'All', text: 'All' }, { value: 'Lectures', text: 'Lectures' }, { value: 'Submissions', text: 'Submissions' }, { value: 'Events', text: 'Events' }] 
+
+        return (<div style={{  display: 'flex', flexDirection: 'row', paddingBottom: 25, marginTop: 100 }}>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+                            
+                <label style={{ width: 150  }}>
+                    <Select
+                        touchUi={true}
+                        theme="ios"
+                        themeVariant="light"
+                        value={filterByChannel}
+                        onChange={(val: any) => {
+                            setFilterByChannel(val.value)
+                        }}
+                        responsive={{
+                            small: {
+                                display: 'bubble'
+                            },
+                            medium: {
+                                touchUi: false
+                            }
+                        }}
+                        dropdown={false}
+                        data={channelOptions}
+                    />
+                                  
+                </label>
+
+                <Text style={{ fontSize: 10, color: '#1D1D20', paddingLeft: 5, paddingTop: 10 }}>
+                   Channel
+                </Text>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', paddingLeft: 75 }}>
+                            
+                <label style={{ width: 150 }}>
+                    <Select
+                        touchUi={true}
+                        theme="ios"
+                        themeVariant="light"
+                        value={filterEventsType}
+                        onChange={(val: any) => {
+                            setFilterEventsType(val.value)
+                        }}
+                        responsive={{
+                            small: {
+                                display: 'bubble'
+                            },
+                            medium: {
+                                touchUi: false
+                            }
+                        }}
+                        dropdown={false}
+                        data={typeOptions}
+                    />
+                                  
+                </label>
+
+                <Text style={{ fontSize: 10, color: '#1D1D20', paddingLeft: 5, paddingTop: 10  }}>
+                   Type
+                </Text>
+            </div>
+
+
+        </div>)
+    }
+
+
 
     return (
         <Animated.View
@@ -1413,6 +1499,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     }}
                                 /> : null} */}
                                 {renderTabs(tab)}
+                                
                                 {
                                     !showAddEvent ?
                                         <View
@@ -2013,6 +2100,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 }
                             </View>
                         )}
+                        {renderEventFilters()}
                         {/* TEMPORARILY HIDDEN */}
                         <View style={{ backgroundColor: "white", display: 'none' }}>
                             <View style={{ flexDirection: Dimensions.get('window').width < 1024 ? 'column' : 'row', flex: 1, paddingTop: 40 }}>

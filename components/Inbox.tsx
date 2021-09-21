@@ -696,7 +696,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                 <View style={{ backgroundColor: '#fff', paddingTop: 15 }}>
                                                     <View style={{ flexDirection: 'row', backgroundColor: '#fff' }}>
                                                         
-                                                    <label style={{ width: 140 }}>
+                                                    <label style={{ width: 150 }}>
                                                         <Select
                                                             touchUi={true}
                                                             themeVariant="light"
@@ -718,7 +718,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                     </label>
 
                                                     </View>
-                                                    <Text style={{ fontSize: 10, color: '#1D1D20', paddingLeft: 17 }}>
+                                                    <Text style={{ fontSize: 10, color: '#1D1D20',  paddingLeft: 5, paddingTop: 10 }}>
                                                         Channel
                                                     </Text>
                                                 </View> : null

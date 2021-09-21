@@ -1363,7 +1363,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         />
                                             
                                     </label>
-                                    <Text style={{ fontSize: 10, color: '#1D1D20', marginLeft: 17 }}>
+                                    <Text style={{ fontSize: 10, color: '#1D1D20', marginLeft: 17, paddingLeft: 5, paddingTop: 10 }}>
                                         Type
                                     </Text>
                                 </View>

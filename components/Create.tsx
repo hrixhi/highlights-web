@@ -43,11 +43,9 @@ import ReactPlayer from "react-player";
 // import Webview from "./Webview";
 import Multiselect from "multiselect-react-dropdown";
 import WebViewer from '@pdftron/pdfjs-express';
-// import { Datepicker as MobiscrollDatePicker } from "@mobiscroll/react5";
-import mobiscroll, { Form as MobiscrollForm, FormGroup, Button as MobiscrollButton, Select, Input, FormGroupTitle } from '@mobiscroll/react'
+import mobiscroll, { Select, Datepicker as MobiscrollDatePicker } from '@mobiscroll/react'
 
 import '@mobiscroll/react/dist/css/mobiscroll.react.min.css';
-import '@mobiscroll/react5/dist/css/mobiscroll.min.css';
 
 import {
   Menu,

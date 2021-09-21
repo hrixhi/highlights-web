@@ -3981,16 +3981,17 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             data={categoriesOptions}
                                             theme="ios"
                                             themeVariant="light"
+                                            touchUi={true}
+                                            responsive={{
+                                                small: {
+                                                    display: 'bubble'
+                                                },
+                                                medium: {
+                                                    touchUi: false,
+                                                }
+                                            }}
                                             onChange={(val: any) => {
                                                 setCustomCategory(val.value)
-                                                }}
-                                                responsive={{
-                                                    small: {
-                                                        display: 'bubble'
-                                                    },
-                                                    medium: {
-                                                        touchUi: false,
-                                                    }
                                                 }}
                                             />
                                             
@@ -4361,7 +4362,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     }}>{PreferredLanguageText("remindEvery")}</Text>
                                     <label style={{ width: 140 }}>
                                     <MobiscrollSelect
+                                        theme="ios"
                                         themeVariant="light"
+                                        touchUi={true}
                                         value={frequency}
                                         rows={timedFrequencyOptions.length}
                                         onChange={(val: any) => {

@@ -380,7 +380,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             props.cueId === null && !showPost ?
                                 <View style={{
                                     // width: '100%',
-                                    height: 60,
+                                    paddingTop: 10,
                                     paddingRight: 20,
                                     // paddingTop: 7,
                                     backgroundColor: 'white',
@@ -421,7 +421,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                             }
                                         </MenuOptions>
                                     </Menu> */}
-                                    <label style={{ width: 140 }}>
+                                    <label style={{ width: 150 }}>
                                         <Select
                                             touchUi={true}
                                             themeVariant="light"
@@ -441,7 +441,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                         />
                                             
                                     </label>
-                                    <Text style={{ fontSize: 10, color: '#1D1D20', width: '100%', paddingTop: 3, paddingLeft: 14 }}>
+                                    <Text style={{ fontSize: 10, color: '#1D1D20', width: '100%',  paddingLeft: 5, paddingTop: 10 }}>
                                         Topic
                                     </Text>
                                 </View> : null}

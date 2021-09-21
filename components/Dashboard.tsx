@@ -34,7 +34,7 @@ import Discussion from './Discussion';
 import Meeting from './Meeting';
 import ChannelSettings from './ChannelSettings';
 
-import mobiscroll, { Form as MobiscrollForm, FormGroup, Button as MobiscrollButton, Popup, Optionlist, OptionItem, Listview,   } from '@mobiscroll/react'
+import { Datepicker, Select } from '@mobiscroll/react'
 import '@mobiscroll/react/dist/css/mobiscroll.react.min.css';
 
 
@@ -693,6 +693,22 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const windowHeight =
         width < 1024 ? Dimensions.get("window").height - 30 : Dimensions.get("window").height;
 
+    const sortbyOptions = [
+        {
+            value: 'Date ↑',
+            text: 'Date ↑'
+        }, 
+        {
+            value: 'Date ↓',
+            text: 'Date ↓'
+        },
+        {
+            value: 'Priority',
+            text: 'Priority'
+        }
+    ]
+
+
     const overview = <View
         key={collapseMap.toString()}
         style={{
@@ -701,6 +717,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
             width: '100%',
             overflow: 'scroll'
         }}>
+        {/* Add sort by filter here */}
         <View style={{ width: '100%' }}>
             <ScrollView
                 showsVerticalScrollIndicator={false}
@@ -1076,6 +1093,37 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         </View>
                     })
                 }
+                <View style={{ width: '100%', flexDirection: 'row', paddingTop: 20, paddingBottom: 10  }}>
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                            
+                            <label style={{ width: 150 }}>
+                                <Select
+                                    touchUi={true}
+                                    theme="ios"
+                                    themeVariant="light"
+                                    value={sortBy}
+                                    onChange={(val: any) => {
+                                        setSortBy(val.value)
+                                    }}
+                                    responsive={{
+                                        small: {
+                                            display: 'bubble'
+                                        },
+                                        medium: {
+                                            touchUi: false
+                                        }
+                                    }}
+                                    dropdown={false}
+                                    data={sortbyOptions}
+                                />
+                                              
+                            </label>
+            
+                            <Text style={{ fontSize: 10, color: '#1D1D20', paddingLeft: 5, paddingTop: 10  }}>
+                               Sort By
+                            </Text>
+                        </div>
+                    </View>
             </ScrollView>
         </View>
     </View>
@@ -1157,190 +1205,221 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         backgroundColor: '#f8f8fa'
                     }}>
                         {props.option === 'To Do' || props.option === 'Classroom' ?
-                            <Menu
-                                style={{ flex: 1 }}
-                                onSelect={(e: any) => {
-                                    if (props.option === 'Classroom') {
-                                        setSortBy(e)
-                                    } else {
-                                        if (e.type) {
-                                            setFilterEventsType(e.type)
-                                        } else {
-                                            setFilterByChannel(e.channelName)
-                                            setActivityChannelId(e.channelId)
-                                        }
-                                    }
-                                }}>
-                                <MenuTrigger>
-                                    <Text style={{ fontSize: 11, color: '#1D1D20', paddingTop: 9, textAlign: 'right' }}>
-                                        Filter <Ionicons name="caret-down" size={11} />
-                                    </Text>
-                                </MenuTrigger>
-                                <MenuOptions customStyles={{
-                                    optionsContainer: {
-                                        padding: 10,
-                                        borderRadius: 15,
-                                        shadowOpacity: 0,
-                                        borderWidth: 1,
-                                        borderColor: '#f0f0f2',
-                                        overflow: 'scroll',
-                                        maxHeight: '100%'
-                                    }
-                                }}>
-                                    {(props.option === 'Classroom' ?
-                                        <>
-                                            <MenuOption
-                                                value={'Priority'}>
-                                                <Text>
-                                                    Priority {sortBy === 'Priority' ? <Ionicons name='checkmark-outline' /> : null}
-                                                </Text>
-                                            </MenuOption>
-                                            <MenuOption
-                                                value={'Date ↑'}>
-                                                <Text>
-                                                    Date ↑ {sortBy === 'Date ↑' ? <Ionicons name='checkmark-outline' /> : null}
-                                                </Text>
-                                            </MenuOption>
-                                            <MenuOption
-                                                value={'Date ↓'}>
-                                                <Text>
-                                                    Date ↓ {sortBy === 'Date ↓' ? <Ionicons name='checkmark-outline' /> : null}
-                                                </Text>
-                                            </MenuOption>
-                                        </>
-                                        : null
-                                    )}
-                                    {
-                                        props.option === 'Classroom' || props.option === 'To Do' ? <MenuOption
-                                            disabled={true}
-                                            value={'2'}>
-                                            <DateRangePicker
-                                                preventOverflow={true}
-                                                size={'sm'}
-                                                appearance={'subtle'}
-                                                placeholder={'Dates'}
-                                                onChange={(e: any) => {
-                                                    if (e[0] > e[1]) {
-                                                        alert('End date must be greater')
-                                                        return
-                                                    }
-                                                    else {
-                                                        setFilterStart(e[0])
-                                                        setFilterEnd(e[1])
-                                                    }
-                                                }}
-                                                defaultShow={true}
-                                                showOneCalendar={true}
-                                                value={[
-                                                    filterStart,
-                                                    filterEnd
-                                                ]}
-                                                style={{
-                                                    marginTop: -4,
-                                                    marginRight: width < 1024 ? -20 : 0
-                                                }}
-                                            />
-                                        </MenuOption>
-                                            : null
-                                    }
-                                    {(props.option === 'To Do' ?
-                                        <>
-                                            <MenuOption
-                                                disabled={true}
-                                                disableTouchable={true}
-                                                value={'All'}>
-                                                <Text style={{ fontFamily: 'inter' }}>
-                                                    Channel
-                                                </Text>
-                                            </MenuOption>
-                                            <MenuOption
-                                                value={'All'}>
-                                                <Text>
-                                                    <View style={{
-                                                        width: 10,
-                                                        height: 10,
-                                                        borderRadius: 5,
-                                                        marginTop: 1,
-                                                        marginRight: 10,
-                                                        backgroundColor: '#fff'
-                                                    }} /> All {filterByChannel === 'All' ? <Ionicons name='checkmark-outline' /> : null}
-                                                </Text>
-                                            </MenuOption>
-                                            <MenuOption
-                                                value={'Date ↑'}>
-                                                <Text>
-                                                    <View style={{
-                                                        width: 10,
-                                                        height: 10,
-                                                        borderRadius: 5,
-                                                        marginTop: 1,
-                                                        marginRight: 10,
-                                                        backgroundColor: '#1D1D20'
-                                                    }} /> My Cues {filterByChannel === 'My Cues' ? <Ionicons name='checkmark-outline' /> : null}
-                                                </Text>
-                                            </MenuOption>
-                                            {
-                                                props.subscriptions.map((sub: any) => {
-                                                    return <MenuOption
-                                                        value={sub}>
-                                                        <Text>
-                                                            <View style={{
-                                                                width: 10,
-                                                                height: 10,
-                                                                borderRadius: 5,
-                                                                marginTop: 1,
-                                                                marginRight: 10,
-                                                                backgroundColor: sub.colorCode
-                                                            }} /> {sub.channelName} {filterByChannel === sub.channelName ? <Ionicons name='checkmark-outline' /> : null}
-                                                        </Text>
-                                                    </MenuOption>
-                                                })
+                            // <Menu
+                            //     style={{ flex: 1 }}
+                            //     onSelect={(e: any) => {
+                            //         if (props.option === 'Classroom') {
+                            //             setSortBy(e)
+                            //         } else {
+                            //             if (e.type) {
+                            //                 setFilterEventsType(e.type)
+                            //             } else {
+                            //                 setFilterByChannel(e.channelName)
+                            //                 setActivityChannelId(e.channelId)
+                            //             }
+                            //         }
+                            //     }}>
+                            //     <MenuTrigger>
+                            //         <Text style={{ fontSize: 11, color: '#1D1D20', paddingTop: 9, textAlign: 'right' }}>
+                            //             Filter <Ionicons name="caret-down" size={11} />
+                            //         </Text>
+                            //     </MenuTrigger>
+                            //     <MenuOptions customStyles={{
+                            //         optionsContainer: {
+                            //             padding: 10,
+                            //             borderRadius: 15,
+                            //             shadowOpacity: 0,
+                            //             borderWidth: 1,
+                            //             borderColor: '#f0f0f2',
+                            //             overflow: 'scroll',
+                            //             maxHeight: '100%'
+                            //         }
+                            //     }}>
+                            //         {(props.option === 'Classroom' ?
+                            //             <>
+                            //                 <MenuOption
+                            //                     value={'Priority'}>
+                            //                     <Text>
+                            //                         Priority {sortBy === 'Priority' ? <Ionicons name='checkmark-outline' /> : null}
+                            //                     </Text>
+                            //                 </MenuOption>
+                            //                 <MenuOption
+                            //                     value={'Date ↑'}>
+                            //                     <Text>
+                            //                         Date ↑ {sortBy === 'Date ↑' ? <Ionicons name='checkmark-outline' /> : null}
+                            //                     </Text>
+                            //                 </MenuOption>
+                            //                 <MenuOption
+                            //                     value={'Date ↓'}>
+                            //                     <Text>
+                            //                         Date ↓ {sortBy === 'Date ↓' ? <Ionicons name='checkmark-outline' /> : null}
+                            //                     </Text>
+                            //                 </MenuOption>
+                            //             </>
+                            //             : null
+                            //         )}
+                            //         {
+                            //             props.option === 'Classroom' || props.option === 'To Do' ? <MenuOption
+                            //                 disabled={true}
+                            //                 value={'2'}>
+                            //                 <DateRangePicker
+                            //                     preventOverflow={true}
+                            //                     size={'sm'}
+                            //                     appearance={'subtle'}
+                            //                     placeholder={'Dates'}
+                            //                     onChange={(e: any) => {
+                            //                         if (e[0] > e[1]) {
+                            //                             alert('End date must be greater')
+                            //                             return
+                            //                         }
+                            //                         else {
+                            //                             setFilterStart(e[0])
+                            //                             setFilterEnd(e[1])
+                            //                         }
+                            //                     }}
+                            //                     defaultShow={true}
+                            //                     showOneCalendar={true}
+                            //                     value={[
+                            //                         filterStart,
+                            //                         filterEnd
+                            //                     ]}
+                            //                     style={{
+                            //                         marginTop: -4,
+                            //                         marginRight: width < 1024 ? -20 : 0
+                            //                     }}
+                            //                 />
+                            //             </MenuOption>
+                            //                 : null
+                            //         }
+                            //         {(props.option === 'To Do' ?
+                            //             <>
+                            //                 <MenuOption
+                            //                     disabled={true}
+                            //                     disableTouchable={true}
+                            //                     value={'All'}>
+                            //                     <Text style={{ fontFamily: 'inter' }}>
+                            //                         Channel
+                            //                     </Text>
+                            //                 </MenuOption>
+                            //                 <MenuOption
+                            //                     value={'All'}>
+                            //                     <Text>
+                            //                         <View style={{
+                            //                             width: 10,
+                            //                             height: 10,
+                            //                             borderRadius: 5,
+                            //                             marginTop: 1,
+                            //                             marginRight: 10,
+                            //                             backgroundColor: '#fff'
+                            //                         }} /> All {filterByChannel === 'All' ? <Ionicons name='checkmark-outline' /> : null}
+                            //                     </Text>
+                            //                 </MenuOption>
+                            //                 <MenuOption
+                            //                     value={'Date ↑'}>
+                            //                     <Text>
+                            //                         <View style={{
+                            //                             width: 10,
+                            //                             height: 10,
+                            //                             borderRadius: 5,
+                            //                             marginTop: 1,
+                            //                             marginRight: 10,
+                            //                             backgroundColor: '#1D1D20'
+                            //                         }} /> My Cues {filterByChannel === 'My Cues' ? <Ionicons name='checkmark-outline' /> : null}
+                            //                     </Text>
+                            //                 </MenuOption>
+                            //                 {
+                            //                     props.subscriptions.map((sub: any) => {
+                            //                         return <MenuOption
+                            //                             value={sub}>
+                            //                             <Text>
+                            //                                 <View style={{
+                            //                                     width: 10,
+                            //                                     height: 10,
+                            //                                     borderRadius: 5,
+                            //                                     marginTop: 1,
+                            //                                     marginRight: 10,
+                            //                                     backgroundColor: sub.colorCode
+                            //                                 }} /> {sub.channelName} {filterByChannel === sub.channelName ? <Ionicons name='checkmark-outline' /> : null}
+                            //                             </Text>
+                            //                         </MenuOption>
+                            //                     })
+                            //                 }
+                            //                 <MenuOption
+                            //                     disabled={true}
+                            //                     disableTouchable={true}
+                            //                     value={'All'}>
+                            //                     <Text style={{ fontFamily: 'inter' }}>
+                            //                         Type
+                            //                     </Text>
+                            //                 </MenuOption>
+                            //                 <MenuOption
+                            //                     value={{ type: "All" }}>
+                            //                     <View style={{ display: 'flex', flexDirection: 'row', }}>
+                            //                         <Text style={{ marginLeft: 5 }}>
+                            //                             All
+                            //                         </Text>
+                            //                     </View>
+                            //                 </MenuOption>
+                            //                 <MenuOption
+                            //                     value={{ type: "Lectures" }}>
+                            //                     <View style={{ display: 'flex', flexDirection: 'row', }}>
+                            //                         <Text style={{ marginLeft: 5 }}>
+                            //                             Lectures
+                            //                         </Text>
+                            //                     </View>
+                            //                 </MenuOption>
+                            //                 <MenuOption
+                            //                     value={{ type: "Submissions" }}>
+                            //                     <View style={{ display: 'flex', flexDirection: 'row', }}>
+                            //                         <Text style={{ marginLeft: 5 }}>
+                            //                             Submissions
+                            //                         </Text>
+                            //                     </View>
+                            //                 </MenuOption>
+                            //                 <MenuOption
+                            //                     value={{ type: "Events" }}>
+                            //                     <View style={{ display: 'flex', flexDirection: 'row', }}>
+                            //                         <Text style={{ marginLeft: 5 }}>
+                            //                             Events
+                            //                         </Text>
+                            //                     </View>
+                            //                 </MenuOption>
+                            //             </>
+                            //             : null
+                            //         )}
+                            //     </MenuOptions>
+                            // </Menu> 
+                            <View style={{ backgroundColor: '#f8f8fa' }}>
+                                {
+                                    props.option === 'Classroom' || props.option === 'To Do' ?
+                                    <Datepicker
+                                        themeVariant="light"
+                                        controls={['calendar']}
+                                        select="range"
+                                        touchUi={true}
+                                        inputComponent="input"
+                                        inputProps={{
+                                            placeholder: 'Filter by Dates'
+                                        }}
+                                        responsive={{
+                                            small: {
+                                                display: 'bubble'
+                                            },
+                                            medium: {
+                                                touchUi: false,
                                             }
-                                            <MenuOption
-                                                disabled={true}
-                                                disableTouchable={true}
-                                                value={'All'}>
-                                                <Text style={{ fontFamily: 'inter' }}>
-                                                    Type
-                                                </Text>
-                                            </MenuOption>
-                                            <MenuOption
-                                                value={{ type: "All" }}>
-                                                <View style={{ display: 'flex', flexDirection: 'row', }}>
-                                                    <Text style={{ marginLeft: 5 }}>
-                                                        All
-                                                    </Text>
-                                                </View>
-                                            </MenuOption>
-                                            <MenuOption
-                                                value={{ type: "Lectures" }}>
-                                                <View style={{ display: 'flex', flexDirection: 'row', }}>
-                                                    <Text style={{ marginLeft: 5 }}>
-                                                        Lectures
-                                                    </Text>
-                                                </View>
-                                            </MenuOption>
-                                            <MenuOption
-                                                value={{ type: "Submissions" }}>
-                                                <View style={{ display: 'flex', flexDirection: 'row', }}>
-                                                    <Text style={{ marginLeft: 5 }}>
-                                                        Submissions
-                                                    </Text>
-                                                </View>
-                                            </MenuOption>
-                                            <MenuOption
-                                                value={{ type: "Events" }}>
-                                                <View style={{ display: 'flex', flexDirection: 'row', }}>
-                                                    <Text style={{ marginLeft: 5 }}>
-                                                        Events
-                                                    </Text>
-                                                </View>
-                                            </MenuOption>
-                                        </>
-                                        : null
-                                    )}
-                                </MenuOptions>
-                            </Menu> : <View style={{ width: 80, right: 0, backgroundColor: '#f8f8fa' }} />
+                                        }}
+                                        onChange={(val: any) => {
+                                            console.log("Selected", val)
+                                            setFilterStart(val.value[0])
+                                            setFilterEnd(val.value[1])
+                                        }}
+                                    />
+                                    : null
+                                }
+                            </View>
+                            
+                            : <View style={{ width: 80, right: 0, backgroundColor: '#f8f8fa' }} />
                         }
 
                         <TextInput
