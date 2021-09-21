@@ -71,6 +71,9 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const [eventChannels, setEventChannels] = useState<any[]>([]);
     const [allEvents, setAllEvents] = useState<any[]>([]);
 
+    const [userId, setUserId] = useState('');
+
+
     const viewAgenda: any = React.useMemo(() => {
         return {
             agenda: { type: 'week' },
@@ -271,10 +274,6 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
         const channelFilterData = [{ text: 'All', value: 'All' }, { text: 'My Events', value: 'My Events' }, ...channels]
 
-         
-        console.log("Channel Filter data", channelFilterData);
-
-        console.log("Filter By Channel", filterByChannel)
 
         return (<View style={{
             marginTop: 0,
@@ -388,8 +387,6 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
         time.setSeconds(0, 0)
         return time
     }
-
-    console.log("Is meeting", isMeeting)
 
     const handleCreate = useCallback(async () => {
         if (start < new Date()) {
@@ -1234,7 +1231,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     fontSize: 11,
                     borderWidth: 1,
                 }}>
-                    {data.original.submitted ? "SUBMITTED" : (assingmentDue ? "MISSING" : "NOT SUBMITTED")}
+                    {data.original.submitted ? "SUBMITTED" : (assingmentDue ? "MISSING" : "PENDING")}
                 </div></div>) : null}
                 {/* <Button className="md-custom-event-btn" color="secondary" variant="outline" onClick={(domEvent) => add(domEvent, data.original)}>Add participant</Button> */}
             </div>
