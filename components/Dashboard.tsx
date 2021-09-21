@@ -1111,6 +1111,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         />
                         {
                             Dimensions.get('window').width < 1024 ?
+                                null : <View style={{ flexDirection: 'row', paddingLeft: 30, flex: 1, backgroundColor: '#f8f8fa' }}>
                                     {
                                         props.options.map((op: any) => {
                                             if (op === 'Settings' || op === 'Channels') {
