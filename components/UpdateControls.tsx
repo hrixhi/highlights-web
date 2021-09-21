@@ -55,9 +55,9 @@ import { Editor } from '@tinymce/tinymce-react';
 import parser from 'html-react-parser';
 import Select from 'react-select';
 import { Datepicker as MobiscrollDatePicker } from "@mobiscroll/react5";
-import '@mobiscroll/react/dist/css/mobiscroll.min.css';
+import '@mobiscroll/react/dist/css/mobiscroll.react.min.css';
 import '@mobiscroll/react5/dist/css/mobiscroll.min.css';
-import mobiscroll, { Form as MobiscrollForm, FormGroup, Button as MobiscrollButton, Select as MobiscrollSelect, Input, FormGroupTitle  } from '@mobiscroll/react'
+import mobiscroll, { Form as MobiscrollForm, FormGroup, Button as MobiscrollButton, Select as MobiscrollSelect, Input, FormGroupTitle } from '@mobiscroll/react'
 
 const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const current = new Date();
@@ -2209,7 +2209,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             props.setShowFolder(!props.showFolder)
                         }}>
                         <Text>
-                            <Ionicons name='menu-outline' size={24} color={'#000'} />
+                            <Ionicons name='menu-outline' size={24} color={'#818385'} />
                         </Text>
                     </TouchableOpacity>
                 </View> : null}
@@ -2227,6 +2227,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         <Text style={!props.showOptions && props.showOriginal && !props.showComments ? styles.allGrayFill : styles.all}>
                             <Ionicons name='document-outline' size={20} />
                         </Text>
+                        <Text style={!props.showOptions && props.showOriginal && !props.showComments ? styles.allGrayFill : styles.all}>
+                            Content
+                        </Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={{
@@ -2241,6 +2244,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         <Text style={props.showOptions ? styles.allGrayFill : styles.all}>
                             <Ionicons name='options-outline' size={20} />
                         </Text>
+                        <Text style={props.showOptions ? styles.allGrayFill : styles.all}>
+                            Options
+                        </Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={{
@@ -2254,6 +2260,10 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         }}>
                         <Text style={props.showComments ? styles.allGrayFill : styles.all}>
                             <Ionicons name='chatbubbles-outline' size={20} />
+                            {/* {props.cue.unreadThreads > 0 ? <View style={styles.badge} /> : null} */}
+                        </Text>
+                        <Text style={props.showComments ? styles.allGrayFill : styles.all}>
+                            Q&A
                             {/* {props.cue.unreadThreads > 0 ? <View style={styles.badge} /> : null} */}
                         </Text>
                     </TouchableOpacity>
@@ -2275,6 +2285,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             <Text style={!props.showOriginal && !props.viewStatus && !props.showComments && !props.showOptions ? styles.allGrayFill : styles.all}>
                                 <Ionicons name='document-attach-outline' size={20} />
                             </Text>
+                            <Text style={!props.showOriginal && !props.viewStatus && !props.showComments && !props.showOptions ? styles.allGrayFill : styles.all}>
+                                Submission
+                            </Text>
                         </TouchableOpacity>
                     )}
                     {/* Add Status button here */}
@@ -2293,6 +2306,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             }}>
                             <Text style={props.viewStatus ? styles.allGrayFill : styles.all}>
                                 <Ionicons name='checkmark-done-outline' size={20} />
+                            </Text>
+                            <Text style={props.viewStatus ? styles.allGrayFill : styles.all}>
+                                Engagement
                             </Text>
                         </TouchableOpacity>
                     )}
@@ -2518,7 +2534,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         </Text>
                     </View>
                     :
-                    <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: 15  }}>
+                    <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: 15 }}>
                         <Ionicons name='alert-circle-outline' size={22} color={"#D91D56"} />
                         <Text style={{ fontSize: 15, paddingLeft: 5 }}>
                             Not Attempted
@@ -2961,9 +2977,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     paste_data_images: true,
                     images_upload_url: 'https://api.cuesapp.co/api/imageUploadEditor',
                     mobile: {
-                        plugins: (!isOwner && props.cue.channelId &&  props.cue.channelId !== "") ? 'print preview' : 'print preview powerpaste casechange importcss tinydrive searchreplace autolink autosave save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount tinymcespellchecker a11ychecker textpattern noneditable help formatpainter pageembed charmap mentions linkchecker emoticons advtable autoresize'
+                        plugins: (!isOwner && props.cue.channelId && props.cue.channelId !== "") ? 'print preview' : 'print preview powerpaste casechange importcss tinydrive searchreplace autolink autosave save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount tinymcespellchecker a11ychecker textpattern noneditable help formatpainter pageembed charmap mentions linkchecker emoticons advtable autoresize'
                     },
-                    plugins: (!isOwner && props.cue.channelId &&  props.cue.channelId !== "") ? 'print preview' : 'print preview powerpaste casechange importcss tinydrive searchreplace autolink autosave save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount tinymcespellchecker a11ychecker textpattern noneditable help formatpainter pageembed charmap mentions linkchecker emoticons advtable autoresize',
+                    plugins: (!isOwner && props.cue.channelId && props.cue.channelId !== "") ? 'print preview' : 'print preview powerpaste casechange importcss tinydrive searchreplace autolink autosave save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount tinymcespellchecker a11ychecker textpattern noneditable help formatpainter pageembed charmap mentions linkchecker emoticons advtable autoresize',
                     menu: { // this is the complete default configuration
                         file: { title: 'File', items: 'newdocument' },
                         edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall' },
@@ -3373,7 +3389,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 //     }}
                                 // // isValidDate={disablePastDt}
                                 // />
-                                <MobiscrollDatePicker 
+                                <MobiscrollDatePicker
                                     controls={['date', 'time']}
                                     touchUi={true}
                                     theme="ios"
@@ -3381,7 +3397,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     themeVariant="light"
                                     inputComponent="input"
                                     inputProps={{
-                                        placeholder: 'Please Select...' 
+                                        placeholder: 'Please Select...'
                                     }}
                                     onChange={(event: any) => {
                                         const date = new Date(event.value);
@@ -3448,7 +3464,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 //     size={'xs'}
                                 // // isValidDate={disablePastDt}
                                 // />
-                                <MobiscrollDatePicker 
+                                <MobiscrollDatePicker
                                     controls={['date', 'time']}
                                     touchUi={true}
                                     theme="ios"
@@ -3456,7 +3472,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     themeVariant="light"
                                     inputComponent="input"
                                     inputProps={{
-                                        placeholder: 'Please Select...' 
+                                        placeholder: 'Please Select...'
                                     }}
                                     onChange={(event: any) => {
                                         const date = new Date(event.value);
@@ -3655,7 +3671,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 //     size={'xs'}
                                 // // isValidDate={disablePastDt}
                                 // />
-                                <MobiscrollDatePicker 
+                                <MobiscrollDatePicker
                                     controls={['date', 'time']}
                                     touchUi={true}
                                     theme="ios"
@@ -3663,7 +3679,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     themeVariant="light"
                                     inputComponent="input"
                                     inputProps={{
-                                        placeholder: 'Please Select...' 
+                                        placeholder: 'Please Select...'
                                     }}
                                     onChange={(event: any) => {
                                         const date = new Date(event.value);
@@ -3690,7 +3706,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     }}
 
                                 />
-                                
+
                             ) : null}
                         </View>
                     ) :
@@ -3953,26 +3969,26 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
                                                 if (!event.valueText) return;
 
-                                                    setCustomCategory(inst.getVal())
-                                                }}
-                                                responsive={{
-                                                    small: {
-                                                        display: 'bubble'
-                                                    },
-                                                    medium: {
-                                                        touchUi: false,
-                                                    }
-                                                }}
-                                            >
-                                                <option value={''}>None</option>
-                                                
-                                                {customCategories.map((category: any) => {
+                                                setCustomCategory(inst.getVal())
+                                            }}
+                                            responsive={{
+                                                small: {
+                                                    display: 'bubble'
+                                                },
+                                                medium: {
+                                                    touchUi: false,
+                                                }
+                                            }}
+                                        >
+                                            <option value={''}>None</option>
+
+                                            {customCategories.map((category: any) => {
                                                 return (
                                                     <option value={category}>{category}</option>
                                                 );
-                                                })}
-                                            </MobiscrollSelect>
-                                            
+                                            })}
+                                        </MobiscrollSelect>
+
                                     </label>
                                 )}
                             </View>
@@ -4347,31 +4363,31 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
                                                 if (!event.valueText) return;
 
-                                                    // const match = timedFrequencyOptions.find((freq: any) => {
-                                                    //   return freq.
-                                                    // })
-                                                    setFrequency(inst.getVal());
-                                                    // setFrequencyName(cat.label);
+                                                // const match = timedFrequencyOptions.find((freq: any) => {
+                                                //   return freq.
+                                                // })
+                                                setFrequency(inst.getVal());
+                                                // setFrequencyName(cat.label);
 
-                                                }}
-                                                responsive={{
-                                                    small: {
-                                                        display: 'bubble'
-                                                    },
-                                                    medium: {
-                                                        touchUi: false,
-                                                    }
-                                                }}
-                                            >   
-                                                {timedFrequencyOptions.map((item: any) => {
+                                            }}
+                                            responsive={{
+                                                small: {
+                                                    display: 'bubble'
+                                                },
+                                                medium: {
+                                                    touchUi: false,
+                                                }
+                                            }}
+                                        >
+                                            {timedFrequencyOptions.map((item: any) => {
                                                 return (
                                                     <option value={item.value} >
-                                                    {item.label}
+                                                        {item.label}
                                                     </option>
                                                 );
-                                                })}
-                                            </MobiscrollSelect>
-                                            
+                                            })}
+                                        </MobiscrollSelect>
+
                                     </label>
                                     {/* <Menu
                                         onSelect={(cat: any) => {
@@ -4454,7 +4470,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             size={'xs'}
                                         /> */}
 
-                                        <MobiscrollDatePicker 
+                                        <MobiscrollDatePicker
                                             controls={['date', 'time']}
                                             touchUi={true}
                                             theme="ios"
@@ -4462,7 +4478,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             themeVariant="light"
                                             inputComponent="input"
                                             inputProps={{
-                                                placeholder: 'Please Select...' 
+                                                placeholder: 'Please Select...'
                                             }}
                                             onChange={(event: any) => {
                                                 const date = new Date(event.value);
@@ -4489,7 +4505,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             }}
 
                                         />
-                                        
+
                                     </View>
                                 </View>
                             )}
@@ -4552,7 +4568,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         size={'xs'}
                                     /> */}
 
-                                    <MobiscrollDatePicker 
+                                    <MobiscrollDatePicker
                                         controls={['date', 'time']}
                                         touchUi={true}
                                         theme="ios"
@@ -4560,7 +4576,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         themeVariant="light"
                                         inputComponent="input"
                                         inputProps={{
-                                            placeholder: 'Please Select...' 
+                                            placeholder: 'Please Select...'
                                         }}
                                         onChange={(event: any) => {
                                             const date = new Date(event.value);
@@ -4587,7 +4603,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         }}
 
                                     />
-                                    
+
                                 </View>
                             )}
                         </View>
@@ -4836,6 +4852,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             <Text style={!props.showOptions ? styles.allGrayFill : styles.all}>
                                 <Ionicons name='document-outline' size={20} />
                             </Text>
+                            <Text style={!props.showOptions ? styles.allGrayFill : styles.all}>
+                                Content
+                            </Text>
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={{
@@ -4847,6 +4866,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             }}>
                             <Text style={props.showOptions ? styles.allGrayFill : styles.all}>
                                 <Ionicons name='options-outline' size={20} />
+                            </Text>
+                            <Text style={props.showOptions ? styles.allGrayFill : styles.all}>
+                                Options
                             </Text>
                         </TouchableOpacity>
                     </View>
@@ -5278,24 +5300,26 @@ const styles: any = StyleSheet.create({
         paddingHorizontal: 10
     },
     all: {
-        fontSize: 25,
+        fontSize: 10,
         color: '#43434f',
         height: 25,
         paddingHorizontal: 10,
         backgroundColor: '#fff',
-        textTransform: 'uppercase',
+        // textTransform: 'uppercase',
         lineHeight: 25,
-        fontFamily: 'inter'
+        // fontFamily: 'inter',
+        textAlign: 'center'
     },
     allGrayFill: {
-        fontSize: 25,
+        fontSize: 10,
         color: '#007AFF',
         height: 25,
         paddingHorizontal: 10,
         backgroundColor: '#fff',
-        textTransform: 'uppercase',
+        // textTransform: 'uppercase',
         lineHeight: 25,
-        fontFamily: 'inter'
+        textAlign: 'center'
+        // fontFamily: 'inter'
     },
     allOutline: {
         fontSize: 12,

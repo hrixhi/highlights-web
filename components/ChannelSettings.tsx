@@ -21,12 +21,12 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 
 import mobiscroll, { Form as MobiscrollForm, FormGroup, Button as MobiscrollButton, Select, Input, FormGroupTitle  } from '@mobiscroll/react'
-import '@mobiscroll/react/dist/css/mobiscroll.min.css';
+import '@mobiscroll/react/dist/css/mobiscroll.react.min.css';
 
-mobiscroll.settings = {
-    theme: 'ios',
-    themeVariant: 'light'
-};
+// mobiscroll.settings = {
+//     theme: 'ios',
+//     themeVariant: 'light'
+// };
 
 
 

@@ -2198,14 +2198,19 @@
     "@babel/runtime" "^7.7.2"
     regenerator-runtime "^0.13.3"
 
-"@mobiscroll/react@4.10.9":
+"@mobiscroll/react5@npm:@mobiscroll/react@^5.9.1":
+  version "5.9.1"
+  resolved "https://npm.mobiscroll.com/@mobiscroll%2freact/-/react-5.9.1.tgz#a501b80af4e51e7c0b8df0471274e4a760093fb5"
+  integrity sha512-gzd2DC6SHt+lFouL5oBA1cM1By1YBuSkcMXDDQjh6WmwbRybsa4sD6DFH/aWBgGV2MxdJIhSLkQ7vjM8Sf4tfg==
+
+"@mobiscroll/react@^4.10.9":
   version "4.10.9"
   resolved "https://npm.mobiscroll.com/@mobiscroll%2freact/-/react-4.10.9.tgz#b231e5123b51d9b5b9f1db205ff2ddd9923401f5"
   integrity sha512-Gksq6FsTRXG0qJIy2JOLDElMkbribzducbyMB/LLopoe19mHM5EJW+nfvdrkE263q7eSbSECPSNqLnN5v1/WPA==
 
 "@mobiscroll/react@file:./src/lib/mobiscroll-package/mobiscroll-react-v5.9.1.tgz":
   version "5.9.1"
-  resolved "file:./src/lib/mobiscroll-package/mobiscroll-react-v5.9.1.tgz#b57b544cbed681af87c19d417d9238dd25dc5608"
+  resolved "file:./src/lib/mobiscroll-package/mobiscroll-react-v5.9.1.tgz#b685ddf04ecd393d52bd97345c92d183c4c38ea4"
 
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
@@ -14207,10 +14212,10 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-typescript@~4.0.0:
-  version "4.0.8"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.0.8.tgz#5739105541db80a971fdbd0d56511d1a6f17d37f"
-  integrity sha512-oz1765PN+imfz1MlZzSZPtC/tqcwsCyIYA8L47EkRnRW97ztRk83SzMiWLrnChC0vqoYxSU1fcFUDA5gV/ZiPg==
+typescript@^4.4.3:
+  version "4.4.3"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.4.3.tgz#bdc5407caa2b109efd4f82fe130656f977a29324"
+  integrity sha512-4xfscpisVgqqDfPaJo5vkd+Qd/ItkoagnHpufr+i2QCHBsNYp+G7UAoyFl8aPtx879u38wPV65rZ8qbGZijalA==
 
 ua-parser-js@^0.7.18:
   version "0.7.28"

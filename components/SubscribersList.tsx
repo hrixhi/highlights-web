@@ -35,10 +35,10 @@ import {
 import parser from 'html-react-parser';
 import mobiscroll, { Form as MobiscrollForm, FormGroup, Button as MobiscrollButton, Select, Input, FormGroupTitle  } from '@mobiscroll/react'
 
-mobiscroll.settings = {
-    theme: 'ios',
-    themeVariant: 'light'
-};
+// mobiscroll.settings = {
+//     theme: 'ios',
+//     themeVariant: 'light'
+// };
 
 
 const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {

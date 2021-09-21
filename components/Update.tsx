@@ -494,7 +494,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     }, [props.cueId, props.channelId])
 
 
-    const DragHandle = SortableHandle(() => (<Text style={{ marginRight: 10 }}> <Ionicons name='menu-outline' size={22} /> </Text>))
+    const DragHandle = SortableHandle(() => (<Text style={{ marginRight: 10 }}> <Ionicons name='menu-outline' size={22} color='#818385' /> </Text>))
 
     const SortableItem = SortableElement(({ value, sortIndex }: any) => {
 
@@ -1629,7 +1629,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 setShowFolder(!showFolder)
                             }}>
                             <Text>
-                                <Ionicons name='menu-outline' size={24} color={'#000'} />
+                                <Ionicons name='menu-outline' size={24} color={'#818385'} />
                             </Text>
                         </TouchableOpacity>
                     </View>
@@ -1649,6 +1649,9 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             <Text style={showOriginal ? styles.allGrayFill : styles.all}>
                                 <Ionicons name='document-outline' size={20} />
                             </Text>
+                            <Text style={showOriginal ? styles.allGrayFill : styles.all}>
+                                Content
+                            </Text>
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={{
@@ -1664,6 +1667,9 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
                             <Text style={styles.all}>
                                 <Ionicons name='options-outline' size={20} />
+                            </Text>
+                            <Text style={styles.all}>
+                                Options
                             </Text>
                         </TouchableOpacity>
                         <TouchableOpacity
@@ -1681,6 +1687,9 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 <Ionicons name='chatbubbles-outline' size={20} />
                                 {/* {props.cue.unreadThreads > 0 ? <View style={styles.badge} /> : null} */}
                             </Text>
+                            <Text style={styles.all}>
+                                Q&A
+                            </Text>
                         </TouchableOpacity>
                         {
                             !submission || (channelOwner && submission) || isQuiz ? null :
@@ -1697,6 +1706,9 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     }}>
                                     <Text style={!showOriginal && !viewStatus && !showOptions && !showComments ? styles.allGrayFill : styles.all}>
                                         <Ionicons name='document-attach-outline' size={20} />
+                                    </Text>
+                                    <Text style={!showOriginal && !viewStatus && !showOptions && !showComments ? styles.allGrayFill : styles.all}>
+                                        Submission
                                     </Text>
                                 </TouchableOpacity>
                         }
@@ -1716,6 +1728,9 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     }}>
                                     <Text style={viewStatus ? styles.allGrayFill : styles.all}>
                                         <Ionicons name='checkmark-done-outline' size={20} />
+                                    </Text>
+                                    <Text style={viewStatus ? styles.allGrayFill : styles.all}>
+                                        Engagement
                                     </Text>
                                 </TouchableOpacity>
                         }
@@ -1827,24 +1842,26 @@ export default Update
 
 const styles: any = StyleSheet.create({
     all: {
-        fontSize: 25,
+        fontSize: 10,
         color: '#43434f',
         height: 25,
         paddingHorizontal: 10,
         backgroundColor: '#fff',
-        textTransform: 'uppercase',
+        // textTransform: 'uppercase',
         lineHeight: 25,
-        fontFamily: 'inter'
+        // fontFamily: 'inter',
+        textAlign: 'center'
     },
     allGrayFill: {
-        fontSize: 25,
+        fontSize: 10,
         color: '#007AFF',
         height: 25,
         paddingHorizontal: 10,
         backgroundColor: '#fff',
-        textTransform: 'uppercase',
+        // textTransform: 'uppercase',
         lineHeight: 25,
-        fontFamily: 'inter'
+        textAlign: 'center'
+        // fontFamily: 'inter'
     },
     badge: {
         position: 'absolute',

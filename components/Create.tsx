@@ -43,13 +43,13 @@ import ReactPlayer from "react-player";
 // import Webview from "./Webview";
 import Multiselect from "multiselect-react-dropdown";
 import WebViewer from '@pdftron/pdfjs-express';
-import { Datepicker as MobiscrollDatePicker } from "@mobiscroll/react5";
-import mobiscroll, { Form as MobiscrollForm, FormGroup, Button as MobiscrollButton, Select, Input, FormGroupTitle  } from '@mobiscroll/react'
+// import { Datepicker as MobiscrollDatePicker } from "@mobiscroll/react5";
+import mobiscroll, { Form as MobiscrollForm, FormGroup, Button as MobiscrollButton, Select, Input, FormGroupTitle } from '@mobiscroll/react'
 
-mobiscroll.settings = {
-    theme: 'ios',
-    themeVariant: 'light'
-};
+// mobiscroll.settings = {
+//     theme: 'ios',
+//     themeVariant: 'light'
+// };
 
 import '@mobiscroll/react/dist/css/mobiscroll.min.css';
 import '@mobiscroll/react5/dist/css/mobiscroll.min.css';
@@ -1609,69 +1609,69 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                       }}
                     >
                       <label>
-                                <Select
-                                    inputClass="mobiscrollCreateInput"
-                                    value={channelId}
-                                    rows={channels.length + 1}
-                                    onSet={(event, inst) => {
+                        <Select
+                          inputClass="mobiscrollCreateInput"
+                          value={channelId}
+                          rows={channels.length + 1}
+                          onSet={(event, inst) => {
 
-                                      console.log("on change", inst.getVal())
+                            console.log("on change", inst.getVal())
 
-                                      const channel = inst.getVal();
+                            const channel = inst.getVal();
 
-                                      if (channel === channelId) return;
+                            if (channel === channelId) return;
 
-                                      if (channel === "") {
-                                        setChannelId("");
-                                        setCustomCategories(localCustomCategories);
-                                        setCustomCategory("");
-                                        setAddCustomCategory(false);
-                                        setSubmission(false);
-                                        setGradeWeight(0);
-                                        setGraded(false);
-                                        setSelected([]);
-                                        setSubscribers([]);
-                                        setProblems([]);
-                                        setIsQuiz(false);
-                                        setChannelName("");
-                                        setTimer(false);
-                                      } else {
-                                        const match = channels.find((c: any) => {
-                                          return c._id === channel
-                                        })
-                                        setChannelId(match._id);
-                                        setChannelName(match.name);
-                                        setAddCustomCategory(false);
-                                        setCustomCategory("");
-                                        setSubmission(isQuiz ? true : false);
-                                        setGradeWeight(0);
-                                        setGraded(false);
-                                      }
-                                    }}
-                                    responsive={{
-                                        small: {
-                                            display: 'bubble'
-                                        },
-                                        medium: {
-                                            touchUi: false
-                                        }
-                                    }}
-                                    // data={channelFilterData}
-                                >
-                                    <option value="">
-                                        My Notes
-                                    </option>
-                                    
-                                    {channels.map((channel: any) => {
-                                      return (
-                                        <option value={channel._id}>
-                                          {channel.name}
-                                        </option>
-                                      );
-                                    })}
-                                </Select>
-                                   
-                            </label>
+                            if (channel === "") {
+                              setChannelId("");
+                              setCustomCategories(localCustomCategories);
+                              setCustomCategory("");
+                              setAddCustomCategory(false);
+                              setSubmission(false);
+                              setGradeWeight(0);
+                              setGraded(false);
+                              setSelected([]);
+                              setSubscribers([]);
+                              setProblems([]);
+                              setIsQuiz(false);
+                              setChannelName("");
+                              setTimer(false);
+                            } else {
+                              const match = channels.find((c: any) => {
+                                return c._id === channel
+                              })
+                              setChannelId(match._id);
+                              setChannelName(match.name);
+                              setAddCustomCategory(false);
+                              setCustomCategory("");
+                              setSubmission(isQuiz ? true : false);
+                              setGradeWeight(0);
+                              setGraded(false);
+                            }
+                          }}
+                          responsive={{
+                            small: {
+                              display: 'bubble'
+                            },
+                            medium: {
+                              touchUi: false
+                            }
+                          }}
+                        // data={channelFilterData}
+                        >
+                          <option value="">
+                            My Notes
+                          </option>
+
+                          {channels.map((channel: any) => {
+                            return (
+                              <option value={channel._id}>
+                                {channel.name}
+                              </option>
+                            );
+                          })}
+                        </Select>
+
+                      </label>
                       {/* <Menu
                         onSelect={(channel: any) => {
                           if (channel === "") {
@@ -1816,35 +1816,35 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                               }}
                             /> */}
                             <label>
-                            <Select
-                                            select="multiple"
-                                            // group={true}
-                                            // groupLabel="&nbsp;"
-                                            // minWidth={[60, 320]}
-                                            placeholder="Select..."
-                                            inputClass="mobiscrollCustomMultiInput"
-                                            value={selected}
-                                            data={subscribers}
-                                            onSet={(event, inst) => {
-                                                console.log("on change", inst.getVal())
+                              <Select
+                                select="multiple"
+                                // group={true}
+                                // groupLabel="&nbsp;"
+                                // minWidth={[60, 320]}
+                                placeholder="Select..."
+                                inputClass="mobiscrollCustomMultiInput"
+                                value={selected}
+                                data={subscribers}
+                                onSet={(event, inst) => {
+                                  console.log("on change", inst.getVal())
 
-                                                setSelected(inst.getVal())
+                                  setSelected(inst.getVal())
 
-                                                // Filter out any moderator if not part of the selected values
+                                  // Filter out any moderator if not part of the selected values
 
-                                            }}
-                                            responsive={{
-                                                small: {
-                                                    display: 'bubble'
-                                                },
-                                                medium: {
-                                                    touchUi: false,
-                                                }
-                                            }}
-                                              minWidth={[60, 320]}
-                                            // minWidth={[60, 320]}
-                                        />
-                                    </label>
+                                }}
+                                responsive={{
+                                  small: {
+                                    display: 'bubble'
+                                  },
+                                  medium: {
+                                    touchUi: false,
+                                  }
+                                }}
+                                minWidth={[60, 320]}
+                              // minWidth={[60, 320]}
+                              />
+                            </label>
                           </View>
                         </View>
                       ) : null}
@@ -1922,7 +1922,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                 size={"xs"}
                               // isValidDate={disablePastDt}
                               /> */}
-                              <MobiscrollDatePicker 
+                              <MobiscrollDatePicker
                                 controls={['date', 'time']}
                                 touchUi={true}
                                 theme="ios"
@@ -1930,7 +1930,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                 themeVariant="light"
                                 inputComponent="input"
                                 inputProps={{
-                                    placeholder: 'Please Select...' 
+                                  placeholder: 'Please Select...'
                                 }}
                                 onChange={(event: any) => {
                                   const date = new Date(event.value);
@@ -1939,24 +1939,24 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                   setInitiateAt(roundValue);
                                 }}
                                 responsive={{
-                                    xsmall: {
-                                        controls: ['date', 'time'],
-                                        display: 'bottom',
-                                        touchUi: true
-                                    },
-                                    // small: {
-                                    //     controls: ['date', 'time'],
-                                    //     display: 'anchored',
-                                    //     touchUi: true
-                                    // },
-                                    medium: {
-                                        controls: ['date', 'time'],
-                                        display: 'anchored',
-                                        touchUi: false
-                                    },
+                                  xsmall: {
+                                    controls: ['date', 'time'],
+                                    display: 'bottom',
+                                    touchUi: true
+                                  },
+                                  // small: {
+                                  //     controls: ['date', 'time'],
+                                  //     display: 'anchored',
+                                  //     touchUi: true
+                                  // },
+                                  medium: {
+                                    controls: ['date', 'time'],
+                                    display: 'anchored',
+                                    touchUi: false
+                                  },
                                 }}
 
-                            />
+                              />
                             </View>
                           ) : null}
                         </View>
@@ -1994,7 +1994,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                 size={"xs"}
                               // isValidDate={disablePastDt}
                               /> */}
-                              <MobiscrollDatePicker 
+                              <MobiscrollDatePicker
                                 controls={['date', 'time']}
                                 touchUi={true}
                                 theme="ios"
@@ -2002,7 +2002,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                 themeVariant="light"
                                 inputComponent="input"
                                 inputProps={{
-                                    placeholder: 'Please Select...' 
+                                  placeholder: 'Please Select...'
                                 }}
                                 onChange={(event: any) => {
                                   const date = new Date(event.value);
@@ -2011,24 +2011,24 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                   setDeadline(roundValue);
                                 }}
                                 responsive={{
-                                    xsmall: {
-                                        controls: ['date', 'time'],
-                                        display: 'bottom',
-                                        touchUi: true
-                                    },
-                                    // small: {
-                                    //     controls: ['date', 'time'],
-                                    //     display: 'anchored',
-                                    //     touchUi: true
-                                    // },
-                                    medium: {
-                                        controls: ['date', 'time'],
-                                        display: 'anchored',
-                                        touchUi: false
-                                    },
+                                  xsmall: {
+                                    controls: ['date', 'time'],
+                                    display: 'bottom',
+                                    touchUi: true
+                                  },
+                                  // small: {
+                                  //     controls: ['date', 'time'],
+                                  //     display: 'anchored',
+                                  //     touchUi: true
+                                  // },
+                                  medium: {
+                                    controls: ['date', 'time'],
+                                    display: 'anchored',
+                                    touchUi: false
+                                  },
                                 }}
 
-                            />
+                              />
                             </View>
                           ) : null}
                         </View>
@@ -2194,7 +2194,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                               size={"xs"}
                             // isValidDate={disablePastDt}
                             /> */}
-                            <MobiscrollDatePicker 
+                            <MobiscrollDatePicker
                               controls={['date', 'time']}
                               touchUi={true}
                               theme="ios"
@@ -2202,7 +2202,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                               themeVariant="light"
                               inputComponent="input"
                               inputProps={{
-                                  placeholder: 'Please Select...' 
+                                placeholder: 'Please Select...'
                               }}
                               onChange={(event: any) => {
                                 const date = new Date(event.value);
@@ -2211,24 +2211,24 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                 setAvailableUntil(roundValue);
                               }}
                               responsive={{
-                                  xsmall: {
-                                      controls: ['date', 'time'],
-                                      display: 'bottom',
-                                      touchUi: true
-                                  },
-                                  // small: {
-                                  //     controls: ['date', 'time'],
-                                  //     display: 'anchored',
-                                  //     touchUi: true
-                                  // },
-                                  medium: {
-                                      controls: ['date', 'time'],
-                                      display: 'anchored',
-                                      touchUi: false
-                                  },
+                                xsmall: {
+                                  controls: ['date', 'time'],
+                                  display: 'bottom',
+                                  touchUi: true
+                                },
+                                // small: {
+                                //     controls: ['date', 'time'],
+                                //     display: 'anchored',
+                                //     touchUi: true
+                                // },
+                                medium: {
+                                  controls: ['date', 'time'],
+                                  display: 'anchored',
+                                  touchUi: false
+                                },
                               }}
 
-                          />
+                            />
                           </View>
                         ) : null}
                       </View>
@@ -2417,35 +2417,35 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                         // </Menu>
 
                         <label>
-                        <Select
+                          <Select
                             inputClass="mobiscrollCategoryInput"
                             value={customCategory}
                             rows={customCategories.length + 1}
                             onSet={(event, inst) => {
 
-                                if (!event.valueText) return;
+                              if (!event.valueText) return;
 
-                                    setCustomCategory(inst.getVal())
-                                }}
-                                responsive={{
-                                    small: {
-                                        display: 'bubble'
-                                    },
-                                    medium: {
-                                        touchUi: false,
-                                    }
-                                }}
-                            >
-                                <option value={''}>None</option>
-                                
-                                {customCategories.map((category: any) => {
-                                  return (
-                                    <option value={category}>{category}</option>
-                                  );
-                                })}
-                            </Select>
-                            
-                    </label>
+                              setCustomCategory(inst.getVal())
+                            }}
+                            responsive={{
+                              small: {
+                                display: 'bubble'
+                              },
+                              medium: {
+                                touchUi: false,
+                              }
+                            }}
+                          >
+                            <option value={''}>None</option>
+
+                            {customCategories.map((category: any) => {
+                              return (
+                                <option value={category}>{category}</option>
+                              );
+                            })}
+                          </Select>
+
+                        </label>
 
 
                       )}
@@ -2659,40 +2659,40 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           {PreferredLanguageText("remindEvery")}
                         </Text>
                         <label>
-                        <Select
+                          <Select
                             inputClass="mobiscrollFrequencyInput"
                             value={frequency}
                             rows={timedFrequencyOptions.length}
                             onSet={(event, inst) => {
 
-                                if (!event.valueText) return;
+                              if (!event.valueText) return;
 
-                                    // const match = timedFrequencyOptions.find((freq: any) => {
-                                    //   return freq.
-                                    // })
-                                    setFrequency(inst.getVal());
-                                    // setFrequencyName(cat.label);
+                              // const match = timedFrequencyOptions.find((freq: any) => {
+                              //   return freq.
+                              // })
+                              setFrequency(inst.getVal());
+                              // setFrequencyName(cat.label);
 
-                                }}
-                                responsive={{
-                                    small: {
-                                        display: 'bubble'
-                                    },
-                                    medium: {
-                                        touchUi: false,
-                                    }
-                                }}
-                            >   
-                                {timedFrequencyOptions.map((item: any) => {
-                                  return (
-                                    <option value={item.value} >
-                                      {item.label}
-                                    </option>
-                                  );
-                                })}
-                            </Select>
-                            
-                    </label>
+                            }}
+                            responsive={{
+                              small: {
+                                display: 'bubble'
+                              },
+                              medium: {
+                                touchUi: false,
+                              }
+                            }}
+                          >
+                            {timedFrequencyOptions.map((item: any) => {
+                              return (
+                                <option value={item.value} >
+                                  {item.label}
+                                </option>
+                              );
+                            })}
+                          </Select>
+
+                        </label>
                         {/* <Menu
                           onSelect={(cat: any) => {
                             setFrequency(cat.value);
@@ -2777,42 +2777,42 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                             // isValidDate={disablePastDt}
                             size={"xs"}
                           /> */}
-                          <MobiscrollDatePicker 
-                                controls={['date', 'time']}
-                                touchUi={true}
-                                theme="ios"
-                                value={endPlayAt}
-                                themeVariant="light"
-                                inputComponent="input"
-                                inputProps={{
-                                    placeholder: 'Please Select...' 
-                                }}
-                                onChange={(event: any) => {
-                                  const date = new Date(event.value);
-                                  if (date < new Date()) return;
+                          <MobiscrollDatePicker
+                            controls={['date', 'time']}
+                            touchUi={true}
+                            theme="ios"
+                            value={endPlayAt}
+                            themeVariant="light"
+                            inputComponent="input"
+                            inputProps={{
+                              placeholder: 'Please Select...'
+                            }}
+                            onChange={(event: any) => {
+                              const date = new Date(event.value);
+                              if (date < new Date()) return;
 
-                                  setEndPlayAt(date);
-                                }}
-                                responsive={{
-                                    xsmall: {
-                                        controls: ['date', 'time'],
-                                        display: 'bottom',
-                                        touchUi: true
-                                    },
-                                    // small: {
-                                    //     controls: ['date', 'time'],
-                                    //     display: 'anchored',
-                                    //     touchUi: true
-                                    // },
-                                    medium: {
-                                        controls: ['date', 'time'],
-                                        display: 'anchored',
-                                        touchUi: false
-                                    },
-                                }}
+                              setEndPlayAt(date);
+                            }}
+                            responsive={{
+                              xsmall: {
+                                controls: ['date', 'time'],
+                                display: 'bottom',
+                                touchUi: true
+                              },
+                              // small: {
+                              //     controls: ['date', 'time'],
+                              //     display: 'anchored',
+                              //     touchUi: true
+                              // },
+                              medium: {
+                                controls: ['date', 'time'],
+                                display: 'anchored',
+                                touchUi: false
+                              },
+                            }}
 
-                            />
-                          
+                          />
+
                         </View>
                       </View>
                     )}
@@ -2886,41 +2886,41 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           size={"xs"}
                         /> */}
 
-                          <MobiscrollDatePicker 
-                                controls={['date', 'time']}
-                                touchUi={true}
-                                theme="ios"
-                                value={endPlayAt}
-                                themeVariant="light"
-                                inputComponent="input"
-                                inputProps={{
-                                    placeholder: 'Please Select...' 
-                                }}
-                                onChange={(event: any) => {
-                                  const date = new Date(event.value);
-                                  if (date < new Date()) return;
-                                  setEndPlayAt(date);
-                                }}
-                                responsive={{
-                                    xsmall: {
-                                        controls: ['date', 'time'],
-                                        display: 'bottom',
-                                        touchUi: true
-                                    },
-                                    // small: {
-                                    //     controls: ['date', 'time'],
-                                    //     display: 'anchored',
-                                    //     touchUi: true
-                                    // },
-                                    medium: {
-                                        controls: ['date', 'time'],
-                                        display: 'anchored',
-                                        touchUi: false
-                                    },
-                                }}
+                        <MobiscrollDatePicker
+                          controls={['date', 'time']}
+                          touchUi={true}
+                          theme="ios"
+                          value={endPlayAt}
+                          themeVariant="light"
+                          inputComponent="input"
+                          inputProps={{
+                            placeholder: 'Please Select...'
+                          }}
+                          onChange={(event: any) => {
+                            const date = new Date(event.value);
+                            if (date < new Date()) return;
+                            setEndPlayAt(date);
+                          }}
+                          responsive={{
+                            xsmall: {
+                              controls: ['date', 'time'],
+                              display: 'bottom',
+                              touchUi: true
+                            },
+                            // small: {
+                            //     controls: ['date', 'time'],
+                            //     display: 'anchored',
+                            //     touchUi: true
+                            // },
+                            medium: {
+                              controls: ['date', 'time'],
+                              display: 'anchored',
+                              touchUi: false
+                            },
+                          }}
 
-                            />
-                        
+                        />
+
                       </View>
                     )}
                   </View>
