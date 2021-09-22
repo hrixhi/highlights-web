@@ -55,6 +55,7 @@ import {
 } from "react-native-popup-menu";
 import TextareaAutosize from 'react-textarea-autosize';
 import { Editor } from '@tinymce/tinymce-react';
+import axios from 'axios';
 
 const Create: React.FunctionComponent<{ [label: string]: any }> = (
   props: any
@@ -1541,7 +1542,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 placeholder: 'Content...',
                 min_height: 500,
                 paste_data_images: true,
-                images_upload_url: 'http://api.cuesapp.co/api/imageUploadEditor',
+                images_upload_url: 'https://api.cuesapp.co/api/imageUploadEditor',
                 mobile: {
                   plugins: 'print preview powerpaste casechange importcss searchreplace autolink autosave save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount tinymcespellchecker a11ychecker textpattern noneditable help formatpainter pageembed charmap mentions linkchecker emoticons advtable autoresize'
                 },

@@ -34,7 +34,7 @@ import Discussion from './Discussion';
 import Meeting from './Meeting';
 import ChannelSettings from './ChannelSettings';
 
-import { Datepicker, Select } from '@mobiscroll/react'
+import { Datepicker, Select, Popup } from '@mobiscroll/react'
 import '@mobiscroll/react/dist/css/mobiscroll.react.min.css';
 
 
@@ -65,7 +65,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
     })
     const [loadingSearchResults, setLoadingSearchResults] = useState(false);
 
-    const [filterStart, setFilterStart] = useState<any>(new Date())
+    const [filterStart, setFilterStart] = useState<any>(null)
     const [filterEnd, setFilterEnd] = useState<any>(null)
 
     const [searchOptions] = useState(['Classroom', 'Messages', 'Threads', 'Channels',])
@@ -93,6 +93,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     const [activityChannelId, setActivityChannelId] = useState<any>('')
     const [filterEventsType, setFilterEventsType] = useState('All');
+    const [showFilterPopup, setShowFilterPopup] = useState(false);
 
 
     useEffect(() => {
@@ -708,6 +709,88 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
         }
     ]
 
+    const renderEventFilters = () => {
+
+        const channelOptions = [{ value: 'All', text: 'All' }, { value: 'My Events', text: 'My Events'}]
+
+        props.subscriptions.map((sub: any) => {
+            channelOptions.push({
+                value: sub.channelName,
+                text: sub.channelName
+            })
+        })
+
+        const typeOptions = [{ value: 'All', text: 'All' }, { value: 'Lectures', text: 'Lectures' }, { value: 'Submissions', text: 'Submissions' }, { value: 'Events', text: 'Events' }] 
+
+        return (<div style={{  display: 'flex', flexDirection: 'column', }}>
+            <div style={{ display: 'flex', flexDirection: 'column', width: '100%', marginBottom: 30 }}>
+                            
+                <Text style={{ fontSize: 10, color: '#1D1D20', paddingLeft: 5, paddingBottom: 10 }}>
+                   Channel
+                </Text>
+
+                <label style={{ width: 200  }}>
+                    <Select
+                        touchUi={true}
+                        theme="ios"
+                        themeVariant="light"
+                        value={filterByChannel}
+                        onChange={(val: any) => {
+                            setFilterByChannel(val.value)
+                        }}
+                        responsive={{
+                            small: {
+                                display: 'bubble'
+                            },
+                            medium: {
+                                touchUi: false
+                            }
+                        }}
+                        dropdown={false}
+                        data={channelOptions}
+                    />
+                                  
+                </label>
+
+                
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', width: '100%', marginBottom: 30 }}>
+                            
+                <Text style={{ fontSize: 10, color: '#1D1D20', paddingLeft: 5, paddingBottom: 10  }}>
+                   Type
+                </Text>
+
+                <label style={{ width: 200 }}>
+                    <Select
+                        touchUi={true}
+                        theme="ios"
+                        themeVariant="light"
+                        value={filterEventsType}
+                        onChange={(val: any) => {
+                            setFilterEventsType(val.value)
+                        }}
+                        responsive={{
+                            small: {
+                                display: 'bubble'
+                            },
+                            medium: {
+                                touchUi: false
+                            }
+                        }}
+                        dropdown={false}
+                        data={typeOptions}
+                    />
+                                  
+                </label>
+
+                
+            </div>
+
+
+        </div>)
+    }
+
 
     const overview = <View
         key={collapseMap.toString()}
@@ -1092,38 +1175,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             </View>
                         </View>
                     })
-                }
-                <View style={{ width: '100%', flexDirection: 'row', paddingTop: 20, paddingBottom: 10  }}>
-                    <div style={{ display: 'flex', flexDirection: 'column' }}>
-                            
-                            <label style={{ width: 150 }}>
-                                <Select
-                                    touchUi={true}
-                                    theme="ios"
-                                    themeVariant="light"
-                                    value={sortBy}
-                                    onChange={(val: any) => {
-                                        setSortBy(val.value)
-                                    }}
-                                    responsive={{
-                                        small: {
-                                            display: 'bubble'
-                                        },
-                                        medium: {
-                                            touchUi: false
-                                        }
-                                    }}
-                                    dropdown={false}
-                                    data={sortbyOptions}
-                                />
-                                              
-                            </label>
-            
-                            <Text style={{ fontSize: 10, color: '#1D1D20', paddingLeft: 5, paddingTop: 10  }}>
-                               Sort By
-                            </Text>
-                        </div>
-                    </View>
+                }   
             </ScrollView>
         </View>
     </View>
@@ -1204,7 +1256,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         // borderWidth: 1,
                         backgroundColor: '#f8f8fa'
                     }}>
-                        {props.option === 'To Do' || props.option === 'Classroom' ?
+                        {/* {props.option === 'To Do' || props.option === 'Classroom' ?
                             // <Menu
                             //     style={{ flex: 1 }}
                             //     onSelect={(e: any) => {
@@ -1420,7 +1472,16 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             </View>
                             
                             : <View style={{ width: 80, right: 0, backgroundColor: '#f8f8fa' }} />
-                        }
+                        } */}
+                        
+                        <TouchableOpacity style={{ backgroundColor: 'none' }} onPress={() => {
+                            setShowFilterPopup(true)
+                        }}>
+                            <Text style={{ fontSize: 11, color: '#1D1D20', paddingTop: 9, textAlign: 'right' }}>
+                                Filter <Ionicons name="caret-down" size={11} />
+                            </Text>
+                        </TouchableOpacity>
+                        
 
                         <TextInput
                             value={searchTerm}
@@ -1555,6 +1616,101 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 </View> : searchResults
 
             }
+            <Popup isOpen={showFilterPopup} 
+                buttons={['ok', {
+                    text: 'Reset', 
+                    handler: function (event) {
+                        setFilterStart(null)
+                        setFilterEnd(null)
+                        setFilterByChannel('All')
+                        setFilterEventsType('All')
+                        
+                    }
+                },]} 
+                theme="ios" 
+                themeVariant="light" 
+                onClose={() => setShowFilterPopup(false)} 
+                responsive={{
+                        small: {
+                            display: 'bottom'
+                        },
+                        medium: { // Custom breakpoint
+                            display: 'center'
+                        },
+                    
+                }}
+            >
+                {/* Show all the settings here */}
+                <View style={{ flexDirection: 'column', padding: 25, backgroundColor: 'none' }} className="mbsc-align-center mbsc-padding">
+                        {props.option === 'Classroom' ? <div style={{ display: 'flex', flexDirection: 'column', width: '100%', marginBottom: 30 }}>
+                            <Text style={{ fontSize: 10, color: '#1D1D20', paddingLeft: 5, paddingBottom: 10  }}>
+                               Sort By
+                            </Text>
+
+                            <label style={{ width: 200 }}>
+                                <Select
+                                    touchUi={true}
+                                    theme="ios"
+                                    themeVariant="light"
+                                    value={sortBy}
+                                    onChange={(val: any) => {
+                                        setSortBy(val.value)
+                                    }}
+                                    responsive={{
+                                        small: {
+                                            display: 'bubble'
+                                        },
+                                        medium: {
+                                            touchUi: false
+                                        }
+                                    }}
+                                    dropdown={false}
+                                    data={sortbyOptions}
+                                />
+                                              
+                            </label>
+            
+                        </div> : null}
+
+                        <div style={{ display: 'flex', flexDirection: 'column', width: '100%', marginBottom: 30 }}>
+                            <Text style={{ fontSize: 10, color: '#1D1D20', paddingLeft: 5, paddingBottom: 10  }}>
+                                Filter by Date
+                            </Text>
+
+                            <label style={{ width: 200 }}>
+                                    <Datepicker
+                                        themeVariant="light"
+                                        controls={['calendar']}
+                                        select="range"
+                                        touchUi={true}
+                                        inputProps={{
+                                            placeholder: 'Select'
+                                        }}
+                                        responsive={{
+                                            small: {
+                                                display: 'bubble'
+                                            },
+                                            medium: {
+                                                touchUi: false,
+                                            }
+                                        }}
+                                        value={[filterStart, filterEnd]}
+
+                                        onChange={(val: any) => {
+                                            console.log("Selected", val)
+                                            setFilterStart(val.value[0])
+                                            setFilterEnd(val.value[1])
+                                        }}
+                                    />
+                            </label>
+                            
+                        </div>
+
+                        {props.option === "To Do" ? renderEventFilters() : null}
+                </View>
+
+
+            </Popup>
         </View>
     );
 }

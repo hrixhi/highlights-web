@@ -712,7 +712,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     }}
                     // style={styles.input}
                     minRows={1}
-                    placeholder={PreferredLanguageText("title")}
+                    placeholder={"E.g. Exam 1 material"}
                     onChange={(e: any) => setNewFolderTitle(e.target.value)}
                 />
 
@@ -803,8 +803,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     </ScrollView>
                     :
                     <View>
-                        <Text style={{ fontSize: 15, color: '#818385', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#fff' }}>
-                            No Cues
+                        <Text style={{ fontSize: 15, color: '#818385', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#fff', paddingVertical: 20 }}>
+                            No Content to select.
                         </Text>
                     </View>}
 
@@ -1087,8 +1087,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 </ScrollView>
                 :
                 <View>
-                    <Text style={{ fontSize: 15, color: '#818385', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#fff' }}>
-                        No Cues
+                    <Text style={{ fontSize: 15, color: '#818385', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#fff', paddingVertical: 20 }}>
+                        No Content to select. 
                     </Text>
                 </View>}
 
@@ -1386,7 +1386,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
         </Text>
         {!createNewFolder && folderId === "" ? <View style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <Menu
+            {channelFolders.length > 0 ? <Menu
                 onSelect={async (choice: any) => {
                     // setCalendarChoice(choice)
 
@@ -1480,7 +1480,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         })
                     }
                 </MenuOptions>
-            </Menu>
+            </Menu> : null }
 
             <TouchableOpacity
                 onPress={() => {
@@ -1497,7 +1497,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     backgroundColor: 'white',
                     overflow: 'hidden',
                     height: 35,
-                    marginTop: 15,
+                    marginTop: channelFolders.length > 0 ? 15 : 0,
                     justifyContent: 'center',
                     flexDirection: 'row',
                 }}>

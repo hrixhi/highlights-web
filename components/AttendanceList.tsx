@@ -22,6 +22,8 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Alert from './Alert';
 
+import { Datepicker, Select } from '@mobiscroll/react'
+
 
 const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -40,8 +42,8 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
 
 
     const [enableFilter, setEnableFilter] = useState(false);
-    const [end, setEnd] = useState(new Date());
-    const [start, setStart] = useState(new Date(end.getTime() - (2630000 * 60 * 10)));
+    const [end, setEnd] = useState<any>(null);
+    const [start, setStart] = useState<any>(null);
 
     const [attendanceTotalMap, setAttendanceTotalMap] = useState<any>({});
 
@@ -234,7 +236,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
 
     // Update past meetings to consider
     useEffect(() => {
-        if (enableFilter) {
+        if (start && end ) {
 
             const filteredPastMeetings = fixedPastMeetings.filter(meeting => {
                 return (new Date(meeting.start) > start && new Date(meeting.end) < end)
@@ -245,9 +247,10 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
         } else {
 
             setPastMeetings(fixedPastMeetings)
+             
         }
 
-    }, [enableFilter, start, end])
+    }, [start, end])
 
     const exportAttendance = () => {
         const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
@@ -366,21 +369,28 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
             <View style={{ backgroundColor: 'white', flexDirection: 'row', paddingBottom: 25, width: '100%', justifyContent: 'flex-end' }}>
                 {pastMeetings.length === 0 || channelAttendances.length === 0 ? null : <View style={{ paddingRight: 20 }}>
                     <View style={{ display: 'flex', width: "100%", flexDirection: "row", marginBottom: 30, }} >
-                        <DateRangePicker
-                            preventOverflow={true}
-                            size={'xs'}
-                            appearance={'subtle'}
-                            placeholder={'Filter'}
-                            onChange={e => {
-                                setStart(e[0])
-                                setEnd(e[1])
+                        <Datepicker
+                            themeVariant="light"
+                            controls={['calendar']}
+                            select="range"
+                            touchUi={true}
+                            inputProps={{
+                                placeholder: 'Filter by Dates'
                             }}
-                            cleanable={false}
-                            showOneCalendar={true}
-                            value={[
-                                start,
-                                end
-                            ]}
+                            responsive={{
+                                small: {
+                                    display: 'bubble'
+                                },
+                                medium: {
+                                    touchUi: false,
+                                }
+                            }}
+                            value={[start, end]}
+                            onChange={(val: any) => {
+                                console.log("Selected", val)
+                                setStart(val.value[0])
+                                setEnd(val.value[1])
+                            }}
                         />
                     </View>
                 </View>

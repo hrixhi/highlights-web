@@ -2498,7 +2498,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const renderQuizEndedMessage = () => {
         return (<View style={{ backgroundColor: 'white', flex: 1, }}>
             <Text style={{ width: '100%', color: '#818385', fontSize: 20, paddingTop: 200, paddingBottom: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1, textAlign: 'center' }}>
-                Quiz submission ended. {remainingAttempts === 0 ? "You have used up all your attempts. " : ""}
+                Quiz submission ended. {remainingAttempts === 0 ? "No attempts left. " : ""}
             </Text>
         </View>)
 
@@ -3162,7 +3162,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 readonly: props.cue.releaseSubmission || (!allowLateSubmission && new Date() > deadline) || (allowLateSubmission && new Date() > availableUntil),
                 min_height: 500,
                 paste_data_images: true,
-                images_upload_url: 'http://api.cuesapp.co/api/imageUploadEditor',
+                images_upload_url: 'https://api.cuesapp.co/api/imageUploadEditor',
                 mobile: {
                     plugins: 'print preview powerpaste casechange importcss tinydrive searchreplace autolink autosave save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount tinymcespellchecker a11ychecker textpattern noneditable help formatpainter pageembed charmap mentions linkchecker emoticons advtable autoresize'
                 },
@@ -3372,7 +3372,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     color: "#818385",
                                     textAlign: "right",
                                     paddingRight: 10,
-                                    paddingTop: 5
+                                    paddingTop: isOwner ? 5 : 0
                                 }}>
                                 Available
                             </Text>
@@ -3446,7 +3446,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     color: "#818385",
                                     textAlign: "right",
                                     paddingRight: 10,
-                                    paddingTop: 5
+                                    paddingTop: isOwner ? 5 : 0
                                 }}>
                                 Deadline
                             </Text>

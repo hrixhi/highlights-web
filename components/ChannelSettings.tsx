@@ -1112,10 +1112,9 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             /> */}
 
                                 <div >
-                                    <label>
+                                    <label style={{ maxWidth: 350, width: 350 }}>
                                         <Select
                                             themeVariant="light"
-                                            style={{ width: 320 }}
                                             selectMultiple={true}
                                             group={true}
                                             groupLabel="&nbsp;"
@@ -1185,7 +1184,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         </View>
                     </View> */}
 
-                        <label>
+                        <label style={{ width: 350 }}>
                             <Select
                                             themeVariant="light"
                                             select="multiple"
@@ -1209,7 +1208,6 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                     touchUi: false,
                                                 }
                                             }}
-                                              minWidth={[60, 320]}
                                             // minWidth={[60, 320]}
                                         />
                                     </label>

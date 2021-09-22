@@ -59,14 +59,31 @@
 }
 
 .mbsc-ios {
-    /* font-family: 'Inter'; */
+    font-family: 'Inter';
 }
 
 .mbsc-select {
     /* width: 180px; */
-    border-radius: 7px;
-    border: 1px solid #f0f0f2;
+    border: 0px;
+    border-radius: 0px;
+    border-bottom: 1px solid #f0f0f2;
+    font-size: 14px;
 }
+
+.mbsc-textfield {
+    /* width: 180px; */
+    border: 0px;
+    border-radius: 0px;
+    border-bottom: 1px solid #f0f0f2;
+    font-size: 14px;
+}
+
+.mbsc-icon {
+    width: 1em;
+    height: 1em;
+    /* top: 0.5em; */
+}
+
 
 /* .dropdown {
     position: relative;
