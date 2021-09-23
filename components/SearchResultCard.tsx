@@ -45,21 +45,30 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                             <Text
                                 ellipsizeMode={'tail'}
                                 numberOfLines={1}
-                                style={styleObject.title}>
+                                style={{
+                                    fontFamily: 'inter',
+                                    fontSize: 15,
+                                    lineHeight: 20,
+                                    // flex: 1,
+                                    marginTop: props.option === "Channels" ? 0 : 7,
+                                    marginBottom: props.option === "Channels" ? 7: 0,
+                                    color: '##1D1D20',
+                                    flexDirection: 'row', flex: 1,
+                                }}>
                                 {props.title}
                             </Text>
-                            {props.subtitle ?
+                            {/* {props.subtitle ?
                                 <Text ellipsizeMode={'tail'}
                                     numberOfLines={1}
                                     style={styleObject.description}>
                                     {props.subtitle}
                                 </Text>
-                                : null}
+                                : null} */}
                             {props.option === "Channels" && !props.subscribed ?  <View style={{ flex: 1, paddingLeft: 10, backgroundColor: '#f8f8fa' }}>
                                 <TouchableOpacity
                                     onPress={() => props.handleSub()}
                                 >
-                                    <Text style={{ textAlign: 'center', fontSize: 12, paddingTop: 10, color: '#007AFF', backgroundColor: '#f8f8fa' }} ellipsizeMode='tail'>
+                                    <Text style={{ textAlign: 'center', fontSize: 12, paddingTop: 5, color: '#007AFF', backgroundColor: '#f8f8fa' }} ellipsizeMode='tail'>
                                         Join
                                     </Text>
                                 </TouchableOpacity>
@@ -145,16 +154,16 @@ const styles: any = (colorScheme: any) => StyleSheet.create({
         textAlign: 'right',
         flex: 1
     },
-    title: {
-        fontFamily: 'inter',
-        fontSize: 15,
-        lineHeight: 20,
-        // flex: 1,
-        marginBottom: 10,
-        color: '##1D1D20',
-        flexDirection: 'row', flex: 1,
-        // height: '50%'
-    },
+    // title: {
+    //     fontFamily: 'inter',
+    //     fontSize: 15,
+    //     lineHeight: 20,
+    //     // flex: 1,
+    //     marginTop: 7,
+    //     color: '##1D1D20',
+    //     flexDirection: 'row', flex: 1,
+    //     // height: '50%'
+    // },
     titleFlip: {
         color: colorScheme === 'light' ? '#1D1D20' : '#1D1D20',
         backgroundColor: colorScheme === 'light' ? '#f8f8fa' : '#f8f8fa',

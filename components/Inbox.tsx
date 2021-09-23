@@ -21,7 +21,7 @@ import alert from '../components/Alert';
 import { Ionicons } from '@expo/vector-icons';
 import FileUpload from './UploadFiles';
 import moment from 'moment';
-import mobiscroll, { Form as MobiscrollForm, FormGroup, Button as MobiscrollButton, Select, Input, FormGroupTitle } from '@mobiscroll/react'
+import { Select } from '@mobiscroll/react'
 
 
 const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
@@ -230,22 +230,19 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
             return
         }
 
-        const groupIds = selected.map((item: any) => {
-            return item.value
-        })
-
         const saveCue = message
 
         const server = fetchAPI('')
         server.mutate({
             mutation: sendMessage,
             variables: {
-                users: [userId, ...groupIds],
+                users: [userId, ...selected],
                 message: saveCue,
                 userId
             }
         }).then(res => {
             // setSendingThread(false)
+            setSelected([]);
             if (res.data.message.createDirect) {
                 loadChats()
             } else {
@@ -436,10 +433,17 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
         reload()
     }, [])
 
+
     let options = users.map((sub: any) => {
         return {
-            value: sub._id, label: sub.fullName
+            value: sub._id, text: sub.fullName, group: sub.fullName[0].toUpperCase()
         }
+    })
+
+    options = options.sort((a: any, b: any) => {
+        if(a.group < b.group) { return -1; }
+        if(a.group > b.group) { return 1; }
+        return 0;
     })
 
 
@@ -765,7 +769,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                         style={{ flex: 1, paddingTop: 12 }}>
                                                         <View style={{ flexDirection: 'column', marginTop: 25, overflow: 'scroll', marginBottom: 25 }}>
                                                             <View style={{ width: '90%', padding: 5, maxWidth: 500, minHeight: 200 }}>
-                                                                <Multiselect
+                                                                {/* <Multiselect
                                                                     placeholder='Select users'
                                                                     displayValue='label'
                                                                     options={options} // Options to display in the dropdown
@@ -778,6 +782,31 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                         setSelected(e);
                                                                         return true
                                                                     }}
+                                                                /> */}
+                                                                <Select
+                                                                    themeVariant="light"
+                                                                    selectMultiple={true}
+                                                                    group={true}
+                                                                    groupLabel="&nbsp;"
+                                                                    inputClass="mobiscrollCustomMultiInput"
+                                                                    placeholder="Select users"
+                                                                    touchUi={true}
+                                                                    // minWidth={[60, 320]}
+                                                                    value={selected}
+                                                                    data={options}
+                                                                    onChange={(val: any) => {
+                                                                        setSelected(val.value)
+                                                                    }}
+                                                                    responsive={{
+                                                                        small: {
+                                                                            display: 'bubble'
+                                                                        },
+                                                                        medium: {
+                                                                            touchUi: false,
+                                                                        }
+                                                                    }}
+                                                                    minWidth={[60, 320]}
+                                                                    // minWidth={[60, 320]}
                                                                 />
                                                             </View>
                                                         </View>

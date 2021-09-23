@@ -33,7 +33,7 @@ import {
     MenuTrigger,
 } from 'react-native-popup-menu';
 import parser from 'html-react-parser';
-import { Select  } from '@mobiscroll/react'
+import { Select } from '@mobiscroll/react'
 
 
 
@@ -170,9 +170,16 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
     const key = JSON.stringify(filteredSubscribers)
     let options = filteredSubscribers.map((sub: any) => {
         return {
-            value: sub._id, label: sub.fullName
+            value: sub._id, text: sub.displayName, group: sub.displayName[0]
         }
     })
+
+    options = options.sort((a: any, b: any) => {
+        if (a > b) return -1;
+        if (a < b) return 1;
+        return 0;
+    })
+
     const group = selected.map(s => {
         return s.value
     })
@@ -1020,7 +1027,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                             <div className="webviewer" ref={submissionViewerRef} style={{ height: "80vh" }}></div>
                         </View>)
                     :
-                    <View style={{ width: '100%', marginTop: 25 }}>
+                    <View style={{ width: '100%', marginTop: 25 }} key={viewSubmissionTab}>
                         {viewSubmissionTab === "mySubmission" ?
                             <div className="mce-content-body htmlParser" style={{ width: '100%' }}>
                                 {parser(attempt.html)}
@@ -1363,7 +1370,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         />
                                             
                                     </label>
-                                    <Text style={{ fontSize: 10, color: '#1D1D20', marginLeft: 17, paddingLeft: 5, paddingTop: 10 }}>
+                                    <Text style={{ fontSize: 10, color: '#1D1D20', paddingLeft: 5, paddingTop: 10 }}>
                                         Type
                                     </Text>
                                 </View>
@@ -1422,7 +1429,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                     </Text> */}
                                                     <View style={{ flexDirection: 'column', marginTop: 25, overflow: 'scroll', marginBottom: 25 }}>
                                                         <View style={{ width: '90%', padding: 5, maxWidth: 500, minHeight: 200 }}>
-                                                            <Multiselect
+                                                            {/* <Multiselect
                                                                 placeholder='Select users'
                                                                 displayValue='label'
                                                                 // key={userDropdownOptions.toString()}
@@ -1441,6 +1448,31 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                     setSelected(e);
                                                                     return true
                                                                 }}
+                                                            /> */}
+                                                            <Select
+                                                                themeVariant="light"
+                                                                selectMultiple={true}
+                                                                group={true}
+                                                                groupLabel="&nbsp;"
+                                                                inputClass="mobiscrollCustomMultiInput"
+                                                                placeholder="Select..."
+                                                                touchUi={true}
+                                                                // minWidth={[60, 320]}
+                                                                value={selected}
+                                                                data={options}
+                                                                onChange={(val: any) => {
+                                                                    setSelected(val.value)
+                                                                }}
+                                                                responsive={{
+                                                                    small: {
+                                                                        display: 'bubble'
+                                                                    },
+                                                                    medium: {
+                                                                        touchUi: false,
+                                                                    }
+                                                                }}
+                                                                minWidth={[60, 320]}
+                                                                // minWidth={[60, 320]}
                                                             />
                                                         </View>
                                                     </View>

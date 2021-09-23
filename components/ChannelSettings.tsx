@@ -20,7 +20,7 @@ import {
 } from 'react-native-popup-menu';
 import { Ionicons } from '@expo/vector-icons';
 
-import mobiscroll, { Form as MobiscrollForm, FormGroup, Button as MobiscrollButton, Select, Input, FormGroupTitle  } from '@mobiscroll/react'
+import { Select } from '@mobiscroll/react'
 import '@mobiscroll/react/dist/css/mobiscroll.react.min.css';
 
 
@@ -1079,7 +1079,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
 
                     {renderSubscriberFilters()}
                     <View style={{ flexDirection: 'column', marginTop: 25, overflow: 'scroll' }}>
-                        <View style={{ width: '90%', height: 'auto' }}>
+                        <View style={{  height: 'auto', maxWidth: 350, width: 350 }}>
                             {/* <Multiselect
                                 placeholder='Select...'
                                 displayValue='name'
@@ -1111,7 +1111,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 }}
                             /> */}
 
-                                <div >
+                                <div style={{ maxWidth: 350, width: 350 }} >
                                     <label style={{ maxWidth: 350, width: 350 }}>
                                         <Select
                                             themeVariant="light"
@@ -1150,7 +1150,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                     <Text style={{
                         fontSize: 15,
                         fontFamily: 'inter',
-                        color: '#1D1D20', marginTop: 25,
+                        color: '#1D1D20', marginTop: 25, marginBottom: 20
                     }}>
                         Moderators
                     </Text>

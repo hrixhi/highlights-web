@@ -179,12 +179,12 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     setDimensions({ window, screen })
   }, []);
 
-  useEffect(() => {
-    Dimensions.addEventListener("change", onDimensionsChange);
-    return () => {
-      Dimensions.removeEventListener("change", onDimensionsChange);
-    };
-  }, [])
+  // useEffect(() => {
+  //   Dimensions.addEventListener("change", onDimensionsChange);
+  //   return () => {
+  //     Dimensions.removeEventListener("change", onDimensionsChange);
+  //   };
+  // }, [])
 
   useEffect(() => {
     (

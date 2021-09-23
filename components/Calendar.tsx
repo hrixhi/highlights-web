@@ -1212,7 +1212,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
         // Add buttons to view event, edit event, join meeting, etc
 
-        const assingmentDue = new Date() > new Date(data.original.end)
+        const assingmentDue = new Date() > new Date(data.original.start)
+        
 
         return <React.Fragment>
             <div>{data.title}</div>

@@ -1161,10 +1161,12 @@ export const findBySchoolId = gql`
              password
              createdBy
              createdByUsername
+             channelCreator
              createdByAvatar
              numSubs
              role
              meetingOn
+             owners
          }
      }
  }

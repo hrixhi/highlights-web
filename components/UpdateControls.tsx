@@ -1031,13 +1031,13 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 subCues = JSON.parse(value);
             }
         } catch (e) { }
-        if (subCues[props.cueKey].length === 0) {
+        if (subCues[props.cueKey] && subCues[props.cueKey].length === 0) {
             return;
         }
 
         const currCue = subCues[props.cueKey][props.cueIndex]
 
-        const currCueValue = currCue.cue;
+        const currCueValue: any  = currCue.cue;
 
         // If there are no existing submissions then initiate cue obj
         let submissionObj = {
@@ -1054,7 +1054,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
         if (isQuiz) {
 
-            if (currCueValue[0] === '{' && currCueValue[currCueValue.length - 1] === '}') {
+            if (currCueValue && currCueValue[0] === '{' && currCueValue[currCueValue.length - 1] === '}') {
                 quizObj = JSON.parse(currCueValue);
             }
 
@@ -1067,7 +1067,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
         } else if (submissionImported) {
 
-            if (currCueValue[0] === '{' && currCueValue[currCueValue.length - 1] === '}') {
+            if (currCueValue && currCueValue[0] === '{' && currCueValue[currCueValue.length - 1] === '}') {
                 submissionObj = JSON.parse(currCueValue);
             }
 
@@ -1124,7 +1124,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 subCues = JSON.parse(value);
             }
         } catch (e) { }
-        if (subCues[props.cueKey].length === 0) {
+        if (subCues[props.cueKey] && subCues[props.cueKey].length === 0) {
             return;
         }
 
