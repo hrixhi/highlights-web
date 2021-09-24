@@ -43,7 +43,7 @@ import ReactPlayer from "react-player";
 // import Webview from "./Webview";
 import Multiselect from "multiselect-react-dropdown";
 import WebViewer from '@pdftron/pdfjs-express';
-import mobiscroll, { Select, Datepicker as MobiscrollDatePicker } from '@mobiscroll/react'
+import { Select, Datepicker as MobiscrollDatePicker } from '@mobiscroll/react'
 
 import '@mobiscroll/react/dist/css/mobiscroll.react.min.css';
 
@@ -411,7 +411,35 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
       })
       .then((res) => {
         if (res.data.channel && res.data.channel.getChannelCategories) {
-          setCustomCategories(res.data.channel.getChannelCategories);
+
+
+          if (role === "instructor") {
+
+            // Add some default categories to the channel set
+
+            const categories = new Set();
+
+            res.data.channel.getChannelCategories.map((category: any) => {
+              console.log("Channel category", category)
+              categories.add(category);
+            })
+
+            categories.add("Assignments")
+            categories.add("Homeworks")
+            categories.add("Quizzes")
+            categories.add("Syllabus")
+            categories.add("Textbook")
+            categories.add("Videos")
+            
+            
+            const withDefaultCategories = Array.from(categories) 
+
+            setCustomCategories(withDefaultCategories)
+
+          } else {
+            setCustomCategories(res.data.channel.getChannelCategories);
+          } 
+
         }
       })
       .catch((err) => { });
@@ -452,7 +480,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
         }
       })
       .catch((err: any) => console.log(err));
-  }, [channelId, localCustomCategories]);
+  }, [channelId, localCustomCategories, role]);
 
   useEffect(() => {
     loadChannelCategoriesAndSubscribers();
@@ -1068,7 +1096,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
             )}
           </View>
           <View style={{ flexDirection: "row" }}>
-            {!isQuiz ? (
+            {!isQuiz && !imported ? (
               <Text
                 style={{
                   lineHeight: 30,
@@ -1086,7 +1114,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   : PreferredLanguageText("formula")}
               </Text>
             ) : null}
-            {isQuiz ? null : (
+            {isQuiz || imported ? null : (
               <Text
                 style={{
                   color: "#1D1D20",
@@ -1118,12 +1146,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                     clearAll()
                     return
                   }
-                  if (channelId !== "") {
-                    setIsQuiz(true);
-                    setSubmission(true);
-                  } else {
-                    Alert(quizAlert);
-                  }
+                  setIsQuiz(true);
+                  setSubmission(true);
                 }}
               >
                 {isQuiz ? 'CANCEL' : PreferredLanguageText("quiz")}
@@ -2932,6 +2956,12 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
               <TouchableOpacity
                 onPress={async () => {
                   if (isQuiz) {
+
+                    if (channelId === "") {
+                      Alert("Select a channel to share quiz.")
+                      return;
+                    }
+
                     createNewQuiz();
                   } else {
                     await handleCreate();

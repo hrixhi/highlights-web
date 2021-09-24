@@ -230,9 +230,9 @@ export const sendDirectMessage = gql`
   }
 `;
 export const sendMessage = gql`
-  mutation($users: [String!]!, $message: String!, $channelId: String, $userId: String!) {
+  mutation($users: [String!]!, $message: String!, $channelId: String, $userId: String!, $groupId: String, $groupName: String, $groupImage: String) {
     message {
-      createDirect(users: $users, message: $message, channelId: $channelId, userId: $userId)
+      createDirect(users: $users, message: $message, channelId: $channelId, userId: $userId, groupId: $groupId, groupName: $groupName, groupImage: $groupImage)
     }
   }
 `;
@@ -500,6 +500,14 @@ export const updateAnnotation = gql`
 mutation($cueId: String!, $userId: String!, $attempts: String!) {
   cue {
     updateAnnotation(cueId: $cueId, userId: $userId, attempts: $attempts)
+  }
+}
+`
+
+export const updateGroup = gql`
+mutation($groupId: String!, $groupName: String!, $groupImage: String) {
+  message {
+    updateGroup(groupId: $groupId, groupName: $groupName, groupImage: $groupImage)
   }
 }
 `
@@ -909,9 +917,13 @@ export const getChats = gql`
         userNames {
           fullName
           avatar
+          _id
         }
         lastMessage
         lastMessageTime
+        name
+        image
+        createdBy
       }
     }
   }

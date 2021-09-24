@@ -33,6 +33,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
     const [channels, setChannels] = useState<any[]>([])
 
     const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     // Alert messages
     const incorrectPasswordAlert = PreferredLanguageText('incorrectPassword');
@@ -167,6 +168,8 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
 
     const handleSubmit = useCallback(async () => {
 
+        setIsSubmitting(true);
+
         const uString: any = await AsyncStorage.getItem('user')
         const user = JSON.parse(uString)
 
@@ -188,8 +191,10 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
             .then(res => {
                 if (res.data.channel.create) {
                     const channelCreateStatus = res.data.channel.create
+                    setIsSubmitting(false);
                     switch (channelCreateStatus) {
                         case "created":
+                            Alert("Channel created successfully")
                             props.closeModal()
                             break;
                         case "invalid-name":
@@ -208,6 +213,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                 }
             })
             .catch(err => {
+                setIsSubmitting(false);
                 Alert(somethingWrongAlert, checkConnectionAlert)
             })
 
@@ -660,7 +666,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             marginTop: 15,
                                             marginBottom: 50
                                         }}
-                                        disabled={isSubmitDisabled}
+                                        disabled={isSubmitDisabled || isSubmitting}
                                     >
                                         <Text style={{
                                             textAlign: 'center',
@@ -673,7 +679,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             height: 35,
                                             textTransform: 'uppercase'
                                         }}>
-                                            {PreferredLanguageText('create')} <Ionicons name='add-outline' size={12} />
+                                            {isSubmitting ? "Creating" : PreferredLanguageText('create')} <Ionicons name='add-outline' size={12} />
                                         </Text>
                                     </TouchableOpacity>
                             }

@@ -42,7 +42,6 @@ import '@mobiscroll/react/dist/css/mobiscroll.react.min.css';
 const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
 
-    console.log(props.cues)
 
     const styles = styleObject()
     const [userId, setUserId] = useState('')

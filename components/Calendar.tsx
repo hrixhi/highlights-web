@@ -1341,13 +1341,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
             text: channel.name
         })
     })
-
-    console.log("Channel options", channelOptions)
-
     
-
-
-
     return (
         <Animated.View
             style={{

@@ -4,7 +4,7 @@ import Alert from '../components/Alert'
 import { Text, TouchableOpacity, View } from './Themed';
 import { ScrollView } from 'react-native'
 import { fetchAPI } from '../graphql/FetchAPI';
-import { getAllUsers, getChats, getGroups, getMessages, getSubscribers, markMessagesAsRead, sendDirectMessage, sendMessage } from '../graphql/QueriesAndMutations';
+import { getAllUsers, getChats, getGroups, getMessages, getSubscribers, markMessagesAsRead, sendDirectMessage, sendMessage, updateGroup } from '../graphql/QueriesAndMutations';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SearchResultCard from './SearchResultCard';
 import { htmlStringParser } from '../helpers/HTMLParser';
@@ -22,6 +22,7 @@ import { Ionicons } from '@expo/vector-icons';
 import FileUpload from './UploadFiles';
 import moment from 'moment';
 import { Select } from '@mobiscroll/react'
+import { TextInput } from './CustomTextInput';
 
 
 const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
@@ -37,7 +38,16 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
     const [users, setUsers] = useState<any>([])
     const [showNewGroup, setShowNewGroup] = useState(false)
     const [chatUsers, setChatUsers] = useState<any[]>([])
-
+    const [groupId, setGroupId] = useState('')
+    const [chatName, setChatName] = useState('')
+    const [chatImg, setChatImg] = useState('')
+    const [isChatGroup, setIsChatGroup] = useState(false);
+    const [viewGroup, setViewGroup] = useState(false);
+    const [groupUsers, setGroupUsers] = useState<any[]>([])
+    const [groupCreatedBy, setGroupCreatedBy] = useState('');
+    const [editGroupName, setEditGroupName] = useState('');
+    const [editGroupImage, setEditGroupImage] = useState('');
+    
     const [roleFilter, setRoleFilter] = useState('')
     const [gradeFilter, setGradeFilter] = useState('')
     const [sectionFilter, setSectionFilter] = useState('')
@@ -45,6 +55,8 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
     const [channelFilter, setChannelFilter] = useState('')
     const [filterChannelName, setFilterChannelName] = useState('')
     const [filterChannelId, setFilterChannelId] = useState('All')
+    const [newGroupName, setNewGroupName] = useState('')
+    const [newGroupImage, setNewGroupImage] = useState(undefined);
 
     const [showDirectory, setShowDirectory] = useState<any>(false)
 
@@ -133,7 +145,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
             }
         }).then((res: any) => {
             if (res.data && res.data.group.getChats) {
-                setChats(res.data.group.getChats)
+                setChats(res.data.group.getChats.reverse())
                 setShowChat(false)
                 setShowNewGroup(false)
                 setShowDirectory(false)
@@ -142,6 +154,8 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
             console.log(err)
         })
     }, [])
+
+    console.log("Chat", chat)
 
     const reload = useCallback(() => {
         loadUsers()
@@ -153,6 +167,21 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
         if (u) {
             const parsedUser = JSON.parse(u)
             setChatUsers(groupUsers)
+            setGroupId(groupId)
+            setIsChatGroup(true)
+
+            // Set current chat name and image
+            chats.map((c: any) => {
+                if (c._id === groupId) {
+                    setGroupCreatedBy(c.createdBy)
+                    setGroupUsers(c.userNames)
+                    setEditGroupName(c.name)
+                    setEditGroupImage(c.image ? c.image : undefined)
+                    setChatName(c.name);
+                    setChatImg(c.image ? c.image : "https://cues-files.s3.amazonaws.com/images/default.png")
+                }
+            })
+
             const server = fetchAPI('')
             server.query({
                 query: getMessages,
@@ -205,6 +234,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                 .catch(err => {
                     // Alert(unableToLoadMessagesAlert, checkConnectionAlert)
                 })
+            
             // mark as read here
             server.mutate({
                 mutation: markMessagesAsRead,
@@ -215,34 +245,33 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
             }).then(res => console.log(res))
                 .catch(e => console.log(e))
         }
-    }, [])
-
-    console.log("Chat users", chatUsers);
+    }, [chats])
 
     const width = Dimensions.get('window').width
 
     const createGroup = useCallback(async () => {
-
-        const message = 'New Group Created'
 
         if (selected.length === 0) {
             alert('Select users.')
             return
         }
 
-        const saveCue = message
-
         const server = fetchAPI('')
         server.mutate({
             mutation: sendMessage,
             variables: {
                 users: [userId, ...selected],
-                message: saveCue,
-                userId
+                message: 'New Group Created',
+                userId,
+                groupName: newGroupName,
+                groupImage: newGroupImage
             }
         }).then(res => {
             // setSendingThread(false)
             setSelected([]);
+            setNewGroupName('');
+            setNewGroupImage(undefined);
+
             if (res.data.message.createDirect) {
                 loadChats()
             } else {
@@ -252,7 +281,42 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
             // setSendingThread(false)
             Alert(somethingWentWrongAlert, checkConnectionAlert)
         })
-    }, [selected, userId])
+    }, [selected, userId, newGroupName, newGroupImage])
+
+    const handleUpdateGroup = useCallback(async () => {
+
+        if (editGroupName === "") {
+            Alert("Enter group name");
+            return;
+        }
+
+        const server = fetchAPI('');
+
+        server.mutate({
+            mutation: updateGroup,
+            variables: {
+                groupId,
+                groupName: editGroupName,
+                groupImage: editGroupImage
+            }
+        }).then(res => {
+            // setSendingThread(false)
+            
+            setNewGroupName('');
+            setNewGroupImage(undefined);
+            setViewGroup(false)
+
+            if (res.data.message.updateGroup) {
+                Alert("Updated group successfully.")
+                loadChats()
+            } else {
+                Alert("Could not update group. Try again.")
+            }
+        }).catch(err => {
+            // setSendingThread(false)
+            Alert("Could not update group. Try again.")
+        })
+    }, [groupId, editGroupName, editGroupImage])
 
     const unableToPostAlert = PreferredLanguageText('unableToPost');
     const somethingWentWrongAlert = PreferredLanguageText('somethingWentWrong');
@@ -279,7 +343,8 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
             variables: {
                 users: chatUsers,
                 message: saveCue,
-                userId
+                userId,
+                groupId
             }
         }).then(res => {
             // setSendingThread(false)
@@ -292,7 +357,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
             // setSendingThread(false)
             Alert(somethingWentWrongAlert, checkConnectionAlert)
         })
-    }, [chatUsers, userId])
+    }, [chatUsers, userId, groupId])
 
     const loadChat = useCallback(async (uId, groupId) => {
         setChat([])
@@ -300,6 +365,34 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
         if (u) {
             const parsedUser = JSON.parse(u)
             setChatUsers([parsedUser._id, uId])
+            setGroupId(groupId)
+
+            // Set current chat name and image
+            chats.map((chat: any) => {
+                if (chat._id === groupId) {
+
+                    // Find the chat user 
+
+                    // Group name or individual user name
+                    let fName = ''
+                                                                            
+                    chat.userNames.map((user: any) => {
+                        if (user._id !== userId) {
+                            fName = user.fullName
+                            return;
+                        }
+                    })
+
+                    
+                    setChatName(fName);
+
+                    // Find the chat avatar
+                    const chatImg = (chat.users[0] === userId ? chat.userNames[1] : chat.userNames[0]).avatar ? (chat.users[0] === userId ? chat.userNames[1] : chat.userNames[0]).avatar : 'https://cues-files.s3.amazonaws.com/images/default.png' 
+
+                    setChatImg(chatImg)
+                }
+            })
+
             // setMeetingOn(false)
             const server = fetchAPI('')
             server.query({
@@ -366,7 +459,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
             })
                 .catch(e => console.log(e))
         }
-    }, [])
+    }, [chats])
 
     const loadNewChat = useCallback(async (uId) => {
         setChat([])
@@ -544,6 +637,8 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
         })
 
     })
+
+    console.log("isChatGroup", isChatGroup)
     return (
         <View>
             {
@@ -580,6 +675,10 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                             showNewGroup || showChat || showDirectory ?
                                                 <TouchableOpacity
                                                     onPress={() => {
+                                                        if (viewGroup) {
+                                                            setViewGroup(false)
+                                                            return;
+                                                        }
                                                         loadChats()
                                                     }}
                                                     style={{
@@ -623,7 +722,27 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                     </Text>
                                                 </TouchableOpacity>
                                         }
-                                        <View style={{ flexDirection: 'row', flex: 1 }} />
+                                        {/* Show user / group name if you open the chat */}
+                                        {showChat ? 
+                                            <TouchableOpacity disabled={!isChatGroup} onPress={() => setViewGroup(true)} style={{ flexDirection: 'row', alignItems: 'center', flex: 1, width: '100%', paddingVertical: 7, borderBottomWidth: 1, borderBottomColor: '#f2f2fa', paddingHorizontal: 10 }} >
+                                                <Image
+                                                    style={{
+                                                        height: 50,
+                                                        width: 50,
+                                                        borderRadius: 75,
+                                                        
+                                                        // marginTop: 20,
+                                                        alignSelf: 'center'
+                                                    }}
+                                                    source={{ uri: chatImg }}
+                                                />
+                                                <Text style={{
+                                                    fontFamily: 'inter', fontSize: 16, paddingLeft: 20
+                                                }}>
+                                                    {chatName}
+                                                </Text>
+                                            </TouchableOpacity>
+                                            : <View style={{ flexDirection: 'row', flex: 1 }} />}
                                         {
                                             showNewGroup || showChat || showDirectory ? null :
                                                 <TouchableOpacity
@@ -728,15 +847,169 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                 </View> : null
                                         }
                                     </View>
+
                                     {
-                                        showChat ?
+                                        viewGroup ? 
+                                        <View style={{ marginTop: 30 }}>
+
+
+                                            {/*  */}
+                                            {
+                                                userId === groupCreatedBy ? 
+                                                    <View>
+                                                        <Image
+                                                            style={{
+                                                                height: 150,
+                                                                width: 150,
+                                                                borderRadius: 75,
+                                                                // marginTop: 20,
+                                                                alignSelf: 'center'
+                                                            }}
+                                                            source={{ uri: editGroupImage ? editGroupImage : 'https://cues-files.s3.amazonaws.com/images/default.png' }}
+                                                        />
+                                                        <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', paddingTop: 15, }}>
+                                                    {
+                                                        editGroupImage ? 
+                                                        <TouchableOpacity
+                                                            onPress={() => setEditGroupImage(undefined)}
+                                                            style={{
+                                                                backgroundColor: 'white',
+                                                                overflow: 'hidden',
+                                                                height: 35,
+                                                                // marginLeft: 20,
+                                                                // marginTop: 15,
+                                                                justifyContent: 'center',
+                                                                flexDirection: 'row'
+                                                            }}>
+                                                                        <Text style={{
+                                                                            textAlign: 'center',
+                                                                            lineHeight: 30,
+                                                                            color: '#1D1D20',
+                                                                            fontSize: 12,
+                                                                            backgroundColor: '#f8f8fa',
+                                                                            paddingHorizontal: 25,
+                                                                            fontFamily: 'inter',
+                                                                            height: 30,
+                                                                            // width: 100,
+                                                                            borderRadius: 15,
+                                                                            textTransform: 'uppercase'
+                                                                        }}>
+                                                                            REMOVE <Ionicons name='close-outline' size={12} />
+                                                                        </Text>
+                                                                        </TouchableOpacity> : <FileUpload
+                                                                        onUpload={(u: any, t: any) => {
+                                                                            setEditGroupImage(u)
+                                                                        }}
+                                                                        />
+                                                                    }
+                                                                </View>
+
+                                                                <View style={{ backgroundColor: 'white' }}>
+                                                                    <Text style={{
+                                                                        fontSize: 15,
+                                                                        fontFamily: 'inter',
+                                                                        color: '#1D1D20'
+                                                                    }}>
+                                                                        {PreferredLanguageText('name')}
+                                                                    </Text>
+                                                                    <TextInput
+                                                                        value={editGroupName}
+                                                                        placeholder={''}
+                                                                        onChangeText={val => {
+                                                                            setEditGroupName(val)
+                                                                        }}
+                                                                        placeholderTextColor={'#a2a2ac'}
+                                                                        required={true}
+                                                                    />
+                                                                </View>
+                                                </View>
+                                                : 
+                                                null
+                                            }
+
+                                            <Text style={{
+                                                fontSize: 15,
+                                                fontFamily: 'inter',
+                                                color: '#1D1D20'
+                                            }}>
+                                                Users
+                                            </Text>
+
+                                            <ScrollView 
+                                                showsVerticalScrollIndicator={false}
+                                                keyboardDismissMode={'on-drag'}
+                                                style={{ flex: 1, paddingTop: 12 }}>
+                                                    {
+                                                        groupUsers.map((user: any) => {
+                                                            return <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1, width: '100%', paddingVertical: 7, borderBottomWidth: 1, borderBottomColor: '#f2f2fa', paddingHorizontal: 10 }} >
+                                                                <Image
+                                                                    style={{
+                                                                        height: 30,
+                                                                        width: 30,
+                                                                        borderRadius: 75,
+                                                                        
+                                                                        // marginTop: 20,
+                                                                        alignSelf: 'center'
+                                                                    }}
+                                                                    source={{ uri: user.avatar ? user.avatar : 'https://cues-files.s3.amazonaws.com/images/default.png' }}
+                                                                />
+                                                                <Text style={{
+                                                                    fontFamily: 'inter', fontSize: 16, paddingLeft: 20
+                                                                }}>
+                                                                    {user.fullName}
+                                                                </Text>
+
+                                                                {
+                                                                    groupCreatedBy === user._id ? <Text style={{
+                                                                        fontSize: 12, paddingRight: 20, marginLeft: 'auto'
+                                                                    }}>
+                                                                        Admin
+                                                                    </Text> : null
+                                                                }
+                                                            </View>
+                                                        })
+                                                    }
+                                            </ScrollView>
+
+                                            <TouchableOpacity
+                                                onPress={() => handleUpdateGroup()}
+                                                    style={{
+                                                        backgroundColor: 'white',
+                                                        overflow: 'hidden',
+                                                        marginTop: 50,
+                                                        height: 35,
+                                                        // marginTop: 15,
+                                                        justifyContent: 'center',
+                                                                flexDirection: 'row'
+                                                            }}>
+                                                            <Text style={{
+                                                                textAlign: 'center',
+                                                                lineHeight: 35,
+                                                                color: '#fff',
+                                                                fontSize: 12,
+                                                                backgroundColor: '#007AFF',
+                                                                paddingHorizontal: 25,
+                                                                fontFamily: 'inter',
+                                                                height: 35,
+                                                                // width: 100,
+                                                                borderRadius: 15,
+                                                                textTransform: 'uppercase'
+                                                            }}>
+                                                                UPDATE
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                        </View> 
+                                        : null
+                                    }
+                                    {
+                                        viewGroup ? null : showChat ?
                                             <View style={{
                                                 width: '100%',
                                                 height: Dimensions.get('window').height - 230,
                                             }}>
                                                 <GiftedChat
-                                                    // showUserAvatar={false}
-                                                    renderUsernameOnMessage={chatUsers.length > 2}
+                                                    // showUserAvatar={isChatGroup}
+                                                    renderUsernameOnMessage={isChatGroup}
                                                     messages={chat}
                                                     onSend={messages => onSend(messages)}
                                                     user={{
@@ -767,29 +1040,93 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                         showsVerticalScrollIndicator={false}
                                                         keyboardDismissMode={'on-drag'}
                                                         style={{ flex: 1, paddingTop: 12 }}>
-                                                        <View style={{ flexDirection: 'column', marginTop: 25, overflow: 'scroll', marginBottom: 25 }}>
-                                                            <View style={{ width: '90%', padding: 5, maxWidth: 500, minHeight: 200 }}>
-                                                                {/* <Multiselect
-                                                                    placeholder='Select users'
-                                                                    displayValue='label'
-                                                                    options={options} // Options to display in the dropdown
-                                                                    selectedValues={selected} // Preselected value to persist in dropdown
-                                                                    onSelect={(e, f) => {
-                                                                        setSelected(e);
-                                                                        return true
-                                                                    }} // Function will trigger on select event
-                                                                    onRemove={(e, f) => {
-                                                                        setSelected(e);
-                                                                        return true
-                                                                    }}
-                                                                /> */}
+                                                        <View style={{ flexDirection: 'column', marginTop: 25, overflow: 'scroll', marginBottom: 25, alignItems: 'center' }}>
+                                                            <View style={{ width: '90%', padding: 5, maxWidth: 500, minHeight: 200, marginBottom: 15 }}>
+                                                                {/* Add group avatar here */}
+                                                                
+                                                                    <Image
+                                                                        style={{
+                                                                            height: 150,
+                                                                            width: 150,
+                                                                            borderRadius: 75,
+                                                                            // marginTop: 20,
+                                                                            alignSelf: 'center'
+                                                                        }}
+                                                                        source={{ uri: newGroupImage ? newGroupImage : 'https://cues-files.s3.amazonaws.com/images/default.png' }}
+                                                                    />
+                                                                    <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', paddingTop: 15, }}>
+                                                                    {
+                                                                        newGroupImage ? <TouchableOpacity
+                                                                        onPress={() => setNewGroupImage(undefined)}
+                                                                        style={{
+                                                                            backgroundColor: 'white',
+                                                                            overflow: 'hidden',
+                                                                            height: 35,
+                                                                            // marginLeft: 20,
+                                                                            // marginTop: 15,
+                                                                            justifyContent: 'center',
+                                                                            flexDirection: 'row'
+                                                                        }}>
+                                                                        <Text style={{
+                                                                            textAlign: 'center',
+                                                                            lineHeight: 30,
+                                                                            color: '#1D1D20',
+                                                                            fontSize: 12,
+                                                                            backgroundColor: '#f8f8fa',
+                                                                            paddingHorizontal: 25,
+                                                                            fontFamily: 'inter',
+                                                                            height: 30,
+                                                                            // width: 100,
+                                                                            borderRadius: 15,
+                                                                            textTransform: 'uppercase'
+                                                                        }}>
+                                                                            REMOVE <Ionicons name='close-outline' size={12} />
+                                                                        </Text>
+                                                                        </TouchableOpacity> : <FileUpload
+                                                                        onUpload={(u: any, t: any) => {
+                                                                            setNewGroupImage(u)
+                                                                        }}
+                                                                        />
+                                                                    }
+                                                                    </View>
+                                                                    
+                                                                {/* Add group name here */}
+                                                                <View style={{ backgroundColor: 'white' }}>
+                                                                    <Text style={{
+                                                                        fontSize: 15,
+                                                                        fontFamily: 'inter',
+                                                                        color: '#1D1D20'
+                                                                    }}>
+                                                                        {PreferredLanguageText('name')}
+                                                                    </Text>
+                                                                    <TextInput
+                                                                        value={newGroupName}
+                                                                        placeholder={''}
+                                                                        onChangeText={val => {
+                                                                            setNewGroupName(val)
+                                                                        }}
+                                                                        placeholderTextColor={'#a2a2ac'}
+                                                                        required={true}
+                                                                    />
+                                                                </View>
+                                                            
+                                                                {/* Add group avatar here */}
+
+                                                                <Text style={{
+                                                                        fontSize: 15,
+                                                                        fontFamily: 'inter',
+                                                                        color: '#1D1D20',
+                                                                        marginBottom: 15
+                                                                    }}>
+                                                                        Users
+                                                                </Text>
                                                                 <Select
                                                                     themeVariant="light"
                                                                     selectMultiple={true}
                                                                     group={true}
                                                                     groupLabel="&nbsp;"
                                                                     inputClass="mobiscrollCustomMultiInput"
-                                                                    placeholder="Select users"
+                                                                    placeholder="Select"
                                                                     touchUi={true}
                                                                     // minWidth={[60, 320]}
                                                                     value={selected}
@@ -924,13 +1261,25 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                 >
                                                                     {
                                                                         chats.map((chat: any, index) => {
+
+                                                                            // Group name or individual user name
                                                                             let fName = ''
-                                                                            chat.userNames.map((u: any, i: any) => {
-                                                                                console.log(u)
-                                                                                if (u.fullName !== fullName) {
-                                                                                    fName += (u.fullName + (i === chat.userNames.length - 2 ? '' : ', '))
-                                                                                }
-                                                                            })
+                                                                            
+                                                                            if (chat.name && chat.name !== '') {
+                                                                                fName = chat.name
+                                                                            } else {
+                                                                                chat.userNames.map((user: any) => {
+
+                                                                                    if (user._id !== userId) {
+                                                                                        fName = user.fullName
+                                                                                        return;
+                                                                                    }
+                                                                                })
+                                                                            } 
+                                                                            
+
+                                                                            const chatImg = chat.name && chat.name !== "" ? (chat.image ? chat.image : "https://cues-files.s3.amazonaws.com/images/default.png") :  (chat.users[0] === userId ? chat.userNames[1] : chat.userNames[0]).avatar ? (chat.users[0] === userId ? chat.userNames[1] : chat.userNames[0]).avatar : 'https://cues-files.s3.amazonaws.com/images/default.png' 
+
                                                                             const { title } = htmlStringParser(chat.lastMessage)
                                                                             return (
                                                                                 <TouchableOpacity
@@ -954,28 +1303,20 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                                         width: '100%'
                                                                                     }}>
                                                                                     <View style={{ backgroundColor: '#f8f8fa', padding: 10 }}>
-                                                                                        {
-                                                                                            chat.userNames.length > 2 ?
-                                                                                                <Text style={{
-                                                                                                    fontFamily: 'inter', marginTop: 5,
-                                                                                                    textAlign: 'center',
-                                                                                                    marginBottom: 5,
-                                                                                                }} ellipsizeMode='tail'>
-                                                                                                    <Ionicons name='people-circle-outline' size={40} />
-                                                                                                </Text>
-                                                                                                : <Image
-                                                                                                    style={{
-                                                                                                        height: 40,
-                                                                                                        width: 40,
-                                                                                                        marginTop: 5,
-                                                                                                        marginBottom: 5,
-                                                                                                        borderRadius: 75,
-                                                                                                        // marginTop: 20,
-                                                                                                        alignSelf: 'center'
-                                                                                                    }}
-                                                                                                    source={{ uri: (chat.users[0] === userId ? chat.users[1] : chat.users[0]).avatar ? (chat.users[0] === userId ? chat.users[1] : chat.users[0]).avatar : 'https://cues-files.s3.amazonaws.com/images/default.png' }}
-                                                                                                />
-                                                                                        }
+                                                                                        
+                                                                                        <Image
+                                                                                            style={{
+                                                                                                height: 40,
+                                                                                                width: 40,
+                                                                                                marginTop: 5,
+                                                                                                marginBottom: 5,
+                                                                                                borderRadius: 75,
+                                                                                                // marginTop: 20,
+                                                                                                alignSelf: 'center'
+                                                                                            }}
+                                                                                            source={{ uri: chatImg  }}
+                                                                                        />
+                                                                                        
                                                                                     </View>
                                                                                     <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
                                                                                         <Text style={{ fontSize: 13, padding: 10 }} ellipsizeMode='tail'>

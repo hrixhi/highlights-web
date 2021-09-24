@@ -124,7 +124,8 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
             })
 
-            const pointsToAdd = totalScore !== 0 ? (totalPoints / totalScore).toFixed(2) + "%" : '0'
+            const pointsToAdd = totalScore !== 0 ? (totalPoints / totalScore).toFixed(2).replace(/\.0+$/,'') + "%" : '0'
+
             // Add Total here
             userRow.push(pointsToAdd)
 
