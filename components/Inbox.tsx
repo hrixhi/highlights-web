@@ -186,7 +186,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
             server.query({
                 query: getMessages,
                 variables: {
-                    users: groupUsers
+                    groupId
                 }
             })
                 .then(res => {

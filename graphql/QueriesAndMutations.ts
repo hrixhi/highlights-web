@@ -816,9 +816,9 @@ export const getSubmissionStatistics = gql`
   }
 `;
 export const getMessages = gql`
-  query($users: [String!]!) {
+  query($groupId: String!) {
     message {
-      getMessagesThread(users: $users) {
+      getMessagesThread(groupId: $groupId) {
         groupId
         _id
         sentBy
