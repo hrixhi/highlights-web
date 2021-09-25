@@ -155,7 +155,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
         })
     }, [])
 
-    console.log("Chat", chat)
+    console.log("Chat users", chatUsers);
 
     const reload = useCallback(() => {
         loadUsers()
@@ -166,6 +166,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
         const u = await AsyncStorage.getItem('user')
         if (u) {
             const parsedUser = JSON.parse(u)
+
             setChatUsers(groupUsers)
             setGroupId(groupId)
             setIsChatGroup(true)
@@ -285,6 +286,10 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
 
     const handleUpdateGroup = useCallback(async () => {
 
+        if (chatUsers.length < 2) {
+            Alert("Group must have at least 2 users")
+        }
+
         if (editGroupName === "") {
             Alert("Enter group name");
             return;
@@ -296,8 +301,9 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
             mutation: updateGroup,
             variables: {
                 groupId,
+                users: [userId, ...chatUsers],
                 groupName: editGroupName,
-                groupImage: editGroupImage
+                groupImage: editGroupImage,
             }
         }).then(res => {
             // setSendingThread(false)
@@ -316,7 +322,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
             // setSendingThread(false)
             Alert("Could not update group. Try again.")
         })
-    }, [groupId, editGroupName, editGroupImage])
+    }, [groupId, editGroupName, editGroupImage, chatUsers])
 
     const unableToPostAlert = PreferredLanguageText('unableToPost');
     const somethingWentWrongAlert = PreferredLanguageText('somethingWentWrong');
@@ -638,7 +644,6 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
 
     })
 
-    console.log("isChatGroup", isChatGroup)
     return (
         <View>
             {
@@ -935,7 +940,34 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                 Users
                                             </Text>
 
-                                            <ScrollView 
+                                            {groupCreatedBy === userId ?
+                                                <Select
+                                                    themeVariant="light"
+                                                    selectMultiple={true}
+                                                    group={true}
+                                                    groupLabel="&nbsp;"
+                                                    inputClass="mobiscrollCustomMultiInput"
+                                                    placeholder="Select"
+                                                    touchUi={true}
+                                                    // minWidth={[60, 320]}
+                                                    value={chatUsers}
+                                                    data={options}
+                                                    onChange={(val: any) => {
+                                                        setChatUsers(val.value)
+                                                    }}
+                                                    responsive={{
+                                                        small: {
+                                                            display: 'bubble'
+                                                        },
+                                                        medium: {
+                                                            touchUi: false,
+                                                        }
+                                                    }}
+                                                    minWidth={[60, 320]}
+                                                    // minWidth={[60, 320]}
+                                                />
+                                                :
+                                                <ScrollView 
                                                 showsVerticalScrollIndicator={false}
                                                 keyboardDismissMode={'on-drag'}
                                                 style={{ flex: 1, paddingTop: 12 }}>
@@ -969,9 +1001,9 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                             </View>
                                                         })
                                                     }
-                                            </ScrollView>
+                                            </ScrollView>}
 
-                                            <TouchableOpacity
+                                            {groupCreatedBy === userId ? <TouchableOpacity
                                                 onPress={() => handleUpdateGroup()}
                                                     style={{
                                                         backgroundColor: 'white',
@@ -997,7 +1029,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                             }}>
                                                                 UPDATE
                                                             </Text>
-                                                        </TouchableOpacity>
+                                                </TouchableOpacity> : null}
                                         </View> 
                                         : null
                                     }

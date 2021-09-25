@@ -505,9 +505,9 @@ mutation($cueId: String!, $userId: String!, $attempts: String!) {
 `
 
 export const updateGroup = gql`
-mutation($groupId: String!, $groupName: String!, $groupImage: String) {
+mutation($groupId: String!, $users: [String!]!, $groupName: String!, $groupImage: String) {
   message {
-    updateGroup(groupId: $groupId, groupName: $groupName, groupImage: $groupImage)
+    updateGroup(groupId: $groupId, users: $users, groupName: $groupName, groupImage: $groupImage)
   }
 }
 `
