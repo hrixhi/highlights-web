@@ -68,8 +68,10 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const [color, setColor] = useState(props.cue.color);
     const [notify, setNotify] = useState(props.cue.frequency !== "0" ? true : false);
     const [frequency, setFrequency] = useState(props.cue.frequency);
-    const [customCategory, setCustomCategory] = useState(props.cue.customCategory === "" ? "None" : props.cue.customCategory);
-    const [customCategories, setCustomCategories] = useState(props.customCategories);
+    const [customCategory, setCustomCategory] = useState("None");
+    const [customCategories, setCustomCategories] = useState<any[]>([]);
+    const [categoryOptions, setCategoryOptions] = useState<any[]>([])
+    const [initializedCustomCategories, setInitializedCustomCategories] = useState(false);
     const [addCustomCategory, setAddCustomCategory] = useState(false);
     const [markedAsRead, setMarkedAsRead] = useState(false);
     const [reloadEditorKey, setReloadEditorKey] = useState(Math.random());
@@ -318,6 +320,32 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         }
     }, [])
 
+    // Loading categories like this due to Mobiscroll Select bug
+    useEffect(() => {
+        let options = [{ 
+            value: 'None', text: 'None'
+          }];
+        
+          customCategories.map((category: any) => {
+            options.push({
+              value: category,
+              text: category
+            })
+          })
+
+          setCategoryOptions(options)
+    }, [customCategories])
+
+    useEffect(() => {
+        if (props.cue.customCategory === "") {
+            setCustomCategory("None")
+            return;
+        }
+
+        setCustomCategory(props.cue.customCategory)
+
+    }, [props.cue])
+
     useEffect(() => {
 
 
@@ -475,10 +503,15 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     .then(res => {
                         if (res.data.channel && res.data.channel.getChannelCategories) {
                             setCustomCategories(res.data.channel.getChannelCategories);
+                            setInitializedCustomCategories(true)
                         }
                     })
                     .catch(err => { });
+            } else {
+                setCustomCategories(props.customCategories)
+                setInitializedCustomCategories(true)
             }
+
 
             server
                 .query({
@@ -778,35 +811,35 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         }
     }, [quizSolutions])
 
-    useEffect(() => {
-        // handleUpdate();
-    }, [
-        cue,
-        shuffle,
-        frequency,
-        gradeWeight,
-        starred,
-        color,
-        props.cueIndex,
-        submitted,
-        markedAsRead,
-        submission,
-        deadline,
-        initiateAt,
-        submissionTitle,
-        submissionImported,
-        submissionType,
-        submissionUrl,
-        isQuiz,
-        solutions,
-        initiatedAt,
-        customCategory,
-        props.cueKey,
-        endPlayAt,
-        playChannelCueIndef,
-        notify,
-        url, original, type, title, imported
-    ]);
+    // useEffect(() => {
+    //     handleUpdate();
+    // }, [
+    //     cue,
+    //     shuffle,
+    //     frequency,
+    //     gradeWeight,
+    //     starred,
+    //     color,
+    //     props.cueIndex,
+    //     submitted,
+    //     markedAsRead,
+    //     submission,
+    //     deadline,
+    //     initiateAt,
+    //     submissionTitle,
+    //     submissionImported,
+    //     submissionType,
+    //     submissionUrl,
+    //     isQuiz,
+    //     solutions,
+    //     initiatedAt,
+    //     customCategory,
+    //     props.cueKey,
+    //     endPlayAt,
+    //     playChannelCueIndef,
+    //     notify,
+    //     url, original, type, title, imported
+    // ]);
 
     const handleHeightChange = useCallback((h: any) => {
         setHeight(h);
@@ -897,119 +930,119 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
     // Handle Update for CUES. Called everytime there is a cue modification
     // Overrides local cues in AsyncStorage and then calls reloadCuesAfterList to sync with the cloud
-    const handleUpdate = useCallback(async () => {
+    // const handleUpdate = useCallback(async () => {
 
-        // If available From set after Deadline or Dealine set before Available then 
-        // we need to throw an Alert and return without updating
+    //     // If available From set after Deadline or Dealine set before Available then 
+    //     // we need to throw an Alert and return without updating
 
-        let subCues: any = {};
-        try {
-            const value = await AsyncStorage.getItem("cues");
-            if (value) {
-                subCues = JSON.parse(value);
-            }
-        } catch (e) { }
-        if (subCues[props.cueKey].length === 0) {
-            return;
-        }
-        let saveCue = "";
-        if (isQuiz) {
-            saveCue = JSON.stringify({
-                solutions,
-                initiatedAt
-            });
-        } else if (submissionImported) {
-            const obj = {
-                type: submissionType,
-                url: submissionUrl,
-                title: submissionTitle
-            };
-            saveCue = JSON.stringify(obj);
-        } else {
-            saveCue = cue;
-        }
-        const submittedNow = new Date();
+    //     let subCues: any = {};
+    //     try {
+    //         const value = await AsyncStorage.getItem("cues");
+    //         if (value) {
+    //             subCues = JSON.parse(value);
+    //         }
+    //     } catch (e) { }
+    //     if (subCues[props.cueKey].length === 0) {
+    //         return;
+    //     }
+    //     let saveCue = "";
+    //     if (isQuiz) {
+    //         saveCue = JSON.stringify({
+    //             solutions,
+    //             initiatedAt
+    //         });
+    //     } else if (submissionImported) {
+    //         const obj = {
+    //             type: submissionType,
+    //             url: submissionUrl,
+    //             title: submissionTitle
+    //         };
+    //         saveCue = JSON.stringify(obj);
+    //     } else {
+    //         saveCue = cue;
+    //     }
+    //     const submittedNow = new Date();
 
-        let tempOriginal = ''
-        if (imported) {
-            const obj = {
-                type,
-                url,
-                title
-            }
-            tempOriginal = JSON.stringify(obj)
-        } else if (isQuiz) {
-            const parse = JSON.parse(original)
-            const obj = {
-                quizId: parse.quizId,
-                title
-            }
-            tempOriginal = JSON.stringify(obj)
-        } else {
-            tempOriginal = original
-        }
+    //     let tempOriginal = ''
+    //     if (imported) {
+    //         const obj = {
+    //             type,
+    //             url,
+    //             title
+    //         }
+    //         tempOriginal = JSON.stringify(obj)
+    //     } else if (isQuiz) {
+    //         const parse = JSON.parse(original)
+    //         const obj = {
+    //             quizId: parse.quizId,
+    //             title
+    //         }
+    //         tempOriginal = JSON.stringify(obj)
+    //     } else {
+    //         tempOriginal = original
+    //     }
 
-        subCues[props.cueKey][props.cueIndex] = {
-            _id: props.cue._id,
-            cue: props.cue.submittedAt ? props.cue.cue : saveCue,
-            date: props.cue.date,
-            color,
-            shuffle,
-            frequency,
-            starred,
-            customCategory,
-            // Channel controls
-            channelId: props.cue.channelId,
-            createdBy: props.cue.createdBy,
-            endPlayAt: notify && (shuffle || !playChannelCueIndef) ? endPlayAt.toISOString() : "",
-            channelName: props.cue.channelName,
-            original: tempOriginal,
-            status: "read",
-            graded: props.cue.graded,
-            gradeWeight,
-            submission,
-            unreadThreads: props.cue.unreadThreads,
-            score,
-            comment: props.cue.comment,
-            submittedAt: submitted ? submittedNow.toISOString() : props.cue.submittedAt,
-            deadline: submission ? deadline.toISOString() : "",
-            initiateAt: submission ? initiateAt.toISOString() : "",
-            releaseSubmission: props.cue.releaseSubmission ? props.cue.releaseSubmission : false
-        };
-        const stringifiedCues = JSON.stringify(subCues);
-        await AsyncStorage.setItem("cues", stringifiedCues);
-        props.reloadCueListAfterUpdate();
-    }, [
-        cue,
-        customCategory,
-        shuffle,
-        frequency,
-        starred,
-        color,
-        playChannelCueIndef,
-        notify,
-        submissionImported,
-        submission,
-        deadline,
-        gradeWeight,
-        submitted,
-        submissionTitle,
-        submissionType,
-        submissionUrl,
-        isQuiz,
-        props.closeModal,
-        props.cueIndex,
-        props.cueKey,
-        props.cue,
-        endPlayAt,
-        props,
-        solutions,
-        initiatedAt,
-        // submission,
-        // deadline,
-        initiateAt,
-        title, original, imported, type, url
-    ]);
+    //     subCues[props.cueKey][props.cueIndex] = {
+    //         _id: props.cue._id,
+    //         cue: props.cue.submittedAt ? props.cue.cue : saveCue,
+    //         date: props.cue.date,
+    //         color,
+    //         shuffle,
+    //         frequency,
+    //         starred,
+    //         customCategory,
+    //         // Channel controls
+    //         channelId: props.cue.channelId,
+    //         createdBy: props.cue.createdBy,
+    //         endPlayAt: notify && (shuffle || !playChannelCueIndef) ? endPlayAt.toISOString() : "",
+    //         channelName: props.cue.channelName,
+    //         original: tempOriginal,
+    //         status: "read",
+    //         graded: props.cue.graded,
+    //         gradeWeight,
+    //         submission,
+    //         unreadThreads: props.cue.unreadThreads,
+    //         score,
+    //         comment: props.cue.comment,
+    //         submittedAt: submitted ? submittedNow.toISOString() : props.cue.submittedAt,
+    //         deadline: submission ? deadline.toISOString() : "",
+    //         initiateAt: submission ? initiateAt.toISOString() : "",
+    //         releaseSubmission: props.cue.releaseSubmission ? props.cue.releaseSubmission : false
+    //     };
+    //     const stringifiedCues = JSON.stringify(subCues);
+    //     await AsyncStorage.setItem("cues", stringifiedCues);
+    //     props.reloadCueListAfterUpdate();
+    // }, [
+    //     cue,
+    //     customCategory,
+    //     shuffle,
+    //     frequency,
+    //     starred,
+    //     color,
+    //     playChannelCueIndef,
+    //     notify,
+    //     submissionImported,
+    //     submission,
+    //     deadline,
+    //     gradeWeight,
+    //     submitted,
+    //     submissionTitle,
+    //     submissionType,
+    //     submissionUrl,
+    //     isQuiz,
+    //     props.closeModal,
+    //     props.cueIndex,
+    //     props.cueKey,
+    //     props.cue,
+    //     endPlayAt,
+    //     props,
+    //     solutions,
+    //     initiatedAt,
+    //     // submission,
+    //     // deadline,
+    //     initiateAt,
+    //     title, original, imported, type, url
+    // ]);
 
     // Clear submission imported if submissionDraft is set to ""
     useEffect(() => {
@@ -3878,18 +3911,10 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         ) : null
     }
 
+
     const renderCategoryOptions = () => {
 
-        let categoriesOptions = [{ 
-            value: 'None', text: 'None'
-          }];
-        
-          customCategories.map((category: any) => {
-            categoriesOptions.push({
-              value: category,
-              text: category
-            })
-          })
+        if (!initializedCustomCategories) return;
 
         return (props.cue.channelId && props.cue.channelId !== "" && isOwner) ||
             !props.channelId ||
@@ -4006,7 +4031,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         <MobiscrollSelect
                                             value={customCategory}
                                             rows={customCategories.length + 1}
-                                            data={categoriesOptions}
+                                            data={categoryOptions}
                                             theme="ios"
                                             themeVariant="light"
                                             touchUi={true}
@@ -4019,8 +4044,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                 }
                                             }}
                                             onChange={(val: any) => {
+                                                if (!initializedCustomCategories) return;
                                                 setCustomCategory(val.value)
-                                                }}
+                                            }}
                                             />
                                             
                                     </label>

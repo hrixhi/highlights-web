@@ -1311,3 +1311,10 @@ export const getFolderCues = gql`
     }
   }
 `
+export const getGroup = gql`
+  query($users: [String!]!) {
+    message {
+      getGroupId(users: $users) 
+    }
+  }
+`

@@ -4,7 +4,7 @@ import Alert from '../components/Alert'
 import { Text, TouchableOpacity, View } from './Themed';
 import { ScrollView } from 'react-native'
 import { fetchAPI } from '../graphql/FetchAPI';
-import { getAllUsers, getChats, getGroups, getMessages, getSubscribers, markMessagesAsRead, sendDirectMessage, sendMessage, updateGroup } from '../graphql/QueriesAndMutations';
+import { getAllUsers, getChats, getGroups, getMessages, getSubscribers, markMessagesAsRead, sendDirectMessage, sendMessage, updateGroup, getGroup } from '../graphql/QueriesAndMutations';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SearchResultCard from './SearchResultCard';
 import { htmlStringParser } from '../helpers/HTMLParser';
@@ -154,8 +154,6 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
             console.log(err)
         })
     }, [])
-
-    console.log("Chat users", chatUsers);
 
     const reload = useCallback(() => {
         loadUsers()
@@ -352,10 +350,30 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                 userId,
                 groupId
             }
-        }).then(res => {
+        }).then(async res => {
             // setSendingThread(false)
             if (res.data.message.createDirect) {
+
                 setChat(previousMessages => GiftedChat.append(previousMessages, messages))
+
+                if (!groupId || groupId === "") {
+
+                    // Refresh and get the groupId
+
+                    const res = await server.query({
+                        query: getGroup,
+                        variables: {
+                            users: chatUsers
+                        }
+                    })
+        
+                    if (res && res.data.message.getGroupId && res.data.message.getGroupId !== "")  {
+                        setGroupId(res.data.message.getGroupId)
+                    }
+        
+                    
+                }
+                
             } else {
                 Alert(unableToPostAlert, checkConnectionAlert)
             }
@@ -404,7 +422,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
             server.query({
                 query: getMessages,
                 variables: {
-                    users: [parsedUser._id, uId]
+                    groupId
                 }
             })
                 .then(res => {
@@ -473,11 +491,51 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
         if (u) {
             const parsedUser = JSON.parse(u)
             setChatUsers([parsedUser._id, uId])
+
+            // Set chat name and image
+            
+
+            // Group name or individual user name
+            let fName = ''
+            let img = "https://cues-files.s3.amazonaws.com/images/default.png"
+                                                                            
+            users.map((user: any) => {
+                if (user._id === uId) {
+                    fName = user.fullName
+                    if (user.avatar) {
+                        img = user.avatar
+                    }
+                    return;
+                }
+            })
+
+            setChatName(fName)
+
+            setChatImg(img)
+
+            setGroupId('')
             const server = fetchAPI('')
+
+            // First load the group if there is one
+
+            const res = await server.query({
+                query: getGroup,
+                variables: {
+                    users: [parsedUser._id, uId]
+                }
+            })
+
+            if (!res || !res.data.message.getGroupId || res.data.message.getGroupId === "")  {
+                setShowChat(true)
+                return;
+            }
+
+            setGroupId(res.data.message.getGroupId)
+
             server.query({
                 query: getMessages,
                 variables: {
-                    users: [parsedUser._id, uId]
+                    groupId: res.data.message.getGroupId
                 }
             })
                 .then(res => {
@@ -526,7 +584,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                     console.log(err)
                 })
         }
-    }, [])
+    }, [users])
 
     useEffect(() => {
         reload()
@@ -683,7 +741,12 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                         if (viewGroup) {
                                                             setViewGroup(false)
                                                             return;
+                                                        } else {
+                                                            setShowChat(false)
                                                         }
+                                                        setGroupId("")
+                                                        setChatName("")
+                                                        setChatImg("")
                                                         loadChats()
                                                     }}
                                                     style={{
@@ -820,7 +883,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                 </TouchableOpacity>
                                         }
                                         {
-                                            showDirectory ?
+                                            showDirectory && !showChat ?
                                                 <View style={{ backgroundColor: '#fff', paddingTop: 15 }}>
                                                     <View style={{ flexDirection: 'row', backgroundColor: '#fff' }}>
                                                         
