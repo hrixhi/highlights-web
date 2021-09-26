@@ -1054,7 +1054,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     setCueId(_id)
     openModal('Update')
     setShowHome(false)
-  }, [subscriptions])
+  }, [subscriptions, cues])
 
   const openUpdate = useCallback((key, index, pageNumber, _id, by, channId) => {
 

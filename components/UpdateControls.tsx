@@ -180,6 +180,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const [isV0Quiz, setIsV0Quiz] = useState(false);
     const [loadingAfterModifyingQuiz, setLoadingAfterModifyingQuiz] = useState(false);
 
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
     const insertEquation = useCallback(() => {
         let currentContent = editorRef.current.getContent();
 
@@ -1490,6 +1492,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             {
                 text: "Okay",
                 onPress: async () => {
+
+                    setIsSubmitting(true)
                     const u: any = await AsyncStorage.getItem("user");
                     if (u) {
                         const parsedUser = JSON.parse(u);
@@ -1520,15 +1524,20 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             })
                             .then(res => {
                                 if (res.data.cue.submitModification) {
+                                    setIsSubmitting(false)
                                     Alert(submissionCompleteAlert, new Date().toString(), [
                                         {
                                             text: "Okay",
                                             onPress: () => window.location.reload()
                                         }
                                     ]);
+                                } else {
+                                    Alert("Submission failed. Try again. ")
+                                    setIsSubmitting(false)
                                 }
                             })
                             .catch(err => {
+                                setIsSubmitting(false)
                                 Alert(somethingWentWrongAlert, tryAgainLaterAlert);
                             });
                     }
@@ -3028,7 +3037,26 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     }}
                 >
                     <TouchableOpacity
-                        onPress={() => handleUpdateContent()}
+                        onPress={() => {
+
+                            Alert("Update content?", "", [
+                                {
+                                    text: "Cancel",
+                                    style: "cancel",
+                                    onPress: () => {
+                                        return;
+                                    }
+                                },
+                                {
+                                    text: "Yes",
+                                    onPress:  () => {
+                                        handleUpdateContent()
+                                    }
+                                }
+                            ])
+                            
+                        }}
+                            
                         disabled={updatingCueContent}
                         style={{
                             borderRadius: 15,
@@ -3469,7 +3497,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     controls={['date', 'time']}
                                     touchUi={true}
                                     theme="ios"
-                                    value={initiateAt}
+                                    value={deadline}
                                     themeVariant="light"
                                     inputComponent="input"
                                     inputProps={{
@@ -4636,7 +4664,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 // if timed quiz not initiated
                                 (isQuiz && isQuizTimed && !initiatedAt) ||
                                 // If no more remaining attempts for quiz
-                                (isQuiz && remainingAttempts === 0)
+                                (isQuiz && remainingAttempts === 0) || isSubmitting
                             }
                             onPress={() => handleSubmit()}
                             style={{ backgroundColor: "white", borderRadius: 15 }}>
@@ -4656,7 +4684,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 }}>
                                 {
                                     (!allowLateSubmission && new Date() > deadline) || (allowLateSubmission && new Date() > availableUntil) || (isQuiz && remainingAttempts === 0) || (props.cue.releaseSubmission && !props.cue.graded)
-                                        ? "Submission Ended" : ((props.cue.graded && !isQuiz) ? PreferredLanguageText("graded") : PreferredLanguageText("submit"))
+                                        ? "Submission Ended" : ((props.cue.graded && !isQuiz) ? PreferredLanguageText("graded") : (isSubmitting ? "Submitting..." : PreferredLanguageText("submit")))
                                 }
                             </Text>
                         </TouchableOpacity>
@@ -4679,7 +4707,23 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         // height: 50,
                         paddingTop: 10
                     }}>
-                    <TouchableOpacity disabled={updatingCueDetails} onPress={() => handleUpdateDetails()} style={{ backgroundColor: "white", borderRadius: 15, marginBottom: 20 }}>
+                    <TouchableOpacity disabled={updatingCueDetails} onPress={() => {
+                        Alert("Update options?", "", [
+                            {
+                                text: "Cancel",
+                                style: "cancel",
+                                onPress: () => {
+                                    return;
+                                }
+                            },
+                            {
+                                text: "Yes",
+                                onPress:  () => {
+                                    handleUpdateDetails()
+                                }
+                            }
+                        ])
+                    }} style={{ backgroundColor: "white", borderRadius: 15, marginBottom: 20 }}>
                         <Text
                             style={{
                                 textAlign: "center",
@@ -4695,7 +4739,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 textTransform: "uppercase",
                                 // width: 160
                             }}>
-                            Save <Ionicons name='create-outline' size={12} />
+                            {updatingCueDetails ? "Saving..." : "Save"} <Ionicons name='create-outline' size={12} />
                         </Text>
                     </TouchableOpacity>
 

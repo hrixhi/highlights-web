@@ -487,7 +487,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                   placeholderTextColor={"#818385"}
                   required={true}
                 />
-                <Text style={{
+                {/* <Text style={{
                   fontSize: 15,
                   fontFamily: 'inter',
                   color: '#1D1D20'
@@ -500,7 +500,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                   onChangeText={val => setDisplayName(val)}
                   placeholderTextColor={"#818385"}
                   required={true}
-                />
+                /> */}
                 {loggedIn ? null : (
                   <View>
                     <Text
