@@ -1246,7 +1246,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                     marginBottom: 15
                   }}
                   // style={styles.input}
-                  minRows={isQuiz ? 3 : 1}
+                  minRows={1}
                   placeholder={isQuiz ? "Quiz title" : PreferredLanguageText("title")}
                   onChange={(e: any) => setTitle(e.target.value)}
                 />

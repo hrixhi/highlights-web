@@ -185,111 +185,126 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
     })
 
     // PREPARE EXPORT DATA 
-    // useEffect(() => {
+    useEffect(() => {
 
-    //     if (problems.length === 0 || subscribers.length === 0) {
-    //         return;
-    //     }
+        if (problems.length === 0 || subscribers.length === 0) {
+            return;
+        }
 
-    //     const exportAoa = [];
+        const exportAoa = [];
 
-    //     // Add row 1 with Overall, problem Score, problem Comments,
-    //     let row1 = [""];
+        // Add row 1 with Overall, problem Score, problem Comments,
+        let row1 = [""];
 
-    //     // Add Graded 
-    //     row1.push("Graded")
+        // Add Graded 
+        row1.push("Graded")
 
-    //     // Add total
-    //     row1.push("Total score")
+        // Add total
+        row1.push("Total score")
 
-    //     problems.forEach((prob: any, index: number) => {
-    //         row1.push(`${index + 1}: ${prob.question} (${prob.points})`)
-    //         row1.push("Score + Remark")
-    //     })
+        problems.forEach((prob: any, index: number) => {
+            row1.push(`${index + 1}: ${prob.question} (${prob.points})`)
+            row1.push("Score + Remark")
+        })
 
-    //     row1.push("Submission Date")
+        row1.push("Submission Date")
 
-    //     row1.push("Feedback")
+        row1.push("Feedback")
 
-    //     exportAoa.push(row1);
+        exportAoa.push(row1);
 
-    //     // Row 2 should be correct answers
-    //     const row2 = ["", "", ""];
+        // Row 2 should be correct answers
+        const row2 = ["", "", ""];
 
-    //     problems.forEach((prob: any, i: number) => {
-    //         const { questionType, required, options = [], } = prob;
-    //         let type = questionType === "" ? "MCQ" : "Free Response";
+        problems.forEach((prob: any, i: number) => {
+            const { questionType, required, options = [], } = prob;
+            let type = questionType === "" ? "MCQ" : "Free Response";
 
-    //         let require = required ? "Required" : "Optional";
+            let require = required ? "Required" : "Optional";
 
-    //         let answer = "";
+            let answer = "";
 
-    //         if (questionType === "") {
-    //             answer += "Ans: "
-    //             options.forEach((opt: any, index: number) => {
-    //                 if (opt.isCorrect) {
-    //                     answer += ((index + 1) + ", ");
-    //                 }
-    //             })
-    //         }
+            if (questionType === "") {
+                answer += "Ans: "
+                options.forEach((opt: any, index: number) => {
+                    if (opt.isCorrect) {
+                        answer += ((index + 1) + ", ");
+                    }
+                })
+            }
 
-    //         row2.push(`${type} ${answer}`)
-    //         row2.push(`(${require})`)
-    //     })
+            row2.push(`${type} ${answer}`)
+            row2.push(`(${require})`)
+        })
 
-    //     exportAoa.push(row2)
+        exportAoa.push(row2)
 
-    //     // Subscribers
-    //     subscribers.forEach((sub: any) => {
+        // Subscribers
+        subscribers.forEach((sub: any) => {
 
-    //         const subscriberRow: any[] = [];
+            const subscriberRow: any[] = [];
 
-    //         const { displayName, submission, submittedAt, comment, graded, score } = sub;
+            const { displayName, submission, submittedAt, comment, graded, score } = sub;
 
-    //         subscriberRow.push(displayName);
-    //         subscriberRow.push(graded ? "Graded" : (submittedAt !== null ? "Submitted" : "Not Submitted"))
+            subscriberRow.push(displayName);
+            subscriberRow.push(graded ? "Graded" : (submittedAt !== null ? "Submitted" : "Not Submitted"))
 
-    //         if (!graded || !submittedAt) {
-    //             exportAoa.push(subscriberRow);
-    //             return;
-    //         }
+            if (!graded || !submittedAt) {
+                exportAoa.push(subscriberRow);
+                return;
+            }
 
-    //         subscriberRow.push(`${score}`)
+            subscriberRow.push(`${score}`)
 
-    //         const obj = JSON.parse(submission);
+            const obj = JSON.parse(submission);
 
-    //         const { solutions, problemScores, problemComments } = obj;
+            const { attempts } = obj;
 
-    //         solutions.forEach((sol: any, i: number) => {
-    //             let response = ''
-    //             if ("selected" in sol) {
-    //                 const options = sol["selected"];
+            let activeAttempt: any = {};
 
-    //                 options.forEach((opt: any, index: number) => {
-    //                     if (opt.isSelected) response += ((index + 1) + " ")
-    //                 })
-    //             } else {
-    //                 response = sol["response"]
-    //             }
+            attempts.map((attempt: any) => {
+                if (attempt.isActive) {
+                    activeAttempt = attempt
+                }
+            })
 
-    //             subscriberRow.push(`${response}`);
-    //             subscriberRow.push(`${problemScores ? problemScores[i] : ""} - Remark: ${problemComments ? problemComments[i] : ''}`)
+            if (!activeAttempt) {
+                return;
+            }
 
-
-    //         })
-
-    //         subscriberRow.push(moment(new Date(Number(submittedAt))).format("MMMM Do YYYY, h:mm a"))
-
-    //         subscriberRow.push(comment)
-
-    //         exportAoa.push(subscriberRow);
-
-    //     })
-
-    //     setExportAoa(exportAoa)
+            const { solutions, problemScores, problemComments } = activeAttempt;
 
 
-    // }, [problems, subscribers])
+            solutions.forEach((sol: any, i: number) => {
+                let response = ''
+                if ("selected" in sol) {
+                    const options = sol["selected"];
+
+                    options.forEach((opt: any, index: number) => {
+                        if (opt.isSelected) response += ((index + 1) + " ")
+                    })
+                } else {
+                    response = sol["response"]
+                }
+
+                subscriberRow.push(`${response}`);
+                subscriberRow.push(`${problemScores ? problemScores[i] : ""} - Remark: ${problemComments ? problemComments[i] : ''}`)
+
+
+            })
+
+            subscriberRow.push(moment(new Date(Number(submittedAt))).format("MMMM Do YYYY, h:mm a"))
+
+            subscriberRow.push(comment)
+
+            exportAoa.push(subscriberRow);
+
+        })
+
+        setExportAoa(exportAoa)
+
+
+    }, [problems, subscribers])
 
     useEffect(() => {
 
