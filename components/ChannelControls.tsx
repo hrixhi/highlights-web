@@ -377,7 +377,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     lineHeight: 30,
                                     color: '#fff',
                                     fontSize: 12,
-                                    backgroundColor: '#35AC78',
+                                    backgroundColor: '#007aff',
                                     paddingHorizontal: 25,
                                     fontFamily: 'inter',
                                     height: 30,
@@ -399,7 +399,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         <View
                             style={{
                                 borderWidth: channels.length === 0 ? 0 : 1,
-                                borderColor: '#f0f0f2',
+                                borderColor: '#e8e8ea',
                                 overflow: 'hidden',
                                 borderRadius: 0
                             }}
@@ -413,13 +413,13 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         return <TouchableOpacity
                                             onPress={() => handleSub(channel.name)}
                                             style={{
-                                                backgroundColor: '#f8f8fa',
+                                                backgroundColor: '#f7f7f7',
                                                 flexDirection: 'row',
-                                                borderColor: '#f0f0f2',
+                                                borderColor: '#e8e8ea',
                                                 borderBottomWidth: ind === channels.length - 1 ? 0 : 1,
                                                 width: '100%'
                                             }}>
-                                            <View style={{ backgroundColor: '#f8f8fa', padding: 10 }}>
+                                            <View style={{ backgroundColor: '#f7f7f7', padding: 10 }}>
                                                 <Image
                                                     style={{
                                                         height: 40,
@@ -535,7 +535,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             onValueChange={() => setTemporary(!temporary)}
                                             style={{ height: 20 }}
                                             trackColor={{
-                                                false: "#f8f8fa",
+                                                false: "#f7f7f7",
                                                 true: "#007AFF"
                                             }}
                                             activeThumbColor="white"
@@ -665,7 +665,7 @@ const styles = StyleSheet.create({
     },
     input: {
         width: '100%',
-        borderBottomColor: '#f8f8fa',
+        borderBottomColor: '#f7f7f7',
         borderBottomWidth: 1,
         fontSize: 15,
         paddingTop: 13,

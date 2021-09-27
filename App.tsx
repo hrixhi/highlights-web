@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useCallback, useEffect } from 'react';
-import { StyleSheet } from 'react-native'
+import { Platform, StyleSheet } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import useCachedResources from './hooks/useCachedResources';
 import useColorScheme from './hooks/useColorScheme';
@@ -12,8 +12,6 @@ import './web/htmlParser.css';
 import './web/mobiscrollCustom.css'
 import { LanguageProvider } from "./helpers/LanguageContext";
 import { MenuProvider } from 'react-native-popup-menu';
-// import {DragDropContextProvider} from 'react-dnd';
-// import HTML5Backend from 'react-dnd-html5-backend';
 
 export default function App() {
 

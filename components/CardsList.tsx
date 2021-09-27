@@ -62,8 +62,8 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     return (
         <Animated.View style={{
-            borderColor: '#f0f0f2',
-            backgroundColor: '#f8f8fa',
+            borderColor: '#e8e8ea',
+            backgroundColor: '#f7f7f7',
             // borderBottomWidth: 2,
             // borderTopWidth: 1,
             height: ((dimensions.window.height) - 60),
@@ -76,18 +76,18 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
             <ScrollView
                 horizontal={true}
                 nestedScrollEnabled={true}
-                contentContainerStyle={{ width: '100%', backgroundColor: '#f8f8fa', paddingTop: 20, maxWidth: 1275 }}
+                contentContainerStyle={{ width: '100%', backgroundColor: '#f7f7f7', paddingTop: 20, maxWidth: 1275 }}
             >
                 {
                     Object.keys(categoryMap).map((category: any, i: any) => {
                         return <ScrollView style={{
                             width: '100%',
                             maxWidth: 225,
-                            backgroundColor: '#f8f8fa',
+                            backgroundColor: '#f7f7f7',
                             // marginRight: 25,
                             minWidth: 225
                         }}>
-                            <View style={{ backgroundColor: '#f8f8fa', paddingLeft: 23, marginBottom: 20 }}>
+                            <View style={{ backgroundColor: '#f7f7f7', paddingLeft: 23, marginBottom: 20 }}>
                                 <Text style={{
                                     flex: 1, flexDirection: 'row',
                                     color: '#818385',
@@ -100,7 +100,7 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             <View
                                 style={{
                                     // borderWidth: 1,
-                                    backgroundColor: '#f8f8fa',
+                                    backgroundColor: '#f7f7f7',
                                     // height: 190,
                                     width: '100%'
                                 }}
@@ -115,7 +115,7 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         marginBottom: 20,
                                         // marginBottom: i === priorities.length - 1 ? 0 : 20,
                                         // maxWidth: 150,
-                                        backgroundColor: '#f8f8fa',
+                                        backgroundColor: '#f7f7f7',
                                         width: 210, // marginRight: 25
                                     }}
                                         key={index}

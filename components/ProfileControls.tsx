@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Dimensions, Image, StyleSheet } from "react-native";
+import { Dimensions, Image, Linking, Platform, StyleSheet } from "react-native";
 import { Text, View, TouchableOpacity } from "./Themed";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ScrollView } from "react-native-gesture-handler";
@@ -22,8 +22,10 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
   props: any
 ) => {
   const [email, setEmail] = useState("");
+  const [userId, setUserId] = useState('')
   const [password, setPassword] = useState("");
   const [avatar, setAvatar] = useState<any>(undefined)
+  const [zoomInfo, setZoomInfo] = useState<any>(undefined)
   const [confirmPassword, setConfirmPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [fullName, setFullName] = useState("");
@@ -174,6 +176,8 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
         setFullName(parsedUser.fullName);
         setAvatar(parsedUser.avatar ? parsedUser.avatar : undefined)
         setCurrentAvatar(parsedUser.avatar ? parsedUser.avatar : undefined)
+        setUserId(parsedUser._id);
+        setZoomInfo(parsedUser.zoomInfo ? parsedUser.zoomInfo : undefined)
         setCurrentDisplayName(parsedUser.displayName);
         setCurrentFullName(parsedUser.fullName);
       }
@@ -310,6 +314,38 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
     setConfirmNewPasswordError("");
   }, [newPassword, confirmNewPassword]);
 
+  const handleZoomAuth = useCallback(async () => {
+
+    let url = ''
+
+    // LIVE
+    // const clientId = 'yRzKFwGRTq8bNKLQojwnA'
+    // DEV
+    const clientId = 'PAfnxrFcSd2HkGnn9Yq96A'
+
+    if (zoomInfo) {
+      // de-auth
+      // TBD
+      url = ''
+    } else {
+      // auth
+
+      // LIVE
+      // const redirectUri = 'https://web.cuesapp.co/zoom_auth'
+      // DEV      
+      const redirectUri = 'http://localhost:19006/zoom_auth'
+
+      url = `https://zoom.us/oauth/authorize?response_type=code&client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${userId}`
+    }
+
+    if (Platform.OS === 'ios' || Platform.OS === 'android') {
+      Linking.openURL(url)
+    } else {
+      window.open(url)
+    }
+
+  }, [zoomInfo, userId])
+
   if (!userFound) {
     return (
       <View style={styles.screen} key={1}>
@@ -439,7 +475,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                         lineHeight: 30,
                         color: '#1D1D20',
                         fontSize: 12,
-                        backgroundColor: '#f8f8fa',
+                        backgroundColor: '#f7f7f7',
                         paddingHorizontal: 25,
                         fontFamily: 'inter',
                         height: 30,
@@ -563,7 +599,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                     overflow: "hidden",
                     height: 35,
                     marginTop: 20,
-                    width: "100%",
+                    // width: "100%",
                     justifyContent: "center",
                     flexDirection: "row"
                   }}
@@ -574,16 +610,16 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                       lineHeight: 35,
                       color: "#1D1D20",
                       fontSize: 12,
-                      backgroundColor: "#f8f8fa",
-                      paddingHorizontal: 25,
+                      backgroundColor: "#f7f7f7",
+                      paddingHorizontal: 20,
                       fontFamily: "inter",
                       height: 35,
-                      width: 150,
+                      // width: 150,
                       borderRadius: 15,
                       textTransform: "uppercase"
                     }}
                   >
-                    {showSavePassword ? <Ionicons name='arrow-back-outline' size={12} /> : null} {showSavePassword ? PreferredLanguageText('back') : PreferredLanguageText('password')} {showSavePassword ? null : <Ionicons name='add-outline' size={12} />}
+                    {showSavePassword ? <Ionicons name='arrow-back-outline' size={12} /> : null} {showSavePassword ? PreferredLanguageText('back') : PreferredLanguageText('password')} {showSavePassword ? null : <Ionicons name='settings-outline' size={12} />}
                   </Text>
                 </TouchableOpacity>
               ) : null}
@@ -594,7 +630,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                   overflow: "hidden",
                   height: 35,
                   marginTop: 15,
-                  width: "100%",
+                  // width: "100%",
                   justifyContent: "center",
                   flexDirection: "row"
                 }}
@@ -607,11 +643,11 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                     color: "white",
                     fontSize: 12,
                     backgroundColor: "#007AFF",
-                    paddingHorizontal: 25,
+                    paddingHorizontal: 20,
                     fontFamily: "inter",
                     height: 35,
                     borderRadius: 15,
-                    width: 150,
+                    // width: 150,
                     textTransform: "uppercase"
                   }}
                 >
@@ -631,7 +667,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                   overflow: "hidden",
                   height: 35,
                   marginTop: 15,
-                  width: "100%",
+                  // width: "100%",
                   justifyContent: "center",
                   flexDirection: "row",
                 }}
@@ -642,18 +678,50 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                     lineHeight: 35,
                     color: "#1D1D20",
                     fontSize: 12,
-                    backgroundColor: "#f8f8fa",
-                    paddingHorizontal: 25,
+                    backgroundColor: "#f7f7f7",
+                    paddingHorizontal: 20,
                     fontFamily: "inter",
                     height: 35,
-                    width: 150,
+                    // width: 150,
                     borderRadius: 15,
                     textTransform: 'uppercase'
                   }}
                 >
-                  {loggedIn ? PreferredLanguageText('logout') : PreferredLanguageText('login')} <Ionicons name='enter-outline' size={12} />
+                  {loggedIn ? PreferredLanguageText('logout') : PreferredLanguageText('login')} <Ionicons name='close-circle-outline' size={12} />
                 </Text>
               </TouchableOpacity>
+              {loggedIn ? (
+                <TouchableOpacity
+                  onPress={() => handleZoomAuth()}
+                  style={{
+                    backgroundColor: "white",
+                    overflow: "hidden",
+                    height: 35,
+                    marginTop: 20,
+                    // width: "100%",
+                    justifyContent: "center",
+                    flexDirection: "row"
+                  }}
+                >
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      lineHeight: 35,
+                      color: "#1D1D20",
+                      fontSize: 12,
+                      backgroundColor: "#f7f7f7",
+                      paddingHorizontal: 20,
+                      fontFamily: "inter",
+                      height: 35,
+                      // width: 150,
+                      borderRadius: 15,
+                      textTransform: "uppercase"
+                    }}
+                  >
+                    {zoomInfo ? 'Disconnect Zoom' : 'Connect Zoom'} {zoomInfo ? <Ionicons name='enter-outline' size={12} /> : <Ionicons name='exit-outline' size={12} />}
+                  </Text>
+                </TouchableOpacity>
+              ) : null}
               <View style={{ flexDirection: 'row', justifyContent: 'center', paddingBottom: 20, width: '100%', marginTop: 30, marginBottom: 100 }}>
                 <LanguageSelect />
               </View>

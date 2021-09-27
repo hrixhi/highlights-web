@@ -602,7 +602,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                             lineHeight: 30,
                                                             // color: '#1D1D20',
                                                             fontSize: 10,
-                                                            // backgroundColor: '#f8f8fa',
+                                                            // backgroundColor: '#f7f7f7',
                                                             paddingHorizontal: 20,
                                                             // marginRight: 15,
                                                             // fontFamily: 'inter',
@@ -640,7 +640,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                         lineHeight: 30,
                                                         // color: '#1D1D20',
                                                         fontSize: 10,
-                                                        // backgroundColor: '#f8f8fa',
+                                                        // backgroundColor: '#f7f7f7',
                                                         paddingHorizontal: 20,
                                                         // marginRight: 15,
                                                         // fontFamily: 'inter',
@@ -676,7 +676,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                         lineHeight: 30,
                                                         // color: showNewGroup || showChat ? '#1D1D20' : '#fff',
                                                         fontSize: 10,
-                                                        // backgroundColor: showNewGroup || showChat ? '#f8f8fa' : '#35AC78',
+                                                        // backgroundColor: showNewGroup || showChat ? '#f7f7f7' : '#35AC78',
                                                         // paddingHorizontal: 20,
                                                         // fontFamily: 'inter',
                                                         height: 30,
@@ -814,7 +814,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                             <View style={{
                                                                 flex: 1, width: '100%', borderWidth: 1,
                                                                 borderRadius: 0,
-                                                                borderColor: '#f0f0f2',
+                                                                borderColor: '#e8e8ea',
                                                                 overflow: 'hidden',
                                                                 marginTop: 30
                                                             }}>
@@ -840,13 +840,13 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                                     loadNewChat(user._id)
                                                                                 }}
                                                                                 style={{
-                                                                                    backgroundColor: '#f8f8fa',
+                                                                                    backgroundColor: '#f7f7f7',
                                                                                     flexDirection: 'row',
-                                                                                    borderColor: '#f0f0f2',
+                                                                                    borderColor: '#e8e8ea',
                                                                                     borderBottomWidth: ind === sectionFiltered.length - 1 ? 0 : 1,
                                                                                     width: '100%'
                                                                                 }}>
-                                                                                <View style={{ backgroundColor: '#f8f8fa', padding: 10 }}>
+                                                                                <View style={{ backgroundColor: '#f7f7f7', padding: 10 }}>
                                                                                     <Image
                                                                                         style={{
                                                                                             height: 40,
@@ -886,7 +886,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                     // style={{ height: '100%' }}
                                                                     contentContainerStyle={{
                                                                         borderWidth: 1,
-                                                                        borderColor: '#f0f0f2',
+                                                                        borderColor: '#e8e8ea',
                                                                         borderRadius: 0,
                                                                         width: '100%',
                                                                         maxHeight: windowHeight - 200,
@@ -919,12 +919,12 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                                     style={{
                                                                                         backgroundColor: '#fff',
                                                                                         flexDirection: 'row',
-                                                                                        borderColor: '#f0f0f2',
+                                                                                        borderColor: '#e8e8ea',
                                                                                         borderBottomWidth: index === chats.length - 1 ? 0 : 1,
                                                                                         // minWidth: 600, // flex: 1,
                                                                                         width: '100%'
                                                                                     }}>
-                                                                                    <View style={{ backgroundColor: '#f8f8fa', padding: 10 }}>
+                                                                                    <View style={{ backgroundColor: '#f7f7f7', padding: 10 }}>
                                                                                         {
                                                                                             chat.userNames.length > 2 ?
                                                                                                 <Text style={{

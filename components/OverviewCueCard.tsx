@@ -141,11 +141,11 @@ const OverviewCueCard: React.FunctionComponent<{ [label: string]: any }> = (prop
                         </Text>
                     </View>
                     <View style={{
-                        backgroundColor: '#f8f8fa',
+                        backgroundColor: '#f7f7f7',
                         width: '100%', flex: 1, height: '80%'
                     }}>
                         <View
-                            style={{ flexDirection: 'row', height: '13%', backgroundColor: '#f8f8fa', justifyContent: 'flex-end' }}
+                            style={{ flexDirection: 'row', height: '13%', backgroundColor: '#f7f7f7', justifyContent: 'flex-end' }}
                         >
                             {
                                 props.editFolderChannelId === props.cue.channelId ?
@@ -180,7 +180,7 @@ const OverviewCueCard: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             height: 20,
                                             borderRadius: 0,
                                             overflow: 'hidden',
-                                            backgroundColor: '#f8f8fa',
+                                            backgroundColor: '#f7f7f7',
                                             zIndex: 150
                                         }}
                                     />
@@ -243,9 +243,9 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
         borderRadius: 15,
         padding: 12,
         paddingHorizontal: 15,
-        backgroundColor: '#f8f8fa',
+        backgroundColor: '#f7f7f7',
         borderWidth: 1,
-        borderColor: '#f0f0f2',
+        borderColor: '#e8e8ea',
         maxHeight: 150
     },
     flipCard: {
@@ -263,18 +263,18 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
     },
     text: {
         height: '100%',
-        backgroundColor: '#f8f8fa'
+        backgroundColor: '#f7f7f7'
     },
     flipText: {
         height: '100%',
         color: '#fff',
-        backgroundColor: colorScheme === 'light' ? '#1D1D20' : '#f8f8fa'
+        backgroundColor: colorScheme === 'light' ? '#1D1D20' : '#f7f7f7'
     },
     dateContainer: {
         fontSize: 10,
         color: '#fff',
         height: '20%',
-        backgroundColor: '#f8f8fa',
+        backgroundColor: '#f7f7f7',
         display: 'flex',
         flexDirection: 'row'
     },
@@ -284,17 +284,17 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
         display: 'flex',
         flexDirection: 'row',
         color: '#fff',
-        backgroundColor: colorScheme === 'light' ? '#1D1D20' : '#f8f8fa'
+        backgroundColor: colorScheme === 'light' ? '#1D1D20' : '#f7f7f7'
     },
     date: {
         fontSize: 10,
-        color: colorScheme === 'light' ? '#f8f8fa' : '#333333',
+        color: colorScheme === 'light' ? '#f7f7f7' : '#333333',
         // marginLeft: 10,
         lineHeight: 10
     },
     date2: {
         fontSize: 10,
-        color: colorScheme === 'light' ? '#f8f8fa' : '#333333',
+        color: colorScheme === 'light' ? '#f7f7f7' : '#333333',
         marginLeft: 10,
         lineHeight: 10,
         textAlign: 'right',
@@ -311,7 +311,7 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
     },
     titleFlip: {
         color: colorScheme === 'light' ? '#1D1D20' : '#1D1D20',
-        backgroundColor: colorScheme === 'light' ? '#f8f8fa' : '#f8f8fa',
+        backgroundColor: colorScheme === 'light' ? '#f7f7f7' : '#f7f7f7',
         fontFamily: 'inter',
         fontSize: 13,
         // ,

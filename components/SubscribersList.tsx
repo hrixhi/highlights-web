@@ -1245,7 +1245,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 onValueChange={() => updateReleaseSubmission()}
                                 style={{ height: 20, marginRight: 20 }}
                                 trackColor={{
-                                    false: '#f8f8fa',
+                                    false: '#f7f7f7',
                                     true: '#007AFF'
                                 }}
                                 activeThumbColor='white'
@@ -1320,7 +1320,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 borderRadius: 15,
                                                 shadowOpacity: 0,
                                                 borderWidth: 1,
-                                                borderColor: '#f0f0f2',
+                                                borderColor: '#e8e8ea',
                                                 overflow: 'scroll',
                                                 maxHeight: '100%'
                                             }
@@ -1470,7 +1470,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                         width: '100%',
                                                         borderRadius: 0,
                                                         borderWidth: 1,
-                                                        borderColor: '#f0f0f2',
+                                                        borderColor: '#e8e8ea',
                                                         maxHeight: props.cueId ? windowHeight - 300 : '100%',
                                                         // marginBottom: props.cueId ? 20 : 0,
                                                         maxWidth: 1275,
@@ -1479,7 +1479,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 >
                                                     {
                                                         !props.cueId || props.cueId === '' ?
-                                                            <View style={{ backgroundColor: 'white', borderBottomWidth: 1, borderBottomColor: '#f8f8fa', marginBottom: 20 }}>
+                                                            <View style={{ backgroundColor: 'white', borderBottomWidth: 1, borderBottomColor: '#f7f7f7', marginBottom: 20 }}>
                                                                 {
                                                                     props.groups.length > 0 ? (props.groups.map((group: any, index: any) => {
                                                                         let displayName = ''
@@ -1542,14 +1542,14 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                     }
                                                                 }}
                                                                 style={{
-                                                                    backgroundColor: '#f8f8fa',
+                                                                    backgroundColor: '#f7f7f7',
                                                                     flexDirection: 'row',
-                                                                    borderColor: '#f0f0f2',
+                                                                    borderColor: '#e8e8ea',
                                                                     borderBottomWidth: index === filteredSubscribers.length - 1 ? 0 : 1,
                                                                     // minWidth: 600, // flex: 1,
                                                                     width: '100%',
                                                                 }}>
-                                                                <View style={{ backgroundColor: '#f8f8fa', padding: 10 }}>
+                                                                <View style={{ backgroundColor: '#f7f7f7', padding: 10 }}>
                                                                     <Image
                                                                         style={{
                                                                             height: 40,
@@ -1758,7 +1758,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                 disabled={true}
                                                                 key={Math.random()}
                                                                 containerStyle={{
-                                                                    backgroundColor: '#f8f8fa',
+                                                                    backgroundColor: '#f7f7f7',
                                                                     padding: 3,
                                                                     paddingTop: 5,
                                                                     paddingBottom: 10,
@@ -1767,12 +1767,12 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                 ref={RichText}
                                                                 style={{
                                                                     width: '100%',
-                                                                    backgroundColor: '#f8f8fa',
+                                                                    backgroundColor: '#f7f7f7',
                                                                     borderRadius: 15,
                                                                     height: 20000
                                                                 }}
                                                                 editorStyle={{
-                                                                    backgroundColor: '#f8f8fa',
+                                                                    backgroundColor: '#f7f7f7',
                                                                     placeholderColor: '#818385',
                                                                     color: '#1D1D20',
                                                                     contentCSSText: 'font-size: 13px;'
@@ -1824,7 +1824,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                                         url={url}
                                                                                         fullScreen={true}
                                                                                     /> */}
-                                                                                    <div className="webviewer" ref={RichText} style={{ height: "80vh", borderWidth: 1, borderColor: '#f0f0f2', borderRadius: 0 }}></div>
+                                                                                    <div className="webviewer" ref={RichText} style={{ height: "80vh", borderWidth: 1, borderColor: '#e8e8ea', borderRadius: 0 }}></div>
                                                                                 </View>
                                                                                 {/* <View style={{ position: 'absolute', zIndex: 1, flex: 1, width: 800, height: 20000, backgroundColor: 'rgb(0,0,0,0)' }}>
                                                                                     <Annotation
@@ -1856,7 +1856,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                             value={emails}
                             style={{
                                 height: 200,
-                                backgroundColor: '#f8f8fa',
+                                backgroundColor: '#f7f7f7',
                                 borderRadius: 0,
                                 fontSize: 15,
                                 padding: 15,
@@ -1886,7 +1886,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 lineHeight: 35,
                                 color: '#1D1D20',
                                 fontSize: 12,
-                                backgroundColor: '#f8f8fa',
+                                backgroundColor: '#f7f7f7',
                                 paddingHorizontal: 25,
                                 fontFamily: 'inter',
                                 height: 35,
@@ -1915,7 +1915,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                             {
                                 filteredSubscribers.map((sub: any) => {
                                     return (<View style={{
-                                        backgroundColor: '#f8f8fa',
+                                        backgroundColor: '#f7f7f7',
                                         width: '100%',
                                         padding: 10,
                                         borderRadius: 8,
@@ -1975,7 +1975,7 @@ const styleObject = () => {
         },
         input: {
             width: '100%',
-            borderBottomColor: '#f8f8fa',
+            borderBottomColor: '#f7f7f7',
             borderBottomWidth: 1,
             fontSize: 15,
             paddingTop: 13,

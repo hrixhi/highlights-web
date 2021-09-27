@@ -2156,7 +2156,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 }}>
                 <View
                     style={{
-                        borderColor: "#f0f0f2",
+                        borderColor: "#e8e8ea",
                         borderWidth: 1,
                         borderRadius: 15,
                         padding: 10,
@@ -2477,7 +2477,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     value={props.cue.comment}
                     style={{
                         height: 200,
-                        backgroundColor: "#f8f8fa",
+                        backgroundColor: "#f7f7f7",
                         borderRadius: 0,
                         fontSize: 15,
                         padding: 15,
@@ -2706,7 +2706,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         lineHeight: 30,
                                         color: '#fff',
                                         fontSize: 12,
-                                        backgroundColor: '#35AC78',
+                                        backgroundColor: '#007aff',
                                         paddingHorizontal: 25,
                                         fontFamily: 'inter',
                                         height: 30,
@@ -2735,7 +2735,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         lineHeight: 30,
                                         color: '#fff',
                                         fontSize: 12,
-                                        backgroundColor: '#35AC78',
+                                        backgroundColor: '#007aff',
                                         paddingHorizontal: 25,
                                         fontFamily: 'inter',
                                         height: 30,
@@ -2861,7 +2861,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             lineHeight: 35,
                                             color: "#1D1D20",
                                             fontSize: 12,
-                                            backgroundColor: "#f8f8fa",
+                                            backgroundColor: "#f7f7f7",
                                             paddingHorizontal: 25,
                                             fontFamily: "inter",
                                             height: 35,
@@ -3349,7 +3349,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     }}
                                     style={{ height: 20 }}
                                     trackColor={{
-                                        false: "#f8f8fa",
+                                        false: "#f7f7f7",
                                         true: "#007AFF"
                                     }}
                                     activeThumbColor="white"
@@ -3545,7 +3545,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 onValueChange={() => setGraded(!graded)}
                                 style={{ height: 20 }}
                                 trackColor={{
-                                    false: "#f8f8fa",
+                                    false: "#f7f7f7",
                                     true: "#818385"
                                 }}
                                 activeThumbColor="white"
@@ -3576,7 +3576,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     value={gradeWeight}
                                     style={{
                                         width: "25%",
-                                        borderBottomColor: "#f8f8fa",
+                                        borderBottomColor: "#f7f7f7",
                                         borderBottomWidth: 1,
                                         fontSize: 15,
                                         padding: 15,
@@ -3632,7 +3632,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 onValueChange={() => setAllowLateSubmission(!allowLateSubmission)}
                                 style={{ height: 20 }}
                                 trackColor={{
-                                    false: "#f8f8fa",
+                                    false: "#f7f7f7",
                                     true: "#818385"
                                 }}
                                 activeThumbColor="white"
@@ -3872,7 +3872,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     borderRightWidth: 0,
                     flexDirection: width < 1024 ? 'column' : 'row',
                     paddingTop: 40,
-                    borderColor: "#f0f0f2",
+                    borderColor: "#e8e8ea",
                 }}>
                 <View
                     style={{
@@ -3951,7 +3951,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     //             borderRadius: 15,
                                     //             shadowOpacity: 0,
                                     //             borderWidth: 1,
-                                    //             borderColor: '#f0f0f2',
+                                    //             borderColor: '#e8e8ea',
                                     //             overflow: 'scroll',
                                     //             maxHeight: '100%'
                                     //         }
@@ -4035,7 +4035,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     borderRightWidth: 0,
                     flexDirection: width < 1024 ? 'column' : 'row',
                     paddingTop: 40,
-                    borderColor: "#f0f0f2"
+                    borderColor: "#e8e8ea"
                 }}>
                 <View
                     style={{
@@ -4092,7 +4092,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     width: "100%",
                     flexDirection: width < 1024 ? 'column' : 'row',
                     borderRightWidth: 0,
-                    borderColor: "#f0f0f2",
+                    borderColor: "#e8e8ea",
                     paddingTop: 40,
                 }}>
                 <View
@@ -4137,7 +4137,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     borderRadius: 15,
                                     shadowOpacity: 0,
                                     borderWidth: 1,
-                                    borderColor: '#f0f0f2',
+                                    borderColor: '#e8e8ea',
                                     overflow: 'scroll',
                                     maxHeight: '100%',
                                 }
@@ -4206,7 +4206,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     borderRadius: 15,
                                     shadowOpacity: 0,
                                     borderWidth: 1,
-                                    borderColor: '#f0f0f2',
+                                    borderColor: '#e8e8ea',
                                     overflow: 'scroll',
                                     maxHeight: '100%',
                                 }
@@ -4307,7 +4307,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             }}
                             style={{ height: 20 }}
                             trackColor={{
-                                false: "#f8f8fa",
+                                false: "#f7f7f7",
                                 true: "#007AFF"
                             }}
                             activeThumbColor="white"
@@ -4340,7 +4340,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     onValueChange={() => setShuffle(!shuffle)}
                                     style={{ height: 20 }}
                                     trackColor={{
-                                        false: "#f8f8fa",
+                                        false: "#f7f7f7",
                                         true: "#818385"
                                     }}
                                     activeThumbColor="white"
@@ -4408,7 +4408,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                 borderRadius: 15,
                                                 shadowOpacity: 0,
                                                 borderWidth: 1,
-                                                borderColor: '#f0f0f2',
+                                                borderColor: '#e8e8ea',
                                                 overflow: 'scroll',
                                                 maxHeight: '100%'
                                             }
@@ -4536,7 +4536,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     onValueChange={() => setPlayChannelCueIndef(!playChannelCueIndef)}
                                     style={{ height: 20 }}
                                     trackColor={{
-                                        false: "#f8f8fa",
+                                        false: "#f7f7f7",
                                         true: "#818385"
                                     }}
                                     activeThumbColor="white"
@@ -4707,7 +4707,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     lineHeight: 35,
                                     color: "#1D1D20",
                                     fontSize: 12,
-                                    backgroundColor: "#f8f8fa",
+                                    backgroundColor: "#f7f7f7",
                                     borderRadius: 15,
                                     paddingHorizontal: 25,
                                     fontFamily: "inter",
@@ -4880,7 +4880,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     || (!props.showOriginal && submissionImported) || (imported && props.showOriginal) || props.showOptions || props.showComments || viewSubmission
                                     ? 0 : 1,
                                 marginTop: 20,
-                                borderBottomColor: '#f8f8fa'
+                                borderBottomColor: '#f7f7f7'
                             }}
                         />
                         :
@@ -4896,7 +4896,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     || (((props.cue.graded && submission && !isOwner) && !props.showOriginal) || (!props.showOriginal && showImportOptions))
                                     || (!props.showOriginal && submissionImported) || (imported && props.showOriginal) || props.showOptions || props.showComments || viewSubmission
                                     ? 0 : 1,
-                                borderBottomColor: '#f8f8fa'
+                                borderBottomColor: '#f7f7f7'
                             }}
                             onTouchStart={() => Keyboard.dismiss()}>
                             <View
@@ -4998,7 +4998,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     style={{
                         paddingBottom: 25,
                         height: "100%",
-                        // borderBottomColor: "#f8f8fa",
+                        // borderBottomColor: "#f7f7f7",
                         // borderBottomWidth: 1
                     }}
                     showsVerticalScrollIndicator={false}
@@ -5191,7 +5191,7 @@ const styles: any = StyleSheet.create({
     },
     cuesInput: {
         width: "100%",
-        backgroundColor: "#f8f8fa",
+        backgroundColor: "#f7f7f7",
         borderRadius: 15,
         fontSize: 20,
         padding: 20,
@@ -5231,7 +5231,7 @@ const styles: any = StyleSheet.create({
     },
     input: {
         width: "100%",
-        borderBottomColor: "#f8f8fa",
+        borderBottomColor: "#f7f7f7",
         borderBottomWidth: 1,
         fontSize: 15,
         paddingTop: 12,

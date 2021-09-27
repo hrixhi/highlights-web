@@ -1523,7 +1523,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     lineHeight: 35,
                     color: '#1D1D20',
                     fontSize: 12,
-                    backgroundColor: '#f8f8fa',
+                    backgroundColor: '#f7f7f7',
                     paddingHorizontal: 25,
                     fontFamily: 'inter',
                     height: 35,
@@ -1679,7 +1679,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             <View style={{
               height: 61,
               borderBottomWidth: 1,
-              borderColor: '#f0f0f2'
+              borderColor: '#e8e8ea'
             }}>
               <VerticalBar
                 menuCollapsed={menuCollapsed}
@@ -1722,11 +1722,11 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             <View style={{
               width: dimensions.window.width,
               height: dimensions.window.height,
-              borderColor: '#f0f0f2',
-              backgroundColor: '#f8f8fa',
+              borderColor: '#e8e8ea',
+              backgroundColor: '#f7f7f7',
             }}>
               <View style={{
-                backgroundColor: '#f8f8fa',
+                backgroundColor: '#f7f7f7',
                 width: dimensions.window.width,
                 height: dimensions.window.height - 30,
                 maxWidth: 1275, alignSelf: 'center'
@@ -1813,7 +1813,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 height: (menuCollapsed ? dimensions.window.height - 60 : 0),
                 // paddingHorizontal: dimensions.window.width < 1024 ? 0 : 30,
                 paddingTop: 10,
-                // backgroundColor: '#f8f8fa',
+                // backgroundColor: '#f7f7f7',
                 backgroundColor: '#fff',
                 position: dimensions.window.width < 1024 ? 'absolute' : 'relative'
               }}
@@ -1896,8 +1896,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           <View style={{
             position: 'absolute',
             zIndex: showLoginWindow ? 40 : 1000,
-            backgroundColor: '#f8f8fa',
-            borderColor: '#f0f0f2',
+            backgroundColor: '#f7f7f7',
+            borderColor: '#e8e8ea',
             borderTopWidth: 1,
             alignSelf: 'flex-end',
             width: '100%',
@@ -1909,7 +1909,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           }}>
             <TouchableOpacity
               style={{
-                backgroundColor: '#f8f8fa',
+                backgroundColor: '#f7f7f7',
                 width: '25%'
               }}
               onPress={() => setOption('To Do')}
@@ -1923,7 +1923,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             </TouchableOpacity>
             <TouchableOpacity
               style={{
-                backgroundColor: '#f8f8fa',
+                backgroundColor: '#f7f7f7',
                 width: '25%'
               }}
               onPress={() => setOption('Classroom')}
@@ -1937,7 +1937,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             </TouchableOpacity>
             <TouchableOpacity
               style={{
-                backgroundColor: '#f8f8fa',
+                backgroundColor: '#f7f7f7',
                 width: '25%'
               }}
               onPress={() => setOption('Performance')}
@@ -1951,7 +1951,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             </TouchableOpacity>
             <TouchableOpacity
               style={{
-                backgroundColor: '#f8f8fa',
+                backgroundColor: '#f7f7f7',
                 //marginHorizontal: 20,
                 width: '25%'
               }}
@@ -1990,7 +1990,7 @@ const styles = (channelId: string) => StyleSheet.create({
     width: '100%',
     // maxWidth: 1275,
     justifyContent: "center",
-    backgroundColor: '#f8f8fa'
+    backgroundColor: '#f7f7f7'
   },
   horizontal: {
     flexDirection: "row",
@@ -1998,7 +1998,7 @@ const styles = (channelId: string) => StyleSheet.create({
   },
   input: {
     width: '100%',
-    borderBottomColor: '#f8f8fa',
+    borderBottomColor: '#f7f7f7',
     borderBottomWidth: 1,
     fontSize: 15,
     paddingTop: 13,

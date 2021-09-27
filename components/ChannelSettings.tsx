@@ -203,7 +203,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 borderRadius: 15,
                                 shadowOpacity: 0,
                                 borderWidth: 1,
-                                borderColor: '#f0f0f2',
+                                borderColor: '#e8e8ea',
                                 overflow: 'scroll',
                                 maxHeight: '100%'
                             }
@@ -260,7 +260,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 borderRadius: 15,
                                 shadowOpacity: 0,
                                 borderWidth: 1,
-                                borderColor: '#f0f0f2',
+                                borderColor: '#e8e8ea',
                                 overflow: 'scroll',
                                 maxHeight: '100%'
                             }
@@ -317,7 +317,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 borderRadius: 15,
                                 shadowOpacity: 0,
                                 borderWidth: 1,
-                                borderColor: '#f0f0f2',
+                                borderColor: '#e8e8ea',
                                 overflow: 'scroll',
                                 maxHeight: '100%'
                             }
@@ -840,7 +840,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 onValueChange={() => setDuplicateChannelTemporary(!duplicateChannelTemporary)}
                                 style={{ height: 20 }}
                                 trackColor={{
-                                    false: "#f8f8fa",
+                                    false: "#f7f7f7",
                                     true: "#007AFF"
                                 }}
                                 activeThumbColor="white"
@@ -887,7 +887,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             }}
                                             style={{ height: 20 }}
                                             trackColor={{
-                                                false: "#f8f8fa",
+                                                false: "#f7f7f7",
                                                 true: "#007AFF"
                                             }}
                                             activeThumbColor="white"
@@ -935,7 +935,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             }}
                                             style={{ height: 20 }}
                                             trackColor={{
-                                                false: "#f8f8fa",
+                                                false: "#f7f7f7",
                                                 true: "#007AFF"
                                             }}
                                             activeThumbColor="white"
@@ -1254,7 +1254,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 lineHeight: 35,
                                 color: '#1D1D20',
                                 fontSize: 12,
-                                backgroundColor: '#f8f8fa',
+                                backgroundColor: '#f7f7f7',
                                 paddingHorizontal: 25,
                                 fontFamily: 'inter',
                                 height: 35,
@@ -1281,7 +1281,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         lineHeight: 35,
                                         color: '#1D1D20',
                                         fontSize: 12,
-                                        backgroundColor: '#f8f8fa',
+                                        backgroundColor: '#f7f7f7',
                                         paddingHorizontal: 25,
                                         fontFamily: 'inter',
                                         height: 35,
@@ -1346,7 +1346,7 @@ const styles = StyleSheet.create({
     },
     input: {
         width: '100%',
-        borderBottomColor: '#f8f8fa',
+        borderBottomColor: '#f7f7f7',
         borderBottomWidth: 1,
         fontSize: 15,
         paddingTop: 13,

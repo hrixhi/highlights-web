@@ -503,6 +503,19 @@ mutation($cueId: String!, $userId: String!, $attempts: String!) {
   }
 }
 `
+export const connectZoom = gql`
+mutation($userId: String!, $code: String!) {
+  user {
+    connectZoom(code: $code, userId: $userId) {
+      accountId
+      accessToken
+      refreshToken
+      expiresOn
+      email
+    }
+  }
+}
+`
 /**
  * ALL
  * QUERIES
@@ -515,6 +528,9 @@ export const findUserById = gql`
         fullName
         avatar
         displayName
+        zoomInfo {
+          accountId
+        }
         notificationId
         randomShuffleFrequency
         sleepFrom
@@ -679,6 +695,9 @@ export const getSubscribers = gql`
       findByChannelId(channelId: $channelId) {
         _id
         email
+        zoomInfo {
+          accountId
+        }
         avatar
         displayName
         fullName
@@ -1231,6 +1250,9 @@ export const getAllUsers = gql`
        role
        grade
        section
+       zoomInfo {
+        accountId
+       }
        channelIds
      }
    }

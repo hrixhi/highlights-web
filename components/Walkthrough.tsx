@@ -330,7 +330,39 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 <Text style={{ lineHeight: 35, width: '100%', textAlign: 'center' }}>
                                     <Ionicons name='arrow-back-outline' size={25} color={'#1D1D20'} />
                                 </Text>
-                            </TouchableOpacity> :
+                            </TouchableOpacity> : null
+                            // <Text
+                            //     style={{
+                            //         fontSize: 23,
+                            //         paddingBottom: 30,
+                            //         fontFamily: 'inter',
+                            //         // textTransform: "uppercase",
+                            //         // paddingLeft: 10,
+                            //         // flex: 1,
+                            //         maxWidth: 500, alignSelf: 'center',
+                            //         width: '100%',
+                            //         lineHeight: 25,
+                            //         paddingTop: 10,
+                            //     }}>
+                            //     <Ionicons name='settings-outline' size={23} />
+                            // </Text>
+                        }
+                    </View>
+                    {
+                        showHelp ? null :
+                            <TouchableOpacity
+                                onPress={() => {
+                                    setShowHelp(true)
+                                }}
+                                style={{
+                                    backgroundColor: 'white',
+                                    overflow: 'hidden',
+                                    // height: 35,
+                                    marginTop: 5,
+                                    justifyContent: 'center',
+                                    flexDirection: 'row',
+                                    // alignSelf: 'flex-end'
+                                }}>
                                 <Text
                                     style={{
                                         fontSize: 23,
@@ -344,39 +376,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                         lineHeight: 25,
                                         paddingTop: 10,
                                     }}>
-                                    <Ionicons name='settings-outline' size={23} />
-                                </Text>
-                        }
-                    </View>
-                    {
-                        showHelp ? null :
-                            <TouchableOpacity
-                                onPress={() => {
-                                    setShowHelp(true)
-                                }}
-                                style={{
-                                    backgroundColor: 'white',
-                                    overflow: 'hidden',
-                                    height: 35,
-                                    marginTop: 5,
-                                    justifyContent: 'center',
-                                    flexDirection: 'row',
-                                    // alignSelf: 'flex-end'
-                                }}>
-                                <Text style={{
-                                    textAlign: 'center',
-                                    lineHeight: 30,
-                                    color: '#fff',
-                                    fontSize: 12,
-                                    backgroundColor: '#35AC78',
-                                    paddingHorizontal: 25,
-                                    fontFamily: 'inter',
-                                    height: 30,
-                                    // width: 100,
-                                    borderRadius: 15,
-                                    textTransform: 'uppercase'
-                                }}>
-                                    Help <Ionicons name='help-outline' size={12} />
+                                    <Ionicons name='help-circle-outline' size={23} />
                                 </Text>
                             </TouchableOpacity>
                     }
@@ -392,7 +392,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             // paddingRight: Dimensions.get('window').width < 1024 ? 0 : 25,
                             // marginRight: Dimensions.get('window').width < 1024 ? 0 : 20,
                             // borderRightWidth: Dimensions.get('window').width < 1024 ? 0 : 1,
-                            borderColor: '#f0f0f2'
+                            borderColor: '#e8e8ea'
                         }}>
                             <Profile
                                 closeModal={() => props.closeModal()}
@@ -430,7 +430,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                 }}
                                                 style={{
                                                     backgroundColor: '#fff',
-                                                    borderColor: '#f0f0f2',
+                                                    borderColor: '#e8e8ea',
                                                     borderBottomWidth: item.question === 'Planner' ? 0 : 1,
                                                     width: '100%',
                                                     paddingBottom: 20,
