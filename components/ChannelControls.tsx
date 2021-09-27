@@ -33,6 +33,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
     const [channels, setChannels] = useState<any[]>([])
 
     const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     // Alert messages
     const incorrectPasswordAlert = PreferredLanguageText('incorrectPassword');
@@ -43,6 +44,8 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
     const invalidChannelNameAlert = PreferredLanguageText('invalidChannelName');
     const nameAlreadyInUseAlert = PreferredLanguageText('nameAlreadyInUse');
     const changesNotSavedAlert = PreferredLanguageText('changesNotSaved')
+
+    const [userId, setUserId] = useState('');
 
     useEffect(() => {
         if (option === "Subscribe") {
@@ -65,6 +68,18 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
         setIsSubmitDisabled(true);
 
     }, [name, password, passwordRequired, option, colorCode])
+
+    useEffect(() => {
+        (
+            async () => {
+              const u = await AsyncStorage.getItem('user')
+              if (u) {
+                const parsedUser: any = JSON.parse(u)
+                setUserId(parsedUser._id)
+              } 
+            }
+          )()
+    }, [])
 
     const handleSubscribe = useCallback(async (nm, pass) => {
 
@@ -153,6 +168,8 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
 
     const handleSubmit = useCallback(async () => {
 
+        setIsSubmitting(true);
+
         const uString: any = await AsyncStorage.getItem('user')
         const user = JSON.parse(uString)
 
@@ -174,8 +191,10 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
             .then(res => {
                 if (res.data.channel.create) {
                     const channelCreateStatus = res.data.channel.create
+                    setIsSubmitting(false);
                     switch (channelCreateStatus) {
                         case "created":
+                            Alert("Channel created successfully")
                             props.closeModal()
                             break;
                         case "invalid-name":
@@ -194,6 +213,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                 }
             })
             .catch(err => {
+                setIsSubmitting(false);
                 Alert(somethingWrongAlert, checkConnectionAlert)
             })
 
@@ -324,6 +344,18 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
 
     const width = Dimensions.get('window').width
 
+    const sortChannels = channels.sort((a: any, b: any) => {
+
+        const aSubscribed = props.subscriptions.find((sub: any) => sub.channelId === a._id)
+        
+        const bSubscribed = props.subscriptions.find((sub: any) => sub.channelId === b._id)
+
+        if (aSubscribed && !bSubscribed) return -1;
+
+        return 1;
+
+    })
+
     return (
         <View style={styles.screen} key={1}>
             <View style={{ width: '100%', maxWidth: 800 }}>
@@ -409,9 +441,29 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 width: '100%',
                             }}>
                                 {
-                                    channels.map((channel: any, ind: any) => {
-                                        return <TouchableOpacity
-                                            onPress={() => handleSub(channel.name)}
+                                    sortChannels.map((channel: any, ind: any) => {
+
+                                        const subscribed = props.subscriptions.find((sub: any) => {
+                                            return sub.channelId === channel._id
+                                        }) 
+
+                                        let role = 'Subscribed';
+
+                                        // Check if user is a moderator or the owner
+                                        if (subscribed && userId !== "") {
+
+                                            const isModerator = channel.owners.includes(userId);
+
+                                            if (channel.channelCreator === userId) {
+                                                role = "Owner";
+                                            } else if (isModerator) {
+                                                role = "Moderator"
+                                            }
+
+                                        }
+
+                                        return <View
+                                            // onPress={() => handleSub(channel.name)}
                                             style={{
                                                 backgroundColor: '#f7f7f7',
                                                 flexDirection: 'row',
@@ -441,7 +493,23 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                     {channel.name}
                                                 </Text>
                                             </View>
-                                        </TouchableOpacity>
+                                            <View style={{ width: '20%', }}>
+                                                {
+                                                    !subscribed ?  <View style={{ flex: 1, paddingLeft: 10, flexDirection: 'column', justifyContent: 'center'  }}>
+                                                    <TouchableOpacity
+                                                        onPress={() => handleSub(channel.name)}
+                                                    >
+                                                        <Text style={{ textAlign: 'center', fontSize: 12, color: '#007AFF' }} ellipsizeMode='tail'>
+                                                            Join
+                                                        </Text>
+                                                    </TouchableOpacity>
+                                                </View> : <View style={{ flex: 1, paddingLeft: 10, flexDirection: 'column', justifyContent: 'center'  }}>
+                                                    <Text style={{ textAlign: 'center', fontSize: 12, fontFamily: 'inter', color: role === "Owner" || role === "Moderator" ? '#F94144' : '#35Ac78' }}>
+                                                        {role}
+                                                    </Text>
+                                                </View>}
+                                            </View>
+                                        </View>
                                     })
                                 }
                             </ScrollView>
@@ -598,7 +666,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             marginTop: 15,
                                             marginBottom: 50
                                         }}
-                                        disabled={isSubmitDisabled}
+                                        disabled={isSubmitDisabled || isSubmitting}
                                     >
                                         <Text style={{
                                             textAlign: 'center',
@@ -611,7 +679,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             height: 35,
                                             textTransform: 'uppercase'
                                         }}>
-                                            {PreferredLanguageText('create')} <Ionicons name='add-outline' size={12} />
+                                            {isSubmitting ? "Creating" : PreferredLanguageText('create')} <Ionicons name='add-outline' size={12} />
                                         </Text>
                                     </TouchableOpacity>
                             }

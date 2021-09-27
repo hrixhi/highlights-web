@@ -33,27 +33,23 @@ import FileUpload from "./UploadFiles";
 
 import ReactPlayer from "react-player";
 
+import { Select } from '@mobiscroll/react';
+
 
 const questionTypeOptions = [
     {
-        label: "MCQ",
-        value: "",
+        text: "MCQ",
+        value: "mcq",
     },
     {
-        label: "Free response",
+        text: "Free response",
         value: "freeResponse"
     },
     {
-        label: "True/False",
+        text: "True/False",
         value: "trueFalse"
     }
 ]
-
-const questionTypeLabels = {
-    "": "MCQ",
-    "freeResponse": "Free response",
-    "trueFalse": "True/False"
-}
 
 const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -536,6 +532,9 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 problems.map((problem: any, index: any) => {
                     const { questionType } = problem;
 
+                    // Dropdown doesn't accept empty strings
+                    let dropdownQuestionType = questionType !== "" ? questionType : "mcq"
+
                     // Audio/Video question
 
                     let audioVideoQuestion = problem.question[0] === "{"  && problem.question[problem.question.length - 1] === "}";
@@ -656,7 +655,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                             flexDirection: 'row',
                                             marginBottom: Dimensions.get('window').width < 1024 ? 0 : 30,
                                         }}>
-                                        <Menu
+                                        {/* <Menu
                                             onSelect={(questionType: any) => {
                                                 const updatedProblems = [...problems]
                                                 updatedProblems[index].questionType = questionType;
@@ -712,7 +711,54 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                     );
                                                 })}
                                             </MenuOptions>
-                                        </Menu>
+                                        </Menu> */}
+
+                                        <label style={{ width: 180 }}>
+                                            <Select
+                                                touchUi={true}
+                                                cssClass="customDropdown"
+                                                value={dropdownQuestionType}
+                                                rows={questionTypeOptions.length}
+                                                data={questionTypeOptions}
+                                                themeVariant="light"
+                                                onChange={(val: any) => {
+                                                    // setCustomCategory(val.value)
+                                                    const updatedProblems = [...problems]
+                                                    if (val.value === "mcq") {
+                                                        updatedProblems[index].questionType = "";
+                                                    } else {
+                                                        updatedProblems[index].questionType = val.value;
+                                                    }
+                                                    
+                                                    // Clear Options 
+                                                    if (val.value === "freeResponse") {
+                                                        updatedProblems[index].options = []
+                                                    } else if (val.value === "trueFalse") {
+                                                        updatedProblems[index].options = []
+                                                        updatedProblems[index].options.push({
+                                                            option: 'True',
+                                                            isCorrect: false
+                                                        })
+                                                        updatedProblems[index].options.push({
+                                                            option: 'False',
+                                                            isCorrect: false
+                                                        })
+                                                    }
+                                                    setProblems(updatedProblems)
+                                                    props.setProblems(updatedProblems)
+
+                                                }}
+                                                responsive={{
+                                                    small: {
+                                                        display: 'bubble'
+                                                    },
+                                                    medium: {
+                                                        touchUi: false,
+                                                    }
+                                                }}
+                                            />
+                                        </label>
+
                                     </View> : null}
                                     {editQuestionNumber === (index + 1) ? <View style={{ paddingTop: 15, flexDirection: 'row', alignItems: 'center', marginBottom: (Dimensions.get('window').width < 1024 || editQuestionNumber !== (index + 1)) ? 0 : 30 }}>
                                         <input

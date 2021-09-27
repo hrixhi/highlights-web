@@ -37,6 +37,7 @@ const Channels: React.FunctionComponent<{ [label: string]: any }> = (props: any)
                     {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
                 </Text>
                 <ChannelControls
+                    subscriptions={props.subscriptions}
                     closeModal={() => props.closeModal()}
                 />
             </Animated.View>

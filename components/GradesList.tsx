@@ -23,7 +23,9 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
     const unparsedCues: any[] = JSON.parse(JSON.stringify(props.cues))
     const unparsedSubmissionStatistics: any[] = JSON.parse(JSON.stringify(props.submissionStatistics))
     const [scores, setScores] = useState<any[]>(unparsedScores)
-    const [cues] = useState<any[]>(unparsedCues)
+    const [cues] = useState<any[]>(unparsedCues.sort((a: any, b: any) => {
+        return a.deadline < b.deadline ? -1 : 1
+    }))
     const [submissionStatistics, setSubmissionStatistics] = useState<any[]>(unparsedSubmissionStatistics)
     const [exportAoa, setExportAoa] = useState<any[]>()
     const [activeCueId, setActiveCueId] = useState("")
@@ -124,7 +126,8 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
             })
 
-            const pointsToAdd = totalScore !== 0 ? (totalPoints / totalScore).toFixed(2) + "%" : '0'
+            const pointsToAdd = totalScore !== 0 ? (totalPoints / totalScore).toFixed(2).replace(/\.0+$/,'') + "%" : '0'
+
             // Add Total here
             userRow.push(pointsToAdd)
 

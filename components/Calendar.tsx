@@ -91,6 +91,9 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     const [school, setSchool] = useState<any>({})
 
+    const tabs = ['Agenda', 'Schedule', 'Calendar', 'Activity', 'Add']
+    const [tab, setTab] = useState('Agenda')
+
     useEffect(() => {
         (
             async () => {
@@ -386,14 +389,15 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     }
 
     const handleCreate = useCallback(async () => {
-        if (start < new Date()) {
+
+        if (title === "") {
+            Alert("A title must be set for the event. ");
+            return;
+        } else if (start < new Date()) {
             Alert("Event must be set in the future.");
             return;
-        } else if (title === "") {
-            Alert("New Event/Lecture cannot be empty.");
-            return;
         } else if (start > end) {
-            Alert("End time must be greater than start time.");
+            Alert("End time must be after than start time.");
             return
         }
         if (recurring) {
@@ -470,22 +474,21 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     recordMeeting,
                 }
             })
-            .then(res => {
-                const updated = new Date();
-                loadEvents();
-                setTitle("");
-                setRepeatTill(new Date())
-                setIsMeeting(false);
-                setDescription("");
-                setFrequency("1-W");
-                setRecurring(false);
-                setRecordMeeting(false);
+            .then((res) => {
+
+                if (res.data.date.editV1) {
+
+                    loadEvents();
+                    Alert('Updated event successully.')
+                } else {
+                    Alert('Failed to edit event. Try again.')
+                }
+                
                 setIsEditingEvents(false);
-                setEditEvent(null)
-                setShowAddEvent(false)
 
             })
             .catch(err => {
+                Alert('Failed to edit event. Try again.')
                 setIsEditingEvents(false);
                 console.log(err)
             });
@@ -495,7 +498,6 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const handleDelete = useCallback(async (deleteAll: boolean) => {
 
         const { eventId, recurringId } = editEvent;
-
 
         setIsDeletingEvents(true);
 
@@ -509,21 +511,31 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 }
             })
             .then(res => {
-                const updated = new Date();
-                loadEvents();
-                setTitle("");
-                setRepeatTill(new Date())
-                setIsMeeting(false);
-                setDescription("");
-                setFrequency("1-W");
-                setRecurring(false);
-                setRecordMeeting(false);
+                if (res.data.date.deleteV1) {
+                    loadEvents();
+                    setTitle("");
+                    setRepeatTill(new Date())
+                    setIsMeeting(false);
+                    setDescription("");
+                    setFrequency("1-W");
+                    setRecurring(false);
+                    setRecordMeeting(false);
+                    setEditEvent(null)
+                    setShowAddEvent(false)
+
+                    Alert(!deleteAll ? 'Deleted event successfully.' : 'Deleted events successfully.')
+
+                } else {
+
+                    Alert(!deleteAll ? 'Failed to delete events. Try again.' : 'Failed to delete events. Try again.')
+
+                }
                 setIsDeletingEvents(false);
-                setEditEvent(null)
-                setShowAddEvent(false)
+                
             })
             .catch(err => {
                 setIsDeletingEvents(false);
+                Alert(!deleteAll ? 'Failed to delete events. Try again.' : 'Failed to delete events. Try again.')
                 console.log(err)
             });
 
@@ -631,6 +643,10 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
         else return true
     }
 
+    console.log('Edit event', editEvent);
+    console.log('Add event', showAddEvent);
+
+
     const onSelectEvent = async (data: any) => {
 
         const { event } = data;
@@ -649,7 +665,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
                 setEditEvent(event)
                 setTab('Add')
-                setShowAddEvent(true)
+                // setShowAddEvent(true)
 
             } else if (user._id === event.createdBy && new Date(event.end) < new Date() && event.eventId) {
                 Alert("Delete " + event.title + "?", descriptionString, [
@@ -1024,7 +1040,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const renderEditChannelName = () => {
 
         return editChannelName && (
-            <View style={{ maxWidth: width < 1024 ? "100%" : "33%" }}>
+            <View style={{  }}>
                 <TouchableOpacity
                     key={Math.random()}
                     disabled={true}
@@ -1126,7 +1142,23 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     justifyContent: "center",
                     flexDirection: "row"
                 }}
-                onPress={() => handleEdit()}
+                onPress={() => {
+                    Alert("Update event?", "", [
+                        {
+                            text: "Cancel",
+                            style: "cancel",
+                            onPress: () => {
+                                return;
+                            }
+                        },
+                        {
+                            text: "Yes",
+                            onPress:  () => {
+                                handleEdit()
+                            }
+                        }
+                    ])
+                }}
                 disabled={isSubmitDisabled || isEditingEvents || isDeletingEvents}>
                 <Text
                     style={{
@@ -1138,11 +1170,10 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         paddingHorizontal: 25,
                         fontFamily: "inter",
                         height: 35,
-                        width: 200,
                         borderRadius: 15,
                         textTransform: "uppercase"
                     }}>
-                    {isEditingEvents ? "EDITING..." : "EDIT"}
+                    {isEditingEvents ? "EDITING..." : "EDIT"} <Ionicons name='pencil-outline' size={12} />
                 </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -1155,7 +1186,23 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     justifyContent: "center",
                     flexDirection: "row"
                 }}
-                onPress={() => handleDelete(false)}
+                onPress={() => {
+                    Alert("Delete event?", "", [
+                        {
+                            text: "Cancel",
+                            style: "cancel",
+                            onPress: () => {
+                                return;
+                            }
+                        },
+                        {
+                            text: "Yes",
+                            onPress:  () => {
+                                handleDelete(false)
+                            }
+                        }
+                    ])
+                }}
                 disabled={isEditingEvents || isDeletingEvents}>
                 <Text
                     style={{
@@ -1167,11 +1214,10 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         paddingHorizontal: 25,
                         fontFamily: "inter",
                         height: 35,
-                        width: 200,
                         borderRadius: 15,
                         textTransform: "uppercase"
                     }}>
-                    {isDeletingEvents ? "DELETING..." : "DELETE"}
+                    {isDeletingEvents ? "DELETING..." : "DELETE"} <Ionicons name='trash-outline' size={12} />
                 </Text>
             </TouchableOpacity>
 
@@ -1185,7 +1231,23 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     justifyContent: "center",
                     flexDirection: "row"
                 }}
-                onPress={() => handleDelete(true)}
+                onPress={() => {
+                    Alert("Delete events?", "", [
+                        {
+                            text: "Cancel",
+                            style: "cancel",
+                            onPress: () => {
+                                return;
+                            }
+                        },
+                        {
+                            text: "Yes",
+                            onPress:  () => {
+                                handleDelete(true)
+                            }
+                        }
+                    ])
+                }}  
                 disabled={isEditingEvents || isDeletingEvents}>
                 <Text
                     style={{
@@ -1197,7 +1259,6 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         paddingHorizontal: 25,
                         fontFamily: "inter",
                         height: 35,
-                        width: 200,
                         borderRadius: 15,
                         textTransform: "uppercase"
                     }}>
@@ -1212,7 +1273,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
         // Add buttons to view event, edit event, join meeting, etc
 
-        const assingmentDue = new Date() > new Date(data.original.end)
+        const assingmentDue = new Date() > new Date(data.original.start)
+        
 
         return <React.Fragment>
             <div>{data.title}</div>
@@ -1244,9 +1306,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     }
 
 
-
-    const tabs = ['Agenda', 'Schedule', 'Calendar', 'Activity', 'Add']
-    const [tab, setTab] = useState('Agenda')
+    console.log("Tab", tab);
 
     const renderTabs = (activeTab: any) => {
 
@@ -1257,6 +1317,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     flexDirection: "column"
                 }}
                 onPress={() => {
+                    setEditEvent(null)
                     setTab(tabs[0])
                 }}>
                 <Text style={activeTab === tabs[0] ? styles.allGrayFill1 : styles.all1}>
@@ -1272,6 +1333,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     flexDirection: "column"
                 }}
                 onPress={() => {
+                    setEditEvent(null)
                     setTab(tabs[1])
                 }}>
                 <Text style={activeTab === tabs[1] ? styles.allGrayFill1 : styles.all1}>
@@ -1287,6 +1349,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     flexDirection: "column"
                 }}
                 onPress={() => {
+                    setEditEvent(null)
                     setTab(tabs[2])
                 }}>
                 <Text style={activeTab === tabs[2] ? styles.allGrayFill1 : styles.all1}>
@@ -1302,6 +1365,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     flexDirection: "column"
                 }}
                 onPress={() => {
+                    setEditEvent(null)
                     setTab(tabs[3])
                 }}>
                 <Text style={activeTab === tabs[3] ? styles.allGrayFill1 : styles.all1}>
@@ -1320,7 +1384,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     setTab(tabs[4])
                 }}>
                 <Text style={activeTab === tabs[4] ? styles.allGrayFill1 : styles.all1}>
-                    <Ionicons name='add-outline' size={20} />
+                    {editEvent ? <Ionicons name='pencil-outline' size={20} /> :<Ionicons name='add-outline' size={20} />}
                 </Text>
                 <Text style={activeTab === tabs[4] ? styles.allGrayFill1 : styles.all1}>
                     Event
@@ -1340,13 +1404,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
             text: channel.name
         })
     })
-
-    console.log("Channel options", channelOptions)
-
     
-
-
-
     return (
         <Animated.View
             style={{
@@ -1450,7 +1508,6 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                 data={events}
                                                                 themeVariant="light"
                                                                 // height={}
-                                                                s
                                                                 onEventClick={onSelectEvent}
                                                                 renderEventContent={renderEventContent}
                                                             /> : (
@@ -1681,43 +1738,14 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                             </View> : (
                                                                                 <ScrollView
                                                                                     contentContainerStyle={{
-                                                                                        maxHeight: width < 1024 ? windowHeight - 200 : '100%'
+                                                                                        maxHeight: width < 1024 ? windowHeight - 200 : '100%',
+                                                                                        alignItems: 'center'
                                                                                     }}
                                                                                 >
-                                                                                    {/* <TouchableOpacity
-                                                                                        onPress={() => {
-                                                                                            setEditEvent(null)
-                                                                                            setShowAddEvent(!showAddEvent)
-                                                                                        }}
-                                                                                        style={{
-                                                                                            backgroundColor: 'white',
-                                                                                            overflow: 'hidden',
-                                                                                            height: 35,
-                                                                                            // marginLeft: 20,
-                                                                                            // marginTop: 15,
-                                                                                            justifyContent: 'flex-start',
-                                                                                            flexDirection: 'row'
-                                                                                        }}>
-                                                                                        <Text style={{
-                                                                                            textAlign: 'left',
-                                                                                            lineHeight: 30,
-                                                                                            color: showAddEvent ? '#1D1D20' : '#fff',
-                                                                                            fontSize: 12,
-                                                                                            // backgroundColor: showAddEvent ? '#f7f7f7' : '#35AC78',
-                                                                                            // paddingHorizontal: 25,
-                                                                                            fontFamily: 'inter',
-                                                                                            height: 30,
-                                                                                            // width: 100,
-                                                                                            borderRadius: 15,
-                                                                                            marginBottom: 20,
-                                                                                            textTransform: 'uppercase'
-                                                                                        }}>
-                                                                                            {showAddEvent ? <Ionicons name='arrow-back-outline' size={25} color='#1D1D20' /> : <Ionicons name='add-outline' size={25} color='#007AFF' />}
-                                                                                        </Text>
-                                                                                    </TouchableOpacity> */}
                                                                                     <View
                                                                                         style={{
-                                                                                            flexDirection: "column"
+                                                                                            flexDirection: "column",
+                                                                                            alignItems: 'center'
                                                                                         }}>
                                                                                         <View style={{ width: 300, paddingTop: 20 }}>
                                                                                             <Text
@@ -1756,14 +1784,11 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                         </View>
                                                                                     </View>
                                                                                     {/* Put time here */}
-                                                                                    <View style={{ display: 'flex', width: "100%", }} >
+                                                                                    <View style={{ display: 'flex', width: 300 }} >
                                                                                         <View
                                                                                             style={{
                                                                                                 width: 200,
-                                                                                                // flexDirection: "row",
-                                                                                                // marginTop: 12,
                                                                                                 paddingVertical: 15
-                                                                                                // alignItems: 'center'
                                                                                             }}>
                                                                                             <Text style={styles.text}>{PreferredLanguageText("start")}</Text>
                                                                                             {/* <DatePicker
@@ -1799,11 +1824,6 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                                         display: 'bottom',
                                                                                                         touchUi: true
                                                                                                     },
-                                                                                                    // small: {
-                                                                                                    //     controls: ['date', 'time'],
-                                                                                                    //     display: 'anchored',
-                                                                                                    //     touchUi: true
-                                                                                                    // },
                                                                                                     medium: {
                                                                                                         controls: ['date', 'time'],
                                                                                                         display: 'anchored',
@@ -1815,10 +1835,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                         <View
                                                                                             style={{
                                                                                                 width: 200,
-                                                                                                // marginTop: 12,
                                                                                                 paddingVertical: 15
-                                                                                                // alignItems: 'center',
-                                                                                                // marginLeft: width < 1024 ? 0 : 30
                                                                                             }}>
                                                                                             <Text style={styles.text}>{PreferredLanguageText("end")}</Text>
                                                                                             {/* <DatePicker
@@ -1855,11 +1872,6 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                                         display: 'bottom',
                                                                                                         touchUi: true
                                                                                                     },
-                                                                                                    // small: {
-                                                                                                    //     controls: ['date', 'time'],
-                                                                                                    //     display: 'anchored',
-                                                                                                    //     touchUi: true
-                                                                                                    // },
                                                                                                     medium: {
                                                                                                         controls: ['date', 'time'],
                                                                                                         display: 'anchored',
@@ -1874,7 +1886,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                             marginBottom: 20,
                                                                                             borderColor: "#e8e8ea",
                                                                                             // borderBottomWidth: 1,
-                                                                                            paddingTop: 20
+                                                                                            paddingTop: 20,
+                                                                                            width: 300
                                                                                         }}>
                                                                                         {channels.length > 0 && !editEvent ? (
                                                                                             <View>
@@ -1965,7 +1978,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                         {channelId !== "" && <Text style={{ fontSize: 11, color: '#1D1D20', textTransform: 'uppercase', paddingTop: 10 }}>
                                                                                             Attendances will only be captured for scheduled lectures.
                                                                                         </Text>}
-                                                                                        {tab === 'Add' ? <View
+                                                                                        {tab === 'Add' && !editEvent ? <View
                                                                                             style={{
                                                                                                 width: '100%',
                                                                                                 flexDirection: "row",

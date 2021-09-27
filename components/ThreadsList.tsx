@@ -377,7 +377,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 !showPost && !showThreadCues ?
                     <View style={{ backgroundColor: 'white', flexDirection: 'row', paddingBottom: !props.cueId ? 0 : 0, width: '100%' }}>
                         {
-                            props.cueId === null && !showPost ?
+                            props.cueId === null && !showPost && categoryChoices.length > 1 ?
                                 <View style={{
                                     // width: '100%',
                                     paddingTop: 10,

@@ -179,12 +179,12 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     setDimensions({ window, screen })
   }, []);
 
-  useEffect(() => {
-    Dimensions.addEventListener("change", onDimensionsChange);
-    return () => {
-      Dimensions.removeEventListener("change", onDimensionsChange);
-    };
-  }, [])
+  // useEffect(() => {
+  //   Dimensions.addEventListener("change", onDimensionsChange);
+  //   return () => {
+  //     Dimensions.removeEventListener("change", onDimensionsChange);
+  //   };
+  // }, [])
 
   useEffect(() => {
     (
@@ -1054,7 +1054,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     setCueId(_id)
     openModal('Update')
     setShowHome(false)
-  }, [subscriptions])
+  }, [subscriptions, cues])
 
   const openUpdate = useCallback((key, index, pageNumber, _id, by, channId) => {
 

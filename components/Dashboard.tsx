@@ -42,7 +42,6 @@ import '@mobiscroll/react/dist/css/mobiscroll.react.min.css';
 const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
 
-    console.log(props.cues)
 
     const styles = styleObject()
     const [userId, setUserId] = useState('')
@@ -537,7 +536,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     }
 
                                     return <View style={{
-                                        height: channelName !== "" ? 90 : 70,
+                                        height: option === "Channels" ? 80 : 70,
                                         marginRight: 15,
                                         maxWidth: 175,
                                         backgroundColor: '#fff',
@@ -1256,232 +1255,14 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         // borderWidth: 1,
                         backgroundColor: '#f7f7f7'
                     }}>
-                        {/* {props.option === 'To Do' || props.option === 'Classroom' ?
-                            // <Menu
-                            //     style={{ flex: 1 }}
-                            //     onSelect={(e: any) => {
-                            //         if (props.option === 'Classroom') {
-                            //             setSortBy(e)
-                            //         } else {
-                            //             if (e.type) {
-                            //                 setFilterEventsType(e.type)
-                            //             } else {
-                            //                 setFilterByChannel(e.channelName)
-                            //                 setActivityChannelId(e.channelId)
-                            //             }
-                            //         }
-                            //     }}>
-                            //     <MenuTrigger>
-                            //         <Text style={{ fontSize: 11, color: '#1D1D20', paddingTop: 9, textAlign: 'right' }}>
-                            //             Filter <Ionicons name="caret-down" size={11} />
-                            //         </Text>
-                            //     </MenuTrigger>
-                            //     <MenuOptions customStyles={{
-                            //         optionsContainer: {
-                            //             padding: 10,
-                            //             borderRadius: 15,
-                            //             shadowOpacity: 0,
-                            //             borderWidth: 1,
-                            //             borderColor: '#e8e8ea',
-                            //             overflow: 'scroll',
-                            //             maxHeight: '100%'
-                            //         }
-                            //     }}>
-                            //         {(props.option === 'Classroom' ?
-                            //             <>
-                            //                 <MenuOption
-                            //                     value={'Priority'}>
-                            //                     <Text>
-                            //                         Priority {sortBy === 'Priority' ? <Ionicons name='checkmark-outline' /> : null}
-                            //                     </Text>
-                            //                 </MenuOption>
-                            //                 <MenuOption
-                            //                     value={'Date ↑'}>
-                            //                     <Text>
-                            //                         Date ↑ {sortBy === 'Date ↑' ? <Ionicons name='checkmark-outline' /> : null}
-                            //                     </Text>
-                            //                 </MenuOption>
-                            //                 <MenuOption
-                            //                     value={'Date ↓'}>
-                            //                     <Text>
-                            //                         Date ↓ {sortBy === 'Date ↓' ? <Ionicons name='checkmark-outline' /> : null}
-                            //                     </Text>
-                            //                 </MenuOption>
-                            //             </>
-                            //             : null
-                            //         )}
-                            //         {
-                            //             props.option === 'Classroom' || props.option === 'To Do' ? <MenuOption
-                            //                 disabled={true}
-                            //                 value={'2'}>
-                            //                 <DateRangePicker
-                            //                     preventOverflow={true}
-                            //                     size={'sm'}
-                            //                     appearance={'subtle'}
-                            //                     placeholder={'Dates'}
-                            //                     onChange={(e: any) => {
-                            //                         if (e[0] > e[1]) {
-                            //                             alert('End date must be greater')
-                            //                             return
-                            //                         }
-                            //                         else {
-                            //                             setFilterStart(e[0])
-                            //                             setFilterEnd(e[1])
-                            //                         }
-                            //                     }}
-                            //                     defaultShow={true}
-                            //                     showOneCalendar={true}
-                            //                     value={[
-                            //                         filterStart,
-                            //                         filterEnd
-                            //                     ]}
-                            //                     style={{
-                            //                         marginTop: -4,
-                            //                         marginRight: width < 1024 ? -20 : 0
-                            //                     }}
-                            //                 />
-                            //             </MenuOption>
-                            //                 : null
-                            //         }
-                            //         {(props.option === 'To Do' ?
-                            //             <>
-                            //                 <MenuOption
-                            //                     disabled={true}
-                            //                     disableTouchable={true}
-                            //                     value={'All'}>
-                            //                     <Text style={{ fontFamily: 'inter' }}>
-                            //                         Channel
-                            //                     </Text>
-                            //                 </MenuOption>
-                            //                 <MenuOption
-                            //                     value={'All'}>
-                            //                     <Text>
-                            //                         <View style={{
-                            //                             width: 10,
-                            //                             height: 10,
-                            //                             borderRadius: 5,
-                            //                             marginTop: 1,
-                            //                             marginRight: 10,
-                            //                             backgroundColor: '#fff'
-                            //                         }} /> All {filterByChannel === 'All' ? <Ionicons name='checkmark-outline' /> : null}
-                            //                     </Text>
-                            //                 </MenuOption>
-                            //                 <MenuOption
-                            //                     value={'Date ↑'}>
-                            //                     <Text>
-                            //                         <View style={{
-                            //                             width: 10,
-                            //                             height: 10,
-                            //                             borderRadius: 5,
-                            //                             marginTop: 1,
-                            //                             marginRight: 10,
-                            //                             backgroundColor: '#1D1D20'
-                            //                         }} /> My Cues {filterByChannel === 'My Cues' ? <Ionicons name='checkmark-outline' /> : null}
-                            //                     </Text>
-                            //                 </MenuOption>
-                            //                 {
-                            //                     props.subscriptions.map((sub: any) => {
-                            //                         return <MenuOption
-                            //                             value={sub}>
-                            //                             <Text>
-                            //                                 <View style={{
-                            //                                     width: 10,
-                            //                                     height: 10,
-                            //                                     borderRadius: 5,
-                            //                                     marginTop: 1,
-                            //                                     marginRight: 10,
-                            //                                     backgroundColor: sub.colorCode
-                            //                                 }} /> {sub.channelName} {filterByChannel === sub.channelName ? <Ionicons name='checkmark-outline' /> : null}
-                            //                             </Text>
-                            //                         </MenuOption>
-                            //                     })
-                            //                 }
-                            //                 <MenuOption
-                            //                     disabled={true}
-                            //                     disableTouchable={true}
-                            //                     value={'All'}>
-                            //                     <Text style={{ fontFamily: 'inter' }}>
-                            //                         Type
-                            //                     </Text>
-                            //                 </MenuOption>
-                            //                 <MenuOption
-                            //                     value={{ type: "All" }}>
-                            //                     <View style={{ display: 'flex', flexDirection: 'row', }}>
-                            //                         <Text style={{ marginLeft: 5 }}>
-                            //                             All
-                            //                         </Text>
-                            //                     </View>
-                            //                 </MenuOption>
-                            //                 <MenuOption
-                            //                     value={{ type: "Lectures" }}>
-                            //                     <View style={{ display: 'flex', flexDirection: 'row', }}>
-                            //                         <Text style={{ marginLeft: 5 }}>
-                            //                             Lectures
-                            //                         </Text>
-                            //                     </View>
-                            //                 </MenuOption>
-                            //                 <MenuOption
-                            //                     value={{ type: "Submissions" }}>
-                            //                     <View style={{ display: 'flex', flexDirection: 'row', }}>
-                            //                         <Text style={{ marginLeft: 5 }}>
-                            //                             Submissions
-                            //                         </Text>
-                            //                     </View>
-                            //                 </MenuOption>
-                            //                 <MenuOption
-                            //                     value={{ type: "Events" }}>
-                            //                     <View style={{ display: 'flex', flexDirection: 'row', }}>
-                            //                         <Text style={{ marginLeft: 5 }}>
-                            //                             Events
-                            //                         </Text>
-                            //                     </View>
-                            //                 </MenuOption>
-                            //             </>
-                            //             : null
-                            //         )}
-                            //     </MenuOptions>
-                            // </Menu> 
-                            <View style={{ backgroundColor: '#f7f7f7' }}>
-                                {
-                                    props.option === 'Classroom' || props.option === 'To Do' ?
-                                    <Datepicker
-                                        themeVariant="light"
-                                        controls={['calendar']}
-                                        select="range"
-                                        touchUi={true}
-                                        inputComponent="input"
-                                        inputProps={{
-                                            placeholder: 'Filter'
-                                        }}
-                                        responsive={{
-                                            small: {
-                                                display: 'bubble'
-                                            },
-                                            medium: {
-                                                touchUi: false,
-                                            }
-                                        }}
-                                        onChange={(val: any) => {
-                                            console.log("Selected", val)
-                                            setFilterStart(val.value[0])
-                                            setFilterEnd(val.value[1])
-                                        }}
-                                    />
-                                    : null
-                                }
-                            </View>
-                            
-                            : <View style={{ width: 80, right: 0, backgroundColor: '#f7f7f7' }} />
-                        } */}
-
-                        <TouchableOpacity style={{ backgroundColor: 'none' }} onPress={() => {
+                        {props.option === "To Do" || props.option === "Classroom" ? <TouchableOpacity style={{ backgroundColor: 'none' }} onPress={() => {
                             setShowFilterPopup(true)
                         }}>
                             <Text style={{ fontSize: 11, color: '#1D1D20', paddingTop: 9, textAlign: 'right' }}>
                                 Filter <Ionicons name="caret-down" size={11} />
                             </Text>
-                        </TouchableOpacity>
 
+                        </TouchableOpacity> : null}
 
                         <TextInput
                             value={searchTerm}
@@ -1568,6 +1349,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         props.option === 'Channels' ?
                             <Channels
                                 closeModal={() => props.hideHome()}
+                                subscriptions={props.subscriptions}
                             /> : null
                     }
                     {
@@ -1624,10 +1406,9 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         setFilterEnd(null)
                         setFilterByChannel('All')
                         setFilterEventsType('All')
-
+                        setShowFilterPopup(false)
                     }
                 },]}
-                theme="ios"
                 themeVariant="light"
                 onClose={() => setShowFilterPopup(false)}
                 responsive={{

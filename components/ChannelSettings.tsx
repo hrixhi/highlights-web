@@ -20,9 +20,9 @@ import {
 } from 'react-native-popup-menu';
 import { Ionicons } from '@expo/vector-icons';
 
-import mobiscroll, { Form as MobiscrollForm, FormGroup, Button as MobiscrollButton, Select, Input, FormGroupTitle  } from '@mobiscroll/react'
+import { Select } from '@mobiscroll/react'
 import '@mobiscroll/react/dist/css/mobiscroll.react.min.css';
-
+import Alert from './Alert';
 
 
 const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
@@ -35,6 +35,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
     const [originalName, setOriginalName] = useState('')
     const [password, setPassword] = useState('')
     const [temporary, setTemporary] = useState(false)
+    const [isUpdatingChannel, setIsUpdatingChannel] = useState(false)
 
 
     // Use to subscribe and unsubscribe users
@@ -93,7 +94,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
 
         if (activeRole !== "All") {
             const filterRoles = filteredUsers.filter((user: any) => {
-                return user.role === activeRole
+                return user.role === activeRole || selectedValues.includes(user._id)
             })
 
             filteredUsers = filterRoles;
@@ -101,7 +102,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
 
         if (activeGrade !== "All") {
             const filterGrades = filteredUsers.filter((user: any) => {
-                return user.grade === activeGrade
+                return user.grade === activeGrade || selectedValues.includes(user._id)
             })
 
             filteredUsers = filterGrades
@@ -109,7 +110,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
 
         if (activeSection !== "All") {
             const filterSections = filteredUsers.filter((user: any) => {
-                return user.section === activeSection
+                return user.section === activeSection || selectedValues.includes(user._id)
             })
 
             filteredUsers = filterSections
@@ -435,6 +436,8 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
             return;
         }
 
+        setIsUpdatingChannel(true);
+        
         const server = fetchAPI('')
         server.query({
             query: doesChannelNameExist,
@@ -495,24 +498,30 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 })
                             }
                         })
-                        alert("Channel updated!")
+                        setIsUpdatingChannel(false);
+
+                        alert("Channel updated successfully.")
                         setOriginalSubs([])
 
                         // need to refresh channel subscriptions since name will be updated
 
                         props.closeModal()
                     } else {
-                        alert("Something went wrong.")
+                        setIsUpdatingChannel(false);
+                        alert("Something went wrong. Try again.")
                     }
                 }).catch(err => {
                     newFunction()(err)
-                    alert("Something went wrong.")
+                    setIsUpdatingChannel(false);
+                    alert("Something went wrong. Try again.")
                 })
             } else {
                 alert("Channel name in use.")
+                setIsUpdatingChannel(false);
             }
         }).catch(err => {
-            alert("Something went wrong.")
+            alert("Something went wrong. Try again.")
+            setIsUpdatingChannel(false);
         })
     }, [name, password, props.channelId, options, originalSubs, owners,
         temporary, selected, originalName, colorCode, selectedValues, selectedModerators])
@@ -531,6 +540,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                 }
             })
         })
+        Alert("Deleted Channel successfully.")
         props.closeModal()
     }, [props.channelId, originalSubs, owner])
 
@@ -1079,7 +1089,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
 
                     {renderSubscriberFilters()}
                     <View style={{ flexDirection: 'column', marginTop: 25, overflow: 'scroll' }}>
-                        <View style={{ width: '90%', height: 'auto' }}>
+                        <View style={{  height: 'auto', maxWidth: 350, width: 350 }}>
                             {/* <Multiselect
                                 placeholder='Select...'
                                 displayValue='name'
@@ -1111,7 +1121,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 }}
                             /> */}
 
-                                <div >
+                                <div style={{ maxWidth: 350, width: 350 }} >
                                     <label style={{ maxWidth: 350, width: 350 }}>
                                         <Select
                                             themeVariant="light"
@@ -1150,7 +1160,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                     <Text style={{
                         fontSize: 15,
                         fontFamily: 'inter',
-                        color: '#1D1D20', marginTop: 25,
+                        color: '#1D1D20', marginTop: 25, marginBottom: 20
                     }}>
                         Moderators
                     </Text>
@@ -1214,13 +1224,30 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
 
                     <View style={{ flexDirection: 'column', alignItems: 'center', marginTop: 50, paddingBottom: 50 }}>
                         <TouchableOpacity
-                            onPress={() => handleSubmit()}
+                            onPress={() => {
+                                Alert("Update channel?", "", [
+                                    {
+                                        text: "Cancel",
+                                        style: "cancel",
+                                        onPress: () => {
+                                            return;
+                                        }
+                                    },
+                                    {
+                                        text: "Yes",
+                                        onPress:  () => {
+                                            handleSubmit()
+                                        }
+                                    }
+                                ])  
+                            }}
                             style={{
                                 backgroundColor: 'white',
                                 borderRadius: 15,
                                 overflow: 'hidden',
                                 height: 35,
                             }}
+                            disabled={isUpdatingChannel}
                         >
                             <Text style={{
                                 textAlign: 'center',
@@ -1234,7 +1261,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 textTransform: 'uppercase',
                                 width: 150
                             }}>
-                                UPDATE
+                                {isUpdatingChannel ? "UPDATING" : "UPDATE"}
                             </Text>
                         </TouchableOpacity>
 
@@ -1267,7 +1294,23 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         {
                             temporary ?
                                 <TouchableOpacity
-                                    onPress={() => handleDelete()}
+                                    onPress={() => {
+                                        Alert("Delete channel?", "", [
+                                            {
+                                                text: "Cancel",
+                                                style: "cancel",
+                                                onPress: () => {
+                                                    return;
+                                                }
+                                            },
+                                            {
+                                                text: "Yes",
+                                                onPress:  () => {
+                                                    handleDelete()
+                                                }
+                                            }
+                                        ]) 
+                                    }}
                                     style={{
                                         backgroundColor: 'white',
                                         borderRadius: 15,

@@ -230,9 +230,9 @@ export const sendDirectMessage = gql`
   }
 `;
 export const sendMessage = gql`
-  mutation($users: [String!]!, $message: String!, $channelId: String, $userId: String!) {
+  mutation($users: [String!]!, $message: String!, $channelId: String, $userId: String!, $groupId: String, $groupName: String, $groupImage: String) {
     message {
-      createDirect(users: $users, message: $message, channelId: $channelId, userId: $userId)
+      createDirect(users: $users, message: $message, channelId: $channelId, userId: $userId, groupId: $groupId, groupName: $groupName, groupImage: $groupImage)
     }
   }
 `;
@@ -513,6 +513,13 @@ mutation($userId: String!, $code: String!) {
       expiresOn
       email
     }
+  }
+}`
+
+export const updateGroup = gql`
+mutation($groupId: String!, $users: [String!]!, $groupName: String!, $groupImage: String) {
+  message {
+    updateGroup(groupId: $groupId, users: $users, groupName: $groupName, groupImage: $groupImage)
   }
 }
 `
@@ -827,9 +834,9 @@ export const getSubmissionStatistics = gql`
   }
 `;
 export const getMessages = gql`
-  query($users: [String!]!) {
+  query($groupId: String!) {
     message {
-      getMessagesThread(users: $users) {
+      getMessagesThread(groupId: $groupId) {
         groupId
         _id
         sentBy
@@ -928,9 +935,13 @@ export const getChats = gql`
         userNames {
           fullName
           avatar
+          _id
         }
         lastMessage
         lastMessageTime
+        name
+        image
+        createdBy
       }
     }
   }
@@ -1180,10 +1191,12 @@ export const findBySchoolId = gql`
              password
              createdBy
              createdByUsername
+             channelCreator
              createdByAvatar
              numSubs
              role
              meetingOn
+             owners
          }
      }
  }
@@ -1316,6 +1329,13 @@ export const getFolderCues = gql`
         allowedAttempts
         availableUntil
       }
+    }
+  }
+`
+export const getGroup = gql`
+  query($users: [String!]!) {
+    message {
+      getGroupId(users: $users) 
     }
   }
 `
