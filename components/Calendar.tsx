@@ -1625,7 +1625,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                         {
                                                                                             activity.map((act: any, index) => {
 
-                                                                                                const { cueId, channelId, createdBy, target } = act;
+                                                                                                const { cueId, channelId, createdBy, target, threadId } = act;
 
                                                                                                 if (props.activityChannelId !== '') {
                                                                                                     if (props.activityChannelId !== act.channelId) {
@@ -1677,7 +1677,15 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                                         }
 
                                                                                                         if (target === "DISCUSSION") {
-                                                                                                            props.openDiscussion(channelId, createdBy)
+                                                                                                            
+                                                                                                            if (threadId && threadId !== "") {
+                                                                                                                await AsyncStorage.setItem("openThread", threadId)
+                                                                                                            }
+                                                                                                            
+
+                                                                                                            props.openDiscussion(channelId)
+
+
                                                                                                         }
 
                                                                                                         if (target === "CHANNEL_SUBSCRIBED" || target === "CHANNEL_MODERATOR_ADDED" || target === "CHANNEL_MODERATOR_REMOVED") {
@@ -1685,6 +1693,11 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                                         }
 
                                                                                                         if (target === "Q&A") {
+
+                                                                                                            if (threadId && threadId !== "") {
+                                                                                                                await AsyncStorage.setItem("openThread", threadId)
+                                                                                                            }
+
                                                                                                             props.openQA(channelId, cueId, createdBy)
                                                                                                         }
 

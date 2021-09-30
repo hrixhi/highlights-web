@@ -35,6 +35,7 @@ import ReactPlayer from "react-player";
 
 import { Select } from '@mobiscroll/react';
 
+import FormulaGuide from './FormulaGuide';
 
 const questionTypeOptions = [
     {
@@ -61,6 +62,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
     const [showEquationEditor, setShowEquationEditor] = useState(false);
     const [reloadEditorKey, setReloadEditorKey] = useState(Math.random());
     const [showImportOptions, setShowImportOptions] = useState(false);
+    const [showFormulaGuide, setShowFormulaGuide] = useState(false);
 
     let RichText: any = useRef();
 
@@ -200,12 +202,22 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         <TouchableOpacity
                             style={{
                                 justifyContent: "center",
-                                paddingHorizontal: 20,
+                                paddingLeft: 20,
                                 maxWidth: "10%",
                             }}
                             onPress={() => insertEquation()}
                         >
                             <Ionicons name="add-circle-outline" color="#1D1D20" size={20} />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={{
+                                justifyContent: "center",
+                                paddingLeft: 10,
+                                maxWidth: "10%",
+                            }}
+                            onPress={() => setShowFormulaGuide(true)}
+                            >
+                            <Ionicons name="help-circle-outline" color="#1D1D20" size={20} />
                         </TouchableOpacity>
                     </View> : null)
                 }
@@ -527,6 +539,8 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
             justifyContent: 'flex-start'
         }}
         >
+            { showFormulaGuide ? <FormulaGuide show={showFormulaGuide} onClose={() => setShowFormulaGuide(false)} /> : null }
+
             {/* Insert HEADER FOR INDEX 0 */}
             {
                 problems.map((problem: any, index: any) => {
@@ -891,6 +905,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 />
                                                 :
                                                 (option.option && option.option.includes("formula:") ?
+                                                <View style={{ flexDirection: 'row', marginTop: 10 }}>
                                                     <View style={{
                                                         borderColor: '#f0f0f2',
                                                         borderWidth: 1,
@@ -909,7 +924,20 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                             autoCommands="bar overline sqrt sum prod int alpha beta gamma delta epsilon zeta eta theta iota kappa lambda mu nu xi omikron pi rho sigma tau upsilon phi chi psi omega Alpha Beta Gamma Aelta Epsilon Zeta Eta Theta Iota Kappa Lambda Mu Nu Xi Omikron Pi Rho Sigma Tau Upsilon Phi Chi Psi Omega"
                                                             autoOperatorNames="sin cos tan arccos arcsin arctan"
                                                         />
-                                                    </View> :
+                                                    </View>
+                                                    {/*  */}
+                                                    <TouchableOpacity
+                                                            style={{
+                                                                justifyContent: "center",
+                                                                paddingLeft: 10,
+                                                                maxWidth: "10%",
+                                                            }}
+                                                            onPress={() => setShowFormulaGuide(true)}
+                                                            >
+                                                            <Ionicons name="help-circle-outline" color="#1D1D20" size={20} />
+                                                        </TouchableOpacity>
+                                                </View>
+                                                     :
                                                     <View style={{ width: '90%' }}>
                                                         {questionType === "trueFalse" || editQuestionNumber !== (index + 1) ?
                                                         <Text style={{ maxWidth: '100%', marginBottom: 10, marginTop: 10, paddingTop: 13, paddingBottom: 13, fontSize: 15, }}>
