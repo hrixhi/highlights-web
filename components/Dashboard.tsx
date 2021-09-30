@@ -408,7 +408,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 }}
             >
                 <Text style={{
-                    fontSize: 23,
+                    fontSize: 20,
                     paddingBottom: 20,
                     paddingTop: 10,
                     fontFamily: 'inter',
@@ -603,7 +603,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
         const activeTab = tabs[indexMap[key]];
 
-        return (<View style={{ flexDirection: "row", flex: 1, justifyContent: 'center', marginBottom: 40, paddingVertical: 10 }}>
+        return (<View style={{ flexDirection: "row", flex: 1, justifyContent: 'flex-start', marginBottom: 40, paddingVertical: 10 }}>
             <TouchableOpacity
                 style={{
                     justifyContent: "center",
@@ -615,7 +615,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     setIndexMap(temp)
                 }}>
                 <Text style={activeTab === 'Content' ? styles.allGrayFill1 : styles.all1}>
-                    <Ionicons name='library-outline' size={20} />
+                    <Ionicons name='library-outline' size={17} />
                 </Text>
                 <Text style={activeTab === 'Content' ? styles.allGrayFill1 : styles.all1}>
                     Library
@@ -632,7 +632,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     setIndexMap(temp)
                 }}>
                 <Text style={activeTab === 'Meet' ? styles.allGrayFill1 : styles.all1}>
-                    <Ionicons name='videocam-outline' size={20} />
+                    <Ionicons name='videocam-outline' size={17} />
                 </Text>
                 <Text style={activeTab === 'Meet' ? styles.allGrayFill1 : styles.all1}>
                     Meet
@@ -649,7 +649,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     setIndexMap(temp)
                 }}>
                 <Text style={activeTab === 'Discuss' ? styles.allGrayFill1 : styles.all1}>
-                    <Ionicons name='chatbubbles-outline' size={20} />
+                    <Ionicons name='chatbubbles-outline' size={17} />
                 </Text>
                 <Text style={activeTab === 'Discuss' ? styles.allGrayFill1 : styles.all1}>
                     Discuss
@@ -668,7 +668,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             setIndexMap(temp)
                         }}>
                         <Text style={activeTab === 'Settings' ? styles.allGrayFill1 : styles.all1}>
-                            <Ionicons name='hammer-outline' size={20} />
+                            <Ionicons name='hammer-outline' size={17} />
                         </Text>
                         <Text style={activeTab === 'Settings' ? styles.allGrayFill1 : styles.all1}>
                             Settings
@@ -723,11 +723,9 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
         return (<div style={{ display: 'flex', flexDirection: 'column', }}>
             <div style={{ display: 'flex', flexDirection: 'column', width: '100%', marginBottom: 30 }}>
-
                 <Text style={{ fontSize: 10, color: '#1D1D20', paddingLeft: 5, paddingBottom: 10 }}>
                     Channel
                 </Text>
-
                 <label style={{ width: 200 }}>
                     <Select
                         touchUi={true}
@@ -748,12 +746,8 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         dropdown={false}
                         data={channelOptions}
                     />
-
                 </label>
-
-
             </div>
-
             <div style={{ display: 'flex', flexDirection: 'column', width: '100%', marginBottom: 30 }}>
 
                 <Text style={{ fontSize: 10, color: '#1D1D20', paddingLeft: 5, paddingBottom: 10 }}>
@@ -830,7 +824,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             }}
                                         >
                                             <Text style={{
-                                                fontSize: 23,
+                                                fontSize: 20,
                                                 paddingBottom: 10,
                                                 paddingTop: 10,
                                                 fontFamily: 'inter',
@@ -849,114 +843,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         </TouchableOpacity>
                                         <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', backgroundColor: '#fff', paddingTop: 10 }}>
                                             <View style={{ flexDirection: 'row', justifyContent: 'center', display: 'flex', backgroundColor: '#fff' }}>
-                                                {/* {
-                                                    editFolderChannelId === key.split('-SPLIT-')[1] && (cueIds.length !== 0 || folderId !== '') ?
-                                                        <TouchableOpacity
-                                                            onPress={() => {
-                                                                handleFolderUpdate()
-                                                            }}
-                                                            style={{
-                                                                backgroundColor: 'white',
-                                                                overflow: 'hidden',
-                                                                height: 35,
-                                                                marginLeft: 20,
-                                                                // marginTop: 15,
-                                                                justifyContent: 'center',
-                                                                flexDirection: 'row'
-                                                            }}>
-                                                            <Text style={{
-                                                                textAlign: 'center',
-                                                                lineHeight: 30,
-                                                                color: '#fff',
-                                                                fontSize: 12,
-                                                                backgroundColor: '#007aff',
-                                                                paddingHorizontal: 25,
-                                                                marginRight: 15,
-                                                                fontFamily: 'inter',
-                                                                height: 30,
-                                                                // width: 100,
-                                                                borderRadius: 15,
-                                                                textTransform: 'uppercase'
-                                                            }}>
-                                                                GROUP
-                                                            </Text>
-                                                        </TouchableOpacity>
-                                                        : null
-                                                }
-                                                {
-                                                    editFolderChannelId === key.split('-SPLIT-')[1] ?
-                                                        <TouchableOpacity
-                                                            onPress={() => {
-                                                                setCueIds([])
-                                                                setEditFolderChannelId('')
-                                                                setFolderId('')
-                                                            }}
-                                                            style={{
-                                                                backgroundColor: 'white',
-                                                                overflow: 'hidden',
-                                                                height: 35,
-                                                                justifyContent: 'center',
-                                                                flexDirection: 'row'
-                                                            }}>
-                                                            <Text style={{
-                                                                textAlign: 'center',
-                                                                lineHeight: 30,
-                                                                color: '#1D1D20',
-                                                                fontSize: 12,
-                                                                backgroundColor: '#f7f7f7',
-                                                                paddingHorizontal: 25,
-                                                                marginRight: 15,
-                                                                fontFamily: 'inter',
-                                                                height: 30,
-                                                                borderRadius: 15,
-                                                                textTransform: 'uppercase'
-                                                            }}>
-                                                                CANCEL
-                                                            </Text>
-                                                        </TouchableOpacity>
-                                                        : null
-                                                }
-                                                {
-                                                    key.split('-SPLIT-')[2] === userId ?
-                                                        <TouchableOpacity
-                                                            style={{ marginRight: 15 }}
-                                                            onPress={() => {
-                                                                props.setChannelFilterChoice('All')
-                                                                props.handleFilterChange(key.split('-SPLIT-')[0])
-                                                                props.setChannelId(key.split('-SPLIT-')[1])
-                                                                props.setChannelCreatedBy(key.split('-SPLIT-')[2])
-                                                                props.openChannelSettings()
-                                                                props.hideHome()
-                                                            }}
-                                                        >
-                                                            <Text style={styles.channelText}>
-                                                                <Ionicons
-                                                                    name='hammer-outline' size={19} color={'#1D1D20'} />
-                                                            </Text>
-                                                            <Text style={{ fontSize: 11, color: '#1D1D20', textAlign: 'center' }}>
-                                                                Settings
-                                                            </Text>
-                                                        </TouchableOpacity>
-                                                        : null
-                                                }
-                                                <TouchableOpacity
-                                                    style={{ marginRight: 15, backgroundColor: '#fff' }}
-                                                    onPress={() => {
-                                                        props.setChannelFilterChoice('All')
-                                                        props.handleFilterChange(key.split('-SPLIT-')[0])
-                                                        props.setChannelId(key.split('-SPLIT-')[1])
-                                                        props.setChannelCreatedBy(key.split('-SPLIT-')[2])
-                                                        props.openMeeting()
-                                                        props.hideHome()
-                                                    }}>
-                                                    <Text style={styles.channelText}>
-                                                        <Ionicons
-                                                            name='chatbubbles-outline' size={19} color={'#1D1D20'} />
-                                                    </Text>
-                                                    <Text style={{ fontSize: 11, color: '#1D1D20', textAlign: 'center' }}>
-                                                        Classroom
-                                                    </Text>
-                                                </TouchableOpacity> */}
                                                 <TouchableOpacity
                                                     onPress={() => {
                                                         const tempCollapse = JSON.parse(JSON.stringify(collapseMap))
@@ -986,7 +872,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             }}
                                         >
                                             <Text style={{
-                                                fontSize: 23,
+                                                fontSize: 20,
                                                 paddingBottom: 20,
                                                 paddingTop: 10,
                                                 fontFamily: 'inter',
@@ -1083,7 +969,11 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                         maxWidth: 210,
                                                                         marginRight: 25
                                                                     }}>
-                                                                        <View style={{ backgroundColor: '#fff', paddingLeft: 23, marginBottom: 20 }}>
+                                                                        <View style={{
+                                                                            backgroundColor: '#fff',
+                                                                            // paddingLeft: 23, 
+                                                                            marginBottom: 20
+                                                                        }}>
                                                                             <Text style={{
                                                                                 flex: 1, flexDirection: 'row',
                                                                                 color: '#818385',
@@ -1529,22 +1419,22 @@ const styleObject: any = () => StyleSheet.create({
     all1: {
         fontSize: 10,
         color: '#43434f',
-        height: 25,
+        height: 20,
         paddingHorizontal: 10,
         backgroundColor: '#fff',
         // textTransform: 'uppercase',
-        lineHeight: 25,
+        lineHeight: 20,
         // fontFamily: 'inter',
         textAlign: 'center'
     },
     allGrayFill1: {
         fontSize: 10,
         color: '#007AFF',
-        height: 25,
+        height: 20,
         paddingHorizontal: 10,
         backgroundColor: '#fff',
         // textTransform: 'uppercase',
-        lineHeight: 25,
+        lineHeight: 20,
         // fontFamily: 'inter',
         textAlign: 'center'
     },

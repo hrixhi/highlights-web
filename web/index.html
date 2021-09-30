@@ -53,20 +53,66 @@
       text-rendering: optimizeLegibility;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
-      -ms-overflow-style: scrollbar;
+      -ms-overflow-style: none !important;
+      scrollbar-width: none !important;
     }
 
-    button, input, optgroup, select, textarea::-webkit-input-placeholder { /* WebKit browsers */
-      color:#a2a2ac;
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    body::-webkit-scrollbar {
+      display: none !important;
     }
-    button, input, optgroup, select, textarea:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
-      color:#a2a2ac;
+
+    html {
+      overflow: scroll;
+      overflow-x: hidden;
     }
-    button, input, optgroup, select, textarea::-moz-placeholder { /* Mozilla Firefox 19+ */
-      color:#a2a2ac;
+
+    ::-webkit-scrollbar {
+      width: 0;
+      /* Remove scrollbar space */
+      background: transparent;
+      /* Optional: just make scrollbar invisible */
     }
-    button, input, optgroup, select, textarea:-ms-input-placeholder { /* Internet Explorer 10+ */
-      color:#a2a2ac;
+
+    /* Optional: show position indicator in red */
+    ::-webkit-scrollbar-thumb {
+      display: none
+    }
+
+    button,
+    input,
+    optgroup,
+    select,
+    textarea::-webkit-input-placeholder {
+      /* WebKit browsers */
+      color: #a2a2ac;
+    }
+
+    button,
+    input,
+    optgroup,
+    select,
+    textarea:-moz-placeholder {
+      /* Mozilla Firefox 4 to 18 */
+      color: #a2a2ac;
+    }
+
+    button,
+    input,
+    optgroup,
+    select,
+    textarea::-moz-placeholder {
+      /* Mozilla Firefox 19+ */
+      color: #a2a2ac;
+    }
+
+    button,
+    input,
+    optgroup,
+    select,
+    textarea:-ms-input-placeholder {
+      /* Internet Explorer 10+ */
+      color: #a2a2ac;
     }
 
     textarea {

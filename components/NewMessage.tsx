@@ -393,7 +393,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 }}
                                                 style={{ backgroundColor: 'white' }}>
                                                 <Text style={{ textAlign: 'right', lineHeight: 20, width: '100%' }}>
-                                                    <Ionicons name={addCustomCategory ? 'close' : 'add'} size={20} color={'#818385'} />
+                                                    <Ionicons name={addCustomCategory ? 'close' : 'add'} size={17} color={'#818385'} />
                                                 </Text>
                                             </TouchableOpacity>
                                         </View>

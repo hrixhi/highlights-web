@@ -694,7 +694,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             }}
                             onPress={() => insertEquation()}
                         >
-                            <Ionicons name="add-circle-outline" color="#1D1D20" size={20} />
+                            <Ionicons name="add-circle-outline" color="#1D1D20" size={17} />
                         </TouchableOpacity>
                     </View> : null)
             }

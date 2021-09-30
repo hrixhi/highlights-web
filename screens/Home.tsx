@@ -1915,7 +1915,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               onPress={() => setOption('To Do')}
             >
               <Text style={{ textAlign: 'center' }}>
-                <Ionicons name='journal-outline' size={25} color={option === 'To Do' ? '#007AFF' : '#1D1D20'} />
+                <Ionicons name='journal-outline' size={22} color={option === 'To Do' ? '#007AFF' : '#1D1D20'} />
               </Text>
               <Text style={{ fontSize: 11, color: option === 'To Do' ? '#007AFF' : '#1D1D20', paddingTop: 5, textAlign: 'center' }}>
                 To Do
@@ -1929,10 +1929,10 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               onPress={() => setOption('Classroom')}
             >
               <Text style={{ textAlign: 'center' }}>
-                <Ionicons name='school-outline' size={25} color={option === 'Classroom' ? '#007AFF' : '#1D1D20'} />
+                <Ionicons name='school-outline' size={22} color={option === 'Classroom' ? '#007AFF' : '#1D1D20'} />
               </Text>
               <Text style={{ fontSize: 11, color: option === 'Classroom' ? '#007AFF' : '#1D1D20', paddingTop: 5, textAlign: 'center' }}>
-                Classroom
+                Classrooms
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -1943,7 +1943,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               onPress={() => setOption('Performance')}
             >
               <Text style={{ textAlign: 'center' }}>
-                <Ionicons name='speedometer-outline' size={25} color={option === 'Performance' ? '#007AFF' : '#1D1D20'} />
+                <Ionicons name='speedometer-outline' size={22} color={option === 'Performance' ? '#007AFF' : '#1D1D20'} />
               </Text>
               <Text style={{ fontSize: 11, color: option === 'Performance' ? '#007AFF' : '#1D1D20', paddingTop: 5, textAlign: 'center' }}>
                 Performance
@@ -1958,7 +1958,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               onPress={() => setOption('Inbox')}
             >
               <Text style={{ textAlign: 'center' }}>
-                <Ionicons name='mail-outline' size={25} color={option === 'Inbox' ? '#007AFF' : '#1D1D20'} />
+                <Ionicons name='mail-outline' size={22} color={option === 'Inbox' ? '#007AFF' : '#1D1D20'} />
               </Text>
               <Text style={{ fontSize: 11, color: option === 'Inbox' ? '#007AFF' : '#1D1D20', paddingTop: 5, textAlign: 'center' }}>
                 Inbox

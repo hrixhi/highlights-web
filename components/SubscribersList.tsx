@@ -1110,7 +1110,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
         }}>
             {
                 props.cueId ? null : <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 25 }}>
-                    {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
+                    {/* <Ionicons name='chevron-down' size={17} color={'#e0e0e0'} /> */}
                 </Text>
             }
             {
@@ -1628,7 +1628,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                                     </Text>
                                                                                     :
                                                                                     null
-                                                                            } {subscriber.fullName === 'submitted' || subscriber.fullName === 'graded' ? <Ionicons name='chevron-forward-outline' size={20} /> : null}
+                                                                            } {subscriber.fullName === 'submitted' || subscriber.fullName === 'graded' ? <Ionicons name='chevron-forward-outline' size={17} /> : null}
                                                                         </Text>
                                                                     </View>
                                                                 </View>

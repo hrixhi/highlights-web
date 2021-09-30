@@ -342,7 +342,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     }}
                     style={{ backgroundColor: 'white' }}>
                     <Text style={{ textAlign: 'right', lineHeight: 20, width: '100%' }}>
-                        <Ionicons name={addCustomCategory ? 'close' : 'add'} size={20} color={'#818385'} />
+                        <Ionicons name={addCustomCategory ? 'close' : 'add'} size={17} color={'#818385'} />
                     </Text>
                 </TouchableOpacity>
             </View>
@@ -477,7 +477,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                             textTransform: 'uppercase'
                                         }}>
                                             POST <Ionicons name='chatbox-ellipses-outline' size={12} />
-                                            {/* <Ionicons name='create-outline' size={20} color={'#1D1D20'} /> */}
+                                            {/* <Ionicons name='create-outline' size={17} color={'#1D1D20'} /> */}
                                         </Text>
                                     </TouchableOpacity>
                                 </View> : null
@@ -690,12 +690,12 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                                                 {
                                                                                     thread.isPrivate ?
                                                                                         <Text style={{ fontSize: 15, padding: 10, color: '#007AFF', textAlign: 'center' }} ellipsizeMode='tail'>
-                                                                                            <Ionicons name='eye-off-outline' size={20} />
+                                                                                            <Ionicons name='eye-off-outline' size={17} />
                                                                                         </Text>
                                                                                         : null
                                                                                 }
                                                                                 <Text style={{ fontSize: 15, padding: 10, color: '#007AFF', textAlign: 'center' }} ellipsizeMode='tail'>
-                                                                                    <Ionicons name='chevron-forward-outline' size={20} />
+                                                                                    <Ionicons name='chevron-forward-outline' size={17} />
                                                                                 </Text>
                                                                             </View>
                                                                         </View>

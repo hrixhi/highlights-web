@@ -101,7 +101,7 @@ const ThreadCard: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 <Text ellipsizeMode={'tail'}
                                     numberOfLines={1}
                                     style={styleObject.titleArrow}>
-                                    <Ionicons name="chevron-forward-outline" color="#818385" size={20} style={{ marginTop: 4 }} />
+                                    <Ionicons name="chevron-forward-outline" color="#818385" size={17} style={{ marginTop: 4 }} />
                                 </Text>
                             </View>
                             : <View style={{ backgroundColor: '#f7f7f7', width: '100%', flexDirection: 'row', display: 'flex' }}>
@@ -129,7 +129,7 @@ const ThreadCard: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 <Text ellipsizeMode={'tail'}
                                     numberOfLines={1}
                                     style={styleObject.titleArrow}>
-                                    <Ionicons name="chevron-forward-outline" color="#818385" size={20} style={{ marginTop: 4 }} />
+                                    <Ionicons name="chevron-forward-outline" color="#818385" size={17} style={{ marginTop: 4 }} />
                                 </Text>
                             </View>
                     }

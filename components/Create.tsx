@@ -984,7 +984,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
             paddingBottom: 30,
           }}
         >
-          {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
+          {/* <Ionicons name='chevron-down' size={17} color={'#e0e0e0'} /> */}
         </Text>
         <View style={{ flexDirection: "row" }}>
           <View style={{ backgroundColor: "white", flex: 1 }} />
@@ -1188,7 +1188,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
               }}
               onPress={() => insertEquation()}
             >
-              <Ionicons name="add-circle-outline" color="#1D1D20" size={20} />
+              <Ionicons name="add-circle-outline" color="#1D1D20" size={17} />
             </TouchableOpacity>
             <View
               style={{
@@ -1262,7 +1262,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                       <Ionicons
                         name="trash-outline"
                         color="#818385"
-                        size={20}
+                        size={17}
                         style={{ alignSelf: "center" }}
                       />
                       <Text
@@ -2451,7 +2451,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                         >
                           <Ionicons
                             name={addCustomCategory ? "close" : "add"}
-                            size={20}
+                            size={17}
                             color={"#1D1D20"}
                           />
                         </Text>

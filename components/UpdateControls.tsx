@@ -2219,7 +2219,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         maxWidth: "10%"
                     }}
                     onPress={() => insertEquation()}>
-                    <Ionicons name="add-circle-outline" color="#1D1D20" size={20} />
+                    <Ionicons name="add-circle-outline" color="#1D1D20" size={17} />
                 </TouchableOpacity>
                 <View
                     style={{
@@ -2267,7 +2267,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             props.setShowComments(false)
                         }}>
                         <Text style={!props.showOptions && props.showOriginal && !props.showComments ? styles.allGrayFill : styles.all}>
-                            <Ionicons name='document-outline' size={20} />
+                            <Ionicons name='document-outline' size={17} />
                         </Text>
                         <Text style={!props.showOptions && props.showOriginal && !props.showComments ? styles.allGrayFill : styles.all}>
                             Content
@@ -2284,7 +2284,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             props.setShowComments(false)
                         }}>
                         <Text style={props.showOptions ? styles.allGrayFill : styles.all}>
-                            <Ionicons name='options-outline' size={20} />
+                            <Ionicons name='options-outline' size={17} />
                         </Text>
                         <Text style={props.showOptions ? styles.allGrayFill : styles.all}>
                             Options
@@ -2301,7 +2301,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             props.setShowOptions(false)
                         }}>
                         <Text style={props.showComments ? styles.allGrayFill : styles.all}>
-                            <Ionicons name='chatbubbles-outline' size={20} />
+                            <Ionicons name='chatbubbles-outline' size={17} />
                             {/* {props.cue.unreadThreads > 0 ? <View style={styles.badge} /> : null} */}
                         </Text>
                         <Text style={props.showComments ? styles.allGrayFill : styles.all}>
@@ -2325,7 +2325,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
                             }}>
                             <Text style={!props.showOriginal && !props.viewStatus && !props.showComments && !props.showOptions ? styles.allGrayFill : styles.all}>
-                                <Ionicons name='document-attach-outline' size={20} />
+                                <Ionicons name='document-attach-outline' size={17} />
                             </Text>
                             <Text style={!props.showOriginal && !props.viewStatus && !props.showComments && !props.showOptions ? styles.allGrayFill : styles.all}>
                                 Submission
@@ -2347,7 +2347,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 props.changeViewStatus();
                             }}>
                             <Text style={props.viewStatus ? styles.allGrayFill : styles.all}>
-                                <Ionicons name='checkmark-done-outline' size={20} />
+                                <Ionicons name='checkmark-done-outline' size={17} />
                             </Text>
                             <Text style={props.viewStatus ? styles.allGrayFill : styles.all}>
                                 Engagement
@@ -2452,7 +2452,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 <Ionicons
                                     name="reload-outline"
                                     color="#818385"
-                                    size={20}
+                                    size={17}
                                     onPress={() => setWebviewKey(Math.random())}
                                 />
                             </View>
@@ -2467,7 +2467,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         </View> */}
                         {/* <a download={true} href={url} style={{ textDecoration: "none", textAlign: "center" }}>
                             <View>
-                                <Ionicons name="cloud-download-outline" color="#818385" size={20} />
+                                <Ionicons name="cloud-download-outline" color="#818385" size={17} />
                                 <Text
                                     style={{
                                         fontSize: 10,
@@ -2486,7 +2486,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     }}
                                     onPress={() => clearAll()}
                                 >
-                                    <Ionicons name="trash-outline" color="#818385" size={20} style={{ alignSelf: 'center' }} />
+                                    <Ionicons name="trash-outline" color="#818385" size={17} style={{ alignSelf: 'center' }} />
                                     <Text
                                         style={{
                                             fontSize: 10,
@@ -4070,7 +4070,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             lineHeight: 20,
                                             width: "100%"
                                         }}>
-                                        <Ionicons name={addCustomCategory ? "close" : "add"} size={20} color={"#1D1D20"} />
+                                        <Ionicons name={addCustomCategory ? "close" : "add"} size={17} color={"#1D1D20"} />
                                     </Text>
                                 </TouchableOpacity>
                             </View>
@@ -4308,7 +4308,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 }}>
                                 <Ionicons
                                     name={"arrow-redo-outline"}
-                                    size={20}
+                                    size={17}
                                     color={shareWithChannelId === "" ? "#818385" : "#1D1D20"}
                                 />
                             </Text>
@@ -4849,7 +4849,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         height: 15,
                         paddingBottom: 30
                     }}>
-                    {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
+                    {/* <Ionicons name='chevron-down' size={17} color={'#e0e0e0'} /> */}
                 </Text>
 
                 {props.cue.channelId && props.cue.channelId !== "" ? (
@@ -4917,7 +4917,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             }}
                         >
                             <Text style={!props.showOptions ? styles.allGrayFill : styles.all}>
-                                <Ionicons name='document-outline' size={20} />
+                                <Ionicons name='document-outline' size={17} />
                             </Text>
                             <Text style={!props.showOptions ? styles.allGrayFill : styles.all}>
                                 Content
@@ -4932,7 +4932,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 props.setShowOptions(true)
                             }}>
                             <Text style={props.showOptions ? styles.allGrayFill : styles.all}>
-                                <Ionicons name='options-outline' size={20} />
+                                <Ionicons name='options-outline' size={17} />
                             </Text>
                             <Text style={props.showOptions ? styles.allGrayFill : styles.all}>
                                 Options
@@ -5119,7 +5119,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             <Ionicons
                                                 name="reload-outline"
                                                 color="#818385"
-                                                size={20}
+                                                size={17}
                                                 onPress={() => setWebviewKey(Math.random())}
                                             />
                                         </View>
@@ -5134,7 +5134,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     </View> */}
                                                 {/* <a download={true} href={submissionUrl} style={{ textDecoration: "none", textAlign: "center" }}>
                                                     <View>
-                                                        <Ionicons name="cloud-download-outline" color="#818385" size={20} style={{ alignSelf: 'center' }} />
+                                                        <Ionicons name="cloud-download-outline" color="#818385" size={17} style={{ alignSelf: 'center' }} />
                                                         <Text
                                                             style={{
                                                                 fontSize: 10,
@@ -5151,7 +5151,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                             onPress={() => clearAll()}
                                                             style={{ marginLeft: 15, alignContent: 'center' }}
                                                         >
-                                                            <Ionicons name="trash-outline" color="#818385" size={20} />
+                                                            <Ionicons name="trash-outline" color="#818385" size={17} />
                                                             <Text
                                                                 style={{
                                                                     fontSize: 10,
@@ -5169,7 +5169,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             }}
                                             onPress={() => clearAll()}
                                         >
-                                            <Ionicons name="trash-outline" color="#818385" size={20} style={{ alignSelf: 'center' }} />
+                                            <Ionicons name="trash-outline" color="#818385" size={17} style={{ alignSelf: 'center' }} />
                                             <Text
                                                 style={{
                                                     fontSize: 10,

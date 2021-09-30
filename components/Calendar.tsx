@@ -483,7 +483,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 } else {
                     Alert('Failed to edit event. Try again.')
                 }
-                
+
                 setIsEditingEvents(false);
 
             })
@@ -531,7 +531,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
                 }
                 setIsDeletingEvents(false);
-                
+
             })
             .catch(err => {
                 setIsDeletingEvents(false);
@@ -822,7 +822,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         flexDirection: "row",
                         marginLeft: 0
                     }}>
-                    
+
                     <label style={{ width: 180 }}>
                         <Select
                             themeVariant="light"
@@ -847,7 +847,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 }
                             })}
                         />
-                                             
+
                     </label>
 
 
@@ -924,7 +924,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         themeVariant="light"
                         inputComponent="input"
                         inputProps={{
-                            placeholder: 'Repeat till...' 
+                            placeholder: 'Repeat till...'
                         }}
                         onChange={(event: any) => {
                             const date = new Date(event.value);
@@ -1040,7 +1040,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const renderEditChannelName = () => {
 
         return editChannelName && (
-            <View style={{  }}>
+            <View style={{}}>
                 <TouchableOpacity
                     key={Math.random()}
                     disabled={true}
@@ -1153,7 +1153,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         },
                         {
                             text: "Yes",
-                            onPress:  () => {
+                            onPress: () => {
                                 handleEdit()
                             }
                         }
@@ -1197,7 +1197,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         },
                         {
                             text: "Yes",
-                            onPress:  () => {
+                            onPress: () => {
                                 handleDelete(false)
                             }
                         }
@@ -1242,12 +1242,12 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         },
                         {
                             text: "Yes",
-                            onPress:  () => {
+                            onPress: () => {
                                 handleDelete(true)
                             }
                         }
                     ])
-                }}  
+                }}
                 disabled={isEditingEvents || isDeletingEvents}>
                 <Text
                     style={{
@@ -1274,7 +1274,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
         // Add buttons to view event, edit event, join meeting, etc
 
         const assingmentDue = new Date() > new Date(data.original.start)
-        
+
 
         return <React.Fragment>
             <div>{data.title}</div>
@@ -1321,7 +1321,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     setTab(tabs[0])
                 }}>
                 <Text style={activeTab === tabs[0] ? styles.allGrayFill1 : styles.all1}>
-                    <Ionicons name='receipt-outline' size={20} />
+                    <Ionicons name='receipt-outline' size={17} />
                 </Text>
                 <Text style={activeTab === tabs[0] ? styles.allGrayFill1 : styles.all1}>
                     Agenda
@@ -1337,7 +1337,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     setTab(tabs[1])
                 }}>
                 <Text style={activeTab === tabs[1] ? styles.allGrayFill1 : styles.all1}>
-                    <Ionicons name='today-outline' size={20} />
+                    <Ionicons name='today-outline' size={17} />
                 </Text>
                 <Text style={activeTab === tabs[1] ? styles.allGrayFill1 : styles.all1}>
                     Time Table
@@ -1353,7 +1353,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     setTab(tabs[2])
                 }}>
                 <Text style={activeTab === tabs[2] ? styles.allGrayFill1 : styles.all1}>
-                    <Ionicons name='calendar-outline' size={20} />
+                    <Ionicons name='calendar-outline' size={17} />
                 </Text>
                 <Text style={activeTab === tabs[2] ? styles.allGrayFill1 : styles.all1}>
                     Calendar
@@ -1369,7 +1369,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     setTab(tabs[3])
                 }}>
                 <Text style={activeTab === tabs[3] ? styles.allGrayFill1 : styles.all1}>
-                    <Ionicons name='notifications-outline' size={20} />
+                    <Ionicons name='notifications-outline' size={17} />
                 </Text>
                 <Text style={activeTab === tabs[3] ? styles.allGrayFill1 : styles.all1}>
                     Activity
@@ -1384,7 +1384,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     setTab(tabs[4])
                 }}>
                 <Text style={activeTab === tabs[4] ? styles.allGrayFill1 : styles.all1}>
-                    {editEvent ? <Ionicons name='pencil-outline' size={20} /> :<Ionicons name='add-outline' size={20} />}
+                    {editEvent ? <Ionicons name='pencil-outline' size={17} /> : <Ionicons name='add-outline' size={17} />}
                 </Text>
                 <Text style={activeTab === tabs[4] ? styles.allGrayFill1 : styles.all1}>
                     Event
@@ -1404,7 +1404,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
             text: channel.name
         })
     })
-    
+
     return (
         <Animated.View
             style={{
@@ -1803,7 +1803,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                                 }}
                                                                                                 size={'xs'}
                                                                                             /> */}
-                                                                                            <MobiscrollDatePicker 
+                                                                                            <MobiscrollDatePicker
                                                                                                 controls={['date', 'time']}
                                                                                                 touchUi={true}
                                                                                                 theme="ios"
@@ -1811,7 +1811,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                                 themeVariant="light"
                                                                                                 inputComponent="input"
                                                                                                 inputProps={{
-                                                                                                    placeholder: 'Select start...' 
+                                                                                                    placeholder: 'Select start...'
                                                                                                 }}
                                                                                                 onChange={(event: any) => {
                                                                                                     const date = new Date(event.value);
@@ -1851,7 +1851,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                                 size={'xs'}
                                                                                             /> */}
 
-                                                                                            <MobiscrollDatePicker 
+                                                                                            <MobiscrollDatePicker
                                                                                                 controls={['date', 'time']}
                                                                                                 touchUi={true}
                                                                                                 theme="ios"
@@ -1859,7 +1859,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                                 themeVariant="light"
                                                                                                 inputComponent="input"
                                                                                                 inputProps={{
-                                                                                                    placeholder: 'Select end...' 
+                                                                                                    placeholder: 'Select end...'
                                                                                                 }}
                                                                                                 onChange={(event: any) => {
                                                                                                     const date = new Date(event.value);
@@ -1943,7 +1943,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                                             }
                                                                                                         </MenuOptions>
                                                                                                     </Menu> */}
-                                                                                                     <label style={{ width: 180 }}>
+                                                                                                    <label style={{ width: 180 }}>
                                                                                                         <Select
                                                                                                             touchUi={true}
                                                                                                             themeVariant="light"
@@ -2099,23 +2099,23 @@ const styles: any = StyleSheet.create({
     all1: {
         fontSize: 10,
         color: '#43434f',
-        height: 25,
+        height: 20,
         paddingHorizontal: 10,
         backgroundColor: '#fff',
         // textTransform: 'uppercase',
-        lineHeight: 25,
+        lineHeight: 20,
         textAlign: 'center',
         // fontFamily: 'inter'
     },
     allGrayFill1: {
         fontSize: 10,
         color: '#007AFF',
-        height: 25,
+        height: 20,
         paddingHorizontal: 10,
         textAlign: 'center',
         backgroundColor: '#fff',
         // textTransform: 'uppercase',
-        lineHeight: 25,
+        lineHeight: 20,
         // fontFamily: 'inter'
     },
     col: {

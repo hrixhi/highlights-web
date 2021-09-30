@@ -1383,7 +1383,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         }}
     >
         <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 30, backgroundColor: 'white' }}>
-            {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
+            {/* <Ionicons name='chevron-down' size={17} color={'#e0e0e0'} /> */}
         </Text>
         {!createNewFolder && folderId === "" ? <View style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             {channelFolders.length > 0 ? <Menu
@@ -1647,7 +1647,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 setShowComments(false)
                             }}>
                             <Text style={showOriginal ? styles.allGrayFill : styles.all}>
-                                <Ionicons name='document-outline' size={20} />
+                                <Ionicons name='document-outline' size={17} />
                             </Text>
                             <Text style={showOriginal ? styles.allGrayFill : styles.all}>
                                 Content
@@ -1666,7 +1666,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             }}>
 
                             <Text style={styles.all}>
-                                <Ionicons name='options-outline' size={20} />
+                                <Ionicons name='options-outline' size={17} />
                             </Text>
                             <Text style={styles.all}>
                                 Options
@@ -1684,7 +1684,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 setShowComments(true)
                             }}>
                             <Text style={styles.all}>
-                                <Ionicons name='chatbubbles-outline' size={20} />
+                                <Ionicons name='chatbubbles-outline' size={17} />
                                 {/* {props.cue.unreadThreads > 0 ? <View style={styles.badge} /> : null} */}
                             </Text>
                             <Text style={styles.all}>
@@ -1705,7 +1705,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         setShowOptions(false)
                                     }}>
                                     <Text style={!showOriginal && !viewStatus && !showOptions && !showComments ? styles.allGrayFill : styles.all}>
-                                        <Ionicons name='document-attach-outline' size={20} />
+                                        <Ionicons name='document-attach-outline' size={17} />
                                     </Text>
                                     <Text style={!showOriginal && !viewStatus && !showOptions && !showComments ? styles.allGrayFill : styles.all}>
                                         Submission
@@ -1727,7 +1727,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         setShowOptions(false)
                                     }}>
                                     <Text style={viewStatus ? styles.allGrayFill : styles.all}>
-                                        <Ionicons name='checkmark-done-outline' size={20} />
+                                        <Ionicons name='checkmark-done-outline' size={17} />
                                     </Text>
                                     <Text style={viewStatus ? styles.allGrayFill : styles.all}>
                                         Engagement

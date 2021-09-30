@@ -536,14 +536,14 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                     <TouchableOpacity onPress={() => {
                                                                         modifyGrade()
                                                                     }}>
-                                                                        <Ionicons name='checkmark-circle-outline' size={20} style={{ marginRight: 5 }} color={'#8bc34a'} />
+                                                                        <Ionicons name='checkmark-circle-outline' size={17} style={{ marginRight: 5 }} color={'#8bc34a'} />
                                                                     </TouchableOpacity>
                                                                     <TouchableOpacity onPress={() => {
                                                                         setActiveCueId('')
                                                                         setActiveUserId('')
                                                                         setActiveScore('')
                                                                     }}>
-                                                                        <Ionicons name='close-circle-outline' size={20} color={'#f94144'} />
+                                                                        <Ionicons name='close-circle-outline' size={17} color={'#f94144'} />
                                                                     </TouchableOpacity>
                                                                 </View>
 

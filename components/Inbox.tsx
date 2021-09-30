@@ -783,7 +783,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                             textTransform: 'uppercase'
                                                         }}
                                                     >
-                                                        <Ionicons name='reload-outline' size={20} color={'#1D1D20'} />
+                                                        <Ionicons name='reload-outline' size={17} color={'#1D1D20'} />
                                                     </Text>
                                                     <Text style={{ fontSize: 10, color: '#1D1D20', paddingTop: 5, backgroundColor: '#fff', textAlign: 'center' }}>
                                                         Refresh
@@ -840,7 +840,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                         borderRadius: 15,
                                                         textTransform: 'uppercase'
                                                     }}>
-                                                        <Ionicons name='list-outline' size={20} color={'#1D1D20'} />
+                                                        <Ionicons name='list-outline' size={17} color={'#1D1D20'} />
                                                     </Text>
                                                     <Text style={{ fontSize: 10, color: '#1D1D20', paddingTop: 5, backgroundColor: '#fff', textAlign: 'center' }}>
                                                         Directory
@@ -875,7 +875,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                         borderRadius: 15,
                                                         // textTransform: 'uppercase'
                                                     }}>
-                                                        <Ionicons name='people-circle-outline' size={20} color={'#1D1D20'} />
+                                                        <Ionicons name='people-circle-outline' size={17} color={'#1D1D20'} />
                                                     </Text>
                                                     <Text style={{ fontSize: 10, color: '#1D1D20', paddingTop: 5, backgroundColor: '#fff', textAlign: 'center' }}>
                                                         New Group
@@ -1331,7 +1331,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                                 </View>
                                                                                 {/* <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
                                                                 <Text style={{ fontSize: 15, padding: 10, color: '#007AFF', textAlign: 'center' }} ellipsizeMode='tail'>
-                                                                    <Ionicons name='chatbubble-ellipses-outline' size={20} />
+                                                                    <Ionicons name='chatbubble-ellipses-outline' size={17} />
                                                                 </Text>
                                                             </View> */}
                                                                             </TouchableOpacity>
@@ -1431,7 +1431,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                                     </View>
                                                                                     {/* <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
                                                                                 <Text style={{ fontSize: 15, padding: 10, color: '#007AFF', textAlign: 'center' }} ellipsizeMode='tail'>
-                                                                                    <Ionicons name='chevron-forward-outline' size={20} />
+                                                                                    <Ionicons name='chevron-forward-outline' size={17} />
                                                                                 </Text>
                                                                             </View> */}
                                                                                 </TouchableOpacity>
