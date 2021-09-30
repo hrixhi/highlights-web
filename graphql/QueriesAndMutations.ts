@@ -1224,6 +1224,7 @@ export const getActivity = gql`
        cueId
        createdBy
        target
+       threadId
      }
    }
  }

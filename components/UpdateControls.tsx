@@ -58,6 +58,7 @@ import { Datepicker as MobiscrollDatePicker } from "@mobiscroll/react5";
 import '@mobiscroll/react/dist/css/mobiscroll.react.min.css';
 import '@mobiscroll/react5/dist/css/mobiscroll.min.css';
 import mobiscroll, { Form as MobiscrollForm, FormGroup, Button as MobiscrollButton, Select as MobiscrollSelect, Input, FormGroupTitle } from '@mobiscroll/react'
+import FormulaGuide from './FormulaGuide';
 
 const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const current = new Date();
@@ -183,6 +184,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const [loadingAfterModifyingQuiz, setLoadingAfterModifyingQuiz] = useState(false);
 
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [showFormulaGuide, setShowFormulaGuide] = useState(false);
+
 
     const insertEquation = useCallback(() => {
         let currentContent = editorRef.current.getContent();
@@ -887,10 +890,17 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     }, [RichText, RichText.current]);
 
     const initQuiz = useCallback(async () => {
-        let now = new Date();
-        if (now >= deadline) {
-            Alert(unableToStartQuizAlert, deadlineHasPassedAlert);
-            return;
+
+        // Need to update this for late submission
+
+        // Late submission not allowed then no submission after deadline has passed
+        if ((!allowLateSubmission && new Date() > deadline) ||
+            // If late submission allowed, then available until should be the new deadline
+            (allowLateSubmission && new Date() > availableUntil) ||
+            // Once release Submission that means assignment should be locked
+            (props.cue.releaseSubmission)) {
+                Alert(unableToStartQuizAlert, "Submission period has ended.");
+                return;
         }
 
         if (now < initiateAt) {
@@ -2215,23 +2225,22 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 <TouchableOpacity
                     style={{
                         justifyContent: "center",
-                        paddingHorizontal: 20,
+                        paddingLeft: 20,
                         maxWidth: "10%"
                     }}
                     onPress={() => insertEquation()}>
                     <Ionicons name="add-circle-outline" color="#1D1D20" size={20} />
                 </TouchableOpacity>
-                <View
+                <TouchableOpacity
                     style={{
-                        minWidth: "40%",
-                        flex: 1,
-                        paddingVertical: 5,
-                        justifyContent: "center"
-                    }}>
-                    <Text style={{ flex: 1, fontSize: 12, color: "#1D1D20", lineHeight: "1.5" }}>
-                        ^ → Superscript,  _ → Subscript,  int → Integral,  sum → Summation,  prod → Product,  sqrt → Square root,  bar → Bar over letter;  alpha, beta, ... omega → Small Greek letter;  Alpha, Beta, ... Omega → Capital Greek letter
-                    </Text>
-                </View>
+                        justifyContent: "center",
+                        paddingLeft: 10,
+                        maxWidth: "10%",
+                    }}
+                    onPress={() => setShowFormulaGuide(true)}
+                    >
+                    <Ionicons name="help-circle-outline" color="#1D1D20" size={20} />
+                </TouchableOpacity>
             </View>
         ) : null;
     };
@@ -2417,7 +2426,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         }
 
                                         if (remainingTime === 120) {
-                                            Alert("Two minutes left. Quiz will auto-submit.")
+                                            Alert("Two minutes left. Quiz will auto-submit when timer ends.")
                                         }
 
                                         const hours = Math.floor(remainingTime / 3600);
@@ -3809,7 +3818,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
                     <View
                         style={{
-                            width: "100%",
                             display: "flex",
                             flexDirection: "row",
                             backgroundColor: "white",
@@ -5064,6 +5072,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         </View>
                 }
                 {renderEquationEditor()}
+                { showFormulaGuide ? <FormulaGuide show={showFormulaGuide} onClose={() => setShowFormulaGuide(false)} /> : null }
                 <ScrollView
                     style={{
                         paddingBottom: 25,
