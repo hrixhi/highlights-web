@@ -94,7 +94,7 @@ const ThreadCard: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     </View>
                     {
                         imported ?
-                            <View style={{ backgroundColor: '#f8f8fa', flex: 1, flexDirection: 'row', paddingTop: 6 }}>
+                            <View style={{ backgroundColor: '#f7f7f7', flex: 1, flexDirection: 'row', paddingTop: 6 }}>
                                 <Text style={{ width: '100%', color: '#818385', fontSize: 15, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                                     <Ionicons name='document-outline' size={17} color='#818385' /> {title}.{type}
                                 </Text>
@@ -104,7 +104,7 @@ const ThreadCard: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     <Ionicons name="chevron-forward-outline" color="#818385" size={20} style={{ marginTop: 4 }} />
                                 </Text>
                             </View>
-                            : <View style={{ backgroundColor: '#f8f8fa', width: '100%', flexDirection: 'row', display: 'flex' }}>
+                            : <View style={{ backgroundColor: '#f7f7f7', width: '100%', flexDirection: 'row', display: 'flex' }}>
                                 <Text ellipsizeMode={'tail'}
                                     numberOfLines={1}
                                     style={styleObject.title}>
@@ -166,7 +166,7 @@ const styles: any = () => StyleSheet.create({
         width: '100%',
         borderRadius: 0,
         padding: 13,
-        backgroundColor: '#f8f8fa',
+        backgroundColor: '#f7f7f7',
         borderWidth: 1,
         borderColor: '#d0d0d2'
     },
@@ -174,12 +174,12 @@ const styles: any = () => StyleSheet.create({
         display: 'flex',
         flexDirection: 'column',
         flex: 1,
-        backgroundColor: '#f8f8fa'
+        backgroundColor: '#f7f7f7'
     },
     dateContainer: {
         fontSize: 10,
         height: '22%',
-        backgroundColor: '#f8f8fa',
+        backgroundColor: '#f7f7f7',
         display: 'flex',
         flexDirection: 'row'
     },

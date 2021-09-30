@@ -63,10 +63,10 @@ const FilterBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
     return (
         <View style={styles.bottombar}>
             <View style={styles.colorBar}>
-                <View style={{ flexDirection: 'row', flex: 1, backgroundColor: '#f8f8fa' }}>
-                    <View style={{ paddingLeft: 10, flexDirection: 'row', backgroundColor: '#f8f8fa' }}>
-                        <View style={{ backgroundColor: '#f8f8fa' }}>
-                            <View style={{ flexDirection: 'row', display: 'flex', backgroundColor: '#f8f8fa', paddingLeft: 30 }}>
+                <View style={{ flexDirection: 'row', flex: 1, backgroundColor: '#f7f7f7' }}>
+                    <View style={{ paddingLeft: 10, flexDirection: 'row', backgroundColor: '#f7f7f7' }}>
+                        <View style={{ backgroundColor: '#f7f7f7' }}>
+                            <View style={{ flexDirection: 'row', display: 'flex', backgroundColor: '#f7f7f7', paddingLeft: 30 }}>
                                 <Menu
                                     onSelect={(subscription: any) => {
                                         if (subscription === 'All') {
@@ -100,7 +100,7 @@ const FilterBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             borderRadius: 15,
                                             shadowOpacity: 0,
                                             borderWidth: 1,
-                                            borderColor: '#f0f0f2',
+                                            borderColor: '#e8e8ea',
                                             overflow: 'scroll',
                                             maxHeight: '100%'
                                         }
@@ -157,14 +157,14 @@ const FilterBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     </MenuOptions>
                                 </Menu>
                             </View>
-                            <Text style={{ fontSize: 10, color: '#1D1D20', paddingTop: 7, backgroundColor: '#f8f8fa', paddingLeft: 30 }}>
+                            <Text style={{ fontSize: 10, color: '#1D1D20', paddingTop: 7, backgroundColor: '#f7f7f7', paddingLeft: 30 }}>
                                 Channel
                             </Text>
                         </View>
                     </View>
-                    <View style={{ flexDirection: 'row', backgroundColor: '#f8f8fa', paddingRight: 30, flex: 1, justifyContent: 'flex-end'}}>
-                        <View style={{ backgroundColor: '#f8f8fa' }}>
-                            <View style={{ flexDirection: 'row', display: 'flex', backgroundColor: '#f8f8fa' }}>
+                    <View style={{ flexDirection: 'row', backgroundColor: '#f7f7f7', paddingRight: 30, flex: 1, justifyContent: 'flex-end'}}>
+                        <View style={{ backgroundColor: '#f7f7f7' }}>
+                            <View style={{ flexDirection: 'row', display: 'flex', backgroundColor: '#f7f7f7' }}>
                                 <Menu>
                                     <MenuTrigger>
                                         <Text style={{ fontFamily: 'inter', fontSize: 15, color: '#1D1D20', paddingLeft: 10 }}>
@@ -177,7 +177,7 @@ const FilterBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             borderRadius: 15,
                                             shadowOpacity: 0,
                                             borderWidth: 1,
-                                            borderColor: '#f0f0f2',
+                                            borderColor: '#e8e8ea',
                                             overflow: 'scroll',
                                             maxHeight: '100%',
                                             backgroundColor: '#fff'
@@ -199,7 +199,7 @@ const FilterBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         borderRadius: 15,
                                                         shadowOpacity: 0,
                                                         borderWidth: 1,
-                                                        borderColor: '#f0f0f2',
+                                                        borderColor: '#e8e8ea',
                                                         overflow: 'scroll',
                                                         maxHeight: '100%'
                                                     }
@@ -282,7 +282,7 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
         paddingBottom: 10,
         // borderTopWidth: 1,
         borderColor: '#555555',
-        backgroundColor: '#f8f8fa'
+        backgroundColor: '#f7f7f7'
     },
     icons: {
         width: '33.33%',
@@ -290,7 +290,7 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
         justifyContent: 'center',
         flexDirection: 'column',
         overflow: 'hidden',
-        backgroundColor: '#f8f8fa'
+        backgroundColor: '#f7f7f7'
     },
     defaultFont: {
         fontFamily: 'system font'
@@ -300,13 +300,13 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
         // justifyContent: 'center',
         display: 'flex',
         textAlign: 'center',
-        backgroundColor: '#f8f8fa'
+        backgroundColor: '#f7f7f7'
     },
     colorBar: {
         width: '100%',
         height: '47%',
         paddingTop: 20,
-        backgroundColor: '#f8f8fa'
+        backgroundColor: '#f7f7f7'
     },
     iconContainer: {
         width: '20%',

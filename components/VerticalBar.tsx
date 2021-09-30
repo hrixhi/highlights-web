@@ -47,11 +47,11 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
             <View style={{
                 display: 'flex',
                 width: '100%',
-                borderColor: '#f0f0f2',
+                borderColor: '#e8e8ea',
                 // borderRightWidth: Dimensions.get('window').width < 1024 ? 0 : 1,
                 // paddingHorizontal: Dimensions.get('window').width < 1024 ? 15 : 0,
                 paddingTop: 5,
-                backgroundColor: '#f8f8fa',
+                backgroundColor: '#f7f7f7',
                 flexDirection: 'row',
                 maxWidth: 1275,
             }}>
@@ -65,7 +65,7 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             props.setChannelCreatedBy('')
                             props.closeModal()
                         }}
-                        style={{ backgroundColor: '#f8f8fa', width: '100%', paddingBottom: 20 }}
+                        style={{ backgroundColor: '#f7f7f7', width: '100%', paddingBottom: 20 }}
                     >
                         <Text style={{ lineHeight: 33, width: '100%', textAlign: 'center' }}>
                             <Ionicons name='arrow-back-outline' size={25} color={'#1D1D20'} style={{ marginTop: -2 }} />
@@ -94,13 +94,13 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 }
                 <TouchableOpacity onPress={() => {
                     props.hideMenu()
-                }} style={{ backgroundColor: '#f8f8fa', flexDirection: 'row', flex: 1 }} />
+                }} style={{ backgroundColor: '#f7f7f7', flexDirection: 'row', flex: 1 }} />
                 <View style={styles.icons}>
                     {/* {
                         isOwner && props.channelId !== '' && (props.menuCollapsed === true) ?
                             <TouchableOpacity
                                 style={{
-                                    backgroundColor: '#f8f8fa',
+                                    backgroundColor: '#f7f7f7',
                                     width: Dimensions.get('window').width < 1024 ? 'auto' : '100%',
                                     paddingBottom: 20
                                 }}
@@ -118,7 +118,7 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     {/* {
                         props.channelId !== '' && (props.menuCollapsed === true) ?
                             <TouchableOpacity
-                                style={{ backgroundColor: '#f8f8fa', width: Dimensions.get('window').width < 1024 ? 'auto' : '100%', paddingBottom: 20 }}
+                                style={{ backgroundColor: '#f7f7f7', width: Dimensions.get('window').width < 1024 ? 'auto' : '100%', paddingBottom: 20 }}
                                 onPress={() => props.openMeeting()}>
                                 <Text style={styles.channelText}>
                                     <Ionicons
@@ -134,7 +134,7 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 <View style={styles.icons2}>
                     {
                         props.channelId !== '' && (props.menuCollapsed === true) ?
-                            <TouchableOpacity style={{ backgroundColor: '#f8f8fa', width: '100%', paddingBottom: 20 }}
+                            <TouchableOpacity style={{ backgroundColor: '#f7f7f7', width: '100%', paddingBottom: 20 }}
                                 onPress={() => props.hideMenu()}>
                                 <Text style={{ lineHeight: 30, width: '100%', textAlign: 'center' }}>
                                     <Ionicons
@@ -158,7 +158,7 @@ const styleObject: any = (colorScheme: any, mc: any) => StyleSheet.create({
         paddingTop: 10,
         flexDirection: 'row',
         justifyContent: 'center',
-        backgroundColor: '#f8f8fa',
+        backgroundColor: '#f7f7f7',
     },
     icons: {
         display: 'flex',
@@ -166,7 +166,7 @@ const styleObject: any = (colorScheme: any, mc: any) => StyleSheet.create({
         flexDirection: 'row',
         paddingRight: 25,
         overflow: 'hidden',
-        backgroundColor: '#f8f8fa'
+        backgroundColor: '#f7f7f7'
     },
     icons2: {
         display: 'flex',
@@ -174,7 +174,7 @@ const styleObject: any = (colorScheme: any, mc: any) => StyleSheet.create({
         flexDirection: 'row',
         paddingRight: 0,
         overflow: 'hidden',
-        backgroundColor: '#f8f8fa'
+        backgroundColor: '#f7f7f7'
     },
     defaultFont: {
         fontFamily: 'system font'

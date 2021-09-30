@@ -366,8 +366,8 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
             backgroundColor: 'white',
             width: '100%',
             height: props.cueId ? windowHeight - 200 : windowHeight - 50,
-            paddingRight: 20,
-            paddingLeft: Dimensions.get('window').width < 1024 ? 20 : 0,
+            // paddingRight: 20,
+            // paddingLeft: Dimensions.get('window').width < 1024 ? 20 : 0,
             borderTopRightRadius: props.cueId ? 0 : 30,
             borderTopLeftRadius: props.cueId ? 0 : 30,
             paddingTop: props.cueId ? 0 : 0,
@@ -398,7 +398,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                 borderRadius: 15,
                                                 shadowOpacity: 0,
                                                 borderWidth: 1,
-                                                borderColor: '#f0f0f2',
+                                                borderColor: '#e8e8ea',
                                                 overflow: 'scroll',
                                                 maxHeight: '100%'
                                             }
@@ -439,7 +439,6 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                             }}
                                             data={categoryChoices}
                                         />
-                                            
                                     </label>
                                     <Text style={{ fontSize: 10, color: '#1D1D20', width: '100%',  paddingLeft: 5, paddingTop: 10 }}>
                                         Topic
@@ -469,7 +468,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                             lineHeight: 30,
                                             color: '#fff',
                                             fontSize: 12,
-                                            backgroundColor: '#35AC78',
+                                            backgroundColor: '#007aff',
                                             paddingHorizontal: 25,
                                             fontFamily: 'inter',
                                             height: 30,
@@ -634,7 +633,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                             contentContainerStyle={{
                                                                 borderWidth: 1,
                                                                 borderRightWidth: 1,
-                                                                borderColor: '#f0f0f2',
+                                                                borderColor: '#e8e8ea',
                                                                 borderRadius: 0,
                                                                 width: '100%',
                                                                 maxHeight: 600,
@@ -656,15 +655,15 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                                     return <TouchableOpacity
                                                                         onPress={() => loadCueDiscussions(thread._id)}
                                                                         style={{
-                                                                            backgroundColor: '#f8f8fa',
+                                                                            backgroundColor: '#f7f7f7',
                                                                             flexDirection: 'row',
-                                                                            borderColor: '#f0f0f2',
+                                                                            borderColor: '#e8e8ea',
                                                                             borderRightWidth: 1,
                                                                             borderBottomWidth: ind === filteredThreads.length - 1 ? 0 : 1,
                                                                             // minWidth: 600, // flex: 1,
                                                                             width: '100%'
                                                                         }}>
-                                                                        <View style={{ backgroundColor: '#f8f8fa', padding: 10 }}>
+                                                                        <View style={{ backgroundColor: '#f7f7f7', padding: 10 }}>
                                                                             <Image
                                                                                 style={{
                                                                                     height: 40,

@@ -216,7 +216,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 borderRightWidth: 0,
                 flex: 1,
                 paddingLeft: 0,
-                borderColor: "#f0f0f2",
+                borderColor: "#e8e8ea",
                 paddingTop: 10,
                 paddingRight: 25
             }}
@@ -265,7 +265,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     }}
                     style={{ height: 20, marginRight: 20 }}
                     trackColor={{
-                        false: "#f8f8fa",
+                        false: "#f7f7f7",
                         true: "#007AFF",
                     }}
                     activeThumbColor="white"
@@ -275,7 +275,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         style={{
                             borderRightWidth: 0,
                             paddingTop: 0,
-                            borderColor: "#f0f0f2",
+                            borderColor: "#e8e8ea",
                             flexDirection: 'row'
                         }}
                     >
@@ -302,7 +302,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             borderRadius: 15,
                                             shadowOpacity: 0,
                                             borderWidth: 1,
-                                            borderColor: "#f0f0f2",
+                                            borderColor: "#e8e8ea",
                                             overflow: 'scroll',
                                             maxHeight: '100%'
                                         },
@@ -341,7 +341,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             borderRadius: 15,
                                             shadowOpacity: 0,
                                             borderWidth: 1,
-                                            borderColor: "#f0f0f2",
+                                            borderColor: "#e8e8ea",
                                             overflow: 'scroll',
                                             maxHeight: '100%'
                                         },
@@ -392,7 +392,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     }}
                     style={{ height: 20, marginRight: 20 }}
                     trackColor={{
-                        false: "#f8f8fa",
+                        false: "#f7f7f7",
                         true: "#007AFF",
                     }}
                     activeThumbColor="white"
@@ -672,7 +672,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 (showEquationEditor ?
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                         <View style={{
-                            borderColor: '#f0f0f2',
+                            borderColor: '#e8e8ea',
                             borderWidth: 1,
                             borderRadius: 15,
                             padding: 10,
@@ -947,7 +947,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     }
 
 
-                    return <View style={{ borderBottomColor: '#f8f8fa', borderBottomWidth: index === (problems.length - 1) ? 0 : 1, marginBottom: 25 }} key={index}>
+                    return <View style={{ borderBottomColor: '#f7f7f7', borderBottomWidth: index === (problems.length - 1) ? 0 : 1, marginBottom: 25 }} key={index}>
                         {renderHeader(index)}
                         {props.isOwner && modifiedCorrectAnswerProblems[index] ?
                             <View style={{ marginVertical: 10, flexDirection: 'row', alignItems: 'center', padding: 10, backgroundColor: '#f3f3f3', borderRadius: 1 }}>
@@ -979,7 +979,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         (
                                             problem.question && problem.question.includes("formula:") ? (
                                                 <View style={{
-                                                    // borderColor: '#f0f0f2',
+                                                    // borderColor: '#e8e8ea',
                                                     // borderWidth: 1,
                                                     // borderRadius: 15,
                                                     padding: 10,
@@ -1338,7 +1338,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 lineHeight: 35,
                                                 color: "#1D1D20",
                                                 fontSize: 12,
-                                                backgroundColor: "#f8f8fa",
+                                                backgroundColor: "#f7f7f7",
                                                 borderRadius: 15,
                                                 paddingHorizontal: 25,
                                                 fontFamily: "inter",
@@ -1360,7 +1360,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 lineHeight: 35,
                                                 color: "#1D1D20",
                                                 fontSize: 12,
-                                                backgroundColor: "#f8f8fa",
+                                                backgroundColor: "#f7f7f7",
                                                 borderRadius: 15,
                                                 paddingHorizontal: 25,
                                                 fontFamily: "inter",
@@ -1423,7 +1423,7 @@ export default Quiz;
 const styles = StyleSheet.create({
     input: {
         width: '50%',
-        // borderBottomColor: '#f8f8fa',
+        // borderBottomColor: '#f7f7f7',
         // borderBottomWidth: 1,
         fontSize: 15,
         paddingTop: 12,

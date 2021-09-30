@@ -89,7 +89,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     return (
         <View style={styles.bottombar}>
-            <View style={{ display: 'flex', flexDirection: 'row', backgroundColor: '#f8f8fa' }}>
+            <View style={{ display: 'flex', flexDirection: 'row', backgroundColor: '#f7f7f7' }}>
                 <View style={styles.icons}>
                     <TouchableOpacity
                         onPress={() => {
@@ -110,7 +110,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 {
                     selectedChannel ? <TouchableOpacity
                         onPress={() => props.showMenu()}
-                        style={{ backgroundColor: '#f8f8fa', flexDirection: 'row', flex: 1 }}>
+                        style={{ backgroundColor: '#f7f7f7', flexDirection: 'row', flex: 1 }}>
                         <View style={styles.icons}>
                             <Text style={{
                                 fontSize: 22,
@@ -130,7 +130,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             </Text>
                         </View>
                     </TouchableOpacity> :
-                        <View style={{ backgroundColor: '#f8f8fa', flexDirection: 'row', flex: 1 }} />
+                        <View style={{ backgroundColor: '#f7f7f7', flexDirection: 'row', flex: 1 }} />
                 }
                 {/* {
                     isOwner ?
@@ -190,7 +190,7 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
         display: 'flex',
         paddingBottom: 10,
         // paddingHorizontal: Dimensions.get('window').width < 1024 ? 20 : 20,
-        backgroundColor: '#f8f8fa'
+        backgroundColor: '#f7f7f7'
     },
     icons: {
         display: 'flex',
@@ -198,7 +198,7 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
         flexDirection: 'column',
         paddingRight: 25,
         overflow: 'hidden',
-        backgroundColor: '#f8f8fa'
+        backgroundColor: '#f7f7f7'
     },
     icons2: {
         display: 'flex',
@@ -206,7 +206,7 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
         flexDirection: 'row',
         paddingRight: 0,
         overflow: 'hidden',
-        backgroundColor: '#f8f8fa'
+        backgroundColor: '#f7f7f7'
     },
     defaultFont: {
         fontFamily: 'system font'
@@ -215,13 +215,13 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
         width: '100%',
         display: 'flex',
         textAlign: 'center',
-        backgroundColor: '#f8f8fa'
+        backgroundColor: '#f7f7f7'
     },
     colorBar: {
         width: '100%',
         height: '47%',
         paddingTop: 20,
-        backgroundColor: '#f8f8fa'
+        backgroundColor: '#f7f7f7'
     },
     iconContainer: {
         width: '20%',
@@ -242,7 +242,7 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
     },
     outline: {
         borderRadius: 0,
-        backgroundColor: colorScheme === 'light' ? '#f8f8fa' : 'white',
+        backgroundColor: colorScheme === 'light' ? '#f7f7f7' : 'white',
         color: colorScheme === 'light' ? '#1D1D20' : '#1D1D20'
     },
     cusCategory: {
@@ -253,17 +253,17 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
     },
     sub: {
         fontSize: 15,
-        color: colorScheme === 'light' ? '#f8f8fa' : 'white',
+        color: colorScheme === 'light' ? '#f7f7f7' : 'white',
         height: 22,
         paddingHorizontal: 10
     },
     subOutline: {
         fontSize: 15,
-        color: colorScheme === 'light' ? '#f8f8fa' : 'white',
+        color: colorScheme === 'light' ? '#f7f7f7' : 'white',
         height: 22,
         paddingHorizontal: 10,
         borderRadius: 0,
-        backgroundColor: colorScheme === 'light' ? '#f8f8fa' : 'white',
+        backgroundColor: colorScheme === 'light' ? '#f7f7f7' : 'white',
     },
     channelText: {
         textAlign: 'center',

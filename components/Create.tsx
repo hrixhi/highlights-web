@@ -1023,7 +1023,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
             marginTop: 0,
             backgroundColor: "white",
             borderBottomWidth: imported || isQuiz ? 0 : 1,
-            borderBottomColor: '#f8f8fa'
+            borderBottomColor: '#f7f7f7'
           }}
           onTouchStart={() => Keyboard.dismiss()}
         >
@@ -1168,7 +1168,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
           >
             <View
               style={{
-                borderColor: "#f0f0f2",
+                borderColor: "#e8e8ea",
                 borderWidth: 1,
                 borderRadius: 15,
                 padding: 10,
@@ -1228,7 +1228,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   width: width < 1024 ? "100%" : "50%",
                   maxWidth: 400,
                   borderRightWidth: 0,
-                  borderColor: "#f0f0f2",
+                  borderColor: "#e8e8ea",
                   // paddingRight: 15,
                   // display: "flex",
                   paddingLeft: isQuiz && Dimensions.get('window').width > 768 ? 20 : 0,
@@ -1286,7 +1286,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                     borderRightWidth: 0,
                     flex: 1,
                     paddingLeft: 20,
-                    borderColor: "#f0f0f2",
+                    borderColor: "#e8e8ea",
                     paddingTop: 10,
                     paddingRight: 25
                   }}
@@ -1332,7 +1332,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                       }}
                       style={{ height: 20, marginRight: 20 }}
                       trackColor={{
-                        false: "#f8f8fa",
+                        false: "#f7f7f7",
                         true: "#007AFF",
                       }}
                       activeThumbColor="white"
@@ -1342,7 +1342,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                         style={{
                           borderRightWidth: 0,
                           paddingTop: 0,
-                          borderColor: "#f0f0f2",
+                          borderColor: "#e8e8ea",
                           flexDirection: 'row'
                         }}
                       >
@@ -1369,7 +1369,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                   borderRadius: 15,
                                   shadowOpacity: 0,
                                   borderWidth: 1,
-                                  borderColor: "#f0f0f2",
+                                  borderColor: "#e8e8ea",
                                   overflow: 'scroll',
                                   maxHeight: '100%'
                                 },
@@ -1408,7 +1408,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                   borderRadius: 15,
                                   shadowOpacity: 0,
                                   borderWidth: 1,
-                                  borderColor: "#f0f0f2",
+                                  borderColor: "#e8e8ea",
                                   overflow: 'scroll',
                                   maxHeight: '100%'
                                 },
@@ -1509,7 +1509,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
               ) : (
                 <View key={url} style={{ flex: 1, maxHeight: 800 }}>
                   {/* <Webview key={url} url={url} /> */}
-                  <div className="webviewer" ref={RichText} style={{ height: "80vh", borderWidth: 1, borderColor: '#f0f0f2', borderRadius: 0 }}></div>
+                  <div className="webviewer" ref={RichText} style={{ height: "80vh", borderWidth: 1, borderColor: '#e8e8ea', borderRadius: 0 }}></div>
                 </View>
               )
             ) : null}
@@ -1623,7 +1623,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   style={{
                     flexDirection: width < 1024 ? 'column' : "row",
                     borderRightWidth: 0,
-                    borderColor: "#f0f0f2",
+                    borderColor: "#e8e8ea",
                     paddingTop: 40
                   }}
                 >
@@ -1758,7 +1758,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                               borderRadius: 15,
                               shadowOpacity: 0,
                               borderWidth: 1,
-                              borderColor: "#f0f0f2",
+                              borderColor: "#e8e8ea",
                               overflow: 'scroll',
                               maxHeight: '100%'
                             },
@@ -1919,7 +1919,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           }}
                           style={{ height: 20 }}
                           trackColor={{
-                            false: "#f8f8fa",
+                            false: "#f7f7f7",
                             true: "#007AFF",
                           }}
                           activeThumbColor="white"
@@ -2101,7 +2101,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                             onValueChange={() => setGraded(!graded)}
                             style={{ height: 20 }}
                             trackColor={{
-                              false: "#f8f8fa",
+                              false: "#f7f7f7",
                               true: "#818385",
                             }}
                             activeThumbColor="white"
@@ -2133,7 +2133,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                               value={gradeWeight}
                               style={{
                                 width: "25%",
-                                borderBottomColor: "#f8f8fa",
+                                borderBottomColor: "#f7f7f7",
                                 borderBottomWidth: 1,
                                 fontSize: 15,
                                 padding: 15,
@@ -2187,7 +2187,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                             onValueChange={() => setAllowLateSubmission(!allowLateSubmission)}
                             style={{ height: 20 }}
                             trackColor={{
-                              false: "#f8f8fa",
+                              false: "#f7f7f7",
                               true: "#818385",
                             }}
                             activeThumbColor="white"
@@ -2361,7 +2361,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 style={{
                   width: "100%",
                   borderRightWidth: 0,
-                  borderColor: "#f0f0f2",
+                  borderColor: "#e8e8ea",
                 }}
               >
                 <View style={{ width: "100%", backgroundColor: "white", flexDirection: width < 1024 ? 'column' : 'row', paddingTop: 40 }}>
@@ -2466,7 +2466,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 style={{
                   width: "100%",
                   borderRightWidth: 0,
-                  borderColor: "#f0f0f2",
+                  borderColor: "#e8e8ea",
                   flexDirection: width < 1024 ? 'column' : 'row', paddingTop: 40
                 }}
               >
@@ -2576,7 +2576,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                     }}
                     style={{ height: 20 }}
                     trackColor={{
-                      false: "#f8f8fa",
+                      false: "#f7f7f7",
                       true: "#007AFF",
                     }}
                     activeThumbColor="white"
@@ -2616,7 +2616,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                         onValueChange={() => setShuffle(!shuffle)}
                         style={{ height: 20 }}
                         trackColor={{
-                          false: "#f8f8fa",
+                          false: "#f7f7f7",
                           true: "#818385",
                         }}
                         activeThumbColor="white"
@@ -2692,7 +2692,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                 borderRadius: 15,
                                 shadowOpacity: 0,
                                 borderWidth: 1,
-                                borderColor: "#f0f0f2",
+                                borderColor: "#e8e8ea",
                                 overflow: 'scroll',
                                 maxHeight: '100%'
                               },
@@ -2826,7 +2826,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                         }
                         style={{ height: 20 }}
                         trackColor={{
-                          false: "#f8f8fa",
+                          false: "#f7f7f7",
                           true: "#818385",
                         }}
                         activeThumbColor="white"
@@ -2933,7 +2933,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                       onValueChange={() => setShuffleQuiz(!shuffleQuiz)}
                       style={{ height: 20 }}
                       trackColor={{
-                        false: "#f8f8fa",
+                        false: "#f7f7f7",
                         true: "#818385",
                       }}
                       activeThumbColor="white"
@@ -3046,7 +3046,7 @@ const styles: any = StyleSheet.create({
   },
   cuesInput: {
     width: "100%",
-    backgroundColor: "#f8f8fa",
+    backgroundColor: "#f7f7f7",
     borderRadius: 15,
     fontSize: 20,
     padding: 20,
@@ -3085,7 +3085,7 @@ const styles: any = StyleSheet.create({
   },
   input: {
     width: "100%",
-    borderBottomColor: "#f8f8fa",
+    borderBottomColor: "#f7f7f7",
     borderBottomWidth: 1,
     fontSize: 15,
     paddingTop: 12,

@@ -174,9 +174,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
             }
         ]);
 
-
     }
-
 
     useEffect(() => {
         (async () => {
@@ -197,34 +195,64 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
         }).start();
     }, [props.channelCreatedBy, props.channelId]);
 
-    const handleEnterClassroom = useCallback(() => {
+    const handleEnterClassroom = useCallback(async () => {
 
-        const server = fetchAPI('')
-        server.mutate({
-            mutation: meetingRequest,
-            variables: {
-                userId,
-                channelId: props.channelId,
-                isOwner: isOwner
-            }
-        }).then(res => {
-            console.log(res)
-            if (res.data && res.data.channel.meetingRequest !== 'error') {
-                server
-                    .mutate({
-                        mutation: markAttendance,
-                        variables: {
-                            userId: userId,
-                            channelId: props.channelId
-                        }
-                    })
-                window.open(res.data.channel.meetingRequest, "_blank");
+        const u = await AsyncStorage.getItem('user')
+        if (u) {
+            const user = JSON.parse(u)
+            if (user.zoomInfo) {
+
+                // Zoom is connected
+                const server = fetchAPI('')
+                server.mutate({
+                    mutation: meetingRequest,
+                    variables: {
+                        userId,
+                        channelId: props.channelId,
+                        isOwner: isOwner
+                    }
+                }).then(res => {
+                    console.log(res)
+                    if (res.data && res.data.channel.meetingRequest !== 'error') {
+                        server
+                            .mutate({
+                                mutation: markAttendance,
+                                variables: {
+                                    userId: userId,
+                                    channelId: props.channelId
+                                }
+                            })
+                        window.open(res.data.channel.meetingRequest, "_blank");
+                    } else {
+                        Alert("Classroom not in session. Waiting for instructor.")
+                    }
+                }).catch(err => {
+                    Alert("Something went wrong.")
+                })
             } else {
-                Alert("Classroom not in session. Waiting for instructor.")
+
+                Alert("Connect with Zoom to enter meeting.")
+
+                // LIVE
+                // const clientId = 'yRzKFwGRTq8bNKLQojwnA'
+                // const redirectUri = 'https://web.cuesapp.co/zoom_auth'
+                // DEV   
+                const redirectUri = 'http://localhost:19006/zoom_auth'
+                const clientId = 'PAfnxrFcSd2HkGnn9Yq96A'
+
+                const url = `https://zoom.us/oauth/authorize?response_type=code&client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${userId}`
+
+                if (Platform.OS === 'ios' || Platform.OS === 'android') {
+                    Linking.openURL(url)
+                } else {
+                    window.open(url)
+                }
+
             }
-        }).catch(err => {
-            Alert("Something went wrong.")
-        })
+        } else {
+            return
+        }
+
     }, [isOwner, userId, props.channelId])
 
     const windowHeight =
@@ -269,7 +297,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
             <ScrollView
                 contentContainerStyle={{
                     borderWidth: 1,
-                    borderColor: '#f0f0f2',
+                    borderColor: '#e8e8ea',
                     borderRadius: 0,
                     width: '100%',
                     maxHeight: windowHeight - 200,
@@ -287,9 +315,9 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                 }
                             }}
                             style={{
-                                backgroundColor: '#f8f8fa',
+                                backgroundColor: '#f7f7f7',
                                 flexDirection: 'row',
-                                borderColor: '#f0f0f2',
+                                borderColor: '#e8e8ea',
                                 borderBottomWidth: index === pastMeetings.length - 1 ? 0 : 1,
                                 // minWidth: 600, // flex: 1,
                                 width: '100%',
@@ -465,7 +493,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                 lineHeight: 30,
                                 color: '#fff',
                                 fontSize: 12,
-                                backgroundColor: '#35AC78',
+                                backgroundColor: '#007aff',
                                 paddingHorizontal: 25,
                                 fontFamily: 'inter',
                                 height: 30,
@@ -640,7 +668,7 @@ const styles = StyleSheet.create({
         maxWidth: '100%',
         borderRadius: 15,
         padding: 13,
-        backgroundColor: '#f8f8fa',
+        backgroundColor: '#f7f7f7',
         flexDirection: 'row',
         justifyContent: 'space-between'
     },
@@ -648,7 +676,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'column',
         flex: 1,
-        backgroundColor: '#f8f8fa',
+        backgroundColor: '#f7f7f7',
     },
     title: {
         fontFamily: 'inter',

@@ -203,7 +203,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             lineHeight: 30,
                             color: '#fff',
                             fontSize: 12,
-                            backgroundColor: '#35AC78',
+                            backgroundColor: '#007aff',
                             paddingHorizontal: 25,
                             fontFamily: 'inter',
                             height: 30,
@@ -530,7 +530,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                         onChangeText={val => {
                                                                             setActiveScore(val)
                                                                         }}
-                                                                        style={{ width: '50%', marginRight: 5, padding: 8, borderBottomColor: "#f8f8fa", borderBottomWidth: 1, fontSize: 12 }}
+                                                                        style={{ width: '50%', marginRight: 5, padding: 8, borderBottomColor: "#f7f7f7", borderBottomWidth: 1, fontSize: 12 }}
                                                                         placeholderTextColor={'#818385'}
                                                                     />
                                                                     <TouchableOpacity onPress={() => {

@@ -375,7 +375,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                             select="range"
                             touchUi={true}
                             inputProps={{
-                                placeholder: 'Filter by Dates'
+                                placeholder: 'Filter'
                             }}
                             responsive={{
                                 small: {
@@ -414,7 +414,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                             lineHeight: 30,
                             color: '#fff',
                             fontSize: 12,
-                            backgroundColor: '#35AC78',
+                            backgroundColor: '#007aff',
                             paddingHorizontal: 25,
                             fontFamily: 'inter',
                             height: 30,
@@ -600,7 +600,7 @@ const styles = StyleSheet.create({
         color: '#1D1D20',
         height: 22,
         paddingHorizontal: 20,
-        backgroundColor: '#f8f8fa',
+        backgroundColor: '#f7f7f7',
         lineHeight: 22,
         fontFamily: 'inter'
     },

@@ -18,6 +18,7 @@ export default {
           },
         },
       },
+      zoom_auth: 'zoom_auth',
       NotFound: '*',
     },
   },

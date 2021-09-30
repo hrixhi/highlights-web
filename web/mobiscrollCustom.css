@@ -10,7 +10,7 @@
 
 .mobiscrollCustomInput {
     border: 0px;
-    /* border-bottom: 1px solid #f0f0f2; */
+    /* border-bottom: 1px solid #e8e8ea; */
     width: 100px;
     padding-top: 13px;
     padding-bottom: 8px;
@@ -21,7 +21,7 @@
 
 .mobiscrollCreateInput {
     border: 0px;
-    /* border-bottom: 1px solid #f0f0f2; */
+    /* border-bottom: 1px solid #e8e8ea; */
     font-weight: bold;
     font-family: 'inter';
     cursor: pointer;
@@ -29,7 +29,7 @@
 
 .mobiscrollCategoryInput {
     border: 0px;
-    /* border-bottom: 1px solid #f0f0f2; */
+    /* border-bottom: 1px solid #e8e8ea; */
     width: 150px;
     font-weight: bold;
     font-family: 'inter';
@@ -38,7 +38,7 @@
 
 .mobiscrollFrequencyInput {
     border: 0px;
-    /* border-bottom: 1px solid #f0f0f2; */
+    /* border-bottom: 1px solid #e8e8ea; */
     width: 90px;
     font-weight: bold;
     font-family: 'inter';
@@ -66,7 +66,7 @@
     /* width: 180px; */
     border: 0px;
     border-radius: 0px;
-    border-bottom: 1px solid #f0f0f2;
+    border-bottom: 1px solid #e8e8ea;
     font-size: 14px;
 }
 
@@ -74,7 +74,7 @@
     /* width: 180px; */
     border: 0px;
     border-radius: 0px;
-    border-bottom: 1px solid #f0f0f2;
+    border-bottom: 1px solid #e8e8ea;
     font-size: 14px;
 }
 

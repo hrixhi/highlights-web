@@ -7,6 +7,7 @@ import NotFoundScreen from '../screens/NotFoundScreen';
 import { RootStackParamList } from '../types';
 import Home from '../screens/Home';
 import LinkingConfiguration from './Linking';
+import FinishZoomSetup from '../screens/FinishZoomSetup';
 
 
 // Main stack navigator 
@@ -32,6 +33,7 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
           </View>} />
 
         {/* In case navigation ends up at a wrong location */}
+        <Stack.Screen name="zoom_auth" component={FinishZoomSetup} options={{ title: 'Connecting Zoom...' }} />
         <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
 
       </Stack.Navigator>

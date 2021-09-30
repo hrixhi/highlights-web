@@ -36,12 +36,12 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                         </Text> : null}
                     </View>
                     <View style={{
-                        backgroundColor: '#f8f8fa',
+                        backgroundColor: '#f7f7f7',
                         width: '100%', flex: 1,
                         height: '100%',
                         flexDirection: 'row'
                     }}>
-                        <View style={{ flex: 1, backgroundColor: '#f8f8fa' }}>
+                        <View style={{ flex: 1, backgroundColor: '#f7f7f7' }}>
                             <Text
                                 ellipsizeMode={'tail'}
                                 numberOfLines={1}
@@ -51,7 +51,7 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                                     lineHeight: 20,
                                     // flex: 1,
                                     marginTop: props.option === "Channels" ? 0 : 7,
-                                    marginBottom: props.option === "Channels" ? 7: 0,
+                                    marginBottom: props.option === "Channels" ? 7 : 0,
                                     color: '##1D1D20',
                                     flexDirection: 'row', flex: 1,
                                 }}>
@@ -63,8 +63,9 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                                     style={styleObject.description}>
                                     {props.subtitle}
                                 </Text>
+
                                 : null} */}
-                            {props.option === "Channels" && !props.subscribed ?  <View style={{ flex: 1, paddingLeft: 10, backgroundColor: '#f8f8fa' }}>
+                            {props.option === "Channels" && !props.subscribed ? <View style={{ flex: 1, paddingLeft: 10, backgroundColor: '#f8f8fa' }}>
                                 <TouchableOpacity
                                     onPress={() => props.handleSub()}
                                 >
@@ -75,7 +76,7 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                             </View> : null}
                         </View>
                     </View>
-                    
+
                 </View>
             </TouchableOpacity>
         </View >
@@ -97,9 +98,9 @@ const styles: any = (colorScheme: any) => StyleSheet.create({
         borderRadius: 0,
         padding: 12,
         paddingHorizontal: 15,
-        backgroundColor: '#f8f8fa',
+        backgroundColor: '#f7f7f7',
         borderWidth: 1,
-        borderColor: '#f0f0f2'
+        borderColor: '#e8e8ea'
     },
     flipCard: {
         height: '100%',
@@ -116,19 +117,19 @@ const styles: any = (colorScheme: any) => StyleSheet.create({
     },
     text: {
         // height: '100%',
-        backgroundColor: '#f8f8fa'
+        backgroundColor: '#f7f7f7'
     },
     flipText: {
         height: '100%',
         color: '#fff',
-        backgroundColor: colorScheme === 'light' ? '#1D1D20' : '#f8f8fa'
+        backgroundColor: colorScheme === 'light' ? '#1D1D20' : '#f7f7f7'
     },
     dateContainer: {
         fontSize: 10,
         marginBottom: 5,
         color: '#fff',
         // height: '25%',
-        backgroundColor: '#f8f8fa',
+        backgroundColor: '#f7f7f7',
         display: 'flex',
         flexDirection: 'row'
     },
@@ -138,17 +139,17 @@ const styles: any = (colorScheme: any) => StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         color: '#fff',
-        backgroundColor: colorScheme === 'light' ? '#1D1D20' : '#f8f8fa'
+        backgroundColor: colorScheme === 'light' ? '#1D1D20' : '#f7f7f7'
     },
     date: {
         fontSize: 10,
-        color: colorScheme === 'light' ? '#f8f8fa' : '#333333',
+        color: colorScheme === 'light' ? '#f7f7f7' : '#333333',
         marginLeft: 10,
         lineHeight: 10
     },
     date2: {
         fontSize: 10,
-        color: colorScheme === 'light' ? '#f8f8fa' : '#333333',
+        color: colorScheme === 'light' ? '#f7f7f7' : '#333333',
         marginLeft: 10,
         lineHeight: 10,
         textAlign: 'right',
@@ -166,7 +167,7 @@ const styles: any = (colorScheme: any) => StyleSheet.create({
     // },
     titleFlip: {
         color: colorScheme === 'light' ? '#1D1D20' : '#1D1D20',
-        backgroundColor: colorScheme === 'light' ? '#f8f8fa' : '#f8f8fa',
+        backgroundColor: colorScheme === 'light' ? '#f7f7f7' : '#f7f7f7',
         fontFamily: 'inter',
         fontSize: 13,
         // ,

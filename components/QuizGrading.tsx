@@ -299,7 +299,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         type = parse.type;
                     }
 
-                    return <View style={{ borderBottomColor: '#f8f8fa', borderBottomWidth: index === (props.problems.length - 1) ? 0 : 1, marginBottom: 25 }} key={index}>
+                    return <View style={{ borderBottomColor: '#f7f7f7', borderBottomWidth: index === (props.problems.length - 1) ? 0 : 1, marginBottom: 25 }} key={index}>
                         {renderHeader(index)}
                         <View style={{ flexDirection: Dimensions.get('window').width < 1024 ? 'column' : 'row', width: '100%' }}>
                                 <View style={{ flexDirection: Dimensions.get('window').width < 1024 ? 'column' : 'row', width: Dimensions.get('window').width > 768 ? '65%' : '100%' }}>
@@ -322,7 +322,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 (
                                                     problem.question && problem.question.includes("formula:") ? (
                                                         <View style={{
-                                                            borderColor: '#f0f0f2',
+                                                            borderColor: '#e8e8ea',
                                                             borderWidth: 1,
                                                             borderRadius: 15,
                                                             padding: 10,
@@ -363,7 +363,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     }}
                                     style={{
                                         width: 120,
-                                        borderBottomColor: '#f8f8fa',
+                                        borderBottomColor: '#f7f7f7',
                                         borderBottomWidth: 1,
                                         fontSize: 15,
                                         padding: 15,
@@ -464,7 +464,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             (
                                                 option.option && option.option.includes("formula:") ?
                                                     <View style={{
-                                                        borderColor: '#f0f0f2',
+                                                        borderColor: '#e8e8ea',
                                                         borderWidth: 1,
                                                         borderRadius: 15,
                                                         padding: 10,
@@ -542,7 +542,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     </View>
                 })
             }
-            {!props.isOwner && !comment ? null : <View style={{ width: '100%', paddingVertical: 50, paddingHorizontal: 40, borderTopWidth: 1, borderColor: '#f0f0f2' }}>
+            {!props.isOwner && !comment ? null : <View style={{ width: '100%', paddingVertical: 50, paddingHorizontal: 40, borderTopWidth: 1, borderColor: '#e8e8ea' }}>
                 <Text style={{ width: '100%', textAlign: 'left' }}>
                     Feedback
                 </Text>
@@ -643,7 +643,7 @@ export default Quiz;
 const styles = StyleSheet.create({
     input: {
         width: '50%',
-        // borderBottomColor: '#f8f8fa',
+        // borderBottomColor: '#f7f7f7',
         // borderBottomWidth: 1,
         fontSize: 15,
         paddingTop: 12,
