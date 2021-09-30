@@ -72,6 +72,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   const [saveDataInProgress, setSaveDataInProgress] = useState(false)
   const [dimensions, setDimensions] = useState({ window, screen });
   const [target, setTarget] = useState('');
+  const [loadDiscussionForChannelId, setLoadDiscussionForChannelId] = useState();
+
 
   // Notifications count for Top Bar
   const [unreadDiscussionThreads, setUnreadDiscussionThreads] = useState(0)
@@ -1613,12 +1615,9 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                   calendarCues={cues}
                   openCueFromCalendar={openCueFromCalendar}
                   key={option.toString() + showHome.toString()}
-                  openDiscussionFromActivity={(channelId: string, createdBy: string) => {
-                    setChannelId(channelId);
-                    setChannelCreatedBy(createdBy);
-                    setCreatedBy(createdBy)
-                    openModal('Meeting')
-                    setShowHome(false);
+                  openDiscussionFromActivity={(channelId: string) => {
+                    setOption('Classroom')
+                    setLoadDiscussionForChannelId(channelId)
                   }}
                   openChannelFromActivity={(channelId: string, createdBy: string) => {
                     setChannelId(channelId);
@@ -1626,25 +1625,27 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     setCreatedBy(createdBy);
                     setShowHome(false);
                   }}
+                  openQAFromSearch={(channelId: any, cueId: string) => {
+
+                    const subscription = subscriptions.find((sub: any) => {
+                      return sub.channelId === channelId;
+                    })
+
+                    if (subscription) {
+                      openCueFromCalendar(channelId, cueId, subscription.channelCreatedBy)
+                      setTarget('Q&A')
+                    }
+                    
+                  }}
                   openQAFromActivity={(channelId: any, cueId: string, by: string) => {
                     openCueFromCalendar(channelId, cueId, by)
                     setTarget('Q&A')
                   }}
                   openDiscussionFromSearch={(channelId: any) => {
                     // Find channel Created By from subscriptions
-                    const match = subscriptions.filter((sub: any) => {
-                      return sub.channelId === channelId
-                    })
-
-                    if (match && match.length !== 0) {
-                      const createdBy = match[0].channelCreatedBy
-                      setChannelId(channelId);
-                      setChannelCreatedBy(createdBy);
-                      setCreatedBy(createdBy)
-                      openModal('Meeting')
-                      setShowHome(false);
-                    }
+                    setOption('Classroom')
                   }}
+
                   openClassroom={(channelId: any) => {
                     // Find channel Created By from subscriptions
                     const match = subscriptions.filter((sub: any) => {
@@ -1659,6 +1660,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                       setShowHome(false);
                     }
                   }}
+                  loadDiscussionForChannelId={loadDiscussionForChannelId}
+                  setLoadDiscussionForChannelId={setLoadDiscussionForChannelId}
                 />
             }
           </View>

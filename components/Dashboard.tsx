@@ -51,6 +51,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     const deskMobiRef: any = useRef(null);
 
+    const scrollViewRef: any = useRef(null);
 
     const [searchTerm, setSearchTerm] = useState('')
     const priorities = [4, 3, 2, 1, 0]
@@ -81,6 +82,8 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     const [filterByChannel, setFilterByChannel] = useState("All");
     const [indexMap, setIndexMap] = useState<any>({})
+    const [channelKeyList, setChannelKeyList] = useState<any[]>([])
+    const [channelHeightList, setChannelHeightList] = useState<any[]>([])
 
     const incorrectPasswordAlert = PreferredLanguageText('incorrectPassword');
     const alreadySubscribedAlert = PreferredLanguageText('alreadySubscribed');
@@ -94,6 +97,98 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const [filterEventsType, setFilterEventsType] = useState('All');
     const [showFilterPopup, setShowFilterPopup] = useState(false);
 
+    const [loadDiscussionForChannelId, setLoadDiscussionForChannelId] = useState();
+
+
+    const openThreadFromSearch = useCallback((channelId: String) => {
+
+        if (scrollViewRef && scrollViewRef.current !== null && channelKeyList && channelKeyList.length > 0 && channelHeightList && channelHeightList.length > 0) {
+
+            let matchIndex = -1;
+
+            channelKeyList.map((key: any, index: number) => {
+                if (key === channelId) {
+                    matchIndex = index;
+                }
+            })
+
+            let indexMapKey = "";
+            
+            Object.keys(indexMap).map((key: any, ) => {
+                if (key.split("-SPLIT-")[1] === channelId) {
+                    indexMapKey = key
+                }
+            })
+
+
+            if (matchIndex === -1 || !channelHeightList[matchIndex] || indexMapKey === "") {
+                Alert("Cannot open discussion.");
+            };
+
+            const temp = JSON.parse(JSON.stringify(indexMap))
+            temp[indexMapKey] = 2
+            setIndexMap(temp)
+
+            const tempCollapse = JSON.parse(JSON.stringify(collapseMap))
+            tempCollapse[indexMapKey] = !collapseMap[indexMapKey]
+            setCollapseMap(tempCollapse)
+            
+            scrollViewRef.current.scrollTo({
+                x: 0,
+                y: channelHeightList[matchIndex],
+                animated: true,
+            })
+
+        }
+
+    }, [scrollViewRef.current, channelKeyList, channelHeightList, indexMap])
+
+    useEffect(() => {
+        setLoadDiscussionForChannelId(props.loadDiscussionForChannelId)
+    }, [props.loadDiscussionForChannelId])
+
+    useEffect(() => {
+
+        if (scrollViewRef && scrollViewRef.current !== null && channelKeyList && channelKeyList.length > 0 && channelHeightList && channelHeightList.length > 0 && loadDiscussionForChannelId !== "") {
+
+            let matchIndex = -1;
+
+            channelKeyList.map((key: any, index: number) => {
+                if (key === loadDiscussionForChannelId) {
+                    matchIndex = index;
+                }
+            })
+
+            let indexMapKey = "";
+            
+            Object.keys(indexMap).map((key: any ) => {
+                if (key.split("-SPLIT-")[1] === loadDiscussionForChannelId) {
+                    indexMapKey = key
+                }
+            })
+
+            if (matchIndex === -1  || !channelHeightList[matchIndex] || indexMapKey === "" || !loadDiscussionForChannelId) return;
+
+            const temp = JSON.parse(JSON.stringify(indexMap))
+            temp[indexMapKey] = 2
+            setIndexMap(temp)
+
+            const tempCollapse = JSON.parse(JSON.stringify(collapseMap))
+            tempCollapse[indexMapKey] = !collapseMap[indexMapKey]
+            setCollapseMap(tempCollapse)
+            
+
+            scrollViewRef.current.scrollTo({
+                x: 0,
+                y: channelHeightList[matchIndex],
+                animated: true,
+            })
+
+            setLoadDiscussionForChannelId('')
+            
+        }
+
+    }, [scrollViewRef.current, channelKeyList, channelHeightList, loadDiscussionForChannelId, indexMap])
 
     useEffect(() => {
         (
@@ -557,10 +652,22 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     setSearchTerm("")
                                                 } else if (option === 'Threads') {
 
-                                                    await AsyncStorage.setItem("openThread", obj._id)
+                                                    await AsyncStorage.setItem("openThread", obj.parentId && obj.parentId !== "" ? obj.parentId : obj._id)
 
-                                                    props.openDiscussionFromSearch(obj.channelId)
+                                                    if (obj.cueId && obj.cueId !== "") {
+
+                                                        props.openQAFromSearch(obj.channelId, obj.cueId)
+
+                                                    } else {
+                                                        
+                                                        props.openDiscussionFromSearch(obj.channelId)
+                                                        
+    
+                                                        props.setLoadDiscussionForChannelId(obj.channelId)
+                                                    }
+
                                                     setSearchTerm("")
+                                                    
 
 
                                                 } else if (option === 'Messages') {
@@ -801,14 +908,28 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 contentContainerStyle={{
                     width: '100%'
                 }}
+                ref={scrollViewRef}
             >
                 {
                     Object.keys(cueMap).map((key: any, ind: any) => {
-                        return <View style={{
-                            marginTop: 20, paddingBottom: 20,
-                            borderColor: '#e8e8ea',
-                            borderBottomWidth: 1,
-                        }}>
+
+                        return <View 
+                            style={{
+                                marginTop: 20, paddingBottom: 20,
+                                borderColor: '#e8e8ea',
+                                borderBottomWidth: 1,
+                            }}
+                            key={ind}
+                            onLayout={(event) => {
+                                const layout = event.nativeEvent.layout;
+                                const temp1 = [...channelKeyList]
+                                const temp2 = [...channelHeightList]
+                                temp1[ind] = key.split('-SPLIT-')[1];
+                                temp2[ind] = layout.y;
+                                setChannelKeyList(temp1);
+                                setChannelHeightList(temp2)
+                            }}
+                        >
                             {
                                 ind !== 0 ?
                                     <View style={{ flexDirection: 'row', paddingBottom: !collapseMap[key] ? 0 : 20, maxWidth: 1275, alignSelf: 'center', width: '100%' }}>

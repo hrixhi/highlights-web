@@ -55,7 +55,8 @@ import {
 } from "react-native-popup-menu";
 import TextareaAutosize from 'react-textarea-autosize';
 import { Editor } from '@tinymce/tinymce-react';
-import axios from 'axios';
+import FormulaGuide from './FormulaGuide';
+
 
 const Create: React.FunctionComponent<{ [label: string]: any }> = (
   props: any
@@ -148,6 +149,9 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
   const screen = Dimensions.get("screen");
 
   const [dimensions, setDimensions] = useState({ window, screen });
+
+  const [showFormulaGuide, setShowFormulaGuide] = useState(false);
+
   // Alerts
 
   const enterOneProblemAlert = PreferredLanguageText("enterOneProblem");
@@ -718,6 +722,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
         if (!uString) {
           return;
         }
+
+        
         const userName = await JSON.parse(uString)
         let ownerarray: any = selected
         const userSubscriptions = await AsyncStorage.getItem('subscriptions')
@@ -725,10 +731,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
           const list = JSON.parse(userSubscriptions)
           list.map((i: any) => {
             if (i.channelId === channelId) {
-              ownerarray.push({
-                id: i.channelCreatedBy,
-                name: userName.fullName
-              })
+              ownerarray.push(i.channelCreatedBy);
             }
           })
           setSelected(ownerarray)
@@ -749,12 +752,12 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
 
         const user = JSON.parse(uString);
         const server = fetchAPI("");
-        const userIds: any[] = [];
-        if (selected.length !== 0) {
-          selected.map((item) => {
-            userIds.push(item.id);
-          });
-        }
+        // const userIds: any[] = [];
+        // if (selected.length !== 0) {
+        //   selected.map((item) => {
+        //     userIds.push(item);
+        //   });
+        // }
 
 
         const variables = {
@@ -775,7 +778,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
               ? endPlayAt.toISOString()
               : "",
           shareWithUserIds:
-            !limitedShare ? null : userIds,
+            !limitedShare ? null : selected,
           limitedShares: limitedShare,
           allowedAttempts: attempts,
           availableUntil: (submission || isQuiz) && allowLateSubmission ? availableUntil.toISOString() : ""
@@ -1176,34 +1179,33 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
               <EquationEditor
                 value={equation}
                 onChange={setEquation}
-                autoCommands="bar overline sqrt sum prod int alpha beta gamma delta epsilon zeta eta theta iota kappa lambda mu nu xi omikron pi rho sigma tau upsilon phi chi psi omega Alpha Beta Gamma Aelta Epsilon Zeta Eta Theta Iota Kappa Lambda Mu Nu Xi Omikron Pi Rho Sigma Tau Upsilon Phi Chi Psi Omega"
+                autoCommands="bar overline sqrt sum prod int alpha beta gamma delta epsilon zeta eta theta iota kappa lambda mu nu xi omikron pi rho sigma tau upsilon phi chi psi omega Alpha Beta Gamma Aelta Epsilon Zeta Eta Theta Iota Kappa Lambda Mu Nu Xi Omikron Pi Rho Sigma Tau Upsilon Phi Chi Psi Omega Delta"
                 autoOperatorNames="sin cos tan arccos arcsin arctan"
               />
             </View>
             <TouchableOpacity
               style={{
                 justifyContent: "center",
-                paddingHorizontal: 20,
+                paddingLeft: 20,
                 maxWidth: "10%",
               }}
               onPress={() => insertEquation()}
             >
               <Ionicons name="add-circle-outline" color="#1D1D20" size={17} />
             </TouchableOpacity>
-            <View
+            <TouchableOpacity
               style={{
-                minWidth: "40%",
-                flex: 1,
-                paddingVertical: 5,
                 justifyContent: "center",
+                paddingLeft: 10,
+                maxWidth: "10%",
               }}
+              onPress={() => setShowFormulaGuide(true)}
             >
-              <Text style={{ flex: 1, fontSize: 12, color: "#1D1D20", lineHeight: "1.5" }}>
-                ^ → Superscript,  _ → Subscript,  int → Integral,  sum → Summation,  prod → Product,  sqrt → Square root,  bar → Bar over letter;  alpha, beta, ... omega → Small Greek letter;  Alpha, Beta, ... Omega → Capital Greek letter
-              </Text>
-            </View>
+              <Ionicons name="help-circle-outline" color="#1D1D20" size={20} />
+            </TouchableOpacity>
           </View>
         ) : null}
+        { showFormulaGuide ? <FormulaGuide show={showFormulaGuide} onClose={() => setShowFormulaGuide(false)} /> : null }
         <View
           style={{ paddingBottom: 100 }}
         // showsVerticalScrollIndicator={false}
