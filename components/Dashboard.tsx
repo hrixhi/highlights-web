@@ -36,6 +36,7 @@ import ChannelSettings from './ChannelSettings';
 
 import { Datepicker, Select, Popup } from '@mobiscroll/react'
 import '@mobiscroll/react/dist/css/mobiscroll.react.min.css';
+import axios from 'axios';
 
 
 
@@ -98,6 +99,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const [showFilterPopup, setShowFilterPopup] = useState(false);
 
     const [loadDiscussionForChannelId, setLoadDiscussionForChannelId] = useState();
+    const [openChannelId, setOpenChannelId] = useState('');
 
 
     const openThreadFromSearch = useCallback((channelId: String) => {
@@ -146,6 +148,46 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
     useEffect(() => {
         setLoadDiscussionForChannelId(props.loadDiscussionForChannelId)
     }, [props.loadDiscussionForChannelId])
+
+    useEffect(() => {
+        setOpenChannelId(props.openChannelId)
+    }, [props.openChannelId])
+
+    useEffect(() => {
+        if (scrollViewRef && scrollViewRef.current !== null && channelKeyList && channelKeyList.length > 0 && channelHeightList && channelHeightList.length > 0 && openChannelId !== "") {
+            let matchIndex = -1;
+
+            channelKeyList.map((key: any, index: number) => {
+                if (key === openChannelId) {
+                    matchIndex = index;
+                }
+            })
+
+            let indexMapKey = "";
+            
+            Object.keys(indexMap).map((key: any ) => {
+                if (key.split("-SPLIT-")[1] === openChannelId) {
+                    indexMapKey = key
+                }
+            })
+
+            if (matchIndex === -1  || !channelHeightList[matchIndex] || !openChannelId) return;
+
+            const tempCollapse = JSON.parse(JSON.stringify(collapseMap))
+            tempCollapse[indexMapKey] = !collapseMap[indexMapKey]
+            setCollapseMap(tempCollapse)
+            
+
+            scrollViewRef.current.scrollTo({
+                x: 0,
+                y: channelHeightList[matchIndex],
+                animated: true,
+            })
+
+            setOpenChannelId('')
+        }
+
+    }, [scrollViewRef.current, channelKeyList, channelHeightList, loadDiscussionForChannelId])
 
     useEffect(() => {
 
@@ -326,34 +368,47 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
         setSelectedCategories(tempSelected)
     }, [sortBy, filterStart, filterEnd])
 
+    // Using this architecture so that only the last request for search sets the loadingSearchResults to false -> Previous ones get cancelled
+    let cancelTokenRef: any = useRef({});
+
     useEffect(() => {
         if (searchTerm.trim() === '') {
             return
         }
+
         setLoadingSearchResults(true);
-        const server = fetchAPI('')
-        server.query({
-            query: getSearch,
-            variables: {
-                userId,
-                term: searchTerm
-            }
-        }).then(res => {
-            if (res.data && res.data.user.search) {
-                const r = JSON.parse(res.data.user.search)
+
+
+        if (typeof cancelTokenRef.current != typeof undefined) {
+            
+            cancelTokenRef.current && cancelTokenRef.current.cancel && cancelTokenRef.current.cancel("Operation canceled due to new request.")
+        }
+
+        //Save the cancel token for the current request
+        cancelTokenRef.current = axios.CancelToken.source()
+
+        try {
+            axios.get(
+              `http://localhost:8081/search`,
+              { cancelToken: cancelTokenRef.current.token, params: { term: searchTerm, userId } } //Pass the cancel token to the current request
+            ).then((res: any) => {
+                console.log(res.data)
+                console.log(res.channels)
                 const tempResults = {
-                    'Classroom': [...r.personalCues, ...r.channelCues],
-                    'Channels': r.channels,
-                    'Threads': r.threads,
-                    'Messages': r.messages
+                    'Classroom': [...res.data.personalCues, ...res.data.channelCues],
+                    'Channels': res.data.channels,
+                    'Threads': res.data.threads,
+                    'Messages': res.data.messages
                 }
                 setResults(tempResults)
                 setLoadingSearchResults(false);
-            }
-        }).catch(err => {
-            console.log(err)
+            })
+            
+          } catch (error) {
             setLoadingSearchResults(false);
-        })
+            console.log(error)
+          }
+
     }, [searchTerm, userId])
 
     const handleFolderUpdate = useCallback(() => {
@@ -687,7 +742,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
                                                     if (subscribed) {
                                                         // Open the channel meeting
-                                                        props.openClassroom(obj._id)
+                                                        props.openChannelFromActivity(obj._id)
                                                     }
                                                 }
 

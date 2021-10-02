@@ -500,13 +500,9 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         {
                             problem.questionType === "freeResponse" ?
                                 <View style={{ width: '100%', paddingHorizontal: 40 }}>
-                                    <CustomTextInput
-                                        editable={false}
-                                        value={solutions[index].response}
-                                        placeholder='Answer'
-                                        hasMultipleLines={true}
-
-                                    />
+                                    <Text style={{ color: solutions[index].response !== "" ? '#818385' : '#f94144', paddingTop: 20, paddingBottom: 40, lineHeight: 20, borderBottomColor: '#e8e8ea', borderBottomWidth: 1 }}>
+                                        {solutions[index].response && solutions[index].response !== "" ? solutions[index].response : "No response"}
+                                    </Text>
                                 </View>
                                 :
                                 null
