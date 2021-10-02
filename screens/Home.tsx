@@ -72,7 +72,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   const [saveDataInProgress, setSaveDataInProgress] = useState(false)
   const [dimensions, setDimensions] = useState({ window, screen });
   const [target, setTarget] = useState('');
-  const [loadDiscussionForChannelId, setLoadDiscussionForChannelId] = useState();
+  const [loadDiscussionForChannelId, setLoadDiscussionForChannelId] = useState('');
+  const [openChannelId, setOpenChannelId] = useState('');
 
 
   // Notifications count for Top Bar
@@ -187,6 +188,13 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   //     Dimensions.removeEventListener("change", onDimensionsChange);
   //   };
   // }, [])
+
+  useEffect(() => {
+    if (option === "Classroom") return;
+    
+    setLoadDiscussionForChannelId('')
+    setOpenChannelId('')
+  }, [option])
 
   useEffect(() => {
     (
@@ -1619,11 +1627,9 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     setOption('Classroom')
                     setLoadDiscussionForChannelId(channelId)
                   }}
-                  openChannelFromActivity={(channelId: string, createdBy: string) => {
-                    setChannelId(channelId);
-                    setChannelCreatedBy(createdBy);
-                    setCreatedBy(createdBy);
-                    setShowHome(false);
+                  openChannelFromActivity={(channelId: string) => {
+                    setOption('Classroom')
+                    setOpenChannelId(channelId)
                   }}
                   openQAFromSearch={(channelId: any, cueId: string) => {
 
@@ -1662,6 +1668,9 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                   }}
                   loadDiscussionForChannelId={loadDiscussionForChannelId}
                   setLoadDiscussionForChannelId={setLoadDiscussionForChannelId}
+                  openChannelId={openChannelId}
+                  setOpenChannelId={setOpenChannelId}
+
                 />
             }
           </View>

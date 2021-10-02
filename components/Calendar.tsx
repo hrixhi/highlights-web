@@ -69,7 +69,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     const [allEvents, setAllEvents] = useState<any[]>([]);
 
     const [userId, setUserId] = useState('');
-
+    const [allActivity, setAllActivity] = useState<any[]>([]);
 
     const viewAgenda: any = React.useMemo(() => {
         return {
@@ -166,6 +166,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             })
                             setUnreadCount(unread)
                             setActivity(tempActivity)
+                            setAllActivity(tempActivity)
                         }
                     })
                 }
@@ -259,6 +260,18 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     }, [props.filterByChannel, props.filterEventsType, props.filterStart, props.filterEnd])
 
+    useEffect(() => {
+
+        console.log("Filter by channel", props.filterByChannel);
+
+        const all = [...allActivity];
+        if (props.filterByChannel === "All") {
+            setActivity(all);
+        } else {
+            const filter = all.filter((e: any) => props.filterByChannel === e.channelName);
+            setActivity(filter);
+        }
+    }, [props.filterByChannel])
 
 
 
@@ -1688,7 +1701,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                                         }
 
                                                                                                         if (target === "CHANNEL_SUBSCRIBED" || target === "CHANNEL_MODERATOR_ADDED" || target === "CHANNEL_MODERATOR_REMOVED") {
-                                                                                                            props.openChannel(channelId, createdBy)
+                                                                                                            props.openChannel(channelId)
+
                                                                                                         }
 
                                                                                                         if (target === "Q&A") {
