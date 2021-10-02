@@ -903,11 +903,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 return;
         }
 
-        if (now < initiateAt) {
-            Alert("Quiz not available")
-            return;
-        }
-
         const u = await AsyncStorage.getItem("user");
         if (u) {
             const user = JSON.parse(u);
@@ -936,7 +931,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             // after saving time in cloud, save it locally, set initiatedAt
             // quiz gets triggered
         }
-    }, [props.cue._id, solutions, deadline, initiateAt]);
+    }, [props.cue._id, solutions, deadline, availableUntil, allowLateSubmission]);
 
     // Handle Update for CUES. Called everytime there is a cue modification
     // Overrides local cues in AsyncStorage and then calls reloadCuesAfterList to sync with the cloud

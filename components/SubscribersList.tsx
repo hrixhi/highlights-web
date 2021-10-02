@@ -525,24 +525,55 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
     }, [userId, props.cueId])
 
     const handleGradeSubmit = useCallback(() => {
+
         if (Number.isNaN(Number(score))) {
+            Alert("Score must be a number")
             return
         }
-        const server = fetchAPI('')
-        server.mutate({
-            mutation: submitGrade,
-            variables: {
-                cueId: props.cueId,
-                userId,
-                score,
-                comment
+
+        const availableUntil = props.cue && props.cue.availableUntil && props.cue.availableUntil !== "" ? new Date(props.cue.availableUntil) : null;
+
+        const deadline = props.cue && props.cue.deadline && props.cue.deadline !== "" ? new Date(props.cue.deadline) : null;
+
+        let warning = "";
+
+        if (deadline && new Date() < deadline) {
+            warning = "Deadline has not passed. Students can still re-submit and may override current grading."
+        } else if (availableUntil && new Date() < availableUntil) {
+            warning = "Late submission deadline has not passed. Students will be unable to submit after releasing scores."
+        }
+
+        Alert("Save grade?",  warning, [
+            {
+                text: "Cancel",
+                style: "cancel",
+                onPress: () => {
+                    return;
+                }
+            },
+            {
+                text: "Yes",
+                onPress: async () => {
+                    
+                    const server = fetchAPI('')
+                    server.mutate({
+                        mutation: submitGrade,
+                        variables: {
+                            cueId: props.cueId,
+                            userId,
+                            score,
+                            comment
+                        }
+                    }).then(res => {
+                        if (res.data.cue.submitGrade) {
+                            props.reloadStatuses()
+                        }
+                    })
+                }
             }
-        }).then(res => {
-            if (res.data.cue.submitGrade) {
-                props.reloadStatuses()
-            }
-        })
-    }, [score, userId, props.cueId, comment])
+        ])
+        
+    }, [score, userId, props.cueId, comment, props])
 
     useEffect(() => {
         (
@@ -913,7 +944,20 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
 
     const updateReleaseSubmission = useCallback(() => {
 
-        Alert(releaseSubmission ? "Hide scores?" : "Release Scores?", "", [
+
+        const availableUntil = props.cue && props.cue.availableUntil && props.cue.availableUntil !== "" ? new Date(props.cue.availableUntil) : null;
+
+        const deadline = props.cue && props.cue.deadline && props.cue.deadline !== "" ? new Date(props.cue.deadline) : null;
+
+        let warning = "";
+
+        if (deadline && new Date() < deadline) {
+            warning = "Deadline has not passed. Students will be unable to submit after releasing scores."
+        } else if (availableUntil && new Date() < availableUntil) {
+            warning = "Late submission deadline has not passed. Students will be unable to submit after releasing scores."
+        }
+
+        Alert(releaseSubmission ? "Hide scores?" : "Release Scores?",  warning, [
             {
                 text: "Cancel",
                 style: "cancel",
@@ -947,7 +991,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
         ])
 
 
-    }, [releaseSubmission, props.cueId])
+    }, [releaseSubmission, props.cueId, props])
 
     useEffect(() => {
         if (url === '' || !url) {
