@@ -1006,18 +1006,11 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
     return (
         <View style={styles.screen} >
             <View style={{ width: '100%', backgroundColor: 'white', paddingTop: 30 }}>
-                <ScrollView
-                    onScroll={() => {
-                        Keyboard.dismiss()
-                    }}
-                    showsVerticalScrollIndicator={false}
-                    contentContainerStyle={{
-                        maxHeight: Dimensions.get('window').height - 95,
-                        // height: 'auto',
+                <View
+                    style={{
                         maxWidth: 500,
                         alignSelf: 'center',
                         minHeight: 100,
-                        // paddingRight: 50
                     }}
                 >
                     <View style={{ backgroundColor: 'white' }}>
@@ -1339,7 +1332,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                     </View>
                     <View style={{ height: 75 }} />
                     {/* <View style={{ height: 50, backgroundColor: '#fff' }} /> */}
-                </ScrollView>
+                </View>
             </View>
         </View>
     );

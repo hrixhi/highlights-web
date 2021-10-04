@@ -365,7 +365,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
         <View style={{
             backgroundColor: 'white',
             width: '100%',
-            height: props.cueId ? windowHeight - 200 : windowHeight - 50,
+            // height: props.cueId ? windowHeight - 200 : windowHeight - 50,
             // paddingRight: 20,
             // paddingLeft: Dimensions.get('window').width < 1024 ? 20 : 0,
             borderTopRightRadius: props.cueId ? 0 : 30,
@@ -513,7 +513,8 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             </View> :
                             <View style={{
                                 width: '100%',
-                                height: props.cueId ? 'auto' : windowHeight - 100,
+                                // height: props.cueId ? 'auto' : windowHeight - 100,
+                                minHeight: 400,
                                 // borderWidth: 1,
                                 backgroundColor: 'white',
                                 flex: 1,
@@ -527,7 +528,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                             width: '100%',
                                             maxWidth: 800,
                                             paddingLeft: 20,
-                                            height: Dimensions.get('window').height - 350,
+                                            // height: Dimensions.get('window').height - 350,
                                         }}
                                         // key={threadChat.toString()}
                                         >
@@ -584,7 +585,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                 width: '100%',
                                                 maxWidth: 800,
                                                 paddingLeft: 20,
-                                                height: Dimensions.get('window').height - 350,
+                                                // height: Dimensions.get('window').height - 350,
                                             }}
                                             // key={threadChat.toString()}
                                             >
