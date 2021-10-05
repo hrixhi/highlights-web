@@ -60,7 +60,7 @@ const SubscriberCard: React.FunctionComponent<{ [label: string]: any }> = (props
                                     null
                                 }
                                 {
-                                    props.hideChevron ? null : <Ionicons name="chevron-forward-outline" color="#818385" size={20} style={{ marginTop: 3, marginLeft: 10 }} />
+                                    props.hideChevron ? null : <Ionicons name="chevron-forward-outline" color="#818385" size={17} style={{ marginTop: 3, marginLeft: 10 }} />
                                 }
                             </View>
                             : null

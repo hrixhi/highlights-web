@@ -534,7 +534,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     numberOfLines={1}
                     style={{
                         fontFamily: 'inter',
-                        fontSize: 15,
+                        fontSize: 14,
                         lineHeight: 20,
                         flex: 1,
                         marginTop: 4,
@@ -610,7 +610,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     numberOfLines={1}
                     style={{
                         fontFamily: 'inter',
-                        fontSize: 15,
+                        fontSize: 14,
                         lineHeight: 20,
                         flex: 1,
                         marginTop: 4,
@@ -704,7 +704,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         width: 300,
                         maxWidth: '100%',
                         borderBottom: '1px solid #cccccc',
-                        fontSize: 15,
+                        fontSize: 14,
                         paddingTop: 13,
                         paddingBottom: 13,
                         marginTop: 0,
@@ -764,7 +764,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         numberOfLines={1}
                                         style={{
                                             fontFamily: 'inter',
-                                            fontSize: 15,
+                                            fontSize: 14,
                                             lineHeight: 20,
                                             flex: 1,
                                             marginTop: 4,
@@ -803,7 +803,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     </ScrollView>
                     :
                     <View>
-                        <Text style={{ fontSize: 15, color: '#818385', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#fff', paddingVertical: 20 }}>
+                        <Text style={{ fontSize: 14, color: '#818385', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#fff', paddingVertical: 20 }}>
                             No Content to select.
                         </Text>
                     </View>}
@@ -818,7 +818,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 >
                     {
                         selectedCues.length > 0 ? <SortableList items={selectedCues} onSortEnd={onSortEnd} useDragHandle /> : <View >
-                            <Text style={{ fontSize: 15, color: '#818385', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#fff', }}>
+                            <Text style={{ fontSize: 14, color: '#818385', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#fff', }}>
                                 No Selection
                             </Text>
                         </View>
@@ -889,7 +889,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 fontSize: 12,
                                 backgroundColor: "#007AFF",
                                 borderRadius: 15,
-                                paddingHorizontal: 25,
+                                paddingHorizontal: 20,
                                 fontFamily: "inter",
                                 overflow: "hidden",
                                 height: 35,
@@ -933,7 +933,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 fontSize: 12,
                                 backgroundColor: "#007AFF",
                                 borderRadius: 15,
-                                paddingHorizontal: 25,
+                                paddingHorizontal: 20,
                                 fontFamily: "inter",
                                 overflow: "hidden",
                                 height: 35,
@@ -959,7 +959,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
         if (folderCuesToDisplay.length === 0) {
             return <View >
-                <Text style={{ fontSize: 15, color: '#818385', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#fff', }}>
+                <Text style={{ fontSize: 14, color: '#818385', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#fff', }}>
                     Fetching cues...
                 </Text>
             </View>
@@ -989,7 +989,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     width: 300,
                     maxWidth: '100%',
                     borderBottom: '1px solid #cccccc',
-                    fontSize: 15,
+                    fontSize: 14,
                     paddingTop: 13,
                     paddingBottom: 13,
                     marginTop: 0,
@@ -1048,7 +1048,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     numberOfLines={1}
                                     style={{
                                         fontFamily: 'inter',
-                                        fontSize: 15,
+                                        fontSize: 14,
                                         lineHeight: 20,
                                         flex: 1,
                                         marginTop: 4,
@@ -1087,7 +1087,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 </ScrollView>
                 :
                 <View>
-                    <Text style={{ fontSize: 15, color: '#818385', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#fff', paddingVertical: 20 }}>
+                    <Text style={{ fontSize: 14, color: '#818385', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#fff', paddingVertical: 20 }}>
                         No Content to select. 
                     </Text>
                 </View>}
@@ -1156,7 +1156,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 fontSize: 12,
                                 backgroundColor: "#007AFF",
                                 borderRadius: 15,
-                                paddingHorizontal: 25,
+                                paddingHorizontal: 20,
                                 fontFamily: "inter",
                                 overflow: "hidden",
                                 height: 35,
@@ -1178,7 +1178,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
         </View> :
             <View style={{ width: '100%', marginTop: 10 }}>
-                <Text style={{ fontSize: 15, color: '#000', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#fff', }}>
+                <Text style={{ fontSize: 14, color: '#000', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#fff', }}>
                     {folder.title}
                 </Text>
                 <ScrollView
@@ -1231,7 +1231,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     numberOfLines={1}
                                     style={{
                                         fontFamily: 'inter',
-                                        fontSize: 15,
+                                        fontSize: 14,
                                         lineHeight: 20,
                                         flex: 1,
                                         marginTop: 4,
@@ -1276,7 +1276,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     fontSize: 12,
                                     backgroundColor: "#007AFF",
                                     borderRadius: 15,
-                                    paddingHorizontal: 25,
+                                    paddingHorizontal: 20,
                                     fontFamily: "inter",
                                     overflow: "hidden",
                                     height: 35,
@@ -1343,7 +1343,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     fontSize: 12,
                                     backgroundColor: "#007AFF",
                                     borderRadius: 15,
-                                    paddingHorizontal: 25,
+                                    paddingHorizontal: 20,
                                     fontFamily: "inter",
                                     overflow: "hidden",
                                     height: 35,
@@ -1383,7 +1383,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         }}
     >
         <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 30, backgroundColor: 'white' }}>
-            {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
+            {/* <Ionicons name='chevron-down' size={17} color={'#e0e0e0'} /> */}
         </Text>
         {!createNewFolder && folderId === "" ? <View style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             {channelFolders.length > 0 ? <Menu
@@ -1589,7 +1589,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             ref={scroll2}
                             contentContainerStyle={{
                                 width: '100%',
-                                maxWidth: 800,
+                                maxWidth: 600,
                                 alignSelf: 'center',
                                 height: '100%'
                             }}
@@ -1648,7 +1648,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 setShowComments(false)
                             }}>
                             <Text style={showOriginal ? styles.allGrayFill : styles.all}>
-                                <Ionicons name='document-outline' size={20} />
+                                <Ionicons name='document-outline' size={17} />
                             </Text>
                             <Text style={showOriginal ? styles.allGrayFill : styles.all}>
                                 Content
@@ -1667,7 +1667,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             }}>
 
                             <Text style={styles.all}>
-                                <Ionicons name='options-outline' size={20} />
+                                <Ionicons name='options-outline' size={17} />
                             </Text>
                             <Text style={styles.all}>
                                 Options
@@ -1685,7 +1685,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 setShowComments(true)
                             }}>
                             <Text style={styles.all}>
-                                <Ionicons name='chatbubbles-outline' size={20} />
+                                <Ionicons name='chatbubbles-outline' size={17} />
                                 {/* {props.cue.unreadThreads > 0 ? <View style={styles.badge} /> : null} */}
                             </Text>
                             <Text style={styles.all}>
@@ -1706,7 +1706,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         setShowOptions(false)
                                     }}>
                                     <Text style={!showOriginal && !viewStatus && !showOptions && !showComments ? styles.allGrayFill : styles.all}>
-                                        <Ionicons name='document-attach-outline' size={20} />
+                                        <Ionicons name='document-attach-outline' size={17} />
                                     </Text>
                                     <Text style={!showOriginal && !viewStatus && !showOptions && !showComments ? styles.allGrayFill : styles.all}>
                                         Submission
@@ -1728,7 +1728,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         setShowOptions(false)
                                     }}>
                                     <Text style={viewStatus ? styles.allGrayFill : styles.all}>
-                                        <Ionicons name='checkmark-done-outline' size={20} />
+                                        <Ionicons name='checkmark-done-outline' size={17} />
                                     </Text>
                                     <Text style={viewStatus ? styles.allGrayFill : styles.all}>
                                         Engagement

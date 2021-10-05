@@ -302,7 +302,7 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
     },
     title: {
         fontFamily: 'inter',
-        fontSize: 15,
+        fontSize: 14,
         lineHeight: 20,
         // flex: 1,
         height: '41%',

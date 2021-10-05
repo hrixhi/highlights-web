@@ -53,7 +53,7 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 paddingTop: 5,
                 backgroundColor: '#f7f7f7',
                 flexDirection: 'row',
-                maxWidth: 1275,
+                maxWidth: 1000,
             }}>
                 <View style={styles.icons}>
                     <TouchableOpacity
@@ -72,7 +72,7 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         </Text>
                     </TouchableOpacity>
                 </View>
-                {
+                {/* {
                     selectedChannel ? <View style={styles.icons}>
                         <Text style={{
                             fontSize: 22,
@@ -91,7 +91,7 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             }} /> {selectedChannel.channelName}
                         </Text>
                     </View> : null
-                }
+                } */}
                 <TouchableOpacity onPress={() => {
                     props.hideMenu()
                 }} style={{ backgroundColor: '#f7f7f7', flexDirection: 'row', flex: 1 }} />
@@ -131,7 +131,7 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             : null
                     } */}
                 </View>
-                <View style={styles.icons2}>
+                {/* <View style={styles.icons2}>
                     {
                         props.channelId !== '' && (props.menuCollapsed === true) ?
                             <TouchableOpacity style={{ backgroundColor: '#f7f7f7', width: '100%', paddingBottom: 20 }}
@@ -142,7 +142,7 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 </Text>
                             </TouchableOpacity> : null
                     }
-                </View>
+                </View> */}
             </View>
         </View>
     );
@@ -215,19 +215,19 @@ const styleObject: any = (colorScheme: any, mc: any) => StyleSheet.create({
         color: colorScheme === 'light' ? 'white' : '#1D1D20'
     },
     cusCategory: {
-        fontSize: 15,
+        fontSize: 14,
         color: '#818385',
         height: 22,
         paddingHorizontal: 10
     },
     sub: {
-        fontSize: 15,
+        fontSize: 14,
         color: colorScheme === 'light' ? '#1D1D20' : 'white',
         height: 22,
         paddingHorizontal: 10
     },
     subOutline: {
-        fontSize: 15,
+        fontSize: 14,
         color: colorScheme === 'light' ? '#1D1D20' : 'white',
         height: 22,
         paddingHorizontal: 10,
@@ -237,7 +237,7 @@ const styleObject: any = (colorScheme: any, mc: any) => StyleSheet.create({
     text: {
         textAlign: 'right',
         color: '#1D1D20',
-        fontSize: 15,
+        fontSize: 14,
         paddingRight: 15
     },
     channelText: {

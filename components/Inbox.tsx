@@ -728,7 +728,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                         // overflow: 'scroll'
                     }} key={1}>
                         <View style={{ width: '100%', backgroundColor: 'white' }}>
-                            <View style={{ width: '100%', maxWidth: 800, alignSelf: 'center' }}>
+                            <View style={{ width: '100%', maxWidth: 600, alignSelf: 'center' }}>
                                 <View style={{
                                     backgroundColor: '#fff', width: '100%',
                                     marginBottom: width < 1024 ? 20 : 0
@@ -783,7 +783,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                             textTransform: 'uppercase'
                                                         }}
                                                     >
-                                                        <Ionicons name='reload-outline' size={20} color={'#1D1D20'} />
+                                                        <Ionicons name='reload-outline' size={17} color={'#1D1D20'} />
                                                     </Text>
                                                     <Text style={{ fontSize: 10, color: '#1D1D20', paddingTop: 5, backgroundColor: '#fff', textAlign: 'center' }}>
                                                         Refresh
@@ -840,10 +840,10 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                         borderRadius: 15,
                                                         textTransform: 'uppercase'
                                                     }}>
-                                                        <Ionicons name='list-outline' size={20} color={'#1D1D20'} />
+                                                        <Ionicons name='list-outline' size={17} color={'#1D1D20'} />
                                                     </Text>
                                                     <Text style={{ fontSize: 10, color: '#1D1D20', paddingTop: 5, backgroundColor: '#fff', textAlign: 'center' }}>
-                                                        Directory
+                                                        Contacts
                                                     </Text>
                                                 </TouchableOpacity>
                                         }
@@ -875,7 +875,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                         borderRadius: 15,
                                                         // textTransform: 'uppercase'
                                                     }}>
-                                                        <Ionicons name='people-circle-outline' size={20} color={'#1D1D20'} />
+                                                        <Ionicons name='people-circle-outline' size={17} color={'#1D1D20'} />
                                                     </Text>
                                                     <Text style={{ fontSize: 10, color: '#1D1D20', paddingTop: 5, backgroundColor: '#fff', textAlign: 'center' }}>
                                                         New Group
@@ -909,9 +909,9 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                         </label>
 
                                                     </View>
-                                                    <Text style={{ fontSize: 10, color: '#1D1D20', paddingLeft: 5, paddingTop: 10 }}>
+                                                    {/* <Text style={{ fontSize: 10, color: '#1D1D20', paddingLeft: 5, paddingTop: 10 }}>
                                                         Channel
-                                                    </Text>
+                                                    </Text> */}
                                                 </View> : null
                                         }
                                     </View>
@@ -955,7 +955,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                                 color: '#1D1D20',
                                                                                 fontSize: 12,
                                                                                 backgroundColor: '#f8f8fa',
-                                                                                paddingHorizontal: 25,
+                                                                                paddingHorizontal: 20,
                                                                                 fontFamily: 'inter',
                                                                                 height: 30,
                                                                                 // width: 100,
@@ -974,7 +974,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
 
                                                             <View style={{ backgroundColor: 'white' }}>
                                                                 <Text style={{
-                                                                    fontSize: 15,
+                                                                    fontSize: 14,
                                                                     fontFamily: 'inter',
                                                                     color: '#1D1D20'
                                                                 }}>
@@ -996,7 +996,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                 }
 
                                                 <Text style={{
-                                                    fontSize: 15,
+                                                    fontSize: 14,
                                                     fontFamily: 'inter',
                                                     color: '#1D1D20'
                                                 }}>
@@ -1053,7 +1053,6 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                     }}>
                                                                         {user.fullName}
                                                                     </Text>
-
                                                                     {
                                                                         groupCreatedBy === user._id ? <Text style={{
                                                                             fontSize: 12, paddingRight: 20, marginLeft: 'auto'
@@ -1083,7 +1082,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                         color: '#fff',
                                                         fontSize: 12,
                                                         backgroundColor: '#007AFF',
-                                                        paddingHorizontal: 25,
+                                                        paddingHorizontal: 20,
                                                         fontFamily: 'inter',
                                                         height: 35,
                                                         // width: 100,
@@ -1168,7 +1167,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                                 color: '#1D1D20',
                                                                                 fontSize: 12,
                                                                                 backgroundColor: '#f8f8fa',
-                                                                                paddingHorizontal: 25,
+                                                                                paddingHorizontal: 20,
                                                                                 fontFamily: 'inter',
                                                                                 height: 30,
                                                                                 // width: 100,
@@ -1188,7 +1187,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                 {/* Add group name here */}
                                                                 <View style={{ backgroundColor: 'white' }}>
                                                                     <Text style={{
-                                                                        fontSize: 15,
+                                                                        fontSize: 14,
                                                                         fontFamily: 'inter',
                                                                         color: '#1D1D20'
                                                                     }}>
@@ -1208,7 +1207,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                 {/* Add group avatar here */}
 
                                                                 <Text style={{
-                                                                    fontSize: 15,
+                                                                    fontSize: 14,
                                                                     fontFamily: 'inter',
                                                                     color: '#1D1D20',
                                                                     marginBottom: 15
@@ -1258,7 +1257,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                 color: '#fff',
                                                                 fontSize: 12,
                                                                 backgroundColor: '#007AFF',
-                                                                paddingHorizontal: 25,
+                                                                paddingHorizontal: 20,
                                                                 fontFamily: 'inter',
                                                                 height: 35,
                                                                 // width: 100,
@@ -1307,11 +1306,11 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                                     borderBottomWidth: ind === sectionFiltered.length - 1 ? 0 : 1,
                                                                                     width: '100%'
                                                                                 }}>
-                                                                                <View style={{ backgroundColor: '#f7f7f7', padding: 10 }}>
+                                                                                <View style={{ backgroundColor: '#f7f7f7', padding: 5 }}>
                                                                                     <Image
                                                                                         style={{
-                                                                                            height: 40,
-                                                                                            width: 40,
+                                                                                            height: 25,
+                                                                                            width: 25,
                                                                                             marginTop: 5,
                                                                                             marginBottom: 5,
                                                                                             borderRadius: 75,
@@ -1322,18 +1321,13 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                                     />
                                                                                 </View>
                                                                                 <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                                                                    <Text style={{ fontSize: 16, padding: 10, fontFamily: 'inter' }} ellipsizeMode='tail'>
+                                                                                    <Text style={{ fontSize: 13, padding: 5, fontFamily: 'inter' }} ellipsizeMode='tail'>
                                                                                         {user.fullName}
                                                                                     </Text>
-                                                                                    <Text style={{ fontSize: 13, padding: 10 }} ellipsizeMode='tail'>
+                                                                                    <Text style={{ fontSize: 11, padding: 5 }} ellipsizeMode='tail'>
                                                                                         {user.email}
                                                                                     </Text>
                                                                                 </View>
-                                                                                {/* <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                                                <Text style={{ fontSize: 15, padding: 10, color: '#007AFF', textAlign: 'center' }} ellipsizeMode='tail'>
-                                                                    <Ionicons name='chatbubble-ellipses-outline' size={20} />
-                                                                </Text>
-                                                            </View> */}
                                                                             </TouchableOpacity>
                                                                         })
                                                                     }
@@ -1372,7 +1366,6 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                                 })
                                                                             }
 
-
                                                                             const chatImg = chat.name && chat.name !== "" ? (chat.image ? chat.image : "https://cues-files.s3.amazonaws.com/images/default.png") : (chat.users[0] === userId ? chat.userNames[1] : chat.userNames[0]).avatar ? (chat.users[0] === userId ? chat.userNames[1] : chat.userNames[0]).avatar : 'https://cues-files.s3.amazonaws.com/images/default.png'
 
                                                                             const { title } = htmlStringParser(chat.lastMessage)
@@ -1397,11 +1390,11 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                                         // minWidth: 600, // flex: 1,
                                                                                         width: '100%'
                                                                                     }}>
-                                                                                    <View style={{ backgroundColor: '#f8f8fa', padding: 10 }}>
+                                                                                    <View style={{ backgroundColor: '#f8f8fa', padding: 5 }}>
                                                                                         <Image
                                                                                             style={{
-                                                                                                height: 40,
-                                                                                                width: 40,
+                                                                                                height: 25,
+                                                                                                width: 25,
                                                                                                 marginTop: 5,
                                                                                                 marginBottom: 5,
                                                                                                 borderRadius: 75,
@@ -1412,26 +1405,26 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                                         />
                                                                                     </View>
                                                                                     <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                                                                        <Text style={{ fontSize: 13, padding: 10 }} ellipsizeMode='tail'>
+                                                                                        <Text style={{ fontSize: 11, padding: 5 }} ellipsizeMode='tail'>
                                                                                             {fName}
                                                                                         </Text>
                                                                                         <View style={{ flexDirection: 'row', flex: 1 }}>
-                                                                                            <Text style={{ flex: 1, flexDirection: 'row', fontSize: 16, padding: 10, fontFamily: 'inter' }} ellipsizeMode='tail'>
+                                                                                            <Text style={{ flex: 1, flexDirection: 'row', fontSize: 13, padding: 5, fontFamily: 'inter' }} ellipsizeMode='tail'>
                                                                                                 {title}
                                                                                             </Text>
                                                                                         </View>
                                                                                     </View>
                                                                                     <View style={{ backgroundColor: '#fff', padding: 0, flexDirection: 'row', alignSelf: 'center' }} >
-                                                                                        <Text style={{ fontSize: 13, padding: 10, lineHeight: 13 }} ellipsizeMode='tail'>
+                                                                                        <Text style={{ fontSize: 11, padding: 5, lineHeight: 13 }} ellipsizeMode='tail'>
                                                                                             {emailTimeDisplay(chat.lastMessageTime)}
                                                                                         </Text>
-                                                                                        <Text style={{ fontSize: 13, padding: 10, lineHeight: 13 }} ellipsizeMode='tail'>
-                                                                                            <Ionicons name='chevron-forward-outline' size={23} color='#007AFF' />
+                                                                                        <Text style={{ fontSize: 13, padding: 5, lineHeight: 13 }} ellipsizeMode='tail'>
+                                                                                            <Ionicons name='chevron-forward-outline' size={20} color='#007AFF' />
                                                                                         </Text>
                                                                                     </View>
                                                                                     {/* <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                                                                <Text style={{ fontSize: 15, padding: 10, color: '#007AFF', textAlign: 'center' }} ellipsizeMode='tail'>
-                                                                                    <Ionicons name='chevron-forward-outline' size={20} />
+                                                                                <Text style={{ fontSize: 14, padding: 10, color: '#007AFF', textAlign: 'center' }} ellipsizeMode='tail'>
+                                                                                    <Ionicons name='chevron-forward-outline' size={17} />
                                                                                 </Text>
                                                                             </View> */}
                                                                                 </TouchableOpacity>

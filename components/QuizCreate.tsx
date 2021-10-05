@@ -203,7 +203,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             }}
                             onPress={() => insertEquation()}
                         >
-                            <Ionicons name="add-circle-outline" color="#1D1D20" size={20} />
+                            <Ionicons name="add-circle-outline" color="#1D1D20" size={17} />
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={{
@@ -426,7 +426,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 <View style={{ flexDirection: 'row', width: '95%', marginTop: 50, paddingLeft: 20, marginBottom: 20 }}>
                     <View style={{ width: Dimensions.get('window').width < 1024 ? '95%' : '50%' }}>
                         <TextareaAutosize
-                            style={{ maxWidth: '100%', marginBottom: 10, marginTop: 10, paddingTop: 13, paddingBottom: 13, fontSize: 15, borderBottom: '1px solid #cccccc', }}
+                            style={{ maxWidth: '100%', marginBottom: 10, marginTop: 10, paddingTop: 13, paddingBottom: 13, fontSize: 14, borderBottom: '1px solid #cccccc', }}
                             value={headers[index]}
                             placeholder={'Heading'}
                             onChange={(e: any) => {
@@ -617,7 +617,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         {renderHeaderOption(index)}
                         <View style={{ flexDirection: 'row' }}>
                             <View style={{ paddingTop: 15 }}>
-                                <Text style={{ color: '#1D1D20', fontSize: 15, paddingBottom: 25, marginRight: 10, paddingTop: 12 }}>
+                                <Text style={{ color: '#1D1D20', fontSize: 14, paddingBottom: 25, marginRight: 10, paddingTop: 12 }}>
                                     {index + 1}.
                                 </Text>
                             </View>
@@ -699,7 +699,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                             value={editQuestionNumber === (index + 1) ? problem.points : ((problem.points === "" ? "Enter" : problem.points) + " " + (Number(problem.points) === 1 ? 'Point' : 'Points'))}
                                             editable={editQuestionNumber === (index + 1)}
                                             style={{
-                                                fontSize: 15,
+                                                fontSize: 14,
                                                 padding: 15,
                                                 paddingTop: 12,
                                                 paddingBottom: 12,
@@ -1217,7 +1217,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             fontSize: 12,
                             backgroundColor: "#007AFF",
                             borderRadius: 15,
-                            paddingHorizontal: 25,
+                            paddingHorizontal: 20,
                             fontFamily: "inter",
                             overflow: "hidden",
                             height: 35,
@@ -1238,7 +1238,7 @@ const styles = StyleSheet.create({
         width: '50%',
         borderBottomColor: '#f7f7f7',
         borderBottomWidth: 1,
-        fontSize: 15,
+        fontSize: 14,
         paddingTop: 12,
         paddingBottom: 12,
         marginTop: 5,

@@ -191,7 +191,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
   useEffect(() => {
     if (option === "Classroom") return;
-    
+
     setLoadDiscussionForChannelId('')
     setOpenChannelId('')
   }, [option])
@@ -1208,7 +1208,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     }
 
     setCueId('')
-    setModalType('')
+    // setModalType('')
     setShowHome(true)
     setCreatedBy('')
     setChannelFilterChoice('All')
@@ -1218,6 +1218,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         setChannelId('')
       }
     }
+    setOption('To Do')
     loadData(true)
   }, [sheetRef, fadeAnimation, modalType, filterChoice])
 
@@ -1225,7 +1226,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     channelId={channelId}
     refreshSubscriptions={refreshSubscriptions}
     closeModal={() => {
-      setShowHome(false)
+      setShowHome(true)
       closeModal()
     }}
   /> :
@@ -1263,7 +1264,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           : (
             modalType === 'Channels' ? <Channels
               closeModal={() => {
-                setShowHome(false)
+                setShowHome(true)
                 closeModal()
               }}
             /> : (
@@ -1507,10 +1508,10 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     color: 'white',
                     fontSize: 12,
                     backgroundColor: '#007AFF',
-                    paddingHorizontal: 25,
+                    paddingHorizontal: 20,
                     fontFamily: 'inter',
                     height: 35,
-                    width: 180,
+                    // width: 180,
                     borderRadius: 15,
                     textTransform: 'uppercase'
                   }}>
@@ -1529,16 +1530,18 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     width: '100%', justifyContent: 'center', flexDirection: 'row'
                   }}>
                   <Text style={{
+                    color: '#007aff',
+                    borderWidth: 1,
+                    borderRadius: 15,
+                    borderColor: '#007aff',
+                    backgroundColor: '#fff',
+                    fontSize: 12,
                     textAlign: 'center',
                     lineHeight: 35,
-                    color: '#1D1D20',
-                    fontSize: 12,
-                    backgroundColor: '#f7f7f7',
-                    paddingHorizontal: 25,
+                    paddingHorizontal: 20,
                     fontFamily: 'inter',
                     height: 35,
-                    width: 180,
-                    borderRadius: 15,
+                    // width: 200,
                     textTransform: 'uppercase'
                   }}>
                     {
@@ -1598,6 +1601,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     loadData()
                   }}
                   closeModal={() => {
+                    setShowHome(true)
                     closeModal()
                   }}
                   saveDataInCloud={async () => await saveDataInCloud()}
@@ -1641,7 +1645,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                       openCueFromCalendar(channelId, cueId, subscription.channelCreatedBy)
                       setTarget('Q&A')
                     }
-                    
+
                   }}
                   openQAFromActivity={(channelId: any, cueId: string, by: string) => {
                     openCueFromCalendar(channelId, cueId, by)
@@ -1741,7 +1745,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 backgroundColor: '#f7f7f7',
                 width: dimensions.window.width,
                 height: dimensions.window.height - 30,
-                maxWidth: 1275, alignSelf: 'center'
+                maxWidth: 1000, alignSelf: 'center'
               }}>
                 <BottomBar
                   cues={dateFilteredCues}
@@ -1817,7 +1821,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             </View >
         }
         {
-          !menuCollapsed && dimensions.window.width < 1024 ? null :
+          (!menuCollapsed && dimensions.window.width < 1024) || showHome ? null :
             (modalType === '' ? <View
               style={{
                 width: dimensions.window.width < 1024 ? 0 : dimensions.window.width,
@@ -1862,7 +1866,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     alignSelf: 'center',
                     borderTopLeftRadius: 0,
                     borderTopRightRadius: 0,
-                    maxWidth: modalType === 'Create' || modalType === 'Update' ? 1275 : dimensions.window.width,
+                    maxWidth: modalType === 'Create' || modalType === 'Update' ? 1000 : dimensions.window.width,
                     overflow: 'hidden'
                   }}>
                     {modalContent}
@@ -1927,7 +1931,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               onPress={() => setOption('To Do')}
             >
               <Text style={{ textAlign: 'center' }}>
-                <Ionicons name='journal-outline' size={25} color={option === 'To Do' ? '#007AFF' : '#1D1D20'} />
+                <Ionicons name='journal-outline' size={22} color={option === 'To Do' ? '#007AFF' : '#1D1D20'} />
               </Text>
               <Text style={{ fontSize: 11, color: option === 'To Do' ? '#007AFF' : '#1D1D20', paddingTop: 5, textAlign: 'center' }}>
                 To Do
@@ -1941,10 +1945,10 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               onPress={() => setOption('Classroom')}
             >
               <Text style={{ textAlign: 'center' }}>
-                <Ionicons name='school-outline' size={25} color={option === 'Classroom' ? '#007AFF' : '#1D1D20'} />
+                <Ionicons name='school-outline' size={22} color={option === 'Classroom' ? '#007AFF' : '#1D1D20'} />
               </Text>
               <Text style={{ fontSize: 11, color: option === 'Classroom' ? '#007AFF' : '#1D1D20', paddingTop: 5, textAlign: 'center' }}>
-                Classroom
+                Classrooms
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -1955,7 +1959,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               onPress={() => setOption('Performance')}
             >
               <Text style={{ textAlign: 'center' }}>
-                <Ionicons name='speedometer-outline' size={25} color={option === 'Performance' ? '#007AFF' : '#1D1D20'} />
+                <Ionicons name='speedometer-outline' size={22} color={option === 'Performance' ? '#007AFF' : '#1D1D20'} />
               </Text>
               <Text style={{ fontSize: 11, color: option === 'Performance' ? '#007AFF' : '#1D1D20', paddingTop: 5, textAlign: 'center' }}>
                 Performance
@@ -1970,7 +1974,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               onPress={() => setOption('Inbox')}
             >
               <Text style={{ textAlign: 'center' }}>
-                <Ionicons name='mail-outline' size={25} color={option === 'Inbox' ? '#007AFF' : '#1D1D20'} />
+                <Ionicons name='mail-outline' size={22} color={option === 'Inbox' ? '#007AFF' : '#1D1D20'} />
               </Text>
               <Text style={{ fontSize: 11, color: option === 'Inbox' ? '#007AFF' : '#1D1D20', paddingTop: 5, textAlign: 'center' }}>
                 Inbox
@@ -2000,7 +2004,7 @@ const styles = (channelId: string) => StyleSheet.create({
     borderTopLeftRadius: 15,
     height: Dimensions.get('window').height - 60,
     width: '100%',
-    // maxWidth: 1275,
+    // maxWidth: 1000,
     justifyContent: "center",
     backgroundColor: '#f7f7f7'
   },
@@ -2012,7 +2016,7 @@ const styles = (channelId: string) => StyleSheet.create({
     width: '100%',
     borderBottomColor: '#f7f7f7',
     borderBottomWidth: 1,
-    fontSize: 15,
+    fontSize: 14,
     paddingTop: 13,
     paddingBottom: 13,
     marginTop: 5,

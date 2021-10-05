@@ -1005,7 +1005,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
             paddingBottom: 30,
           }}
         >
-          {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
+          {/* <Ionicons name='chevron-down' size={17} color={'#e0e0e0'} /> */}
         </Text>
         <View style={{ flexDirection: "row" }}>
           <View style={{ backgroundColor: "white", flex: 1 }} />
@@ -1209,7 +1209,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
               }}
               onPress={() => insertEquation()}
             >
-              <Ionicons name="add-circle-outline" color="#1D1D20" size={20} />
+              <Ionicons name="add-circle-outline" color="#1D1D20" size={17} />
             </TouchableOpacity>
             <TouchableOpacity
               style={{
@@ -1259,7 +1259,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                     width: "100%",
                     maxWidth: '100%',
                     borderBottom: '1px solid #cccccc',
-                    fontSize: 15,
+                    fontSize: 14,
                     paddingTop: 13,
                     paddingBottom: 13,
                     marginTop: 12,
@@ -1282,7 +1282,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                       <Ionicons
                         name="trash-outline"
                         color="#818385"
-                        size={20}
+                        size={17}
                         style={{ alignSelf: "center" }}
                       />
                       <Text
@@ -1328,7 +1328,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                         width: "100%",
                         maxWidth: '100%',
                         borderBottom: '1px solid #cccccc',
-                        fontSize: 15,
+                        fontSize: 14,
                         paddingTop: 13,
                         paddingBottom: 13,
                         marginTop: 0,
@@ -1516,7 +1516,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
               display: "flex",
               flexDirection: "column",
               marginHorizontal: 10,
-              maxWidth: 800, alignSelf: 'center',
+              maxWidth: 600, alignSelf: 'center',
               // marginLeft: width < 1024 ? 0 : 200
             }}
           >
@@ -1544,7 +1544,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   >
                     <Text
                       style={{
-                        fontSize: 15,
+                        fontSize: 14,
                         color: '#1D1D20'
                       }}
                     >
@@ -1701,7 +1701,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                     >
                       <Text
                         style={{
-                          fontSize: 15,
+                          fontSize: 14,
                           color: '#1D1D20'
                         }}
                       >
@@ -1802,7 +1802,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                     >
                       <Text
                         style={{
-                          fontSize: 15,
+                          fontSize: 14,
                           color: '#1D1D20'
                         }}
                       >
@@ -1986,7 +1986,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                     >
                       <Text
                         style={{
-                          fontSize: 15,
+                          fontSize: 14,
                           color: '#1D1D20'
                         }}
                       >
@@ -2043,7 +2043,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                 width: "25%",
                                 borderBottomColor: "#f7f7f7",
                                 borderBottomWidth: 1,
-                                fontSize: 15,
+                                fontSize: 14,
                                 padding: 15,
                                 paddingVertical: 12,
                                 marginTop: 0,
@@ -2072,7 +2072,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                     >
                       <Text
                         style={{
-                          fontSize: 15,
+                          fontSize: 14,
                           color: '#1D1D20'
                         }}
                       >
@@ -2185,7 +2185,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                     >
                       <Text
                         style={{
-                          fontSize: 15,
+                          fontSize: 14,
                           color: '#1D1D20'
                         }}
                       >
@@ -2240,7 +2240,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                               width: "25%",
                               borderBottomColor: "#F8F9FA",
                               borderBottomWidth: 1,
-                              fontSize: 15,
+                              fontSize: 14,
                               padding: 15,
                               paddingVertical: 12,
                               marginTop: 0,
@@ -2282,7 +2282,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   >
                     <Text
                       style={{
-                        fontSize: 15,
+                        fontSize: 14,
                         color: '#1D1D20'
                       }}
                     >
@@ -2361,7 +2361,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                         >
                           <Ionicons
                             name={addCustomCategory ? "close" : "add"}
-                            size={20}
+                            size={17}
                             color={"#1D1D20"}
                           />
                         </Text>
@@ -2387,7 +2387,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 >
                   <Text
                     style={{
-                      fontSize: 15,
+                      fontSize: 14,
                       color: '#1D1D20'
                     }}
                   >
@@ -2454,7 +2454,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 >
                   <Text
                     style={{
-                      fontSize: 15,
+                      fontSize: 14,
                       color: '#1D1D20'
                     }}
                   >
@@ -2502,7 +2502,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   >
                     <Text
                       style={{
-                        fontSize: 15,
+                        fontSize: 14,
                         color: '#1D1D20'
                       }}
                     >
@@ -2710,7 +2710,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   >
                     <Text
                       style={{
-                        fontSize: 15,
+                        fontSize: 14,
                         color: '#1D1D20'
                       }}
                     >
@@ -2961,7 +2961,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 >
                   <Text
                     style={{
-                      fontSize: 15,
+                      fontSize: 14,
                       color: '#1D1D20'
                     }}
                   >
@@ -3034,7 +3034,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                       fontSize: 12,
                       backgroundColor: "#007AFF",
                       borderRadius: 15,
-                      paddingHorizontal: 25,
+                      paddingHorizontal: 20,
                       fontFamily: "inter",
                       overflow: "hidden",
                       height: 35,
@@ -3054,7 +3054,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                       fontSize: 12,
                       backgroundColor: "#007AFF",
                       borderRadius: 15,
-                      paddingHorizontal: 25,
+                      paddingHorizontal: 20,
                       fontFamily: "inter",
                       overflow: "hidden",
                       height: 35,
@@ -3081,7 +3081,7 @@ export default Create;
 const styles: any = StyleSheet.create({
   timePicker: {
     width: 125,
-    fontSize: 15,
+    fontSize: 14,
     height: 45,
     color: "#1D1D20",
     borderRadius: 0,
@@ -3137,7 +3137,7 @@ const styles: any = StyleSheet.create({
     width: "100%",
     borderBottomColor: "#f7f7f7",
     borderBottomWidth: 1,
-    fontSize: 15,
+    fontSize: 14,
     paddingTop: 12,
     paddingBottom: 12,
     marginTop: 0,

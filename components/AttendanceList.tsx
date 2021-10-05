@@ -364,7 +364,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
             borderTopLeftRadius: 0
         }}>
             <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 25 }}>
-                {/* <Ionicons name='chevron-down' size={20} color={'#e0e0e0'} /> */}
+                {/* <Ionicons name='chevron-down' size={17} color={'#e0e0e0'} /> */}
             </Text>
             <View style={{ backgroundColor: 'white', flexDirection: 'row', paddingBottom: 25, width: '100%', justifyContent: 'flex-end' }}>
                 {pastMeetings.length === 0 || channelAttendances.length === 0 ? null : <View style={{ paddingRight: 20 }}>
@@ -415,7 +415,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                             color: '#fff',
                             fontSize: 12,
                             backgroundColor: '#007aff',
-                            paddingHorizontal: 25,
+                            paddingHorizontal: 20,
                             fontFamily: 'inter',
                             height: 30,
                             // width: 100,
@@ -532,9 +532,9 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                                             <TouchableOpacity disabled={!isOwner} onPress={() => onChangeAttendance(meeting.dateId, channelAttendance.userId, attendanceObject ? false : true)} style={{ marginBottom: 5, width: '100%', flexDirection: 'row', justifyContent: 'center' }}>
                                                                 {
                                                                     attendanceObject ?
-                                                                        <Ionicons name='checkmark-outline' size={20} color={'#007AFF'} />
+                                                                        <Ionicons name='checkmark-outline' size={17} color={'#007AFF'} />
                                                                         :
-                                                                        isOwner ? <Ionicons name='checkmark-outline' size={20} color={'#e0e0e0'} /> : '-'
+                                                                        isOwner ? <Ionicons name='checkmark-outline' size={17} color={'#e0e0e0'} /> : '-'
                                                                 }
                                                             </TouchableOpacity>
                                                             {attendanceObject ? <Text style={{ textAlign: 'center', fontSize: 12, color: '#1D1D20', width: '100%', }}>

@@ -72,13 +72,13 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
     useEffect(() => {
         (
             async () => {
-              const u = await AsyncStorage.getItem('user')
-              if (u) {
-                const parsedUser: any = JSON.parse(u)
-                setUserId(parsedUser._id)
-              } 
+                const u = await AsyncStorage.getItem('user')
+                if (u) {
+                    const parsedUser: any = JSON.parse(u)
+                    setUserId(parsedUser._id)
+                }
             }
-          )()
+        )()
     }, [])
 
     const handleSubscribe = useCallback(async (nm, pass) => {
@@ -347,7 +347,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
     const sortChannels = channels.sort((a: any, b: any) => {
 
         const aSubscribed = props.subscriptions.find((sub: any) => sub.channelId === a._id)
-        
+
         const bSubscribed = props.subscriptions.find((sub: any) => sub.channelId === b._id)
 
         if (aSubscribed && !bSubscribed) return -1;
@@ -358,7 +358,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
 
     return (
         <View style={styles.screen} key={1}>
-            <View style={{ width: '100%', maxWidth: 800 }}>
+            <View style={{ width: '100%', maxWidth: 600 }}>
                 <View style={{ flexDirection: 'row', width: '100%', height: 50, marginBottom: 10 }}>
                     <View style={{ flexDirection: 'row', flex: 1 }}>
                         {
@@ -385,7 +385,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     lineHeight: 23,
                                     color: '#1D1D20'
                                 }}>
-                                    <Ionicons name='school-outline' size={25} color={'#1D1D20'} />
+                                    <Ionicons name='radio-outline' size={30} color={'#007aff'} />
                                 </Text>
                         }
                     </View>
@@ -410,14 +410,14 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     color: '#fff',
                                     fontSize: 12,
                                     backgroundColor: '#007aff',
-                                    paddingHorizontal: 25,
+                                    paddingHorizontal: 20,
                                     fontFamily: 'inter',
                                     height: 30,
                                     // width: 100,
                                     borderRadius: 15,
                                     textTransform: 'uppercase'
                                 }}>
-                                    Create <Ionicons name='add-outline' size={12} />
+                                    Create <Ionicons name='create-outline' size={12} />
                                 </Text>
                             </TouchableOpacity>
                     }
@@ -437,7 +437,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             }}
                         >
                             <ScrollView contentContainerStyle={{
-                                height: width < 1024 ? 600 :  Dimensions.get('window').height - 200,
+                                height: width < 1024 ? 600 : Dimensions.get('window').height - 200,
                                 width: '100%',
                             }}>
                                 {
@@ -445,7 +445,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
 
                                         const subscribed = props.subscriptions.find((sub: any) => {
                                             return sub.channelId === channel._id
-                                        }) 
+                                        })
 
                                         let role = 'Subscribed';
 
@@ -471,11 +471,11 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 borderBottomWidth: ind === channels.length - 1 ? 0 : 1,
                                                 width: '100%'
                                             }}>
-                                            <View style={{ backgroundColor: '#f7f7f7', padding: 10 }}>
+                                            <View style={{ backgroundColor: '#f7f7f7', padding: 5 }}>
                                                 <Image
                                                     style={{
-                                                        height: 40,
-                                                        width: 40,
+                                                        height: 25,
+                                                        width: 25,
                                                         marginTop: 5,
                                                         marginBottom: 5,
                                                         borderRadius: 75,
@@ -486,28 +486,32 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 />
                                             </View>
                                             <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                                <Text style={{ fontSize: 13, padding: 10 }} ellipsizeMode='tail'>
+                                                <Text style={{ fontSize: 11, padding: 5 }} ellipsizeMode='tail'>
                                                     {channel.createdByUsername}
                                                 </Text>
-                                                <Text style={{ fontSize: 16, padding: 10, fontFamily: 'inter' }} ellipsizeMode='tail'>
+                                                <Text style={{ fontSize: 13, padding: 5, fontFamily: 'inter' }} ellipsizeMode='tail'>
                                                     {channel.name}
                                                 </Text>
                                             </View>
-                                            <View style={{ width: '20%', }}>
+                                            <View style={{ padding: 10 }}>
                                                 {
-                                                    !subscribed ?  <View style={{ flex: 1, paddingLeft: 10, flexDirection: 'column', justifyContent: 'center'  }}>
-                                                    <TouchableOpacity
-                                                        onPress={() => handleSub(channel.name)}
-                                                    >
-                                                        <Text style={{ textAlign: 'center', fontSize: 12, color: '#007AFF' }} ellipsizeMode='tail'>
-                                                            Join
+                                                    !subscribed ? <View style={{ flex: 1, paddingLeft: 10, flexDirection: 'column', justifyContent: 'center' }}>
+                                                        <TouchableOpacity
+                                                            onPress={() => handleSub(channel.name)}
+                                                        >
+                                                            <Text style={{ textAlign: 'center', fontSize: 13, color: '#007AFF' }} ellipsizeMode='tail'>
+                                                                Join
+                                                            </Text>
+                                                        </TouchableOpacity>
+                                                    </View> : <View style={{ flex: 1, paddingLeft: 10, flexDirection: 'column', justifyContent: 'center' }}>
+                                                        <Text style={{
+                                                            textAlign: 'center', fontSize: 13,
+                                                            fontFamily: 'inter',
+                                                            color: role === "Owner" || role === "Moderator" ? '#F94144' : '#35Ac78'
+                                                        }}>
+                                                            {role}
                                                         </Text>
-                                                    </TouchableOpacity>
-                                                </View> : <View style={{ flex: 1, paddingLeft: 10, flexDirection: 'column', justifyContent: 'center'  }}>
-                                                    <Text style={{ textAlign: 'center', fontSize: 12, fontFamily: 'inter', color: role === "Owner" || role === "Moderator" ? '#F94144' : '#35Ac78' }}>
-                                                        {role}
-                                                    </Text>
-                                                </View>}
+                                                    </View>}
                                             </View>
                                         </View>
                                     })
@@ -526,8 +530,8 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                     }}>
                         <View style={{ backgroundColor: 'white' }}>
                             <Text style={{
-                                fontSize: 15,
-                                fontFamily: 'inter',
+                                fontSize: 14,
+                                // fontFamily: 'inter',
                                 color: '#1D1D20'
                             }}>
                                 {PreferredLanguageText('name')}
@@ -549,8 +553,8 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             (option === 'Subscribe' && passwordRequired) || option === 'Create' ?
                                 <View style={{ backgroundColor: 'white' }}>
                                     <Text style={{
-                                        fontSize: 15,
-                                        fontFamily: 'inter',
+                                        fontSize: 14,
+                                        // fontFamily: 'inter',
                                         color: '#1D1D20'
                                     }}>
                                         {PreferredLanguageText('enrolmentPassword')}
@@ -586,8 +590,8 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             backgroundColor: "white"
                                         }}>
                                         <Text style={{
-                                            fontSize: 15,
-                                            fontFamily: 'inter',
+                                            fontSize: 14,
+                                            // fontFamily: 'inter',
                                             color: '#1D1D20'
                                         }}>Temporary</Text>
                                     </View>
@@ -630,10 +634,10 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             backgroundColor: "white"
                                         }}>
                                         <Text style={{
-                                            fontSize: 15,
-                                            fontFamily: 'inter',
+                                            fontSize: 14,
+                                            // fontFamily: 'inter',
                                             color: '#1D1D20'
-                                        }}>Color</Text>
+                                        }}>Theme</Text>
                                     </View>
                                     <View style={{ width: '100%', backgroundColor: 'white' }}>
                                         <CirclePicker
@@ -674,7 +678,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             color: 'white',
                                             fontSize: 12,
                                             backgroundColor: '#007AFF',
-                                            paddingHorizontal: 25,
+                                            paddingHorizontal: 20,
                                             fontFamily: 'inter',
                                             height: 35,
                                             textTransform: 'uppercase'
@@ -709,14 +713,14 @@ const styles = StyleSheet.create({
         borderColor: '#818385'
     },
     all: {
-        fontSize: 15,
+        fontSize: 14,
         color: '#818385',
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: 'white'
     },
     allOutline: {
-        fontSize: 15,
+        fontSize: 14,
         color: '#fff',
         height: 22,
         paddingHorizontal: 10,
@@ -735,7 +739,7 @@ const styles = StyleSheet.create({
         width: '100%',
         borderBottomColor: '#f7f7f7',
         borderBottomWidth: 1,
-        fontSize: 15,
+        fontSize: 14,
         paddingTop: 13,
         paddingBottom: 13,
         marginTop: 5,
