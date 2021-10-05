@@ -1088,10 +1088,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             }
                             <View style={{ flexDirection: 'row', justifyContent: 'center' }} key={collapseMap.toString()}>
                                 {
-                                    cueMap[key].length === 0 && collapseMap[key] ?
-                                        <Text style={{ fontSize: 15, color: '#818385', textAlign: 'left', fontFamily: 'inter', backgroundColor: '#fff', width: '100%' }}>
-                                            {PreferredLanguageText('noCuesCreated')}
-                                        </Text> :
                                         (
                                             collapseMap[key] ?
                                                 <View
@@ -1133,7 +1129,12 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                             />
                                                                     )
                                                             ) :
-                                                            (<ScrollView
+                                                            cueMap[key].length === 0 ? 
+                                                                <Text style={{ width: '100%', color: '#818385', fontSize: 23, paddingTop: 100, paddingBottom: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                                                    {PreferredLanguageText('noCuesCreated')}
+                                                                </Text>
+                                                            :
+                                                             (<ScrollView
                                                                 horizontal={true}
                                                                 contentContainerStyle={{
                                                                     maxWidth: '100%'

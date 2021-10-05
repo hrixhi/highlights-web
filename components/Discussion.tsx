@@ -112,20 +112,10 @@ const Discussion: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
     const windowHeight = Dimensions.get('window').width < 1024 ? Dimensions.get('window').height - 30 : Dimensions.get('window').height;
     return (
-        <ScrollView style={{
+        <View style={{
             width: '100%',
-            height: '100%',
-            maxHeight: 600,
             backgroundColor: 'white',
-            borderTopRightRadius: 0,
-            borderTopLeftRadius: 0
         }}
-            showsVerticalScrollIndicator={false}
-            scrollEnabled={true}
-            scrollEventThrottle={1}
-            keyboardDismissMode={'on-drag'}
-            overScrollMode={'never'}
-            nestedScrollEnabled={true}
         >
             <Animated.View style={{
                 opacity: modalAnimation,
@@ -168,7 +158,7 @@ const Discussion: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         />
                 }
             </Animated.View>
-        </ScrollView>
+        </View>
     );
 }
 
