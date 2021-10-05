@@ -191,7 +191,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         let currentContent = editorRef.current.getContent();
 
         const SVGEquation = TeXToSVG(equation, { width: 100 }); // returns svg in html format
-        currentContent += "<div>" + SVGEquation + "<br/></div>";
+        currentContent += '<div contenteditable="false" style="display: inline-block">' + SVGEquation + "<br/></div>";
 
         editorRef.current.setContent(currentContent)
         setShowEquationEditor(false);
@@ -472,8 +472,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         let now = new Date();
         now.setMinutes(now.getMinutes() - 1);
         let current = new Date();
-        if (now >= deadline) {
-            // deadline crossed
+        if ((!allowLateSubmission && now >= deadline) || (allowLateSubmission && now >= availableUntil)) {
+            // deadline crossed or late submission over
             return;
         }
         if (duration === 0) {
@@ -486,7 +486,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         } else {
             setInitDuration(remainingTime); // set remaining duration in seconds
         }
-    }, [initiatedAt, duration, deadline, isQuizTimed, isOwner]);
+    }, [initiatedAt, duration, deadline, isQuizTimed, isOwner, allowLateSubmission, availableUntil]);
 
     // Loads all the channel categories and list of people cue has been shared with
     const loadChannelsAndSharedWith = useCallback(async () => {
@@ -1884,6 +1884,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             setDuration(res.data.quiz.getQuiz.duration * 60);
                                             setShuffleQuiz(res.data.quiz.getQuiz.shuffleQuiz ? res.data.quiz.getQuiz.shuffleQuiz : false)
                                             alert('Quiz updated successfully')
+                                            // Refresh all subscriber scores since there could be regrades
+                                            props.reloadStatuses()
+
                                         }
                                     });
 
@@ -2544,7 +2547,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const renderQuizEndedMessage = () => {
         return (<View style={{ backgroundColor: 'white', flex: 1, }}>
             <Text style={{ width: '100%', color: '#818385', fontSize: 20, paddingTop: 200, paddingBottom: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1, textAlign: 'center' }}>
-                Quiz submission ended. {remainingAttempts === 0 ? "No attempts left. " : ""}
+                Quiz submission ended. {remainingAttempts === 0 ? "No attempts left. " : ""} { props.cue.releaseSubmission ? "Quiz grades released by instructor. " : ""}
             </Text>
         </View>)
 
@@ -3023,9 +3026,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     paste_data_images: true,
                     images_upload_url: 'https://api.cuesapp.co/api/imageUploadEditor',
                     mobile: {
-                        plugins: (!isOwner && props.cue.channelId && props.cue.channelId !== "") ? 'print preview' : 'print preview powerpaste casechange importcss tinydrive searchreplace autolink autosave save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount tinymcespellchecker a11ychecker textpattern noneditable help formatpainter pageembed charmap mentions linkchecker emoticons advtable autoresize'
+                        plugins: (!isOwner && props.cue.channelId && props.cue.channelId !== "") ? 'print preview' : 'print preview powerpaste casechange importcss tinydrive searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize'
                     },
-                    plugins: (!isOwner && props.cue.channelId && props.cue.channelId !== "") ? 'print preview' : 'print preview powerpaste casechange importcss tinydrive searchreplace autolink autosave save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount tinymcespellchecker a11ychecker textpattern noneditable help formatpainter pageembed charmap mentions linkchecker emoticons advtable autoresize',
+                    plugins: (!isOwner && props.cue.channelId && props.cue.channelId !== "") ? 'print preview' : 'print preview powerpaste casechange importcss tinydrive searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize',
                     menu: { // this is the complete default configuration
                         file: { title: 'File', items: 'newdocument' },
                         edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall' },
@@ -3037,7 +3040,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     },
                     // menubar: 'file edit view insert format tools table tc help',
                     menubar: false,
-                    toolbar: (!isOwner && props.cue.channelId && props.cue.channelId !== "") ? false : 'undo redo | bold italic underline strikethrough | fontselect fontSizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat  pagebreak | table image media pageembed link | preview print | charmap emoticons |  ltr rtl | showcomments addcomment',
+                    toolbar: (!isOwner && props.cue.channelId && props.cue.channelId !== "") ? false : 'undo redo | bold italic underline strikethrough | superscript subscript | fontselect fontSizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat  pagebreak | table image media pageembed link | preview print | charmap emoticons |  ltr rtl | showcomments addcomment',
                     importcss_append: true,
                     image_caption: true,
                     quickbars_selection_toolbar: 'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
@@ -3229,9 +3232,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 paste_data_images: true,
                 images_upload_url: 'https://api.cuesapp.co/api/imageUploadEditor',
                 mobile: {
-                    plugins: 'print preview powerpaste casechange importcss tinydrive searchreplace autolink autosave save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount tinymcespellchecker a11ychecker textpattern noneditable help formatpainter pageembed charmap mentions linkchecker emoticons advtable autoresize'
+                    plugins: 'print preview powerpaste casechange importcss tinydrive searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize'
                 },
-                plugins: 'print preview powerpaste casechange importcss tinydrive searchreplace autolink autosave save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount tinymcespellchecker a11ychecker textpattern noneditable help formatpainter pageembed charmap mentions linkchecker emoticons advtable autoresize',
+                plugins: 'print preview powerpaste casechange importcss tinydrive searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize',
                 menu: { // this is the complete default configuration
                     file: { title: 'File', items: 'newdocument' },
                     edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall' },

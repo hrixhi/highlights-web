@@ -121,6 +121,7 @@
         "rsuite": "^4.10.2",
         "tex-to-svg": "^0.2.0",
         "unique-names-generator": "^4.3.1",
+        "use-dynamic-refs": "^1.0.0",
         "xlsx": "^0.17.0"
     },
     "devDependencies": {

@@ -107,22 +107,30 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 </Text>
             </View>
             <View style={styles.row}>
-                <View style={styles.col} />
-                <View style={styles.col}>
+                <View style={{ justifyContent: 'center', display: 'flex', flexDirection: 'column', padding: 7, width: props.isOwner ? "20%" : "25%" }} />
+                <View style={{ justifyContent: 'center', display: 'flex', flexDirection: 'column', padding: 7, width: props.isOwner ? "20%" : "25%" }}>
                     <Text style={{ fontWeight: 'bold'}}>
                         Attempt
                     </Text>
                 </View>
-                <View style={styles.col}>
+                <View style={{ justifyContent: 'center', display: 'flex', flexDirection: 'column', padding: 7, width: props.isOwner ? "20%" : "25%" }}>
                     <Text style={{ fontWeight: 'bold'}}>
                         Time
                     </Text>
                 </View>
-                <View style={styles.col}>
+                <View style={{ justifyContent: 'center', display: 'flex', flexDirection: 'column', padding: 7, width: props.isOwner ? "20%" : "25%" }}>
                     <Text style={{ fontWeight: 'bold'}}>
                         Score
                     </Text>
                 </View>
+                {
+                    props.isOwner ?
+                    <View style={{ justifyContent: 'center', display: 'flex', flexDirection: 'column', padding: 7, width: props.isOwner ? "20%" : "25%" }}>
+                        <Text style={{ fontWeight: 'bold'}}>
+                            Status
+                        </Text>
+                    </View> : null
+                }
             </View>
             {
                 props.attempts.map((attempt: any, index: number) => {
@@ -136,7 +144,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     let seconds = duration !== 0 ?  Math.ceil(duration - (hours * 3600) - (minutes * 60)) : 0;
 
                     return (<View style={styles.row}>
-                        <View style={styles.col}>
+                        <View style={{ justifyContent: 'center', display: 'flex', flexDirection: 'column', padding: 7, width: props.isOwner ? "20%" : "25%" }}>
                             {attempt.isActive ? <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                                 <Ionicons name='checkmark-outline' size={23} color={"#53BE68"} /> 
                                 <Text style={{ fontSize: 17, paddingLeft: 5 }}>
@@ -144,7 +152,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 </Text>
                             </View> : null}
                         </View> 
-                        <View style={styles.col}>
+                        <View style={{ justifyContent: 'center', display: 'flex', flexDirection: 'column', padding: 7, width: props.isOwner ? "20%" : "25%" }}>
                             {props.isOwner ? <TouchableOpacity onPress={() => props.onChangeQuizAttempt(index)}>
                                 <Text style={{ color: '#3B64F8' }}>
                                     Attempt {index + 1}
@@ -154,12 +162,20 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             </Text>}
                             
                         </View>
-                        <View style={styles.col}>
+                        <View style={{ justifyContent: 'center', display: 'flex', flexDirection: 'column', padding: 7, width: props.isOwner ? "20%" : "25%" }}>
                             {duration !== 0 ? `${hours !== 0 ? "" + hours + " H " : ""} ${minutes !== 0 ? "" + minutes + " min" : ""}  ${seconds !== 0 ? "" + seconds + " sec" : ""}` : "-"}
                         </View>
-                        <View style={styles.col}>
+                        <View style={{ justifyContent: 'center', display: 'flex', flexDirection: 'column', padding: 7, width: props.isOwner ? "20%" : "25%" }}>
                             {attempt.score} out of {totalPossible} 
                         </View>
+                        {
+                            props.isOwner ? 
+                            <View style={{ justifyContent: 'center', display: 'flex', flexDirection: 'column', padding: 7, width: props.isOwner ? "20%" : "25%" }}>
+                                {attempt.isFullyGraded ? "Graded" : "Not Graded"} 
+                            </View>
+                            : null
+                        }
+
                     </View>)
                 })
             }
@@ -359,6 +375,9 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         if (Number.isNaN(Number(e.target.value))) return
                                         const updateProblemScores = [...problemScores]
                                         updateProblemScores[index] = e.target.value;
+                                        if (Number(e.target.value) > Number(problem.points)) {
+                                            alert('Assigned score exceeds total points')
+                                        }
                                         setProblemScores(updateProblemScores)
                                     }}
                                     style={{
@@ -490,7 +509,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                             lineHeight: 25
                                                         }}
                                                     >
-                                                        {option.option}
+                                                        {parser(option.option)}
                                                     </Text>
                                             )
                                     }
@@ -500,8 +519,8 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         {
                             problem.questionType === "freeResponse" ?
                                 <View style={{ width: '100%', paddingHorizontal: 40 }}>
-                                    <Text style={{ color: solutions[index].response !== "" ? '#818385' : '#f94144', paddingTop: 20, paddingBottom: 40, lineHeight: 20, borderBottomColor: '#e8e8ea', borderBottomWidth: 1 }}>
-                                        {solutions[index].response && solutions[index].response !== "" ? solutions[index].response : "No response"}
+                                    <Text style={{ color: solutions[index].response !== "" ? 'black' : '#f94144', paddingTop: 20, paddingBottom: 40, lineHeight: 25, borderBottomColor: '#e8e8ea', borderBottomWidth: 1 }}>
+                                        {solutions[index].response && solutions[index].response !== "" ? parser(solutions[index].response) : "No response"}
                                     </Text>
                                 </View>
                                 :

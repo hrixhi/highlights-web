@@ -1576,6 +1576,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 showComments={showComments}
                 setShowComments={(s: any) => setShowComments(s)}
                 setShowFolder={(s: any) => setShowFolder(s)}
+                reloadStatuses={reloadStatuses}
             />
             {
                 !Number.isNaN(Number(cueId))

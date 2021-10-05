@@ -957,7 +957,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
             warning = "Late submission deadline has not passed. Students will be unable to submit after releasing scores."
         }
 
-        Alert(releaseSubmission ? "Hide scores?" : "Release Scores?",  warning, [
+        Alert(releaseSubmission ? "Hide scores?" : "Release Scores?",  releaseSubmission ? "" : warning, [
             {
                 text: "Cancel",
                 style: "cancel",

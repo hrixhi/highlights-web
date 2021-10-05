@@ -1,5 +1,5 @@
 import EquationEditor from 'equation-editor-react';
-import React, { useEffect, useState, useCallback, useRef } from 'react';
+import React, { useEffect, useState, useCallback, useRef, createRef } from 'react';
 import { Image, StyleSheet, TextInput, ActivityIndicator, TouchableOpacity, Dimensions, Switch, Keyboard } from 'react-native';
 import { TextInput as CustomTextInput } from './CustomTextInput'
 import { Text, View } from './Themed';
@@ -31,13 +31,21 @@ import FileUpload from "./UploadFiles";
 
 import ReactPlayer from "react-player";
 
+import { Editor } from '@tinymce/tinymce-react';
+
+import FormulaGuide from './FormulaGuide';
+
+import useDynamicRefs from 'use-dynamic-refs';
 
 const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
     const [problems, setProblems] = useState<any[]>(props.problems.slice())
+    const [initialProblems, setInitialProblems] = useState<any[]>(lodash.cloneDeep(props.problems))
     const [headers, setHeaders] = useState<any>(props.headers)
     const [instructions, setInstructions] = useState(props.instructions)
+    const [initialInstructions, setInitialInstructions] = useState(props.instructions)
     const [solutions, setSolutions] = useState<any>([])
+    const [initialSolutions, setInitialSolutions] = useState<any>([])
     const [updateKey, setUpdateKey] = useState(Math.random())
     const [shuffledProblems, setShuffledProblems] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
@@ -48,15 +56,23 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     })
 
     const [editQuestionNumber, setEditQuestionNumber] = useState(0);
+    const [editQuestion, setEditQuestion] = useState<any>({});
     const [modifiedCorrectAnswerProblems, setModifiedCorrectAnswerProblems] = useState<any[]>([]);
     const [regradeChoices, setRegradeChoices] = useState<any[]>([])
     const [timer, setTimer] = useState(false);
     const [height, setHeight] = useState(100);
-    const [equation, setEquation] = useState("y = x + 1");
+    const [equation, setEquation] = useState("");
     const [showEquationEditor, setShowEquationEditor] = useState(false);
     const [reloadEditorKey, setReloadEditorKey] = useState(Math.random());
     const [showImportOptions, setShowImportOptions] = useState(false);
     const [shuffleQuiz, setShuffleQuiz] = useState(props.shuffleQuiz);
+    const [problemRefs, setProblemRefs] = useState<any[]>(props.problems.map(() => createRef(null)));
+    const [showFormulas, setShowFormulas] = useState<any[]>(props.problems.map((prob: any) => false));
+    const [responseEquations, setResponseEquations] = useState<any[]>(props.problems.map((prob: any) => ""));
+    const [showFormulaGuide, setShowFormulaGuide] = useState(false);
+    const [getRef, setRef] =  useDynamicRefs();
+    const [optionEquations, setOptionEquations] = useState<any[]>([]);
+    const [showOptionFormulas, setShowOptionFormulas] =  useState<any[]>([]);
 
     const regradeOptions = {
         'awardCorrectBoth': 'Award points for both corrected and previously correct answers (no scores will be reduced)',
@@ -71,6 +87,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
         setHeaders(props.headers);
         setInstructions(props.instructions);
+        setInitialInstructions(props.instructions);
 
     }, [props.headers, props.instructions])
 
@@ -85,6 +102,11 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
         if (props.solutions && props.solutions.length !== 0) {
             setSolutions(props.solutions)
+
+            // Load initial solutions for free-response text editors
+            if (initialSolutions.length === 0) {
+                setInitialSolutions(lodash.cloneDeep(props.solutions))
+            }
         } else {
             const solutionInit: any = []
             problems.map((problem: any) => {
@@ -371,6 +393,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     lineHeight: 30,
                     // paddingRight: 20,
                     paddingTop: 20,
+                    paddingBottom: 15,
                     textTransform: "uppercase",
                 }}>
                     SHUFFLE QUIZ
@@ -523,12 +546,67 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     }
 
     const insertEquation = useCallback(() => {
-        const SVGEquation = TeXToSVG(equation, { width: 100 }); // returns svg in html format
-        RichText.current.insertHTML("<div>" + SVGEquation + "<br/></div>");
+        let currentContent = RichText.current.getContent();
+
+        const SVGEquation = TeXToSVG(equation); // returns svg in html format
+        currentContent += '<div contenteditable="false" style="display: inline-block">' + SVGEquation + "</div>";
+
+        RichText.current.setContent(currentContent)
+
+        // Update the question
+        // First fetch the question
+
+        let audioVideoQuestion = problems[editQuestionNumber - 1].question[0] === "{" && problems[editQuestionNumber - 1].question[problems[editQuestionNumber - 1].question.length - 1] === "}";
+
+        if (audioVideoQuestion) {
+            const currQuestion = JSON.parse(problems[editQuestionNumber - 1].question);
+            const updatedQuestion = {
+                ...currQuestion,
+                content: RichText.current.getContent()
+            }
+            const newProbs = [...problems];
+            newProbs[editQuestionNumber - 1].question = JSON.stringify(updatedQuestion);
+            setProblems(newProbs)
+
+        } else {
+            // setCue(modifedText);
+            const newProbs = [...problems];
+            newProbs[editQuestionNumber - 1].question = RichText.current.getContent();
+            setProblems(newProbs)
+        }
+
+        // RichText.current.insertHTML("<div><br/>" + SVGEquation + "<br/></div>");
         setShowEquationEditor(false);
-        setEquation("y = x + 1");
+        setEquation("");
+
+    }, [equation, RichText, RichText.current, showEquationEditor, problems, editQuestionNumber]);
+
+    const insertResponseEquation = useCallback((problemIndex: number) => {
+        let currentContent = problemRefs[problemIndex].current.getContent();
+
+        const SVGEquation = TeXToSVG(responseEquations[problemIndex]); // returns svg in html format
+        currentContent += '<div contenteditable="false" style="display: inline-block">' + SVGEquation + "</div>";
+
+        problemRefs[problemIndex].current.setContent(currentContent)
+
+        // RichText.current.insertHTML("<div><br/>" + SVGEquation + "<br/></div>");
+        const updatedSolution = [...solutions]
+        updatedSolution[problemIndex].response = problemRefs[problemIndex].current.getContent();
+        setSolutions(updatedSolution)
+        props.setSolutions(updatedSolution)
+
+        const updateShowFormulas = [...showFormulas];
+        updateShowFormulas[problemIndex] = false;
+        setShowFormulas(updateShowFormulas);
+
+        const updateResponseEquations = [...responseEquations];
+        updateResponseEquations[problemIndex] = "";
+        setResponseEquations(updateResponseEquations)
+
+        // Problem 
+        
         // setReloadEditorKey(Math.random())
-    }, [equation, RichText, RichText.current, showEquationEditor]);
+    }, [showFormulas, problemRefs, responseEquations, solutions]);
 
     const cameraCallback = useCallback(async () => {
         const cameraSettings = await ImagePicker.getCameraPermissionsAsync();
@@ -596,8 +674,8 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             type = parse.type;
         }
 
-        return (<View style={{ width: '80%', marginBottom: 10 }} >
-            <RichToolbar
+        return (<View style={{ width: '80%', marginBottom: props.isOwner ? 0 : 10 }} >
+            {/* <RichToolbar
                 key={reloadEditorKey.toString()}
                 style={{
                     flexWrap: "wrap",
@@ -647,7 +725,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 }}
                 onPressAddImage={galleryCallback}
                 insertCamera={cameraCallback}
-            />
+            /> */}
             {audioVideoQuestion || !showImportOptions ? null : (
                 <View style={{ paddingVertical: 10 }}>
                     <FileUpload
@@ -658,7 +736,6 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             const newProbs = [...problems];
                             newProbs[index].question = JSON.stringify(obj);
                             setProblems(newProbs)
-                            props.setProblems(newProbs)
                             setShowImportOptions(false);
                         }}
                     />
@@ -670,7 +747,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             }
             {
                 (showEquationEditor ?
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', maxWidth: 400 }}>
                         <View style={{
                             borderColor: '#e8e8ea',
                             borderWidth: 1,
@@ -696,9 +773,19 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         >
                             <Ionicons name="add-circle-outline" color="#1D1D20" size={20} />
                         </TouchableOpacity>
+                        <TouchableOpacity
+                            style={{
+                                justifyContent: "center",
+                                paddingLeft: 10,
+                                maxWidth: "10%",
+                                }}
+                                onPress={() => setShowFormulaGuide(true)}
+                            >
+                            <Ionicons name="help-circle-outline" color="#1D1D20" size={20} />
+                        </TouchableOpacity>
                     </View> : null)
             }
-            <RichEditor
+            {/* <RichEditor
                 key={reloadEditorKey.toString()}
                 containerStyle={{
                     height: 250,
@@ -758,7 +845,75 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 allowsInlineMediaPlayback={true}
                 allowsLinkPreview={true}
                 allowsBackForwardNavigationGestures={true}
-            />
+            /> */}
+                <Editor
+                    onInit={(evt, editor) => RichText.current = editor}
+                    initialValue={editQuestion && editQuestion.question ?  editQuestion.question : ""}
+                    apiKey="ip4jckmpx73lbu6jgyw9oj53g0loqddalyopidpjl23fx7tl"
+                    init={{
+                        skin: "snow",
+                        // toolbar_sticky: true,
+                        // selector: 'textarea',  // change this value according to your HTML
+                        // content_style: 'div { margin: 10px; border: 5px solid red; padding: 3px; }',
+                        indent: false,
+                        body_class: 'tinyMCEInput',
+                        branding: false,
+                        placeholder: 'Problem',
+                        autoresize_on_init: false,
+                        autoresize_min_height: 300,
+                        height: 300,
+                        min_height: 300,
+                        paste_data_images: true,
+                        images_upload_url: 'https://api.cuesapp.co/api/imageUploadEditor',
+                        mobile: {
+                        plugins: 'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize'
+                        },
+                        plugins: 'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize',
+                        menu: { // this is the complete default configuration
+                        file: { title: 'File', items: 'newdocument' },
+                        edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall' },
+                        insert: { title: 'Insert', items: 'link media | template hr' },
+                        view: { title: 'View', items: 'visualaid' },
+                        format: { title: 'Format', items: 'bold italic underline strikethrough superscript subscript | formats | removeformat' },
+                        table: { title: 'Table', items: 'inserttable tableprops deletetable | cell row column' },
+                        tools: { title: 'Tools', items: 'spellchecker code' }
+                        },
+                        // menubar: 'file edit view insert format tools table tc help',
+                        menubar: false,
+                        toolbar: 'undo redo | bold italic underline strikethrough |  numlist bullist | forecolor backcolor permanentpen removeformat | table image media pageembed link | charmap emoticons superscript subscript',
+                        importcss_append: true,
+                        image_caption: true,
+                        quickbars_selection_toolbar: 'bold italic underline | quicklink h2 h3 quickimage quicktable',
+                        noneditable_noneditable_class: 'mceNonEditable',
+                        toolbar_mode: 'sliding',
+                        content_style: ".mce-content-body[data-mce-placeholder]:not(.mce-visualblocks)::before{color: #a2a2ac;}",
+                        // tinycomments_mode: 'embedded',
+                        // content_style: '.mymention{ color: gray; }',
+                        // contextmenu: 'link image table configurepermanentpen',
+                        // a11y_advanced_options: true,
+                        extended_valid_elements: "svg[*],defs[*],pattern[*],desc[*],metadata[*],g[*],mask[*],path[*],line[*],marker[*],rect[*],circle[*],ellipse[*],polygon[*],polyline[*],linearGradient[*],radialGradient[*],stop[*],image[*],view[*],text[*],textPath[*],title[*],tspan[*],glyph[*],symbol[*],switch[*],use[*]"
+                        // skin: useDarkMode ? 'oxide-dark' : 'oxide',
+                        // content_css: useDarkMode ? 'dark' : 'default',
+                    }}
+                    onChange={(e: any) => {
+                        if (audioVideoQuestion) {
+                            const currQuestion = JSON.parse(problems[index].question);
+                            const updatedQuestion = {
+                                ...currQuestion,
+                                content: e.target.getContent()
+                            }
+                            const newProbs = [...problems];
+                            newProbs[index].question = JSON.stringify(updatedQuestion);
+                            setProblems(newProbs)
+
+                        } else {
+                            // setCue(modifedText);
+                            const newProbs = [...problems];
+                            newProbs[index].question = e.target.getContent();
+                            setProblems(newProbs)
+                        }
+                    }}
+                />
         </View>)
     }
 
@@ -781,6 +936,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         setProblems([...updateProblems]);
 
         setEditQuestionNumber(0);
+        setEditQuestion({});
     }
 
 
@@ -815,9 +971,43 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
     }
 
+    const insertOptionEquation = (index: number) => {
+        const ref : any = getRef(index.toString())
+
+        if (!ref || !ref.current ) return;
+
+        let currentContent = ref.current.getContent();
+
+        const SVGEquation = TeXToSVG(optionEquations[index], { width: 100 }); // returns svg in html format
+        currentContent += '<div contenteditable="false" style="display: inline-block">' + SVGEquation + "</div>";
+
+        ref.current.setContent(currentContent)
+
+        // Update option
+        const newProbs = [...problems];
+        newProbs[editQuestionNumber - 1].options[index].option = ref.current.getContent();
+        setProblems(newProbs)
+
+        const updateShowFormulas = [...showOptionFormulas];
+        updateShowFormulas[index] = false;
+        setShowOptionFormulas(updateShowFormulas);
+
+        const updateOptionEquations = [...optionEquations];
+        updateOptionEquations[index] = "";
+        setOptionEquations(updateOptionEquations)
+    }
+
+    let solutionRefs: any[] = []
+
     if (problems.length !== solutions.length && !props.isOwner) {
         return null
     }
+
+    if (!props.isOwner && initialSolutions.length === 0) return null;
+
+    problems.map((prob: any, index: number) => {
+        solutionRefs.push(createRef(null));
+    })
 
     let displayProblems = props.shuffleQuiz && !props.isOwner ? shuffledProblems : problems;
 
@@ -839,6 +1029,8 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         <ActivityIndicator color={"#a2a2ac"} />
     </View>)
 
+  
+
     return (
         <View style={{
             width: '100%', backgroundColor: 'white',
@@ -849,6 +1041,8 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             justifyContent: 'flex-start'
         }}
         >
+            { showFormulaGuide ? <FormulaGuide show={showFormulaGuide} onClose={() => setShowFormulaGuide(false)} /> : null }
+
             {/* Show number of questions, Points, number of attempts here */}
             {/* {
                 <View style={{ display: 'flex', flexDirection: 'row', }}>
@@ -879,39 +1073,100 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             } */}
             {props.isOwner ? renderTimer() : null}
             {props.isOwner ? renderShuffleQuizOption() : null}
-            {
-                (props.isOwner ?
-                    <TextareaAutosize
-                        value={instructions}
-                        minRows={3}
-                        style={{
-                            marginTop: 20,
-                            marginBottom: 20,
-                            fontSize: 15,
-                            paddingTop: 12,
-                            paddingBottom: 12,
-                            width: '100%',
-                            maxWidth: "100%",
-                            borderBottom: '1px solid #cccccc',
-                        }}
-                        onChange={(e: any) => setInstructions(e.target.value)}
-                        placeholder={'Instructions'}
-                    />
-                    :
-                    (instructions !== "" ? <Text
-                        style={{
-                            marginTop: 20,
-                            marginBottom: 20,
-                            fontSize: 15,
-                            paddingTop: 12,
-                            paddingBottom: 12,
-                            width: '100%',
-                            lineHeight: 25
-                        }}
-                    >
-                        {instructions}
-                    </Text> : null))
-            }
+            <View style={{ flexDirection: 'column', width: '100%', paddingBottom: 50 }}>
+                <View
+                    style={{
+                        width: "100%",
+                        paddingBottom: 15,
+                        backgroundColor: "white",
+                        flexDirection: 'row',
+                        justifyContent: 'flex-start'
+                    }}
+                >
+                    <Text style={{
+                        color: "#1D1D20",
+                        fontSize: !props.isOwner ? 15 : 11,
+                        fontWeight: !props.isOwner ? 'bold' : 'normal',
+                        lineHeight: 30,
+                        // paddingRight: 20,
+                        paddingTop: !props.isOwner ? 50 : 20,
+                        textTransform: "uppercase",
+                    }}>
+                        Instructions
+                    </Text>
+                </View>
+
+                    {
+                        (props.isOwner ?
+                            <Editor
+                                // onInit={(evt, editor) => RichText.current = editor}
+                                initialValue={initialInstructions}
+                                apiKey="ip4jckmpx73lbu6jgyw9oj53g0loqddalyopidpjl23fx7tl"
+                                init={{
+                                    skin: "snow",
+                                    // toolbar_sticky: true,
+                                    indent: false,
+                                    branding: false,
+                                    placeholder: 'Instructions',
+                                    autoresize_on_init: false,
+                                    autoresize_min_height: 300,
+                                    height: 300,
+                                    min_height: 300,
+                                    paste_data_images: true,
+                                    images_upload_url: 'https://api.cuesapp.co/api/imageUploadEditor',
+                                    mobile: {
+                                    plugins: 'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize'
+                                    },
+                                    plugins: 'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize',
+                                    menu: { // this is the complete default configuration
+                                    file: { title: 'File', items: 'newdocument' },
+                                    edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall' },
+                                    insert: { title: 'Insert', items: 'link media | template hr' },
+                                    view: { title: 'View', items: 'visualaid' },
+                                    format: { title: 'Format', items: 'bold italic underline strikethrough superscript subscript | formats | removeformat' },
+                                    table: { title: 'Table', items: 'inserttable tableprops deletetable | cell row column' },
+                                    tools: { title: 'Tools', items: 'spellchecker code' }
+                                    },
+                                    // menubar: 'file edit view insert format tools table tc help',
+                                    menubar: false,
+                                    toolbar: 'undo redo | bold italic underline strikethrough |  numlist bullist | forecolor backcolor permanentpen removeformat | table image media pageembed link | charmap emoticons superscript subscript',
+                                    importcss_append: true,
+                                    image_caption: true,
+                                    quickbars_selection_toolbar: 'bold italic underline | quicklink h2 h3 quickimage quicktable',
+                                    noneditable_noneditable_class: 'mceNonEditable',
+                                    toolbar_mode: 'sliding',
+                                    content_style: ".mce-content-body[data-mce-placeholder]:not(.mce-visualblocks)::before{color: #a2a2ac;}",
+                                    // tinycomments_mode: 'embedded',
+                                    // content_style: '.mymention{ color: gray; }',
+                                    // contextmenu: 'link image table configurepermanentpen',
+                                    // a11y_advanced_options: true,
+                                    extended_valid_elements: "svg[*],defs[*],pattern[*],desc[*],metadata[*],g[*],mask[*],path[*],line[*],marker[*],rect[*],circle[*],ellipse[*],polygon[*],polyline[*],linearGradient[*],radialGradient[*],stop[*],image[*],view[*],text[*],textPath[*],title[*],tspan[*],glyph[*],symbol[*],switch[*],use[*]"
+                                    // skin: useDarkMode ? 'oxide-dark' : 'oxide',
+                                    // content_css: useDarkMode ? 'dark' : 'default',
+                                }}
+                                onChange={(e: any) => {
+                                    setInstructions(e.target.getContent())
+                                }}
+                            />
+                            :
+                            (instructions !== "" ? <Text
+                                style={{
+                                    // marginTop: 20,
+                                    marginBottom: 20,
+                                    fontSize: 15,
+                                    paddingTop: 12,
+                                    paddingBottom: 12,
+                                    width: '100%',
+                                    lineHeight: 25
+                                }}
+                            >
+                                {parser(instructions)}
+                            </Text> : null))
+                    }
+
+            </View>
+
+            
 
             {
                 displayProblems.map((problem: any, index: any) => {
@@ -996,7 +1251,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 (props.isOwner && editQuestionNumber === (index + 1) ?
                                                     <View style={{ flexDirection: 'column', width: '100%' }}>
                                                         {renderQuestionEditor(editQuestionNumber - 1)}
-                                                        {(editQuestionNumber === (index + 1) ? <View style={{ flexDirection: 'row', marginTop: 10, marginBottom: 20 }}>
+                                                        {(editQuestionNumber === (index + 1) ? <View style={{ flexDirection: 'row', marginTop: 15, marginBottom: 25 }}>
                                                             {
                                                                 <TouchableOpacity
                                                                     style={{
@@ -1037,7 +1292,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                                         }}
                                                                     >
                                                                         {
-                                                                            showImportOptions ? "" : "INSERT AUDIO/VIDEO"
+                                                                            showImportOptions ? "" : "UPLOAD AUDIO/VIDEO"
                                                                         }
                                                                     </Text>
                                                                 </TouchableOpacity>
@@ -1097,7 +1352,38 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     }
                                     {
                                         props.isOwner ? (editQuestionNumber !== (index + 1) ?
-                                            (<TouchableOpacity onPress={() => setEditQuestionNumber(index + 1)} style={{ marginBottom: 20, paddingTop: 8, paddingLeft: 30, paddingRight: 5 }}> <Ionicons name='pencil-outline' size={23} color={'#007AFF'} /></TouchableOpacity>)
+                                            (<TouchableOpacity onPress={() => {
+                                                setEditQuestionNumber(index + 1)
+                                                let initialAudioVideo = problems[index].question[0] === "{"  && problems[index].question[problems[index].question.length - 1] === "}";
+        
+                                                let initialContent = "";
+
+                                                if (initialAudioVideo) {
+                                                    const parse = JSON.parse(problems[index].question);
+                                                    initialContent = parse.content;
+                                                } else {
+                                                    initialContent = problems[index].question
+                                                }
+
+                                                const currentProblems: any[] = lodash.cloneDeep(problems)
+
+                                                setEditQuestion({ ...currentProblems[index], question: initialContent })
+
+                                                const currProblemOptions: any[] = currentProblems[index].options;
+
+                                                const updateShowFormulas: any[] = [];
+
+                                                const updateOptionEquations: any[] = []; 
+
+                                                currProblemOptions.map((option: any) => {
+                                                    updateShowFormulas.push(false);
+                                                    updateOptionEquations.push("")
+                                                })
+
+                                                setShowFormulas(updateShowFormulas)
+                                                setOptionEquations(updateOptionEquations)
+
+                                            }} style={{ marginBottom: 20, paddingTop: 8, paddingLeft: 30, paddingRight: 5 }}> <Ionicons name='pencil-outline' size={23} color={'#007AFF'} /></TouchableOpacity>)
                                             : (<TouchableOpacity style={{ marginBottom: 20, paddingTop: 8, paddingLeft: 30, paddingRight: 5 }}> <View style={{ width: 22 }} /></TouchableOpacity>))
                                             :
                                             null
@@ -1122,7 +1408,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     color = '#3B64F8'
                                 }
 
-                                return <View style={{ flexDirection: 'row' }} >
+                                return <View style={{ flexDirection: 'row', marginBottom: 20 }} >
                                     <View style={{ paddingLeft: 40, paddingRight: 10 }}>
                                         {onlyOneCorrect && editQuestionNumber !== (index + 1)
                                             ?
@@ -1185,27 +1471,133 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                         />
                                                     </View> :
                                                     (props.isOwner && problem.questionType !== "trueFalse" && editQuestionNumber === (index + 1)
-                                                        ? <TextareaAutosize
-                                                            value={option.option}
-                                                            style={{
-                                                                width: Dimensions.get('window').width < 1024 ? '80%' : '50%',
-                                                                fontSize: 15,
-                                                                padding: 15,
-                                                                paddingTop: 12,
-                                                                paddingBottom: 12,
-                                                                marginTop: 5,
-                                                                marginBottom: 20,
-                                                                color,
-                                                                borderBottom: '1px solid #cccccc',
-
-                                                            }}
-                                                            onChange={(e: any) => {
-                                                                const newProbs = [...problems];
-                                                                newProbs[problemIndex].options[i].option = e.target.value;
-                                                                setProblems(newProbs)
-                                                            }}
-                                                            placeholder={'Option ' + (i + 1).toString()}
-                                                        />
+                                                        ? 
+                                                        <View style={{ flexDirection: 'column', maxWidth: 400 }}>
+                                                            {!showOptionFormulas[i] ? null : <View style={{ flexDirection: 'row', marginTop: 10, marginBottom: 20 }}>
+                                                                <View style={{
+                                                                    borderColor: '#e8e8ea',
+                                                                    borderWidth: 1,
+                                                                    borderRadius: 15,
+                                                                    padding: 10,
+                                                                    width: Dimensions.get('window').width < 1024 ? '100%' : '50%'
+                                                                }}>
+                                                                    <EquationEditor
+                                                                        value={optionEquations[i]}
+                                                                        onChange={(eq) => {
+                                                                            const updateOptionEquations = [...optionEquations]
+                                                                            updateOptionEquations[i] = eq;
+                                                                            setOptionEquations(updateOptionEquations)
+                                                                        }}
+                                                                        autoCommands="bar overline sqrt sum prod int alpha beta gamma delta epsilon zeta eta theta iota kappa lambda mu nu xi omikron pi rho sigma tau upsilon phi chi psi omega Alpha Beta Gamma Aelta Epsilon Zeta Eta Theta Iota Kappa Lambda Mu Nu Xi Omikron Pi Rho Sigma Tau Upsilon Phi Chi Psi Omega"
+                                                                        autoOperatorNames="sin cos tan arccos arcsin arctan"
+                                                                    />
+                                                                </View>
+                                                                <TouchableOpacity
+                                                                    style={{
+                                                                        justifyContent: "center",
+                                                                        paddingHorizontal: 20,
+                                                                        maxWidth: "10%",
+                                                                    }}
+                                                                    onPress={() => insertOptionEquation(i)}
+                                                                >
+                                                                    <Ionicons name="add-circle-outline" color="#1D1D20" size={20} />
+                                                                </TouchableOpacity>
+                                                                {/*  */}
+                                                                <TouchableOpacity
+                                                                    style={{
+                                                                        justifyContent: "center",
+                                                                        paddingLeft: 10,
+                                                                        maxWidth: "10%",
+                                                                    }}
+                                                                    onPress={() => setShowFormulaGuide(true)}
+                                                                    >
+                                                                    <Ionicons name="help-circle-outline" color="#1D1D20" size={20} />
+                                                                </TouchableOpacity>
+                                                            </View>}
+                                                            <Editor
+                                                                onInit={(evt, editor) => {
+                                                                    const currRef: any = setRef(i.toString());
+                                                                    if (currRef) {
+                                                                        currRef.current = editor
+                                                                    }
+                                                                    
+                                                                }}
+                                                                initialValue={editQuestion && editQuestion.options && editQuestion.options[i] && editQuestion.options[i].option !== "" ? editQuestion.options[i].option : ""}
+                                                                apiKey="ip4jckmpx73lbu6jgyw9oj53g0loqddalyopidpjl23fx7tl"
+                                                                init={{
+                                                                    // skin: "snow",
+                                                                    // toolbar_sticky: true,
+                                                                    branding: false,
+                                                                    placeholder: 'Option',
+                                                                    autoresize_on_init: false,
+                                                                    autoresize_min_height: 150,
+                                                                    height: 150,
+                                                                    min_height: 150,
+                                                                    paste_data_images: true,
+                                                                    images_upload_url: 'https://api.cuesapp.co/api/imageUploadEditor',
+                                                                    mobile: {
+                                                                    plugins: 'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize'
+                                                                    },
+                                                                    plugins: 'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize',
+                                                                    menu: { // this is the complete default configuration
+                                                                    file: { title: 'File', items: 'newdocument' },
+                                                                    edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall' },
+                                                                    insert: { title: 'Insert', items: 'link media | template hr' },
+                                                                    view: { title: 'View', items: 'visualaid' },
+                                                                    format: { title: 'Format', items: 'bold italic underline strikethrough superscript subscript | formats | removeformat' },
+                                                                    table: { title: 'Table', items: 'inserttable tableprops deletetable | cell row column' },
+                                                                    tools: { title: 'Tools', items: 'spellchecker code' }
+                                                                    },
+                                                                    // menubar: 'file edit view insert format tools table tc help',
+                                                                    menubar: false,
+                                                                    toolbar: 'undo redo | bold italic underline strikethrough | superscript subscript | numlist bullist removeformat | table image media link | charmap emoticons',
+                                                                    importcss_append: true,
+                                                                    image_caption: true,
+                                                                    quickbars_selection_toolbar: 'bold italic underline | quicklink h2 h3 quickimage quicktable',
+                                                                    noneditable_noneditable_class: 'mceNonEditable',
+                                                                    toolbar_mode: 'sliding',
+                                                                    content_style: ".mce-content-body[data-mce-placeholder]:not(.mce-visualblocks)::before{color: #a2a2ac;}",
+                                                                    // tinycomments_mode: 'embedded',
+                                                                    // content_style: '.mymention{ color: gray; }',
+                                                                    // contextmenu: 'link image table configurepermanentpen',
+                                                                    // a11y_advanced_options: true,
+                                                                    extended_valid_elements: "svg[*],defs[*],pattern[*],desc[*],metadata[*],g[*],mask[*],path[*],line[*],marker[*],rect[*],circle[*],ellipse[*],polygon[*],polyline[*],linearGradient[*],radialGradient[*],stop[*],image[*],view[*],text[*],textPath[*],title[*],tspan[*],glyph[*],symbol[*],switch[*],use[*]"
+                                                                    // skin: useDarkMode ? 'oxide-dark' : 'oxide',
+                                                                    // content_css: useDarkMode ? 'dark' : 'default',
+                                                                }}
+                                                                onChange={(e: any) => {
+                                                                    const newProbs = [...problems];
+                                                                    newProbs[problemIndex].options[i].option = e.target.getContent();
+                                                                    setProblems(newProbs)
+                                                                }}
+                                                            />
+                                                            {editQuestionNumber !== (index + 1) ? null : <View style={{ flexDirection: 'row', marginTop: 15, marginBottom: 15 }}>
+                                                                {
+                                                                    problem.questionType  === "trueFalse" ? null :
+                                                                        <TouchableOpacity
+                                                                            style={{ backgroundColor: '#fff' }}
+                                                                            onPress={() => {
+                                                                                const updateShowFormulas = [...showOptionFormulas]
+                                                                                updateShowFormulas[i] = !updateShowFormulas[i]
+                                                                                setShowOptionFormulas(updateShowFormulas)
+                                                                            }}
+                                                                        >
+                                                                            <Text
+                                                                                style={{
+                                                                                    paddingTop: showOptionFormulas[i] ? 10 : 0,
+                                                                                    color: '#a2a2ac',
+                                                                                    fontFamily: 'Overpass',
+                                                                                    fontSize: 10
+                                                                                }}
+                                                                            >
+                                                                                {
+                                                                                    showOptionFormulas[i] ? "HIDE FORMULA" : "INSERT FORMULA"
+                                                                                }
+                                                                            </Text>
+                                                                        </TouchableOpacity>
+                                                                }
+                                                            </View>}
+                                                        </View>
                                                         :
                                                         <Text
                                                             style={{
@@ -1220,7 +1612,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                                 lineHeight: 25
                                                             }}
                                                         >
-                                                            {option.option}
+                                                            {parser(option.option)}
                                                         </Text>)
                                             )
                                     }
@@ -1242,27 +1634,160 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         marginBottom: props.isOwner ? 50 : 30
                                     }}>
                                         {props.isOwner ? "Free Response Answer" : solutions[problemIndex].response}
-                                    </Text> : <TextareaAutosize
-                                        value={solutions[problemIndex].response}
-                                        onChange={(e: any) => {
-                                            const updatedSolution = [...solutions]
-                                            updatedSolution[problemIndex].response = e.target.value;
-                                            setSolutions(updatedSolution)
-                                            props.setSolutions(updatedSolution)
-                                        }}
-                                        style={{
-                                            marginTop: 20,
-                                            marginBottom: 20,
-                                            fontSize: 15,
-                                            paddingTop: 12,
-                                            paddingBottom: 12,
-                                            width: '100%',
-                                            maxWidth: "100%",
-                                            borderBottom: '1px solid #cccccc',
-                                        }}
-                                        minRows={3}
-                                        placeholder='Answer'
-                                    />}
+                                    </Text> : 
+                                    <View style={{ flexDirection: 'column', width: '100%' }}>
+                                        {
+                                            showFormulas[problemIndex] 
+                                            ?
+                                            <View style={{ flexDirection: 'row', alignItems: 'center', maxWidth: 400 }}>
+                                                <View style={{
+                                                    borderColor: '#e8e8ea',
+                                                    borderWidth: 1,
+                                                    borderRadius: 15,
+                                                    padding: 10,
+                                                    width: '70%',
+                                                    marginVertical: 20
+                                                }}>
+                                                    <EquationEditor
+                                                        value={equation}
+                                                        onChange={(x) => {
+                                                            const updateResponseEquations = [...responseEquations];
+                                                            updateResponseEquations[problemIndex] = x;
+                                                            setResponseEquations(updateResponseEquations)
+                                                        }}
+                                                        autoCommands="bar overline sqrt sum prod int alpha beta gamma delta epsilon zeta eta theta iota kappa lambda mu nu xi omikron pi rho sigma tau upsilon phi chi psi omega Alpha Beta Gamma Aelta Epsilon Zeta Eta Theta Iota Kappa Lambda Mu Nu Xi Omikron Pi Rho Sigma Tau Upsilon Phi Chi Psi Omega"
+                                                        autoOperatorNames="sin cos tan arccos arcsin arctan"
+                                                    />
+                                                </View>
+                                                <TouchableOpacity
+                                                    style={{
+                                                        justifyContent: "center",
+                                                        paddingHorizontal: 20,
+                                                        maxWidth: "10%",
+                                                    }}
+                                                    onPress={() => insertResponseEquation(problemIndex)}
+                                                >
+                                                    <Ionicons name="add-circle-outline" color="#1D1D20" size={20} />
+                                                </TouchableOpacity>
+                                                <TouchableOpacity
+                                                    style={{
+                                                        justifyContent: "center",
+                                                        paddingLeft: 10,
+                                                        maxWidth: "10%",
+                                                    }}
+                                                    onPress={() => setShowFormulaGuide(true)}
+                                                >
+                                                    <Ionicons name="help-circle-outline" color="#1D1D20" size={20} />
+                                                </TouchableOpacity>                                
+                                            </View>
+                                            : null
+                                        }
+                                        <Editor
+                                            onInit={(evt, editor) => {
+                                                const updateRefs = [...problemRefs];
+                                                updateRefs[problemIndex].current = editor
+                                                setProblemRefs(updateRefs)
+                                                solutionRefs[problemIndex].current = editor
+                                            }}
+                                            initialValue={initialSolutions[problemIndex].response}
+                                            apiKey="ip4jckmpx73lbu6jgyw9oj53g0loqddalyopidpjl23fx7tl"
+                                            init={{
+                                                skin: "snow",
+                                                // toolbar_sticky: true,
+                                                indent: false,
+                                                branding: false,
+                                                placeholder: 'Answer',
+                                                autoresize_on_init: false,
+                                                autoresize_min_height: 300,
+                                                height: 300,
+                                                min_height: 300,
+                                                paste_data_images: true,
+                                                images_upload_url: 'https://api.cuesapp.co/api/imageUploadEditor',
+                                                mobile: {
+                                                plugins: 'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize'
+                                                },
+                                                plugins: 'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize',
+                                                menu: { // this is the complete default configuration
+                                                file: { title: 'File', items: 'newdocument' },
+                                                edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall' },
+                                                insert: { title: 'Insert', items: 'link media | template hr' },
+                                                view: { title: 'View', items: 'visualaid' },
+                                                format: { title: 'Format', items: 'bold italic underline strikethrough superscript subscript | formats | removeformat' },
+                                                table: { title: 'Table', items: 'inserttable tableprops deletetable | cell row column' },
+                                                tools: { title: 'Tools', items: 'spellchecker code' }
+                                                },
+                                                // menubar: 'file edit view insert format tools table tc help',
+                                                menubar: false,
+                                                toolbar: 'undo redo | bold italic underline strikethrough |  numlist bullist | forecolor backcolor permanentpen removeformat | table image media pageembed link | charmap emoticons superscript subscript',
+                                                importcss_append: true,
+                                                image_caption: true,
+                                                quickbars_selection_toolbar: 'bold italic underline | quicklink h2 h3 quickimage quicktable',
+                                                noneditable_noneditable_class: 'mceNonEditable',
+                                                toolbar_mode: 'sliding',
+                                                content_style: ".mce-content-body[data-mce-placeholder]:not(.mce-visualblocks)::before{color: #a2a2ac;}",
+                                                // tinycomments_mode: 'embedded',
+                                                // content_style: '.mymention{ color: gray; }',
+                                                // contextmenu: 'link image table configurepermanentpen',
+                                                // a11y_advanced_options: true,
+                                                extended_valid_elements: "svg[*],defs[*],pattern[*],desc[*],metadata[*],g[*],mask[*],path[*],line[*],marker[*],rect[*],circle[*],ellipse[*],polygon[*],polyline[*],linearGradient[*],radialGradient[*],stop[*],image[*],view[*],text[*],textPath[*],title[*],tspan[*],glyph[*],symbol[*],switch[*],use[*]"
+                                                // skin: useDarkMode ? 'oxide-dark' : 'oxide',
+                                                // content_css: useDarkMode ? 'dark' : 'default',
+                                            }}
+                                            onChange={(e: any) => {
+                                                const updatedSolution = [...solutions]
+                                                updatedSolution[problemIndex].response = e.target.getContent();
+                                                setSolutions(updatedSolution)
+                                                props.setSolutions(updatedSolution)
+                                            }}
+                                        />
+                                        <View style={{ paddingTop: 15, paddingBottom: 15 }}>
+                                            <TouchableOpacity
+                                                style={{
+                                                    backgroundColor: '#fff'
+                                                }}
+                                                onPress={() => {
+                                                    const updateShowFormulas = [...showFormulas]
+                                                    updateShowFormulas[problemIndex] = !updateShowFormulas[problemIndex]
+                                                    setShowFormulas(updateShowFormulas)
+                                                }}
+                                            >
+                                                <Text
+                                                    style={{
+                                                        color: '#a2a2ac',
+                                                        fontFamily: 'Overpass',
+                                                        fontSize: 10
+                                                    }}
+                                                >
+                                                    {
+                                                        showFormulas[problemIndex] ? "HIDE FORMULA" : "INSERT FORMULA"
+                                                    }
+                                                </Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                    </View>
+                                    
+                                        // <TextareaAutosize
+                                        // value={solutions[problemIndex].response}
+                                        // onChange={(e: any) => {
+                                        //     const updatedSolution = [...solutions]
+                                        //     updatedSolution[problemIndex].response = e.target.value;
+                                        //     setSolutions(updatedSolution)
+                                        //     props.setSolutions(updatedSolution)
+                                        // }}
+                                        // style={{
+                                        //     marginTop: 20,
+                                        //     marginBottom: 20,
+                                        //     fontSize: 15,
+                                        //     paddingTop: 12,
+                                        //     paddingBottom: 12,
+                                        //     width: '100%',
+                                        //     maxWidth: "100%",
+                                        //     borderBottom: '1px solid #cccccc',
+                                        // }}
+                                        // minRows={3}
+                                        // placeholder='Answer'
+                                        // />
+                                    }
 
                                 </View>
                                 :
@@ -1350,7 +1875,10 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         </Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity
-                                        onPress={() => setEditQuestionNumber(0)}
+                                        onPress={() => {
+                                            setEditQuestionNumber(0)
+                                            setEditQuestion({})
+                                        }}
                                         style={{ backgroundColor: "white", borderRadius: 15, width: 120 }}
                                     >
 
