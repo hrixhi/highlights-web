@@ -133,8 +133,8 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
         })
 
         const sort = filteredOptions.sort((a, b) => {
-            if(a.group < b.group) { return -1; }
-            if(a.group > b.group) { return 1; }
+            if (a.group < b.group) { return -1; }
+            if (a.group > b.group) { return 1; }
             return 0;
         })
 
@@ -168,7 +168,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                 return sub !== channelCreator
             })
 
-            
+
 
             // // Sort the values
             // const sort = filterOutOwner.sort((a, b) => {
@@ -194,7 +194,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             setActiveRole(role)
                         }}>
                         <MenuTrigger>
-                            <Text style={{ fontSize: 15, color: '#1D1D20' }}>
+                            <Text style={{ fontSize: 14, color: '#1D1D20' }}>
                                 {activeRole}<Ionicons name='caret-down' size={15} />
                             </Text>
                         </MenuTrigger>
@@ -251,7 +251,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             setActiveGrade(grade)
                         }}>
                         <MenuTrigger>
-                            <Text style={{ fontSize: 15, color: '#1D1D20' }}>
+                            <Text style={{ fontSize: 14, color: '#1D1D20' }}>
                                 {activeGrade}<Ionicons name='caret-down' size={15} />
                             </Text>
                         </MenuTrigger>
@@ -308,7 +308,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             setActiveSection(grade)
                         }}>
                         <MenuTrigger>
-                            <Text style={{ fontSize: 15, color: '#1D1D20' }}>
+                            <Text style={{ fontSize: 14, color: '#1D1D20' }}>
                                 {activeSection}<Ionicons name='caret-down' size={15} />
                             </Text>
                         </MenuTrigger>
@@ -437,7 +437,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
         }
 
         setIsUpdatingChannel(true);
-        
+
         const server = fetchAPI('')
         server.query({
             query: doesChannelNameExist,
@@ -635,16 +635,16 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     })
 
                                     const sort = tempUsers.sort((a, b) => {
-                                        if(a.text < b.text) { return -1; }
-                                        if(a.text > b.text) { return 1; }
+                                        if (a.text < b.text) { return -1; }
+                                        if (a.text > b.text) { return 1; }
                                         return 0;
                                     })
 
                                     console.log("Sort", sort)
 
-                            
+
                                     setOptions(sort)
-                            
+
 
                                     // setOptions(tempUsers)
                                 })
@@ -676,12 +676,12 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 // add the user always 
                             })
 
-                            const tempSelectedValues: any[] = [] 
+                            const tempSelectedValues: any[] = []
 
                             res.data.user.findByChannelId.map((item: any, index: any) => {
                                 tempSelectedValues.push(item._id)
                             })
-                            
+
                             setSelectedValues(tempSelectedValues)
                             setOriginalSubs(tempUsers)
                             setSelected(tempUsers)
@@ -736,7 +736,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         }}>
                         <Text style={{
                             width: '100%',
-                            fontSize: 15,
+                            fontSize: 14,
                             color: '#a2a2ac'
                         }}>
                             <Ionicons name='chevron-back-outline' size={17} color={'#1D1D20'} style={{ marginRight: 10 }} />
@@ -753,7 +753,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         flex: 1,
                         lineHeight: 25
                     }}>
-                    Duplicate Channel
+                    Duplicate
                 </Text>
                 <ScrollView
                     onScroll={() => {
@@ -768,8 +768,8 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                 >
                     <View style={{ backgroundColor: 'white' }}>
                         <Text style={{
-                            fontSize: 15,
-                            fontFamily: 'inter',
+                            fontSize: 14,
+                            // fontFamily: 'inter',
                             color: '#1D1D20'
                         }}>
                             {PreferredLanguageText('name')}
@@ -787,8 +787,8 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                     </View>
                     <View style={{ backgroundColor: 'white' }}>
                         <Text style={{
-                            fontSize: 15,
-                            fontFamily: 'inter',
+                            fontSize: 14,
+                            // fontFamily: 'inter',
                             color: '#1D1D20'
                         }}>
                             {PreferredLanguageText('enrolmentPassword')}
@@ -804,11 +804,11 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                     </View>
                     <View style={{ backgroundColor: 'white' }}>
                         <Text style={{
-                            fontSize: 15,
-                            fontFamily: 'inter',
+                            fontSize: 14,
+                            // fontFamily: 'inter',
                             color: '#1D1D20'
                         }}>
-                            Color
+                            Theme
                         </Text>
                         <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white', marginTop: 20 }}>
                             <View style={{ width: '100%', backgroundColor: 'white' }}>
@@ -834,7 +834,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 backgroundColor: "white"
                             }}>
                             <Text style={{
-                                fontSize: 15,
+                                fontSize: 14,
                                 fontFamily: 'inter',
                                 color: '#1D1D20'
                             }}>Temporary</Text>
@@ -874,8 +874,8 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 >
                                     <Text
                                         style={{
-                                            fontSize: 15,
-                                            fontFamily: 'inter',
+                                            fontSize: 14,
+                                            // fontFamily: 'inter',
                                             color: '#1D1D20'
                                         }}
                                     >
@@ -922,8 +922,8 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 >
                                     <Text
                                         style={{
-                                            fontSize: 15,
-                                            fontFamily: 'inter',
+                                            fontSize: 14,
+                                            // fontFamily: 'inter',
                                             color: '#1D1D20'
                                         }}
                                     >
@@ -973,7 +973,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 color: 'white',
                                 fontSize: 12,
                                 backgroundColor: '#007AFF',
-                                paddingHorizontal: 25,
+                                paddingHorizontal: 20,
                                 fontFamily: 'inter',
                                 height: 35,
                                 textTransform: 'uppercase',
@@ -1001,7 +1001,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
     })
 
 
-    
+
 
     return (
         <View style={styles.screen} >
@@ -1015,8 +1015,8 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                 >
                     <View style={{ backgroundColor: 'white' }}>
                         <Text style={{
-                            fontSize: 15,
-                            fontFamily: 'inter',
+                            fontSize: 14,
+                            // fontFamily: 'inter',
                             color: '#1D1D20'
                         }}>
                             {PreferredLanguageText('name')}
@@ -1035,8 +1035,8 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                     </View>
                     <View style={{ backgroundColor: 'white' }}>
                         <Text style={{
-                            fontSize: 15,
-                            fontFamily: 'inter',
+                            fontSize: 14,
+                            // fontFamily: 'inter',
                             color: '#1D1D20'
                         }}>
                             {PreferredLanguageText('enrolmentPassword')}
@@ -1054,11 +1054,11 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
 
                     <View style={{ backgroundColor: 'white' }}>
                         <Text style={{
-                            fontSize: 15,
-                            fontFamily: 'inter',
+                            fontSize: 14,
+                            // fontFamily: 'inter',
                             color: '#1D1D20'
                         }}>
-                            Color
+                            Theme
                         </Text>
                         <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white', marginTop: 20 }}>
                             <View style={{ width: '100%', backgroundColor: 'white' }}>
@@ -1072,9 +1072,9 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                     </View>
 
                     <Text style={{
-                        fontSize: 15,
+                        fontSize: 14,
                         paddingTop: 20,
-                        fontFamily: 'inter',
+                        // fontFamily: 'inter',
                         color: '#1D1D20'
                     }}>
                         Subscribers
@@ -1082,7 +1082,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
 
                     {renderSubscriberFilters()}
                     <View style={{ flexDirection: 'column', marginTop: 25, overflow: 'scroll' }}>
-                        <View style={{  height: 'auto', maxWidth: 350, width: 350 }}>
+                        <View style={{ height: 'auto', maxWidth: 350, width: 350 }}>
                             {/* <Multiselect
                                 placeholder='Select...'
                                 displayValue='name'
@@ -1114,45 +1114,45 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 }}
                             /> */}
 
-                                <div style={{ maxWidth: 350, width: 350 }} >
-                                    <label style={{ maxWidth: 350, width: 350 }}>
-                                        <Select
-                                            themeVariant="light"
-                                            selectMultiple={true}
-                                            group={true}
-                                            groupLabel="&nbsp;"
-                                            inputClass="mobiscrollCustomMultiInput"
-                                            placeholder="Select..."
-                                            touchUi={true}
-                                            // minWidth={[60, 320]}
-                                            value={selectedValues}
-                                            data={options}
-                                            onChange={(val: any) => {
-                                                setSelectedValues(val.value)
-                                                // Filter out any moderator if not part of the selected values
+                            <div style={{ maxWidth: 350, width: 350 }} >
+                                <label style={{ maxWidth: 350, width: 350 }}>
+                                    <Select
+                                        themeVariant="light"
+                                        selectMultiple={true}
+                                        group={true}
+                                        groupLabel="&nbsp;"
+                                        inputClass="mobiscrollCustomMultiInput"
+                                        placeholder="Select..."
+                                        touchUi={true}
+                                        // minWidth={[60, 320]}
+                                        value={selectedValues}
+                                        data={options}
+                                        onChange={(val: any) => {
+                                            setSelectedValues(val.value)
+                                            // Filter out any moderator if not part of the selected values
 
-                                                let filterRemovedModerators = selectedModerators.filter((mod: any) => val.value.includes(mod))
-                                                
-                                                setSelectedModerators(filterRemovedModerators)
-                                            }}
-                                            responsive={{
-                                                small: {
-                                                    display: 'bubble'
-                                                },
-                                                medium: {
-                                                    touchUi: false,
-                                                }
-                                            }}
-                                              minWidth={[60, 320]}
-                                            // minWidth={[60, 320]}
-                                        />
-                                    </label>
-                                </div>
+                                            let filterRemovedModerators = selectedModerators.filter((mod: any) => val.value.includes(mod))
+
+                                            setSelectedModerators(filterRemovedModerators)
+                                        }}
+                                        responsive={{
+                                            small: {
+                                                display: 'bubble'
+                                            },
+                                            medium: {
+                                                touchUi: false,
+                                            }
+                                        }}
+                                        minWidth={[60, 320]}
+                                    // minWidth={[60, 320]}
+                                    />
+                                </label>
+                            </div>
                         </View>
                     </View>
                     <Text style={{
-                        fontSize: 15,
-                        fontFamily: 'inter',
+                        fontSize: 14,
+                        //  fontFamily: 'inter',
                         color: '#1D1D20', marginTop: 25, marginBottom: 20
                     }}>
                         Moderators
@@ -1187,33 +1187,33 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         </View>
                     </View> */}
 
-                        <label style={{ width: 350 }}>
-                            <Select
-                                            themeVariant="light"
-                                            select="multiple"
-                                            selectMultiple={true}
-                                            // group={true}
-                                            // groupLabel="&nbsp;"
-                                            // minWidth={[60, 320]}
-                                            placeholder="Select..."
-                                            inputClass="mobiscrollCustomMultiInput"
-                                            value={selectedModerators}
-                                            data={moderatorOptions}
-                                            onChange={(val: any) => {
-                                                setSelectedModerators(val.value)
-                                            }}
-                                            touchUi={true}
-                                            responsive={{
-                                                small: {
-                                                    display: 'bubble'
-                                                },
-                                                medium: {
-                                                    touchUi: false,
-                                                }
-                                            }}
-                                            // minWidth={[60, 320]}
-                                        />
-                                    </label>
+                    <label style={{ width: 350 }}>
+                        <Select
+                            themeVariant="light"
+                            select="multiple"
+                            selectMultiple={true}
+                            // group={true}
+                            // groupLabel="&nbsp;"
+                            // minWidth={[60, 320]}
+                            placeholder="Select..."
+                            inputClass="mobiscrollCustomMultiInput"
+                            value={selectedModerators}
+                            data={moderatorOptions}
+                            onChange={(val: any) => {
+                                setSelectedModerators(val.value)
+                            }}
+                            touchUi={true}
+                            responsive={{
+                                small: {
+                                    display: 'bubble'
+                                },
+                                medium: {
+                                    touchUi: false,
+                                }
+                            }}
+                        // minWidth={[60, 320]}
+                        />
+                    </label>
 
                     <View style={{ flexDirection: 'column', alignItems: 'center', marginTop: 50, paddingBottom: 50 }}>
                         <TouchableOpacity
@@ -1228,11 +1228,11 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     },
                                     {
                                         text: "Yes",
-                                        onPress:  () => {
+                                        onPress: () => {
                                             handleSubmit()
                                         }
                                     }
-                                ])  
+                                ])
                             }}
                             style={{
                                 backgroundColor: 'white',
@@ -1248,7 +1248,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 color: 'white',
                                 fontSize: 12,
                                 backgroundColor: '#007AFF',
-                                paddingHorizontal: 25,
+                                paddingHorizontal: 20,
                                 fontFamily: 'inter',
                                 height: 35,
                                 textTransform: 'uppercase',
@@ -1272,10 +1272,13 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             <Text style={{
                                 textAlign: 'center',
                                 lineHeight: 35,
-                                color: '#1D1D20',
+                                color: '#007aff',
+                                borderWidth: 1,
+                                borderRadius: 15,
+                                borderColor: '#007aff',
+                                backgroundColor: '#fff',
                                 fontSize: 12,
-                                backgroundColor: '#f7f7f7',
-                                paddingHorizontal: 25,
+                                paddingHorizontal: 20,
                                 fontFamily: 'inter',
                                 height: 35,
                                 textTransform: 'uppercase',
@@ -1298,11 +1301,11 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             },
                                             {
                                                 text: "Yes",
-                                                onPress:  () => {
+                                                onPress: () => {
                                                     handleDelete()
                                                 }
                                             }
-                                        ]) 
+                                        ])
                                     }}
                                     style={{
                                         backgroundColor: 'white',
@@ -1318,7 +1321,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         color: '#1D1D20',
                                         fontSize: 12,
                                         backgroundColor: '#f7f7f7',
-                                        paddingHorizontal: 25,
+                                        paddingHorizontal: 20,
                                         fontFamily: 'inter',
                                         height: 35,
                                         textTransform: 'uppercase',
@@ -1356,14 +1359,14 @@ const styles = StyleSheet.create({
         borderColor: '#818385'
     },
     all: {
-        fontSize: 15,
+        fontSize: 14,
         color: '#818385',
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: 'white'
     },
     allOutline: {
-        fontSize: 15,
+        fontSize: 14,
         color: '#818385',
         height: 22,
         paddingHorizontal: 10,
@@ -1384,7 +1387,7 @@ const styles = StyleSheet.create({
         width: '100%',
         borderBottomColor: '#f7f7f7',
         borderBottomWidth: 1,
-        fontSize: 15,
+        fontSize: 14,
         paddingTop: 13,
         paddingBottom: 13,
         marginTop: 5,

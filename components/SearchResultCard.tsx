@@ -47,7 +47,7 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                                 numberOfLines={1}
                                 style={{
                                     fontFamily: 'inter',
-                                    fontSize: 15,
+                                    fontSize: 12,
                                     lineHeight: 20,
                                     // flex: 1,
                                     marginTop: props.option === "Channels" ? 0 : 7,
@@ -90,14 +90,14 @@ const styles: any = (colorScheme: any) => StyleSheet.create({
         height: '100%',
         borderRadius: 0,
         overflow: 'hidden',
-        maxWidth: 200
+        maxWidth: 175
     },
     card: {
         // maxWidth: 200,
         height: '100%',
-        borderRadius: 0,
-        padding: 12,
-        paddingHorizontal: 15,
+        borderRadius: 10,
+        padding: 10,
+        paddingHorizontal: 10,
         backgroundColor: '#f7f7f7',
         borderWidth: 1,
         borderColor: '#e8e8ea'
@@ -157,7 +157,7 @@ const styles: any = (colorScheme: any) => StyleSheet.create({
     },
     // title: {
     //     fontFamily: 'inter',
-    //     fontSize: 15,
+    //     fontSize: 14,
     //     lineHeight: 20,
     //     // flex: 1,
     //     marginTop: 7,

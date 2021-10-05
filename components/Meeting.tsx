@@ -371,7 +371,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                             ]);
                                         }}
                                     >
-                                        <Text style={{ width: '100%', color: '#818385', fontSize: 15, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                        <Text style={{ width: '100%', color: '#818385', fontSize: 14, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                                             <Ionicons name='trash-outline' size={17} color="#f94144" />
                                         </Text>
                                     </TouchableOpacity>
@@ -494,7 +494,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                 color: '#fff',
                                 fontSize: 12,
                                 backgroundColor: '#007aff',
-                                paddingHorizontal: 25,
+                                paddingHorizontal: 20,
                                 fontFamily: 'inter',
                                 height: 30,
                                 // width: 100,
@@ -543,90 +543,8 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
             </Animated.View>
         </ScrollView>
     );
-
-    const attendanceListView = (
-        <AttendanceList
-            key={JSON.stringify(channelAttendances)}
-            channelAttendances={channelAttendances}
-            isOwner={isOwner}
-            pastMeetings={pastAttendances}
-            channelName={props.filterChoice}
-            channelId={props.channelId}
-            closeModal={() => {
-                Animated.timing(modalAnimation, {
-                    toValue: 0,
-                    duration: 150,
-                    useNativeDriver: true
-                }).start(() => props.closeModal());
-            }}
-            hideChannelAttendance={() => {
-                setViewChannelAttendance(false);
-            }}
-            reload={() => loadChannelAttendances()}
-            modifyAttendance={onChangeAttendance}
-        />
-    );
-
-    const width = Dimensions.get('window').width
-
+    
     return mainClassroomView
-
-    return <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{
-            height: Dimensions.get('window').height - 100,
-            maxWidth: 800,
-            width: '100%',
-            alignSelf: 'center'
-        }}>
-        <View style={{ flexDirection: "row", width: '100%', justifyContent: 'center', paddingVertical: 30 }}>
-            <TouchableOpacity
-                style={{
-                    justifyContent: "center",
-                    flexDirection: "column"
-                }}
-                onPress={() => {
-                    setShowMeeting(true);
-                }}>
-                <Text style={showMeeting ? styles.allGrayFill : styles.all}>
-                    MEET
-                </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-                style={{
-                    justifyContent: "center",
-                    flexDirection: "column"
-                }}
-                onPress={() => {
-                    setShowMeeting(false);
-                }}>
-                <Text style={!showMeeting ? styles.allGrayFill : styles.all}>
-                    DISCUSS
-                </Text>
-            </TouchableOpacity>
-        </View>
-        {
-            showMeeting ? <View style={{
-                backgroundColor: 'white',
-                width: '100%',
-            }}>
-                {mainClassroomView}
-            </View>
-                : <View style={{
-                    backgroundColor: '#fff', width: '100%',
-                    paddingLeft: width < 1024 ? 0 : 20,
-                    marginTop: 20,
-                    marginBottom: 20,
-                }}>
-                    <Discussion
-                        channelId={props.channelId}
-                        filterChoice={props.filterChoice}
-                        channelCreatedBy={props.channelCreatedBy}
-                        refreshUnreadDiscussionCount={() => props.refreshUnreadDiscussionCount()}
-                    />
-                </View>
-        }
-    </ScrollView>
 };
 
 export default Meeting;

@@ -1160,7 +1160,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
             {
                 showSubmission || showChat || showAddUsers || showNewGroup ?
                     <View style={{ backgroundColor: 'white', paddingBottom: 15, width: '100%', flexDirection: 'row', justifyContent: 'center' }}>
-                        <View style={{ flexDirection: 'row', width: '100%', maxWidth: 1275 }}>
+                        <View style={{ flexDirection: 'row', width: '100%', maxWidth: 1000 }}>
                             <TouchableOpacity
                                 key={Math.random()}
                                 style={{
@@ -1220,7 +1220,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             color: '#fff',
                                             fontSize: 12,
                                             backgroundColor: '#007AFF',
-                                            paddingHorizontal: 25,
+                                            paddingHorizontal: 20,
                                             fontFamily: 'inter',
                                             height: 35,
                                             width: 175,
@@ -1243,7 +1243,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 <Text
                                     ellipsizeMode="tail"
                                     style={{
-                                        fontSize: 15,
+                                        fontSize: 14,
                                         paddingBottom: 20,
                                         fontFamily: 'inter',
                                         // textTransform: "uppercase",
@@ -1303,7 +1303,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                             backgroundColor: 'white',
                             // marginTop: 20,
                             width: '100%',
-                            maxWidth: 1275,
+                            maxWidth: 1000,
                             flexDirection: 'row'
                         }}>
                             <Switch
@@ -1354,7 +1354,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                     </View> :
                     <View style={{
                         width: '100%',
-                        maxWidth: 1275,
+                        maxWidth: 1000,
                         alignSelf: 'center',
                         backgroundColor: 'white',
                         flex: 1
@@ -1429,9 +1429,6 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         />
                                             
                                     </label>
-                                    <Text style={{ fontSize: 10, color: '#1D1D20', paddingLeft: 5, paddingTop: 10 }}>
-                                        Type
-                                    </Text>
                                 </View>
                         }
                         {
@@ -1564,7 +1561,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                         borderColor: '#e8e8ea',
                                                         maxHeight: props.cueId ? windowHeight - 300 : '100%',
                                                         // marginBottom: props.cueId ? 20 : 0,
-                                                        maxWidth: 1275,
+                                                        maxWidth: 1000,
                                                         alignSelf: 'center'
                                                     }}
                                                 >
@@ -1664,7 +1661,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                 </View>
                                                                 <View style={{ justifyContent: 'center', flexDirection: 'column' }}>
                                                                     <View style={{ flexDirection: 'row', backgroundColor: '#fff', paddingLeft: 10 }}>
-                                                                        <Text style={{ fontSize: 15, padding: 10, color: '#007AFF', textAlign: 'center' }} ellipsizeMode='tail'>
+                                                                        <Text style={{ fontSize: 14, padding: 10, color: '#007AFF', textAlign: 'center' }} ellipsizeMode='tail'>
                                                                             {
                                                                                 subscriber.submittedAt && subscriber.submittedAt !== "" && subscriber.deadline && subscriber.deadline !== "" && subscriber.submittedAt >= subscriber.deadline ?
                                                                                     <Text style={{ color: '#f94144', fontSize: 12 }}>
@@ -1758,7 +1755,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             <View style={{ width: '100%', marginBottom: 20 }}>
                                                 <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                                                     <Ionicons name='checkmark-outline' size={22} color={"#53BE68"} />
-                                                    <Text style={{ fontSize: 15, paddingLeft: 5 }}>
+                                                    <Text style={{ fontSize: 14, paddingLeft: 5 }}>
                                                         Turned In at {moment(new Date(parseInt(submittedAt))).format('MMMM Do, h:mm a')}
                                                     </Text>
                                                 </View>
@@ -1776,7 +1773,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                             width: 120,
                                                             borderBottomColor: '#cccccc',
                                                             borderBottomWidth: 1,
-                                                            fontSize: 15,
+                                                            fontSize: 14,
                                                             paddingTop: 13,
                                                             paddingBottom: 13,
                                                             marginTop: 5,
@@ -1812,7 +1809,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                 color: 'white',
                                                                 fontSize: 12,
                                                                 backgroundColor: '#007AFF',
-                                                                paddingHorizontal: 25,
+                                                                paddingHorizontal: 20,
                                                                 fontFamily: 'inter',
                                                                 height: 35,
                                                             }}>
@@ -1949,7 +1946,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 height: 200,
                                 backgroundColor: '#f7f7f7',
                                 borderRadius: 0,
-                                fontSize: 15,
+                                fontSize: 14,
                                 padding: 15,
                                 paddingTop: 13,
                                 paddingBottom: 13,
@@ -1978,7 +1975,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 color: '#1D1D20',
                                 fontSize: 12,
                                 backgroundColor: '#f7f7f7',
-                                paddingHorizontal: 25,
+                                paddingHorizontal: 20,
                                 fontFamily: 'inter',
                                 height: 35,
                                 width: 150,
@@ -1994,7 +1991,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                             lineHeight: 35,
                             color: '#1D1D20',
                             fontSize: 12,
-                            paddingHorizontal: 25,
+                            paddingHorizontal: 20,
                             width: "100%",
                             fontFamily: 'inter',
                             borderRadius: 15,
@@ -2068,7 +2065,7 @@ const styleObject = () => {
             width: '100%',
             borderBottomColor: '#f7f7f7',
             borderBottomWidth: 1,
-            fontSize: 15,
+            fontSize: 14,
             paddingTop: 13,
             paddingBottom: 13,
             marginTop: 5,
@@ -2081,13 +2078,13 @@ const styleObject = () => {
             color: 'white'
         },
         cusCategory: {
-            fontSize: 15,
+            fontSize: 14,
             backgroundColor: 'white',
             paddingHorizontal: 10,
             height: 22
         },
         cusCategoryOutline: {
-            fontSize: 15,
+            fontSize: 14,
             backgroundColor: 'white',
             paddingHorizontal: 10,
             height: 22,

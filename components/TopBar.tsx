@@ -52,7 +52,7 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     // height: '45%',
                     flexDirection: 'row',
                     display: 'flex',
-                    paddingHorizontal: 25,
+                    paddingHorizontal: 20,
                     // paddingTop: 10,
                     backgroundColor: '#f7f7f7'
                 }}>
@@ -152,11 +152,11 @@ const styleObject: any = (channelId: any) => StyleSheet.create({
     text: {
         textAlign: 'right',
         color: '#1D1D20',
-        fontSize: 15,
+        fontSize: 14,
         paddingRight: 15
     },
     subOutline: {
-        fontSize: 15,
+        fontSize: 14,
         color: '#818385',
         height: 22,
         paddingHorizontal: 10,
@@ -166,7 +166,7 @@ const styleObject: any = (channelId: any) => StyleSheet.create({
         borderWidth: 1
     },
     sub: {
-        fontSize: 15,
+        fontSize: 14,
         color: '#818385',
         height: 22,
         paddingHorizontal: 10,

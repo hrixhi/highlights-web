@@ -1241,7 +1241,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                     width: "100%",
                     maxWidth: '100%',
                     borderBottom: '1px solid #cccccc',
-                    fontSize: 15,
+                    fontSize: 14,
                     paddingTop: 13,
                     paddingBottom: 13,
                     marginTop: 0,
@@ -1301,7 +1301,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                     }}
                   >
                     <Text style={{
-                      fontSize: 15,
+                      fontSize: 14,
                       fontFamily: 'inter',
                       color: '#1D1D20'
                     }}>
@@ -1355,7 +1355,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                               <Text
                                 style={{
                                   // fontFamily: "inter",
-                                  fontSize: 15,
+                                  fontSize: 14,
                                   color: "#1D1D20",
                                 }}
                               >
@@ -1394,7 +1394,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                               <Text
                                 style={{
                                   // fontFamily: "inter",
-                                  fontSize: 15,
+                                  fontSize: 14,
                                   color: "#1D1D20",
                                 }}
                               >
@@ -1471,7 +1471,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                         width: "100%",
                         maxWidth: '100%',
                         borderBottom: '1px solid #cccccc',
-                        fontSize: 15,
+                        fontSize: 14,
                         paddingTop: 13,
                         paddingBottom: 13,
                         marginTop: 0,
@@ -1608,7 +1608,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
               display: "flex",
               flexDirection: "column",
               marginHorizontal: 10,
-              maxWidth: 800, alignSelf: 'center',
+              maxWidth: 600, alignSelf: 'center',
               // marginLeft: width < 1024 ? 0 : 200
             }}
           >
@@ -1636,7 +1636,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   >
                     <Text
                       style={{
-                        fontSize: 15,
+                        fontSize: 14,
                         color: '#1D1D20'
                       }}
                     >
@@ -1793,7 +1793,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                     >
                       <Text
                         style={{
-                          fontSize: 15,
+                          fontSize: 14,
                           color: '#1D1D20'
                         }}
                       >
@@ -1894,7 +1894,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                     >
                       <Text
                         style={{
-                          fontSize: 15,
+                          fontSize: 14,
                           color: '#1D1D20'
                         }}
                       >
@@ -2078,7 +2078,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                     >
                       <Text
                         style={{
-                          fontSize: 15,
+                          fontSize: 14,
                           color: '#1D1D20'
                         }}
                       >
@@ -2135,7 +2135,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                 width: "25%",
                                 borderBottomColor: "#f7f7f7",
                                 borderBottomWidth: 1,
-                                fontSize: 15,
+                                fontSize: 14,
                                 padding: 15,
                                 paddingVertical: 12,
                                 marginTop: 0,
@@ -2164,7 +2164,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                     >
                       <Text
                         style={{
-                          fontSize: 15,
+                          fontSize: 14,
                           color: '#1D1D20'
                         }}
                       >
@@ -2277,7 +2277,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                     >
                       <Text
                         style={{
-                          fontSize: 15,
+                          fontSize: 14,
                           color: '#1D1D20'
                         }}
                       >
@@ -2332,7 +2332,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                               width: "25%",
                               borderBottomColor: "#F8F9FA",
                               borderBottomWidth: 1,
-                              fontSize: 15,
+                              fontSize: 14,
                               padding: 15,
                               paddingVertical: 12,
                               marginTop: 0,
@@ -2374,7 +2374,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   >
                     <Text
                       style={{
-                        fontSize: 15,
+                        fontSize: 14,
                         color: '#1D1D20'
                       }}
                     >
@@ -2479,7 +2479,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 >
                   <Text
                     style={{
-                      fontSize: 15,
+                      fontSize: 14,
                       color: '#1D1D20'
                     }}
                   >
@@ -2546,7 +2546,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 >
                   <Text
                     style={{
-                      fontSize: 15,
+                      fontSize: 14,
                       color: '#1D1D20'
                     }}
                   >
@@ -2594,7 +2594,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   >
                     <Text
                       style={{
-                        fontSize: 15,
+                        fontSize: 14,
                         color: '#1D1D20'
                       }}
                     >
@@ -2802,7 +2802,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   >
                     <Text
                       style={{
-                        fontSize: 15,
+                        fontSize: 14,
                         color: '#1D1D20'
                       }}
                     >
@@ -2911,7 +2911,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 >
                   <Text
                     style={{
-                      fontSize: 15,
+                      fontSize: 14,
                       color: '#1D1D20'
                     }}
                   >
@@ -2984,7 +2984,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                       fontSize: 12,
                       backgroundColor: "#007AFF",
                       borderRadius: 15,
-                      paddingHorizontal: 25,
+                      paddingHorizontal: 20,
                       fontFamily: "inter",
                       overflow: "hidden",
                       height: 35,
@@ -3004,7 +3004,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                       fontSize: 12,
                       backgroundColor: "#007AFF",
                       borderRadius: 15,
-                      paddingHorizontal: 25,
+                      paddingHorizontal: 20,
                       fontFamily: "inter",
                       overflow: "hidden",
                       height: 35,
@@ -3031,7 +3031,7 @@ export default Create;
 const styles: any = StyleSheet.create({
   timePicker: {
     width: 125,
-    fontSize: 15,
+    fontSize: 14,
     height: 45,
     color: "#1D1D20",
     borderRadius: 0,
@@ -3087,7 +3087,7 @@ const styles: any = StyleSheet.create({
     width: "100%",
     borderBottomColor: "#f7f7f7",
     borderBottomWidth: 1,
-    fontSize: 15,
+    fontSize: 14,
     paddingTop: 12,
     paddingBottom: 12,
     marginTop: 0,

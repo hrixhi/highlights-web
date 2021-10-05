@@ -95,7 +95,7 @@ const ThreadCard: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     {
                         imported ?
                             <View style={{ backgroundColor: '#f7f7f7', flex: 1, flexDirection: 'row', paddingTop: 6 }}>
-                                <Text style={{ width: '100%', color: '#818385', fontSize: 15, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                <Text style={{ width: '100%', color: '#818385', fontSize: 14, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                                     <Ionicons name='document-outline' size={17} color='#818385' /> {title}.{type}
                                 </Text>
                                 <Text ellipsizeMode={'tail'}

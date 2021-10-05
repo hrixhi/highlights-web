@@ -90,7 +90,7 @@ const FilterBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         props.closeModal()
                                     }}>
                                     <MenuTrigger>
-                                        <Text style={{ fontFamily: 'inter', fontSize: 15, color: '#1D1D20' }}>
+                                        <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#1D1D20' }}>
                                             {choice === 'MyCues' ? 'My Cues' : choice}<Ionicons name='caret-down' size={15} />
                                         </Text>
                                     </MenuTrigger>
@@ -167,7 +167,7 @@ const FilterBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             <View style={{ flexDirection: 'row', display: 'flex', backgroundColor: '#f7f7f7' }}>
                                 <Menu>
                                     <MenuTrigger>
-                                        <Text style={{ fontFamily: 'inter', fontSize: 15, color: '#1D1D20', paddingLeft: 10 }}>
+                                        <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#1D1D20', paddingLeft: 10 }}>
                                             Filter <Ionicons name='caret-down' size={15} />
                                         </Text>
                                     </MenuTrigger>
@@ -189,7 +189,7 @@ const FilterBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     props.setChannelFilterChoice(category)
                                                 }}>
                                                 <MenuTrigger>
-                                                    <Text style={{ fontFamily: 'inter', fontSize: 15, color: '#1D1D20', paddingLeft: 10 }}>
+                                                    <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#1D1D20', paddingLeft: 10 }}>
                                                         {filterChoice}<Ionicons name='caret-down' size={15} />
                                                     </Text>
                                                 </MenuTrigger>
@@ -331,19 +331,19 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
         color: colorScheme === 'light' ? 'white' : '#1D1D20'
     },
     cusCategory: {
-        fontSize: 15,
+        fontSize: 14,
         color: '#818385',
         height: 22,
         paddingHorizontal: 10
     },
     sub: {
-        fontSize: 15,
+        fontSize: 14,
         color: colorScheme === 'light' ? '#1D1D20' : 'white',
         height: 22,
         paddingHorizontal: 10
     },
     subOutline: {
-        fontSize: 15,
+        fontSize: 14,
         color: colorScheme === 'light' ? '#1D1D20' : 'white',
         height: 22,
         paddingHorizontal: 10,

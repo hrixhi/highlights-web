@@ -409,7 +409,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                         marginTop: 25, backgroundColor: '#fff',
                                         height: windowHeight - 50, paddingBottom: 75,
                                         width: '100%',
-                                        maxWidth: 800, alignSelf: 'center'
+                                        maxWidth: 600, alignSelf: 'center'
                                     }}
                                 >
                                     {
@@ -488,7 +488,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             </View>}
                 </View>
             </View>
-            <MessengerCustomerChat pageId="109965671259610" appId="746023139417168" themeColor="#35AC78" />
+            <MessengerCustomerChat pageId="109965671259610" appId="746023139417168" themeColor="#007aff" />
         </View >
     );
 }
@@ -500,7 +500,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         height: '100%',
         width: '100%',
-        maxWidth: 800,
+        maxWidth: 600,
         paddingHorizontal: Dimensions.get("window").width < 1024 ? 0 : 50,
         // alignSelf: 'center',
         borderTopRightRadius: 0,

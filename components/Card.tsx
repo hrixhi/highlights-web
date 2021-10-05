@@ -154,18 +154,18 @@ export default React.memo(Card, (prev, next) => {
 const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.create({
     swiper: {
         height: '100%',
-        borderRadius: 0,
+        borderRadius: 10,
         overflow: 'hidden',
-        maxWidth: 210,
+        maxWidth: 175,
         width: '100%'
     },
     card: {
         maxWidth: 210,
         height: '100%',
-        borderRadius: 0,
+        borderRadius: 10,
         width: '100%',
-        padding: 12,
-        paddingHorizontal: 15,
+        padding: 10,
+        paddingHorizontal: 10,
         backgroundColor: '#fff',
         borderWidth: 1,
         borderColor: '#e8e8ea'
@@ -224,7 +224,7 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
     },
     title: {
         fontFamily: 'inter',
-        fontSize: 15,
+        fontSize: 12,
         lineHeight: 20,
         flex: 1,
         marginTop: 5,

@@ -204,7 +204,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             color: '#fff',
                             fontSize: 12,
                             backgroundColor: '#007aff',
-                            paddingHorizontal: 25,
+                            paddingHorizontal: 20,
                             fontFamily: 'inter',
                             height: 30,
                             // width: 100,
@@ -276,7 +276,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 name: title,
                 color,
                 legendFontColor: "#7F7F7F",
-                legendFontSize: 15,
+                legendfontSize: 14,
 
             }
         })

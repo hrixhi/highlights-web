@@ -246,19 +246,19 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
         color: colorScheme === 'light' ? '#1D1D20' : '#1D1D20'
     },
     cusCategory: {
-        fontSize: 15,
+        fontSize: 14,
         color: '#818385',
         height: 22,
         paddingHorizontal: 10
     },
     sub: {
-        fontSize: 15,
+        fontSize: 14,
         color: colorScheme === 'light' ? '#f7f7f7' : 'white',
         height: 22,
         paddingHorizontal: 10
     },
     subOutline: {
-        fontSize: 15,
+        fontSize: 14,
         color: colorScheme === 'light' ? '#f7f7f7' : 'white',
         height: 22,
         paddingHorizontal: 10,

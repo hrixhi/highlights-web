@@ -471,7 +471,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 style={{
                     marginBottom: 30,
                     marginTop: 50,
-                    fontSize: 15,
+                    fontSize: 14,
                     paddingTop: 12,
                     paddingBottom: 12,
                     maxWidth: "100%",
@@ -490,7 +490,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 style={{
                     marginBottom: 30,
                     marginTop: 50,
-                    fontSize: 15,
+                    fontSize: 14,
                     paddingTop: 12,
                     paddingBottom: 12,
                     fontWeight: "600",
@@ -852,23 +852,23 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             {/* Show number of questions, Points, number of attempts here */}
             {/* {
                 <View style={{ display: 'flex', flexDirection: 'row', }}>
-                    <Text style={{ marginRight: 10, fontWeight: '700', fontSize: 15 }}>
+                    <Text style={{ marginRight: 10, fontWeight: '700', fontSize: 14 }}>
                         {problems.length} {problems.length === 1 ? "Question" : "Questions"}
                     </Text>
-                    <Text style={{ marginRight: 10, fontSize: 15}}>
+                    <Text style={{ marginRight: 10, fontSize: 14}}>
                         |
                     </Text>
-                    <Text style={{ marginRight: 10, fontWeight: '700', fontSize: 15 }}>
+                    <Text style={{ marginRight: 10, fontWeight: '700', fontSize: 14 }}>
                         {totalPoints} Points 
                     </Text>
-                    {!props.isOwner && props.duration ? <Text style={{ marginRight: 10, fontSize: 15}}>
+                    {!props.isOwner && props.duration ? <Text style={{ marginRight: 10, fontSize: 14}}>
                         |
                     </Text> : null}
                     {!props.isOwner && props.duration ? <Text style={{ marginRight: 10, fontWeight: '700' }}>
                         {duration.hours} H {duration.minutes} min
                     </Text> : null}
 
-                    {!props.isOwner ? <Text style={{ marginRight: 10, fontSize: 15}}>
+                    {!props.isOwner ? <Text style={{ marginRight: 10, fontSize: 14}}>
                         |
                     </Text> : null}
                     {!props.isOwner ? <Text style={{ marginRight: 10, fontWeight: '700' }}>
@@ -887,7 +887,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         style={{
                             marginTop: 20,
                             marginBottom: 20,
-                            fontSize: 15,
+                            fontSize: 14,
                             paddingTop: 12,
                             paddingBottom: 12,
                             width: '100%',
@@ -902,7 +902,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         style={{
                             marginTop: 20,
                             marginBottom: 20,
-                            fontSize: 15,
+                            fontSize: 14,
                             paddingTop: 12,
                             paddingBottom: 12,
                             width: '100%',
@@ -960,7 +960,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         <View style={{ flexDirection: Dimensions.get('window').width < 1024 ? 'column' : 'row' }}>
                             <View style={{ flexDirection: 'row', flex: 1 }}>
                                 <View style={{ paddingTop: 15 }}>
-                                    <Text style={{ color: '#a2a2ac', fontSize: 15, paddingBottom: 25, marginRight: 10, paddingTop: 10 }}>
+                                    <Text style={{ color: '#a2a2ac', fontSize: 14, paddingBottom: 25, marginRight: 10, paddingTop: 10 }}>
                                         {index + 1}.
                                     </Text>
                                 </View>
@@ -1047,10 +1047,10 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                     :
                                                     (audioVideoQuestion ? <View style={{ width: '80%', marginBottom: 10 }}>
                                                         {renderAudioVideoPlayer(url, type)}
-                                                        <Text style={{ marginVertical: 20, marginLeft: 20, fontSize: 15, lineHeight: 25 }}>
+                                                        <Text style={{ marginVertical: 20, marginLeft: 20, fontSize: 14, lineHeight: 25 }}>
                                                             {parser(content)}
                                                         </Text>
-                                                    </View> : <Text style={{ marginVertical: 20, marginLeft: 20, fontSize: 15, width: '80%', marginBottom: 10, lineHeight: 25 }}>
+                                                    </View> : <Text style={{ marginVertical: 20, marginLeft: 20, fontSize: 14, width: '80%', marginBottom: 10, lineHeight: 25 }}>
                                                         {parser(problem.question)}
                                                     </Text>))
                                         )
@@ -1065,7 +1065,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         editable={props.isOwner && editQuestionNumber === (index + 1)}
                                         value={props.isOwner && editQuestionNumber === (index + 1) ? problem.points : (problem.points + " " + (Number(problem.points) === 1 ? 'Point' : ' Points'))}
                                         style={{
-                                            fontSize: 15,
+                                            fontSize: 14,
                                             padding: 15,
                                             paddingTop: 12,
                                             paddingBottom: 12,
@@ -1189,7 +1189,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                             value={option.option}
                                                             style={{
                                                                 width: Dimensions.get('window').width < 1024 ? '80%' : '50%',
-                                                                fontSize: 15,
+                                                                fontSize: 14,
                                                                 padding: 15,
                                                                 paddingTop: 12,
                                                                 paddingBottom: 12,
@@ -1210,7 +1210,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                         <Text
                                                             style={{
                                                                 width: Dimensions.get('window').width < 1024 ? '80%' : '50%',
-                                                                fontSize: 15,
+                                                                fontSize: 14,
                                                                 padding: 15,
                                                                 paddingTop: 12,
                                                                 paddingBottom: 12,
@@ -1233,7 +1233,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 <View style={{ width: '100%', paddingHorizontal: 40 }}>
                                     {props.isOwner ? <Text style={{
                                         marginTop: 20,
-                                        fontSize: 15,
+                                        fontSize: 14,
                                         paddingTop: 12,
                                         paddingBottom: 12,
                                         width: '50%',
@@ -1253,7 +1253,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         style={{
                                             marginTop: 20,
                                             marginBottom: 20,
-                                            fontSize: 15,
+                                            fontSize: 14,
                                             paddingTop: 12,
                                             paddingBottom: 12,
                                             width: '100%',
@@ -1340,7 +1340,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 fontSize: 12,
                                                 backgroundColor: "#f7f7f7",
                                                 borderRadius: 15,
-                                                paddingHorizontal: 25,
+                                                paddingHorizontal: 20,
                                                 fontFamily: "inter",
                                                 overflow: "hidden",
                                                 height: 35,
@@ -1362,7 +1362,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 fontSize: 12,
                                                 backgroundColor: "#f7f7f7",
                                                 borderRadius: 15,
-                                                paddingHorizontal: 25,
+                                                paddingHorizontal: 20,
                                                 fontFamily: "inter",
                                                 overflow: "hidden",
                                                 height: 35,
@@ -1400,7 +1400,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     fontSize: 12,
                                     backgroundColor: "#007AFF",
                                     borderRadius: 15,
-                                    paddingHorizontal: 25,
+                                    paddingHorizontal: 20,
                                     fontFamily: "inter",
                                     overflow: "hidden",
                                     height: 35,
@@ -1425,7 +1425,7 @@ const styles = StyleSheet.create({
         width: '50%',
         // borderBottomColor: '#f7f7f7',
         // borderBottomWidth: 1,
-        fontSize: 15,
+        fontSize: 14,
         paddingTop: 12,
         paddingBottom: 12,
         marginTop: 5,

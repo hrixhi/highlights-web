@@ -391,8 +391,8 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                 }}
               >
                 <Text style={{
-                  fontSize: 15,
-                  fontFamily: 'inter',
+                  fontSize: 14,
+                  // fontFamily: 'inter',
                   color: '#1D1D20'
                 }}>
                   {PreferredLanguageText('currentPassword')}
@@ -405,8 +405,8 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                   placeholderTextColor={"#818385"}
                 />
                 <Text style={{
-                  fontSize: 15,
-                  fontFamily: 'inter',
+                  fontSize: 14,
+                  // fontFamily: 'inter',
                   color: '#1D1D20'
                 }}>
                   {PreferredLanguageText('newPassword')}
@@ -423,8 +423,8 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                   }
                 />
                 <Text style={{
-                  fontSize: 15,
-                  fontFamily: 'inter',
+                  fontSize: 14,
+                  // fontFamily: 'inter',
                   color: '#1D1D20'
                 }}>
                   {PreferredLanguageText('confirmNewPassword')}
@@ -443,14 +443,14 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                 style={{
                   width: "100%",
                   backgroundColor: "white",
-                  paddingTop: 20,
+                  // paddingTop: 20,
                   paddingBottom: 20
                 }}
               >
                 <Image
                   style={{
-                    height: 150,
-                    width: 150,
+                    height: 100,
+                    width: 100,
                     borderRadius: 75,
                     // marginTop: 20,
                     alignSelf: 'center'
@@ -473,10 +473,12 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                       <Text style={{
                         textAlign: 'center',
                         lineHeight: 30,
-                        color: '#1D1D20',
+                        color: '#007aff',
+                        borderWidth: 1,
+                        borderColor: '#007aff',
+                        backgroundColor: '#fff',
                         fontSize: 12,
-                        backgroundColor: '#f7f7f7',
-                        paddingHorizontal: 25,
+                        paddingHorizontal: 20,
                         fontFamily: 'inter',
                         height: 30,
                         // width: 100,
@@ -494,8 +496,8 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                 </View>
                 <Text style={{
                   marginTop: 20,
-                  fontSize: 15,
-                  fontFamily: 'inter',
+                  fontSize: 14,
+                  // fontFamily: 'inter',
                   color: '#1D1D20'
                 }}>
                   {PreferredLanguageText('email')}
@@ -510,8 +512,8 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                   errorText={emailValidError}
                 />
                 <Text style={{
-                  fontSize: 15,
-                  fontFamily: 'inter',
+                  fontSize: 14,
+                  // fontFamily: 'inter',
                   color: '#1D1D20'
                 }}>
                   {PreferredLanguageText('fullName')}
@@ -524,7 +526,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                   required={true}
                 />
                 {/* <Text style={{
-                  fontSize: 15,
+                  fontSize: 14,
                   fontFamily: 'inter',
                   color: '#1D1D20'
                 }}>
@@ -541,8 +543,8 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                   <View>
                     <Text
                       style={{
-                        fontSize: 15,
-                        fontFamily: 'inter',
+                        fontSize: 14,
+                        // fontFamily: 'inter',
                         color: '#1D1D20'
                       }}
                     >
@@ -562,8 +564,8 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                     />
                     <Text
                       style={{
-                        fontSize: 15,
-                        fontFamily: 'inter',
+                        fontSize: 14,
+                        // fontFamily: 'inter',
                         color: '#1D1D20'
                       }}
                     >
@@ -591,38 +593,6 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                 // paddingTop: 30
               }}
             >
-              {loggedIn ? (
-                <TouchableOpacity
-                  onPress={() => setShowSavePassword(!showSavePassword)}
-                  style={{
-                    backgroundColor: "white",
-                    overflow: "hidden",
-                    height: 35,
-                    marginTop: 20,
-                    // width: "100%",
-                    justifyContent: "center",
-                    flexDirection: "row"
-                  }}
-                >
-                  <Text
-                    style={{
-                      textAlign: "center",
-                      lineHeight: 35,
-                      color: "#1D1D20",
-                      fontSize: 12,
-                      backgroundColor: "#f7f7f7",
-                      paddingHorizontal: 20,
-                      fontFamily: "inter",
-                      height: 35,
-                      // width: 150,
-                      borderRadius: 15,
-                      textTransform: "uppercase"
-                    }}
-                  >
-                    {showSavePassword ? <Ionicons name='arrow-back-outline' size={12} /> : null} {showSavePassword ? PreferredLanguageText('back') : PreferredLanguageText('password')} {showSavePassword ? null : <Ionicons name='settings-outline' size={12} />}
-                  </Text>
-                </TouchableOpacity>
-              ) : null}
               <TouchableOpacity
                 onPress={() => handleSubmit()}
                 style={{
@@ -654,6 +624,40 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                   {loggedIn ? (showSavePassword ? PreferredLanguageText('update') : PreferredLanguageText('save')) : PreferredLanguageText('signUp')} <Ionicons name='arrow-forward-outline' size={12} />
                 </Text>
               </TouchableOpacity>
+              {loggedIn ? (
+                <TouchableOpacity
+                  onPress={() => setShowSavePassword(!showSavePassword)}
+                  style={{
+                    backgroundColor: "white",
+                    overflow: "hidden",
+                    height: 35,
+                    marginTop: 20,
+                    // width: "100%",
+                    justifyContent: "center",
+                    flexDirection: "row"
+                  }}
+                >
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      lineHeight: 35,
+                      color: '#007aff',
+                      borderWidth: 1,
+                      borderRadius: 15,
+                      borderColor: '#007aff',
+                      backgroundColor: '#fff',
+                      fontSize: 12,
+                      paddingHorizontal: 20,
+                      fontFamily: "inter",
+                      height: 35,
+                      // width: 150,
+                      textTransform: "uppercase"
+                    }}
+                  >
+                    {showSavePassword ? <Ionicons name='arrow-back-outline' size={12} /> : null} {showSavePassword ? PreferredLanguageText('back') : PreferredLanguageText('password')} {showSavePassword ? null : <Ionicons name='settings-outline' size={12} />}
+                  </Text>
+                </TouchableOpacity>
+              ) : null}
               <TouchableOpacity
                 onPress={() => {
                   if (loggedIn) {
@@ -674,16 +678,17 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
               >
                 <Text
                   style={{
+                    color: '#007aff',
+                    borderWidth: 1,
+                    borderRadius: 15,
+                    borderColor: '#007aff',
+                    backgroundColor: '#fff',
+                    fontSize: 12,
                     textAlign: "center",
                     lineHeight: 35,
-                    color: "#1D1D20",
-                    fontSize: 12,
-                    backgroundColor: "#f7f7f7",
                     paddingHorizontal: 20,
                     fontFamily: "inter",
                     height: 35,
-                    // width: 150,
-                    borderRadius: 15,
                     textTransform: 'uppercase'
                   }}
                 >
@@ -707,14 +712,16 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                     style={{
                       textAlign: "center",
                       lineHeight: 35,
-                      color: "#1D1D20",
-                      fontSize: 12,
-                      backgroundColor: "#f7f7f7",
                       paddingHorizontal: 20,
                       fontFamily: "inter",
                       height: 35,
-                      // width: 150,
+                      color: '#007aff',
+                      borderWidth: 1,
                       borderRadius: 15,
+                      borderColor: '#007aff',
+                      backgroundColor: '#fff',
+                      fontSize: 12,
+                      // width: 150,
                       textTransform: "uppercase"
                     }}
                   >
@@ -739,7 +746,7 @@ const styles = StyleSheet.create({
   screen: {
     // paddingHorizontal: Dimensions.get("window").width < 1024 ? 0 : 20,
     width: "100%",
-    maxWidth: 800,
+    maxWidth: 600,
     alignSelf: 'center',
     height: Dimensions.get("window").height - 110,
     backgroundColor: "white"
@@ -750,14 +757,14 @@ const styles = StyleSheet.create({
     borderColor: "#818385"
   },
   all: {
-    fontSize: 15,
+    fontSize: 14,
     color: "#818385",
     height: 22,
     paddingHorizontal: 10,
     backgroundColor: "white"
   },
   allOutline: {
-    fontSize: 15,
+    fontSize: 14,
     color: "#818385",
     height: 22,
     paddingHorizontal: 10,
