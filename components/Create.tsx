@@ -136,6 +136,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [shuffleQuiz, setShuffleQuiz] = useState(false);
   const [quizInstructions, setQuizInstructions] = useState("");
+  const [initialQuizInstructions, setInitialQuizInstructions] = useState("");
   const [initialDuration, setInitialDuration] = useState(null);
 
   const [channelName, setChannelName] = useState("");
@@ -193,7 +194,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
     let currentContent = editorRef.current.getContent();
 
     const SVGEquation = TeXToSVG(equation, { width: 100 }); // returns svg in html format
-    currentContent += "<div>" + SVGEquation + "<br/></div>";
+    currentContent += '<div contenteditable="false" style="display: inline-block">' + SVGEquation + "<br/></div>";
 
     editorRef.current.setContent(currentContent)
 
@@ -581,6 +582,18 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
     loadChannels();
   }, []);
 
+  // Don't save question if no question entered
+  const isCurrentQuestionValid = (problem: any) => {
+
+    if (problem.question === "") {
+        return false; 
+    }
+
+
+    return true;
+
+}
+
   useEffect(() => {
     if (!init) {
       return;
@@ -594,9 +607,13 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
       };
       saveCue = JSON.stringify(obj);
     } else if (isQuiz) {
+
+      // Loop over entire quiz and save only the questions which are valid
+      const validProblems = problems.filter((prob: any) => isCurrentQuestionValid(prob));
+
       const quiz = {
         title,
-        problems,
+        problems: validProblems,
         timer,
         duration,
         headers,
@@ -865,6 +882,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
           setTitle(title);
           setHeaders(headers);
           setQuizInstructions(quizInstructions);
+          setInitialQuizInstructions(quizInstructions);
         }
       } catch (e) {
         console.log(e);
@@ -1244,7 +1262,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                     fontSize: 14,
                     paddingTop: 13,
                     paddingBottom: 13,
-                    marginTop: 0,
+                    marginTop: 12,
                     marginBottom: 15
                   }}
                   // style={styles.input}
@@ -1279,167 +1297,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                     </TouchableOpacity> : null
                 }
               </View>
-              {isQuiz ? (
-                <View
-                  style={{
-                    width: width < 1024 ? "100%" : "50%",
-                    borderRightWidth: 0,
-                    flex: 1,
-                    paddingLeft: 20,
-                    borderColor: "#e8e8ea",
-                    paddingTop: 10,
-                    paddingRight: 25
-                  }}
-                >
-                  <View
-                    style={{
-                      width: "100%",
-                      paddingBottom: 15,
-                      backgroundColor: "white",
-                      flexDirection: 'row',
-                      justifyContent: 'flex-start'
-                    }}
-                  >
-                    <Text style={{
-                      fontSize: 14,
-                      fontFamily: 'inter',
-                      color: '#1D1D20'
-                    }}>
-                      Timed
-                    </Text>
-                  </View>
-                  <View
-                    style={{
-                      backgroundColor: "white",
-                      width: "100%",
-                      height: 40,
-                      marginRight: 10,
-                      flexDirection: 'row',
-                      justifyContent: 'flex-start'
-                    }}
-                  >
-                    <Switch
-                      value={timer}
-                      onValueChange={() => {
-                        if (timer) {
-                          setDuration({
-                            hours: 1,
-                            minutes: 0,
-                            seconds: 0,
-                          });
-                        }
-                        setTimer(!timer);
-                      }}
-                      style={{ height: 20, marginRight: 20 }}
-                      trackColor={{
-                        false: "#f7f7f7",
-                        true: "#007AFF",
-                      }}
-                      activeThumbColor="white"
-                    />
-                    {timer ? (
-                      <View
-                        style={{
-                          borderRightWidth: 0,
-                          paddingTop: 0,
-                          borderColor: "#e8e8ea",
-                          flexDirection: 'row'
-                        }}
-                      >
-                        <View>
-                          <Menu onSelect={(hour: any) => setDuration({
-                            ...duration,
-                            hours: hour
-                          })}>
-                            <MenuTrigger>
-                              <Text
-                                style={{
-                                  // fontFamily: "inter",
-                                  fontSize: 14,
-                                  color: "#1D1D20",
-                                }}
-                              >
-                                {duration.hours} H <Ionicons name="caret-down" size={14} /> &nbsp;&nbsp;:&nbsp;&nbsp;
-                              </Text>
-                            </MenuTrigger>
-                            <MenuOptions
-                              customStyles={{
-                                optionsContainer: {
-                                  padding: 10,
-                                  borderRadius: 15,
-                                  shadowOpacity: 0,
-                                  borderWidth: 1,
-                                  borderColor: "#e8e8ea",
-                                  overflow: 'scroll',
-                                  maxHeight: '100%'
-                                },
-                              }}
-                            >
-                              {hours.map((hour: any) => {
-                                return (
-                                  <MenuOption value={hour}>
-                                    <Text>{hour}</Text>
-                                  </MenuOption>
-                                );
-                              })}
-                            </MenuOptions>
-                          </Menu>
-                        </View>
-                        <View>
-                          <Menu onSelect={(min: any) => setDuration({
-                            ...duration,
-                            minutes: min
-                          })}>
-                            <MenuTrigger>
-                              <Text
-                                style={{
-                                  // fontFamily: "inter",
-                                  fontSize: 14,
-                                  color: "#1D1D20",
-                                }}
-                              >
-                                {duration.minutes}  m  <Ionicons name="caret-down" size={14} />
-                              </Text>
-                            </MenuTrigger>
-                            <MenuOptions
-                              customStyles={{
-                                optionsContainer: {
-                                  padding: 10,
-                                  borderRadius: 15,
-                                  shadowOpacity: 0,
-                                  borderWidth: 1,
-                                  borderColor: "#e8e8ea",
-                                  overflow: 'scroll',
-                                  maxHeight: '100%'
-                                },
-                              }}
-                            >
-                              {minutes.map((min: any) => {
-                                return (
-                                  <MenuOption value={min}>
-                                    <Text>{min}</Text>
-                                  </MenuOption>
-                                );
-                              })}
-                            </MenuOptions>
-                          </Menu>
-                        </View>
-                        {/* <DurationPicker
-                                                // key={Math.random()}
-                                                onChange={(d) => onChangeDuration(d)}
-                                                initialDuration={
-                                                    initialDuration
-                                                        ? initialDuration
-                                                        : { hours: 1, minutes: 0, seconds: 0 }
-                                                }
-                                                // style={{ color: 'blue' }}
-                                                maxHours={6}
-                                            /> */}
-                      </View>
-                    ) : null}
-                  </View>
-                </View>
-              ) : null}
             </View>
           ) : null}
           <View
@@ -1462,8 +1319,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   flexDirection: 'row',
                   width: '100%'
                 }}>
-                  <View style={{ width: '100%', maxWidth: 400, paddingRight: Dimensions.get('window').width > 768 ? 15 : 0 }}>
-                    <TextareaAutosize
+                  <View style={{ width: '100%', paddingRight: Dimensions.get('window').width > 768 ? 15 : 0, paddingTop: 15 }}>
+                    {/* <TextareaAutosize
                       value={quizInstructions}
                       placeholder="Instructions"
                       minRows={3}
@@ -1479,7 +1336,57 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                       }}
                       onChange={(e) => setQuizInstructions(e.target.value)}
                       required={false}
-                    />
+                    /> */}
+                    <Editor
+                      // onInit={(evt, editor) => RichText.current = editor}
+                      initialValue={initialQuizInstructions}
+                      apiKey="ip4jckmpx73lbu6jgyw9oj53g0loqddalyopidpjl23fx7tl"
+                      init={{
+                          skin: "snow",
+                          // toolbar_sticky: true,
+                          indent: false,
+                          branding: false,
+                          placeholder: 'Instructions',
+                          autoresize_on_init: false,
+                          autoresize_min_height: 200,
+                          height: 200,
+                          min_height: 200,
+                          paste_data_images: true,
+                          images_upload_url: 'https://api.cuesapp.co/api/imageUploadEditor',
+                          mobile: {
+                          plugins: 'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize'
+                          },
+                          plugins: 'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize',
+                          menu: { // this is the complete default configuration
+                          file: { title: 'File', items: 'newdocument' },
+                          edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall' },
+                          insert: { title: 'Insert', items: 'link media | template hr' },
+                          view: { title: 'View', items: 'visualaid' },
+                          format: { title: 'Format', items: 'bold italic underline strikethrough superscript subscript | formats | removeformat' },
+                          table: { title: 'Table', items: 'inserttable tableprops deletetable | cell row column' },
+                          tools: { title: 'Tools', items: 'spellchecker code' }
+                          },
+                          // menubar: 'file edit view insert format tools table tc help',
+                          menubar: false,
+                          toolbar: 'undo redo | bold italic underline strikethrough |  numlist bullist checklist | forecolor backcolor permanentpen removeformat | table image media pageembed link | charmap emoticons superscript subscript',
+                          importcss_append: true,
+                          image_caption: true,
+                          quickbars_selection_toolbar: 'bold italic underline | quicklink h2 h3 quickimage quicktable',
+                          noneditable_noneditable_class: 'mceNonEditable',
+                          toolbar_mode: 'sliding',
+                          // tinycomments_mode: 'embedded',
+                          content_style: ".mce-content-body[data-mce-placeholder]:not(.mce-visualblocks)::before{color: #a2a2ac;}",
+                          // contextmenu: 'link image table configurepermanentpen',
+                          // a11y_advanced_options: true,
+                          extended_valid_elements: "svg[*],defs[*],pattern[*],desc[*],metadata[*],g[*],mask[*],path[*],line[*],marker[*],rect[*],circle[*],ellipse[*],polygon[*],polyline[*],linearGradient[*],radialGradient[*],stop[*],image[*],view[*],text[*],textPath[*],title[*],tspan[*],glyph[*],symbol[*],switch[*],use[*]"
+                          // skin: useDarkMode ? 'oxide-dark' : 'oxide',
+                          // content_css: useDarkMode ? 'dark' : 'default',
+
+                      }}
+                      onChange={(e: any) => {
+                        setQuizInstructions(e.target.getContent())
+                      }}
+                  />
                   </View>
                 </View>
                 <QuizCreate
@@ -1570,9 +1477,9 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 paste_data_images: true,
                 images_upload_url: 'https://api.cuesapp.co/api/imageUploadEditor',
                 mobile: {
-                  plugins: 'print preview powerpaste casechange importcss searchreplace autolink autosave save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount tinymcespellchecker a11ychecker textpattern noneditable help formatpainter pageembed charmap mentions linkchecker emoticons advtable autoresize'
+                  plugins: 'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize'
                 },
-                plugins: 'print preview powerpaste casechange importcss searchreplace autolink autosave save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount tinymcespellchecker a11ychecker textpattern noneditable help formatpainter pageembed charmap mentions linkchecker emoticons advtable autoresize',
+                plugins: 'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize',
                 menu: { // this is the complete default configuration
                   file: { title: 'File', items: 'newdocument' },
                   edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall' },
@@ -1584,12 +1491,13 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 },
                 // menubar: 'file edit view insert format tools table tc help',
                 menubar: false,
-                toolbar: 'undo redo | bold italic underline strikethrough | fontselect fontSizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat  pagebreak | table image media pageembed link | preview print | charmap emoticons |  ltr rtl | showcomments addcomment',
+                toolbar: 'undo redo | bold italic underline strikethrough | superscript subscript | fontselect fontSizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat  pagebreak | table image media pageembed link | preview print | charmap emoticons |  ltr rtl | showcomments addcomment',
                 importcss_append: true,
                 image_caption: true,
                 quickbars_selection_toolbar: 'bold italic underline | quicklink h2 h3 quickimage quicktable',
                 noneditable_noneditable_class: 'mceNonEditable',
                 toolbar_mode: 'sliding',
+                content_style: ".mce-content-body[data-mce-placeholder]:not(.mce-visualblocks)::before{color: #a2a2ac;}",
                 // tinycomments_mode: 'embedded',
                 // content_style: '.mymention{ color: gray; }',
                 // contextmenu: 'link image table configurepermanentpen',
@@ -2899,6 +2807,148 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 </View>
               ) : null}
             </View>
+            {/* Timed Quiz */}
+            {isQuiz ? (
+              <View style={{ width: "100%", flexDirection: width < 1024 ? 'column' : 'row', paddingTop: 40 }}>
+                <View
+                  style={{
+                    flex: 1, flexDirection: 'row',
+                    paddingBottom: 15,
+                    backgroundColor: "white",
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: 15,
+                      color: '#1D1D20'
+                    }}
+                  >
+                    Timed 
+                  </Text>
+                </View>
+                <View>
+                  <View
+                    style={{
+                      backgroundColor: "white",
+                      height: 40,
+                      marginRight: 10,
+                      flexDirection: 'row',
+                      justifyContent: 'flex-end',
+                    }}
+                  >
+                    <Switch
+                      value={timer}
+                      onValueChange={() => {
+                        if (timer) {
+                          setDuration({
+                            hours: 1,
+                            minutes: 0,
+                            seconds: 0,
+                          });
+                        }
+                        setTimer(!timer);
+                      }}
+                      style={{ height: 20 }}
+                      trackColor={{
+                        false: "#f7f7f7",
+                        true: "#818385",
+                      }}
+                      activeThumbColor="white"
+                    />
+                  </View>
+                  {timer ? (
+                      <View
+                        style={{
+                          borderRightWidth: 0,
+                          paddingTop: 0,
+                          borderColor: "#e8e8ea",
+                          flexDirection: 'row'
+                        }}
+                      >
+                        <View>
+                          <Menu onSelect={(hour: any) => setDuration({
+                            ...duration,
+                            hours: hour
+                          })}>
+                            <MenuTrigger>
+                              <Text
+                                style={{
+                                  // fontFamily: "inter",
+                                  fontSize: 15,
+                                  color: "#1D1D20",
+                                }}
+                              >
+                                {duration.hours} H <Ionicons name="caret-down" size={14} /> &nbsp;&nbsp;:&nbsp;&nbsp;
+                              </Text>
+                            </MenuTrigger>
+                            <MenuOptions
+                              customStyles={{
+                                optionsContainer: {
+                                  padding: 10,
+                                  borderRadius: 15,
+                                  shadowOpacity: 0,
+                                  borderWidth: 1,
+                                  borderColor: "#e8e8ea",
+                                  overflow: 'scroll',
+                                  maxHeight: '100%'
+                                },
+                              }}
+                            >
+                              {hours.map((hour: any) => {
+                                return (
+                                  <MenuOption value={hour}>
+                                    <Text>{hour}</Text>
+                                  </MenuOption>
+                                );
+                              })}
+                            </MenuOptions>
+                          </Menu>
+                        </View>
+                        <View>
+                          <Menu onSelect={(min: any) => setDuration({
+                            ...duration,
+                            minutes: min
+                          })}>
+                            <MenuTrigger>
+                              <Text
+                                style={{
+                                  // fontFamily: "inter",
+                                  fontSize: 15,
+                                  color: "#1D1D20",
+                                }}
+                              >
+                                {duration.minutes}  m  <Ionicons name="caret-down" size={14} />
+                              </Text>
+                            </MenuTrigger>
+                            <MenuOptions
+                              customStyles={{
+                                optionsContainer: {
+                                  padding: 10,
+                                  borderRadius: 15,
+                                  shadowOpacity: 0,
+                                  borderWidth: 1,
+                                  borderColor: "#e8e8ea",
+                                  overflow: 'scroll',
+                                  maxHeight: '100%'
+                                },
+                              }}
+                            >
+                              {minutes.map((min: any) => {
+                                return (
+                                  <MenuOption value={min}>
+                                    <Text>{min}</Text>
+                                  </MenuOption>
+                                );
+                              })}
+                            </MenuOptions>
+                          </Menu>
+                        </View>
+                      </View>
+                    ) : null}
+                </View>
+              </View>
+            ) : null}
+
             {/* if Quiz then ask Shuffle */}
             {isQuiz ? (
               <View style={{ width: "100%", flexDirection: width < 1024 ? 'column' : 'row', paddingTop: 40 }}>

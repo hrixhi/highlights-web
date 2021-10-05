@@ -85,6 +85,14 @@
     /* top: 0.5em; */
 }
 
+.mce-content-body[data-mce-placeholder]:not(.mce-visualblocks)::before {
+    color: #a2a2ac !important; 
+}
+
+.tox-tinymce {
+    border: 1px solid #cccccc !important;
+}
+
 /* .dropdown {
     position: relative;
     display: inline-block;

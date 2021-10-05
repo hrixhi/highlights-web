@@ -26,6 +26,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
 
     const [collapseMap, setCollpaseMap] = useState<any>({})
     const [activeTabMap, setActiveTabMap] = useState<any>({})
+    const [ownersMap, setOwnersMap] = useState<any>({});
 
     useEffect(() => {
         console.log('Collapse Map', collapseMap);
@@ -33,57 +34,75 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
     }, [collapseMap])
 
     useEffect(() => {
+        (
+            async () => {
+              const u = await AsyncStorage.getItem('user')
+              if (u) {
+                const parsedUser: any = JSON.parse(u)
+                
+                // FILTERS PENDING
 
-        // FILTERS PENDING
+                const temp: any = {}
+                const tabMap: any = {}
+                const ownMap: any = {}
+                props.subscriptions.map((item: any, ind: any) => {
+                    temp[ind] = true
+                    if (item.channelCreatedBy.toString() === parsedUser._id.toString()) {
+                        tabMap[ind] = 'scores'
+                        ownMap[ind] = true
+                    } else {
+                        tabMap[ind] = 'overview'
+                        ownMap[ind] = false
+                    }
+                    
+                })
+                setCollpaseMap(temp)
+                setActiveTabMap(tabMap)
+                setOwnersMap(ownMap)
 
-        const temp: any = {}
-        const tabMap: any = {}
-        props.subscriptions.map((item: any, ind: any) => {
-            temp[ind] = true
-            tabMap[ind] = 'overview'
-        })
-        setCollpaseMap(temp)
-        setActiveTabMap(tabMap)
+                const tempSc: any = {}
+                scores.map((sc: any) => {
+                    if (!tempSc[sc.channelId]) {
+                        tempSc[sc.channelId] = sc
+                    }
+                })
+                setScore(tempSc)
 
-        const tempSc: any = {}
-        scores.map((sc: any) => {
-            if (!tempSc[sc.channelId]) {
-                tempSc[sc.channelId] = sc
+                const tempAtt: any = {}
+                attendances.map((att: any) => {
+                    if (tempAtt[att.channelId]) {
+                        tempAtt[att.channelId].push(att)
+                    } else {
+                        tempAtt[att.channelId] = [att]
+                    }
+                })
+                setAttendance(tempAtt)
+
+                const tempDate: any = {}
+                dates.map((dt: any) => {
+                    if (tempDate[dt.channelId]) {
+                        tempDate[dt.channelId].push(dt)
+                    } else {
+                        tempDate[dt.channelId] = [dt]
+                    }
+                })
+                setDate(tempDate)
+
+                const tempThread: any = {}
+                threads.map((t: any) => {
+                    if (tempThread[t.channelId]) {
+                        tempThread[t.channelId].push(t)
+                    } else {
+                        tempThread[t.channelId] = [t]
+                    }
+                })
+                setThread(tempThread)
+
+                setLoading(false)
+              } 
             }
-        })
-        setScore(tempSc)
-
-        const tempAtt: any = {}
-        attendances.map((att: any) => {
-            if (tempAtt[att.channelId]) {
-                tempAtt[att.channelId].push(att)
-            } else {
-                tempAtt[att.channelId] = [att]
-            }
-        })
-        setAttendance(tempAtt)
-
-        const tempDate: any = {}
-        dates.map((dt: any) => {
-            if (tempDate[dt.channelId]) {
-                tempDate[dt.channelId].push(dt)
-            } else {
-                tempDate[dt.channelId] = [dt]
-            }
-        })
-        setDate(tempDate)
-
-        const tempThread: any = {}
-        threads.map((t: any) => {
-            if (tempThread[t.channelId]) {
-                tempThread[t.channelId].push(t)
-            } else {
-                tempThread[t.channelId] = [t]
-            }
-        })
-        setThread(tempThread)
-
-        setLoading(false)
+        )()
+       
 
     }, [attendances, dates, props.filterStart, props.filterEnd, threads, scores, props.subscriptions])
 
@@ -164,9 +183,11 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
     const renderTabs = (index: number) => {
 
         const activeTab = activeTabMap[index];
+        const isOwner = ownersMap[index]
+
 
         return (<View style={{ flexDirection: "row", marginBottom: 20, paddingTop: 5 }}>
-            <TouchableOpacity
+             {isOwner ? null : <TouchableOpacity
                 style={{
                     justifyContent: "center",
                     flexDirection: "column"
@@ -182,7 +203,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 <Text style={activeTab === 'overview' ? styles.allGrayFill : styles.all}>
                     Overview
                 </Text>
-            </TouchableOpacity>
+            </TouchableOpacity>}
             <TouchableOpacity
                 style={{
                     justifyContent: "center",
