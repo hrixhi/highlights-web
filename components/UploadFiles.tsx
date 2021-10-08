@@ -4,15 +4,22 @@ import axios from 'axios'
 import { Ionicons } from '@expo/vector-icons'
 import { Dimensions } from 'react-native'
 
+import * as DocumentPicker from 'expo-document-picker';
+import { PreferredLanguageText } from '../helpers/LanguageContext'
+
 const mime = require('mime-types')
 
 const FileUpload: React.FC<any> = (props: any) => {
 
     const [uploading, setUploading] = useState(false)
-    const onChange = useCallback((e) => {
+    const handleFile = useCallback(async () => {
+        // e.preventDefault();
+        const file: any = await DocumentPicker.getDocumentAsync()
+        console.log(file)
+        if (file.type === 'cancel') {
+            return
+        }
         setUploading(true)
-        e.preventDefault();
-        const file = e.target.files[0]
         if (file.size > 26214400) {
             alert('File size must be less than 25 mb')
             setUploading(false)
@@ -62,7 +69,10 @@ const FileUpload: React.FC<any> = (props: any) => {
     }, [])
 
     const fileUpload = useCallback((file, type) => {
-        const url = "https://api.cuesapp.co/api/upload";
+        // LIVE
+        // const url = "https://api.cuesapp.co/api/upload";
+        // DEV
+        const url = "http://localhost:8081/api/upload";
         const formData = new FormData();
         formData.append("attachment", file);
         formData.append("typeOfUpload", type);
@@ -74,39 +84,19 @@ const FileUpload: React.FC<any> = (props: any) => {
         return axios.post(url, formData, config);
     }, [])
 
-    return <View style={{
-        paddingTop: 3.5,
-        paddingBottom: Dimensions.get('window').width < 1024 ? 5 : 0
-    }}>
-        {
-            uploading ? <Text style={{ fontSize: 11, color: '#1D1D20', textTransform: 'uppercase' }}>
-                Importing...
-            </Text> :
-                <div style={{
-                    display: 'flex', flexDirection: 'row'
-                }}>
-                    {
-                        props.back ?
-                            <Ionicons name="arrow-back" color="#818385" size={17} style={{ marginRight: 10 }} onPress={() => props.back()} />
-                            : null
-                    }
-                    <input
-                        type="file"
-                        name="import"
-                        title="Import"
-                        onChange={onChange}
-                        style={{
-                            backgroundColor: '#fff',
-                            fontFamily: 'overpass',
-                            fontSize: 12,
-                            color: '#818385',
-                            marginRight: 10,
-                            width: 170
-                        }}
-                    />
-                </div>
-        }
-    </View >
+    return <View>
+        <Text
+            style={{
+                color: "#007aff",
+                lineHeight: 30,
+                textAlign: "right",
+                fontSize: 12
+            }}
+            onPress={() => handleFile()}
+        >
+            {uploading ? 'Importing...' : PreferredLanguageText("import")}
+        </Text>
+    </View>
 }
 
 export default FileUpload

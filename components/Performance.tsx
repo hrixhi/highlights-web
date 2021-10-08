@@ -378,7 +378,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                             activeTabMap[ind] === "attendance" ? <AttendanceList
                                                 channelId={sub.channelId}
                                                 channelCreatedBy={sub.channelCreatedBy}
-                                            /> : <View style={{ maxWidth: 600, alignSelf: 'center', width: '100%' }}>
+                                            /> : <View style={{ maxWidth: 1000, alignSelf: 'center', width: '100%' }}>
                                                 <View style={{ flexDirection: 'row', flex: 1, paddingTop: 20 }}>
                                                     <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
                                                         <Text style={{

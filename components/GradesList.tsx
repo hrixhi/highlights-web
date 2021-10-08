@@ -201,12 +201,13 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         <Text style={{
                             textAlign: 'center',
                             lineHeight: 30,
-                            color: '#fff',
+                            color: '#007aff',
                             fontSize: 12,
-                            backgroundColor: '#007aff',
+                            borderColor: '#007aff',
                             paddingHorizontal: 20,
                             fontFamily: 'inter',
                             height: 30,
+                            borderWidth: 1,
                             // width: 100,
                             borderRadius: 15,
                             textTransform: 'uppercase'
@@ -441,7 +442,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             }}
                             nestedScrollEnabled={true}
                         >
-                            <View style={{ minHeight: 70, flexDirection: 'row', overflow: 'hidden', paddingBottom: 10, borderBottomWidth: 1, borderBottomColor: 'black' }} key={"-"}>
+                            <View style={{ minHeight: 70, flexDirection: 'row', overflow: 'hidden', paddingBottom: 10, borderBottomWidth: 1, borderBottomColor: '#e8e8ea' }} key={"-"}>
                                 <View style={styles.col} key={'0,0'}>
                                     {props.isOwner ? <CustomTextInput
                                         value={studentSearch}

@@ -315,7 +315,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     borderTopRightRadius: 0
                 }}>
                 <View style={{ flexDirection: 'row', width: '100%', height: 50, marginBottom: 10, marginTop: 20 }}>
-                    <View style={{ flexDirection: 'row', flex: 1 }}>
+                    <View style={{ flexDirection: 'row' }}>
                         {
                             showHelp ? <TouchableOpacity
                                 onPress={() => {
@@ -328,7 +328,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 }}
                             >
                                 <Text style={{ lineHeight: 35, width: '100%', textAlign: 'center' }}>
-                                    <Ionicons name='arrow-back-outline' size={25} color={'#1D1D20'} />
+                                    <Ionicons name='arrow-back-outline' size={25} color={'#818385'} />
                                 </Text>
                             </TouchableOpacity> : null
                             // <Text
@@ -366,7 +366,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 <Text
                                     style={{
                                         fontSize: 23,
-                                        paddingBottom: 30,
+                                        paddingBottom: 10,
                                         fontFamily: 'inter',
                                         // textTransform: "uppercase",
                                         // paddingLeft: 10,
@@ -376,7 +376,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                         lineHeight: 25,
                                         paddingTop: 10,
                                     }}>
-                                    <Ionicons name='help-circle-outline' size={23} />
+                                    <Ionicons name='help-circle-outline' size={25} color="#007aff" />
                                 </Text>
                             </TouchableOpacity>
                     }
@@ -409,7 +409,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                         marginTop: 25, backgroundColor: '#fff',
                                         height: windowHeight - 50, paddingBottom: 75,
                                         width: '100%',
-                                        maxWidth: 600, alignSelf: 'center'
+                                        maxWidth: 1000, alignSelf: 'center'
                                     }}
                                 >
                                     {
@@ -500,7 +500,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         height: '100%',
         width: '100%',
-        maxWidth: 600,
+        maxWidth: 1000,
         paddingHorizontal: Dimensions.get("window").width < 1024 ? 0 : 50,
         // alignSelf: 'center',
         borderTopRightRadius: 0,

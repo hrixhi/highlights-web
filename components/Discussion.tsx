@@ -110,11 +110,11 @@ const Discussion: React.FunctionComponent<{ [label: string]: any }> = (props: an
         loadThreads()
     }, [props.channelId])
 
-    const windowHeight = Dimensions.get('window').width < 1024 ? Dimensions.get('window').height - 30 : Dimensions.get('window').height;
     return (
         <View style={{
             width: '100%',
             backgroundColor: 'white',
+            marginBottom: 20
         }}
         >
             <Animated.View style={{

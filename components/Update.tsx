@@ -514,7 +514,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     maxWidth: 300,
                     width: '100%',
                     height: '100%',
-                    borderRadius: 1,
+                    borderRadius: 10,
                     padding: 15,
                     paddingHorizontal: 20,
                     backgroundColor: '#fff',
@@ -703,7 +703,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     style={{
                         width: 300,
                         maxWidth: '100%',
-                        borderBottom: '1px solid #cccccc',
+                        borderBottom: '1px solid #e8e8ea',
                         fontSize: 14,
                         paddingTop: 13,
                         paddingBottom: 13,
@@ -746,7 +746,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         maxWidth: 300,
                                         width: '100%',
                                         height: '100%',
-                                        borderRadius: 1,
+                                        borderRadius: 10,
                                         padding: 15,
                                         paddingHorizontal: 20,
                                         backgroundColor: '#fff',
@@ -857,7 +857,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 // Update cue locally with the new Unread count so that the Unread count reflects in real time
 
                                 if (res.data.folder.create === null || res.data.folder.create === "") {
-                                    Alert("Could not create list. Try again.")
+                                    Alert("Could not create folder. Try again.")
                                     setCreatingFolder(false)
                                     return;
                                 }
@@ -869,7 +869,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 props.refreshCues()
 
                             }).catch((e) => {
-                                Alert("Could not create list. Try again.")
+                                Alert("Could not create folder. Try again.")
                                 setCreatingFolder(false)
                             })
 
@@ -897,8 +897,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             }}
                         >
                             {creatingFolder
-                                ? 'Creating...'
-                                : 'Create'}
+                                ? 'Adding...'
+                                : 'Add'}
                         </Text>
                     </TouchableOpacity>
                 </View>
@@ -927,17 +927,17 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     >
                         <Text
                             style={{
-                                textAlign: "center",
+                                textAlign: 'center',
                                 lineHeight: 35,
-                                color: "white",
+                                color: '#007aff',
+                                borderWidth: 1,
+                                borderColor: '#007aff',
                                 fontSize: 12,
-                                backgroundColor: "#007AFF",
-                                borderRadius: 15,
                                 paddingHorizontal: 20,
-                                fontFamily: "inter",
-                                overflow: "hidden",
+                                fontFamily: 'inter',
                                 height: 35,
-                                textTransform: "uppercase",
+                                borderRadius: 15,
+                                textTransform: 'uppercase'
                             }}
                         >
                             {/* {isSubmitting
@@ -979,7 +979,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     setFolderCuesToDisplay(cuesInOrder)
 
                 }}>
-                    <Ionicons name='arrow-back-outline' size={22} color={'#1D1D20'} />
+                    <Ionicons name='arrow-back-outline' size={22} color={'#818385'} />
                 </TouchableOpacity>
             </View>
 
@@ -988,7 +988,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 style={{
                     width: 300,
                     maxWidth: '100%',
-                    borderBottom: '1px solid #cccccc',
+                    borderBottom: '1px solid #e8e8ea',
                     fontSize: 14,
                     paddingTop: 13,
                     paddingBottom: 13,
@@ -1088,7 +1088,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 :
                 <View>
                     <Text style={{ fontSize: 14, color: '#818385', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#fff', paddingVertical: 20 }}>
-                        No Content to select. 
+                        No Content to select.
                     </Text>
                 </View>}
 
@@ -1124,7 +1124,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
                                 // Update cue locally with the new Unread count so that the Unread count reflects in real time
                                 if (res.data.folder.update === null || res.data.folder.update === undefined) {
-                                    Alert("Could not create list. Try again.")
+                                    Alert("Could not create folder. Try again.")
                                     setUpdatingFolder(false)
                                     return;
                                 }
@@ -1137,7 +1137,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 props.refreshCues()
 
                             }).catch((e) => {
-                                Alert("Could not create list. Try again.")
+                                Alert("Could not create folder. Try again.")
                                 setUpdatingFolder(false)
                             })
 
@@ -1326,7 +1326,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     props.refreshCues()
 
                                 }).catch((e) => {
-                                    Alert("Could not create list. Try again.")
+                                    Alert("Could not create folder. Try again.")
                                     setDeletingFolder(false)
                                 })
                             }}
@@ -1480,7 +1480,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         })
                     }
                 </MenuOptions>
-            </Menu> : null }
+            </Menu> : null}
 
             <TouchableOpacity
                 onPress={() => {
@@ -1503,18 +1503,18 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 }}>
                 <Text style={{
                     textAlign: 'center',
-                    lineHeight: 30,
-                    color: '#fff',
+                    lineHeight: 35,
+                    color: '#007aff',
+                    borderWidth: 1,
+                    borderColor: '#007aff',
                     fontSize: 12,
-                    backgroundColor: '#3abb83',
                     paddingHorizontal: 20,
                     fontFamily: 'inter',
-                    height: 30,
-                    // width: 100,
+                    height: 35,
                     borderRadius: 15,
                     textTransform: 'uppercase'
                 }}>
-                    Create List {<Ionicons name='add-outline' size={12} />}
+                    Add Files {<Ionicons name='document-outline' size={12} />}
                 </Text>
             </TouchableOpacity>
         </View> : null}
@@ -1558,13 +1558,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 channelOwner={channelOwner}
                 createdBy={createdBy}
                 folderId={folderId}
-                closeModal={() => {
-                    Animated.timing(modalAnimation, {
-                        toValue: 0,
-                        duration: 150,
-                        useNativeDriver: true
-                    }).start(() => props.closeModal())
-                }}
+                closeModal={() => props.closeModal()}
                 reloadCueListAfterUpdate={() => props.reloadCueListAfterUpdate()}
                 changeViewStatus={() => setViewStatus(true)}
                 viewStatus={viewStatus}
@@ -1589,7 +1583,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             ref={scroll2}
                             contentContainerStyle={{
                                 width: '100%',
-                                maxWidth: 600,
+                                maxWidth: 1000,
                                 alignSelf: 'center',
                                 height: '100%'
                             }}
@@ -1619,7 +1613,26 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         </ScrollView>
             : <View style={{ paddingTop: 30 }}>
                 <View style={{ width: '100%', flexDirection: 'row' }}>
-                    <View style={{ marginLeft: 20 }}>
+                    {
+                        showFolder ? null :
+                            <View style={{}}>
+                                <TouchableOpacity
+                                    style={{
+                                        justifyContent: 'center',
+                                        flexDirection: 'column',
+                                        marginRight: 20,
+                                        paddingTop: 2
+                                    }}
+                                    onPress={() => {
+                                        props.closeModal()
+                                    }}>
+                                    <Text>
+                                        <Ionicons name='arrow-back-outline' size={24} color={'#818385'} />
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                    }
+                    {/* <View style={{}}>
                         <TouchableOpacity
                             style={{
                                 justifyContent: 'center',
@@ -1630,12 +1643,12 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 setShowFolder(!showFolder)
                             }}>
                             <Text>
-                                <Ionicons name='menu-outline' size={24} color={'#818385'} />
+                                <Ionicons name={showFolder ? 'close-outline' : 'document-attach-outline'} size={24} color={'#007aff'} />
                             </Text>
-                        </TouchableOpacity>
+                        </TouchableOpacity> 
                     </View>
-
-                    <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'center' }}>
+                    */}
+                    <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
                         <TouchableOpacity
                             style={{
                                 justifyContent: 'center',
@@ -1770,13 +1783,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     cueId={cueId}
                                     channelName={props.filterChoice}
                                     channelId={props.channelId}
-                                    closeModal={() => {
-                                        Animated.timing(modalAnimation, {
-                                            toValue: 0,
-                                            duration: 150,
-                                            useNativeDriver: true
-                                        }).start(() => props.closeModal())
-                                    }}
+                                    closeModal={() => props.closeModal()}
                                     reload={() => loadThreadsAndStatuses()}
                                     cue={props.cue}
                                     updateCueWithReleaseSubmission={updateCueWithReleaseSubmission}
@@ -1845,23 +1852,23 @@ const styles: any = StyleSheet.create({
     all: {
         fontSize: 10,
         color: '#43434f',
-        height: 25,
-        paddingHorizontal: 10,
+        height: 20,
+        paddingHorizontal: 5,
         backgroundColor: '#fff',
         // textTransform: 'uppercase',
-        lineHeight: 25,
-        // fontFamily: 'inter',
-        textAlign: 'center'
+        lineHeight: 20,
+        textAlign: 'center',
+        // fontFamily: 'inter'
     },
     allGrayFill: {
         fontSize: 10,
         color: '#007AFF',
-        height: 25,
-        paddingHorizontal: 10,
+        height: 20,
+        paddingHorizontal: 5,
+        textAlign: 'center',
         backgroundColor: '#fff',
         // textTransform: 'uppercase',
-        lineHeight: 25,
-        textAlign: 'center'
+        lineHeight: 20,
         // fontFamily: 'inter'
     },
     badge: {

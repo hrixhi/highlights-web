@@ -790,7 +790,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     const renderRecurringOptions = () => (
         <View style={{}}>
-            <View style={{ width: 300, display: "flex" }}>
+            <View style={{ width: 350, display: "flex" }}>
                 <View style={{ width: "100%", paddingTop: width < 1024 ? 40 : 40, paddingBottom: 15, backgroundColor: "white" }}>
                     <Text style={{
                         fontSize: 14,
@@ -818,7 +818,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 </View>
             </View>
 
-            {recurring ? <View style={{ width: 300, display: "flex" }}>
+            {recurring ? <View style={{ width: 350, display: "flex" }}>
                 <View style={{ width: "100%", paddingTop: width < 1024 ? 20 : 40, paddingBottom: 15, backgroundColor: "white" }}>
                     <Text
                         style={{
@@ -864,7 +864,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 </View>
             </View> : null}
 
-            {recurring ? <View style={{ width: 300, display: "flex" }}>
+            {recurring ? <View style={{ width: 350, display: "flex" }}>
                 <View style={{ width: "100%", paddingTop: width < 1024 ? 20 : 40, paddingBottom: 15, backgroundColor: "white" }}>
                     <Text style={{
                         fontSize: 14,
@@ -1286,7 +1286,111 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     const renderTabs = (activeTab: any) => {
 
-        return (<View style={{ flexDirection: "row", flex: 1, justifyContent: 'center', marginBottom: 30, marginTop: 10, paddingVertical: 10 }}>
+        return (<View style={{ flexDirection: "row", flex: 1, marginBottom: 30, marginTop: 10, paddingVertical: 10 }}>
+            {
+                tab !== 'Add' ? <TouchableOpacity
+                    style={{
+                        backgroundColor: "white",
+                        overflow: "hidden",
+                        height: 35,
+                        // marginTop: -20
+                        // marginBottom: 20
+                    }}
+                    onPress={() => {
+                        setTab(tabs[4])
+                    }}
+                    disabled={isCreatingEvents}>
+                    <Text
+                        style={{
+                            textAlign: "center",
+                            lineHeight: 35,
+                            color: '#007AFF',
+                            fontSize: 12,
+                            borderWidth: 1,
+                            borderColor: '#007AFF',
+                            paddingHorizontal: 20,
+                            fontFamily: "inter",
+                            height: 35,
+                            // width: 125,
+                            borderRadius: 15,
+                            textTransform: "uppercase"
+                        }}>
+                        Add <Ionicons name='add-outline' size={12} />
+                    </Text>
+                </TouchableOpacity> : null
+            }
+
+            {
+                tab === tabs[3] && unreadCount !== 0 ?
+                    <TouchableOpacity
+                        onPress={async () => {
+                            const uString: any = await AsyncStorage.getItem("user");
+                            if (uString) {
+                                const user = JSON.parse(uString);
+                                const server = fetchAPI(user._id);
+                                server
+                                    .mutate({
+                                        mutation: markActivityAsRead,
+                                        variables: {
+                                            userId: user._id,
+                                            markAllRead: true
+                                        }
+                                    })
+                                    .then(res => {
+                                        if (res.data.activity.markActivityAsRead) {
+                                            // setChannels(res.data.channel.findByUserId);
+                                            console.log("Mark as read", res.data.activity.markActivityAsRead);
+
+                                            server.query({
+                                                query: getActivity,
+                                                variables: {
+                                                    userId: user._id
+                                                }
+                                            }).then(res => {
+                                                if (res.data && res.data.activity.getActivity) {
+                                                    const tempActivity = res.data.activity.getActivity.reverse()
+                                                    let unread = 0
+                                                    tempActivity.map((act: any) => {
+                                                        if (act.status === 'unread') {
+                                                            unread++
+                                                        }
+                                                    })
+                                                    setUnreadCount(unread)
+                                                    setActivity(tempActivity)
+                                                }
+                                            })
+
+                                        }
+                                    })
+                                    .catch(err => { });
+                            }
+                        }}
+                        style={{
+                            backgroundColor: "white",
+                            overflow: "hidden",
+                            height: 35,
+                            // marginTop: -20,
+                            marginLeft: 15
+                        }}>
+                        <Text style={{
+                            textAlign: 'center',
+                            lineHeight: 35,
+                            color: unreadCount === 0 ? '#1D1D20' : '#fff',
+                            fontSize: 12,
+                            backgroundColor: unreadCount === 0 ? '#f7f7f7' : '#007aff',
+                            paddingHorizontal: 20,
+                            fontFamily: 'inter',
+                            height: 35,
+                            // width: 100,
+                            borderRadius: 15,
+                            textTransform: 'uppercase'
+                        }}>
+                            mark as Read {<Ionicons name='checkmark-done-outline' size={12} />}
+                        </Text>
+                    </TouchableOpacity>
+                    : null
+            }
+            <View style={{ flex: 1, flexDirection: 'row' }} />
             <TouchableOpacity
                 style={{
                     justifyContent: "center",
@@ -1351,21 +1455,6 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     Activity
                 </Text>
             </TouchableOpacity>
-            <TouchableOpacity
-                style={{
-                    justifyContent: "center",
-                    flexDirection: "column"
-                }}
-                onPress={() => {
-                    setTab(tabs[4])
-                }}>
-                <Text style={activeTab === tabs[4] ? styles.allGrayFill1 : styles.all1}>
-                    {editEvent ? <Ionicons name='pencil-outline' size={17} /> : <Ionicons name='add-outline' size={17} />}
-                </Text>
-                <Text style={activeTab === tabs[4] ? styles.allGrayFill1 : styles.all1}>
-                    Event
-                </Text>
-            </TouchableOpacity>
         </View>)
     }
 
@@ -1391,7 +1480,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 borderTopRightRadius: 0,
                 borderTopLeftRadius: 0,
                 overflow: 'hidden',
-                maxWidth: 600,
+                maxWidth: 1000,
                 alignSelf: 'center'
             }}>
             <View style={{
@@ -1400,7 +1489,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
             }}>
                 <View style={{
                     width: Dimensions.get('window').width < 1024 ? '100%' : '100%',
-                    paddingRight: Dimensions.get('window').width < 1024 ? 0 : 30,
+                    // paddingRight: Dimensions.get('window').width < 1024 ? 0 : 30,
                     borderColor: '#e8e8ea'
                 }}>
                     <View
@@ -1459,11 +1548,14 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 // overflow: 'hidden',
                                                 // marginTop: 20,
                                                 marginBottom: Dimensions.get('window').width < 1024 ? 0 : 0,
-                                                borderWidth: tab !== 'Add' && tab !== 'Activity' ? 1 : 0,
+                                                borderWidth: tab !== 'Add' && 'Activity' ? 1 : 0,
+                                                // borderRightWidth: tab === 'Activity' ? 0 : 1,
+                                                // borderLeftWidth: tab === 'Activity' ? 0 : 1,
                                                 borderColor: '#e8e8ea',
+                                                overflow: 'hidden',
                                                 // maxHeight: 550,
-                                                height: '100%',
-                                                backgroundColor: '#fff'
+                                                // height: '100%',
+                                                backgroundColor: '#fff',
                                             }}
                                         >
                                             {
@@ -1500,232 +1592,137 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                         tab === tabs[3] ?
                                                                             <View style={{
                                                                                 width: Dimensions.get('window').width < 1024 ? '100%' : '100%',
-                                                                                paddingLeft: Dimensions.get('window').width < 1024 ? 0 : 30,
+                                                                                paddingLeft: Dimensions.get('window').width < 1024 ? 0 : 0,
                                                                                 paddingTop: Dimensions.get('window').width < 1024 ? 0 : 0
                                                                             }}>
-                                                                                <View style={{ flexDirection: 'row', marginBottom: 0, marginTop: 0, flex: 1 }}>
-                                                                                    <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', marginBottom: 0 }}>
-                                                                                        {unreadCount !== 0 ?
-                                                                                            <TouchableOpacity
+                                                                                <View>
+                                                                                    {
+                                                                                        activity.map((act: any, index) => {
+
+                                                                                            const { cueId, channelId, createdBy, target, threadId } = act;
+
+                                                                                            if (props.activityChannelId !== '') {
+                                                                                                if (props.activityChannelId !== act.channelId) {
+                                                                                                    return
+                                                                                                }
+                                                                                            }
+
+                                                                                            const date = new Date(act.date)
+
+                                                                                            if (props.filterStart && props.filterEnd) {
+                                                                                                const start = new Date(props.filterStart)
+                                                                                                if (date < start) {
+                                                                                                    return
+                                                                                                }
+                                                                                                const end = new Date(props.filterEnd)
+                                                                                                if (date > end) {
+                                                                                                    return
+                                                                                                }
+                                                                                            }
+
+
+                                                                                            return <TouchableOpacity
                                                                                                 onPress={async () => {
                                                                                                     const uString: any = await AsyncStorage.getItem("user");
                                                                                                     if (uString) {
                                                                                                         const user = JSON.parse(uString);
-                                                                                                        const server = fetchAPI(user._id);
+                                                                                                        const server = fetchAPI("");
                                                                                                         server
                                                                                                             .mutate({
                                                                                                                 mutation: markActivityAsRead,
                                                                                                                 variables: {
+                                                                                                                    activityId: act._id,
                                                                                                                     userId: user._id,
-                                                                                                                    markAllRead: true
+                                                                                                                    markAllRead: false
                                                                                                                 }
                                                                                                             })
                                                                                                             .then(res => {
                                                                                                                 if (res.data.activity.markActivityAsRead) {
                                                                                                                     // setChannels(res.data.channel.findByUserId);
                                                                                                                     console.log("Mark as read", res.data.activity.markActivityAsRead);
-
-                                                                                                                    server.query({
-                                                                                                                        query: getActivity,
-                                                                                                                        variables: {
-                                                                                                                            userId: user._id
-                                                                                                                        }
-                                                                                                                    }).then(res => {
-                                                                                                                        if (res.data && res.data.activity.getActivity) {
-                                                                                                                            const tempActivity = res.data.activity.getActivity.reverse()
-                                                                                                                            let unread = 0
-                                                                                                                            tempActivity.map((act: any) => {
-                                                                                                                                if (act.status === 'unread') {
-                                                                                                                                    unread++
-                                                                                                                                }
-                                                                                                                            })
-                                                                                                                            setUnreadCount(unread)
-                                                                                                                            setActivity(tempActivity)
-                                                                                                                        }
-                                                                                                                    })
-
                                                                                                                 }
                                                                                                             })
                                                                                                             .catch(err => { });
                                                                                                     }
+
+                                                                                                    // Opens the cue from the activity
+                                                                                                    if (cueId !== null && cueId !== "" && channelId !== "" && createdBy !== "" && (target === "CUE")) {
+                                                                                                        props.openCueFromCalendar(channelId, cueId, createdBy)
+                                                                                                    }
+
+                                                                                                    if (target === "DISCUSSION") {
+
+                                                                                                        if (threadId && threadId !== "") {
+                                                                                                            await AsyncStorage.setItem("openThread", threadId)
+                                                                                                        }
+
+
+                                                                                                        props.openDiscussion(channelId)
+
+
+                                                                                                    }
+
+                                                                                                    if (target === "CHANNEL_SUBSCRIBED" || target === "CHANNEL_MODERATOR_ADDED" || target === "CHANNEL_MODERATOR_REMOVED") {
+                                                                                                        props.openChannel(channelId)
+
+                                                                                                    }
+
+                                                                                                    if (target === "Q&A") {
+
+                                                                                                        if (threadId && threadId !== "") {
+                                                                                                            await AsyncStorage.setItem("openThread", threadId)
+                                                                                                        }
+
+                                                                                                        props.openQA(channelId, cueId, createdBy)
+                                                                                                    }
+
                                                                                                 }}
                                                                                                 style={{
-                                                                                                    backgroundColor: 'white',
-                                                                                                    overflow: 'hidden',
-                                                                                                    height: 35,
-                                                                                                    paddingBottom: 50,
-                                                                                                    justifyContent: 'center',
+                                                                                                    backgroundColor: '#fff',
                                                                                                     flexDirection: 'row',
+                                                                                                    borderColor: '#e8e8ea',
+                                                                                                    // borderRightWidth: 1,
+                                                                                                    borderBottomWidth: index === activity.length - 1 ? 0 : 1,
+                                                                                                    // minWidth: 600, // flex: 1,
+                                                                                                    width: '100%'
                                                                                                 }}>
-                                                                                                <Text style={{
-                                                                                                    textAlign: 'center',
-                                                                                                    lineHeight: 30,
-                                                                                                    color: unreadCount === 0 ? '#1D1D20' : '#fff',
-                                                                                                    fontSize: 12,
-                                                                                                    backgroundColor: unreadCount === 0 ? '#f7f7f7' : '#007aff',
-                                                                                                    paddingHorizontal: 20,
-                                                                                                    fontFamily: 'inter',
-                                                                                                    height: 30,
-                                                                                                    // width: 100,
-                                                                                                    borderRadius: 15,
-                                                                                                    textTransform: 'uppercase'
-                                                                                                }}>
-                                                                                                    Read all {<Ionicons name='checkmark-done-outline' size={12} />}
-                                                                                                </Text>
+                                                                                                <View style={{ backgroundColor: '#fff', padding: 0, flexDirection: 'column', justifyContent: 'center', width: 125 }}>
+                                                                                                    <Text style={{ fontSize: 12, padding: 5, fontFamily: 'inter' }} ellipsizeMode='tail'>
+                                                                                                        <View style={{
+                                                                                                            width: 9,
+                                                                                                            height: 9,
+                                                                                                            borderRadius: 12,
+                                                                                                            marginRight: 5,
+                                                                                                            backgroundColor: act.colorCode
+                                                                                                        }} /> {act.channelName}
+                                                                                                    </Text>
+                                                                                                </View>
+                                                                                                <View style={{ flex: 1, backgroundColor: '#fff', padding: 0, flexDirection: 'column', justifyContent: 'center' }}>
+                                                                                                    <View style={{ flexDirection: 'row', flex: 1, maxHeight: 25 }}>
+                                                                                                        <Text style={{ fontSize: 13, padding: 5, paddingTop: 15, paddingBottom: 15, fontFamily: 'inter', flex: 1, flexDirection: 'row' }} ellipsizeMode='tail'>
+                                                                                                            {act.title}
+                                                                                                        </Text>
+                                                                                                    </View>
+                                                                                                    <Text style={{ fontSize: 11, padding: 5, lineHeight: 20 }} ellipsizeMode='tail'>
+                                                                                                        {act.subtitle}
+                                                                                                    </Text>
+                                                                                                </View>
+                                                                                                <View style={{ backgroundColor: '#fff', padding: 0, flexDirection: 'row', alignSelf: 'center' }} >
+                                                                                                    <Text style={{ fontSize: 13, padding: 5, lineHeight: 13 }} ellipsizeMode='tail'>
+                                                                                                        {act.status === 'unread' ?
+                                                                                                            <Ionicons name='alert-circle-outline' color='#f94144' size={23} /> : null}
+                                                                                                    </Text>
+                                                                                                    <Text style={{ fontSize: 11, padding: 5, lineHeight: 13 }} ellipsizeMode='tail'>
+                                                                                                        {emailTimeDisplay(act.date)}
+                                                                                                    </Text>
+                                                                                                    <Text style={{ fontSize: 13, padding: 5, lineHeight: 13 }} ellipsizeMode='tail'>
+                                                                                                        <Ionicons name='chevron-forward-outline' size={20} color='#007AFF' />
+                                                                                                    </Text>
+                                                                                                </View>
                                                                                             </TouchableOpacity>
-                                                                                            : <View style={{ height: width < 1024 ? 0 : 20 }} />}
-                                                                                    </View>
+                                                                                        })
+                                                                                    }
                                                                                 </View>
-                                                                                <ScrollView
-                                                                                    horizontal={true}
-                                                                                    contentContainerStyle={{
-                                                                                        width: '100%', paddingTop: width < 1024 ? 0 : 5,
-                                                                                    }}
-                                                                                >
-                                                                                    <ScrollView
-                                                                                        showsVerticalScrollIndicator={false}
-                                                                                        horizontal={false}
-                                                                                        // style={{ height: '100%' }}
-                                                                                        contentContainerStyle={{
-                                                                                            //borderWidth: activity.length === 0 ? 0 : 1,
-                                                                                            borderRightWidth: 0,
-                                                                                            width: '100%',
-                                                                                            minWidth: width < 1024 ? 600 : 0,
-                                                                                            maxHeight: windowHeight - (unreadCount !== 0 ? 260 : 170),
-                                                                                            borderRadius: 0,
-                                                                                            marginTop: 20,
-                                                                                            // overflow: 'hidden',
-                                                                                            borderColor: '#e8e8ea',
-                                                                                        }}
-                                                                                    >
-                                                                                        {
-                                                                                            activity.map((act: any, index) => {
-
-                                                                                                const { cueId, channelId, createdBy, target, threadId } = act;
-
-                                                                                                if (props.activityChannelId !== '') {
-                                                                                                    if (props.activityChannelId !== act.channelId) {
-                                                                                                        return
-                                                                                                    }
-                                                                                                }
-
-                                                                                                const date = new Date(act.date)
-
-                                                                                                if (props.filterStart && props.filterEnd) {
-                                                                                                    const start = new Date(props.filterStart)
-                                                                                                    if (date < start) {
-                                                                                                        return
-                                                                                                    }
-                                                                                                    const end = new Date(props.filterEnd)
-                                                                                                    if (date > end) {
-                                                                                                        return
-                                                                                                    }
-                                                                                                }
-
-
-                                                                                                return <TouchableOpacity
-                                                                                                    onPress={async () => {
-                                                                                                        const uString: any = await AsyncStorage.getItem("user");
-                                                                                                        if (uString) {
-                                                                                                            const user = JSON.parse(uString);
-                                                                                                            const server = fetchAPI("");
-                                                                                                            server
-                                                                                                                .mutate({
-                                                                                                                    mutation: markActivityAsRead,
-                                                                                                                    variables: {
-                                                                                                                        activityId: act._id,
-                                                                                                                        userId: user._id,
-                                                                                                                        markAllRead: false
-                                                                                                                    }
-                                                                                                                })
-                                                                                                                .then(res => {
-                                                                                                                    if (res.data.activity.markActivityAsRead) {
-                                                                                                                        // setChannels(res.data.channel.findByUserId);
-                                                                                                                        console.log("Mark as read", res.data.activity.markActivityAsRead);
-                                                                                                                    }
-                                                                                                                })
-                                                                                                                .catch(err => { });
-                                                                                                        }
-
-                                                                                                        // Opens the cue from the activity
-                                                                                                        if (cueId !== null && cueId !== "" && channelId !== "" && createdBy !== "" && (target === "CUE")) {
-                                                                                                            props.openCueFromCalendar(channelId, cueId, createdBy)
-                                                                                                        }
-
-                                                                                                        if (target === "DISCUSSION") {
-
-                                                                                                            if (threadId && threadId !== "") {
-                                                                                                                await AsyncStorage.setItem("openThread", threadId)
-                                                                                                            }
-
-
-                                                                                                            props.openDiscussion(channelId)
-
-
-                                                                                                        }
-
-                                                                                                        if (target === "CHANNEL_SUBSCRIBED" || target === "CHANNEL_MODERATOR_ADDED" || target === "CHANNEL_MODERATOR_REMOVED") {
-                                                                                                            props.openChannel(channelId)
-
-                                                                                                        }
-
-                                                                                                        if (target === "Q&A") {
-
-                                                                                                            if (threadId && threadId !== "") {
-                                                                                                                await AsyncStorage.setItem("openThread", threadId)
-                                                                                                            }
-
-                                                                                                            props.openQA(channelId, cueId, createdBy)
-                                                                                                        }
-
-                                                                                                    }}
-                                                                                                    style={{
-                                                                                                        backgroundColor: '#fff',
-                                                                                                        flexDirection: 'row',
-                                                                                                        borderColor: '#e8e8ea',
-                                                                                                        borderRightWidth: 1,
-                                                                                                        borderBottomWidth: index === activity.length - 1 ? 0 : 1,
-                                                                                                        // minWidth: 600, // flex: 1,
-                                                                                                        width: '100%'
-                                                                                                    }}>
-                                                                                                    <View style={{ backgroundColor: '#f7f7f7', padding: 0, flexDirection: 'column', justifyContent: 'center', width: 125 }}>
-                                                                                                        <Text style={{ fontSize: 12, padding: 5, fontFamily: 'inter' }} ellipsizeMode='tail'>
-                                                                                                            <View style={{
-                                                                                                                width: 9,
-                                                                                                                height: 9,
-                                                                                                                borderRadius: 12,
-                                                                                                                marginRight: 5,
-                                                                                                                backgroundColor: act.colorCode
-                                                                                                            }} /> {act.channelName}
-                                                                                                        </Text>
-                                                                                                    </View>
-                                                                                                    <View style={{ flex: 1, backgroundColor: '#fff', padding: 0, flexDirection: 'column', justifyContent: 'center' }}>
-                                                                                                        <View style={{ flexDirection: 'row', flex: 1, maxHeight: 25 }}>
-                                                                                                            <Text style={{ fontSize: 13, padding: 5, paddingTop: 15, paddingBottom: 15, fontFamily: 'inter', flex: 1, flexDirection: 'row' }} ellipsizeMode='tail'>
-                                                                                                                {act.title}
-                                                                                                            </Text>
-                                                                                                        </View>
-                                                                                                        <Text style={{ fontSize: 11, padding: 5, lineHeight: 20 }} ellipsizeMode='tail'>
-                                                                                                            {act.subtitle}
-                                                                                                        </Text>
-                                                                                                    </View>
-                                                                                                    <View style={{ backgroundColor: '#fff', padding: 0, flexDirection: 'row', alignSelf: 'center' }} >
-                                                                                                        <Text style={{ fontSize: 13, padding: 5, lineHeight: 13 }} ellipsizeMode='tail'>
-                                                                                                            {act.status === 'unread' ?
-                                                                                                                <Ionicons name='alert-circle-outline' color='#f94144' size={23} /> : null}
-                                                                                                        </Text>
-                                                                                                        <Text style={{ fontSize: 11, padding: 5, lineHeight: 13 }} ellipsizeMode='tail'>
-                                                                                                            {emailTimeDisplay(act.date)}
-                                                                                                        </Text>
-                                                                                                        <Text style={{ fontSize: 13, padding: 5, lineHeight: 13 }} ellipsizeMode='tail'>
-                                                                                                            <Ionicons name='chevron-forward-outline' size={20} color='#007AFF' />
-                                                                                                        </Text>
-                                                                                                    </View>
-                                                                                                </TouchableOpacity>
-                                                                                            })
-                                                                                        }
-                                                                                    </ScrollView>
-                                                                                </ScrollView>
                                                                             </View> : (
                                                                                 <ScrollView
                                                                                     contentContainerStyle={{
@@ -1738,7 +1735,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                             flexDirection: "column",
                                                                                             alignItems: 'center'
                                                                                         }}>
-                                                                                        <View style={{ width: 300, paddingTop: 20 }}>
+                                                                                        <View style={{ width: 350, paddingTop: 20 }}>
                                                                                             <Text
                                                                                                 style={{
                                                                                                     fontSize: 14,
@@ -1757,7 +1754,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                                 required={true}
                                                                                             />
                                                                                         </View>
-                                                                                        <View style={{ width: 300 }}>
+                                                                                        <View style={{ width: 350 }}>
                                                                                             <Text
                                                                                                 style={{
                                                                                                     fontSize: 14,
@@ -1775,10 +1772,10 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                         </View>
                                                                                     </View>
                                                                                     {/* Put time here */}
-                                                                                    <View style={{ display: 'flex', width: 300 }} >
+                                                                                    <View style={{ display: 'flex', width: 350 }} >
                                                                                         <View
                                                                                             style={{
-                                                                                                width: 200,
+                                                                                                width: 350,
                                                                                                 paddingVertical: 15
                                                                                             }}>
                                                                                             <Text style={styles.text}>{PreferredLanguageText("start")}</Text>
@@ -1825,7 +1822,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                         </View>
                                                                                         <View
                                                                                             style={{
-                                                                                                width: 200,
+                                                                                                width: 350,
                                                                                                 paddingVertical: 15
                                                                                             }}>
                                                                                             <Text style={styles.text}>{PreferredLanguageText("end")}</Text>
@@ -1878,7 +1875,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                             borderColor: "#e8e8ea",
                                                                                             // borderBottomWidth: 1,
                                                                                             paddingTop: 20,
-                                                                                            width: 300
+                                                                                            width: 350
                                                                                         }}>
                                                                                         {channels.length > 0 && !editEvent ? (
                                                                                             <View>
@@ -1934,7 +1931,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                                             }
                                                                                                         </MenuOptions>
                                                                                                     </Menu> */}
-                                                                                                    <label style={{ width: 180 }}>
+                                                                                                    <label style={{ width: 350 }}>
                                                                                                         <Select
                                                                                                             touchUi={true}
                                                                                                             themeVariant="light"
@@ -2002,7 +1999,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                                         borderRadius: 15,
                                                                                                         textTransform: "uppercase"
                                                                                                     }}>
-                                                                                                    {isCreatingEvents ? "ADDING..." : "ADD"} <Ionicons name='add-outline' size={12} />
+                                                                                                    {isCreatingEvents ? "CREATING..." : "CREATE"} <Ionicons name='create-outline' size={12} />
                                                                                                 </Text>
                                                                                             </TouchableOpacity>
                                                                                         </View> : null}

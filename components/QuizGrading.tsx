@@ -222,7 +222,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             justifyContent: 'flex-start'
         }}>
             {
-                props.isOwner ? <View style={{ display: 'flex', flexDirection: Dimensions.get('window').width < 1024 ? 'column' : 'row', justifyContent: 'space-between', marginBottom: 20, borderBottomWidth: 1, borderBottomColor: "#cccccc", width: '100%' }}>
+                props.isOwner ? <View style={{ display: 'flex', flexDirection: Dimensions.get('window').width < 1024 ? 'column' : 'row', justifyContent: 'space-between', marginBottom: 20, borderBottomWidth: 1, borderBottomColor: "#e8e8ea", width: '100%' }}>
                     <View style={{ display: 'flex', flexDirection: 'row', marginBottom: Dimensions.get('window').width < 1024 ? 20 : 0  }}>
                         <Text style={{ marginRight: 10, fontWeight: '700', fontSize: 14 }}>
                             {props.problems.length} {props.problems.length === 1 ? "Question" : "Questions"}
@@ -540,7 +540,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     paddingBottom: 12,
                                     width: '100%',
                                     maxWidth: "100%",
-                                    borderBottom: '1px solid #cccccc',
+                                    borderBottom: '1px solid #e8e8ea',
                                 }}
                                 onChange={(e: any) => {
                                     const updateProblemComments = [...problemComments];
@@ -571,7 +571,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             paddingBottom: 12,
                             width: '100%',
                             maxWidth: "100%",
-                            borderBottom: '1px solid #cccccc',
+                            borderBottom: '1px solid #e8e8ea',
                         }}
                         value={comment}
                         onChange={(e: any) => setComment(e.target.value)}

@@ -396,10 +396,10 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                 style={{
                     width: "100%",
                     backgroundColor: "white",
-                    paddingRight: 20,
+                    // paddingRight: 20,
                     paddingTop: 20,
                     paddingBottom: 50,
-                    paddingLeft: Dimensions.get('window').width < 1024 ? 20 : 0,
+                    // paddingLeft: Dimensions.get('window').width < 1024 ? 20 : 0,
                     opacity: modalAnimation,
                     borderTopLeftRadius: 0,
                     borderTopRightRadius: 0,
@@ -490,13 +490,14 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                             }}>
                             <Text style={{
                                 textAlign: 'center',
-                                lineHeight: 30,
-                                color: '#fff',
+                                lineHeight: 35,
+                                color: '#007aff',
                                 fontSize: 12,
-                                backgroundColor: '#007aff',
+                                borderColor: '#007aff',
                                 paddingHorizontal: 20,
+                                borderWidth: 1,
                                 fontFamily: 'inter',
-                                height: 30,
+                                height: 35,
                                 // width: 100,
                                 borderRadius: 15,
                                 textTransform: 'uppercase'

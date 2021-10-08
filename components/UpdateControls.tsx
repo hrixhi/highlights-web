@@ -325,18 +325,18 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
     // Loading categories like this due to Mobiscroll Select bug
     useEffect(() => {
-        let options = [{ 
+        let options = [{
             value: 'None', text: 'None'
-          }];
-        
-          customCategories.map((category: any) => {
-            options.push({
-              value: category,
-              text: category
-            })
-          })
+        }];
 
-          setCategoryOptions(options)
+        customCategories.map((category: any) => {
+            options.push({
+                value: category,
+                text: category
+            })
+        })
+
+        setCategoryOptions(options)
     }, [customCategories])
 
     useEffect(() => {
@@ -899,8 +899,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             (allowLateSubmission && new Date() > availableUntil) ||
             // Once release Submission that means assignment should be locked
             (props.cue.releaseSubmission)) {
-                Alert(unableToStartQuizAlert, "Submission period has ended.");
-                return;
+            Alert(unableToStartQuizAlert, "Submission period has ended.");
+            return;
         }
 
         const u = await AsyncStorage.getItem("user");
@@ -1077,7 +1077,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
         const currCue = subCues[props.cueKey][props.cueIndex]
 
-        const currCueValue: any  = currCue.cue;
+        const currCueValue: any = currCue.cue;
 
         // If there are no existing submissions then initiate cue obj
         let submissionObj = {
@@ -2236,7 +2236,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         maxWidth: "10%",
                     }}
                     onPress={() => setShowFormulaGuide(true)}
-                    >
+                >
                     <Ionicons name="help-circle-outline" color="#1D1D20" size={20} />
                 </TouchableOpacity>
             </View>
@@ -2246,23 +2246,43 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const renderCueTabs = () => {
         return (
             <View style={{ flexDirection: 'row', width: '100%' }}>
-
-                {props.folderId !== "" || isOwner ? <View style={{}}>
+                {
+                    props.showFolder ? null :
+                        <View style={{}}>
+                            <TouchableOpacity
+                                style={{
+                                    justifyContent: 'center',
+                                    flexDirection: 'column',
+                                    marginRight: 20,
+                                    paddingTop: 2
+                                }}
+                                onPress={() => {
+                                    props.closeModal()
+                                }}>
+                                <Text>
+                                    <Ionicons name='arrow-back-outline' size={24} color={'#818385'} />
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                }
+                {(props.folderId !== "" || isOwner) && !props.showComments ? <View style={{}}>
                     <TouchableOpacity
                         style={{
                             justifyContent: 'center',
                             flexDirection: 'column',
-                            marginRight: 20
+                            paddingTop: 2
                         }}
                         onPress={() => {
                             props.setShowFolder(!props.showFolder)
                         }}>
                         <Text>
-                            <Ionicons name='menu-outline' size={24} color={'#818385'} />
+                            <Ionicons name={props.showFolder ? 'close-outline' : 'document-attach-outline'} size={24} color={props.showFolder ? '#818385' : '#007aff'} />
                         </Text>
                     </TouchableOpacity>
                 </View> : null}
-                <View style={{ flexDirection: "row", flex: 1, justifyContent: 'center' }}>
+                {props.showOptions ? renderDeleteButtons() : null}
+                {props.showOriginal && !isQuiz && !props.showOptions && !props.showComments ? renderSaveCueButton() : null}
+                <View style={{ flexDirection: "row", flex: 1, justifyContent: 'flex-end' }}>
                     <TouchableOpacity
                         style={{
                             justifyContent: "center",
@@ -2382,7 +2402,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             marginTop: 5,
                             marginBottom: 20,
                             maxWidth: "100%",
-                            borderBottom: '1px solid #cccccc',
+                            borderBottom: '1px solid #e8e8ea',
                             // fontWeight: "600",
                             width: '100%'
                         }}
@@ -2489,7 +2509,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             (isOwner || !props.cue.channelId) ?
                                 <TouchableOpacity
                                     style={{
-                                        marginLeft: 15
+                                        // marginLeft: 15
+                                        right: 0
                                     }}
                                     onPress={() => clearAll()}
                                 >
@@ -2500,7 +2521,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             color: "#818385",
                                             textAlign: "center"
                                         }}>
-                                        Remove
+                                        Clear
                                     </Text>
                                 </TouchableOpacity> : null
                         }
@@ -2547,7 +2568,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const renderQuizEndedMessage = () => {
         return (<View style={{ backgroundColor: 'white', flex: 1, }}>
             <Text style={{ width: '100%', color: '#818385', fontSize: 20, paddingTop: 200, paddingBottom: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1, textAlign: 'center' }}>
-                Quiz submission ended. {remainingAttempts === 0 ? "No attempts left. " : ""} { props.cue.releaseSubmission ? "Quiz grades released by instructor. " : ""}
+                Quiz submission ended. {remainingAttempts === 0 ? "No attempts left. " : ""} {props.cue.releaseSubmission ? "Quiz grades released by instructor. " : ""}
             </Text>
         </View>)
 
@@ -2958,12 +2979,12 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             width={"100%"}
                             height={"100%"}
                         />
-                        {renderSaveCueButton()}
+                        {/* {renderSaveCueButton()} */}
                     </View>
                 ) : (
                     <View key={url + props.showOriginal.toString()} style={{}}>
                         <div className="webviewer" ref={RichText} style={{ height: "80vh" }} key={props.showOriginal + url + imported.toString()}></div>
-                        {renderSaveCueButton()}
+                        {/* {renderSaveCueButton()} */}
                     </View>
                 )
             ) : (
@@ -3056,7 +3077,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 }}
                 onChange={(e: any) => setOriginal(e.target.getContent())}
             />
-            {renderSaveCueButton()}
+            {/* {renderSaveCueButton()} */}
         </View>)
 
     }
@@ -3064,68 +3085,62 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const renderSaveCueButton = () => {
 
         return (isOwner || !props.cue.channelId) ?
-            <View style={styles.footer}>
-                <View
+            <View
+                style={{
+                    backgroundColor: "white",
+                    flexDirection: "row",
+                }}
+            >
+                <TouchableOpacity
+                    onPress={() => {
+
+                        Alert("Update content?", "", [
+                            {
+                                text: "Cancel",
+                                style: "cancel",
+                                onPress: () => {
+                                    return;
+                                }
+                            },
+                            {
+                                text: "Yes",
+                                onPress: () => {
+                                    handleUpdateContent()
+                                }
+                            }
+                        ])
+
+                    }}
+
+                    disabled={updatingCueContent}
                     style={{
-                        flex: 1,
+                        borderRadius: 15,
                         backgroundColor: "white",
-                        justifyContent: "center",
-                        display: "flex",
-                        flexDirection: "row",
-                        height: 50,
-                        paddingTop: 10,
+                        marginLeft: 20
                     }}
                 >
-                    <TouchableOpacity
-                        onPress={() => {
-
-                            Alert("Update content?", "", [
-                                {
-                                    text: "Cancel",
-                                    style: "cancel",
-                                    onPress: () => {
-                                        return;
-                                    }
-                                },
-                                {
-                                    text: "Yes",
-                                    onPress:  () => {
-                                        handleUpdateContent()
-                                    }
-                                }
-                            ])
-                            
-                        }}
-                            
-                        disabled={updatingCueContent}
+                    <Text
                         style={{
+                            textAlign: "center",
+                            lineHeight: 35,
+                            color: "white",
+                            fontSize: 12,
+                            backgroundColor: "#007AFF",
                             borderRadius: 15,
-                            backgroundColor: "white",
+                            paddingHorizontal: 20,
+                            fontFamily: "inter",
+                            overflow: "hidden",
+                            height: 35,
+                            textTransform: "uppercase",
+                            // width: 160
                         }}
                     >
-                        <Text
-                            style={{
-                                textAlign: "center",
-                                lineHeight: 35,
-                                color: "white",
-                                fontSize: 12,
-                                backgroundColor: "#007AFF",
-                                borderRadius: 15,
-                                paddingHorizontal: 20,
-                                fontFamily: "inter",
-                                overflow: "hidden",
-                                height: 35,
-                                textTransform: "uppercase",
-                                // width: 160
-                            }}
-                        >
-                            {updatingCueContent
-                                ? 'Saving...'
-                                : 'Save'} <Ionicons name='create-outline' size={12} />
-                        </Text>
-                    </TouchableOpacity>
-                </View>
-            </View> : null
+                        {updatingCueContent
+                            ? 'Saving...'
+                            : 'Save'} <Ionicons name='save-outline' size={12} />
+                    </Text>
+                </TouchableOpacity>
+            </View > : null
     }
     // Make sure that when the deadline has passed that the viewSubmission is set to true by default and that (Re-Submit button is not there)
 
@@ -3944,7 +3959,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         color: '#1D1D20'
                     }}>{PreferredLanguageText("category")}</Text>
                 </View>
-                <View style={{ }}>
+                <View style={{}}>
                     {props.cue.channelId && !props.channelOwner ? (
                         <View
                             style={{
@@ -4053,12 +4068,12 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                 if (!initializedCustomCategories) return;
                                                 setCustomCategory(val.value)
                                             }}
-                                            />
-                                            
+                                        />
+
                                     </label>
                                 )}
                             </View>
-                            <View style={{ backgroundColor: "white", paddingRight: 20,  paddingLeft: 20 }}>
+                            <View style={{ backgroundColor: "white", paddingRight: 20, paddingLeft: 20 }}>
                                 <TouchableOpacity
                                     onPress={() => {
                                         if (addCustomCategory) {
@@ -4421,30 +4436,30 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         paddingTop: 5
                                     }}>{PreferredLanguageText("remindEvery")}</Text>
                                     <label style={{ width: 140 }}>
-                                    <MobiscrollSelect
-                                        theme="ios"
-                                        themeVariant="light"
-                                        touchUi={true}
-                                        value={frequency}
-                                        rows={timedFrequencyOptions.length}
-                                        onChange={(val: any) => {
-                                        setFrequency(val.value);
-                                        }}
-                                        responsive={{
-                                        small: {
-                                            display: 'bubble'
-                                        },
-                                        medium: {
-                                            touchUi: false,
-                                        }
-                                        }}
-                                        data={timedFrequencyOptions.map((freq: any) => {
-                                        return {
-                                            value: freq.value,
-                                            text: freq.label
-                                            }
-                                        })}
-                                    />   
+                                        <MobiscrollSelect
+                                            theme="ios"
+                                            themeVariant="light"
+                                            touchUi={true}
+                                            value={frequency}
+                                            rows={timedFrequencyOptions.length}
+                                            onChange={(val: any) => {
+                                                setFrequency(val.value);
+                                            }}
+                                            responsive={{
+                                                small: {
+                                                    display: 'bubble'
+                                                },
+                                                medium: {
+                                                    touchUi: false,
+                                                }
+                                            }}
+                                            data={timedFrequencyOptions.map((freq: any) => {
+                                                return {
+                                                    value: freq.value,
+                                                    text: freq.label
+                                                }
+                                            })}
+                                        />
                                     </label>
                                     {/* <Menu
                                         onSelect={(cat: any) => {
@@ -4728,42 +4743,69 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
     const renderDeleteButtons = () => {
         return (
-            <View style={styles.footer}>
-                <View
-                    style={{
-                        flex: 1,
-                        backgroundColor: "white",
-                        alignItems: "center",
-                        display: "flex",
-                        flexDirection: "column",
-                        // height: 50,
-                        paddingTop: 10
-                    }}>
-                    <TouchableOpacity disabled={updatingCueDetails} onPress={() => {
-                        Alert("Update options?", "", [
-                            {
-                                text: "Cancel",
-                                style: "cancel",
-                                onPress: () => {
-                                    return;
-                                }
-                            },
-                            {
-                                text: "Yes",
-                                onPress:  () => {
-                                    handleUpdateDetails()
-                                }
+            <View
+                style={{
+                    // flex: 1,
+                    backgroundColor: "white",
+                    // alignItems: "center",
+                    flexDirection: "row",
+                    // height: 50,
+                    // paddingTop: 10
+                }}>
+                <TouchableOpacity disabled={updatingCueDetails} onPress={() => {
+                    Alert("Update options?", "", [
+                        {
+                            text: "Cancel",
+                            style: "cancel",
+                            onPress: () => {
+                                return;
                             }
-                        ])
-                    }} style={{ backgroundColor: "white", borderRadius: 15, marginBottom: 20 }}>
+                        },
+                        {
+                            text: "Yes",
+                            onPress: () => {
+                                handleUpdateDetails()
+                            }
+                        }
+                    ])
+                }} style={{
+                    backgroundColor: "white", borderRadius: 15,
+                    // marginBottom: 20, 
+                    marginLeft: 20
+                }}>
+                    <Text
+                        style={{
+                            textAlign: "center",
+                            lineHeight: 35,
+                            color: "white",
+                            fontSize: 12,
+                            backgroundColor: "#007AFF",
+                            borderRadius: 15,
+                            paddingHorizontal: 20,
+                            fontFamily: "inter",
+                            overflow: "hidden",
+                            height: 35,
+                            textTransform: "uppercase",
+                            // width: 160
+                        }}>
+                        {updatingCueDetails ? "Saving..." : "Save"} <Ionicons name='create-outline' size={12} />
+                    </Text>
+                </TouchableOpacity>
+
+                {isOwner || !props.cue.channelId || props.cue.channelId === "" ? (
+                    <TouchableOpacity onPress={() => handleDelete()} style={{
+                        backgroundColor: "white", borderRadius: 15, marginLeft: 20
+                    }}>
                         <Text
                             style={{
+                                color: '#007aff',
+                                borderWidth: 1,
+                                borderRadius: 15,
+                                borderColor: '#007aff',
+                                backgroundColor: '#fff',
+                                fontSize: 12,
                                 textAlign: "center",
                                 lineHeight: 35,
-                                color: "white",
-                                fontSize: 12,
-                                backgroundColor: "#007AFF",
-                                borderRadius: 15,
                                 paddingHorizontal: 20,
                                 fontFamily: "inter",
                                 overflow: "hidden",
@@ -4771,38 +4813,14 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 textTransform: "uppercase",
                                 // width: 160
                             }}>
-                            {updatingCueDetails ? "Saving..." : "Save"} <Ionicons name='create-outline' size={12} />
+                            {isOwner
+                                ? props.cue.channelId && props.cue.channelId !== ""
+                                    ? PreferredLanguageText("deleteForEveryone")
+                                    : PreferredLanguageText("delete")
+                                : PreferredLanguageText("delete")} <Ionicons name='trash-outline' size={12} />
                         </Text>
                     </TouchableOpacity>
-
-                    {isOwner || !props.cue.channelId || props.cue.channelId === "" ? (
-                        <TouchableOpacity onPress={() => handleDelete()} style={{ backgroundColor: "white", borderRadius: 15 }}>
-                            <Text
-                                style={{
-                                    color: '#007aff',
-                                    borderWidth: 1,
-                                    borderRadius: 15,
-                                    borderColor: '#007aff',
-                                    backgroundColor: '#fff',
-                                    fontSize: 12,
-                                    textAlign: "center",
-                                    lineHeight: 35,
-                                    paddingHorizontal: 20,
-                                    fontFamily: "inter",
-                                    overflow: "hidden",
-                                    height: 35,
-                                    textTransform: "uppercase",
-                                    // width: 160
-                                }}>
-                                {isOwner
-                                    ? props.cue.channelId && props.cue.channelId !== ""
-                                        ? PreferredLanguageText("deleteForEveryone")
-                                        : PreferredLanguageText("delete")
-                                    : PreferredLanguageText("delete")} <Ionicons name='trash-outline' size={12} />
-                            </Text>
-                        </TouchableOpacity>
-                    ) : null}
-                </View>
+                ) : null}
             </View>
         );
     };
@@ -4913,7 +4931,27 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         </TouchableOpacity> */}
                     </View>
                 ) : (
-                    <View style={{ flexDirection: "row", justifyContent: 'center' }}>
+                    <View style={{ flexDirection: "row", }}>
+                        <View style={{}}>
+                            <TouchableOpacity
+                                style={{
+                                    justifyContent: 'center',
+                                    flexDirection: 'column',
+                                    marginRight: 20,
+                                    paddingTop: 2
+                                }}
+                                onPress={() => {
+                                    props.closeModal()
+                                }}>
+                                <Text>
+                                    <Ionicons name='arrow-back-outline' size={24} color={'#818385'} />
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                        {
+                            renderSaveCueButton()
+                        }
+                        <View style={{ flex: 1, flexDirection: 'row' }} />
                         <TouchableOpacity
                             style={{
                                 justifyContent: "center",
@@ -4953,10 +4991,10 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     props.showOptions || props.showComments || viewSubmission ?
                         <View
                             style={{
-                                borderBottomWidth: ((props.cue.channelId && props.cue.channelId !== '' && !isOwner && props.showOriginal) || (props.showOriginal && showImportOptions) || isQuiz)
-                                    || (((props.cue.graded && submission && !isOwner) && !props.showOriginal) || (!props.showOriginal && showImportOptions))
-                                    || (!props.showOriginal && submissionImported) || (imported && props.showOriginal) || props.showOptions || props.showComments || viewSubmission
-                                    ? 0 : 1,
+                                // borderBottomWidth: ((props.cue.channelId && props.cue.channelId !== '' && !isOwner && props.showOriginal) || (props.showOriginal && showImportOptions) || isQuiz)
+                                //     || (((props.cue.graded && submission && !isOwner) && !props.showOriginal) || (!props.showOriginal && showImportOptions))
+                                //     || (!props.showOriginal && submissionImported) || (imported && props.showOriginal) || props.showOptions || props.showComments || viewSubmission
+                                //     ? 0 : 1,
                                 marginTop: 20,
                                 borderBottomColor: '#f7f7f7'
                             }}
@@ -4970,10 +5008,10 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 marginBottom: 5,
                                 backgroundColor: "white",
                                 marginTop: 20,
-                                borderBottomWidth: ((props.cue.channelId && props.cue.channelId !== '' && !isOwner && props.showOriginal) || (props.showOriginal && showImportOptions) || isQuiz)
-                                    || (((props.cue.graded && submission && !isOwner) && !props.showOriginal) || (!props.showOriginal && showImportOptions))
-                                    || (!props.showOriginal && submissionImported) || (imported && props.showOriginal) || props.showOptions || props.showComments || viewSubmission
-                                    ? 0 : 1,
+                                // borderBottomWidth: ((props.cue.channelId && props.cue.channelId !== '' && !isOwner && props.showOriginal) || (props.showOriginal && showImportOptions) || isQuiz)
+                                //     || (((props.cue.graded && submission && !isOwner) && !props.showOriginal) || (!props.showOriginal && showImportOptions))
+                                //     || (!props.showOriginal && submissionImported) || (imported && props.showOriginal) || props.showOptions || props.showComments || viewSubmission
+                                //     ? 0 : 1,
                                 borderBottomColor: '#f7f7f7'
                             }}
                             onTouchStart={() => Keyboard.dismiss()}>
@@ -5029,19 +5067,24 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     !submissionImported &&
                                     !showImportOptions &&
                                     !props.cue.graded && !isQuiz && !props.cue.releaseSubmission && !(!allowLateSubmission && new Date() > deadline) && !(allowLateSubmission && new Date() > availableUntil) ? (
-                                    <Text
-                                        style={{
-                                            color: "#1D1D20",
-                                            lineHeight: 30,
-                                            textAlign: "right",
-                                            // paddingRight: 10,
-                                            // textTransform: "uppercase",
-                                            fontSize: 12,
-                                            // fontFamily: 'inter',
+                                    <FileUpload
+                                        back={() => setShowImportOptions(false)}
+                                        onUpload={(u: any, t: any) => {
+                                            if (props.showOriginal) {
+                                                setOriginal(JSON.stringify({
+                                                    url: u, type: t, title
+                                                }))
+                                            } else {
+                                                setSubmissionDraft(JSON.stringify({
+                                                    url: u, type: t, title: submissionTitle, annotations: ''
+                                                }))
+                                                setSubmissionImported(true);
+                                                setSubmissionType(t);
+                                                setSubmissionUrl(u);
+                                            }
+                                            setShowImportOptions(false);
                                         }}
-                                        onPress={() => setShowImportOptions(true)}>
-                                        {PreferredLanguageText("import")} {Dimensions.get("window").width < 1024 ? "" : "   "}
-                                    </Text>
+                                    />
                                 ) : (
                                     (props.showOriginal && !isOwner && props.cue.channelId && props.cue.channelId !== "") || // viewing import as non import (Channel cues)
                                         (props.showOriginal && (isOwner && props.cue.channelId && props.cue.channelId !== "") && imported) ||  // viewing import as owner (Channel cues)
@@ -5053,26 +5096,31 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         || (!props.showOriginal && (props.cue.releaseSubmission || (!allowLateSubmission && new Date() > deadline) || (allowLateSubmission && new Date() > availableUntil)))
                                         ? null :
                                         (
-                                            <Text style={{
-                                                color: '#1D1D20',
-                                                fontSize: 12,
-                                                // fontFamily: 'inter',
-                                                lineHeight: 30,
-                                                textAlign: 'right',
-                                                // paddingRight: 10,
-                                                // textTransform: 'uppercase'
-                                            }}
-                                                onPress={() => setShowImportOptions(true)}
-                                            >
-                                                {PreferredLanguageText('import')} {Dimensions.get('window').width < 1024 ? '' : '   '}
-                                            </Text>
+                                            <FileUpload
+                                                back={() => setShowImportOptions(false)}
+                                                onUpload={(u: any, t: any) => {
+                                                    if (props.showOriginal) {
+                                                        setOriginal(JSON.stringify({
+                                                            url: u, type: t, title
+                                                        }))
+                                                    } else {
+                                                        setSubmissionDraft(JSON.stringify({
+                                                            url: u, type: t, title: submissionTitle, annotations: ''
+                                                        }))
+                                                        setSubmissionImported(true);
+                                                        setSubmissionType(t);
+                                                        setSubmissionUrl(u);
+                                                    }
+                                                    setShowImportOptions(false);
+                                                }}
+                                            />
                                         )
                                 )}
                             </View>
                         </View>
                 }
                 {renderEquationEditor()}
-                { showFormulaGuide ? <FormulaGuide show={showFormulaGuide} onClose={() => setShowFormulaGuide(false)} /> : null }
+                {showFormulaGuide ? <FormulaGuide show={showFormulaGuide} onClose={() => setShowFormulaGuide(false)} /> : null}
                 <ScrollView
                     style={{
                         paddingBottom: 25,
@@ -5158,7 +5206,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                     props.cue.graded || (currentDate > deadline) ? null :
                                                         <TouchableOpacity
                                                             onPress={() => clearAll()}
-                                                            style={{ marginLeft: 15, alignContent: 'center' }}
+                                                            style={{ marginLeft: 15, right: 0 }}
                                                         >
                                                             <Ionicons name="trash-outline" color="#818385" size={17} />
                                                             <Text
@@ -5167,14 +5215,14 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                                     color: "#818385",
                                                                     textAlign: "center"
                                                                 }}>
-                                                                Remove
+                                                                Clear
                                                             </Text>
                                                         </TouchableOpacity>
                                                 }
                                             </View>
                                         ) : <TouchableOpacity
                                             style={{
-                                                marginLeft: 15
+                                                right: 0
                                             }}
                                             onPress={() => clearAll()}
                                         >
@@ -5185,7 +5233,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                     color: "#818385",
                                                     textAlign: "center"
                                                 }}>
-                                                Remove
+                                                Clear
                                             </Text>
                                         </TouchableOpacity>}
                                     </View>
@@ -5226,7 +5274,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     renderMainCueContent())}
                             </View>}
                     <View style={{
-                        width: '100%', maxWidth: 600, alignSelf: 'center'
+                        width: '100%', maxWidth: 1000, alignSelf: 'center'
                     }}>
                         <Collapse isOpened={props.showOptions}>
                             <View style={{ flex: 1, display: "flex", flexDirection: "column" }}>
@@ -5248,7 +5296,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             {renderCategoryOptions()}
                             {renderPriorityOptions()}
                             {renderReminderOptions()}
-                            {renderDeleteButtons()}
                         </Collapse>
                     </View>
                 </ScrollView>
@@ -5378,23 +5425,23 @@ const styles: any = StyleSheet.create({
     all: {
         fontSize: 10,
         color: '#43434f',
-        height: 25,
-        paddingHorizontal: 10,
+        height: 20,
+        paddingHorizontal: 5,
         backgroundColor: '#fff',
         // textTransform: 'uppercase',
-        lineHeight: 25,
-        // fontFamily: 'inter',
-        textAlign: 'center'
+        lineHeight: 20,
+        textAlign: 'center',
+        // fontFamily: 'inter'
     },
     allGrayFill: {
         fontSize: 10,
         color: '#007AFF',
-        height: 25,
-        paddingHorizontal: 10,
+        height: 20,
+        paddingHorizontal: 5,
+        textAlign: 'center',
         backgroundColor: '#fff',
         // textTransform: 'uppercase',
-        lineHeight: 25,
-        textAlign: 'center'
+        lineHeight: 20,
         // fontFamily: 'inter'
     },
     allOutline: {

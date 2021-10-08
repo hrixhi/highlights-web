@@ -426,7 +426,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 <View style={{ flexDirection: 'row', width: '95%', marginTop: 50, paddingLeft: 20, marginBottom: 20 }}>
                     <View style={{ width: Dimensions.get('window').width < 1024 ? '95%' : '50%' }}>
                         <TextareaAutosize
-                            style={{ maxWidth: '100%', marginBottom: 10, marginTop: 10, paddingTop: 13, paddingBottom: 13, fontSize: 14, borderBottom: '1px solid #cccccc', }}
+                            style={{ maxWidth: '100%', marginBottom: 10, marginTop: 10, paddingTop: 13, paddingBottom: 13, fontSize: 14, borderBottom: '1px solid #e8e8ea', }}
                             value={headers[index]}
                             placeholder={'Heading'}
                             onChange={(e: any) => {
@@ -708,7 +708,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 textAlign: 'center',
                                                 marginBottom: (Dimensions.get('window').width < 1024 || editQuestionNumber !== (index + 1)) ? 0 : 30,
                                                 fontWeight: editQuestionNumber === (index + 1) ? 'normal' : '700',
-                                                borderBottomColor: '#cccccc',
+                                                borderBottomColor: '#e8e8ea',
                                                 borderBottomWidth: editQuestionNumber === (index + 1) ? 1 : 0,
                                             }}
                                             placeholder={PreferredLanguageText('enterPoints')}
@@ -942,7 +942,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 maxWidth: Dimensions.get("window").width < 768 ? "100%" : "60%",
                                 color: "#a2a2ac",
                                 marginBottom: 20,
-                                borderBottomColor: '#cccccc',
+                                borderBottomColor: '#e8e8ea',
                                 borderBottomWidth: 1
                             }}>
                                 Free Response Answer
@@ -1189,7 +1189,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
             <View style={{
                 width: '100%', flexDirection: 'row',
                 justifyContent: 'flex-start', paddingLeft: 12,
-                paddingTop: 25, borderBottomColor: '#cccccc',
+                paddingTop: 25, borderBottomColor: '#e8e8ea',
                 paddingBottom: 25, borderBottomWidth: 1
             }}>
                 <TouchableOpacity

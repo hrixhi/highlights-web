@@ -63,7 +63,7 @@ const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: 
                             maxHeight: 500
                         }}
                     >
-                        <View style={{ width: '100%', flexDirection: 'row', backgroundColor: '#f2f2f7', borderBottomWidth: 1, borderBottomColor: '#cccccc' }}>
+                        <View style={{ width: '100%', flexDirection: 'row', backgroundColor: '#f2f2f7', borderBottomWidth: 1, borderBottomColor: '#e8e8ea' }}>
                                <View style={{ padding: 10, width: '50%',  backgroundColor: '#f2f2f7' }}>
                                    Symbol
                                </View>

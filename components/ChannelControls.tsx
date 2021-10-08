@@ -295,7 +295,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                 }
             }).then((res: any) => {
                 if (res.data && res.data.channel.findBySchoolId) {
-                    res.data.channel.findBySchoolId.sort((a, b) => {
+                    res.data.channel.findBySchoolId.sort((a: any, b: any) => {
                         if (a.name < b.name) { return -1; }
                         if (a.name > b.name) { return 1; }
                         return 0;
@@ -305,7 +305,12 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         delete x.__typename
                         return x
                     })
-                    setChannels(c)
+                    const sortedChannels = c.sort((a: any, b: any) => {
+                        if (a.name < b.name) { return -1; }
+                        if (a.name > b.name) { return 1; }
+                        return 0;
+                    })
+                    setChannels(sortedChannels)
                     setLoading(false)
                 }
             }).catch(err => {
@@ -360,7 +365,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
 
     return (
         <View style={styles.screen} key={1}>
-            <View style={{ width: '100%', maxWidth: 600 }}>
+            <View style={{ width: '100%', maxWidth: 1000 }}>
                 <View style={{ flexDirection: 'row', width: '100%', height: 50, marginBottom: 10 }}>
                     <View style={{ flexDirection: 'row', flex: 1 }}>
                         {
@@ -375,20 +380,20 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 }}
                             >
                                 <Text style={{ lineHeight: 35, width: '100%', textAlign: 'center' }}>
-                                    <Ionicons name='arrow-back-outline' size={25} color={'#1D1D20'} />
+                                    <Ionicons name='arrow-back-outline' size={25} color={'#818385'} />
                                 </Text>
-                            </TouchableOpacity> :
-                                <Text style={{
-                                    fontSize: 23,
-                                    // paddingBottom: 40,
-                                    paddingTop: 10,
-                                    fontFamily: 'inter',
-                                    flex: 1,
-                                    lineHeight: 23,
-                                    color: '#1D1D20'
-                                }}>
-                                    <Ionicons name='radio-outline' size={30} color={'#007aff'} />
-                                </Text>
+                            </TouchableOpacity> : null
+                            // <Text style={{
+                            //     fontSize: 23,
+                            //     // paddingBottom: 40,
+                            //     paddingTop: 10,
+                            //     fontFamily: 'inter',
+                            //     flex: 1,
+                            //     lineHeight: 23,
+                            //     color: '#1D1D20'
+                            // }}>
+                            //     <Ionicons name='radio-outline' size={25} color={'#007aff'} />
+                            // </Text>
                         }
                     </View>
                     {
@@ -408,15 +413,16 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 }}>
                                 <Text style={{
                                     textAlign: 'center',
-                                    lineHeight: 30,
-                                    color: '#fff',
+                                    lineHeight: 35,
+                                    color: '#007aff',
                                     fontSize: 12,
-                                    backgroundColor: '#007aff',
+                                    borderColor: '#007aff',
                                     paddingHorizontal: 20,
                                     fontFamily: 'inter',
-                                    height: 30,
+                                    height: 35,
                                     // width: 100,
                                     borderRadius: 15,
+                                    borderWidth: 1,
                                     textTransform: 'uppercase'
                                 }}>
                                     Create <Ionicons name='create-outline' size={12} />
@@ -473,7 +479,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 borderBottomWidth: ind === channels.length - 1 ? 0 : 1,
                                                 width: '100%'
                                             }}>
-                                            <View style={{ backgroundColor: '#f7f7f7', padding: 5 }}>
+                                            <View style={{ backgroundColor: '#fff', padding: 5 }}>
                                                 <Image
                                                     style={{
                                                         height: 25,
@@ -701,8 +707,8 @@ export default ChannelControls;
 
 const styles = StyleSheet.create({
     screen: {
-        padding: 15,
-        paddingHorizontal: Dimensions.get('window').width < 1024 ? 0 : 20,
+        paddingVertical: 15,
+        // paddingHorizontal: Dimensions.get('window').width < 1024 ? 0 : 20,
         width: '100%',
         height: Dimensions.get('window').height - 150,
         backgroundColor: 'white',

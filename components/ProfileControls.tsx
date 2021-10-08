@@ -380,7 +380,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
           {!loggedIn ? PreferredLanguageText('createAccount') : ""}
         </Text> */}
         <View style={{ width: '100%', flexDirection: 'row', flex: 1, justifyContent: 'center' }}>
-          <View style={{ maxWidth: 500, width: '100%' }}>
+          <View style={{ maxWidth: 350, width: '100%' }}>
             {showSavePassword ? (
               <View
                 style={{
@@ -470,22 +470,8 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                         justifyContent: 'center',
                         flexDirection: 'row'
                       }}>
-                      <Text style={{
-                        textAlign: 'center',
-                        lineHeight: 30,
-                        color: '#007aff',
-                        borderWidth: 1,
-                        borderColor: '#007aff',
-                        backgroundColor: '#fff',
-                        fontSize: 12,
-                        paddingHorizontal: 20,
-                        fontFamily: 'inter',
-                        height: 30,
-                        // width: 100,
-                        borderRadius: 15,
-                        textTransform: 'uppercase'
-                      }}>
-                        REMOVE <Ionicons name='close-outline' size={12} />
+                      <Text>
+                        <Ionicons name={'trash-outline'} size={20} color={'#818385'} />
                       </Text>
                     </TouchableOpacity> : <FileUpload
                       onUpload={(u: any, t: any) => {
@@ -589,7 +575,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                 flex: 1,
                 backgroundColor: "white",
                 justifyContent: "center",
-                display: "flex",
+                // flexDirection: Dimensions.get('window').width < 1024 ? 'column' : 'row'
                 // paddingTop: 30
               }}
             >
@@ -617,7 +603,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                     fontFamily: "inter",
                     height: 35,
                     borderRadius: 15,
-                    // width: 150,
+                    width: 175,
                     textTransform: "uppercase"
                   }}
                 >
@@ -650,11 +636,11 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                       paddingHorizontal: 20,
                       fontFamily: "inter",
                       height: 35,
-                      // width: 150,
+                      width: 175,
                       textTransform: "uppercase"
                     }}
                   >
-                    {showSavePassword ? <Ionicons name='arrow-back-outline' size={12} /> : null} {showSavePassword ? PreferredLanguageText('back') : PreferredLanguageText('password')} {showSavePassword ? null : <Ionicons name='settings-outline' size={12} />}
+                    {showSavePassword ? <Ionicons name='arrow-back-outline' size={12} color='#818385' /> : null} {showSavePassword ? PreferredLanguageText('back') : PreferredLanguageText('password')} {showSavePassword ? null : <Ionicons name='settings-outline' size={12} />}
                   </Text>
                 </TouchableOpacity>
               ) : null}
@@ -689,10 +675,11 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                     paddingHorizontal: 20,
                     fontFamily: "inter",
                     height: 35,
-                    textTransform: 'uppercase'
+                    textTransform: 'uppercase',
+                    width: 175,
                   }}
                 >
-                  {loggedIn ? PreferredLanguageText('logout') : PreferredLanguageText('login')} <Ionicons name='close-circle-outline' size={12} />
+                  {loggedIn ? PreferredLanguageText('logout') : PreferredLanguageText('login')} <Ionicons name='power-outline' size={12} />
                 </Text>
               </TouchableOpacity>
               {loggedIn ? (
@@ -721,7 +708,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                       borderColor: '#007aff',
                       backgroundColor: '#fff',
                       fontSize: 12,
-                      // width: 150,
+                      width: 175,
                       textTransform: "uppercase"
                     }}
                   >
@@ -746,7 +733,7 @@ const styles = StyleSheet.create({
   screen: {
     // paddingHorizontal: Dimensions.get("window").width < 1024 ? 0 : 20,
     width: "100%",
-    maxWidth: 600,
+    maxWidth: 1000,
     alignSelf: 'center',
     height: Dimensions.get("window").height - 110,
     backgroundColor: "white"
