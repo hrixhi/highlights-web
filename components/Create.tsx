@@ -435,15 +435,15 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
             categories.add("Syllabus")
             categories.add("Textbook")
             categories.add("Videos")
-            
-            
-            const withDefaultCategories = Array.from(categories) 
+
+
+            const withDefaultCategories = Array.from(categories)
 
             setCustomCategories(withDefaultCategories)
 
           } else {
             setCustomCategories(res.data.channel.getChannelCategories);
-          } 
+          }
 
         }
       })
@@ -586,13 +586,13 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
   const isCurrentQuestionValid = (problem: any) => {
 
     if (problem.question === "") {
-        return false; 
+      return false;
     }
 
 
     return true;
 
-}
+  }
 
   useEffect(() => {
     if (!init) {
@@ -740,7 +740,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
           return;
         }
 
-        
+
         const userName = await JSON.parse(uString)
         let ownerarray: any = selected
         const userSubscriptions = await AsyncStorage.getItem('subscriptions')
@@ -962,7 +962,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
   }
 
 
-  let categoriesOptions = [{ 
+  let categoriesOptions = [{
     value: 'None', text: 'None'
   }];
 
@@ -1008,29 +1008,19 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
           {/* <Ionicons name='chevron-down' size={17} color={'#e0e0e0'} /> */}
         </Text>
         <View style={{ flexDirection: "row" }}>
-          <View style={{ backgroundColor: "white", flex: 1 }} />
-          {/* <TouchableOpacity
-            onPress={() => setStarred(!starred)}
+          <TouchableOpacity
             style={{
-              backgroundColor: "white",
+              justifyContent: 'center',
+              flexDirection: 'column',
+              marginRight: 20
             }}
-          >
-            <Text
-              style={{
-                textAlign: "right",
-                lineHeight: 30,
-                marginTop: -31,
-                // paddingRight: 25,
-                width: "100%",
-              }}
-            >
-              <Ionicons
-                name="bookmark"
-                size={40}
-                color={starred ? "#f94144" : "#818385"}
-              />
+            onPress={() => {
+              props.closeModal()
+            }}>
+            <Text>
+              <Ionicons name='arrow-back-outline' size={24} color={'#818385'} />
             </Text>
-          </TouchableOpacity> */}
+          </TouchableOpacity>
         </View>
         <View
           style={{
@@ -1105,16 +1095,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 insertCamera={cameraCallback}
               />
             )} */}
-            {imported || !showImportOptions ? null : (
-              <FileUpload
-                back={() => setShowImportOptions(false)}
-                onUpload={(u: any, t: any) => {
-                  const obj = { url: u, type: t, title };
-                  setCue(JSON.stringify(obj));
-                  setShowImportOptions(false);
-                }}
-              />
-            )}
+
           </View>
           <View style={{ flexDirection: "row" }}>
             {!isQuiz && !imported ? (
@@ -1126,7 +1107,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   // textTransform: "uppercase",
                   fontSize: 12,
                   // fontFamily: 'inter',
-                  color: '#1D1D20',
+                  color: '#007aff',
                 }}
                 onPress={() => setShowEquationEditor(!showEquationEditor)}
               >
@@ -1136,25 +1117,19 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
               </Text>
             ) : null}
             {isQuiz || imported ? null : (
-              <Text
-                style={{
-                  color: "#1D1D20",
-                  lineHeight: 30,
-                  textAlign: "right",
-                  paddingRight: 20,
-                  fontSize: 12,
-                  // fontFamily: 'inter',
-                  // textTransform: 'uppercase'
+              <FileUpload
+                back={() => setShowImportOptions(false)}
+                onUpload={(u: any, t: any) => {
+                  const obj = { url: u, type: t, title };
+                  setCue(JSON.stringify(obj));
+                  setShowImportOptions(false);
                 }}
-                onPress={() => setShowImportOptions(true)}
-              >
-                {PreferredLanguageText("import")}
-              </Text>
+              />
             )}
             {
               role === 'instructor' ? <Text
                 style={{
-                  color: "#1D1D20",
+                  color: "#007aff",
                   lineHeight: 30,
                   textAlign: "right",
                   paddingRight: 10,
@@ -1223,7 +1198,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
             </TouchableOpacity>
           </View>
         ) : null}
-        { showFormulaGuide ? <FormulaGuide show={showFormulaGuide} onClose={() => setShowFormulaGuide(false)} /> : null }
+        {showFormulaGuide ? <FormulaGuide show={showFormulaGuide} onClose={() => setShowFormulaGuide(false)} /> : null}
         <View
           style={{ paddingBottom: 100 }}
         // showsVerticalScrollIndicator={false}
@@ -1258,7 +1233,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   style={{
                     width: "100%",
                     maxWidth: '100%',
-                    borderBottom: '1px solid #cccccc',
+                    borderBottom: '1px solid #e8e8ea',
                     fontSize: 14,
                     paddingTop: 13,
                     paddingBottom: 13,
@@ -1292,7 +1267,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           textAlign: "center",
                         }}
                       >
-                        Remove
+                        Clear
                       </Text>
                     </TouchableOpacity> : null
                 }
@@ -1327,7 +1302,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                       style={{
                         width: "100%",
                         maxWidth: '100%',
-                        borderBottom: '1px solid #cccccc',
+                        borderBottom: '1px solid #e8e8ea',
                         fontSize: 14,
                         paddingTop: 13,
                         paddingBottom: 13,
@@ -1342,22 +1317,22 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                       initialValue={initialQuizInstructions}
                       apiKey="ip4jckmpx73lbu6jgyw9oj53g0loqddalyopidpjl23fx7tl"
                       init={{
-                          skin: "snow",
-                          // toolbar_sticky: true,
-                          indent: false,
-                          branding: false,
-                          placeholder: 'Instructions',
-                          autoresize_on_init: false,
-                          autoresize_min_height: 200,
-                          height: 200,
-                          min_height: 200,
-                          paste_data_images: true,
-                          images_upload_url: 'https://api.cuesapp.co/api/imageUploadEditor',
-                          mobile: {
+                        skin: "snow",
+                        // toolbar_sticky: true,
+                        indent: false,
+                        branding: false,
+                        placeholder: 'Instructions',
+                        autoresize_on_init: false,
+                        autoresize_min_height: 200,
+                        height: 200,
+                        min_height: 200,
+                        paste_data_images: true,
+                        images_upload_url: 'https://api.cuesapp.co/api/imageUploadEditor',
+                        mobile: {
                           plugins: 'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize'
-                          },
-                          plugins: 'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize',
-                          menu: { // this is the complete default configuration
+                        },
+                        plugins: 'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize',
+                        menu: { // this is the complete default configuration
                           file: { title: 'File', items: 'newdocument' },
                           edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall' },
                           insert: { title: 'Insert', items: 'link media | template hr' },
@@ -1365,28 +1340,28 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           format: { title: 'Format', items: 'bold italic underline strikethrough superscript subscript | formats | removeformat' },
                           table: { title: 'Table', items: 'inserttable tableprops deletetable | cell row column' },
                           tools: { title: 'Tools', items: 'spellchecker code' }
-                          },
-                          // menubar: 'file edit view insert format tools table tc help',
-                          menubar: false,
-                          toolbar: 'undo redo | bold italic underline strikethrough |  numlist bullist checklist | forecolor backcolor permanentpen removeformat | table image media pageembed link | charmap emoticons superscript subscript',
-                          importcss_append: true,
-                          image_caption: true,
-                          quickbars_selection_toolbar: 'bold italic underline | quicklink h2 h3 quickimage quicktable',
-                          noneditable_noneditable_class: 'mceNonEditable',
-                          toolbar_mode: 'sliding',
-                          // tinycomments_mode: 'embedded',
-                          content_style: ".mce-content-body[data-mce-placeholder]:not(.mce-visualblocks)::before{color: #a2a2ac;}",
-                          // contextmenu: 'link image table configurepermanentpen',
-                          // a11y_advanced_options: true,
-                          extended_valid_elements: "svg[*],defs[*],pattern[*],desc[*],metadata[*],g[*],mask[*],path[*],line[*],marker[*],rect[*],circle[*],ellipse[*],polygon[*],polyline[*],linearGradient[*],radialGradient[*],stop[*],image[*],view[*],text[*],textPath[*],title[*],tspan[*],glyph[*],symbol[*],switch[*],use[*]"
-                          // skin: useDarkMode ? 'oxide-dark' : 'oxide',
-                          // content_css: useDarkMode ? 'dark' : 'default',
+                        },
+                        // menubar: 'file edit view insert format tools table tc help',
+                        menubar: false,
+                        toolbar: 'undo redo | bold italic underline strikethrough |  numlist bullist checklist | forecolor backcolor permanentpen removeformat | table image media pageembed link | charmap emoticons superscript subscript',
+                        importcss_append: true,
+                        image_caption: true,
+                        quickbars_selection_toolbar: 'bold italic underline | quicklink h2 h3 quickimage quicktable',
+                        noneditable_noneditable_class: 'mceNonEditable',
+                        toolbar_mode: 'sliding',
+                        // tinycomments_mode: 'embedded',
+                        content_style: ".mce-content-body[data-mce-placeholder]:not(.mce-visualblocks)::before{color: #a2a2ac;}",
+                        // contextmenu: 'link image table configurepermanentpen',
+                        // a11y_advanced_options: true,
+                        extended_valid_elements: "svg[*],defs[*],pattern[*],desc[*],metadata[*],g[*],mask[*],path[*],line[*],marker[*],rect[*],circle[*],ellipse[*],polygon[*],polyline[*],linearGradient[*],radialGradient[*],stop[*],image[*],view[*],text[*],textPath[*],title[*],tspan[*],glyph[*],symbol[*],switch[*],use[*]"
+                        // skin: useDarkMode ? 'oxide-dark' : 'oxide',
+                        // content_css: useDarkMode ? 'dark' : 'default',
 
                       }}
                       onChange={(e: any) => {
                         setQuizInstructions(e.target.getContent())
                       }}
-                  />
+                    />
                   </View>
                 </View>
                 <QuizCreate
@@ -1516,7 +1491,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
               display: "flex",
               flexDirection: "column",
               marginHorizontal: 10,
-              maxWidth: 600, alignSelf: 'center',
+              maxWidth: 1000, alignSelf: 'center',
               // marginLeft: width < 1024 ? 0 : 200
             }}
           >
@@ -1566,57 +1541,57 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                       }}
                     >
                       <label style={{ width: 180 }}>
-                                <Select
-                                    touchUi={true}
-                                    value={selectedChannel}
-                                    rows={channels.length + 1}
-                                    themeVariant="light"
-                                    onChange={(val) => {
+                        <Select
+                          touchUi={true}
+                          value={selectedChannel}
+                          rows={channels.length + 1}
+                          themeVariant="light"
+                          onChange={(val) => {
 
-                                      const channel = val.value;
+                            const channel = val.value;
 
-                                      if (channel === "My Notes") {
-                                        setSelectedChannel("My Notes")
-                                        setChannelId("");
-                                        setCustomCategories(localCustomCategories);
-                                        setCustomCategory("None");
-                                        setAddCustomCategory(false);
-                                        setSubmission(false);
-                                        setGradeWeight(0);
-                                        setGraded(false);
-                                        setSelected([]);
-                                        setSubscribers([]);
-                                        setProblems([]);
-                                        setIsQuiz(false);
-                                        setChannelName("");
-                                        setTimer(false);
-                                      } else {
-                                        const match = channels.find((c: any) => {
-                                          return c._id === channel
-                                        })
-                                        setSelectedChannel(match._id)
-                                        setChannelId(match._id);
-                                        setChannelName(match.name);
-                                        setAddCustomCategory(false);
-                                        setCustomCategory("None");
-                                        setSubmission(isQuiz ? true : false);
-                                        setGradeWeight(0);
-                                        setGraded(false);
-                                      }
-                                    }}
-                                    responsive={{
-                                        small: {
-                                            display: 'bubble'
-                                        },
-                                        medium: {
-                                            touchUi: false
-                                        }
-                                    }}
-                                    data={channelOptions}
-                                />
-                                
-                                   
-                            </label>
+                            if (channel === "My Notes") {
+                              setSelectedChannel("My Notes")
+                              setChannelId("");
+                              setCustomCategories(localCustomCategories);
+                              setCustomCategory("None");
+                              setAddCustomCategory(false);
+                              setSubmission(false);
+                              setGradeWeight(0);
+                              setGraded(false);
+                              setSelected([]);
+                              setSubscribers([]);
+                              setProblems([]);
+                              setIsQuiz(false);
+                              setChannelName("");
+                              setTimer(false);
+                            } else {
+                              const match = channels.find((c: any) => {
+                                return c._id === channel
+                              })
+                              setSelectedChannel(match._id)
+                              setChannelId(match._id);
+                              setChannelName(match.name);
+                              setAddCustomCategory(false);
+                              setCustomCategory("None");
+                              setSubmission(isQuiz ? true : false);
+                              setGradeWeight(0);
+                              setGraded(false);
+                            }
+                          }}
+                          responsive={{
+                            small: {
+                              display: 'bubble'
+                            },
+                            medium: {
+                              touchUi: false
+                            }
+                          }}
+                          data={channelOptions}
+                        />
+
+
+                      </label>
                       {/* <Menu
                         onSelect={(channel: any) => {
                           if (channel === "") {
@@ -1761,28 +1736,28 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                               }}
                             /> */}
                             <label>
-                            <Select
-                             touchUi={true}
-                                            placeholder="Select..."
-                                            themeVariant="light"
-                                            value={selected}
-                                            data={subscribers}
-                                            selectMultiple={true}
-                                            onChange={(val: any) => {
-                                                setSelected(val.value)
-                                            }}
-                                            responsive={{
-                                                small: {
-                                                    display: 'bubble'
-                                                },
-                                                medium: {
-                                                    touchUi: false,
-                                                }
-                                            }}
-                                              minWidth={[60, 320]}
-                                            // minWidth={[60, 320]}
-                                        />
-                                    </label>
+                              <Select
+                                touchUi={true}
+                                placeholder="Select..."
+                                themeVariant="light"
+                                value={selected}
+                                data={subscribers}
+                                selectMultiple={true}
+                                onChange={(val: any) => {
+                                  setSelected(val.value)
+                                }}
+                                responsive={{
+                                  small: {
+                                    display: 'bubble'
+                                  },
+                                  medium: {
+                                    touchUi: false,
+                                  }
+                                }}
+                                minWidth={[60, 320]}
+                              // minWidth={[60, 320]}
+                              />
+                            </label>
                           </View>
                         </View>
                       ) : null}
@@ -2314,7 +2289,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                       ) : (
 
                         <label style={{ width: 180 }}>
-                        <Select
+                          <Select
                             touchUi={true}
                             cssClass="customDropdown"
                             value={customCategory}
@@ -2322,19 +2297,19 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                             data={categoriesOptions}
                             themeVariant="light"
                             onChange={(val: any) => {
-                                  setCustomCategory(val.value)
-                                }}
-                                responsive={{
-                                    small: {
-                                        display: 'bubble'
-                                    },
-                                    medium: {
-                                        touchUi: false,
-                                    }
-                                }}
-                            />
-                            
-                    </label>
+                              setCustomCategory(val.value)
+                            }}
+                            responsive={{
+                              small: {
+                                display: 'bubble'
+                              },
+                              medium: {
+                                touchUi: false,
+                              }
+                            }}
+                          />
+
+                        </label>
 
 
                       )}
@@ -2549,7 +2524,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           {PreferredLanguageText("remindEvery")}
                         </Text>
                         <label style={{ width: 140 }}>
-                        <Select
+                          <Select
                             touchUi={true}
                             themeVariant="light"
                             value={frequency}
@@ -2568,11 +2543,11 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                             data={timedFrequencyOptions.map((freq: any) => {
                               return {
                                 value: freq.value,
-                                  text: freq.label
-                                }
+                                text: freq.label
+                              }
                             })}
-                        />   
-                    </label>
+                          />
+                        </label>
                         {/* <Menu
                           onSelect={(cat: any) => {
                             setFrequency(cat.value);
@@ -2823,7 +2798,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                       color: '#1D1D20'
                     }}
                   >
-                    Timed 
+                    Timed
                   </Text>
                 </View>
                 <View>
@@ -2857,94 +2832,94 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                     />
                   </View>
                   {timer ? (
-                      <View
-                        style={{
-                          borderRightWidth: 0,
-                          paddingTop: 0,
-                          borderColor: "#e8e8ea",
-                          flexDirection: 'row'
-                        }}
-                      >
-                        <View>
-                          <Menu onSelect={(hour: any) => setDuration({
-                            ...duration,
-                            hours: hour
-                          })}>
-                            <MenuTrigger>
-                              <Text
-                                style={{
-                                  // fontFamily: "inter",
-                                  fontSize: 15,
-                                  color: "#1D1D20",
-                                }}
-                              >
-                                {duration.hours} H <Ionicons name="caret-down" size={14} /> &nbsp;&nbsp;:&nbsp;&nbsp;
-                              </Text>
-                            </MenuTrigger>
-                            <MenuOptions
-                              customStyles={{
-                                optionsContainer: {
-                                  padding: 10,
-                                  borderRadius: 15,
-                                  shadowOpacity: 0,
-                                  borderWidth: 1,
-                                  borderColor: "#e8e8ea",
-                                  overflow: 'scroll',
-                                  maxHeight: '100%'
-                                },
+                    <View
+                      style={{
+                        borderRightWidth: 0,
+                        paddingTop: 0,
+                        borderColor: "#e8e8ea",
+                        flexDirection: 'row'
+                      }}
+                    >
+                      <View>
+                        <Menu onSelect={(hour: any) => setDuration({
+                          ...duration,
+                          hours: hour
+                        })}>
+                          <MenuTrigger>
+                            <Text
+                              style={{
+                                // fontFamily: "inter",
+                                fontSize: 15,
+                                color: "#1D1D20",
                               }}
                             >
-                              {hours.map((hour: any) => {
-                                return (
-                                  <MenuOption value={hour}>
-                                    <Text>{hour}</Text>
-                                  </MenuOption>
-                                );
-                              })}
-                            </MenuOptions>
-                          </Menu>
-                        </View>
-                        <View>
-                          <Menu onSelect={(min: any) => setDuration({
-                            ...duration,
-                            minutes: min
-                          })}>
-                            <MenuTrigger>
-                              <Text
-                                style={{
-                                  // fontFamily: "inter",
-                                  fontSize: 15,
-                                  color: "#1D1D20",
-                                }}
-                              >
-                                {duration.minutes}  m  <Ionicons name="caret-down" size={14} />
-                              </Text>
-                            </MenuTrigger>
-                            <MenuOptions
-                              customStyles={{
-                                optionsContainer: {
-                                  padding: 10,
-                                  borderRadius: 15,
-                                  shadowOpacity: 0,
-                                  borderWidth: 1,
-                                  borderColor: "#e8e8ea",
-                                  overflow: 'scroll',
-                                  maxHeight: '100%'
-                                },
-                              }}
-                            >
-                              {minutes.map((min: any) => {
-                                return (
-                                  <MenuOption value={min}>
-                                    <Text>{min}</Text>
-                                  </MenuOption>
-                                );
-                              })}
-                            </MenuOptions>
-                          </Menu>
-                        </View>
+                              {duration.hours} H <Ionicons name="caret-down" size={14} /> &nbsp;&nbsp;:&nbsp;&nbsp;
+                            </Text>
+                          </MenuTrigger>
+                          <MenuOptions
+                            customStyles={{
+                              optionsContainer: {
+                                padding: 10,
+                                borderRadius: 15,
+                                shadowOpacity: 0,
+                                borderWidth: 1,
+                                borderColor: "#e8e8ea",
+                                overflow: 'scroll',
+                                maxHeight: '100%'
+                              },
+                            }}
+                          >
+                            {hours.map((hour: any) => {
+                              return (
+                                <MenuOption value={hour}>
+                                  <Text>{hour}</Text>
+                                </MenuOption>
+                              );
+                            })}
+                          </MenuOptions>
+                        </Menu>
                       </View>
-                    ) : null}
+                      <View>
+                        <Menu onSelect={(min: any) => setDuration({
+                          ...duration,
+                          minutes: min
+                        })}>
+                          <MenuTrigger>
+                            <Text
+                              style={{
+                                // fontFamily: "inter",
+                                fontSize: 15,
+                                color: "#1D1D20",
+                              }}
+                            >
+                              {duration.minutes}  m  <Ionicons name="caret-down" size={14} />
+                            </Text>
+                          </MenuTrigger>
+                          <MenuOptions
+                            customStyles={{
+                              optionsContainer: {
+                                padding: 10,
+                                borderRadius: 15,
+                                shadowOpacity: 0,
+                                borderWidth: 1,
+                                borderColor: "#e8e8ea",
+                                overflow: 'scroll',
+                                maxHeight: '100%'
+                              },
+                            }}
+                          >
+                            {minutes.map((min: any) => {
+                              return (
+                                <MenuOption value={min}>
+                                  <Text>{min}</Text>
+                                </MenuOption>
+                              );
+                            })}
+                          </MenuOptions>
+                        </Menu>
+                      </View>
+                    </View>
+                  ) : null}
                 </View>
               </View>
             ) : null}

@@ -377,7 +377,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
         }}>
             <View style={{
                 width: '100%',
-                maxWidth: 600
+                maxWidth: 1000
             }}>
                 {
                     !showPost && !showThreadCues ?
@@ -386,7 +386,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             flexDirection: 'row',
                             paddingBottom: !props.cueId ? 0 : 0,
                             width: '100%',
-                            maxWidth: 600
+                            maxWidth: 1000
                         }}>
                             {
                                 props.cueId === null && !showPost && categoryChoices.length > 1 ?
@@ -474,13 +474,14 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                             }}>
                                             <Text style={{
                                                 textAlign: 'center',
-                                                lineHeight: 30,
-                                                color: '#fff',
+                                                lineHeight: 35,
+                                                color: '#007aff',
                                                 fontSize: 12,
-                                                backgroundColor: '#007aff',
+                                                borderColor: '#007aff',
                                                 paddingHorizontal: 20,
+                                                borderWidth: 1,
                                                 fontFamily: 'inter',
-                                                height: 30,
+                                                height: 35,
                                                 // width: 100,
                                                 borderRadius: 15,
                                                 textTransform: 'uppercase'
@@ -502,8 +503,8 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 alignSelf: 'flex-start'
                             }}
                         >
-                            <Text style={{ lineHeight: 35, width: '100%', textAlign: 'center' }}>
-                                <Ionicons name='arrow-back-outline' size={25} color={'#1D1D20'} />
+                            <Text style={{ lineHeight: 35, width: '100%', textAlign: 'center', paddingTop: 10 }}>
+                                <Ionicons name='arrow-back-outline' size={25} color={'#818385'} />
                             </Text>
                         </TouchableOpacity>
                 }
@@ -535,7 +536,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                         showPost ?
                                             <View style={{
                                                 width: '100%',
-                                                maxWidth: 600,
+                                                maxWidth: 1000,
                                                 paddingLeft: 20,
                                                 // height: Dimensions.get('window').height - 350,
                                             }}
@@ -572,6 +573,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                                 </Text>
                                                             </View> : null}
                                                             <FileUpload
+                                                                chat={true}
                                                                 onUpload={(u: any, t: any) => {
                                                                     const title = prompt('Enter title and click on OK to share.')
 
@@ -592,7 +594,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                             : (showThreadCues ?
                                                 <View style={{
                                                     width: '100%',
-                                                    maxWidth: 600,
+                                                    maxWidth: 1000,
                                                     paddingLeft: 20,
                                                     // height: Dimensions.get('window').height - 350,
                                                 }}
@@ -612,6 +614,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                                 marginTop: -10
                                                             }}>
                                                                 <FileUpload
+                                                                    chat={true}
                                                                     onUpload={(u: any, t: any) => {
                                                                         const title = prompt('Enter title and click on OK to share.')
                                                                         if (title === "") {
@@ -626,7 +629,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                             </View>
                                                         )}
                                                     />
-                                                </View> : <View style={{ width: '100%', maxWidth: 600, marginTop: 20 }}>
+                                                </View> : <View style={{ width: '100%', maxWidth: 1000, marginTop: 20 }}>
                                                     {
                                                         threads.length === 0 ?
                                                             <View style={{ backgroundColor: 'white', flex: 1 }}>
@@ -642,7 +645,9 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                                 // style={{ height: '100%' }}
                                                                 contentContainerStyle={{
                                                                     borderWidth: 1,
-                                                                    borderRightWidth: 1,
+                                                                    // borderRightWidth: 0,
+                                                                    // borderLeftWidth: 0,
+                                                                    // borderRightWidth: 1,
                                                                     borderColor: '#e8e8ea',
                                                                     borderRadius: 0,
                                                                     width: '100%',
@@ -665,15 +670,15 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                                         return <TouchableOpacity
                                                                             onPress={() => loadCueDiscussions(thread._id)}
                                                                             style={{
-                                                                                backgroundColor: '#f7f7f7',
+                                                                                // backgroundColor: '#f7f7f7',
                                                                                 flexDirection: 'row',
                                                                                 borderColor: '#e8e8ea',
-                                                                                borderRightWidth: 1,
+                                                                                // borderRightWidth: 1,
                                                                                 borderBottomWidth: ind === filteredThreads.length - 1 ? 0 : 1,
                                                                                 // minWidth: 600, // flex: 1,
                                                                                 width: '100%'
                                                                             }}>
-                                                                            <View style={{ backgroundColor: '#f7f7f7', padding: 5 }}>
+                                                                            <View style={{ backgroundColor: '#fff', padding: 5 }}>
                                                                                 <Image
                                                                                     style={{
                                                                                         height: 25,

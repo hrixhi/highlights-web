@@ -498,7 +498,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     paddingTop: 12,
                     paddingBottom: 12,
                     maxWidth: "100%",
-                    borderBottom: '1px solid #cccccc',
+                    borderBottom: '1px solid #e8e8ea',
                     // fontWeight: "600",
                     width: Dimensions.get('window').width < 1024 ? '100%' : '50%'
                 }}
@@ -1332,7 +1332,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             maxHeight: 40,
                                             paddingLeft: Dimensions.get('window').width < 1024 ? 40 : 0,
                                             fontWeight: props.isOwner && editQuestionNumber === (index + 1) ? 'normal' : '700',
-                                            borderBottomColor: '#cccccc'
+                                            borderBottomColor: '#e8e8ea'
                                         }}
                                         onChangeText={(val) => {
                                             if (Number.isNaN(Number(val))) return;
@@ -1784,7 +1784,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                         //     paddingBottom: 12,
                                         //     width: '100%',
                                         //     maxWidth: "100%",
-                                        //     borderBottom: '1px solid #cccccc',
+                                        //     borderBottom: '1px solid #e8e8ea',
                                         // }}
                                         // minRows={3}
                                         // placeholder='Answer'

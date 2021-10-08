@@ -91,7 +91,12 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
             }
         }).then((res: any) => {
             if (res.data.user && res.data.user.getAllUsers) {
-                setUsers(res.data.user.getAllUsers)
+                const sortedUsers = res.data.user.getAllUsers.sort((a: any, b: any) => {
+                    if (a.fullName < b.fullName) { return -1; }
+                    if (a.fullName > b.fullName) { return 1; }
+                    return 0;
+                })
+                setUsers(sortedUsers)
             }
             setLoadingSubs(false)
         }).catch((err: any) => {
@@ -719,8 +724,8 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                     </View>
                     :
                     <View style={{
-                        padding: 15,
-                        paddingHorizontal: width < 1024 ? 0 : 20,
+                        paddingVertical: 15,
+                        // paddingHorizontal: width < 1024 ? 0 : 20,
                         width: '100%',
                         marginTop: 7,
                         height: Dimensions.get('window').height - 230,
@@ -728,7 +733,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                         // overflow: 'scroll'
                     }} key={1}>
                         <View style={{ width: '100%', backgroundColor: 'white' }}>
-                            <View style={{ width: '100%', maxWidth: 600, alignSelf: 'center' }}>
+                            <View style={{ width: '100%', maxWidth: 1000, alignSelf: 'center' }}>
                                 <View style={{
                                     backgroundColor: '#fff', width: '100%',
                                     marginBottom: width < 1024 ? 20 : 0
@@ -755,15 +760,15 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                         alignSelf: 'flex-start'
                                                     }}
                                                 >
-                                                    <Text style={{ lineHeight: 35, width: '100%', textAlign: 'center' }}>
-                                                        <Ionicons name='arrow-back-outline' size={25} color={'#1D1D20'} />
+                                                    <Text style={{ lineHeight: 35, width: '100%', textAlign: 'center', paddingTop: 10 }}>
+                                                        <Ionicons name='arrow-back-outline' size={25} color={'#818385'} />
                                                     </Text>
                                                 </TouchableOpacity> :
                                                 <TouchableOpacity
                                                     onPress={() => reload()}
                                                     style={{
                                                         paddingRight: 20,
-                                                        paddingTop: 5,
+                                                        paddingTop: 10,
                                                         alignSelf: 'flex-start'
                                                     }}
                                                 >
@@ -774,7 +779,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                             // color: '#1D1D20',
                                                             fontSize: 10,
                                                             // backgroundColor: '#f7f7f7',
-                                                            paddingHorizontal: 20,
+                                                            // paddingHorizontal: 20,
                                                             // marginRight: 15,
                                                             // fontFamily: 'inter',
                                                             height: 30,
@@ -783,10 +788,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                             textTransform: 'uppercase'
                                                         }}
                                                     >
-                                                        <Ionicons name='reload-outline' size={17} color={'#1D1D20'} />
-                                                    </Text>
-                                                    <Text style={{ fontSize: 10, color: '#1D1D20', paddingTop: 5, backgroundColor: '#fff', textAlign: 'center' }}>
-                                                        Refresh
+                                                        <Ionicons name='reload-outline' size={25} color={'#007aff'} />
                                                     </Text>
                                                 </TouchableOpacity>
                                         }
@@ -1100,6 +1102,8 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                             <View style={{
                                                 width: '100%',
                                                 height: Dimensions.get('window').height - 230,
+                                                // borderWidth: 1,
+                                                borderColor: '#e8e8ea'
                                             }}>
                                                 <GiftedChat
                                                     // showUserAvatar={isChatGroup}
@@ -1116,6 +1120,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                             marginTop: -10
                                                         }}>
                                                             <FileUpload
+                                                                chat={true}
                                                                 onUpload={(u: any, t: any) => {
                                                                     const title = prompt('Enter title and click on OK to share.')
                                                                     const obj = { url: u, type: t, title: (title + '.' + t) };
@@ -1272,7 +1277,10 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                     (
                                                         showDirectory ?
                                                             <View style={{
-                                                                flex: 1, width: '100%', borderWidth: 1,
+                                                                flex: 1, width: '100%',
+                                                                borderWidth: 1,
+                                                                // borderRightWidth: 0,
+                                                                // borderLeftWidth: 0,
                                                                 borderRadius: 0,
                                                                 borderColor: '#e8e8ea',
                                                                 overflow: 'hidden',
@@ -1306,7 +1314,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                                     borderBottomWidth: ind === sectionFiltered.length - 1 ? 0 : 1,
                                                                                     width: '100%'
                                                                                 }}>
-                                                                                <View style={{ backgroundColor: '#f7f7f7', padding: 5 }}>
+                                                                                <View style={{ backgroundColor: '#fff', padding: 5 }}>
                                                                                     <Image
                                                                                         style={{
                                                                                             height: 25,
@@ -1341,6 +1349,8 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                     // style={{ height: '100%' }}
                                                                     contentContainerStyle={{
                                                                         borderWidth: 1,
+                                                                        // borderRightWidth: 0,
+                                                                        // borderLeftWidth: 0,
                                                                         borderColor: '#e8e8ea',
                                                                         borderRadius: 0,
                                                                         width: '100%',
@@ -1390,7 +1400,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                                         // minWidth: 600, // flex: 1,
                                                                                         width: '100%'
                                                                                     }}>
-                                                                                    <View style={{ backgroundColor: '#f8f8fa', padding: 5 }}>
+                                                                                    <View style={{ backgroundColor: '#fff', padding: 5 }}>
                                                                                         <Image
                                                                                             style={{
                                                                                                 height: 25,

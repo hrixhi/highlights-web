@@ -548,7 +548,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
         <View style={{
             width: '100%',
             maxWidth: 1000,
-            paddingHorizontal: 20
+            paddingHorizontal: Dimensions.get('window').width < 1024 ? 20 : 0
         }}>
             <ScrollView
                 showsVerticalScrollIndicator={false}
@@ -566,7 +566,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     lineHeight: 23,
                     color: '#007AFF'
                 }}>
-                    <Ionicons name='search-outline' size={30} />
+                    <Ionicons name='search-outline' size={25} color="#818385" />
                 </Text>
                 {
                     (!loadingSearchResults && results && results[searchOptions[0]].length === 0 && results[searchOptions[1]].length === 0 && results[searchOptions[2]].length === 0 && results[searchOptions[3]].length === 0) ? <Text style={{
@@ -1098,7 +1098,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     (
                                         collapseMap[key] ?
                                             <View
-                                                style={{ width: '100%' }}
+                                                style={{ width: '100%', paddingBottom: 20 }}
                                                 key={editFolderChannelId.toString() + cueIds.toString() + cueMap.toString()}>
                                                 {
                                                     indexMap[key] !== 0 ?
@@ -1107,7 +1107,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                 // meet
                                                                 (
                                                                     <View
-                                                                        style={{ width: '100%', maxWidth: 600, alignSelf: 'center' }}
+                                                                        style={{ width: '100%', maxWidth: 1000, alignSelf: 'center' }}
                                                                     >
                                                                         <Meeting
                                                                             channelId={key.split('-SPLIT-')[1]}
@@ -1266,23 +1266,25 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 backgroundColor: '#f7f7f7',
                 borderColor: '#e8e8ea',
                 borderBottomWidth: 1,
-                // borderWidth: 1,
-                paddingTop: 20,
-                paddingHorizontal: Dimensions.get('window').width < 1024 ? 20 : 40,
+                overflow: 'hidden',
+                paddingHorizontal: Dimensions.get('window').width < 1024 ? 20 : 0,
                 flexDirection: 'row',
                 justifyContent: 'center',
-                // flex: 1, 
                 paddingBottom: 0,
                 width: '100%',
+                height: 56,
+                paddingVertical: 3,
             }}>
                 <View style={{
                     flexDirection: 'row',
                     width: '100%',
                     maxWidth: 1000, alignSelf: 'center',
                     backgroundColor: '#f7f7f7',
-                    flex: 1
+                    paddingVertical: 10,
+                    flex: 1,
+                    height: 50
                 }}>
-                    <View style={{ flexDirection: 'row', backgroundColor: '#f7f7f7', flex: 1 }}>
+                    <View style={{ flexDirection: 'row', backgroundColor: '#f7f7f7', flex: 1, height: 50, paddingTop: 2 }}>
                         <Image
                             source={logo}
                             style={{
@@ -1292,7 +1294,8 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 marginRight: 0
                             }}
                             resizeMode={'contain'}
-                        />{
+                        />
+                        {
                             Dimensions.get('window').width < 1024 ?
                                 null : <View style={{ flexDirection: 'row', paddingLeft: 30, flex: 1, backgroundColor: '#f7f7f7' }}>
                                     {
@@ -1313,7 +1316,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     props.setOption(op)
                                                 }}>
                                                 <Text style={op === props.option ? styles.allGrayFill : styles.all}>
-                                                    {op === 'Classroom' ? 'Classrooms' : op}
+                                                    {op === 'Classroom' ? 'Coursework' : op}
                                                 </Text>
                                             </TouchableOpacity>
                                         })
@@ -1329,7 +1332,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         {props.option === "To Do" || props.option === "Classroom" ? <TouchableOpacity style={{ backgroundColor: 'none' }} onPress={() => {
                             setShowFilterPopup(true)
                         }}>
-                            <Text style={{ fontSize: 11, color: '#1D1D20', paddingTop: 9, textAlign: 'right' }}>
+                            <Text style={{ fontSize: 11, color: '#818385', paddingTop: 8, textAlign: 'right' }}>
                                 Filter <Ionicons name="caret-down" size={11} />
                             </Text>
 
@@ -1338,7 +1341,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             value={searchTerm}
                             style={{
                                 // width: "100%",
-                                borderColor: "#d0d0d2",
+                                borderColor: "#e8e8ea",
                                 borderBottomWidth: 1,
                                 fontSize: 11,
                                 padding: 5,
@@ -1358,10 +1361,10 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             <MenuTrigger>
                                 <Image
                                     style={{
-                                        height: 31,
-                                        width: 31,
-                                        marginBottom: 7,
-                                        marginTop: 7,
+                                        height: 30,
+                                        width: 30,
+                                        marginBottom: 8,
+                                        marginTop: 6,
                                         borderRadius: 75,
                                         borderWidth: 1,
                                         borderColor: '#e8e8ea'
@@ -1381,13 +1384,13 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 <MenuOption
                                     value={'Channels'}>
                                     <Text>
-                                        <Ionicons name='settings-outline' size={12} /> Classroom Settings
+                                        <Ionicons name='settings-outline' size={12} /> Courses
                                     </Text>
                                 </MenuOption>
                                 <MenuOption
                                     value={'Settings'}>
                                     <Text>
-                                        <Ionicons name='hammer-outline' size={12} /> Edit Profile
+                                        <Ionicons name='hammer-outline' size={12} /> Profile
                                     </Text>
                                 </MenuOption>
                             </MenuOptions>
@@ -1398,7 +1401,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
             {
                 searchTerm === '' ? <View style={{
                     // paddingBottom: Dimensions.get('window').width < 1024 ? 15 : 30,
-                    paddingHorizontal: width < 1024 ? 20 : 40,
+                    paddingHorizontal: width < 1024 ? 20 : 0,
                     maxWidth: 1000,
                     alignSelf: 'center',
                     width: '100%',
@@ -1407,7 +1410,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     {
                         props.option === 'Settings' ?
                             <Walkthrough
-                                closeModal={() => {}}
+                                closeModal={() => { }}
                                 saveDataInCloud={() => props.saveDataInCloud()}
                                 reOpenProfile={() => props.reOpenProfile()}
                                 reloadData={() => props.reloadData()}
@@ -1416,7 +1419,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     {
                         props.option === 'Channels' ?
                             <Channels
-                                closeModal={() => {}}
+                                closeModal={() => { }}
                                 subscriptions={props.subscriptions}
                             /> : null
                     }

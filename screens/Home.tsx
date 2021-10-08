@@ -676,8 +676,13 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           })
             .then(async res => {
               if (res.data.subscription.findByUserId) {
-                setSubscriptions(res.data.subscription.findByUserId)
-                const stringSub = JSON.stringify(res.data.subscription.findByUserId)
+                const sortedSubs = res.data.subscription.findByUserId.sort((a: any, b: any) => {
+                  if (a.channelName < b.channelName) { return -1; }
+                  if (a.channelName > b.channelName) { return 1; }
+                  return 0;
+                })
+                setSubscriptions(sortedSubs)
+                const stringSub = JSON.stringify(sortedSubs)
                 await AsyncStorage.setItem('subscriptions', stringSub)
               } else {
                 setSubscriptions(parsedSubscriptions)
@@ -863,10 +868,13 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
       })
         .then(async res => {
           if (res.data.subscription.findByUserId) {
-
-            setSubscriptions(res.data.subscription.findByUserId)
-            const stringSub = JSON.stringify(res.data.subscription.findByUserId)
-
+            const sortedSubs = res.data.subscription.findByUserId.sort((a: any, b: any) => {
+              if (a.channelName < b.channelName) { return -1; }
+              if (a.channelName > b.channelName) { return 1; }
+              return 0;
+            })
+            setSubscriptions(sortedSubs)
+            const stringSub = JSON.stringify(sortedSubs)
             await AsyncStorage.setItem('subscriptions', stringSub)
 
           }
@@ -1158,8 +1166,13 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
       })
         .then(async res => {
           if (res.data.subscription.findByUserId) {
-            setSubscriptions(res.data.subscription.findByUserId)
-            const stringSub = JSON.stringify(res.data.subscription.findByUserId)
+            const sortedSubs = res.data.subscription.findByUserId.sort((a: any, b: any) => {
+              if (a.channelName < b.channelName) { return -1; }
+              if (a.channelName > b.channelName) { return 1; }
+              return 0;
+            })
+            setSubscriptions(sortedSubs)
+            const stringSub = JSON.stringify(sortedSubs)
             await AsyncStorage.setItem('subscriptions', stringSub)
           }
         })
@@ -1690,7 +1703,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         }}
       >
         {
-          menuCollapsed ?
+          !showHome ? null :
             // VERTICAL BAR
             <View style={{
               height: 61,
@@ -1733,92 +1746,91 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 meetingOn={meetingOn}
               />
             </View>
-            :
-            // FULL MENU
-            <View style={{
-              width: dimensions.window.width,
-              height: dimensions.window.height,
-              borderColor: '#e8e8ea',
-              backgroundColor: '#f7f7f7',
-            }}>
-              <View style={{
-                backgroundColor: '#f7f7f7',
-                width: dimensions.window.width,
-                height: dimensions.window.height - 30,
-                maxWidth: 1000, alignSelf: 'center'
-              }}>
-                <BottomBar
-                  cues={dateFilteredCues}
-                  openWalkthrough={() => openModal('Walkthrough')}
-                  openCalendar={() => openModal('Calendar')}
-                  openCreate={() => openModal('Create')}
-                  openChannels={() => openModal('Channels')}
-                  openProfile={() => openModal('Profile')}
-                  closeModal={() => closeModal()}
-                  showHome={() => {
-                    setShowHome(true)
-                    setMenuCollapsed(true)
-                  }}
-                  hideMenu={() => setMenuCollapsed(true)}
-                  showMenu={() => setMenuCollapsed(false)}
-                  filterChoice={filterChoice}
-                  handleFilterChange={(choice: any) => handleFilterChange(choice)}
-                  key={Math.random()}
-                  customCategories={customCategories}
-                  subscriptions={subscriptions}
-                  setChannelId={(id: string) => setChannelId(id)}
-                  setChannelCreatedBy={(id: any) => setChannelCreatedBy(id)}
-                  setChannelFilterChoice={(choice: string) => setChannelFilterChoice(choice)}
-                  channelFilterChoice={channelFilterChoice}
-                  filterStart={filterStart}
-                  filterEnd={filterEnd}
-                  setFilterStart={(s: any) => setFilterStart(s)}
-                  setFilterEnd={(e: any) => setFilterEnd(e)}
-                  channelId={channelId}
-                  channelCreatedBy={channelCreatedBy}
-                  loadData={() => loadData()}
-                  // setChannelFilterChoice={(choice: any) => setChannelFilterChoice(choice)}
-                  openDiscussion={() => openModal('Discussion')}
-                  openSubscribers={() => openModal('Subscribers')}
-                  openGrades={() => openModal('Grades')}
-                  unsubscribe={() => unsubscribeChannel()}
-                  deleteChannel={() => deleteChannel()}
-                  openMeeting={() => {
-                    openModal('Meeting')
-                    setMenuCollapsed(true)
-                  }}
-                  openChannelSettings={() => {
-                    openModal('ChannelSettings')
-                    setMenuCollapsed(true)
-                  }}
-                  unreadDiscussionThreads={unreadDiscussionThreads}
-                  unreadMessages={unreadMessages}
-                  meetingOn={meetingOn}
-                />
-                {
-                  reLoading ? <View style={[styles(channelId).activityContainer, styles(channelId).horizontal]}>
-                    <ActivityIndicator color={'#818385'} />
-                  </View>
-                    : <View style={[styles(channelId).activityContainer, styles(channelId).horizontal]}>
-                      <CardsList
-                        pageNumber={pageNumber}
-                        fadeAnimation={fadeAnimation}
-                        key={JSON.stringify(filterChoice) + JSON.stringify(channelId) + JSON.stringify(dateFilteredCues) + JSON.stringify(channelFilterChoice)}
-                        cues={dateFilteredCues}
-                        channelId={channelId}
-                        createdBy={channelCreatedBy}
-                        filterChoice={filterChoice}
-                        openUpdate={(index: any, key: any, pageNumber: any, _id: any, by: any, cId: any) => {
-                          openUpdate(index, key, pageNumber, _id, by, cId)
-                          setMenuCollapsed(true)
-                        }}
-                        channelFilterChoice={channelFilterChoice}
-                        subscriptions={subscriptions}
-                      />
-                    </View>
-                }
-              </View>
-            </View >
+          // FULL MENU
+          // <View style={{
+          //   width: dimensions.window.width,
+          //   height: dimensions.window.height,
+          //   borderColor: '#e8e8ea',
+          //   backgroundColor: '#f7f7f7',
+          // }}>
+          //   <View style={{
+          //     backgroundColor: '#f7f7f7',
+          //     width: dimensions.window.width,
+          //     height: dimensions.window.height - 30,
+          //     maxWidth: 1000, alignSelf: 'center'
+          //   }}>
+          //     <BottomBar
+          //       cues={dateFilteredCues}
+          //       openWalkthrough={() => openModal('Walkthrough')}
+          //       openCalendar={() => openModal('Calendar')}
+          //       openCreate={() => openModal('Create')}
+          //       openChannels={() => openModal('Channels')}
+          //       openProfile={() => openModal('Profile')}
+          //       closeModal={() => closeModal()}
+          //       showHome={() => {
+          //         setShowHome(true)
+          //         setMenuCollapsed(true)
+          //       }}
+          //       hideMenu={() => setMenuCollapsed(true)}
+          //       showMenu={() => setMenuCollapsed(false)}
+          //       filterChoice={filterChoice}
+          //       handleFilterChange={(choice: any) => handleFilterChange(choice)}
+          //       key={Math.random()}
+          //       customCategories={customCategories}
+          //       subscriptions={subscriptions}
+          //       setChannelId={(id: string) => setChannelId(id)}
+          //       setChannelCreatedBy={(id: any) => setChannelCreatedBy(id)}
+          //       setChannelFilterChoice={(choice: string) => setChannelFilterChoice(choice)}
+          //       channelFilterChoice={channelFilterChoice}
+          //       filterStart={filterStart}
+          //       filterEnd={filterEnd}
+          //       setFilterStart={(s: any) => setFilterStart(s)}
+          //       setFilterEnd={(e: any) => setFilterEnd(e)}
+          //       channelId={channelId}
+          //       channelCreatedBy={channelCreatedBy}
+          //       loadData={() => loadData()}
+          //       // setChannelFilterChoice={(choice: any) => setChannelFilterChoice(choice)}
+          //       openDiscussion={() => openModal('Discussion')}
+          //       openSubscribers={() => openModal('Subscribers')}
+          //       openGrades={() => openModal('Grades')}
+          //       unsubscribe={() => unsubscribeChannel()}
+          //       deleteChannel={() => deleteChannel()}
+          //       openMeeting={() => {
+          //         openModal('Meeting')
+          //         setMenuCollapsed(true)
+          //       }}
+          //       openChannelSettings={() => {
+          //         openModal('ChannelSettings')
+          //         setMenuCollapsed(true)
+          //       }}
+          //       unreadDiscussionThreads={unreadDiscussionThreads}
+          //       unreadMessages={unreadMessages}
+          //       meetingOn={meetingOn}
+          //     />
+          //     {
+          //       reLoading ? <View style={[styles(channelId).activityContainer, styles(channelId).horizontal]}>
+          //         <ActivityIndicator color={'#818385'} />
+          //       </View>
+          //         : <View style={[styles(channelId).activityContainer, styles(channelId).horizontal]}>
+          //           <CardsList
+          //             pageNumber={pageNumber}
+          //             fadeAnimation={fadeAnimation}
+          //             key={JSON.stringify(filterChoice) + JSON.stringify(channelId) + JSON.stringify(dateFilteredCues) + JSON.stringify(channelFilterChoice)}
+          //             cues={dateFilteredCues}
+          //             channelId={channelId}
+          //             createdBy={channelCreatedBy}
+          //             filterChoice={filterChoice}
+          //             openUpdate={(index: any, key: any, pageNumber: any, _id: any, by: any, cId: any) => {
+          //               openUpdate(index, key, pageNumber, _id, by, cId)
+          //               setMenuCollapsed(true)
+          //             }}
+          //             channelFilterChoice={channelFilterChoice}
+          //             subscriptions={subscriptions}
+          //           />
+          //         </View>
+          //     }
+          //   </View>
+          // </View >
         }
         {
           (!menuCollapsed && dimensions.window.width < 1024) || showHome ? null :
@@ -1848,7 +1860,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 style={{
                   width: (dimensions.window.width),
                   alignSelf: 'center',
-                  height: (menuCollapsed ? (dimensions.window.height - 60) : 0),
+                  height: (dimensions.window.height),
                   // paddingHorizontal: dimensions.window.width < 1024 ? 0 : 30,
                   paddingTop: 0,
                   backgroundColor: '#fff',
@@ -1858,9 +1870,9 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                   // dimensions.window.width < 1024 && !menuCollapsed ? null :
                   <View style={{
                     // flex: 1,
-                    height: (menuCollapsed ? (dimensions.window.height - 60) : 0),
+                    height: (menuCollapsed ? (dimensions.window.height) : 0),
                     backgroundColor: 'white',
-                    paddingHorizontal: dimensions.window.width < 1024 ? 20 : 40,
+                    paddingHorizontal: dimensions.window.width < 1024 ? 20 : 0,
                     width: dimensions.window.width,
                     // marginRight: 0,
                     alignSelf: 'center',
@@ -1875,38 +1887,43 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               </View>)
         }
       </View>
-      <TouchableOpacity
-        onPress={() => {
-          setCueId('')
-          setModalType('')
-          setCreatedBy('')
-          setChannelFilterChoice('All')
-          if (modalType === 'Create' || modalType === 'Update') {
-            fadeAnimation.setValue(0)
-            if (modalType === 'Update' && filterChoice === 'All-Channels') {
-              setChannelId('')
-            }
-          }
-          loadData(true)
-          openModal('Create')
-          setShowHome(false)
-          setMenuCollapsed(true)
-        }}
-        style={{
-          position: 'absolute',
-          marginRight: 20,
-          marginBottom: Dimensions.get('window').width < 1024 && (modalType !== 'Create' && modalType !== 'Update') ? 90 : 20,
-          zIndex: showLoginWindow ? 40 : 600,
-          right: 0,
-          justifyContent: 'center',
-          bottom: 0,
-          width: 54, height: 54, borderRadius: 27, backgroundColor: '#007AFF'
-        }}
-      >
-        <Text style={{ color: '#fff', width: '100%', textAlign: 'center' }}>
-          <Ionicons name='add-outline' size={35} />
-        </Text>
-      </TouchableOpacity>
+      {
+        showHome ?
+          <TouchableOpacity
+            onPress={() => {
+              setCueId('')
+              setModalType('')
+              setCreatedBy('')
+              setChannelFilterChoice('All')
+              if (modalType === 'Create' || modalType === 'Update') {
+                fadeAnimation.setValue(0)
+                if (modalType === 'Update' && filterChoice === 'All-Channels') {
+                  setChannelId('')
+                }
+              }
+              loadData(true)
+              openModal('Create')
+              setShowHome(false)
+              setMenuCollapsed(true)
+            }}
+            style={{
+              position: 'absolute',
+              marginRight: Dimensions.get('window').width >= 1100 ? (((Dimensions.get('window').width - 1100) / 2) - 25) : 20,
+              marginBottom: Dimensions.get('window').width < 1024 && (modalType !== 'Create' && modalType !== 'Update') ? 95 : 25,
+              zIndex: showLoginWindow ? 40 : 600,
+              right: 0,
+              justifyContent: 'center',
+              bottom: 0,
+              width: 54, height: 54, borderRadius: 27, backgroundColor: '#007AFF',
+              borderColor: '#e8e8ea',
+              borderWidth: 1
+            }}
+          >
+            <Text style={{ color: '#fff', width: '100%', textAlign: 'center' }}>
+              <Ionicons name='add-outline' size={35} />
+            </Text>
+          </TouchableOpacity> : null
+      }
       {
         Dimensions.get('window').width < 1024 && showHome ?
           <View style={{
@@ -1948,7 +1965,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 <Ionicons name='school-outline' size={22} color={option === 'Classroom' ? '#007AFF' : '#1D1D20'} />
               </Text>
               <Text style={{ fontSize: 11, color: option === 'Classroom' ? '#007AFF' : '#1D1D20', paddingTop: 5, textAlign: 'center' }}>
-                Classrooms
+                Coursework
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -2002,7 +2019,8 @@ const styles = (channelId: string) => StyleSheet.create({
     borderColor: '#eeeeef',
     borderTopRightRadius: 15,
     borderTopLeftRadius: 15,
-    height: Dimensions.get('window').height - 60,
+    height: '100%',
+    // height: Dimensions.get('window').height - 60,
     width: '100%',
     // maxWidth: 1000,
     justifyContent: "center",
