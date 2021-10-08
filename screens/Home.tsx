@@ -1267,6 +1267,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 setShowHome(true)
                 closeModal()
               }}
+              refreshSubscriptions={refreshSubscriptions}
             /> : (
               modalType === 'Discussion' ? <Discussion
                 closeModal={() => closeModal()}
@@ -1674,7 +1675,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                   setLoadDiscussionForChannelId={setLoadDiscussionForChannelId}
                   openChannelId={openChannelId}
                   setOpenChannelId={setOpenChannelId}
-
                 />
             }
           </View>

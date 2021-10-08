@@ -389,7 +389,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
         try {
             axios.get(
-                `http://localhost:8081/search`,
+                `https://api.cuesapp.co/search`,
                 { cancelToken: cancelTokenRef.current.token, params: { term: searchTerm, userId } } //Pass the cancel token to the current request
             ).then((res: any) => {
                 console.log(res.data)
@@ -1418,6 +1418,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             <Channels
                                 closeModal={() => {}}
                                 subscriptions={props.subscriptions}
+                                refreshSubscriptions={props.refreshSubscriptions}
                             /> : null
                     }
                     {

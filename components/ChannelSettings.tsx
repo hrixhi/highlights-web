@@ -542,6 +542,9 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
         })
         Alert("Deleted Channel successfully.")
         props.closeModal()
+        // Force reload
+        // window.location.reload();
+        props.refreshSubscriptions()
     }, [props.channelId, originalSubs, owner])
 
     useEffect(() => {

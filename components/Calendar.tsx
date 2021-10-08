@@ -31,7 +31,7 @@ import Swiper from "react-native-web-swiper";
 // Try New Calendar
 // import Scheduler, {SchedulerData, ViewTypes, DATE_FORMAT} from 'react-big-scheduler'
 // import 'react-big-scheduler/lib/css/style.css';
-import mobiscroll, { Form as MobiscrollForm, FormGroup, Button as MobiscrollButton, Select, Input, FormGroupTitle } from '@mobiscroll/react'
+import { Select } from '@mobiscroll/react'
 
 
 

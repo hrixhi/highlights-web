@@ -20,6 +20,7 @@ import { htmlStringParser } from '../helpers/HTMLParser';
 import { GiftedChat, Bubble } from 'react-native-gifted-chat';
 import FileUpload from './UploadFiles';
 import { Select } from '@mobiscroll/react'
+import ReactPlayer from "react-player";
 
 
 const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
@@ -37,7 +38,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
     const [avatar, setAvatar] = useState('')
     const [privatePost, setPrivatePost] = useState(false)
     const [threadCategories, setThreadCategories] = useState<any[]>([])
-    const [customCategory, setCustomCategory] = useState('')
+    const [customCategory, setCustomCategory] = useState('None')
     const [addCustomCategory, setAddCustomCategory] = useState(false)
 
     const [isOwner, setIsOwner] = useState(false)
@@ -124,7 +125,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 anonymous: false,
                 cueId: props.cueId === null ? 'NULL' : props.cueId,
                 parentId: threadId === '' ? 'INIT' : threadId,
-                category: showPost ? customCategory : ''
+                category: showPost ? (customCategory === "None" ? "" : customCategory) : ''
             }
         }).then(res => {
             if (res.data.thread.writeMessage) {
@@ -158,25 +159,39 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     const tempChat: any[] = []
                     res.data.thread.getThreadWithReplies.map((msg: any) => {
                         let text: any = ''
+                        let img: any = ''
+                        let audio: any = ''
+                        let video: any = ''
                         if (msg.message[0] === '{' && msg.message[msg.message.length - 1] === '}') {
                             const obj = JSON.parse(msg.message)
-                            text = <TouchableOpacity style={{ backgroundColor: '#2484FF' }}>
-                                <Text style={{
-                                    textDecorationLine: 'underline',
-                                    backgroundColor: '#2484FF',
-                                    color: '#fff'
-                                }}
-                                    onPress={() => {
-                                        if (Platform.OS === 'web' || Platform.OS === 'macos' || Platform.OS === 'windows') {
-                                            window.open(obj.url, '_blank')
-                                        } else {
-                                            Linking.openURL(obj.url)
-                                        }
+                            const { type, url } = obj;
+                            if (type === 'png' || type === 'jpeg' || type === 'jpg' || type === 'gif') {
+                                img = url
+                            } else if (type === "mp3" || type === "wav" || type === "mp2" ) {
+                                audio = url 
+                            } else if (type === "mp4") {
+                                video = url
+                            } else {
+                                text = <TouchableOpacity style={{ backgroundColor: '#2484FF' }}>
+                                    <Text style={{
+                                        textDecorationLine: 'underline',
+                                        backgroundColor: '#2484FF',
+                                        color: '#fff'
                                     }}
-                                >
-                                    {obj.title + '.' + obj.type}
-                                </Text>
-                            </TouchableOpacity>
+                                        onPress={() => {
+                                            if (Platform.OS === 'web' || Platform.OS === 'macos' || Platform.OS === 'windows') {
+                                                window.open(url, '_blank')
+                                            } else {
+                                                Linking.openURL(url)
+                                            }
+                                        }}
+                                    >
+                                        {obj.title + '.' + obj.type}
+                                    </Text>
+                                </TouchableOpacity>
+                            }
+
+                            
                         } else {
                             const { title: t, subtitle: s } = htmlStringParser(msg.message)
                             text = t
@@ -184,6 +199,9 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         tempChat.push({
                             _id: msg._id,
                             text,
+                            image: img,
+                            audio,
+                            video,
                             createdAt: msg.time,
                             user: {
                                 _id: msg.userId,
@@ -268,7 +286,61 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
         )
     }
 
+    const renderMessageAudio = (props: any) => {
+
+        if (props.currentMessage.audio && props.currentMessage.audio !== "") {
+            return <View>
+                <ReactPlayer
+                    url={props.currentMessage.audio}
+                    controls={true}
+                    onContextMenu={(e: any) => e.preventDefault()}
+                    config={{
+                    file: { attributes: { controlsList: "nodownload" } },
+                    }}
+                    width={250}
+                    height={60}
+                />
+            </View> 
+        }
+
+        return null;
+        
+    }
+
+    const renderMessageVideo = (props: any) => {
+
+        if (props.currentMessage.video && props.currentMessage.video !== "") {
+            return <View>
+                <ReactPlayer
+                    url={props.currentMessage.video}
+                    controls={true}
+                    onContextMenu={(e: any) => e.preventDefault()}
+                    config={{
+                    file: { attributes: { controlsList: "nodownload" } },
+                    }}
+                    width={250}
+                    height={200}
+                />
+            </View> 
+        }
+
+        return null;
+        
+    }
+
     const windowHeight = Dimensions.get('window').width < 1024 ? Dimensions.get('window').height - 30 : Dimensions.get('window').height;
+
+    let categoriesOptions = [{ 
+        value: 'None', text: 'None'
+      }];
+    
+      categories.map((category: any) => {
+        categoriesOptions.push({
+          value: category,
+          text: category
+        })
+      })
+    
 
     const customCategoryInput = (<View style={{ width: '100%', backgroundColor: 'white', paddingTop: 20, paddingBottom: 10 }}>
         <View style={{ width: '100%', paddingBottom: 10, backgroundColor: 'white' }}>
@@ -276,8 +348,8 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 {PreferredLanguageText('category')}
             </Text>
         </View>
-        <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white' }}>
-            <View style={{ width: '85%', backgroundColor: 'white' }}>
+        <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white', alignItems: 'center',  }}>
+            <View style={{ width: '80%', backgroundColor: 'white', marginRight: 10 }}>
                 {
                     addCustomCategory ?
                         <View style={styles.colorBar}>
@@ -291,54 +363,76 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 placeholderTextColor={'#818385'}
                             />
                         </View> :
-                        <Menu
-                            onSelect={(cat: any) => setCustomCategory(cat)}>
-                            <MenuTrigger>
-                                <Text style={{ fontSize: 14, color: '#818385' }}>
-                                    {customCategory === '' ? 'None' : customCategory}<Ionicons name='caret-down' size={14} />
-                                </Text>
-                            </MenuTrigger>
-                            <MenuOptions customStyles={{
-                                optionsContainer: {
-                                    padding: 10,
-                                    borderRadius: 15,
-                                    shadowOpacity: 0,
-                                    borderWidth: 1,
-                                    borderColor: '#FBFBFC',
-                                    overflow: 'scroll',
-                                    maxHeight: '100%'
-                                }
-                            }}>
-                                <MenuOption
-                                    value={''}>
-                                    <Text>
-                                        None
-                                    </Text>
-                                </MenuOption>
-                                {
-                                    categories.map((category: any) => {
-                                        return <MenuOption
-                                            value={category}>
-                                            <Text>
-                                                {category}
-                                            </Text>
-                                        </MenuOption>
-                                    })
-                                }
-                            </MenuOptions>
-                        </Menu>
+                        // <Menu
+                        //     onSelect={(cat: any) => setCustomCategory(cat)}>
+                        //     <MenuTrigger>
+                        //         <Text style={{ fontSize: 14, color: '#818385' }}>
+                        //             {customCategory === '' ? 'None' : customCategory}<Ionicons name='caret-down' size={14} />
+                        //         </Text>
+                        //     </MenuTrigger>
+                        //     <MenuOptions customStyles={{
+                        //         optionsContainer: {
+                        //             padding: 10,
+                        //             borderRadius: 15,
+                        //             shadowOpacity: 0,
+                        //             borderWidth: 1,
+                        //             borderColor: '#FBFBFC',
+                        //             overflow: 'scroll',
+                        //             maxHeight: '100%'
+                        //         }
+                        //     }}>
+                        //         <MenuOption
+                        //             value={''}>
+                        //             <Text>
+                        //                 None
+                        //             </Text>
+                        //         </MenuOption>
+                        //         {
+                        //             categories.map((category: any) => {
+                        //                 return <MenuOption
+                        //                     value={category}>
+                        //                     <Text>
+                        //                         {category}
+                        //                     </Text>
+                        //                 </MenuOption>
+                        //             })
+                        //         }
+                        //     </MenuOptions>
+                        // </Menu>
+
+                        <label style={{ width: 180 }}>
+                            <Select
+                                themeVariant="light"
+                                touchUi={true}
+                                onChange={(val: any) => {
+                                    setCustomCategory(val.value)
+                                }}
+                                responsive={{
+                                    small: {
+                                        display: 'bubble',
+                                    },
+                                    medium: {
+                                        touchUi: false,
+                                    }
+                                }}
+                                value={customCategory}
+                                rows={categories.length + 1}
+                                data={categoriesOptions}
+                            />
+                        </label>
+
                 }
             </View>
             <View style={{ width: '15%', backgroundColor: 'white' }}>
                 <TouchableOpacity
                     onPress={() => {
                         if (addCustomCategory) {
-                            setCustomCategory('')
+                            setCustomCategory("None");
                             setAddCustomCategory(false)
-                        } else {
-                            setCustomCategory('')
+                          } else {
+                            setCustomCategory("");
                             setAddCustomCategory(true)
-                        }
+                          }
                     }}
                     style={{ backgroundColor: 'white' }}>
                     <Text style={{ textAlign: 'right', lineHeight: 20, width: '100%' }}>

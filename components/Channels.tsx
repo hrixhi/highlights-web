@@ -39,6 +39,7 @@ const Channels: React.FunctionComponent<{ [label: string]: any }> = (props: any)
                 <ChannelControls
                     subscriptions={props.subscriptions}
                     closeModal={() => props.closeModal()}
+                    refreshSubscriptions={props.refreshSubscriptions}
                 />
             </Animated.View>
         </View >

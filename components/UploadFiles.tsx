@@ -28,11 +28,11 @@ const FileUpload: React.FC<any> = (props: any) => {
         }
 
         if (!props.back) {
-            if (type !== 'png' && type !== 'jpeg') {
-                alert('Error! Invalid image format.')
-                setUploading(false)
-                return
-            }
+            // if (type !== 'png' && type !== 'jpeg') {
+            //     alert('Error! Invalid image format.')
+            //     setUploading(false)
+            //     return
+            // }
         } else if ((type === 'png' || type === 'jpeg' || type === 'jpg' || type === 'gif') && props.action !== 'message_send') {
             alert('Error! Images should be directly added to the text editor using the gallery icon in the toolbar.')
             setUploading(false)

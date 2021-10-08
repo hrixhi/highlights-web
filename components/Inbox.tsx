@@ -23,6 +23,7 @@ import FileUpload from './UploadFiles';
 import moment from 'moment';
 import { Select } from '@mobiscroll/react'
 import { TextInput } from './CustomTextInput';
+import ReactPlayer from "react-player";
 
 
 const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
@@ -59,6 +60,8 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
     const [newGroupImage, setNewGroupImage] = useState(undefined);
 
     const [showDirectory, setShowDirectory] = useState<any>(false)
+
+    const [creatingMessage, setCreatingMessage] = useState(false);
 
     const grades = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
     const sections = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",]
@@ -191,26 +194,41 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                 .then(res => {
                     const tempChat: any[] = []
                     res.data.message.getMessagesThread.map((msg: any) => {
+
                         let text: any = ''
+                        let img: any = ''
+                        let audio: any = ''
+                        let video: any = ''
                         if (msg.message[0] === '{' && msg.message[msg.message.length - 1] === '}') {
                             const obj = JSON.parse(msg.message)
-                            text = <TouchableOpacity style={{ backgroundColor: '#2484FF' }}>
-                                <Text style={{
-                                    textDecorationLine: 'underline',
-                                    backgroundColor: '#2484FF',
-                                    color: '#fff'
-                                }}
-                                    onPress={() => {
-                                        if (Platform.OS === 'web' || Platform.OS === 'macos' || Platform.OS === 'windows') {
-                                            window.open(obj.url, '_blank')
-                                        } else {
-                                            Linking.openURL(obj.url)
-                                        }
+                            const { type, url } = obj;
+                            if (type === 'png' || type === 'jpeg' || type === 'jpg' || type === 'gif') {
+                                img = url
+                            } else if (type === "mp3" || type === "wav" || type === "mp2" ) {
+                                audio = url 
+                            } else if (type === "mp4") {
+                                video = url
+                            } else {
+                                text = <TouchableOpacity style={{ backgroundColor: '#2484FF' }}>
+                                    <Text style={{
+                                        textDecorationLine: 'underline',
+                                        backgroundColor: '#2484FF',
+                                        color: '#fff'
                                     }}
-                                >
-                                    {obj.title + '.' + obj.type}
-                                </Text>
-                            </TouchableOpacity>
+                                        onPress={() => {
+                                            if (Platform.OS === 'web' || Platform.OS === 'macos' || Platform.OS === 'windows') {
+                                                window.open(url, '_blank')
+                                            } else {
+                                                Linking.openURL(url)
+                                            }
+                                        }}
+                                    >
+                                        {obj.title + '.' + obj.type}
+                                    </Text>
+                                </TouchableOpacity>
+                            }
+
+                            
                         } else {
                             const { title: t, subtitle: s } = htmlStringParser(msg.message)
                             text = t
@@ -218,10 +236,13 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                         tempChat.push({
                             _id: msg._id,
                             text,
+                            image: img,
+                            audio,
+                            video,
                             createdAt: msg.sentAt,
                             user: {
                                 _id: msg.sentBy,
-                                name: msg.displayName,
+                                name: msg.fullName,
                                 avatar: msg.avatar ? msg.avatar : 'https://cues-files.s3.amazonaws.com/images/default.png',
                             },
                         })
@@ -328,8 +349,11 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
 
 
     const onSend = useCallback(async (messages = []) => {
-        const message = messages[0].text
-        const u = await AsyncStorage.getItem('user')
+
+        if (creatingMessage) return;
+
+        const message = messages[0].file || messages[0].image || messages[0].audio || messages[0].video ? messages[0].saveCue : messages[0].text
+        const u : any = await AsyncStorage.getItem('user')
         if (!message || message === '' || !u) {
             // setSendingThread(false)
             return
@@ -339,14 +363,22 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
             return
         }
         const user = JSON.parse(u)
-        const saveCue = message
+
+        messages[0] = {
+            ...messages[0],
+            user: {
+                _id: userId
+            }
+        }
+
+        setCreatingMessage(true)
 
         const server = fetchAPI('')
         server.mutate({
             mutation: sendMessage,
             variables: {
                 users: chatUsers,
-                message: saveCue,
+                message,
                 userId,
                 groupId
             }
@@ -371,17 +403,20 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                         setGroupId(res.data.message.getGroupId)
                     }
 
-
                 }
+
+                setCreatingMessage(false)
 
             } else {
                 Alert(unableToPostAlert, checkConnectionAlert)
+                setCreatingMessage(false)
             }
         }).catch(err => {
             // setSendingThread(false)
             Alert(somethingWentWrongAlert, checkConnectionAlert)
+            setCreatingMessage(false)
         })
-    }, [chatUsers, userId, groupId])
+    }, [chatUsers, userId, groupId, creatingMessage])
 
     const loadChat = useCallback(async (uId, groupId) => {
         setChat([])
@@ -428,26 +463,41 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                 .then(res => {
                     const tempChat: any[] = []
                     res.data.message.getMessagesThread.map((msg: any) => {
+
                         let text: any = ''
+                        let img: any = ''
+                        let audio: any = ''
+                        let video: any = ''
                         if (msg.message[0] === '{' && msg.message[msg.message.length - 1] === '}') {
                             const obj = JSON.parse(msg.message)
-                            text = <TouchableOpacity style={{ backgroundColor: '#2484FF' }}>
-                                <Text style={{
-                                    textDecorationLine: 'underline',
-                                    backgroundColor: '#2484FF',
-                                    color: '#fff'
-                                }}
-                                    onPress={() => {
-                                        if (Platform.OS === 'web' || Platform.OS === 'macos' || Platform.OS === 'windows') {
-                                            window.open(obj.url, '_blank')
-                                        } else {
-                                            Linking.openURL(obj.url)
-                                        }
+                            const { type, url } = obj;
+                            if (type === 'png' || type === 'jpeg' || type === 'jpg' || type === 'gif') {
+                                img = url
+                            } else if (type === "mp3" || type === "wav" || type === "mp2" ) {
+                                audio = url 
+                            } else if (type === "mp4") {
+                                video = url
+                            } else {
+                                text = <TouchableOpacity style={{ backgroundColor: '#2484FF' }}>
+                                    <Text style={{
+                                        textDecorationLine: 'underline',
+                                        backgroundColor: '#2484FF',
+                                        color: '#fff'
                                     }}
-                                >
-                                    {obj.title}
-                                </Text>
-                            </TouchableOpacity>
+                                        onPress={() => {
+                                            if (Platform.OS === 'web' || Platform.OS === 'macos' || Platform.OS === 'windows') {
+                                                window.open(url, '_blank')
+                                            } else {
+                                                Linking.openURL(url)
+                                            }
+                                        }}
+                                    >
+                                        {obj.title + '.' + obj.type}
+                                    </Text>
+                                </TouchableOpacity>
+                            }
+
+                            
                         } else {
                             const { title: t, subtitle: s } = htmlStringParser(msg.message)
                             text = t
@@ -455,11 +505,14 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                         tempChat.push({
                             _id: msg._id,
                             text,
+                            image: img,
+                            audio,
+                            video,
                             createdAt: msg.sentAt,
                             user: {
                                 _id: msg.sentBy,
-                                name: msg.displayName,
-                                avatar: msg.avatar ? msg.avatar : 'https://cues-files.s3.amazonaws.com/images/default.png',
+                                name: msg.fullName,
+                                avatar: msg.avatar ? msg.avatar : 'https://cues-files.s3.amazonaws.com/images/default.png'
                             },
                         })
                     })
@@ -542,25 +595,39 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                     const tempChat: any[] = []
                     res.data.message.getMessagesThread.map((msg: any) => {
                         let text: any = ''
+                        let img: any = ''
+                        let audio: any = ''
+                        let video: any = ''
                         if (msg.message[0] === '{' && msg.message[msg.message.length - 1] === '}') {
                             const obj = JSON.parse(msg.message)
-                            text = <TouchableOpacity style={{ backgroundColor: '#2484FF' }}>
-                                <Text style={{
-                                    textDecorationLine: 'underline',
-                                    backgroundColor: '#2484FF',
-                                    color: '#fff'
-                                }}
-                                    onPress={() => {
-                                        if (Platform.OS === 'web' || Platform.OS === 'macos' || Platform.OS === 'windows') {
-                                            window.open(obj.url, '_blank')
-                                        } else {
-                                            Linking.openURL(obj.url)
-                                        }
+                            const { type, url } = obj;
+                            if (type === 'png' || type === 'jpeg' || type === 'jpg' || type === 'gif') {
+                                img = url
+                            } else if (type === "mp3" || type === "wav" || type === "mp2" ) {
+                                audio = url 
+                            } else if (type === "mp4") {
+                                video = url
+                            } else {
+                                text = <TouchableOpacity style={{ backgroundColor: '#2484FF' }}>
+                                    <Text style={{
+                                        textDecorationLine: 'underline',
+                                        backgroundColor: '#2484FF',
+                                        color: '#fff'
                                     }}
-                                >
-                                    {obj.title + '.' + obj.type}
-                                </Text>
-                            </TouchableOpacity>
+                                        onPress={() => {
+                                            if (Platform.OS === 'web' || Platform.OS === 'macos' || Platform.OS === 'windows') {
+                                                window.open(url, '_blank')
+                                            } else {
+                                                Linking.openURL(url)
+                                            }
+                                        }}
+                                    >
+                                        {obj.title + '.' + obj.type}
+                                    </Text>
+                                </TouchableOpacity>
+                            }
+
+                            
                         } else {
                             const { title: t, subtitle: s } = htmlStringParser(msg.message)
                             text = t
@@ -568,10 +635,13 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                         tempChat.push({
                             _id: msg._id,
                             text,
+                            image: img,
+                            audio,
+                            video,
                             createdAt: msg.sentAt,
                             user: {
                                 _id: msg.sentBy,
-                                name: msg.displayName,
+                                name: msg.fullName,
                                 avatar: msg.avatar ? msg.avatar : 'https://cues-files.s3.amazonaws.com/images/default.png',
                             },
                         })
@@ -678,6 +748,48 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                 }}
             />
         )
+    }
+
+    const renderMessageAudio = (props: any) => {
+
+        if (props.currentMessage.audio && props.currentMessage.audio !== "") {
+            return <View>
+                <ReactPlayer
+                    url={props.currentMessage.audio}
+                    controls={true}
+                    onContextMenu={(e: any) => e.preventDefault()}
+                    config={{
+                    file: { attributes: { controlsList: "nodownload" } },
+                    }}
+                    width={250}
+                    height={60}
+                />
+            </View> 
+        }
+
+        return null;
+        
+    }
+
+    const renderMessageVideo = (props: any) => {
+
+        if (props.currentMessage.video && props.currentMessage.video !== "") {
+            return <View>
+                <ReactPlayer
+                    url={props.currentMessage.video}
+                    controls={true}
+                    onContextMenu={(e: any) => e.preventDefault()}
+                    config={{
+                    file: { attributes: { controlsList: "nodownload" } },
+                    }}
+                    width={250}
+                    height={200}
+                />
+            </View> 
+        }
+
+        return null;
+        
     }
 
     function emailTimeDisplay(dbDate: string) {
@@ -1103,6 +1215,8 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                             }}>
                                                 <GiftedChat
                                                     // showUserAvatar={isChatGroup}
+                                                    renderMessageAudio={renderMessageAudio}
+                                                    renderMessageVideo={renderMessageVideo}
                                                     renderUsernameOnMessage={isChatGroup}
                                                     messages={chat}
                                                     onSend={messages => onSend(messages)}
@@ -1118,9 +1232,51 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                             <FileUpload
                                                                 onUpload={(u: any, t: any) => {
                                                                     const title = prompt('Enter title and click on OK to share.')
-                                                                    const obj = { url: u, type: t, title: (title + '.' + t) };
+                                                                    if (!title || title === "") return;
+
+                                                                    let text: any = ''
+                                                                    let img: any = ''
+                                                                    let audio: any = ''
+                                                                    let video: any = ''
+                                                                    let file: any = ''
+
+                                                                    if (t === 'png' || t === 'jpeg' || t === 'jpg' || t === 'gif') {
+                                                                        img = u
+                                                                    } else if (t === "mp3" || t === "wav" || t === "mp2" ) {
+                                                                        audio = u 
+                                                                    } else if (t === "mp4") {
+                                                                        video = u
+                                                                    } else {
+                                                                        file = u
+                                                                        text = <TouchableOpacity style={{ backgroundColor: '#2484FF' }}>
+                                                                            <Text style={{
+                                                                                textDecorationLine: 'underline',
+                                                                                backgroundColor: '#2484FF',
+                                                                                color: '#fff'
+                                                                            }}
+                                                                                onPress={() => {
+                                                                                    if (Platform.OS === 'web' || Platform.OS === 'macos' || Platform.OS === 'windows') {
+                                                                                        window.open(u, '_blank')
+                                                                                    } else {
+                                                                                        Linking.openURL(u)
+                                                                                    }
+                                                                                }}
+                                                                            >
+                                                                                {title}
+                                                                            </Text>
+                                                                        </TouchableOpacity>
+                                                                    }
+
+                                                                    const obj = { title, type: t, url: u }
+
                                                                     onSend([{
-                                                                        text: JSON.stringify(obj)
+                                                                        title,
+                                                                        text,
+                                                                        image: img,
+                                                                        audio,
+                                                                        video,
+                                                                        file,
+                                                                        saveCue: JSON.stringify(obj)
                                                                     }])
                                                                 }}
                                                             />

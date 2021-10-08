@@ -196,6 +196,8 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         case "created":
                             Alert("Channel created successfully")
                             props.closeModal()
+                            // Refresh subs
+                            props.refreshSubscriptions()
                             break;
                         case "invalid-name":
                             Alert(invalidChannelNameAlert)
