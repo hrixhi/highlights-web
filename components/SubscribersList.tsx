@@ -1047,7 +1047,15 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
             </View>}
             {
                 attempt.url !== undefined ?
-                    (attempt.type === 'mp4' || attempt.type === 'mp3' || attempt.type === 'mov' || attempt.type === 'mpeg' || attempt.type === 'mp2' || attempt.type === 'wav' ?
+                    (attempt.type === "mp4" ||
+                    attempt.type === "oga" ||
+                    attempt.type === "mov" ||
+                    attempt.type === "wmv" ||
+                    attempt.type === "mp3" ||
+                    attempt.type === "mov" ||
+                    attempt.type === "mpeg" ||
+                    attempt.type === "mp2" ||
+                    attempt.type === "wav" ?
                         <View style={{ width: '100%', marginTop: 25 }}>
                             {attempt.title !== "" ? <Text
                                 style={{
@@ -1864,7 +1872,15 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                         >
                                                             {
                                                                 (
-                                                                    type === 'mp4' || type === 'mp3' || type === 'mov' || type === 'mpeg' || type === 'mp2' || type === 'wav' ?
+                                                                    type === "mp4" ||
+                                                                    type === "oga" ||
+                                                                    type === "mov" ||
+                                                                    type === "wmv" ||
+                                                                    type === "mp3" ||
+                                                                    type === "mov" ||
+                                                                    type === "mpeg" ||
+                                                                    type === "mp2" ||
+                                                                    type === "wav" ?
                                                                         <ReactPlayer url={url} controls={true} />
                                                                         :
                                                                         (!isQuiz ? <View

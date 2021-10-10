@@ -10,6 +10,7 @@ import { createMessage, deleteThread, getThreadWithReplies, markThreadsAsRead, g
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Collapse } from 'react-collapse';
 import { PreferredLanguageText } from '../helpers/LanguageContext';
+import moment from 'moment';
 import {
     Menu,
     MenuOptions,
@@ -169,7 +170,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 img = url
                             } else if (type === "mp3" || type === "wav" || type === "mp2" ) {
                                 audio = url 
-                            } else if (type === "mp4") {
+                            } else if (type === "mp4" || type === "oga" || type === "mov" || type === "wmv") {
                                 video = url
                             } else {
                                 text = <TouchableOpacity style={{ backgroundColor: '#2484FF' }}>
@@ -341,6 +342,17 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
         })
       })
     
+
+    function emailTimeDisplay(dbDate: string) {
+        let date = moment(dbDate);
+        var currentDate = moment();
+        if (currentDate.isSame(date, 'day'))
+            return date.format('h:mm a');
+        else if (currentDate.isSame(date, 'year'))
+            return date.format("MMM DD");
+        else
+            return date.format("MM/DD/YYYY");
+    }
 
     const customCategoryInput = (<View style={{ width: '100%', backgroundColor: 'white', paddingTop: 20, paddingBottom: 10 }}>
         <View style={{ width: '100%', paddingBottom: 10, backgroundColor: 'white' }}>
@@ -590,6 +602,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             onPress={() => {
                                 setShowPost(false)
                                 setShowThreadCues(false)
+                                props.reload()
                             }}
                             style={{
                                 paddingRight: 20,
@@ -795,7 +808,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                                                 </Text>
                                                                             </View>
                                                                             <View style={{ justifyContent: 'center', flexDirection: 'column' }}>
-                                                                                <View style={{ flexDirection: 'row', backgroundColor: '#fff', paddingLeft: 10 }}>
+                                                                                <View style={{ flexDirection: 'row', backgroundColor: '#fff', paddingLeft: 10, alignItems: 'center' }}>
                                                                                     {
                                                                                         thread.isPrivate ?
                                                                                             <Text style={{ fontSize: 13, padding: 5, color: '#007AFF', textAlign: 'center' }} ellipsizeMode='tail'>
@@ -803,6 +816,23 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                                                             </Text>
                                                                                             : null
                                                                                     }
+                                                                                    {thread.unreadThreads > 0 ? <View style={{
+                                                                                            width: 16,
+                                                                                            height: 16,
+                                                                                            borderRadius: 8,
+                                                                                            marginHorizontal: 5,
+                                                                                            backgroundColor: "#007AFF",
+                                                                                            alignItems: 'center',
+                                                                                            justifyContent: 'center'
+                                                                                        }}>
+                                                                                            <Text style={{ color: 'white', fontSize: 11 }}>
+                                                                                            {thread.unreadThreads}
+                                                                                            </Text>
+                                                                                            
+                                                                                    </View> : null}  
+                                                                                    <Text style={{ fontSize: 11, padding: 5, lineHeight: 13, color: thread.unreadThreads > 0 ? "#007AFF" : '#1d1d20' }} ellipsizeMode='tail'>
+                                                                                        {emailTimeDisplay(thread.time)}
+                                                                                    </Text>
                                                                                     <Text style={{ fontSize: 13, padding: 5, color: '#007AFF', textAlign: 'center' }} ellipsizeMode='tail'>
                                                                                         <Ionicons name='chevron-forward-outline' size={17} />
                                                                                     </Text>

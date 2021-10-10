@@ -211,7 +211,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                 img = url
                             } else if (type === "mp3" || type === "wav" || type === "mp2" ) {
                                 audio = url 
-                            } else if (type === "mp4") {
+                            } else if (type === "mp4" || type === "oga" || type === "mov" || type === "wmv") {
                                 video = url
                             } else {
                                 text = <TouchableOpacity style={{ backgroundColor: '#2484FF' }}>
@@ -480,7 +480,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                 img = url
                             } else if (type === "mp3" || type === "wav" || type === "mp2" ) {
                                 audio = url 
-                            } else if (type === "mp4") {
+                            } else if (type === "mp4" || type === "oga" || type === "mov" || type === "wmv") {
                                 video = url
                             } else {
                                 text = <TouchableOpacity style={{ backgroundColor: '#2484FF' }}>
@@ -610,7 +610,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                 img = url
                             } else if (type === "mp3" || type === "wav" || type === "mp2" ) {
                                 audio = url 
-                            } else if (type === "mp4") {
+                            } else if (type === "mp4" || type === "oga" || type === "mov" || type === "wmv") {
                                 video = url
                             } else {
                                 text = <TouchableOpacity style={{ backgroundColor: '#2484FF' }}>
@@ -817,6 +817,10 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
             text: subscription.channelName
         })
 
+    })
+    
+    const sortChatsByLastMessage = chats.sort((a: any, b: any) => {
+        return new Date(a.lastMessageTime) > new Date(b.lastMessageTime) ? -1 : 1
     })
 
     return (
@@ -1249,7 +1253,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                         img = u
                                                                     } else if (t === "mp3" || t === "wav" || t === "mp2" ) {
                                                                         audio = u 
-                                                                    } else if (t === "mp4") {
+                                                                    } else if (t === "mp4" || t === "oga" || t === "mov" || t === "wmv") {
                                                                         video = u
                                                                     } else {
                                                                         file = u
@@ -1515,7 +1519,9 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                     }}
                                                                 >
                                                                     {
-                                                                        chats.map((chat: any, index) => {
+                                                                        sortChatsByLastMessage.map((chat: any, index) => {
+
+                                                                            console.log("Chat", chat);
 
                                                                             // Group name or individual user name
                                                                             let fName = ''
@@ -1580,51 +1586,32 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                                             </Text>
                                                                                         </View>
                                                                                     </View>
-                                                                                    <View style={{ backgroundColor: '#fff', padding: 0, flexDirection: 'row', alignSelf: 'center' }} >
-                                                                                        <Text style={{ fontSize: 11, padding: 5, lineHeight: 13 }} ellipsizeMode='tail'>
+                                                                                    <View style={{ backgroundColor: '#fff', padding: 0, flexDirection: 'row', alignSelf: 'center', alignItems: 'center' }} >
+                                                                                        {/* Unread notification badge */}
+                                                                                        {chat.unreadMessages > 0 ? <View style={{
+                                                                                            width: 16,
+                                                                                            height: 16,
+                                                                                            borderRadius: 8,
+                                                                                            marginRight: 5,
+                                                                                            backgroundColor: "#007AFF",
+                                                                                            alignItems: 'center',
+                                                                                            justifyContent: 'center'
+                                                                                        }}>
+                                                                                            <Text style={{ color: 'white', fontSize: 11 }}>
+                                                                                            {chat.unreadMessages}
+                                                                                            </Text>
+                                                                                            
+                                                                                        </View> : null}  
+
+                                                                                        <Text style={{ fontSize: 11, padding: 5, lineHeight: 13, color: chat.unreadMessages > 0 ? "#007AFF" : '#1d1d20' }} ellipsizeMode='tail'>
                                                                                             {emailTimeDisplay(chat.lastMessageTime)}
                                                                                         </Text>
                                                                                         <Text style={{ fontSize: 13, padding: 5, lineHeight: 13 }} ellipsizeMode='tail'>
                                                                                             <Ionicons name='chevron-forward-outline' size={20} color='#007AFF' />
                                                                                         </Text>
                                                                                     </View>
-                                                                                    {/* <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                                                                <Text style={{ fontSize: 14, padding: 10, color: '#007AFF', textAlign: 'center' }} ellipsizeMode='tail'>
-                                                                                    <Ionicons name='chevron-forward-outline' size={17} />
-                                                                                </Text>
-                                                                            </View> */}
                                                                                 </TouchableOpacity>
                                                                             )
-                                                                            // <View style={{
-                                                                            //     width: '100%',
-                                                                            //     height: 70,
-                                                                            //     marginBottom: 15,
-                                                                            //     // flex: 1,
-                                                                            //     backgroundColor: 'white'
-                                                                            // }} key={index}>
-                                                                            //     <SearchResultCard
-                                                                            //         style={{
-                                                                            //             height: '100%',
-                                                                            //             borderRadius: 0,
-                                                                            //             overflow: 'hidden',
-                                                                            //             windowHeight: '100%'
-                                                                            //         }}
-                                                                            //         unreadMessages={chat.unreadMessages}
-                                                                            //         title={fName}
-                                                                            //         subtitle={title}
-                                                                            //  onPress={
-                                                                            //     () => {
-                                                                            //         if (chat.userNames.length > 2) {
-                                                                            //             loadGroupChat(chat.users, chat._id)
-                                                                            //         } else {
-                                                                            //             loadChat(
-                                                                            //                 chat.users[0] === userId ? chat.users[1] : chat.users[0]
-                                                                            //                 , chat._id)
-                                                                            //         }
-                                                                            //     }
-                                                                            // }
-                                                                            //     />
-                                                                            // </View>
                                                                         })
                                                                     }
                                                                 </ScrollView>

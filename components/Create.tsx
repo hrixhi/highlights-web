@@ -225,11 +225,14 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
     }
 
     if (type === "mp4" ||
-      type === "mp3" ||
-      type === "mov" ||
-      type === "mpeg" ||
-      type === "mp2" ||
-      type === "wav") {
+    type === "oga" ||
+    type === "mov" ||
+    type === "wmv" ||
+    type === "mp3" ||
+    type === "mov" ||
+    type === "mpeg" ||
+    type === "mp2" ||
+    type === "wav") {
       return;
     }
 
@@ -1373,6 +1376,9 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
               </View>
             ) : imported ? (
               type === "mp4" ||
+                type === "oga" ||
+                type === "mov" ||
+                type === "wmv" ||
                 type === "mp3" ||
                 type === "mov" ||
                 type === "mpeg" ||

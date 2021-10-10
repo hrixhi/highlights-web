@@ -14,11 +14,14 @@ const FileUpload: React.FC<any> = (props: any) => {
     const [uploading, setUploading] = useState(false)
     const handleFile = useCallback(async () => {
         // e.preventDefault();
-        const file: any = await DocumentPicker.getDocumentAsync()
-        console.log(file)
-        if (file.type === 'cancel') {
+        const res: any = await DocumentPicker.getDocumentAsync()
+      
+        if (res.type === 'cancel' || res.type !== "success") {
             return
         }
+
+        const { file } = res;
+        
         setUploading(true)
         if (file.size > 26214400) {
             alert('File size must be less than 25 mb')
@@ -29,7 +32,21 @@ const FileUpload: React.FC<any> = (props: any) => {
             setUploading(false)
             return;
         }
+
         let type = mime.extension(file.type);
+
+        if (file.type === "video/avi") {
+            type = "avi"
+        } else if (file.type === "video/quicktime") {
+            type = "mov"
+        } 
+
+        if (type === "wma" || type === "avi") {
+            alert("This video format is not supported. Uplaod mp4 or ogg.")
+            setUploading(false)
+            return;
+        }
+      
         if (type === 'mpga') {
             type = 'mp3'
         }

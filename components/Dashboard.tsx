@@ -388,9 +388,11 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
         cancelTokenRef.current = axios.CancelToken.source()
 
         try {
-            axios.get(
-                `https://api.cuesapp.co/search`,
-                { cancelToken: cancelTokenRef.current.token, params: { term: searchTerm, userId } } //Pass the cancel token to the current request
+            axios.post(`https://api.cuesapp.co/search`,
+                {
+                    term: searchTerm, userId
+                },
+                { cancelToken: cancelTokenRef.current.token } 
             ).then((res: any) => {
                 console.log(res.data)
                 console.log(res.channels)
