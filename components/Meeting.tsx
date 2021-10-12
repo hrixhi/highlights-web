@@ -289,7 +289,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
     const renderPastMeetings = () => {
         return (pastMeetings.length === 0 ?
             <View style={{ backgroundColor: 'white', flex: 1 }}>
-                <Text style={{ width: '100%', color: '#818385', fontSize: 20, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                <Text style={{ width: '100%', color: '#50566B', fontSize: 20, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                     {PreferredLanguageText('noPastMeetings')}
                 </Text>
             </View>
@@ -297,7 +297,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
             <ScrollView
                 contentContainerStyle={{
                     borderWidth: 1,
-                    borderColor: '#e8e8ea',
+                    borderColor: '#E3E8EE',
                     borderRadius: 0,
                     width: '100%',
                     maxHeight: windowHeight - 200,
@@ -315,9 +315,9 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                 }
                             }}
                             style={{
-                                backgroundColor: '#f7f7f7',
+                                backgroundColor: '#f7fafc',
                                 flexDirection: 'row',
-                                borderColor: '#e8e8ea',
+                                borderColor: '#E3E8EE',
                                 borderBottomWidth: index === pastMeetings.length - 1 ? 0 : 1,
                                 // minWidth: 600, // flex: 1,
                                 width: '100%',
@@ -371,8 +371,8 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                             ]);
                                         }}
                                     >
-                                        <Text style={{ width: '100%', color: '#818385', fontSize: 14, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
-                                            <Ionicons name='trash-outline' size={17} color="#f94144" />
+                                        <Text style={{ width: '100%', color: '#50566B', fontSize: 14, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                            <Ionicons name='trash-outline' size={15} color="#f94144" />
                                         </Text>
                                     </TouchableOpacity>
                                     : null
@@ -427,9 +427,9 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                             lineHeight: 21,
                                             textAlign: 'center'
                                         }}>
-                                            <Ionicons name='copy-outline' size={19} color={'#1D1D20'} />
+                                            <Ionicons name='copy-outline' size={19} color={'#1A2036'} />
                                         </Text>
-                                        <Text style={{ fontSize: 10, color: '#1D1D20', textAlign: 'center', width: '100%', }}>
+                                        <Text style={{ fontSize: 10, color: '#1A2036', textAlign: 'center', width: '100%', }}>
                                             Host Link
                                         </Text>
                                     </TouchableOpacity>
@@ -460,9 +460,9 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                             lineHeight: 21,
                                             textAlign: 'center'
                                         }}>
-                                            <Ionicons name='copy-outline' size={19} color={'#1D1D20'} />
+                                            <Ionicons name='copy-outline' size={19} color={'#1A2036'} />
                                         </Text>
-                                        <Text style={{ fontSize: 10, color: '#1D1D20', textAlign: 'center', width: '100%', }}>
+                                        <Text style={{ fontSize: 10, color: '#1A2036', textAlign: 'center', width: '100%', }}>
                                             Guest Link
                                         </Text>
                                     </TouchableOpacity>
@@ -475,7 +475,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                             backgroundColor: "white",
                             flex: 1,
                             flexDirection: 'row',
-                            justifyContent: 'flex-end'
+                            justifyContent: 'flex-start'
                         }}>
                         <TouchableOpacity
                             onPress={handleEnterClassroom}
@@ -491,9 +491,9 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                             <Text style={{
                                 textAlign: 'center',
                                 lineHeight: 35,
-                                color: '#007aff',
+                                color: '#5469D4',
                                 fontSize: 12,
-                                borderColor: '#007aff',
+                                borderColor: '#5469D4',
                                 paddingHorizontal: 20,
                                 borderWidth: 1,
                                 fontFamily: 'inter',
@@ -502,7 +502,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                 borderRadius: 15,
                                 textTransform: 'uppercase'
                             }}>
-                                {PreferredLanguageText("enterClassroom")} <Ionicons name='videocam-outline' />
+                                {PreferredLanguageText("enterClassroom")}
                             </Text>
                         </TouchableOpacity>
                     </View>
@@ -516,7 +516,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                     {
                                         attendances.length === 0 ?
                                             <View style={{ backgroundColor: 'white', flex: 1 }}>
-                                                <Text style={{ width: '100%', color: '#818385', fontSize: 20, paddingVertical: 50, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                                <Text style={{ width: '100%', color: '#50566B', fontSize: 20, paddingVertical: 50, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                                                     {PreferredLanguageText('noAttendances')}
                                                 </Text>
                                             </View>
@@ -544,7 +544,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
             </Animated.View>
         </ScrollView>
     );
-    
+
     return mainClassroomView
 };
 
@@ -562,7 +562,7 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 12,
-        color: "#818385",
+        color: "#50566B",
         textAlign: "left",
         paddingHorizontal: 10,
         paddingTop: 5
@@ -587,7 +587,7 @@ const styles = StyleSheet.create({
         maxWidth: '100%',
         borderRadius: 15,
         padding: 13,
-        backgroundColor: '#f7f7f7',
+        backgroundColor: '#f7fafc',
         flexDirection: 'row',
         justifyContent: 'space-between'
     },
@@ -595,22 +595,22 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'column',
         flex: 1,
-        backgroundColor: '#f7f7f7',
+        backgroundColor: '#f7fafc',
     },
     title: {
         fontFamily: 'inter',
         fontSize: 13,
         width: '100%',
         paddingTop: 5,
-        color: '#1D1D20'
+        color: '#1A2036'
     },
     description: {
         fontSize: 13,
-        color: '#818385',
+        color: '#50566B',
     },
     all: {
         fontSize: 11,
-        color: '#2f2f3c',
+        color: '#50566B',
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: '#fff',

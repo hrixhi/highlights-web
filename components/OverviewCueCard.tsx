@@ -14,7 +14,7 @@ const OverviewCueCard: React.FunctionComponent<{ [label: string]: any }> = (prop
     const starred = props.cue.starred;
     const { title, subtitle } = htmlStringParser(props.cue.channelId && props.cue.channelId !== '' ? props.cue.original : props.cue.cue)
     const [showScore, setShowScore] = useState(false);
-    const [colorCode, setColorCode] = useState('#1D1D20');
+    const [colorCode, setColorCode] = useState('#1A2036');
     const [isOwner, setIsOwner] = useState(false)
 
     useEffect(() => {
@@ -99,7 +99,7 @@ const OverviewCueCard: React.FunctionComponent<{ [label: string]: any }> = (prop
                         </Text> */}
                         {/* {
                             props.cue.submission ? <Text style={styleObject.date}>
-                                <Ionicons name='share-outline' size={9} color={props.cue.submittedAt && props.cue.submittedAt !== '' ? ('#007AFF') : (colorScheme === 'light' ? '#fff' : '#333333')} style={{ marginRight: 10 }} />
+                                <Ionicons name='share-outline' size={9} color={props.cue.submittedAt && props.cue.submittedAt !== '' ? ('#5469D4') : (colorScheme === 'light' ? '#fff' : '#333333')} style={{ marginRight: 10 }} />
                             </Text> : null
                         }
                         {
@@ -111,7 +111,7 @@ const OverviewCueCard: React.FunctionComponent<{ [label: string]: any }> = (prop
                         {
                             props.cue.graded && showScore && !isOwner ? <Text style={{
                                 fontSize: 10,
-                                color: '#007AFF',
+                                color: '#5469D4',
                                 marginLeft: 10
                             }}>
                                 {props.cue.score}%
@@ -141,11 +141,11 @@ const OverviewCueCard: React.FunctionComponent<{ [label: string]: any }> = (prop
                         </Text>
                     </View>
                     <View style={{
-                        backgroundColor: '#f7f7f7',
+                        backgroundColor: '#f7fafc',
                         width: '100%', flex: 1, height: '80%'
                     }}>
                         <View
-                            style={{ flexDirection: 'row', height: '13%', backgroundColor: '#f7f7f7', justifyContent: 'flex-end' }}
+                            style={{ flexDirection: 'row', height: '13%', backgroundColor: '#f7fafc', justifyContent: 'flex-end' }}
                         >
                             {
                                 props.editFolderChannelId === props.cue.channelId ?
@@ -180,7 +180,7 @@ const OverviewCueCard: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             height: 20,
                                             borderRadius: 0,
                                             overflow: 'hidden',
-                                            backgroundColor: '#f7f7f7',
+                                            backgroundColor: '#f7fafc',
                                             zIndex: 150
                                         }}
                                     />
@@ -192,7 +192,7 @@ const OverviewCueCard: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         height: 20,
                                         borderRadius: 0,
                                         overflow: 'hidden',
-                                        backgroundColor: '#007AFF',
+                                        backgroundColor: '#5469D4',
                                         textAlign: 'center',
                                         zIndex: 150,
                                         marginLeft: 10,
@@ -243,9 +243,9 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
         borderRadius: 15,
         padding: 12,
         paddingHorizontal: 15,
-        backgroundColor: '#f7f7f7',
+        backgroundColor: '#f7fafc',
         borderWidth: 1,
-        borderColor: '#e8e8ea',
+        borderColor: '#E3E8EE',
         maxHeight: 150
     },
     flipCard: {
@@ -254,7 +254,7 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
         borderRadius: 15,
         padding: 13,
         color: '#fff',
-        backgroundColor: colorScheme === 'light' ? '#1D1D20' : 'white'
+        backgroundColor: colorScheme === 'light' ? '#1A2036' : 'white'
     },
     descriptionFlip: {
         color: '#fff',
@@ -263,18 +263,18 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
     },
     text: {
         height: '100%',
-        backgroundColor: '#f7f7f7'
+        backgroundColor: '#f7fafc'
     },
     flipText: {
         height: '100%',
         color: '#fff',
-        backgroundColor: colorScheme === 'light' ? '#1D1D20' : '#f7f7f7'
+        backgroundColor: colorScheme === 'light' ? '#1A2036' : '#f7fafc'
     },
     dateContainer: {
         fontSize: 10,
         color: '#fff',
         height: '20%',
-        backgroundColor: '#f7f7f7',
+        backgroundColor: '#f7fafc',
         display: 'flex',
         flexDirection: 'row'
     },
@@ -284,17 +284,17 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
         display: 'flex',
         flexDirection: 'row',
         color: '#fff',
-        backgroundColor: colorScheme === 'light' ? '#1D1D20' : '#f7f7f7'
+        backgroundColor: colorScheme === 'light' ? '#1A2036' : '#f7fafc'
     },
     date: {
         fontSize: 10,
-        color: colorScheme === 'light' ? '#f7f7f7' : '#333333',
+        color: colorScheme === 'light' ? '#f7fafc' : '#333333',
         // marginLeft: 10,
         lineHeight: 10
     },
     date2: {
         fontSize: 10,
-        color: colorScheme === 'light' ? '#f7f7f7' : '#333333',
+        color: colorScheme === 'light' ? '#f7fafc' : '#333333',
         marginLeft: 10,
         lineHeight: 10,
         textAlign: 'right',
@@ -310,8 +310,8 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
         color: col
     },
     titleFlip: {
-        color: colorScheme === 'light' ? '#1D1D20' : '#1D1D20',
-        backgroundColor: colorScheme === 'light' ? '#f7f7f7' : '#f7f7f7',
+        color: colorScheme === 'light' ? '#1A2036' : '#1A2036',
+        backgroundColor: colorScheme === 'light' ? '#f7fafc' : '#f7fafc',
         fontFamily: 'inter',
         fontSize: 13,
         // ,
@@ -321,7 +321,7 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
     },
     description: {
         fontSize: 13,
-        color: '#818385',
+        color: '#50566B',
         // height: '30%'
         height: '27%',
     }

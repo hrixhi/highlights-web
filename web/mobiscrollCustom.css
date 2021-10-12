@@ -10,7 +10,7 @@
 
 .mobiscrollCustomInput {
     border: 0px;
-    /* border-bottom: 1px solid #e8e8ea; */
+    /* border-bottom: 1px solid #E3E8EE; */
     width: 100px;
     padding-top: 13px;
     padding-bottom: 8px;
@@ -21,7 +21,7 @@
 
 .mobiscrollCreateInput {
     border: 0px;
-    /* border-bottom: 1px solid #e8e8ea; */
+    /* border-bottom: 1px solid #E3E8EE; */
     font-weight: bold;
     font-family: "inter";
     cursor: pointer;
@@ -29,7 +29,7 @@
 
 .mobiscrollCategoryInput {
     border: 0px;
-    /* border-bottom: 1px solid #e8e8ea; */
+    /* border-bottom: 1px solid #E3E8EE; */
     width: 150px;
     font-weight: bold;
     font-family: "inter";
@@ -38,7 +38,7 @@
 
 .mobiscrollFrequencyInput {
     border: 0px;
-    /* border-bottom: 1px solid #e8e8ea; */
+    /* border-bottom: 1px solid #E3E8EE; */
     width: 90px;
     font-weight: bold;
     font-family: "inter";
@@ -67,7 +67,7 @@
     /* width: 180px; */
     border: 0px;
     border-radius: 0px;
-    border-bottom: 1px solid #e8e8ea;
+    border-bottom: 1px solid #E3E8EE;
     font-size: 14px;
 }
 
@@ -75,7 +75,7 @@
     /* width: 180px; */
     border: 0px;
     border-radius: 0px;
-    border-bottom: 1px solid #e8e8ea;
+    border-bottom: 1px solid #E3E8EE;
     font-size: 14px;
 }
 
@@ -86,11 +86,11 @@
 }
 
 .mce-content-body[data-mce-placeholder]:not(.mce-visualblocks)::before {
-    color: #a2a2ac !important; 
+    color: #50566B !important; 
 }
 
 .tox-tinymce {
-    border: 1px solid #e8e8ea !important;
+    border: 1px solid #E3E8EE !important;
 }
 
 /* .dropdown {

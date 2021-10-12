@@ -642,7 +642,7 @@ export function LanguageSelect() {
 
     const [showLanguageDropdown, setShowLanguageDropdown] = useState(false);
     const colorScheme = useColorScheme();
-    const color = colorScheme === 'light' ? '#1D1D20' : '#fff'
+    const color = colorScheme === 'light' ? '#1A2036' : '#fff'
 
     return <LanguageContext.Consumer>
         {context => {
@@ -662,7 +662,7 @@ export function LanguageSelect() {
                         selectedValue={language}
                         style={{
                             height: 28, borderRadius: 0,
-                            // border: "1px solid #818385",
+                            // border: "1px solid #50566B",
                             fontSize: 12,
                             padding: '0px 5px'
                         }}

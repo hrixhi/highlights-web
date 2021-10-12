@@ -270,7 +270,7 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
     }
     
-    const windowHeight = Dimensions.get('window').width < 1024 ? Dimensions.get('window').height - 30 : Dimensions.get('window').height;
+    const windowHeight = Dimensions.get('window').width < 1024 ? Dimensions.get('window').height  : Dimensions.get('window').height;
     return (
         <ScrollView style={{
             width: '100%',
@@ -307,7 +307,7 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             borderTopLeftRadius: 0,
                             paddingVertical: 100
                         }}>
-                            <ActivityIndicator color={'#818385'} />
+                            <ActivityIndicator color={'#50566B'} />
                         </View>
                         :
                         <GradesList

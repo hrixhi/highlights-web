@@ -45,7 +45,7 @@ const ActivityCard: React.FunctionComponent<{ [label: string]: any }> = (props: 
                             }
                         </Text>
 
-                    </View> <View style={{ backgroundColor: '#f7f7f7', width: '100%', flexDirection: 'row', display: 'flex' }}>
+                    </View> <View style={{ backgroundColor: '#f7fafc', width: '100%', flexDirection: 'row', display: 'flex' }}>
                         <Text ellipsizeMode={'tail'}
                             numberOfLines={1}
                             style={styleObject.title}>
@@ -70,7 +70,7 @@ const ActivityCard: React.FunctionComponent<{ [label: string]: any }> = (props: 
                         <Text ellipsizeMode={'tail'}
                             numberOfLines={1}
                             style={styleObject.titleArrow}>
-                            <Ionicons name="chevron-forward-outline" color="#818385" size={17} style={{ marginTop: 4 }} />
+                            <Ionicons name="chevron-forward-outline" color="#50566B" size={15} style={{ marginTop: 4 }} />
                         </Text>
                     </View>
                     <Text ellipsizeMode={'tail'}
@@ -93,7 +93,7 @@ const styles: any = () => StyleSheet.create({
         maxWidth: 500,
         borderRadius: 0,
         overflow: 'hidden',
-        backgroundColor: '#f7f7f7',
+        backgroundColor: '#f7fafc',
     },
     badge: {
         width: 20,
@@ -109,33 +109,33 @@ const styles: any = () => StyleSheet.create({
         width: '100%',
         borderRadius: 0,
         padding: 13,
-        backgroundColor: '#f7f7f7',
+        backgroundColor: '#f7fafc',
         borderWidth: 1,
-        borderColor: '#e8e8ea'
+        borderColor: '#E3E8EE'
     },
     text: {
         display: 'flex',
         flexDirection: 'column',
         flex: 1,
-        backgroundColor: '#f7f7f7'
+        backgroundColor: '#f7fafc'
     },
     dateContainer: {
         fontSize: 10,
         height: '22%',
-        backgroundColor: '#f7f7f7',
+        backgroundColor: '#f7fafc',
         display: 'flex',
         flexDirection: 'row'
     },
     date: {
         fontSize: 10,
-        color: '#818385',
+        color: '#50566B',
         // marginLeft: 5
     },
     title: {
         fontFamily: 'inter',
         fontSize: 13,
         paddingTop: 7,
-        color: '#1D1D20',
+        color: '#1A2036',
         flex: 1
     },
     titleArrow: {
@@ -148,7 +148,7 @@ const styles: any = () => StyleSheet.create({
     },
     description: {
         fontSize: 13,
-        color: '#818385',
+        color: '#50566B',
         // height: '30%',
     },
     color: {

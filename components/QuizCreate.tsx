@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback, useRef, createRef } from 'react';
-import { StyleSheet, Image, Dimensions, Keyboard , TextInput as DefaultTextInput } from 'react-native';
+import { StyleSheet, Image, Dimensions, Keyboard, TextInput as DefaultTextInput } from 'react-native';
 import { TextInput } from "./CustomTextInput";
 import { Text, TouchableOpacity, View } from '../components/Themed';
 import { Ionicons } from '@expo/vector-icons';
@@ -25,7 +25,7 @@ import {
     actions,
     RichEditor,
     RichToolbar,
-  } from "react-native-pell-rich-editor";
+} from "react-native-pell-rich-editor";
 
 import Alert from "../components/Alert";
 
@@ -70,9 +70,9 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
     const [reloadEditorKey, setReloadEditorKey] = useState(Math.random());
     const [showImportOptions, setShowImportOptions] = useState(false);
     const [showFormulaGuide, setShowFormulaGuide] = useState(false);
-    const [getRef, setRef] =  useDynamicRefs();
+    const [getRef, setRef] = useDynamicRefs();
     const [optionEquations, setOptionEquations] = useState<any[]>([]);
-    const [showOptionFormulas, setShowOptionFormulas] =  useState<any[]>([]);
+    const [showOptionFormulas, setShowOptionFormulas] = useState<any[]>([]);
 
     let RichText: any = useRef();
 
@@ -81,7 +81,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
         if (editQuestionNumber === 0) {
             setShowOptionFormulas([])
             setOptionEquations([])
-        } 
+        }
 
     }, [editQuestionNumber])
 
@@ -123,26 +123,26 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
         setShowEquationEditor(false);
         setEquation("");
         // setReloadEditorKey(Math.random())
-      }, [equation, RichText, RichText.current, showEquationEditor, editQuestionNumber, problems]);
+    }, [equation, RichText, RichText.current, showEquationEditor, editQuestionNumber, problems]);
 
     const renderAudioVideoPlayer = (url: string, type: string) => {
         return <ReactPlayer
-        url={url}
-        controls={true}
-        width={"100%"}
-        height={type === "mp3" || type === "wav" ? "75px" : "360px" }
-        onContextMenu={(e: any) => e.preventDefault()}
-        config={{
-          file: { attributes: { controlsList: "nodownload" } },
-        }}
-      />
+            url={url}
+            controls={true}
+            width={"100%"}
+            height={type === "mp3" || type === "wav" ? "75px" : "360px"}
+            onContextMenu={(e: any) => e.preventDefault()}
+            config={{
+                file: { attributes: { controlsList: "nodownload" } },
+            }}
+        />
     }
 
     const renderQuestionEditor = (index: number) => {
 
         if (editQuestionNumber === 0) return null;
 
-        let audioVideoQuestion = problems[index].question[0] === "{"  && problems[index].question[problems[index].question.length - 1] === "}";
+        let audioVideoQuestion = problems[index].question[0] === "{" && problems[index].question[problems[index].question.length - 1] === "}";
 
         let url = "";
         let type = "";
@@ -155,39 +155,39 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
             content = parse.content;
             type = parse.type;
         }
-        
+
         return (<View >
-                {audioVideoQuestion || !showImportOptions ? null : (
-                    <View style={{ paddingVertical: 10 }}>
-                        <FileUpload
-                            action={"audio/video"}
-                            back={() => setShowImportOptions(false)}
-                            onUpload={(u: any, t: any) => {
-                                const obj = { url: u, type: t, content: problems[index].question };
-                                const newProbs = [...problems];
-                                newProbs[index].question = JSON.stringify(obj);
-                                setProblems(newProbs)
-                                props.setProblems(newProbs)
-                                setShowImportOptions(false);
-                            }}
-                        />
-                    </View>
-                )}
-                {audioVideoQuestion ? 
-                    renderAudioVideoPlayer(url, type)
-                  : null
-                }
-                {
-                    (showEquationEditor ?
-                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            <View style={{
-                                borderColor: '#e8e8ea',
-                                borderWidth: 1,
-                                borderRadius: 15,
-                                padding: 10,
-                                width: '70%',
-                                marginVertical: 20
-                            }}>
+            {audioVideoQuestion || !showImportOptions ? null : (
+                <View style={{ paddingVertical: 10 }}>
+                    <FileUpload
+                        action={"audio/video"}
+                        back={() => setShowImportOptions(false)}
+                        onUpload={(u: any, t: any) => {
+                            const obj = { url: u, type: t, content: problems[index].question };
+                            const newProbs = [...problems];
+                            newProbs[index].question = JSON.stringify(obj);
+                            setProblems(newProbs)
+                            props.setProblems(newProbs)
+                            setShowImportOptions(false);
+                        }}
+                    />
+                </View>
+            )}
+            {audioVideoQuestion ?
+                renderAudioVideoPlayer(url, type)
+                : null
+            }
+            {
+                (showEquationEditor ?
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <View style={{
+                            borderColor: '#C1C9D2',
+                            borderWidth: 1,
+                            borderRadius: 15,
+                            padding: 10,
+                            width: '70%',
+                            marginVertical: 20
+                        }}>
                             <EquationEditor
                                 value={equation}
                                 onChange={setEquation}
@@ -203,7 +203,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             }}
                             onPress={() => insertEquation()}
                         >
-                            <Ionicons name="add-circle-outline" color="#1D1D20" size={17} />
+                            <Ionicons name="add-circle-outline" color="#1A2036" size={15} />
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={{
@@ -212,36 +212,36 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 maxWidth: "10%",
                             }}
                             onPress={() => setShowFormulaGuide(true)}
-                            >
-                            <Ionicons name="help-circle-outline" color="#1D1D20" size={20} />
+                        >
+                            <Ionicons name="help-circle-outline" color="#1A2036" size={20} />
                         </TouchableOpacity>
                     </View> : null)
-                }
+            }
 
-                <Editor
-                    onInit={(evt, editor) => RichText.current = editor}
-                    initialValue={editQuestion && editQuestion.question ?  editQuestion.question : ""}
-                    apiKey="ip4jckmpx73lbu6jgyw9oj53g0loqddalyopidpjl23fx7tl"
-                    init={{
-                        skin: "snow",
-                        // toolbar_sticky: true,
-                        // selector: 'textarea',  // change this value according to your HTML
-                        // content_style: 'div { margin: 10px; border: 5px solid red; padding: 3px; }',
-                        indent: false,
-                        body_class: 'tinyMCEInput',
-                        branding: false,
-                        placeholder: 'Problem',
-                        autoresize_on_init: false,
-                        autoresize_min_height: 250,
-                        height: 250,
-                        min_height: 250,
-                        paste_data_images: true,
-                        images_upload_url: 'https://api.cuesapp.co/api/imageUploadEditor',
-                        mobile: {
+            <Editor
+                onInit={(evt, editor) => RichText.current = editor}
+                initialValue={editQuestion && editQuestion.question ? editQuestion.question : ""}
+                apiKey="ip4jckmpx73lbu6jgyw9oj53g0loqddalyopidpjl23fx7tl"
+                init={{
+                    skin: "snow",
+                    // toolbar_sticky: true,
+                    // selector: 'textarea',  // change this value according to your HTML
+                    // content_style: 'div { margin: 10px; border: 5px solid red; padding: 3px; }',
+                    indent: false,
+                    body_class: 'tinyMCEInput',
+                    branding: false,
+                    placeholder: 'Problem',
+                    autoresize_on_init: false,
+                    autoresize_min_height: 250,
+                    height: 250,
+                    min_height: 250,
+                    paste_data_images: true,
+                    images_upload_url: 'https://api.cuesapp.co/api/imageUploadEditor',
+                    mobile: {
                         plugins: 'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize'
-                        },
-                        plugins: 'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize',
-                        menu: { // this is the complete default configuration
+                    },
+                    plugins: 'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize',
+                    menu: { // this is the complete default configuration
                         file: { title: 'File', items: 'newdocument' },
                         edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall' },
                         insert: { title: 'Insert', items: 'link media | template hr' },
@@ -249,95 +249,95 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         format: { title: 'Format', items: 'bold italic underline strikethrough superscript subscript | formats | removeformat' },
                         table: { title: 'Table', items: 'inserttable tableprops deletetable | cell row column' },
                         tools: { title: 'Tools', items: 'spellchecker code' }
-                        },
-                        // menubar: 'file edit view insert format tools table tc help',
-                        menubar: false,
-                        toolbar: 'undo redo | bold italic underline strikethrough | superscript subscript | numlist bullist | forecolor backcolor permanentpen removeformat | table image media pageembed link | charmap emoticons ',
-                        importcss_append: true,
-                        image_caption: true,
-                        quickbars_selection_toolbar: 'bold italic underline | quicklink h2 h3 quickimage quicktable',
-                        noneditable_noneditable_class: 'mceNonEditable',
-                        toolbar_mode: 'sliding',
-                        content_style: ".mce-content-body[data-mce-placeholder]:not(.mce-visualblocks)::before{color: #a2a2ac;}",
-                        // tinycomments_mode: 'embedded',
-                        // content_style: '.mymention{ color: gray; }',
-                        // contextmenu: 'link image table configurepermanentpen',
-                        // a11y_advanced_options: true,
-                        extended_valid_elements: "svg[*],defs[*],pattern[*],desc[*],metadata[*],g[*],mask[*],path[*],line[*],marker[*],rect[*],circle[*],ellipse[*],polygon[*],polyline[*],linearGradient[*],radialGradient[*],stop[*],image[*],view[*],text[*],textPath[*],title[*],tspan[*],glyph[*],symbol[*],switch[*],use[*]"
-                        // skin: useDarkMode ? 'oxide-dark' : 'oxide',
-                        // content_css: useDarkMode ? 'dark' : 'default',
-                    }}
-                    onChange={(e: any) => {
-                        if (audioVideoQuestion) {
-                            const currQuestion = JSON.parse(problems[index].question);
-                            const updatedQuestion = {
-                                ...currQuestion,
-                                content: e.target.getContent()
-                            }
-                            const newProbs = [...problems];
-                            newProbs[index].question = JSON.stringify(updatedQuestion);
-                            setProblems(newProbs)
-                            props.setProblems(newProbs)
-
-                        } else {
-                            // setCue(modifedText);
-                            const newProbs = [...problems];
-                            newProbs[index].question = e.target.getContent();
-                            setProblems(newProbs)
-                            props.setProblems(newProbs)
+                    },
+                    // menubar: 'file edit view insert format tools table tc help',
+                    menubar: false,
+                    toolbar: 'undo redo | bold italic underline strikethrough | superscript subscript | numlist bullist | forecolor backcolor permanentpen removeformat | table image media pageembed link | charmap emoticons ',
+                    importcss_append: true,
+                    image_caption: true,
+                    quickbars_selection_toolbar: 'bold italic underline | quicklink h2 h3 quickimage quicktable',
+                    noneditable_noneditable_class: 'mceNonEditable',
+                    toolbar_mode: 'sliding',
+                    content_style: ".mce-content-body[data-mce-placeholder]:not(.mce-visualblocks)::before{color: #a2a2ac;}",
+                    // tinycomments_mode: 'embedded',
+                    // content_style: '.mymention{ color: gray; }',
+                    // contextmenu: 'link image table configurepermanentpen',
+                    // a11y_advanced_options: true,
+                    extended_valid_elements: "svg[*],defs[*],pattern[*],desc[*],metadata[*],g[*],mask[*],path[*],line[*],marker[*],rect[*],circle[*],ellipse[*],polygon[*],polyline[*],linearGradient[*],radialGradient[*],stop[*],image[*],view[*],text[*],textPath[*],title[*],tspan[*],glyph[*],symbol[*],switch[*],use[*]"
+                    // skin: useDarkMode ? 'oxide-dark' : 'oxide',
+                    // content_css: useDarkMode ? 'dark' : 'default',
+                }}
+                onChange={(e: any) => {
+                    if (audioVideoQuestion) {
+                        const currQuestion = JSON.parse(problems[index].question);
+                        const updatedQuestion = {
+                            ...currQuestion,
+                            content: e.target.getContent()
                         }
-                    }}
-                />
+                        const newProbs = [...problems];
+                        newProbs[index].question = JSON.stringify(updatedQuestion);
+                        setProblems(newProbs)
+                        props.setProblems(newProbs)
+
+                    } else {
+                        // setCue(modifedText);
+                        const newProbs = [...problems];
+                        newProbs[index].question = e.target.getContent();
+                        setProblems(newProbs)
+                        props.setProblems(newProbs)
+                    }
+                }}
+            />
         </View>)
     }
 
     const cameraCallback = useCallback(async () => {
         const cameraSettings = await ImagePicker.getCameraPermissionsAsync();
         if (!cameraSettings.granted) {
-          await ImagePicker.requestCameraPermissionsAsync();
-          const updatedCameraSettings =
-            await ImagePicker.getCameraPermissionsAsync();
-          if (!updatedCameraSettings.granted) {
-            return;
-          }
+            await ImagePicker.requestCameraPermissionsAsync();
+            const updatedCameraSettings =
+                await ImagePicker.getCameraPermissionsAsync();
+            if (!updatedCameraSettings.granted) {
+                return;
+            }
         }
         let result = await ImagePicker.launchCameraAsync({
-          mediaTypes: ImagePicker.MediaTypeOptions.Images,
-          quality: 1,
-          base64: true,
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            quality: 1,
+            base64: true,
         });
         if (!result.cancelled) {
-          RichText.current.insertImage(
-            result.uri,
-            "border-radius: 8px; max-width: 400px; width: 100%;"
-          );
+            RichText.current.insertImage(
+                result.uri,
+                "border-radius: 8px; max-width: 400px; width: 100%;"
+            );
         }
-      }, [RichText, RichText.current]);
-    
-      const galleryCallback = useCallback(async () => {
+    }, [RichText, RichText.current]);
+
+    const galleryCallback = useCallback(async () => {
         const gallerySettings = await ImagePicker.getMediaLibraryPermissionsAsync();
         if (!gallerySettings.granted) {
-          await ImagePicker.requestMediaLibraryPermissionsAsync();
-          const updatedGallerySettings =
-            await ImagePicker.getMediaLibraryPermissionsAsync();
-          if (!updatedGallerySettings.granted) {
-            return;
-          }
+            await ImagePicker.requestMediaLibraryPermissionsAsync();
+            const updatedGallerySettings =
+                await ImagePicker.getMediaLibraryPermissionsAsync();
+            if (!updatedGallerySettings.granted) {
+                return;
+            }
         }
-    
+
         let result = await ImagePicker.launchImageLibraryAsync({
-          mediaTypes: ImagePicker.MediaTypeOptions.Images,
-          quality: 1,
-          base64: true,
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            quality: 1,
+            base64: true,
         });
-    
+
         if (!result.cancelled) {
-          RichText.current.insertImage(
-            result.uri,
-            "border-radius: 8px; max-width: 400px; width: 100%;"
-          );
+            RichText.current.insertImage(
+                result.uri,
+                "border-radius: 8px; max-width: 400px; width: 100%;"
+            );
         }
-      }, [RichText, RichText.current]);
+    }, [RichText, RichText.current]);
 
 
     const optionGalleryCallback = useCallback(async (index: any, i: any) => {
@@ -420,13 +420,17 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
     }
 
     const renderHeaderOption = (index: number) => {
-        return <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'flex-start', }} >
+        return <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'center' }} >
             {index in headers
                 ?
-                <View style={{ flexDirection: 'row', width: '95%', marginTop: 50, paddingLeft: 20, marginBottom: 20 }}>
+                <View style={{ flexDirection: 'row', width: '100%', marginTop: 50, marginBottom: 20 }}>
                     <View style={{ width: Dimensions.get('window').width < 1024 ? '95%' : '50%' }}>
                         <TextareaAutosize
-                            style={{ maxWidth: '100%', marginBottom: 10, marginTop: 10, paddingTop: 13, paddingBottom: 13, fontSize: 14, borderBottom: '1px solid #e8e8ea', }}
+                            style={{
+                                maxWidth: '100%', marginBottom: 10, marginTop: 10,
+                                borderRadius: 0,
+                                paddingTop: 13, paddingBottom: 13, fontSize: 14, borderBottom: '1px solid #C1C9D2',
+                            }}
                             value={headers[index]}
                             placeholder={'Heading'}
                             onChange={(e: any) => {
@@ -438,35 +442,53 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             minRows={1}
                         />
                     </View>
-                    <View style={{ paddingTop: 20, paddingLeft: 20 }}>
-                        <Ionicons
-                            name='close-outline'
+                    <View style={{ paddingTop: 35, paddingLeft: 20 }}>
+                        <Text
+                            style={{
+                                color: '#5469D4',
+                                fontFamily: 'Overpass',
+                                fontSize: 10
+                            }}
                             onPress={() => {
                                 removeHeader(index)
                             }}
-                            size={17}
-                        />
+                        >
+                            Remove
+                        </Text>
                     </View>
                 </View>
                 :
                 <TouchableOpacity
-                    style={{ width: 100, flexDirection: 'row', }}
                     onPress={() => addHeader(index)}
+                    style={{
+                        backgroundColor: "white",
+                        overflow: "hidden",
+                        height: 35,
+                        marginTop: 15,
+                        marginBottom: 15,
+                        // width: "100%",
+                        justifyContent: "center",
+                        flexDirection: "row",
+                    }}
                 >
-                    {/* <Ionicons name='add-circle' size={19} color={"#1D1D20"} /> */}
                     <Text
                         style={{
-                            marginLeft: 10,
-                            fontSize: 10,
-                            paddingBottom: 20,
-                            textTransform: "uppercase",
-                            // paddingLeft: 20,
-                            flex: 1,
-                            lineHeight: 25,
-                            color: '#1D1D20',
-                            paddingLeft: 12
-                        }}>
-                        Add Header
+                            color: '#5469D4',
+                            borderWidth: 1,
+                            borderRadius: 15,
+                            borderColor: '#5469D4',
+                            backgroundColor: '#fff',
+                            fontSize: 12,
+                            textAlign: "center",
+                            lineHeight: 35,
+                            paddingHorizontal: 20,
+                            fontFamily: "inter",
+                            height: 35,
+                            textTransform: 'uppercase',
+                            width: 175,
+                        }}
+                    >
+                        Add Heading
                     </Text>
                 </TouchableOpacity>}
         </View>
@@ -477,20 +499,20 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
         if (editQuestionNumber === 0) return true;
 
         const currentQuestion = problems[index];
-        
+
         if (currentQuestion.question === "") {
             alert(`Question ${index + 1} has no content.`)
-            return false; 
+            return false;
         }
 
         if (currentQuestion.points === "") {
             alert(`Enter points for Question ${index + 1}.`)
-            return false; 
+            return false;
         }
 
         if (currentQuestion.questionType === "" && currentQuestion.options.length < 2) {
             alert(`Create at least 2 options for Question ${index + 1}.`)
-            return false; 
+            return false;
         }
 
         if ((currentQuestion.questionType === "" || currentQuestion.questionType === "trueFalse")) {
@@ -532,12 +554,12 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
     }
 
-    
+
 
     const insertOptionEquation = (index: number) => {
-        const ref : any = getRef(index.toString())
+        const ref: any = getRef(index.toString())
 
-        if (!ref || !ref.current ) return;
+        if (!ref || !ref.current) return;
 
         let currentContent = ref.current.getContent();
 
@@ -561,9 +583,9 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
         updateOptionEquations[index] = "";
         setOptionEquations(updateOptionEquations)
     }
-    
 
-  
+
+
     // Create refs for current question options
     let optionRefs: any[] = []
 
@@ -572,13 +594,14 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
             optionRefs.push(getRef(index.toString()));
         })
     }
-    
+
     return (
         <View style={{
             width: '100%', height: '100%', backgroundColor: 'white',
             borderTopLeftRadius: 0,
+            maxWidth: 1000,
             borderTopRightRadius: 0,
-            borderTopColor: '#f7f7f7',
+            borderTopColor: '#f7fafc',
             borderTopWidth: 1,
             marginTop: 35,
             paddingTop: 25,
@@ -586,7 +609,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
             justifyContent: 'flex-start'
         }}
         >
-            { showFormulaGuide ? <FormulaGuide show={showFormulaGuide} onClose={() => setShowFormulaGuide(false)} /> : null }
+            {showFormulaGuide ? <FormulaGuide show={showFormulaGuide} onClose={() => setShowFormulaGuide(false)} /> : null}
 
             {/* Insert HEADER FOR INDEX 0 */}
             {
@@ -598,7 +621,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
                     // Audio/Video question
 
-                    let audioVideoQuestion = problem.question[0] === "{"  && problem.question[problem.question.length - 1] === "}";
+                    let audioVideoQuestion = problem.question[0] === "{" && problem.question[problem.question.length - 1] === "}";
 
                     let url = "";
                     let content = "";
@@ -613,88 +636,75 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     }
 
 
-                    return <View style={{ borderBottomColor: '#f7f7f7', borderBottomWidth: index === (problems.length - 1) ? 0 : 1, marginBottom: 25 }}>
+                    return <View style={{ borderBottomColor: '#C1C9D2', borderBottomWidth: index === (problems.length - 1) ? 0 : 1, marginBottom: 25, width: '100%' }}>
                         {renderHeaderOption(index)}
-                        <View style={{ flexDirection: 'row' }}>
-                            <View style={{ paddingTop: 15 }}>
-                                <Text style={{ color: '#1D1D20', fontSize: 14, paddingBottom: 25, marginRight: 10, paddingTop: 12 }}>
+                        <View style={{ flexDirection: 'column', width: '100%', paddingBottom: 15 }}>
+                            <View style={{ paddingTop: 15, flexDirection: 'row', flex: 1 }}>
+                                <Text style={{ color: '#1A2036', fontSize: 22, paddingBottom: 25, width: 40, paddingTop: 15, fontFamily: 'inter' }}>
                                     {index + 1}.
                                 </Text>
-                            </View>
-                            <View style={{ flexDirection: Dimensions.get('window').width < 1024 ? 'column' : 'row', width: '95%' }}>
-                                <View key={reloadEditorKey} style={{ width: Dimensions.get('window').width < 1024 ? '95%' : (editQuestionNumber === (index + 1) ? '75%' : '65%'), paddingTop: 7 }}>
-                                    {
-                                        (editQuestionNumber === (index + 1) ? renderQuestionEditor(index) : (audioVideoQuestion ? <View>
-                                            {renderAudioVideoPlayer(url, type)}
-                                            <Text style={{ marginVertical: 20, marginLeft: 20, fontSize: 15, lineHeight: 25 }}>
-                                                {parser(content)}
-                                            </Text>
-                                        </View> : <Text style={{ marginVertical: 20, marginLeft: 20, fontSize: 15, lineHeight: 25  }}>
-                                            {parser(problem.question)}
-                                        </Text>))
-                                    }
-                                    {(editQuestionNumber === (index + 1) ? <View style={{ flexDirection: 'row', marginTop: 10, marginBottom: 20 }}>
-                                        { 
-                                            <TouchableOpacity
-                                                    style={{
-                                                        backgroundColor: '#fff'
-                                                    }}
-                                                    onPress={() => {
-                                                        setShowEquationEditor(!showEquationEditor)
-                                                    }}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            color: '#a2a2ac',
-                                                            fontFamily: 'Overpass',
-                                                            fontSize: 10
-                                                        }}
-                                                    >
-                                                        {
-                                                            showEquationEditor ? "HIDE FORMULA" : "INSERT FORMULA"
-                                                        }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                        }
-                                        { 
-                                            <TouchableOpacity
-                                                    style={{
-                                                        backgroundColor: '#fff'
-                                                    }}
-                                                    onPress={() => {
-
-                                                        if (audioVideoQuestion) {
-                                                            const updateProblems = lodash.cloneDeep(problems);
-                                                            const question = updateProblems[index].question;
-                                                            const parse = JSON.parse(question);
-                                                            updateProblems[index].question = parse.content;
-                                                            setProblems(updateProblems)
-                                                            props.setProblems(updateProblems)
-
+                                <View style={{
+                                    flexDirection: Dimensions.get('window').width < 1024 ? 'column' : 'row',
+                                    alignItems: 'center',
+                                    flex: 1,
+                                    // width: '100%',
+                                    maxWidth: 1000,
+                                    marginTop: Dimensions.get('window').width < 1024 ? 0 : 0
+                                }}>
+                                    <View style={{ flexDirection: 'row' }}>
+                                        {editQuestionNumber === (index + 1) ? <View
+                                            style={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                flexDirection: 'row',
+                                                marginBottom: Dimensions.get('window').width < 1024 ? 0 : 30,
+                                            }}>
+                                            <label style={{ width: 180, marginTop: 10 }}>
+                                                <Select
+                                                    touchUi={true}
+                                                    cssClass="customDropdown"
+                                                    value={dropdownQuestionType}
+                                                    rows={questionTypeOptions.length}
+                                                    data={questionTypeOptions}
+                                                    themeVariant="light"
+                                                    onChange={(val: any) => {
+                                                        // setCustomCategory(val.value)
+                                                        const updatedProblems = [...problems]
+                                                        if (val.value === "mcq") {
+                                                            updatedProblems[index].questionType = "";
                                                         } else {
-                                                            setShowImportOptions(!showImportOptions)
+                                                            updatedProblems[index].questionType = val.value;
                                                         }
-                                                        
+
+                                                        // Clear Options 
+                                                        if (val.value === "freeResponse") {
+                                                            updatedProblems[index].options = []
+                                                        } else if (val.value === "trueFalse") {
+                                                            updatedProblems[index].options = []
+                                                            updatedProblems[index].options.push({
+                                                                option: 'True',
+                                                                isCorrect: false
+                                                            })
+                                                            updatedProblems[index].options.push({
+                                                                option: 'False',
+                                                                isCorrect: false
+                                                            })
+                                                        }
+                                                        setProblems(updatedProblems)
+                                                        props.setProblems(updatedProblems)
+
                                                     }}
-                                                >
-                                                    <Text
-                                                        style={{
-                                                            color: '#a2a2ac',
-                                                            fontFamily: 'Overpass',
-                                                            fontSize: 10,
-                                                            marginLeft: 20
-                                                        }}
-                                                    >
-                                                        {
-                                                            showImportOptions ? "" : audioVideoQuestion ? "REMOVE AUDIO/VIDEO" : "UPLOAD AUDIO/VIDEO"
+                                                    responsive={{
+                                                        small: {
+                                                            display: 'bubble'
+                                                        },
+                                                        medium: {
+                                                            touchUi: false,
                                                         }
-                                                    </Text>
-                                                </TouchableOpacity>
-                                        }
-                                    </View> : null)}
-                                </View>
-                                {/* Add dropdown here */}
-                                <View style={{ flexDirection: (Dimensions.get('window').width < 1024 || editQuestionNumber !== index + 1)  ? 'row' : 'column', alignItems: 'center', height: 40, paddingLeft: Dimensions.get('window').width > 768 ? 50 : 0, marginTop: 15  }}>
+                                                    }}
+                                                />
+                                            </label>
+                                        </View> : null}
                                         <DefaultTextInput
                                             value={editQuestionNumber === (index + 1) ? problem.points : ((problem.points === "" ? "Enter" : problem.points) + " " + (Number(problem.points) === 1 ? 'Point' : 'Points'))}
                                             editable={editQuestionNumber === (index + 1)}
@@ -705,10 +715,11 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 paddingBottom: 12,
                                                 marginTop: 5,
                                                 width: 120,
+                                                marginLeft: editQuestionNumber === (index + 1) ? 20 : 0,
                                                 textAlign: 'center',
                                                 marginBottom: (Dimensions.get('window').width < 1024 || editQuestionNumber !== (index + 1)) ? 0 : 30,
                                                 fontWeight: editQuestionNumber === (index + 1) ? 'normal' : '700',
-                                                borderBottomColor: '#e8e8ea',
+                                                borderBottomColor: '#C1C9D2',
                                                 borderBottomWidth: editQuestionNumber === (index + 1) ? 1 : 0,
                                             }}
                                             placeholder={PreferredLanguageText('enterPoints')}
@@ -721,214 +732,185 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                             }}
                                             placeholderTextColor={'#a2a2ac'}
                                         />
-                                    {editQuestionNumber === (index + 1) ? <View
-                                        style={{
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            flexDirection: 'row',
-                                            marginBottom: Dimensions.get('window').width < 1024 ? 0 : 30,
+                                    </View>
+                                    {
+                                        Dimensions.get('window').width < 1024 ? null : <View style={{ flex: 1 }} />
+                                    }
+                                    <View style={{ flexDirection: 'row' }}>
+                                        {editQuestionNumber === (index + 1) ? <View style={{
+                                            paddingRight: 20,
+                                            paddingTop: 15, flexDirection: 'row', alignItems: 'center', marginBottom: (Dimensions.get('window').width < 1024 || editQuestionNumber !== (index + 1)) ? 0 : 30
                                         }}>
-                                        {/* <Menu
-                                            onSelect={(questionType: any) => {
-                                                const updatedProblems = [...problems]
-                                                updatedProblems[index].questionType = questionType;
-                                                // Clear Options 
-                                                if (questionType === "freeResponse") {
-                                                    updatedProblems[index].options = []
-                                                } else if (questionType === "trueFalse") {
-                                                    updatedProblems[index].options = []
-                                                    updatedProblems[index].options.push({
-                                                        option: 'True',
-                                                        isCorrect: false
-                                                    })
-                                                    updatedProblems[index].options.push({
-                                                        option: 'False',
-                                                        isCorrect: false
-                                                    })
-                                                }
-                                                setProblems(updatedProblems)
-                                                props.setProblems(updatedProblems)
-                                            }}
-                                            style={{ paddingTop: 13, paddingRight: 20, paddingLeft: 20 }}
-                                        >
-                                            <MenuTrigger>
-                                                <Text
-                                                    style={{
-                                                        // fontFamily: "inter",
-                                                        fontSize: 14,
-                                                        color: "#1D1D20",
-                                                    }}
-                                                >
-                                                    {questionTypeLabels[questionType]}
-                                                    <Ionicons name="caret-down" size={14} />
-                                                </Text>
-                                            </MenuTrigger>
-                                            <MenuOptions
-                                                customStyles={{
-                                                    optionsContainer: {
-                                                        padding: 10,
-                                                        borderRadius: 15,
-                                                        shadowOpacity: 0,
-                                                        borderWidth: 1,
-                                                        borderColor: "#e8e8ea",
-                                                        overflow: 'scroll',
-                                                        maxHeight: '100%'
-                                                    },
-                                                }}
-                                            >
-                                                {questionTypeOptions.map((item: any) => {
-                                                    return (
-                                                        <MenuOption value={item.value}>
-                                                            <Text>{item.value === "" ? "MCQ" : item.label}</Text>
-                                                        </MenuOption>
-                                                    );
-                                                })}
-                                            </MenuOptions>
-                                        </Menu> */}
-
-                                        <label style={{ width: 180 }}>
-                                            <Select
-                                                touchUi={true}
-                                                cssClass="customDropdown"
-                                                value={dropdownQuestionType}
-                                                rows={questionTypeOptions.length}
-                                                data={questionTypeOptions}
-                                                themeVariant="light"
-                                                onChange={(val: any) => {
-                                                    // setCustomCategory(val.value)
+                                            <input
+                                                style={{ paddingRight: 20 }}
+                                                type='checkbox'
+                                                checked={problem.required}
+                                                onChange={(e) => {
                                                     const updatedProblems = [...problems]
-                                                    if (val.value === "mcq") {
-                                                        updatedProblems[index].questionType = "";
-                                                    } else {
-                                                        updatedProblems[index].questionType = val.value;
-                                                    }
-                                                    
-                                                    // Clear Options 
-                                                    if (val.value === "freeResponse") {
-                                                        updatedProblems[index].options = []
-                                                    } else if (val.value === "trueFalse") {
-                                                        updatedProblems[index].options = []
-                                                        updatedProblems[index].options.push({
-                                                            option: 'True',
-                                                            isCorrect: false
-                                                        })
-                                                        updatedProblems[index].options.push({
-                                                            option: 'False',
-                                                            isCorrect: false
-                                                        })
-                                                    }
+                                                    updatedProblems[index].required = !updatedProblems[index].required;
                                                     setProblems(updatedProblems)
                                                     props.setProblems(updatedProblems)
-
-                                                }}
-                                                responsive={{
-                                                    small: {
-                                                        display: 'bubble'
-                                                    },
-                                                    medium: {
-                                                        touchUi: false,
-                                                    }
                                                 }}
                                             />
-                                        </label>
-
-                                    </View> : null}
-                                    {editQuestionNumber === (index + 1) ? <View style={{ paddingTop: 15, flexDirection: 'row', alignItems: 'center', marginBottom: (Dimensions.get('window').width < 1024 || editQuestionNumber !== (index + 1)) ? 0 : 30 }}>
-                                        <input
-                                            style={{ paddingRight: 20 }}
-                                            type='checkbox'
-                                            checked={problem.required}
-                                            onChange={(e) => {
-                                                const updatedProblems = [...problems]
-                                                updatedProblems[index].required = !updatedProblems[index].required;
-                                                setProblems(updatedProblems)
-                                                props.setProblems(updatedProblems)
-                                            }}
-                                        />
-                                        <Text style={{ fontSize: 10, textTransform: 'uppercase', marginLeft: 10 }}>
-                                            Required
-                                        </Text>
-                                    </View> : (!problem.required ?
+                                            <Text style={{ fontSize: 10, marginLeft: 10 }}>
+                                                Required
+                                            </Text>
+                                        </View> : (!problem.required ?
                                             (<Text style={{ fontSize: 11, color: '#a2a2ac', marginTop: 5, marginBottom: 5, paddingTop: 8 }}>
-                                                optional
+                                                Optional
                                             </Text>)
                                             : (<Text style={{ fontSize: 11, color: '#a2a2ac', marginTop: 5, marginBottom: 5, paddingTop: 8 }}>
-                                                required
+                                                Required
                                             </Text>))
                                         }
-                                    <View style={{ paddingTop: 10, paddingLeft: editQuestionNumber === (index + 1) ? 0 : 25, flexDirection: 'row', alignItems: 'center', marginBottom: (Dimensions.get('window').width < 1024 || editQuestionNumber !== (index + 1)) ? 0 : 30, }}>
-                                        {editQuestionNumber === (index + 1) ? 
-                                        <View style={{ flexDirection: 'row', paddingLeft: Dimensions.get('window').width < 1024 ? 20 : 0  }}>
-                                            <Ionicons
-                                                name='checkmark-circle-outline'
-                                                color={"#35AC78"}
-                                                style={{
-                                                    marginRight: 30
-                                                }}
-                                                onPress={() => {
-                                                    if (isCurrentQuestionValid(editQuestionNumber - 1)) {
-                                                        setEditQuestionNumber(0)
-                                                        setEditQuestion({})
-                                                    }
-                                                }}
-                                                size={23}
-                                            />
+                                        <View style={{ paddingTop: 10, paddingLeft: editQuestionNumber === (index + 1) ? 0 : 25, flexDirection: 'row', alignItems: 'flex-end', marginBottom: (Dimensions.get('window').width < 1024 || editQuestionNumber !== (index + 1)) ? 0 : 30, }}>
+                                            {editQuestionNumber === (index + 1) ?
+                                                <View style={{ flexDirection: 'row', paddingLeft: Dimensions.get('window').width < 1024 ? 20 : 0 }}>
+                                                    <Ionicons
+                                                        name='save-outline'
+                                                        color={"#5469D4"}
+                                                        style={{
+                                                            marginRight: 30
+                                                        }}
+                                                        onPress={() => {
+                                                            if (isCurrentQuestionValid(editQuestionNumber - 1)) {
+                                                                setEditQuestionNumber(0)
+                                                                setEditQuestion({})
+                                                            }
+                                                        }}
+                                                        size={23}
+                                                    />
 
-                                            <Ionicons
-                                                name='trash-outline'
-                                                color={"#f94144"}
-                                                onPress={() => {
-                                                    Alert(`Delete Question ${editQuestionNumber} ?`, "", [
-                                                        {
-                                                            text: "Cancel",
-                                                            style: "cancel",
-                                                        },
-                                                        {
-                                                            text: "Clear",
-                                                            onPress: () => {
-                                                                const updatedProblems = [...problems]
-                                                                updatedProblems.splice(index, 1);
-                                                                removeHeadersOnDeleteProblem(index + 1);
-                                                                setProblems(updatedProblems)
-                                                                props.setProblems(updatedProblems)
-                                                                setEditQuestionNumber(0);
-                                                                setEditQuestion({});
-                                                            },
-                                                        },
-                                                    ])
-                                                }}
-                                                size={23}
-                                            />
-                                        </View> : <Ionicons
-                                        name='pencil-outline'
-                                        color={'#007AFF'}
-                                        onPress={() => {
-                                            if (isCurrentQuestionValid(editQuestionNumber - 1)) {
-                                                setEditQuestionNumber(index + 1)
-                                                // set edit question the one from problems array
+                                                    <Ionicons
+                                                        name='trash-outline'
+                                                        color={"#50566B"}
+                                                        onPress={() => {
+                                                            Alert(`Delete Question ${editQuestionNumber} ?`, "", [
+                                                                {
+                                                                    text: "Cancel",
+                                                                    style: "cancel",
+                                                                },
+                                                                {
+                                                                    text: "Clear",
+                                                                    onPress: () => {
+                                                                        const updatedProblems = [...problems]
+                                                                        updatedProblems.splice(index, 1);
+                                                                        removeHeadersOnDeleteProblem(index + 1);
+                                                                        setProblems(updatedProblems)
+                                                                        props.setProblems(updatedProblems)
+                                                                        setEditQuestionNumber(0);
+                                                                        setEditQuestion({});
+                                                                    },
+                                                                },
+                                                            ])
+                                                        }}
+                                                        size={23}
+                                                    />
+                                                </View> : <Ionicons
+                                                    name='pencil-outline'
+                                                    color={'#5469D4'}
+                                                    onPress={() => {
+                                                        if (isCurrentQuestionValid(editQuestionNumber - 1)) {
+                                                            setEditQuestionNumber(index + 1)
+                                                            // set edit question the one from problems array
 
-                                                let initialAudioVideo = problems[index].question[0] === "{"  && problems[index].question[problems[index].question.length - 1] === "}";
-        
-                                                let initialContent = "";
+                                                            let initialAudioVideo = problems[index].question[0] === "{" && problems[index].question[problems[index].question.length - 1] === "}";
 
-                                                if (initialAudioVideo) {
-                                                    const parse = JSON.parse(problems[index].question);
-                                                    initialContent = parse.content;
-                                                } else {
-                                                    initialContent = problems[index].question
-                                                }
+                                                            let initialContent = "";
 
-                                                const currentProblems: any[] = lodash.cloneDeep(problems)
+                                                            if (initialAudioVideo) {
+                                                                const parse = JSON.parse(problems[index].question);
+                                                                initialContent = parse.content;
+                                                            } else {
+                                                                initialContent = problems[index].question
+                                                            }
 
-                                                setEditQuestion({ ...currentProblems[index], question: initialContent })
-                                                // 
-                                            }
-                                          
-                                        }}
-                                        size={23}
-                                    />}
+                                                            const currentProblems: any[] = lodash.cloneDeep(problems)
+
+                                                            setEditQuestion({ ...currentProblems[index], question: initialContent })
+                                                            // 
+                                                        }
+
+                                                    }}
+                                                    size={18}
+                                                />}
+                                        </View>
                                     </View>
                                 </View>
+                            </View>
+                            <View style={{ flexDirection: Dimensions.get('window').width < 1024 ? 'column' : 'row', width: '100%' }}>
+                                <View key={reloadEditorKey} style={{ width: '100%', paddingTop: 7, paddingLeft: 40 }}>
+                                    {(editQuestionNumber === (index + 1) ? <View style={{ flexDirection: 'row', marginTop: 10, marginBottom: 10, justifyContent: 'flex-end' }}>
+                                        {
+                                            <TouchableOpacity
+                                                style={{
+                                                    backgroundColor: '#fff'
+                                                }}
+                                                onPress={() => {
+                                                    setShowEquationEditor(!showEquationEditor)
+                                                }}
+                                            >
+                                                <Text
+                                                    style={{
+                                                        color: '#5469D4',
+                                                        fontFamily: 'Overpass',
+                                                        fontSize: 10
+                                                    }}
+                                                >
+                                                    {
+                                                        showEquationEditor ? "Close" : "Equation"
+                                                    }
+                                                </Text>
+                                            </TouchableOpacity>
+                                        }
+                                        {
+                                            <TouchableOpacity
+                                                style={{
+                                                    backgroundColor: '#fff'
+                                                }}
+                                                onPress={() => {
+
+                                                    if (audioVideoQuestion) {
+                                                        const updateProblems = lodash.cloneDeep(problems);
+                                                        const question = updateProblems[index].question;
+                                                        const parse = JSON.parse(question);
+                                                        updateProblems[index].question = parse.content;
+                                                        setProblems(updateProblems)
+                                                        props.setProblems(updateProblems)
+
+                                                    } else {
+                                                        setShowImportOptions(!showImportOptions)
+                                                    }
+
+                                                }}
+                                            >
+                                                <Text
+                                                    style={{
+                                                        color: '#5469D4',
+                                                        fontFamily: 'Overpass',
+                                                        fontSize: 10,
+                                                        marginLeft: 20
+                                                    }}
+                                                >
+                                                    {
+                                                        showImportOptions ? "" : audioVideoQuestion ? "Clear" : "Media"
+                                                    }
+                                                </Text>
+                                            </TouchableOpacity>
+                                        }
+                                    </View> : null)}
+                                    {
+                                        (editQuestionNumber === (index + 1) ? renderQuestionEditor(index) : (audioVideoQuestion ? <View>
+                                            {renderAudioVideoPlayer(url, type)}
+                                            <Text style={{ marginVertical: 20, marginLeft: 20, fontSize: 15, lineHeight: 25 }}>
+                                                {parser(content)}
+                                            </Text>
+                                        </View> : <Text style={{ marginVertical: 20, marginLeft: 20, fontSize: 15, lineHeight: 25 }}>
+                                            {parser(problem.question)}
+                                        </Text>))
+                                    }
+                                </View>
+                                {/* Add dropdown here */}
                             </View>
                         </View>
                         {
@@ -937,12 +919,13 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 fontSize: 15,
                                 marginLeft: 20,
                                 paddingTop: 12,
+                                paddingLeft: 40,
                                 paddingBottom: 40,
                                 width: '100%',
-                                maxWidth: Dimensions.get("window").width < 768 ? "100%" : "60%",
+                                // maxWidth: Dimensions.get("window").width < 768 ? "100%" : "60%",
                                 color: "#a2a2ac",
                                 marginBottom: 20,
-                                borderBottomColor: '#e8e8ea',
+                                borderBottomColor: '#C1C9D2',
                                 borderBottomWidth: 1
                             }}>
                                 Free Response Answer
@@ -950,12 +933,12 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         }
                         {
                             problem.options.map((option: any, i: any) => {
-                                
+
 
                                 return <View style={{ flexDirection: 'row', marginTop: 10, backgroundColor: 'none', width: '80%' }} >
-                                    <View style={{ paddingTop: 25, paddingHorizontal: 20 }}>
+                                    <View style={{ paddingTop: 25, width: 40 }}>
                                         <input
-                                            style={{ paddingRight: 20 }}
+                                            style={{}}
                                             type='checkbox'
                                             checked={option.isCorrect}
                                             onChange={(e) => {
@@ -972,120 +955,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                         />
                                     </View>
                                     <View style={{ width: Dimensions.get('window').width < 1024 ? '100%' : '60%', paddingRight: 30, paddingBottom: 10 }}>
-                                        {
-                                                <View style={{ width: '90%', marginBottom: 10 }}>
-                                                    {questionType === "trueFalse" || editQuestionNumber !== (index + 1) ?  
-                                                        <Text style={{ marginVertical: 20, marginLeft: 20, fontSize: 15, lineHeight: 25 }}>
-                                                            {parser(option.option)}
-                                                        </Text>
-                                                        : 
-                                                        <View style={{ flexDirection: 'column' }}>
-                                                            {!showOptionFormulas[i] ? null : <View style={{ flexDirection: 'row', marginTop: 10, marginBottom: 20 }}>
-                                                                <View style={{
-                                                                    borderColor: '#e8e8ea',
-                                                                    borderWidth: 1,
-                                                                    borderRadius: 15,
-                                                                    padding: 10,
-                                                                    width: Dimensions.get('window').width < 1024 ? '100%' : '50%'
-                                                                }}>
-                                                                    <EquationEditor
-                                                                        value={optionEquations[i]}
-                                                                        onChange={(eq) => {
-                                                                            const updateOptionEquations = [...optionEquations]
-                                                                            updateOptionEquations[i] = eq;
-                                                                            setOptionEquations(updateOptionEquations)
-                                                                        }}
-                                                                        autoCommands="bar overline sqrt sum prod int alpha beta gamma delta epsilon zeta eta theta iota kappa lambda mu nu xi omikron pi rho sigma tau upsilon phi chi psi omega Alpha Beta Gamma Aelta Epsilon Zeta Eta Theta Iota Kappa Lambda Mu Nu Xi Omikron Pi Rho Sigma Tau Upsilon Phi Chi Psi Omega"
-                                                                        autoOperatorNames="sin cos tan arccos arcsin arctan"
-                                                                    />
-                                                                </View>
-                                                                <TouchableOpacity
-                                                                    style={{
-                                                                        justifyContent: "center",
-                                                                        paddingHorizontal: 20,
-                                                                        maxWidth: "10%",
-                                                                    }}
-                                                                    onPress={() => insertOptionEquation(i)}
-                                                                >
-                                                                    <Ionicons name="add-circle-outline" color="#1D1D20" size={20} />
-                                                                </TouchableOpacity>
-                                                                {/*  */}
-                                                                <TouchableOpacity
-                                                                    style={{
-                                                                        justifyContent: "center",
-                                                                        paddingLeft: 10,
-                                                                        maxWidth: "10%",
-                                                                    }}
-                                                                    onPress={() => setShowFormulaGuide(true)}
-                                                                    >
-                                                                    <Ionicons name="help-circle-outline" color="#1D1D20" size={20} />
-                                                                </TouchableOpacity>
-                                                            </View>}
-                                                            <Editor
-                                                                onInit={(evt, editor) => {
-                                                                    const currRef: any = setRef(i.toString());
-                                                                    if (currRef) {
-                                                                        currRef.current = editor
-                                                                    }
-                                                                    
-                                                                }}
-                                                                initialValue={editQuestion && editQuestion.options && editQuestion.options[i] && editQuestion.options[i].option !== "" ? editQuestion.options[i].option : ""}
-                                                                apiKey="ip4jckmpx73lbu6jgyw9oj53g0loqddalyopidpjl23fx7tl"
-                                                                init={{
-                                                                    skin: "snow",
-                                                                    // toolbar_sticky: true,
-                                                                    branding: false,
-                                                                    placeholder: 'Option ' + (i + 1) ,
-                                                                    autoresize_on_init: false,
-                                                                    autoresize_min_height: 150,
-                                                                    height: 150,
-                                                                    min_height: 150,
-                                                                    paste_data_images: true,
-                                                                    images_upload_url: 'https://api.cuesapp.co/api/imageUploadEditor',
-                                                                    mobile: {
-                                                                    plugins: 'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize'
-                                                                    },
-                                                                    plugins: 'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize',
-                                                                    menu: { // this is the complete default configuration
-                                                                    file: { title: 'File', items: 'newdocument' },
-                                                                    edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall' },
-                                                                    insert: { title: 'Insert', items: 'link media | template hr' },
-                                                                    view: { title: 'View', items: 'visualaid' },
-                                                                    format: { title: 'Format', items: 'bold italic underline strikethrough superscript subscript | formats | removeformat' },
-                                                                    table: { title: 'Table', items: 'inserttable tableprops deletetable | cell row column' },
-                                                                    tools: { title: 'Tools', items: 'spellchecker code' }
-                                                                    },
-                                                                    // menubar: 'file edit view insert format tools table tc help',
-                                                                    menubar: false,
-                                                                    toolbar: 'undo redo | bold italic underline strikethrough | superscript subscript | numlist bullist removeformat | table image media link | charmap emoticons',
-                                                                    importcss_append: true,
-                                                                    image_caption: true,
-                                                                    quickbars_selection_toolbar: 'bold italic underline | quicklink h2 h3 quickimage quicktable',
-                                                                    noneditable_noneditable_class: 'mceNonEditable',
-                                                                    toolbar_mode: 'sliding',
-                                                                    content_style: ".mce-content-body[data-mce-placeholder]:not(.mce-visualblocks)::before{color: #a2a2ac;}",
-                                                                    // tinycomments_mode: 'embedded',
-                                                                    // content_style: '.mymention{ color: gray; }',
-                                                                    // contextmenu: 'link image table configurepermanentpen',
-                                                                    // a11y_advanced_options: true,
-                                                                    extended_valid_elements: "svg[*],defs[*],pattern[*],desc[*],metadata[*],g[*],mask[*],path[*],line[*],marker[*],rect[*],circle[*],ellipse[*],polygon[*],polyline[*],linearGradient[*],radialGradient[*],stop[*],image[*],view[*],text[*],textPath[*],title[*],tspan[*],glyph[*],symbol[*],switch[*],use[*]"
-                                                                    // skin: useDarkMode ? 'oxide-dark' : 'oxide',
-                                                                    // content_css: useDarkMode ? 'dark' : 'default',
-                                                                }}
-                                                                onChange={(e: any) => {
-                                                                    const newProbs = [...problems];
-                                                                    newProbs[index].options[i].option = e.target.getContent();
-                                                                    setProblems(newProbs)
-                                                                    props.setProblems(newProbs)
-                                                                }}
-                                                            />
-
-                                                        </View>}
-                                                        
-
-                                                </View>
-                                        }
-                                        {editQuestionNumber !== (index + 1) ? null : <View style={{ flexDirection: 'row' }}>
+                                        {editQuestionNumber !== (index + 1) ? null : <View style={{ flexDirection: 'row', justifyContent: 'flex-end', paddingBottom: 10 }}>
                                             {
                                                 questionType === "trueFalse" ? null :
                                                     <TouchableOpacity
@@ -1099,13 +969,13 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                         <Text
                                                             style={{
                                                                 paddingTop: showOptionFormulas[i] ? 10 : 0,
-                                                                color: '#a2a2ac',
+                                                                color: '#5469D4',
                                                                 fontFamily: 'Overpass',
                                                                 fontSize: 10
                                                             }}
                                                         >
                                                             {
-                                                                showOptionFormulas[i] ? "HIDE FORMULA" : "INSERT FORMULA"
+                                                                showOptionFormulas[i] ? "Close" : "Equation"
                                                             }
                                                         </Text>
                                                     </TouchableOpacity>
@@ -1113,7 +983,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                             {questionType === "trueFalse" ? null :
                                                 <TouchableOpacity
                                                     style={{
-                                                        backgroundColor: '#fff', paddingLeft: 10
+                                                        backgroundColor: '#fff', marginLeft: 20
                                                     }}
                                                     onPress={() => {
                                                         const updatedProblems = lodash.cloneDeep(problems)
@@ -1132,16 +1002,129 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                     <Text
                                                         style={{
                                                             paddingTop: showOptionFormulas[i] ? 10 : 0,
-                                                            color: '#a2a2ac',
+                                                            color: '#5469D4',
                                                             fontFamily: 'Overpass',
                                                             fontSize: 10
                                                         }}
                                                     >
-                                                        CLEAR
+                                                        Remove
                                                     </Text>
                                                 </TouchableOpacity>
                                             }
                                         </View>}
+                                        {
+                                            <View style={{ width: '100%', marginBottom: 10 }}>
+                                                {questionType === "trueFalse" || editQuestionNumber !== (index + 1) ?
+                                                    <Text style={{ marginVertical: 20, marginLeft: 20, fontSize: 15, lineHeight: 25 }}>
+                                                        {parser(option.option)}
+                                                    </Text>
+                                                    :
+                                                    <View style={{ flexDirection: 'column' }}>
+                                                        {!showOptionFormulas[i] ? null : <View style={{ flexDirection: 'row', marginTop: 10, marginBottom: 20 }}>
+                                                            <View style={{
+                                                                borderColor: '#C1C9D2',
+                                                                borderWidth: 1,
+                                                                borderRadius: 15,
+                                                                padding: 10,
+                                                                width: Dimensions.get('window').width < 1024 ? '100%' : '50%'
+                                                            }}>
+                                                                <EquationEditor
+                                                                    value={optionEquations[i]}
+                                                                    onChange={(eq) => {
+                                                                        const updateOptionEquations = [...optionEquations]
+                                                                        updateOptionEquations[i] = eq;
+                                                                        setOptionEquations(updateOptionEquations)
+                                                                    }}
+                                                                    autoCommands="bar overline sqrt sum prod int alpha beta gamma delta epsilon zeta eta theta iota kappa lambda mu nu xi omikron pi rho sigma tau upsilon phi chi psi omega Alpha Beta Gamma Aelta Epsilon Zeta Eta Theta Iota Kappa Lambda Mu Nu Xi Omikron Pi Rho Sigma Tau Upsilon Phi Chi Psi Omega"
+                                                                    autoOperatorNames="sin cos tan arccos arcsin arctan"
+                                                                />
+                                                            </View>
+                                                            <TouchableOpacity
+                                                                style={{
+                                                                    justifyContent: "center",
+                                                                    paddingHorizontal: 20,
+                                                                    maxWidth: "10%",
+                                                                }}
+                                                                onPress={() => insertOptionEquation(i)}
+                                                            >
+                                                                <Ionicons name="add-circle-outline" color="#1A2036" size={20} />
+                                                            </TouchableOpacity>
+                                                            {/*  */}
+                                                            <TouchableOpacity
+                                                                style={{
+                                                                    justifyContent: "center",
+                                                                    paddingLeft: 10,
+                                                                    maxWidth: "10%",
+                                                                }}
+                                                                onPress={() => setShowFormulaGuide(true)}
+                                                            >
+                                                                <Ionicons name="help-circle-outline" color="#1A2036" size={20} />
+                                                            </TouchableOpacity>
+                                                        </View>}
+                                                        <Editor
+                                                            onInit={(evt, editor) => {
+                                                                const currRef: any = setRef(i.toString());
+                                                                if (currRef) {
+                                                                    currRef.current = editor
+                                                                }
+
+                                                            }}
+                                                            initialValue={editQuestion && editQuestion.options && editQuestion.options[i] && editQuestion.options[i].option !== "" ? editQuestion.options[i].option : ""}
+                                                            apiKey="ip4jckmpx73lbu6jgyw9oj53g0loqddalyopidpjl23fx7tl"
+                                                            init={{
+                                                                skin: "snow",
+                                                                // toolbar_sticky: true,
+                                                                branding: false,
+                                                                placeholder: 'Option ' + (i + 1),
+                                                                autoresize_on_init: false,
+                                                                autoresize_min_height: 150,
+                                                                height: 150,
+                                                                min_height: 150,
+                                                                paste_data_images: true,
+                                                                images_upload_url: 'https://api.cuesapp.co/api/imageUploadEditor',
+                                                                mobile: {
+                                                                    plugins: 'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize'
+                                                                },
+                                                                plugins: 'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize',
+                                                                menu: { // this is the complete default configuration
+                                                                    file: { title: 'File', items: 'newdocument' },
+                                                                    edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall' },
+                                                                    insert: { title: 'Insert', items: 'link media | template hr' },
+                                                                    view: { title: 'View', items: 'visualaid' },
+                                                                    format: { title: 'Format', items: 'bold italic underline strikethrough superscript subscript | formats | removeformat' },
+                                                                    table: { title: 'Table', items: 'inserttable tableprops deletetable | cell row column' },
+                                                                    tools: { title: 'Tools', items: 'spellchecker code' }
+                                                                },
+                                                                // menubar: 'file edit view insert format tools table tc help',
+                                                                menubar: false,
+                                                                toolbar: 'undo redo | bold italic underline strikethrough | superscript subscript | numlist bullist removeformat | table image media link | charmap emoticons',
+                                                                importcss_append: true,
+                                                                image_caption: true,
+                                                                quickbars_selection_toolbar: 'bold italic underline | quicklink h2 h3 quickimage quicktable',
+                                                                noneditable_noneditable_class: 'mceNonEditable',
+                                                                toolbar_mode: 'sliding',
+                                                                content_style: ".mce-content-body[data-mce-placeholder]:not(.mce-visualblocks)::before{color: #a2a2ac;}",
+                                                                // tinycomments_mode: 'embedded',
+                                                                // content_style: '.mymention{ color: gray; }',
+                                                                // contextmenu: 'link image table configurepermanentpen',
+                                                                // a11y_advanced_options: true,
+                                                                extended_valid_elements: "svg[*],defs[*],pattern[*],desc[*],metadata[*],g[*],mask[*],path[*],line[*],marker[*],rect[*],circle[*],ellipse[*],polygon[*],polyline[*],linearGradient[*],radialGradient[*],stop[*],image[*],view[*],text[*],textPath[*],title[*],tspan[*],glyph[*],symbol[*],switch[*],use[*]"
+                                                                // skin: useDarkMode ? 'oxide-dark' : 'oxide',
+                                                                // content_css: useDarkMode ? 'dark' : 'default',
+                                                            }}
+                                                            onChange={(e: any) => {
+                                                                const newProbs = [...problems];
+                                                                newProbs[index].options[i].option = e.target.getContent();
+                                                                setProblems(newProbs)
+                                                                props.setProblems(newProbs)
+                                                            }}
+                                                        />
+
+                                                    </View>}
+
+
+                                            </View>
+                                        }
                                     </View>
                                 </View>
                             })
@@ -1166,21 +1149,35 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 const updateShowFormulas: any[] = [...showOptionFormulas];
                                 updateShowFormulas.push(false);
                                 setShowOptionFormulas(updateShowFormulas)
+                            }} style={{
+                                backgroundColor: "white",
+                                overflow: "hidden",
+                                height: 35,
+                                marginTop: 15,
+                                alignSelf: 'center'
+                                // width: "100%",
+                                // justifyContent: "center",
+                                // flexDirection: "row",
                             }}
-                            style={{ width: 100, flexDirection: 'row', marginLeft: 20, marginTop: 20 }} >
-                            {/* <Ionicons name='add-circle' size={19} color={"#1D1D20"} /> */}
+                        >
                             <Text
                                 style={{
-                                    // marginLeft: 10,
-                                    fontSize: 10,
-                                    paddingBottom: 20,
-                                    textTransform: "uppercase",
-                                    // paddingLeft: 20,
-                                    flex: 1,
-                                    lineHeight: 25,
-                                    color: '#007AFF'
-                                }}>
-                                Add Option
+                                    color: '#5469D4',
+                                    borderWidth: 1,
+                                    borderRadius: 15,
+                                    borderColor: '#5469D4',
+                                    backgroundColor: '#fff',
+                                    fontSize: 12,
+                                    textAlign: "center",
+                                    lineHeight: 35,
+                                    paddingHorizontal: 20,
+                                    fontFamily: "inter",
+                                    height: 35,
+                                    textTransform: 'uppercase',
+                                    width: 175,
+                                }}
+                            >
+                                Add Choice
                             </Text>
                         </TouchableOpacity> : <View style={{ height: 100 }} />}
                     </View>
@@ -1188,8 +1185,10 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
             }
             <View style={{
                 width: '100%', flexDirection: 'row',
-                justifyContent: 'flex-start', paddingLeft: 12,
-                paddingTop: 25, borderBottomColor: '#e8e8ea',
+                justifyContent: 'center',
+                // paddingLeft: 12,
+                // paddingTop: 25,
+                borderBottomColor: '#C1C9D2',
                 paddingBottom: 25, borderBottomWidth: 1
             }}>
                 <TouchableOpacity
@@ -1215,12 +1214,13 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             lineHeight: 35,
                             color: "white",
                             fontSize: 12,
-                            backgroundColor: "#007AFF",
+                            backgroundColor: "#5469D4",
                             borderRadius: 15,
                             paddingHorizontal: 20,
                             fontFamily: "inter",
                             overflow: "hidden",
                             height: 35,
+                            width: 175,
                             textTransform: "uppercase",
                         }}>
                         Add Problem
@@ -1236,7 +1236,7 @@ export default QuizCreate;
 const styles = StyleSheet.create({
     input: {
         width: '50%',
-        borderBottomColor: '#f7f7f7',
+        borderBottomColor: '#f7fafc',
         borderBottomWidth: 1,
         fontSize: 14,
         paddingTop: 12,

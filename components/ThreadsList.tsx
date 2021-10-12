@@ -168,8 +168,8 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             const { type, url } = obj;
                             if (type === 'png' || type === 'jpeg' || type === 'jpg' || type === 'gif') {
                                 img = url
-                            } else if (type === "mp3" || type === "wav" || type === "mp2" ) {
-                                audio = url 
+                            } else if (type === "mp3" || type === "wav" || type === "mp2") {
+                                audio = url
                             } else if (type === "mp4" || type === "oga" || type === "mov" || type === "wmv") {
                                 video = url
                             } else {
@@ -192,7 +192,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 </TouchableOpacity>
                             }
 
-                            
+
                         } else {
                             const { title: t, subtitle: s } = htmlStringParser(msg.message)
                             text = t
@@ -280,7 +280,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 {...props}
                 wrapperStyle={{
                     right: {
-                        backgroundColor: '#007AFF'
+                        backgroundColor: '#5469D4'
                     }
                 }}
             />
@@ -296,16 +296,16 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     controls={true}
                     onContextMenu={(e: any) => e.preventDefault()}
                     config={{
-                    file: { attributes: { controlsList: "nodownload" } },
+                        file: { attributes: { controlsList: "nodownload" } },
                     }}
                     width={250}
                     height={60}
                 />
-            </View> 
+            </View>
         }
 
         return null;
-        
+
     }
 
     const renderMessageVideo = (props: any) => {
@@ -317,31 +317,31 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     controls={true}
                     onContextMenu={(e: any) => e.preventDefault()}
                     config={{
-                    file: { attributes: { controlsList: "nodownload" } },
+                        file: { attributes: { controlsList: "nodownload" } },
                     }}
                     width={250}
                     height={200}
                 />
-            </View> 
+            </View>
         }
 
         return null;
-        
+
     }
 
-    const windowHeight = Dimensions.get('window').width < 1024 ? Dimensions.get('window').height - 30 : Dimensions.get('window').height;
+    const windowHeight = Dimensions.get('window').width < 1024 ? Dimensions.get('window').height  : Dimensions.get('window').height;
 
-    let categoriesOptions = [{ 
+    let categoriesOptions = [{
         value: 'None', text: 'None'
-      }];
-    
-      categories.map((category: any) => {
+    }];
+
+    categories.map((category: any) => {
         categoriesOptions.push({
-          value: category,
-          text: category
+            value: category,
+            text: category
         })
-      })
-    
+    })
+
 
     function emailTimeDisplay(dbDate: string) {
         let date = moment(dbDate);
@@ -360,7 +360,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 {PreferredLanguageText('category')}
             </Text>
         </View>
-        <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white', alignItems: 'center',  }}>
+        <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white', alignItems: 'center', }}>
             <View style={{ width: '80%', backgroundColor: 'white', marginRight: 10 }}>
                 {
                     addCustomCategory ?
@@ -372,14 +372,14 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 onChangeText={val => {
                                     setCustomCategory(val)
                                 }}
-                                placeholderTextColor={'#818385'}
+                                placeholderTextColor={'#50566B'}
                             />
                         </View> :
                         // <Menu
                         //     onSelect={(cat: any) => setCustomCategory(cat)}>
                         //     <MenuTrigger>
-                        //         <Text style={{ fontSize: 14, color: '#818385' }}>
-                        //             {customCategory === '' ? 'None' : customCategory}<Ionicons name='caret-down' size={14} />
+                        //         <Text style={{ fontSize: 14, color: '#50566B' }}>
+                        //             {customCategory === '' ? 'None' : customCategory}<Ionicons name='chevron-down-outline' size={15} />
                         //         </Text>
                         //     </MenuTrigger>
                         //     <MenuOptions customStyles={{
@@ -441,14 +441,14 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         if (addCustomCategory) {
                             setCustomCategory("None");
                             setAddCustomCategory(false)
-                          } else {
+                        } else {
                             setCustomCategory("");
                             setAddCustomCategory(true)
-                          }
+                        }
                     }}
                     style={{ backgroundColor: 'white' }}>
                     <Text style={{ textAlign: 'right', lineHeight: 20, width: '100%' }}>
-                        <Ionicons name={addCustomCategory ? 'close' : 'add'} size={17} color={'#818385'} />
+                        <Ionicons name={addCustomCategory ? 'close' : 'add'} size={15} color={'#50566B'} />
                     </Text>
                 </TouchableOpacity>
             </View>
@@ -495,19 +495,58 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             maxWidth: 1000
                         }}>
                             {
+                                showComments && !showPost ?
+                                    <View style={{ flex: 1, justifyContent: 'flex-start', flexDirection: 'row' }}>
+                                        <TouchableOpacity
+                                            key={Math.random()}
+                                            onPress={() => {
+                                                setThreadId('')
+                                                setThreadChat([])
+                                                setShowPost(true)
+                                            }}
+                                            style={{
+                                                backgroundColor: 'white',
+                                                overflow: 'hidden',
+                                                height: 35,
+                                                // marginTop: 15,
+                                                justifyContent: 'center',
+                                                flexDirection: 'row',
+                                                right: 0
+                                            }}>
+                                            <Text style={{
+                                                textAlign: 'center',
+                                                lineHeight: 35,
+                                                color: '#5469D4',
+                                                fontSize: 12,
+                                                borderColor: '#5469D4',
+                                                paddingHorizontal: 20,
+                                                borderWidth: 1,
+                                                fontFamily: 'inter',
+                                                height: 35,
+                                                // width: 100,
+                                                borderRadius: 15,
+                                                textTransform: 'uppercase'
+                                            }}>
+                                                POST
+                                                {/* <Ionicons name='create-outline' size={15} color={'#1A2036'} /> */}
+                                            </Text>
+                                        </TouchableOpacity>
+                                    </View> : null
+                            }
+                            {
                                 props.cueId === null && !showPost && categoryChoices.length > 1 ?
                                     <View style={{
                                         // width: '100%',
                                         // paddingTop: 10,
-                                        paddingRight: 20,
+                                        // paddingRight: 20,
                                         // paddingTop: 7,
                                         backgroundColor: 'white',
                                     }}>
                                         {/* <Menu
                                         onSelect={(cat: any) => setFilterChoice(cat)}>
                                         <MenuTrigger>
-                                            <Text style={{ fontSize: 14, color: '#1D1D20' }}>
-                                                {filterChoice === '' ? 'All' : filterChoice}<Ionicons name='caret-down' size={14} />
+                                            <Text style={{ fontSize: 14, color: '#1A2036' }}>
+                                                {filterChoice === '' ? 'All' : filterChoice}<Ionicons name='chevron-down-outline' size={15} />
                                             </Text>
                                         </MenuTrigger>
                                         <MenuOptions customStyles={{
@@ -516,7 +555,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                 borderRadius: 15,
                                                 shadowOpacity: 0,
                                                 borderWidth: 1,
-                                                borderColor: '#e8e8ea',
+                                                borderColor: '#E3E8EE',
                                                 overflow: 'scroll',
                                                 maxHeight: '100%'
                                             }
@@ -559,45 +598,6 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                             />
                                         </label>
                                     </View> : null}
-                            {
-                                showComments && !showPost ?
-                                    <View style={{ flex: 1, justifyContent: 'flex-end', flexDirection: 'row' }}>
-                                        <TouchableOpacity
-                                            key={Math.random()}
-                                            onPress={() => {
-                                                setThreadId('')
-                                                setThreadChat([])
-                                                setShowPost(true)
-                                            }}
-                                            style={{
-                                                backgroundColor: 'white',
-                                                overflow: 'hidden',
-                                                height: 35,
-                                                // marginTop: 15,
-                                                justifyContent: 'center',
-                                                flexDirection: 'row',
-                                                right: 0
-                                            }}>
-                                            <Text style={{
-                                                textAlign: 'center',
-                                                lineHeight: 35,
-                                                color: '#007aff',
-                                                fontSize: 12,
-                                                borderColor: '#007aff',
-                                                paddingHorizontal: 20,
-                                                borderWidth: 1,
-                                                fontFamily: 'inter',
-                                                height: 35,
-                                                // width: 100,
-                                                borderRadius: 15,
-                                                textTransform: 'uppercase'
-                                            }}>
-                                                POST <Ionicons name='chatbox-ellipses-outline' size={12} />
-                                                {/* <Ionicons name='create-outline' size={17} color={'#1D1D20'} /> */}
-                                            </Text>
-                                        </TouchableOpacity>
-                                    </View> : null
-                            }
                         </View> : <TouchableOpacity
                             onPress={() => {
                                 setShowPost(false)
@@ -611,7 +611,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             }}
                         >
                             <Text style={{ lineHeight: 35, width: '100%', textAlign: 'center', paddingTop: 10 }}>
-                                <Ionicons name='arrow-back-outline' size={25} color={'#818385'} />
+                                <Ionicons name='arrow-back-outline' size={26} color={'#50566B'} />
                             </Text>
                         </TouchableOpacity>
                 }
@@ -626,7 +626,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                     flexDirection: 'column',
                                     backgroundColor: 'white'
                                 }}>
-                                    <ActivityIndicator color={'#818385'} />
+                                    <ActivityIndicator color={'#50566B'} />
                                 </View> :
                                 <View style={{
                                     width: '100%',
@@ -740,7 +740,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                     {
                                                         threads.length === 0 ?
                                                             <View style={{ backgroundColor: 'white', flex: 1 }}>
-                                                                <Text style={{ width: '100%', color: '#818385', fontSize: 23, paddingTop: 100, paddingBottom: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                                                <Text style={{ width: '100%', color: '#50566B', fontSize: 23, paddingTop: 100, paddingBottom: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                                                                     {
                                                                         !props.cueId ? PreferredLanguageText('noPosts') : PreferredLanguageText('noComments')
                                                                     }
@@ -755,7 +755,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                                     // borderRightWidth: 0,
                                                                     // borderLeftWidth: 0,
                                                                     // borderRightWidth: 1,
-                                                                    borderColor: '#e8e8ea',
+                                                                    borderColor: '#E3E8EE',
                                                                     borderRadius: 0,
                                                                     width: '100%',
                                                                     maxHeight: 500,
@@ -777,9 +777,9 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                                         return <TouchableOpacity
                                                                             onPress={() => loadCueDiscussions(thread._id)}
                                                                             style={{
-                                                                                // backgroundColor: '#f7f7f7',
+                                                                                // backgroundColor: '#f7fafc',
                                                                                 flexDirection: 'row',
-                                                                                borderColor: '#e8e8ea',
+                                                                                borderColor: '#E3E8EE',
                                                                                 // borderRightWidth: 1,
                                                                                 borderBottomWidth: ind === filteredThreads.length - 1 ? 0 : 1,
                                                                                 // minWidth: 600, // flex: 1,
@@ -811,30 +811,30 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                                                 <View style={{ flexDirection: 'row', backgroundColor: '#fff', paddingLeft: 10, alignItems: 'center' }}>
                                                                                     {
                                                                                         thread.isPrivate ?
-                                                                                            <Text style={{ fontSize: 13, padding: 5, color: '#007AFF', textAlign: 'center' }} ellipsizeMode='tail'>
-                                                                                                <Ionicons name='eye-off-outline' size={17} />
+                                                                                            <Text style={{ fontSize: 13, padding: 5, color: '#5469D4', textAlign: 'center' }} ellipsizeMode='tail'>
+                                                                                                <Ionicons name='eye-off-outline' size={15} />
                                                                                             </Text>
                                                                                             : null
                                                                                     }
                                                                                     {thread.unreadThreads > 0 ? <View style={{
-                                                                                            width: 16,
-                                                                                            height: 16,
-                                                                                            borderRadius: 8,
-                                                                                            marginHorizontal: 5,
-                                                                                            backgroundColor: "#007AFF",
-                                                                                            alignItems: 'center',
-                                                                                            justifyContent: 'center'
-                                                                                        }}>
-                                                                                            <Text style={{ color: 'white', fontSize: 11 }}>
+                                                                                        width: 16,
+                                                                                        height: 16,
+                                                                                        borderRadius: 8,
+                                                                                        marginHorizontal: 5,
+                                                                                        backgroundColor: "#5469D4",
+                                                                                        alignItems: 'center',
+                                                                                        justifyContent: 'center'
+                                                                                    }}>
+                                                                                        <Text style={{ color: 'white', fontSize: 11 }}>
                                                                                             {thread.unreadThreads}
-                                                                                            </Text>
-                                                                                            
-                                                                                    </View> : null}  
-                                                                                    <Text style={{ fontSize: 11, padding: 5, lineHeight: 13, color: thread.unreadThreads > 0 ? "#007AFF" : '#1d1d20' }} ellipsizeMode='tail'>
+                                                                                        </Text>
+
+                                                                                    </View> : null}
+                                                                                    <Text style={{ fontSize: 11, padding: 5, lineHeight: 13, color: thread.unreadThreads > 0 ? "#5469D4" : '#1A2036' }} ellipsizeMode='tail'>
                                                                                         {emailTimeDisplay(thread.time)}
                                                                                     </Text>
-                                                                                    <Text style={{ fontSize: 13, padding: 5, color: '#007AFF', textAlign: 'center' }} ellipsizeMode='tail'>
-                                                                                        <Ionicons name='chevron-forward-outline' size={17} />
+                                                                                    <Text style={{ fontSize: 13, padding: 5, color: '#5469D4', textAlign: 'center' }} ellipsizeMode='tail'>
+                                                                                        <Ionicons name='chevron-forward-outline' size={15} />
                                                                                     </Text>
                                                                                 </View>
                                                                             </View>
@@ -903,18 +903,18 @@ const styleObject = () => {
             height: 22,
             borderRadius: 0,
             borderWidth: 1,
-            borderColor: '#818385',
+            borderColor: '#50566B',
             color: 'white'
         },
         allOutline: {
             fontSize: 12,
-            color: '#818385',
+            color: '#50566B',
             height: 22,
             paddingHorizontal: 10,
             backgroundColor: 'white',
             borderRadius: 12,
             borderWidth: 1,
-            borderColor: '#818385'
+            borderColor: '#50566B'
         },
     })
 }
