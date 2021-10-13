@@ -1369,7 +1369,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
 
 
-    const windowHeight = Dimensions.get('window').width < 1024 ? Dimensions.get('window').height  : Dimensions.get('window').height;
+    const windowHeight = Dimensions.get('window').width < 1024 ? Dimensions.get('window').height : Dimensions.get('window').height;
 
 
     const FolderView = <ScrollView
@@ -1380,7 +1380,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             maxHeight: Dimensions.get('window').height
         }}
     >
-        <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 20, backgroundColor: 'white' }}>
+        <Text style={{ width: '100%', textAlign: 'center', height: 0, paddingBottom: 30, backgroundColor: 'white' }}>
             {/* <Ionicons name='chevron-down' size={15} color={'#e0e0e0'} /> */}
         </Text>
         {!createNewFolder && folderId === "" ? <View style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -1400,7 +1400,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     backgroundColor: 'white',
                     overflow: 'hidden',
                     height: 35,
-                    marginTop: 15,
+                    // marginTop: 15,
                     marginBottom: 15,
                     justifyContent: 'center',
                     flexDirection: 'row',
@@ -1465,7 +1465,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         backgroundColor: 'white',
                         overflow: 'hidden',
                         height: 35,
-                        marginBottom: 15,
+                        marginBottom: 20,
                         justifyContent: 'center',
                         flexDirection: 'row',
                     }}>

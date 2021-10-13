@@ -1168,7 +1168,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                         <Text style={{
                                                                             flex: 1, flexDirection: 'row',
                                                                             color: '#50566B',
-                                                                            fontSize: 13, lineHeight: 25,
+                                                                            fontSize: 12, lineHeight: 25,
                                                                             fontFamily: 'inter'
                                                                         }} ellipsizeMode='tail'>
                                                                             {category === '' ? ' ' : category}
@@ -1382,19 +1382,20 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     borderRadius: 15,
                                     shadowOpacity: 0,
                                     borderWidth: 1,
-                                    borderColor: '#E3E8EE'
+                                    borderColor: '#E3E8EE',
+                                    maxWidth: 125
                                 }
                             }}>
                                 <MenuOption
                                     value={'Channels'}>
                                     <Text style={{ fontFamily: 'inter' }}>
-                                        <Ionicons name='settings-outline' size={12} /> Courses
+                                        <Ionicons name='settings-outline' size={12} />&nbsp;&nbsp;Courses
                                     </Text>
                                 </MenuOption>
                                 <MenuOption
                                     value={'Settings'}>
                                     <Text style={{ fontFamily: 'inter' }}>
-                                        <Ionicons name='hammer-outline' size={12} /> Account
+                                        <Ionicons name='hammer-outline' size={12} />&nbsp;&nbsp;Account
                                     </Text>
                                 </MenuOption>
                             </MenuOptions>
