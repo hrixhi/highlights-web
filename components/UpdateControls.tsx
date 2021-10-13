@@ -93,6 +93,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const RichText: any = useRef();
     const editorRef: any = useRef();
     const submissionViewerRef: any = useRef();
+
     const [height, setHeight] = useState(100);
     const colorChoices: any[] = ["#f94144", "#f3722c", "#f8961e", "#f9c74f", "#35AC78"].reverse();
     const [submission, setSubmission] = useState(props.cue.submission ? props.cue.submission : false);
@@ -3037,7 +3038,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     {!viewSubmission ? (submissionImported ? null : <View style={{}}>
                         {props.cue.releaseSubmission || (!allowLateSubmission && new Date() > deadline) || (allowLateSubmission && new Date() > availableUntil) ? null : renderRichEditorModified()}
                         {renderFooter()}
-                    </View>) : <View key={viewSubmissionTab}>
+                    </View>) : <View key={JSON.stringify(submissionImported) + JSON.stringify(viewSubmission) + JSON.stringify(props.showOriginal)}>
                         {renderViewSubmission()}
                     </View>}
                 </View>
@@ -3213,7 +3214,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         </View>
 
                         :
-                        <View style={{ width: '100%', marginTop: 25 }}>
+                        <View style={{ width: '100%', marginTop: 25 }} key={JSON.stringify(viewSubmission)}>
                             {attempt.title !== "" ? <Text
                                 style={{
                                     fontSize: 14,
@@ -3232,7 +3233,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             <div className="webviewer" ref={submissionViewerRef} style={{ height: "80vh" }}></div>
                         </View>)
                     :
-                    <View style={{ width: '100%', marginTop: 25 }}>
+                    <View style={{ width: '100%', marginTop: 25 }} key={JSON.stringify(attempt)}>
                         {viewSubmissionTab === "mySubmission" ?
                             <div className="mce-content-body htmlParser" style={{ width: '100%', color: 'black' }}>
                                 {parser(attempt.html)}

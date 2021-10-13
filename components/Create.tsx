@@ -1106,7 +1106,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 style={{
                   lineHeight: 35,
                   textAlign: "right",
-                  paddingRight: 20,
+                  paddingRight: 10,
                   // textTransform: "uppercase",
                   fontSize: 11,
                   // fontFamily: 'inter',
@@ -1556,7 +1556,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                         <Select
                           touchUi={true}
                           value={selectedChannel}
-                          rows={channels.length + 1}
+                          // rows={channels.length + 1}
                           themeVariant="light"
                           onChange={(val) => {
 
