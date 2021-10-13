@@ -892,14 +892,14 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                             //     <Text
                                             //         style={{
                                             //             textAlign: 'center',
-                                            //             lineHeight: 30,
+                                            //             lineHeight: 35,
                                             //             // color: '#1A2036',
                                             //             fontSize: 10,
                                             //             // backgroundColor: '#f7fafc',
                                             //             // paddingHorizontal: 20,
                                             //             // marginRight: 15,
                                             //             // fontFamily: 'inter',
-                                            //             height: 30,
+                                            //             height: 35,
                                             //             // width: 100,
                                             //             borderRadius: 15,
                                             //             textTransform: 'uppercase'
@@ -973,26 +973,26 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                         backgroundColor: 'white',
                                                         overflow: 'hidden',
                                                         // height: 35,
-                                                        marginTop: 7,
+                                                        marginTop: 12,
                                                         justifyContent: 'center',
                                                         // flexDirection: 'row',
                                                         // alignSelf: 'flex-end'
                                                     }}>
                                                     <Text style={{
                                                         textAlign: 'center',
-                                                        lineHeight: 30,
+                                                        lineHeight: 20,
                                                         // color: '#1A2036',
                                                         fontSize: 10,
                                                         // backgroundColor: '#f7fafc',
                                                         paddingHorizontal: 20,
                                                         // marginRight: 15,
                                                         // fontFamily: 'inter',
-                                                        height: 30,
+                                                        height: 20,
                                                         // width: 100,
                                                         borderRadius: 15,
                                                         textTransform: 'uppercase'
                                                     }}>
-                                                        <Ionicons name='pencil-outline' size={15} color={'#50566B'} />
+                                                        <Ionicons name='people-circle-outline' size={15} color={'#50566B'} />
                                                     </Text>
                                                     <Text style={{ fontSize: 10, color: '#50566B', paddingTop: 5, backgroundColor: '#fff', textAlign: 'center' }}>
                                                         Group
@@ -1068,13 +1068,13 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                             }}>
                                                                             <Text style={{
                                                                                 textAlign: 'center',
-                                                                                lineHeight: 30,
+                                                                                lineHeight: 35,
                                                                                 color: '#1A2036',
                                                                                 fontSize: 12,
                                                                                 backgroundColor: '#f8f8fa',
                                                                                 paddingHorizontal: 20,
                                                                                 fontFamily: 'inter',
-                                                                                height: 30,
+                                                                                height: 35,
                                                                                 // width: 100,
                                                                                 borderRadius: 15,
                                                                                 textTransform: 'uppercase'
@@ -1156,7 +1156,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                 return <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1, width: '100%', paddingVertical: 7, borderBottomWidth: 1, borderBottomColor: '#f2f2fa', paddingHorizontal: 10 }} >
                                                                     <Image
                                                                         style={{
-                                                                            height: 30,
+                                                                            height: 35,
                                                                             width: 30,
                                                                             borderRadius: 75,
 
@@ -1327,18 +1327,18 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                             }}>
                                                                             <Text style={{
                                                                                 textAlign: 'center',
-                                                                                lineHeight: 30,
+                                                                                lineHeight: 35,
                                                                                 color: '#1A2036',
                                                                                 fontSize: 12,
                                                                                 backgroundColor: '#f8f8fa',
                                                                                 paddingHorizontal: 20,
                                                                                 fontFamily: 'inter',
-                                                                                height: 30,
+                                                                                height: 35,
                                                                                 // width: 100,
                                                                                 borderRadius: 15,
                                                                                 textTransform: 'uppercase'
                                                                             }}>
-                                                                                REMOVE <Ionicons name='close-outline' size={12} />
+                                                                                REMOVE
                                                                             </Text>
                                                                         </TouchableOpacity> : <FileUpload
                                                                             onUpload={(u: any, t: any) => {
@@ -1352,7 +1352,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                 <View style={{ backgroundColor: 'white' }}>
                                                                     <Text style={{
                                                                         fontSize: 14,
-                                                                        fontFamily: 'inter',
+                                                                        // fontFamily: 'inter',
                                                                         color: '#1A2036'
                                                                     }}>
                                                                         {PreferredLanguageText('name')}
@@ -1372,7 +1372,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
 
                                                                 <Text style={{
                                                                     fontSize: 14,
-                                                                    fontFamily: 'inter',
+                                                                    // fontFamily: 'inter',
                                                                     color: '#1A2036',
                                                                     marginBottom: 15
                                                                 }}>
@@ -1446,7 +1446,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                 marginTop: 30
                                                             }}>
                                                                 <ScrollView contentContainerStyle={{
-                                                                    maxHeight: windowHeight - 150,
+                                                                    maxHeight: windowHeight - 215,
                                                                     width: '100%',
                                                                     borderRadius: 0,
                                                                     // flex: 1
@@ -1518,7 +1518,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                         borderColor: '#E3E8EE',
                                                                         borderRadius: 0,
                                                                         width: '100%',
-                                                                        maxHeight: windowHeight - 150,
+                                                                        maxHeight: windowHeight - 215,
                                                                         // overflow: 'hidden'
                                                                     }}
                                                                 >

@@ -200,13 +200,13 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         }}>
                         <Text style={{
                             textAlign: 'center',
-                            lineHeight: 30,
+                            lineHeight: 35,
                             color: '#5469D4',
                             fontSize: 12,
                             borderColor: '#5469D4',
                             paddingHorizontal: 20,
                             fontFamily: 'inter',
-                            height: 30,
+                            height: 35,
                             borderWidth: 1,
                             // width: 100,
                             borderRadius: 15,
@@ -378,8 +378,8 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
             width: '100%',
             height: '100%',
             // paddingRight: 20,
-            paddingLeft: Dimensions.get('window').width < 1024 ? 20 : 0,
-            paddingTop: 30,
+            // paddingLeft: Dimensions.get('window').width < 1024 ? 20 : 0,
+            paddingTop: 0,
             borderTopRightRadius: 0,
             borderTopLeftRadius: 0
         }}>
@@ -462,7 +462,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                     (new Date(cue.deadline)).toString().split(' ')[2]
                                                 }
                                             </Text>
-                                            <Text style={{ textAlign: 'center', fontSize: 13, color: '#1A2036', fontFamily: 'inter', marginBottom: 5, height: 30, textAlignVertical: 'center' }} numberOfLines={2}>
+                                            <Text style={{ textAlign: 'center', fontSize: 13, color: '#1A2036', fontFamily: 'inter', marginBottom: 5, height: 35, textAlignVertical: 'center' }} numberOfLines={2}>
                                                 {title}
                                             </Text>
                                             <Text style={{ textAlign: 'center', fontSize: 10, color: '#1A2036' }}>
@@ -475,7 +475,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     cues.length === 0 ? null :
                                         <View style={styles.col} key={'total'}>
                                             <View style={{ height: 10, marginBottom: 5 }} />
-                                            <Text style={{ textAlign: 'center', fontSize: 13, color: '#1A2036', fontFamily: 'inter', marginBottom: 5, height: 30, }}>
+                                            <Text style={{ textAlign: 'center', fontSize: 13, color: '#1A2036', fontFamily: 'inter', marginBottom: 5, height: 35, }}>
                                                 {PreferredLanguageText('total')}
                                             </Text>
                                             <Text style={{ textAlign: 'center', fontSize: 10, color: '#1A2036' }}>

@@ -722,7 +722,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     <ScrollView
                         style={{
                             width: "100%",
-                            height: 300,
+                            height: 350,
                             backgroundColor: "white",
                             borderTopLeftRadius: 0,
                             borderTopRightRadius: 0,
@@ -1007,7 +1007,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 <ScrollView
                     style={{
                         width: "100%",
-                        height: 300,
+                        height: 350,
                         backgroundColor: "white",
                         borderTopLeftRadius: 0,
                         borderTopRightRadius: 0,
@@ -1186,7 +1186,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 <ScrollView
                     style={{
                         width: "100%",
-                        // height: 300,
+                        // height: 350,
                         backgroundColor: "white",
                         borderTopLeftRadius: 0,
                         borderTopRightRadius: 0,

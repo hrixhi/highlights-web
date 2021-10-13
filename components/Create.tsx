@@ -1104,7 +1104,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
             {!isQuiz && !imported ? (
               <Text
                 style={{
-                  lineHeight: 30,
+                  lineHeight: 35,
                   textAlign: "right",
                   paddingRight: 20,
                   // textTransform: "uppercase",
@@ -1133,7 +1133,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
               role === 'instructor' ? <Text
                 style={{
                   color: "#5469D4",
-                  lineHeight: 30,
+                  lineHeight: 35,
                   textAlign: "right",
                   // paddingRight: 10,
                   paddingLeft: 20,

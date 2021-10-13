@@ -2651,13 +2651,13 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             }}>
                             <Text style={{
                                 textAlign: 'center',
-                                lineHeight: 30,
+                                lineHeight: 35,
                                 color: '#fff',
                                 fontSize: 12,
                                 backgroundColor: '#53BE6D',
                                 paddingHorizontal: 20,
                                 fontFamily: 'inter',
-                                height: 30,
+                                height: 35,
                                 // width: 100,
                                 borderRadius: 15,
                                 textTransform: 'uppercase'
@@ -2680,13 +2680,13 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             }}>
                             <Text style={{
                                 textAlign: 'center',
-                                lineHeight: 30,
+                                lineHeight: 35,
                                 color: '#fff',
                                 fontSize: 12,
                                 backgroundColor: '#53BE6D',
                                 paddingHorizontal: 20,
                                 fontFamily: 'inter',
-                                height: 30,
+                                height: 35,
                                 // width: 100,
                                 borderRadius: 15,
                                 textTransform: 'uppercase'
@@ -2785,13 +2785,13 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     }}>
                                     <Text style={{
                                         textAlign: 'center',
-                                        lineHeight: 30,
+                                        lineHeight: 35,
                                         color: '#fff',
                                         fontSize: 12,
                                         backgroundColor: '#5469D4',
                                         paddingHorizontal: 20,
                                         fontFamily: 'inter',
-                                        height: 30,
+                                        height: 35,
                                         // width: 100,
                                         borderRadius: 15,
                                         textTransform: 'uppercase'
@@ -2814,13 +2814,13 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     }}>
                                     <Text style={{
                                         textAlign: 'center',
-                                        lineHeight: 30,
+                                        lineHeight: 35,
                                         color: '#fff',
                                         fontSize: 12,
                                         backgroundColor: '#5469D4',
                                         paddingHorizontal: 20,
                                         fontFamily: 'inter',
-                                        height: 30,
+                                        height: 35,
                                         // width: 100,
                                         borderRadius: 15,
                                         textTransform: 'uppercase'
@@ -4535,8 +4535,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             paddingRight: 10,
                                             marginTop: 5,
                                             // paddingTop: 5,
-                                            // lineHeight: 30,
-                                            // height: 30
+                                            // lineHeight: 35,
+                                            // height: 35
                                         }}>{PreferredLanguageText("remindOn")}
                                         </Text>
                                     </View>
@@ -4904,7 +4904,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             <Text
                                 style={{
                                     textAlign: "right",
-                                    lineHeight: 30,
+                                    lineHeight: 35,
                                     marginTop: -31,
                                     // paddingRight: 25,
                                     width: "100%"
@@ -5032,7 +5032,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     ? (
                                         <Text
                                             style={{
-                                                lineHeight: 30,
+                                                lineHeight: 35,
                                                 textAlign: "right",
                                                 paddingRight: 20,
                                                 // textTransform: "uppercase",

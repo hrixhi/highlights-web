@@ -136,7 +136,7 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         props.channelId !== '' && (props.menuCollapsed === true) ?
                             <TouchableOpacity style={{ backgroundColor: '#f7fafc', width: '100%', paddingBottom: 20 }}
                                 onPress={() => props.hideMenu()}>
-                                <Text style={{ lineHeight: 30, width: '100%', textAlign: 'center' }}>
+                                <Text style={{ lineHeight: 35, width: '100%', textAlign: 'center' }}>
                                     <Ionicons
                                         name='chevron-down-outline' size={25} color={'#5469D4'} />
                                 </Text>

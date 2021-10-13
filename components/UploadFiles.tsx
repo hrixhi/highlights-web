@@ -105,7 +105,7 @@ const FileUpload: React.FC<any> = (props: any) => {
         <Text
             style={{
                 color: "#5469D4",
-                lineHeight: 30,
+                lineHeight: 35,
                 textAlign: "right",
                 fontSize: 11
             }}

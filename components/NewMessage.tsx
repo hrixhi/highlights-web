@@ -225,7 +225,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             <Text style={{
                                 color: '#50566B',
                                 fontSize: 11,
-                                lineHeight: 30,
+                                lineHeight: 35,
                                 textAlign: 'right',
                                 paddingRight: 10,
                             }}>

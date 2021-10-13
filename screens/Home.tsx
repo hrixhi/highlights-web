@@ -70,7 +70,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   const [showForgotPassword, setShowForgotPassword] = useState(false)
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true)
   const [saveDataInProgress, setSaveDataInProgress] = useState(false)
-  const [user, setUser] = useState<any>(null)
   const [dimensions, setDimensions] = useState({ window, screen });
   const [target, setTarget] = useState('');
   const [loadDiscussionForChannelId, setLoadDiscussionForChannelId] = useState('');
@@ -630,7 +629,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             if (u.__typename) {
               delete u.__typename
             }
-            setUser(u)
             const sU = JSON.stringify(u)
             await AsyncStorage.setItem('user', sU)
           })
@@ -782,7 +780,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
         OneSignal.setExternalUserId(userId);
 
-        setUser(u)
         const sU = JSON.stringify(u)
         await AsyncStorage.setItem('user', sU)
         setShowLoginWindow(false)
@@ -817,7 +814,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           await AsyncStorage.setItem('cueDraft', u.currentDraft)
           delete u.currentDraft;
           delete u.__typename
-          setUser(u)
           const sU = JSON.stringify(u)
           await AsyncStorage.setItem('user', sU)
         }
@@ -1612,7 +1608,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                   <ActivityIndicator color={'#50566B'} />
                 </View> :
                 <Dashboard
-                  user={user}
                   setOption={(op: any) => setOption(op)}
                   option={option}
                   options={options}
@@ -1957,7 +1952,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               <Text style={{ textAlign: 'center' }}>
                 <Ionicons name='list-outline' size={21} color={option === 'To Do' ? '#5469D4' : '#1A2036'} />
               </Text>
-              <Text style={{ fontSize: 11, color: option === 'To Do' ? '#5469D4' : '#1A2036', paddingTop: 6, textAlign: 'center', fontFamily: 'inter' }}>
+              <Text style={{ fontSize: 11, color: option === 'To Do' ? '#5469D4' : '#1A2036', paddingTop: 6, textAlign: 'center' }}>
                 Agenda
               </Text>
             </TouchableOpacity>
@@ -1971,7 +1966,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               <Text style={{ textAlign: 'center' }}>
                 <Ionicons name='school-outline' size={22} color={option === 'Classroom' ? '#5469D4' : '#1A2036'} />
               </Text>
-              <Text style={{ fontSize: 11, color: option === 'Classroom' ? '#5469D4' : '#1A2036', paddingTop: 5, textAlign: 'center', fontFamily: 'inter' }}>
+              <Text style={{ fontSize: 11, color: option === 'Classroom' ? '#5469D4' : '#1A2036', paddingTop: 5, textAlign: 'center' }}>
                 Classroom
               </Text>
             </TouchableOpacity>
@@ -1985,7 +1980,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               <Text style={{ textAlign: 'center' }}>
                 <Ionicons name='speedometer-outline' size={22} color={option === 'Performance' ? '#5469D4' : '#1A2036'} />
               </Text>
-              <Text style={{ fontSize: 11, color: option === 'Performance' ? '#5469D4' : '#1A2036', paddingTop: 5, textAlign: 'center', fontFamily: 'inter' }}>
+              <Text style={{ fontSize: 11, color: option === 'Performance' ? '#5469D4' : '#1A2036', paddingTop: 5, textAlign: 'center' }}>
                 Progress
               </Text>
             </TouchableOpacity>
@@ -2000,7 +1995,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               <Text style={{ textAlign: 'center' }}>
                 <Ionicons name='chatbubble-outline' size={21} color={option === 'Inbox' ? '#5469D4' : '#1A2036'} />
               </Text>
-              <Text style={{ fontSize: 11, color: option === 'Inbox' ? '#5469D4' : '#1A2036', paddingTop: 6, textAlign: 'center', fontFamily: 'inter' }}>
+              <Text style={{ fontSize: 11, color: option === 'Inbox' ? '#5469D4' : '#1A2036', paddingTop: 6, textAlign: 'center' }}>
                 Inbox
               </Text>
             </TouchableOpacity>

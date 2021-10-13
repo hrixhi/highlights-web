@@ -1285,13 +1285,13 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     flex: 1,
                     height: 48
                 }}>
-                    <View style={{ flexDirection: 'row', backgroundColor: '#f7fafc', flex: 1, height: 50, paddingTop: 1 }}>
+                    <View style={{ flexDirection: 'row', backgroundColor: '#f7fafc', flex: 1, height: 50, paddingTop: 0 }}>
                         <Image
                             source={logo}
                             style={{
                                 width: 50,
                                 marginTop: Dimensions.get('window').width < 1024 ? 6 : 3,
-                                height: 20,
+                                height: 22,
                                 marginRight: 0
                             }}
                             resizeMode={'contain'}
@@ -1336,7 +1336,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             setShowFilterPopup(true)
                         }}>
                             <Text style={{ fontSize: 10, color: '#50566B', paddingTop: 9, textAlign: 'right' }}>
-                                Filter <Ionicons name="chevron-down-outline" size={11} />
+                                Filter <Ionicons name="chevron-down-outline" size={10} />
                             </Text>
 
                         </TouchableOpacity> : null}
@@ -1365,10 +1365,10 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             <MenuTrigger>
                                 <Image
                                     style={{
-                                        height: 28,
-                                        width: 28,
+                                        height: 26,
+                                        width: 26,
                                         marginBottom: 10,
-                                        marginTop: 8,
+                                        marginTop: 9,
                                         borderRadius: 75,
                                         borderWidth: 1,
                                         borderColor: '#E3E8EE'

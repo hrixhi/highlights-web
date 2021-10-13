@@ -1324,11 +1324,11 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     }}
                     style={{
                         paddingRight: 20,
-                        paddingTop: 5,
+                        // paddingTop: 5,
                         alignSelf: 'flex-start'
                     }}
                 >
-                    <Text style={{ lineHeight: 35, width: '100%', textAlign: 'center', paddingTop: 10 }}>
+                    <Text style={{ lineHeight: 27, width: '100%', textAlign: 'center' }}>
                         <Ionicons name='arrow-back-outline' size={26} color={'#50566B'} />
                     </Text>
                 </TouchableOpacity>
@@ -1464,7 +1464,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 backgroundColor: "white",
                 borderTopRightRadius: 0,
                 borderTopLeftRadius: 0,
-                overflow: 'scroll',
+                overflow: tab === 'Add' ? 'hidden' : 'scroll',
                 maxWidth: 1000,
                 alignSelf: 'center'
             }}>
@@ -1580,7 +1580,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                             <View style={{
                                                                                 width: Dimensions.get('window').width < 1024 ? '100%' : '100%',
                                                                                 paddingLeft: Dimensions.get('window').width < 1024 ? 0 : 0,
-                                                                                paddingTop: Dimensions.get('window').width < 1024 ? 0 : 0
+                                                                                paddingTop: Dimensions.get('window').width < 1024 ? 0 : 0,
                                                                             }}>
                                                                                 <View>
                                                                                     {
@@ -1714,14 +1714,14 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                 <ScrollView
                                                                                     contentContainerStyle={{
                                                                                         maxHeight: width < 1024 ? windowHeight - 200 : '100%',
-                                                                                        alignItems: 'center'
+                                                                                        alignItems: 'center',
                                                                                     }}
                                                                                 >
                                                                                     <View
                                                                                         style={{
                                                                                             width: '100%', maxWidth: 400, alignSelf: 'center'
                                                                                         }}>
-                                                                                        <View style={{ width: '100%', maxWidth: 400, paddingTop: 20 }}>
+                                                                                        <View style={{ width: '100%', maxWidth: 400 }}>
                                                                                             <Text
                                                                                                 style={{
                                                                                                     fontSize: 14,
@@ -1856,7 +1856,6 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                     </View>
                                                                                     <View
                                                                                         style={{
-                                                                                            marginBottom: 20,
                                                                                             borderColor: "#E3E8EE",
                                                                                             // borderBottomWidth: 1,
                                                                                             paddingTop: 20,
@@ -1957,6 +1956,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                                 flexDirection: "row",
                                                                                                 display: "flex",
                                                                                                 marginBottom: 10,
+                                                                                                paddingBottom: 25,
                                                                                                 // paddingLeft: 7
                                                                                                 justifyContent: 'center'
                                                                                             }}>
