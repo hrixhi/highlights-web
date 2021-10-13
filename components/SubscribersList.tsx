@@ -260,6 +260,8 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
 
             const { attempts } = obj;
 
+            if (attempts.length === 0) return;
+
             let activeAttempt: any = {};
 
             attempts.map((attempt: any) => {
@@ -272,7 +274,9 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                 return;
             }
 
-            const { solutions, problemScores, problemComments } = activeAttempt;
+            if (!activeAttempt) return;
+
+            const { solutions = [], problemScores, problemComments } = activeAttempt;
 
 
             solutions.forEach((sol: any, i: number) => {
