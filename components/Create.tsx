@@ -1106,10 +1106,10 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 style={{
                   lineHeight: 35,
                   textAlign: "right",
-                  paddingRight: 10,
+                  paddingRight: 20,
                   // textTransform: "uppercase",
-                  fontSize: 11,
-                  // fontFamily: 'inter',
+                  fontSize: 12,
+                  fontFamily: 'inter',
                   color: '#5469D4',
                 }}
                 onPress={() => setShowEquationEditor(!showEquationEditor)}
@@ -1138,8 +1138,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   // paddingRight: 10,
                   paddingLeft: 20,
                   // textTransform: "uppercase",
-                  fontSize: 11,
-                  // fontFamily: 'inter',
+                  fontSize: 12,
+                  fontFamily: 'inter',
                 }}
                 onPress={() => {
                   if (isQuiz) {

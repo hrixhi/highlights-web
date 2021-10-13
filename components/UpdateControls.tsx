@@ -5029,8 +5029,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                 textAlign: "right",
                                                 paddingRight: 20,
                                                 // textTransform: "uppercase",
-                                                fontSize: 11,
-                                                // fontFamily: 'inter',
+                                                fontSize: 12,
+                                                fontFamily: 'inter',
                                                 color: '#5469D4',
                                             }}
                                             onPress={() => setShowEquationEditor(!showEquationEditor)}>

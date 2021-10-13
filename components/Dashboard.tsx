@@ -1347,7 +1347,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 color: '#50566B',
                                 borderColor: "#E3E8EE",
                                 borderBottomWidth: 1,
-                                fontSize: 12,
+                                fontSize: 11,
                                 padding: 5,
                                 // paddingVertical: 8,
                                 marginTop: -10,

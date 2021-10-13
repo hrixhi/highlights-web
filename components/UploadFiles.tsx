@@ -107,7 +107,8 @@ const FileUpload: React.FC<any> = (props: any) => {
                 color: "#5469D4",
                 lineHeight: 35,
                 textAlign: "right",
-                fontSize: 11
+                fontSize: 12,
+                fontFamily: 'inter'
             }}
             onPress={() => handleFile()}
         >
