@@ -740,7 +740,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
         // dropdownOptionsSectionFiltered = dropdownOptionsRoleFiltered
     }
 
-    const windowHeight = Dimensions.get('window').width < 1024 ? Dimensions.get('window').height  : Dimensions.get('window').height;
+    const windowHeight = Dimensions.get('window').width < 1024 ? Dimensions.get('window').height : Dimensions.get('window').height;
 
     const renderBubble = (props: any) => {
         return (
@@ -910,6 +910,39 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                             // </TouchableOpacity>
                                         }
                                         {
+                                            showNewGroup || showChat || !showDirectory ? null :
+                                                <TouchableOpacity
+                                                    onPress={() => {
+                                                        setShowNewGroup(!showNewGroup)
+                                                    }}
+                                                    style={{
+                                                        backgroundColor: 'white',
+                                                        overflow: 'hidden',
+                                                        height: 35,
+                                                        // marginLeft: 15,
+                                                        marginTop: 15,
+                                                        justifyContent: 'center',
+                                                        flexDirection: 'row'
+                                                    }}>
+                                                    <Text style={{
+                                                        textAlign: 'center',
+                                                        lineHeight: 35,
+                                                        color: '#5469D4',
+                                                        fontSize: 12,
+                                                        borderColor: '#5469D4',
+                                                        paddingHorizontal: 20,
+                                                        borderWidth: 1,
+                                                        fontFamily: 'inter',
+                                                        height: 35,
+                                                        // width: 100,
+                                                        borderRadius: 15,
+                                                        textTransform: 'uppercase'
+                                                    }}>
+                                                        New Group
+                                                    </Text>
+                                                </TouchableOpacity>
+                                        }
+                                        {
                                             showNewGroup || showChat || showDirectory ? null :
                                                 <TouchableOpacity
                                                     onPress={() => {
@@ -938,7 +971,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                         borderRadius: 15,
                                                         textTransform: 'uppercase'
                                                     }}>
-                                                        Directory
+                                                        Contacts
                                                     </Text>
                                                 </TouchableOpacity>
                                         }
@@ -964,46 +997,9 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                             </TouchableOpacity>
                                             : <View style={{ flexDirection: 'row', flex: 1 }} />}
                                         {
-                                            showNewGroup || showChat || showDirectory ? null :
-                                                <TouchableOpacity
-                                                    onPress={() => {
-                                                        setShowNewGroup(!showNewGroup)
-                                                    }}
-                                                    style={{
-                                                        backgroundColor: 'white',
-                                                        overflow: 'hidden',
-                                                        // height: 35,
-                                                        marginTop: 12,
-                                                        justifyContent: 'center',
-                                                        // flexDirection: 'row',
-                                                        // alignSelf: 'flex-end'
-                                                    }}>
-                                                    <Text style={{
-                                                        textAlign: 'center',
-                                                        lineHeight: 20,
-                                                        // color: '#1A2036',
-                                                        fontSize: 10,
-                                                        // backgroundColor: '#f7fafc',
-                                                        // paddingHorizontal: 20,
-                                                        // marginRight: 15,
-                                                        // fontFamily: 'inter',
-                                                        height: 20,
-                                                        // width: 100,
-                                                        borderRadius: 15,
-                                                        textTransform: 'uppercase'
-                                                    }}>
-                                                        <Ionicons name='people-circle-outline' size={15} color={'#50566B'} />
-                                                    </Text>
-                                                    <Text style={{ fontSize: 10, color: '#50566B', paddingTop: 5, backgroundColor: '#fff', textAlign: 'center' }}>
-                                                        Group
-                                                    </Text>
-                                                </TouchableOpacity>
-                                        }
-                                        {
-                                            showDirectory && !showChat ?
+                                            showDirectory && !showChat && !showNewGroup ?
                                                 <View style={{ backgroundColor: '#fff', paddingTop: 15 }}>
                                                     <View style={{ flexDirection: 'row', backgroundColor: '#fff' }}>
-
                                                         <label style={{ width: 150 }}>
                                                             <Select
                                                                 touchUi={true}

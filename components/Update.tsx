@@ -1423,7 +1423,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 </Text>
             </TouchableOpacity>
         </View> : null}
-        {channelFolders.length > 0 && channelOwner && folderId === "" && !createNewFolder  ? <Menu
+        {channelFolders.length > 0 && channelOwner && folderId === "" && !createNewFolder ? <Menu
             onSelect={async (choice: any) => {
                 // setCalendarChoice(choice)
 
@@ -1518,6 +1518,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         {createNewFolder ? renderCreateNewFolderOptions() : null}
 
         {folderId !== "" ? renderFolderCues() : null}
+
+        <View style={{ height: 25, width: '100%' }} />
 
     </ScrollView>
 

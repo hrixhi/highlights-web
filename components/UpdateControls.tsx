@@ -2283,7 +2283,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             props.setShowFolder(!props.showFolder)
                         }}>
                         <Text>
-                            <Ionicons name={props.showFolder ? 'backspace-outline' : 'folder-outline'} size={18} color={props.folderId !== "" ? '#5469D4' : '#50566B'} />
+                            <Ionicons name={props.showFolder ? 'backspace-outline' : 'folder-outline'} size={20} color={props.folderId !== "" ? '#5469D4' : '#50566B'} />
                         </Text>
                     </TouchableOpacity>
                 </View> : null}
@@ -2520,21 +2520,13 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         {
                             (isOwner || !props.cue.channelId) ?
                                 <TouchableOpacity
-                                    style={{
-                                        marginTop: 3,
-                                        // marginLeft: 15
-                                        right: 0
-                                    }}
                                     onPress={() => clearAll()}
-                                >
-                                    <Text
-                                        style={{
-                                            color: '#5469D4',
-                                            fontFamily: 'Overpass',
-                                            fontSize: 10
-                                        }}
-                                    >
-                                        Clear
+                                    style={{
+                                        backgroundColor: "white", borderRadius: 15, // marginLeft: 15,
+                                        marginTop: 5,
+                                    }}>
+                                    <Text>
+                                        <Ionicons name={'trash-outline'} size={18} color={'#50566B'} />
                                     </Text>
                                 </TouchableOpacity> : null
                         }
@@ -3145,7 +3137,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     }}
                 >
                     <Text>
-                        <Ionicons name={updatingCueContent ? 'ellipsis-horizontal-outline' : 'save-outline'} size={18} color={'#50566B'} />
+                        <Ionicons name={updatingCueContent ? 'ellipsis-horizontal-outline' : 'cloud-upload-outline'} size={20} color={'#5469D4'} />
                     </Text>
                 </TouchableOpacity>
             </View > : null
@@ -3154,7 +3146,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
     const renderViewSubmission = () => {
         const attempt = submissionAttempts[submissionAttempts.length - 1];
-        
+
         return (<View style={{ width: '100%', marginTop: 20 }}>
             {/* Render Tabs to switch between original submission and Annotations only if submission was HTML and not a file upload */}
             {attempt.url !== undefined ? null : <View style={{ flexDirection: "row", width: '100%', justifyContent: 'center' }}>
@@ -4791,17 +4783,17 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     marginLeft: 15
                 }}>
                     <Text>
-                        <Ionicons name={updatingCueContent ? 'ellipsis-horizontal-outline' : 'save-outline'} size={18} color={'#50566B'} />
+                        <Ionicons name={updatingCueContent ? 'ellipsis-horizontal-outline' : 'cloud-upload-outline'} size={20} color={'#5469D4'} />
                     </Text>
                 </TouchableOpacity>
 
                 {isOwner || !props.cue.channelId || props.cue.channelId === "" ? (
                     <TouchableOpacity onPress={() => handleDelete()} style={{
                         backgroundColor: "white", borderRadius: 15, marginLeft: 15,
-                        marginTop: 5,
+                        marginTop: 6,
                     }}>
                         <Text>
-                            <Ionicons name={'trash-outline'} size={18} color={'#50566B'} />
+                            <Ionicons name={'trash-outline'} size={18} color={'#5469D4'} />
                         </Text>
                     </TouchableOpacity>
                 ) : null}
@@ -5159,34 +5151,25 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                     props.cue.graded || (currentDate > deadline) ? null :
                                                         <TouchableOpacity
                                                             onPress={() => clearAll()}
-                                                            style={{ marginLeft: 10, right: 0 }}
-                                                        >
-                                                            <Text
-                                                                style={{
-                                                                    color: '#5469D4',
-                                                                    fontFamily: 'Overpass',
-                                                                    fontSize: 10
-                                                                }}
-                                                            >
-                                                                Clear
+                                                            style={{
+                                                                backgroundColor: "white", borderRadius: 15,
+                                                                // marginLeft: 15,
+                                                                marginTop: 5,
+                                                            }}>
+                                                            <Text>
+                                                                <Ionicons name={'trash-outline'} size={18} color={'#50566B'} />
                                                             </Text>
                                                         </TouchableOpacity>
                                                 }
                                             </View>
                                         ) : <TouchableOpacity
-                                            style={{
-                                                right: 0
-                                            }}
                                             onPress={() => clearAll()}
-                                        >
-                                            <Ionicons name="trash-outline" color="#50566B" size={15} style={{ alignSelf: 'center' }} />
-                                            <Text
-                                                style={{
-                                                    fontSize: 10,
-                                                    color: "#50566B",
-                                                    textAlign: "center"
-                                                }}>
-                                                Clear
+                                            style={{
+                                                backgroundColor: "white", borderRadius: 15, marginLeft: 15,
+                                                marginTop: 5,
+                                            }}>
+                                            <Text>
+                                                <Ionicons name={'trash-outline'} size={18} color={'#50566B'} />
                                             </Text>
                                         </TouchableOpacity>}
                                     </View>

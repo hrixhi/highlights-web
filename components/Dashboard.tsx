@@ -1144,7 +1144,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                             )
                                                     ) :
                                                     cueMap[key].length === 0 ?
-                                                        <Text style={{ width: '100%', color: '#50566B', fontSize: 23, paddingTop: 50, paddingBottom: 50, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                                        <Text style={{ width: '100%', color: '#50566B', fontSize: 20, paddingTop: 50, paddingBottom: 50, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                                                             {PreferredLanguageText('noCuesCreated')}
                                                         </Text>
                                                         :
@@ -1347,9 +1347,9 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 color: '#50566B',
                                 borderColor: "#E3E8EE",
                                 borderBottomWidth: 1,
-                                fontSize: 10,
+                                fontSize: 12,
                                 padding: 5,
-                                paddingVertical: 7,
+                                // paddingVertical: 8,
                                 marginTop: -10,
                                 flex: 1, flexDirection: 'row',
                                 marginLeft: 20,
@@ -1395,7 +1395,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 <MenuOption
                                     value={'Settings'}>
                                     <Text style={{ fontFamily: 'inter' }}>
-                                        <Ionicons name='hammer-outline' size={12} />&nbsp;&nbsp;Account
+                                        <Ionicons name='person-circle-outline' size={12} />&nbsp;&nbsp;Account
                                     </Text>
                                 </MenuOption>
                             </MenuOptions>

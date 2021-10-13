@@ -102,7 +102,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
         return (<View style={{ width: Dimensions.get('window').width < 1024 ? '100%' : '60%', marginTop: 40, marginBottom: 80 }}>
             <View style={{ marginBottom: 20 }}>
-                <Text style={{ fontSize: 23, fontWeight: 'bold'  }}>
+                <Text style={{ fontSize: 20, fontWeight: 'bold'  }}>
                     Attempt History
                 </Text>
             </View>
@@ -278,7 +278,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             {renderAttemptHistory()}
 
             {props.isOwner ? <View style={{ marginBottom: 20 }}>
-                <Text style={{ fontSize: 23, fontWeight: 'bold'  }}>
+                <Text style={{ fontSize: 20, fontWeight: 'bold'  }}>
                     Attempt {props.currentQuizAttempt + 1}
                 </Text>
             </View> : null}

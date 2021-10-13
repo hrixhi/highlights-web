@@ -1288,18 +1288,18 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
         return (<View style={{ flexDirection: "row", flex: 1, marginBottom: 20, marginTop: 10, paddingVertical: 10 }}>
             {
-                tab !== 'Add' ? <TouchableOpacity
+                tab !== 'Add' && tab !== 'Activity' ? <TouchableOpacity
+                    onPress={() => {
+                        setTab(tabs[4])
+                    }}
+                    disabled={isCreatingEvents}
                     style={{
                         backgroundColor: "white",
                         overflow: "hidden",
                         height: 35,
                         // marginTop: -20
                         // marginBottom: 20
-                    }}
-                    onPress={() => {
-                        setTab(tabs[4])
-                    }}
-                    disabled={isCreatingEvents}>
+                    }}>
                     <Text
                         style={{
                             textAlign: "center",
@@ -1317,21 +1317,24 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         }}>
                         Add
                     </Text>
-                </TouchableOpacity> : <TouchableOpacity
-                    onPress={() => {
-                        setEditEvent(null)
-                        setTab(tabs[0])
-                    }}
-                    style={{
-                        paddingRight: 20,
-                        // paddingTop: 5,
-                        alignSelf: 'flex-start'
-                    }}
-                >
-                    <Text style={{ lineHeight: 27, width: '100%', textAlign: 'center' }}>
-                        <Ionicons name='arrow-back-outline' size={25} color={'#50566B'} />
-                    </Text>
-                </TouchableOpacity>
+                </TouchableOpacity> : (
+                    tab === 'Activity' ? null :
+                        <TouchableOpacity
+                            onPress={() => {
+                                setEditEvent(null)
+                                setTab(tabs[0])
+                            }}
+                            style={{
+                                paddingRight: 20,
+                                // paddingTop: 5,
+                                alignSelf: 'flex-start'
+                            }}
+                        >
+                            <Text style={{ lineHeight: 27, width: '100%', textAlign: 'center' }}>
+                                <Ionicons name='arrow-back-outline' size={25} color={'#50566B'} />
+                            </Text>
+                        </TouchableOpacity>
+                )
             }
 
             {
@@ -1382,12 +1385,25 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         style={{
                             backgroundColor: "white",
                             overflow: "hidden",
-                            height: 35,
-                            // marginTop: -20,
-                            marginLeft: 15,
-                            paddingTop: 3
+                            height: 35
                         }}>
-                        <Ionicons name={'checkmark-done-outline'} size={22} color={'#5469D4'} />
+                        <Text
+                            style={{
+                                textAlign: "center",
+                                lineHeight: 35,
+                                color: '#5469D4',
+                                fontSize: 12,
+                                borderWidth: 1,
+                                borderColor: '#5469D4',
+                                paddingHorizontal: 20,
+                                fontFamily: "inter",
+                                height: 35,
+                                // width: 125,
+                                borderRadius: 15,
+                                textTransform: "uppercase"
+                            }}>
+                            Mark as Read
+                        </Text>
                     </TouchableOpacity>
                     : null
             }
@@ -1673,26 +1689,28 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                                     // minWidth: 600, // flex: 1,
                                                                                                     width: '100%'
                                                                                                 }}>
-                                                                                                <View style={{ backgroundColor: '#fff', padding: 0, flexDirection: 'column', justifyContent: 'center', width: 125 }}>
-                                                                                                    <Text style={{ fontSize: 12, padding: 5, fontFamily: 'inter' }} ellipsizeMode='tail'>
-                                                                                                        <View style={{
-                                                                                                            width: 9,
-                                                                                                            height: 9,
-                                                                                                            borderRadius: 12,
-                                                                                                            marginRight: 5,
-                                                                                                            backgroundColor: act.colorCode
-                                                                                                        }} /> {act.channelName}
+                                                                                                <View style={{ backgroundColor: '#fff', padding: 0, flexDirection: 'row', width: 125 }}>
+                                                                                                    <View style={{
+                                                                                                        width: 9,
+                                                                                                        height: 9,
+                                                                                                        borderRadius: 12,
+                                                                                                        // marginRight: 5,
+                                                                                                        margin: 20,
+                                                                                                        backgroundColor: act.colorCode
+                                                                                                    }} />
+                                                                                                    <Text style={{ fontSize: 12, paddingVertical: 18, fontFamily: 'inter' }} ellipsizeMode='tail'>
+                                                                                                        {act.channelName}
                                                                                                     </Text>
                                                                                                 </View>
                                                                                                 <View style={{ flex: 1, backgroundColor: '#fff', padding: 0, flexDirection: 'row' }}>
                                                                                                     <View>
-                                                                                                        <Text style={{ fontSize: 13, padding: 5, paddingTop: 15, paddingBottom: 15, fontFamily: 'inter' }} ellipsizeMode='tail'>
+                                                                                                        <Text style={{ fontSize: 13, padding: 5, paddingTop: 10, paddingBottom: 5, fontFamily: 'inter' }} ellipsizeMode='tail'>
                                                                                                             {act.title}
                                                                                                         </Text>
+                                                                                                        <Text style={{ fontSize: 11, padding: 5 }} ellipsizeMode='tail'>
+                                                                                                            {act.subtitle}
+                                                                                                        </Text>
                                                                                                     </View>
-                                                                                                    <Text style={{ fontSize: 11, padding: 5, lineHeight: 20 }} ellipsizeMode='tail'>
-                                                                                                        {act.subtitle}
-                                                                                                    </Text>
                                                                                                 </View>
                                                                                                 <View style={{ backgroundColor: '#fff', padding: 0, flexDirection: 'row', alignSelf: 'center' }} >
                                                                                                     <Text style={{ fontSize: 13, padding: 5, lineHeight: 13 }} ellipsizeMode='tail'>
@@ -2010,7 +2028,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     style={{
                                         marginRight: 10,
                                         color: '#1A2036',
-                                        fontSize: 23,
+                                        fontSize: 20,
                                         paddingBottom: 20,
                                         fontFamily: 'inter',
                                         flex: 1,

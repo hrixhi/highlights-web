@@ -740,7 +740,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                     {
                                                         threads.length === 0 ?
                                                             <View style={{ backgroundColor: 'white', flex: 1 }}>
-                                                                <Text style={{ width: '100%', color: '#50566B', fontSize: 23, paddingTop: 100, paddingBottom: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                                                <Text style={{ width: '100%', color: '#50566B', fontSize: 20, paddingTop: 100, paddingBottom: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                                                                     {
                                                                         !props.cueId ? PreferredLanguageText('noPosts') : PreferredLanguageText('noComments')
                                                                     }

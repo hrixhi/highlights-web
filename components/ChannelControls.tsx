@@ -385,7 +385,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 </Text>
                             </TouchableOpacity> : null
                             // <Text style={{
-                            //     fontSize: 23,
+                            //     fontSize: 20,
                             //     // paddingBottom: 40,
                             //     paddingTop: 10,
                             //     fontFamily: 'inter',

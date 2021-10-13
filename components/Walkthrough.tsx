@@ -333,7 +333,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             </TouchableOpacity> : null
                             // <Text
                             //     style={{
-                            //         fontSize: 23,
+                            //         fontSize: 20,
                             //         paddingBottom: 30,
                             //         fontFamily: 'inter',
                             //         // textTransform: "uppercase",
@@ -365,7 +365,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 }}>
                                 <Text
                                     style={{
-                                        fontSize: 23,
+                                        fontSize: 20,
                                         paddingBottom: 10,
                                         fontFamily: 'inter',
                                         // textTransform: "uppercase",
