@@ -877,7 +877,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                     }}
                                                 >
                                                     <Text style={{ lineHeight: 35, width: '100%', textAlign: 'center', paddingTop: 10 }}>
-                                                        <Ionicons name='arrow-back-outline' size={26} color={'#50566B'} />
+                                                        <Ionicons name='arrow-back-outline' size={25} color={'#50566B'} />
                                                     </Text>
                                                 </TouchableOpacity>
                                                 : null

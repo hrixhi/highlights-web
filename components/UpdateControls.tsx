@@ -2266,7 +2266,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     props.closeModal()
                                 }}>
                                 <Text>
-                                    <Ionicons name='arrow-back-outline' size={26} color={'#50566B'} />
+                                    <Ionicons name='arrow-back-outline' size={25} color={'#50566B'} />
                                 </Text>
                             </TouchableOpacity>
                         </View>
@@ -2282,7 +2282,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             props.setShowFolder(!props.showFolder)
                         }}>
                         <Text>
-                            <Ionicons name={props.showFolder ? 'close-outline' : 'folder-outline'} size={18} color={'#50566B'} />
+                            <Ionicons name={props.showFolder ? 'backspace-outline' : 'folder-outline'} size={18} color={'#50566B'} />
                         </Text>
                     </TouchableOpacity>
                 </View> : null}
@@ -4927,7 +4927,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     props.closeModal()
                                 }}>
                                 <Text>
-                                    <Ionicons name='arrow-back-outline' size={26} color={'#50566B'} />
+                                    <Ionicons name='arrow-back-outline' size={25} color={'#50566B'} />
                                 </Text>
                             </TouchableOpacity>
                         </View>

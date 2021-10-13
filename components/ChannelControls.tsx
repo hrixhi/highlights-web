@@ -381,7 +381,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 }}
                             >
                                 <Text style={{ lineHeight: 35, width: '100%', textAlign: 'center' }}>
-                                    <Ionicons name='arrow-back-outline' size={26} color={'#50566B'} />
+                                    <Ionicons name='arrow-back-outline' size={25} color={'#50566B'} />
                                 </Text>
                             </TouchableOpacity> : null
                             // <Text style={{
@@ -393,7 +393,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             //     lineHeight: 23,
                             //     color: '#1A2036'
                             // }}>
-                            //     <Ionicons name='radio-outline' size={26} color={'#5469D4'} />
+                            //     <Ionicons name='radio-outline' size={25} color={'#5469D4'} />
                             // </Text>
                         }
                     </View>

@@ -1021,7 +1021,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
               props.closeModal()
             }}>
             <Text>
-              <Ionicons name='arrow-back-outline' size={26} color={'#50566B'} />
+              <Ionicons name='arrow-back-outline' size={25} color={'#50566B'} />
             </Text>
           </TouchableOpacity>
         </View>
@@ -1150,7 +1150,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   setSubmission(true);
                 }}
               >
-                {isQuiz ? 'Cancel' : PreferredLanguageText("quiz")}
+                {isQuiz ? 'Clear' : PreferredLanguageText("quiz")}
               </Text> : null
             }
           </View>

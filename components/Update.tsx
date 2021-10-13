@@ -1623,7 +1623,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         props.closeModal()
                                     }}>
                                     <Text>
-                                        <Ionicons name='arrow-back-outline' size={26} color={'#50566B'} />
+                                        <Ionicons name='arrow-back-outline' size={25} color={'#50566B'} />
                                     </Text>
                                 </TouchableOpacity>
                             </View>
@@ -1639,7 +1639,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 setShowFolder(!showFolder)
                             }}>
                             <Text>
-                                <Ionicons name={showFolder ? 'close-outline' : 'document-attach-outline'} size={26} color={'#5469D4'} />
+                                <Ionicons name={showFolder ? 'close-outline' : 'document-attach-outline'} size={25} color={'#5469D4'} />
                             </Text>
                         </TouchableOpacity> 
                     </View>

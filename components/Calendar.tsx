@@ -1329,7 +1329,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     }}
                 >
                     <Text style={{ lineHeight: 27, width: '100%', textAlign: 'center' }}>
-                        <Ionicons name='arrow-back-outline' size={26} color={'#50566B'} />
+                        <Ionicons name='arrow-back-outline' size={25} color={'#50566B'} />
                     </Text>
                 </TouchableOpacity>
             }
