@@ -1423,7 +1423,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 </Text>
             </TouchableOpacity>
         </View> : null}
-        {channelFolders.length > 0 ? <Menu
+        {channelFolders.length > 0 && channelOwner && folderId === "" && !createNewFolder  ? <Menu
             onSelect={async (choice: any) => {
                 // setCalendarChoice(choice)
 

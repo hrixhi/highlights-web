@@ -64,12 +64,7 @@
     "addOption": "Aggiungi opzione",
     "formFieldEdit": "Modifica campo modulo",
     "viewShortCutKeysFor3D": "Visualizza i tasti di scelta rapida",
-    "markAllRead": "segna tutto come letto",
-    "insertPage": "Inserimento pagina",
-    "insertBlankPageAbove": "Inserisci una pagina vuota sopra",
-    "insertBlankPageBelow": "Inserisci una pagina vuota qui sotto",
-    "pageManipulation": "Manipolazione della pagina",
-    "replace": "Sostituire"
+    "markAllRead": "segna tutto come letto"
   },
   "annotation": {
     "areaMeasurement": "Misurazione dell'area",
@@ -88,7 +83,6 @@
     "freeHandHighlight": "Evidenziazione a mano libera",
     "freetext": "Testo libero",
     "highlight": "Evidenziare",
-    "image": "Immagine",
     "line": "Linea",
     "perimeterMeasurement": "Misurazione perimetrale",
     "polygon": "Poligono",
@@ -237,7 +231,7 @@
       "pageTransition": "Transizione di pagina"
     },
     "documentControls": {
-      "placeholder": "1, 3, 5-10"
+      "placeholder": "Immettere le pagine per selezionare cioè 2, 5-9"
     },
     "outlineControls": {
       "add": "Aggiungi articolo",
@@ -310,8 +304,7 @@
     "filterAnnotModal": {
       "commentBy": "Commento di",
       "types": "tipi",
-      "color": "Colore",
-      "includeReplies": "Includi risposte"
+      "color": "Colore"
     },
     "status": {
       "status": "Stato"
@@ -438,7 +431,7 @@
     "select": "(Esc)",
     "signature": "(S)",
     "squiggly": "(G)",
-    "image": "(IO)",
+    "stamp": "(IO)",
     "redo": "(Ctrl Maiusc Z)",
     "redo_windows": "(Ctrl Y)",
     "undo": "(Ctrl Z)",
@@ -492,20 +485,6 @@
       "9": "ottobre",
       "10": "novembre",
       "11": "dicembre"
-    },
-    "monthsShort": {
-      "0": "genn",
-      "1": "febbr",
-      "2": "mar",
-      "3": "apr",
-      "4": "magg",
-      "5": "giugno",
-      "6": "luglio",
-      "7": "ag",
-      "8": "sett",
-      "9": "ott",
-      "10": "nov",
-      "11": "dic"
     },
     "weekdays": {
       "0": "domenica",
@@ -610,7 +589,6 @@
     "by": "di",
     "on": "sopra",
     "disallowedChange": "Modifica non consentita: {{type}}, objnum: {{objnum}}",
-    "unsignedSignatureField": "Campo firma non firmato: {{fieldName}}",
     "trustVerification": {
       "current": "L'ora di verifica utilizzata era l'ora corrente",
       "signing": "L'ora della verifica è dall'orologio sul computer del firmatario",

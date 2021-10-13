@@ -64,12 +64,7 @@
     "addOption": "Option hinzufügen",
     "formFieldEdit": "Formularfeld bearbeiten",
     "viewShortCutKeysFor3D": "Tastenkombinationen anzeigen",
-    "markAllRead": "markiere alles Gelesene",
-    "insertPage": "Seiteneinfügung",
-    "insertBlankPageAbove": "Leere Seite oben einfügen",
-    "insertBlankPageBelow": "Leere Seite unten einfügen page",
-    "pageManipulation": "Seitenmanipulation",
-    "replace": "Ersetzen"
+    "markAllRead": "markiere alles Gelesene"
   },
   "annotation": {
     "areaMeasurement": "Flächenmessung",
@@ -88,7 +83,6 @@
     "freeHandHighlight": "Freihand-Highlight",
     "freetext": "Freitext",
     "highlight": "Hervorheben",
-    "image": "Bild",
     "line": "Linie",
     "perimeterMeasurement": "Umfangsmessung",
     "polygon": "Polygon",
@@ -237,7 +231,7 @@
       "pageTransition": "Seitenübergang"
     },
     "documentControls": {
-      "placeholder": "1, 3, 5-10"
+      "placeholder": "Geben Sie die gewünschten Seiten ein, z. B. 2, 5-9"
     },
     "outlineControls": {
       "add": "Artikel hinzufügen",
@@ -310,8 +304,7 @@
     "filterAnnotModal": {
       "commentBy": "Kommentar von",
       "types": "Typen",
-      "color": "Farbe",
-      "includeReplies": "Antworten einschließen"
+      "color": "Farbe"
     },
     "status": {
       "status": "Status"
@@ -438,7 +431,7 @@
     "select": "(Esc)",
     "signature": "(S)",
     "squiggly": "(G)",
-    "image": "(ICH)",
+    "stamp": "(I)",
     "redo": "(Strg-Umschalttaste Z)",
     "redo_windows": "(Strg Y)",
     "undo": "(Strg Z)",
@@ -492,20 +485,6 @@
       "9": "Oktober",
       "10": "November",
       "11": "Dezember"
-    },
-    "monthsShort": {
-      "0": "Jän",
-      "1": "Feb",
-      "2": "März",
-      "3": "Apr",
-      "4": "Mai",
-      "5": "Juni",
-      "6": "Juli",
-      "7": "Aug",
-      "8": "Sept",
-      "9": "Okt",
-      "10": "Nov",
-      "11": "Dez"
     },
     "weekdays": {
       "0": "Sonntag",
@@ -610,7 +589,6 @@
     "by": "durch",
     "on": "auf",
     "disallowedChange": "Unzulässige Änderung: {{type}}, objnum: {{objnum}}",
-    "unsignedSignatureField": "Unsigniertes Signaturfeld: {{fieldName}}",
     "trustVerification": {
       "current": "Die verwendete Überprüfungszeit war die aktuelle Zeit",
       "signing": "Die Überprüfungszeit beginnt mit der Uhr auf dem Computer des Unterzeichners",

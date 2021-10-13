@@ -64,12 +64,7 @@
     "addOption": "Ajouter une option",
     "formFieldEdit": "Modifier le champ de formulaire",
     "viewShortCutKeysFor3D": "Afficher les touches de raccourci",
-    "markAllRead": "Marquer tout comme lu",
-    "insertPage": "Insertion de pages",
-    "insertBlankPageAbove": "Insérer une page vierge ci-dessus",
-    "insertBlankPageBelow": "Insérez une page vierge ci-dessous",
-    "pageManipulation": "Manipulation des pages",
-    "replace": "Remplacer"
+    "markAllRead": "Marquer tout comme lu"
   },
   "annotation": {
     "areaMeasurement": "Surface mesurée",
@@ -88,7 +83,6 @@
     "freeHandHighlight": "Mise en évidence de la main libre",
     "freetext": "Texte libre",
     "highlight": "Surligne",
-    "image": "Image",
     "line": "Ligne",
     "perimeterMeasurement": "Périmètre mesure",
     "polygon": "Polygone",
@@ -237,7 +231,7 @@
       "pageTransition": "Transition de page"
     },
     "documentControls": {
-      "placeholder": "1, 3, 5-10"
+      "placeholder": "Entrez les pages à sélectionner, c'est-à-dire 2, 5-9"
     },
     "outlineControls": {
       "add": "Ajouter un item",
@@ -310,8 +304,7 @@
     "filterAnnotModal": {
       "commentBy": "Commentaire de",
       "types": "Les types",
-      "color": "Couleur",
-      "includeReplies": "Inclure les réponses"
+      "color": "Couleur"
     },
     "status": {
       "status": "Statut"
@@ -438,7 +431,7 @@
     "select": "(Esc)",
     "signature": "(S)",
     "squiggly": "(G)",
-    "image": "(JE)",
+    "stamp": "(I)",
     "redo": "(Ctrl Shift Z)",
     "redo_windows": "(Ctrl Y)",
     "undo": "(Ctrl Z)",
@@ -492,20 +485,6 @@
       "9": "octobre",
       "10": "novembre",
       "11": "décembre"
-    },
-    "monthsShort": {
-      "0": "janv",
-      "1": "févr",
-      "2": "mars",
-      "3": "avril",
-      "4": "mai",
-      "5": "juin",
-      "6": "juil",
-      "7": "août",
-      "8": "sept",
-      "9": "oct",
-      "10": "nov",
-      "11": "déc"
     },
     "weekdays": {
       "0": "dimanche",
@@ -610,7 +589,6 @@
     "by": "par",
     "on": "sur",
     "disallowedChange": "Modification interdite: {{type}}, objnum: {{objnum}}",
-    "unsignedSignatureField": "Champ de signature non signé : {{fieldName}}",
     "trustVerification": {
       "current": "L'heure de vérification utilisée était l'heure actuelle",
       "signing": "L'heure de vérification provient de l'horloge de l'ordinateur du signataire",

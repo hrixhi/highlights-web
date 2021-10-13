@@ -462,7 +462,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             });
         }
 
-    }, [viewSubmission, submissionViewerRef, submissionViewerRef.current, viewSubmissionTab, submissionAttempts])
+    }, [viewSubmission, submissionViewerRef, submissionViewerRef.current, viewSubmissionTab, submissionAttempts, props.showOriginal])
 
     // Used to detect ongoing quiz and
     useEffect(() => {
@@ -2277,13 +2277,13 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         style={{
                             justifyContent: 'center',
                             flexDirection: 'column',
-                            paddingTop: 6
+                            paddingTop: 6,
                         }}
                         onPress={() => {
                             props.setShowFolder(!props.showFolder)
                         }}>
                         <Text>
-                            <Ionicons name={props.showFolder ? 'backspace-outline' : 'folder-outline'} size={18} color={'#50566B'} />
+                            <Ionicons name={props.showFolder ? 'backspace-outline' : 'folder-outline'} size={18} color={props.folderId !== "" ? '#5469D4' : '#50566B'} />
                         </Text>
                     </TouchableOpacity>
                 </View> : null}
@@ -3154,7 +3154,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
     const renderViewSubmission = () => {
         const attempt = submissionAttempts[submissionAttempts.length - 1];
-
+        
         return (<View style={{ width: '100%', marginTop: 20 }}>
             {/* Render Tabs to switch between original submission and Annotations only if submission was HTML and not a file upload */}
             {attempt.url !== undefined ? null : <View style={{ flexDirection: "row", width: '100%', justifyContent: 'center' }}>
@@ -3214,7 +3214,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         </View>
 
                         :
-                        <View style={{ width: '100%', marginTop: 25 }} key={JSON.stringify(viewSubmission)}>
+                        <View style={{ width: '100%', marginTop: 25 }} key={JSON.stringify(viewSubmission) + JSON.stringify(attempt) + JSON.stringify(props.showOriginal) + JSON.stringify(submissionAttempts)} >
                             {attempt.title !== "" ? <Text
                                 style={{
                                     fontSize: 14,
@@ -3230,7 +3230,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             >
                                 {attempt.title}
                             </Text> : null}
-                            <div className="webviewer" ref={submissionViewerRef} style={{ height: "80vh" }}></div>
+                            <div className="webviewer" ref={submissionViewerRef} key={JSON.stringify(viewSubmission) + JSON.stringify(attempt) + JSON.stringify(props.showOriginal) + JSON.stringify(submissionAttempts)} style={{ height: "80vh" }}></div>
                         </View>)
                     :
                     <View style={{ width: '100%', marginTop: 25 }} key={JSON.stringify(attempt)}>
