@@ -47,11 +47,11 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
             <View style={{
                 display: 'flex',
                 width: '100%',
-                borderColor: '#e8e8ea',
+                borderColor: '#E3E8EE',
                 // borderRightWidth: Dimensions.get('window').width < 1024 ? 0 : 1,
                 // paddingHorizontal: Dimensions.get('window').width < 1024 ? 15 : 0,
                 paddingTop: 5,
-                backgroundColor: '#f7f7f7',
+                backgroundColor: '#f7fafc',
                 flexDirection: 'row',
                 maxWidth: 1000,
             }}>
@@ -65,10 +65,10 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             props.setChannelCreatedBy('')
                             props.closeModal()
                         }}
-                        style={{ backgroundColor: '#f7f7f7', width: '100%', paddingBottom: 20 }}
+                        style={{ backgroundColor: '#f7fafc', width: '100%', paddingBottom: 20 }}
                     >
                         <Text style={{ lineHeight: 33, width: '100%', textAlign: 'center' }}>
-                            <Ionicons name='arrow-back-outline' size={25} color={'#818385'} style={{ marginTop: -2 }} />
+                            <Ionicons name='arrow-back-outline' size={25} color={'#50566B'} style={{ marginTop: -2 }} />
                         </Text>
                     </TouchableOpacity>
                 </View>
@@ -78,7 +78,7 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             fontSize: 22,
                             fontFamily: 'inter',
                             lineHeight: 20,
-                            color: '#1D1D20',
+                            color: '#1A2036',
                             // marginTop: 1,
                         }}>
                             <View style={{
@@ -94,21 +94,21 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 } */}
                 <TouchableOpacity onPress={() => {
                     props.hideMenu()
-                }} style={{ backgroundColor: '#f7f7f7', flexDirection: 'row', flex: 1 }} />
+                }} style={{ backgroundColor: '#f7fafc', flexDirection: 'row', flex: 1 }} />
                 <View style={styles.icons}>
                     {/* {
                         isOwner && props.channelId !== '' && (props.menuCollapsed === true) ?
                             <TouchableOpacity
                                 style={{
-                                    backgroundColor: '#f7f7f7',
+                                    backgroundColor: '#f7fafc',
                                     width: Dimensions.get('window').width < 1024 ? 'auto' : '100%',
                                     paddingBottom: 20
                                 }}
                                 onPress={() => props.openChannelSettings()}>
                                 <Text style={styles.channelText}>
-                                    <Ionicons name='hammer-outline' size={19} color={'#1D1D20'} />
+                                    <Ionicons name='hammer-outline' size={19} color={'#1A2036'} />
                                 </Text>
-                                <Text style={{ fontSize: 11, color: '#1D1D20', textAlign: 'center', width: '100%', }}>
+                                <Text style={{ fontSize: 11, color: '#1A2036', textAlign: 'center', width: '100%', }}>
                                     Settings
                                 </Text>
                             </TouchableOpacity> : null
@@ -118,13 +118,13 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     {/* {
                         props.channelId !== '' && (props.menuCollapsed === true) ?
                             <TouchableOpacity
-                                style={{ backgroundColor: '#f7f7f7', width: Dimensions.get('window').width < 1024 ? 'auto' : '100%', paddingBottom: 20 }}
+                                style={{ backgroundColor: '#f7fafc', width: Dimensions.get('window').width < 1024 ? 'auto' : '100%', paddingBottom: 20 }}
                                 onPress={() => props.openMeeting()}>
                                 <Text style={styles.channelText}>
                                     <Ionicons
-                                        name='chatbubbles-outline' size={19} color={'#1D1D20'} />
+                                        name='chatbubbles-outline' size={19} color={'#1A2036'} />
                                 </Text>
-                                <Text style={{ fontSize: 11, color: '#1D1D20', textAlign: 'center', width: Dimensions.get('window').width < 1024 ? 'auto' : '100%' }}>
+                                <Text style={{ fontSize: 11, color: '#1A2036', textAlign: 'center', width: Dimensions.get('window').width < 1024 ? 'auto' : '100%' }}>
                                     Classroom
                                 </Text>
                             </TouchableOpacity>
@@ -134,11 +134,11 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 {/* <View style={styles.icons2}>
                     {
                         props.channelId !== '' && (props.menuCollapsed === true) ?
-                            <TouchableOpacity style={{ backgroundColor: '#f7f7f7', width: '100%', paddingBottom: 20 }}
+                            <TouchableOpacity style={{ backgroundColor: '#f7fafc', width: '100%', paddingBottom: 20 }}
                                 onPress={() => props.hideMenu()}>
-                                <Text style={{ lineHeight: 30, width: '100%', textAlign: 'center' }}>
+                                <Text style={{ lineHeight: 35, width: '100%', textAlign: 'center' }}>
                                     <Ionicons
-                                        name='chevron-down-outline' size={25} color={'#007AFF'} />
+                                        name='chevron-down-outline' size={25} color={'#5469D4'} />
                                 </Text>
                             </TouchableOpacity> : null
                     }
@@ -158,7 +158,7 @@ const styleObject: any = (colorScheme: any, mc: any) => StyleSheet.create({
         paddingTop: 10,
         flexDirection: 'row',
         justifyContent: 'center',
-        backgroundColor: '#f7f7f7',
+        backgroundColor: '#f7fafc',
     },
     icons: {
         display: 'flex',
@@ -166,7 +166,7 @@ const styleObject: any = (colorScheme: any, mc: any) => StyleSheet.create({
         flexDirection: 'row',
         paddingRight: 25,
         overflow: 'hidden',
-        backgroundColor: '#f7f7f7'
+        backgroundColor: '#f7fafc'
     },
     icons2: {
         display: 'flex',
@@ -174,7 +174,7 @@ const styleObject: any = (colorScheme: any, mc: any) => StyleSheet.create({
         flexDirection: 'row',
         paddingRight: 0,
         overflow: 'hidden',
-        backgroundColor: '#f7f7f7'
+        backgroundColor: '#f7fafc'
     },
     defaultFont: {
         fontFamily: 'system font'
@@ -184,13 +184,13 @@ const styleObject: any = (colorScheme: any, mc: any) => StyleSheet.create({
         // justifyContent: 'center',
         display: 'flex',
         textAlign: 'left',
-        backgroundColor: '#1D1D20'
+        backgroundColor: '#1A2036'
     },
     colorBar: {
         width: '100%',
         height: '47%',
         paddingTop: 20,
-        backgroundColor: '#1D1D20'
+        backgroundColor: '#1A2036'
     },
     iconContainer: {
         width: '100%',
@@ -211,32 +211,32 @@ const styleObject: any = (colorScheme: any, mc: any) => StyleSheet.create({
     },
     outline: {
         borderRadius: 0,
-        backgroundColor: colorScheme === 'light' ? '#1D1D20' : 'white',
-        color: colorScheme === 'light' ? 'white' : '#1D1D20'
+        backgroundColor: colorScheme === 'light' ? '#1A2036' : 'white',
+        color: colorScheme === 'light' ? 'white' : '#1A2036'
     },
     cusCategory: {
         fontSize: 14,
-        color: '#818385',
+        color: '#50566B',
         height: 22,
         paddingHorizontal: 10
     },
     sub: {
         fontSize: 14,
-        color: colorScheme === 'light' ? '#1D1D20' : 'white',
+        color: colorScheme === 'light' ? '#1A2036' : 'white',
         height: 22,
         paddingHorizontal: 10
     },
     subOutline: {
         fontSize: 14,
-        color: colorScheme === 'light' ? '#1D1D20' : 'white',
+        color: colorScheme === 'light' ? '#1A2036' : 'white',
         height: 22,
         paddingHorizontal: 10,
         borderRadius: 0,
-        backgroundColor: colorScheme === 'light' ? '#1D1D20' : 'white',
+        backgroundColor: colorScheme === 'light' ? '#1A2036' : 'white',
     },
     text: {
         textAlign: 'right',
-        color: '#1D1D20',
+        color: '#1A2036',
         fontSize: 14,
         paddingRight: 15
     },

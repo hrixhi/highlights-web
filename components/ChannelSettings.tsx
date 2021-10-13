@@ -238,8 +238,8 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             setActiveRole(role)
                         }}>
                         <MenuTrigger>
-                            <Text style={{ fontSize: 14, color: '#1D1D20' }}>
-                                {activeRole}<Ionicons name='caret-down' size={15} />
+                            <Text style={{ fontSize: 14, color: '#1A2036' }}>
+                                {activeRole}<Ionicons name='chevron-down-outline' size={15} />
                             </Text>
                         </MenuTrigger>
                         <MenuOptions customStyles={{
@@ -248,7 +248,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 borderRadius: 15,
                                 shadowOpacity: 0,
                                 borderWidth: 1,
-                                borderColor: '#e8e8ea',
+                                borderColor: '#E3E8EE',
                                 overflow: 'scroll',
                                 maxHeight: '100%'
                             }
@@ -303,7 +303,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                               />
                             </label>
                 </View>
-                <Text style={{ fontSize: 10, color: '#1D1D20', paddingTop: 7, textAlign: 'center', backgroundColor: 'white' }}>
+                <Text style={{ fontSize: 10, color: '#1A2036', paddingTop: 7, textAlign: 'center', backgroundColor: 'white' }}>
                     Roles
                 </Text>
             </View>
@@ -315,8 +315,8 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             setActiveGrade(grade)
                         }}>
                         <MenuTrigger>
-                            <Text style={{ fontSize: 14, color: '#1D1D20' }}>
-                                {activeGrade}<Ionicons name='caret-down' size={15} />
+                            <Text style={{ fontSize: 14, color: '#1A2036' }}>
+                                {activeGrade}<Ionicons name='chevron-down-outline' size={15} />
                             </Text>
                         </MenuTrigger>
                         <MenuOptions customStyles={{
@@ -325,7 +325,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 borderRadius: 15,
                                 shadowOpacity: 0,
                                 borderWidth: 1,
-                                borderColor: '#e8e8ea',
+                                borderColor: '#E3E8EE',
                                 overflow: 'scroll',
                                 maxHeight: '100%'
                             }
@@ -380,7 +380,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                   />
                                 </label>
                 </View>
-                <Text style={{ fontSize: 10, color: '#1D1D20', paddingTop: 7, textAlign: 'center', backgroundColor: 'white', paddingLeft: 20 }}>
+                <Text style={{ fontSize: 10, color: '#1A2036', paddingTop: 7, textAlign: 'center', backgroundColor: 'white', paddingLeft: 20 }}>
                     Grades
                 </Text>
             </View>
@@ -392,8 +392,8 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             setActiveSection(grade)
                         }}>
                         <MenuTrigger>
-                            <Text style={{ fontSize: 14, color: '#1D1D20' }}>
-                                {activeSection}<Ionicons name='caret-down' size={15} />
+                            <Text style={{ fontSize: 14, color: '#1A2036' }}>
+                                {activeSection}<Ionicons name='chevron-down-outline' size={15} />
                             </Text>
                         </MenuTrigger>
                         <MenuOptions customStyles={{
@@ -402,7 +402,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 borderRadius: 15,
                                 shadowOpacity: 0,
                                 borderWidth: 1,
-                                borderColor: '#e8e8ea',
+                                borderColor: '#E3E8EE',
                                 overflow: 'scroll',
                                 maxHeight: '100%'
                             }
@@ -458,7 +458,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                   />
                               </label>
                 </View>
-                <Text style={{ fontSize: 10, color: '#1D1D20', paddingTop: 7, textAlign: 'center', paddingLeft: 20 }}>
+                <Text style={{ fontSize: 10, color: '#1A2036', paddingTop: 7, textAlign: 'center', paddingLeft: 20 }}>
                     Sections
                 </Text>
             </View>
@@ -824,7 +824,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                 flexDirection: "column",
                 backgroundColor: "white"
             }}>
-            <ActivityIndicator color={"#a2a2ac"} />
+            <ActivityIndicator color={"#50566B"} />
         </View>
     }
 
@@ -845,9 +845,9 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         <Text style={{
                             width: '100%',
                             fontSize: 14,
-                            color: '#a2a2ac'
+                            color: '#50566B'
                         }}>
-                            <Ionicons name='chevron-back-outline' size={17} color={'#1D1D20'} style={{ marginRight: 10 }} />
+                            <Ionicons name='chevron-back-outline' size={15} color={'#1A2036'} style={{ marginRight: 10 }} />
                         </Text>
                     </TouchableOpacity>
                 </View>
@@ -878,7 +878,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         <Text style={{
                             fontSize: 14,
                             // fontFamily: 'inter',
-                            color: '#1D1D20'
+                            color: '#1A2036'
                         }}>
                             {PreferredLanguageText('name')}
                         </Text>
@@ -888,7 +888,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             onChangeText={val => {
                                 setDuplicateChannelName(val)
                             }}
-                            placeholderTextColor={'#a2a2ac'}
+                            placeholderTextColor={'#50566B'}
                             required={true}
                             footerMessage={'case sensitive'}
                         />
@@ -897,7 +897,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         <Text style={{
                             fontSize: 14,
                             // fontFamily: 'inter',
-                            color: '#1D1D20'
+                            color: '#1A2036'
                         }}>
                             {PreferredLanguageText('enrolmentPassword')}
                         </Text>
@@ -905,7 +905,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             value={duplicateChannelPassword}
                             placeholder={`(${PreferredLanguageText('optional')})`}
                             onChangeText={val => setDuplicateChannelPassword(val)}
-                            placeholderTextColor={'#a2a2ac'}
+                            placeholderTextColor={'#50566B'}
                             secureTextEntry={true}
                             required={false}
                         />
@@ -914,7 +914,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         <Text style={{
                             fontSize: 14,
                             // fontFamily: 'inter',
-                            color: '#1D1D20'
+                            color: '#1A2036'
                         }}>
                             Theme
                         </Text>
@@ -944,7 +944,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             <Text style={{
                                 fontSize: 14,
                                 fontFamily: 'inter',
-                                color: '#1D1D20'
+                                color: '#1A2036'
                             }}>Temporary</Text>
                         </View>
                         <View
@@ -958,13 +958,13 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 onValueChange={() => setDuplicateChannelTemporary(!duplicateChannelTemporary)}
                                 style={{ height: 20 }}
                                 trackColor={{
-                                    false: "#f7f7f7",
-                                    true: "#007AFF"
+                                    false: "#E3E8EE",
+                                    true: "#5469D4"
                                 }}
                                 activeThumbColor="white"
                             />
                         </View>
-                        <Text style={{ color: '#a2a2ac', fontSize: 12 }}>
+                        <Text style={{ color: '#50566B', fontSize: 12 }}>
                             Channels that are not temporary can only be deleted by the school administrator.
                         </Text>
                     </View> */}
@@ -984,7 +984,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         style={{
                                             fontSize: 14,
                                             // fontFamily: 'inter',
-                                            color: '#1D1D20'
+                                            color: '#1A2036'
                                         }}
                                     >
                                         Duplicate Subscribers
@@ -1005,8 +1005,8 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             }}
                                             style={{ height: 20 }}
                                             trackColor={{
-                                                false: "#f7f7f7",
-                                                true: "#007AFF"
+                                                false: "#E3E8EE",
+                                                true: "#5469D4"
                                             }}
                                             activeThumbColor="white"
                                         />
@@ -1032,7 +1032,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         style={{
                                             fontSize: 14,
                                             // fontFamily: 'inter',
-                                            color: '#1D1D20'
+                                            color: '#1A2036'
                                         }}
                                     >
                                         Duplicate Moderators
@@ -1053,8 +1053,8 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             }}
                                             style={{ height: 20 }}
                                             trackColor={{
-                                                false: "#f7f7f7",
-                                                true: "#007AFF"
+                                                false: "#E3E8EE",
+                                                true: "#5469D4"
                                             }}
                                             activeThumbColor="white"
                                         />
@@ -1080,7 +1080,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 lineHeight: 35,
                                 color: 'white',
                                 fontSize: 12,
-                                backgroundColor: '#007AFF',
+                                backgroundColor: '#5469D4',
                                 paddingHorizontal: 20,
                                 fontFamily: 'inter',
                                 height: 35,
@@ -1125,7 +1125,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         <Text style={{
                             fontSize: 14,
                             // fontFamily: 'inter',
-                            color: '#1D1D20'
+                            color: '#1A2036'
                         }}>
                             {PreferredLanguageText('name')}
                         </Text>
@@ -1136,7 +1136,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             onChangeText={val => {
                                 setName(val)
                             }}
-                            placeholderTextColor={'#818385'}
+                            placeholderTextColor={'#50566B'}
                             required={true}
                             footerMessage={'case sensitive'}
                         />
@@ -1145,7 +1145,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         <Text style={{
                             fontSize: 14,
                             // fontFamily: 'inter',
-                            color: '#1D1D20'
+                            color: '#1A2036'
                         }}>
                             {PreferredLanguageText('enrolmentPassword')}
                         </Text>
@@ -1154,7 +1154,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             autoCompleteType='off'
                             placeholder={`(${PreferredLanguageText('optional')})`}
                             onChangeText={val => setPassword(val)}
-                            placeholderTextColor={'#818385'}
+                            placeholderTextColor={'#50566B'}
                             secureTextEntry={true}
                             required={false}
                         />
@@ -1164,7 +1164,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         <Text style={{
                             fontSize: 14,
                             // fontFamily: 'inter',
-                            color: '#1D1D20'
+                            color: '#1A2036'
                         }}>
                             Theme
                         </Text>
@@ -1183,14 +1183,17 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         fontSize: 14,
                         paddingTop: 20,
                         // fontFamily: 'inter',
-                        color: '#1D1D20'
+                        color: '#1A2036'
                     }}>
                         Subscribers
                     </Text>
 
                     {renderSubscriberFilters()}
-                    <View style={{ flexDirection: 'column', marginTop: 25, overflow: 'scroll' }}>
-                        <View style={{ height: 'auto', maxWidth: 350, width: 350 }}>
+                    <View style={{
+                        flexDirection: 'column', marginTop: 25,
+                        // overflow: 'scroll'
+                    }}>
+                        <View style={{ height: 'auto', maxWidth: 400, width: '100%' }}>
                             {/* <Multiselect
                                 placeholder='Select...'
                                 displayValue='name'
@@ -1222,8 +1225,8 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 }}
                             /> */}
 
-                            <div style={{ maxWidth: 350, width: 350 }} >
-                                <label style={{ maxWidth: 350, width: 350 }}>
+                            <div style={{ width: '100%', maxWidth: 400 }} >
+                                <label style={{ width: '100%', maxWidth: 400 }}>
                                     <Select
                                         themeVariant="light"
                                         selectMultiple={true}
@@ -1261,7 +1264,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                     <Text style={{
                         fontSize: 14,
                         //  fontFamily: 'inter',
-                        color: '#1D1D20', marginTop: 25, marginBottom: 20
+                        color: '#1A2036', marginTop: 25, marginBottom: 20
                     }}>
                         Moderators
                     </Text>
@@ -1295,7 +1298,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         </View>
                     </View> */}
 
-                    <label style={{ width: 350 }}>
+                    <label style={{ width: '100%', maxWidth: 400 }}>
                         <Select
                             themeVariant="light"
                             select="multiple"
@@ -1355,7 +1358,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 lineHeight: 35,
                                 color: 'white',
                                 fontSize: 12,
-                                backgroundColor: '#007AFF',
+                                backgroundColor: '#5469D4',
                                 paddingHorizontal: 20,
                                 fontFamily: 'inter',
                                 height: 35,
@@ -1380,10 +1383,10 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             <Text style={{
                                 textAlign: 'center',
                                 lineHeight: 35,
-                                color: '#007aff',
+                                color: '#5469D4',
                                 borderWidth: 1,
                                 borderRadius: 15,
-                                borderColor: '#007aff',
+                                borderColor: '#5469D4',
                                 backgroundColor: '#fff',
                                 fontSize: 12,
                                 paddingHorizontal: 20,
@@ -1426,9 +1429,9 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     <Text style={{
                                         textAlign: 'center',
                                         lineHeight: 35,
-                                        color: '#1D1D20',
+                                        color: '#1A2036',
                                         fontSize: 12,
-                                        backgroundColor: '#f7f7f7',
+                                        backgroundColor: '#f7fafc',
                                         paddingHorizontal: 20,
                                         fontFamily: 'inter',
                                         height: 35,
@@ -1441,7 +1444,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 : null
                         }
                     </View>
-                    <View style={{ height: 75 }} />
+                    {/* <View style={{ height: 75 }} /> */}
                     {/* <View style={{ height: 50, backgroundColor: '#fff' }} /> */}
                 </View>
             </View>
@@ -1455,33 +1458,34 @@ const styles = StyleSheet.create({
     screen: {
         paddingTop: 10,
         paddingBottom: 20,
-        paddingRight: 20,
-        paddingLeft: Dimensions.get('window').width < 1024 ? 20 : 0,
+        // paddingRight: 20,
+        // paddingLeft: Dimensions.get('window').width < 1024 ? 20 : 0,
         width: '100%',
-        height: Dimensions.get('window').height - 50,
+        // overflow: 'scroll',
+        // flex: 1,
         backgroundColor: 'white',
     },
     outline: {
         borderRadius: 0,
         borderWidth: 1,
-        borderColor: '#818385'
+        borderColor: '#50566B'
     },
     all: {
         fontSize: 14,
-        color: '#818385',
+        color: '#50566B',
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: 'white'
     },
     allOutline: {
         fontSize: 14,
-        color: '#818385',
+        color: '#50566B',
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: 'white',
         borderRadius: 0,
         borderWidth: 1,
-        borderColor: '#818385'
+        borderColor: '#50566B'
     },
     colorBar: {
         width: '100%',
@@ -1493,7 +1497,7 @@ const styles = StyleSheet.create({
     },
     input: {
         width: '100%',
-        borderBottomColor: '#f7f7f7',
+        borderBottomColor: '#f7fafc',
         borderBottomWidth: 1,
         fontSize: 14,
         paddingTop: 13,
@@ -1520,7 +1524,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         borderRadius: 0,
         borderWidth: 1,
-        borderColor: '#818385'
+        borderColor: '#50566B'
     },
 });
 

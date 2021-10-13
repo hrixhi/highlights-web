@@ -324,7 +324,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
             <View style={{ width: '100%', backgroundColor: 'white' }}>
                 <View style={styles.colorBar}>
                     <Text style={{
-                        fontSize: 20, color: '#818385'
+                        fontSize: 20, color: '#50566B'
                     }}>
                         {PreferredLanguageText('internetRequired')}
                     </Text>
@@ -345,7 +345,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
             alignSelf: 'center',
             marginTop: 100,
         }}>
-            <ActivityIndicator color={'#818385'} />
+            <ActivityIndicator color={'#50566B'} />
         </View>
     }
 
@@ -365,9 +365,9 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
 
     return (
         <View style={styles.screen} key={1}>
-            <View style={{ width: '100%', maxWidth: 1000 }}>
+            <View style={{ width: '100%', maxWidth: 1000, paddingBottom: 25 }}>
                 <View style={{ flexDirection: 'row', width: '100%', height: 50, marginBottom: 10 }}>
-                    <View style={{ flexDirection: 'row', flex: 1 }}>
+                    <View style={{ flexDirection: 'row' }}>
                         {
                             showCreate ? <TouchableOpacity
                                 onPress={() => {
@@ -375,12 +375,13 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 }}
                                 style={{
                                     paddingRight: 20,
-                                    paddingTop: 15,
-                                    alignSelf: 'flex-start'
+                                    paddingTop: 10,
+                                    alignSelf: 'flex-start',
+                                    paddingBottom: 10
                                 }}
                             >
                                 <Text style={{ lineHeight: 35, width: '100%', textAlign: 'center' }}>
-                                    <Ionicons name='arrow-back-outline' size={25} color={'#818385'} />
+                                    <Ionicons name='arrow-back-outline' size={25} color={'#50566B'} />
                                 </Text>
                             </TouchableOpacity> : null
                             // <Text style={{
@@ -390,9 +391,9 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             //     fontFamily: 'inter',
                             //     flex: 1,
                             //     lineHeight: 23,
-                            //     color: '#1D1D20'
+                            //     color: '#1A2036'
                             // }}>
-                            //     <Ionicons name='radio-outline' size={25} color={'#007aff'} />
+                            //     <Ionicons name='radio-outline' size={25} color={'#5469D4'} />
                             // </Text>
                         }
                     </View>
@@ -414,9 +415,9 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 <Text style={{
                                     textAlign: 'center',
                                     lineHeight: 35,
-                                    color: '#007aff',
+                                    color: '#5469D4',
                                     fontSize: 12,
-                                    borderColor: '#007aff',
+                                    borderColor: '#5469D4',
                                     paddingHorizontal: 20,
                                     fontFamily: 'inter',
                                     height: 35,
@@ -425,7 +426,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     borderWidth: 1,
                                     textTransform: 'uppercase'
                                 }}>
-                                    Create <Ionicons name='create-outline' size={12} />
+                                    Create
                                 </Text>
                             </TouchableOpacity>
                     }
@@ -439,13 +440,13 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         <View
                             style={{
                                 borderWidth: channels.length === 0 ? 0 : 1,
-                                borderColor: '#e8e8ea',
+                                borderColor: '#E3E8EE',
                                 overflow: 'hidden',
                                 borderRadius: 0
                             }}
                         >
                             <ScrollView contentContainerStyle={{
-                                height: width < 1024 ? 600 : Dimensions.get('window').height - 200,
+                                maxHeight: Dimensions.get('window').width < 1024 ? Dimensions.get('window').height - 250 : Dimensions.get('window').height - 175,
                                 width: '100%',
                             }}>
                                 {
@@ -473,9 +474,9 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         return <View
                                             // onPress={() => handleSub(channel.name)}
                                             style={{
-                                                backgroundColor: '#f7f7f7',
+                                                backgroundColor: '#f7fafc',
                                                 flexDirection: 'row',
-                                                borderColor: '#e8e8ea',
+                                                borderColor: '#E3E8EE',
                                                 borderBottomWidth: ind === channels.length - 1 ? 0 : 1,
                                                 width: '100%'
                                             }}>
@@ -507,7 +508,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                         <TouchableOpacity
                                                             onPress={() => handleSub(channel.name)}
                                                         >
-                                                            <Text style={{ textAlign: 'center', fontSize: 13, color: '#007AFF' }} ellipsizeMode='tail'>
+                                                            <Text style={{ textAlign: 'center', fontSize: 13, color: '#5469D4' }} ellipsizeMode='tail'>
                                                                 Join
                                                             </Text>
                                                         </TouchableOpacity>
@@ -540,11 +541,12 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             <Text style={{
                                 fontSize: 14,
                                 // fontFamily: 'inter',
-                                color: '#1D1D20'
+                                color: '#1A2036'
                             }}>
                                 {PreferredLanguageText('name')}
                             </Text>
                             <TextInput
+                                textContentType="oneTimeCode"
                                 value={name}
                                 placeholder={''}
                                 autoCompleteType={'off'}
@@ -552,7 +554,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     setName(val)
                                     setPasswordRequired(false)
                                 }}
-                                placeholderTextColor={'#818385'}
+                                placeholderTextColor={'#50566B'}
                                 required={true}
                                 footerMessage={'case sensitive'}
                             />
@@ -563,16 +565,17 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     <Text style={{
                                         fontSize: 14,
                                         // fontFamily: 'inter',
-                                        color: '#1D1D20'
+                                        color: '#1A2036'
                                     }}>
                                         {PreferredLanguageText('enrolmentPassword')}
                                     </Text>
                                     <TextInput
                                         value={password}
                                         autoCompleteType={'off'}
+                                        textContentType="oneTimeCode"
                                         placeholder={option === 'Subscribe' ? '' : `(${PreferredLanguageText('optional')})`}
                                         onChangeText={val => setPassword(val)}
-                                        placeholderTextColor={'#818385'}
+                                        placeholderTextColor={'#50566B'}
                                         secureTextEntry={true}
                                         required={option === "Subscribe" ? true : false}
                                     />
@@ -600,7 +603,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         <Text style={{
                                             fontSize: 14,
                                             // fontFamily: 'inter',
-                                            color: '#1D1D20'
+                                            color: '#1A2036'
                                         }}>Temporary</Text>
                                     </View>
                                     <View
@@ -615,13 +618,13 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             onValueChange={() => setTemporary(!temporary)}
                                             style={{ height: 20 }}
                                             trackColor={{
-                                                false: "#f7f7f7",
-                                                true: "#007AFF"
+                                                false: "#E3E8EE",
+                                                true: "#5469D4"
                                             }}
                                             activeThumbColor="white"
                                         />
                                     </View>
-                                    <Text style={{ color: '#818385', fontSize: 12 }}>
+                                    <Text style={{ color: '#50566B', fontSize: 12 }}>
                                         Channels that are not temporary can only be deleted by the school administrator.
                                     </Text>
                                 </View>
@@ -644,7 +647,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         <Text style={{
                                             fontSize: 14,
                                             // fontFamily: 'inter',
-                                            color: '#1D1D20'
+                                            color: '#1A2036'
                                         }}>Theme</Text>
                                     </View>
                                     <View style={{ width: '100%', backgroundColor: 'white' }}>
@@ -685,13 +688,13 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             lineHeight: 35,
                                             color: 'white',
                                             fontSize: 12,
-                                            backgroundColor: '#007AFF',
+                                            backgroundColor: '#5469D4',
                                             paddingHorizontal: 20,
                                             fontFamily: 'inter',
                                             height: 35,
                                             textTransform: 'uppercase'
                                         }}>
-                                            {isSubmitting ? "Creating" : PreferredLanguageText('create')} <Ionicons name='add-outline' size={12} />
+                                            {isSubmitting ? "Creating" : PreferredLanguageText('create')}
                                         </Text>
                                     </TouchableOpacity>
                             }
@@ -718,11 +721,11 @@ const styles = StyleSheet.create({
     outline: {
         borderRadius: 12,
         borderWidth: 1,
-        borderColor: '#818385'
+        borderColor: '#50566B'
     },
     all: {
         fontSize: 14,
-        color: '#818385',
+        color: '#50566B',
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: 'white'
@@ -732,7 +735,7 @@ const styles = StyleSheet.create({
         color: '#fff',
         height: 22,
         paddingHorizontal: 10,
-        backgroundColor: '#1D1D20',
+        backgroundColor: '#1A2036',
         borderRadius: 12,
     },
     colorBar: {
@@ -745,7 +748,7 @@ const styles = StyleSheet.create({
     },
     input: {
         width: '100%',
-        borderBottomColor: '#f7f7f7',
+        borderBottomColor: '#f7fafc',
         borderBottomWidth: 1,
         fontSize: 14,
         paddingTop: 13,

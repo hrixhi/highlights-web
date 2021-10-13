@@ -87,9 +87,9 @@ const FileUpload: React.FC<any> = (props: any) => {
 
     const fileUpload = useCallback((file, type) => {
         // LIVE
-        // const url = "https://api.cuesapp.co/api/upload";
+        const url = "https://api.cuesapp.co/api/upload";
         // DEV
-        const url = "http://localhost:8081/api/upload";
+        // const url = "http://localhost:8081/api/upload";
         const formData = new FormData();
         formData.append("attachment", file);
         formData.append("typeOfUpload", type);
@@ -104,10 +104,10 @@ const FileUpload: React.FC<any> = (props: any) => {
     return <View>
         <Text
             style={{
-                color: "#007aff",
-                lineHeight: 30,
+                color: "#5469D4",
+                lineHeight: 35,
                 textAlign: "right",
-                fontSize: 12
+                fontSize: 11
             }}
             onPress={() => handleFile()}
         >

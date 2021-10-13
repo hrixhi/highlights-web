@@ -1449,12 +1449,12 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 resizeMode={'contain'}
               />
             </View>
-            {/* <Text style={{ fontSize: 20, color: '#1D1D20', fontFamily: 'inter', paddingBottom: 15, maxWidth: 500, textAlign: 'center' }}>
+            {/* <Text style={{ fontSize: 20, color: '#1A2036', fontFamily: 'inter', paddingBottom: 15, maxWidth: 500, textAlign: 'center' }}>
               {
                 showForgotPassword ? '' : PreferredLanguageText('login')
               }
             </Text> */}
-            <Text style={{ fontSize: 18, color: '#818385', fontFamily: 'overpass', paddingBottom: 25, textAlign: 'center' }}>
+            <Text style={{ fontSize: 15, color: '#50566B', fontFamily: 'overpass', paddingBottom: 30, textAlign: 'center' }}>
               {
                 showForgotPassword ? PreferredLanguageText('temporaryPassword') : PreferredLanguageText('continueLeftOff')
               }
@@ -1466,20 +1466,20 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               justifyContent: 'center',
               alignSelf: 'center'
             }}>
-              <Text style={{ color: '#1D1D20', fontSize: 14, paddingBottom: 5, paddingTop: 10 }}>
+              <Text style={{ color: '#1A2036', fontSize: 14, paddingBottom: 5, paddingTop: 10 }}>
                 {PreferredLanguageText('email')}
               </Text>
               <TextInput
                 value={email}
                 placeholder={''}
                 onChangeText={(val: any) => setEmail(val)}
-                placeholderTextColor={'#818385'}
+                placeholderTextColor={'#50566B'}
                 errorText={emailValidError}
               />
               {
                 showForgotPassword ? null :
                   <View>
-                    <Text style={{ color: '#1D1D20', fontSize: 14, paddingBottom: 5 }}>
+                    <Text style={{ color: '#1A2036', fontSize: 14, paddingBottom: 5 }}>
                       {PreferredLanguageText('password')}
                     </Text>
                     <TextInput
@@ -1487,7 +1487,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                       value={password}
                       placeholder={''}
                       onChangeText={(val: any) => setPassword(val)}
-                      placeholderTextColor={'#818385'}
+                      placeholderTextColor={'#50566B'}
                     />
                   </View>
               }
@@ -1521,11 +1521,12 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     lineHeight: 35,
                     color: 'white',
                     fontSize: 12,
-                    backgroundColor: '#007AFF',
+                    backgroundColor: '#5469D4',
                     paddingHorizontal: 20,
                     fontFamily: 'inter',
                     height: 35,
                     // width: 180,
+                    width: 175,
                     borderRadius: 15,
                     textTransform: 'uppercase'
                   }}>
@@ -1544,10 +1545,11 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     width: '100%', justifyContent: 'center', flexDirection: 'row'
                   }}>
                   <Text style={{
-                    color: '#007aff',
+                    color: '#5469D4',
+                    width: 175,
                     borderWidth: 1,
                     borderRadius: 15,
-                    borderColor: '#007aff',
+                    borderColor: '#5469D4',
                     backgroundColor: '#fff',
                     fontSize: 12,
                     textAlign: 'center',
@@ -1603,7 +1605,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             {
               reLoading ?
                 <View style={[styles(channelId).activityContainer, styles(channelId).horizontal]}>
-                  <ActivityIndicator color={'#818385'} />
+                  <ActivityIndicator color={'#50566B'} />
                 </View> :
                 <Dashboard
                   setOption={(op: any) => setOption(op)}
@@ -1708,7 +1710,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             <View style={{
               height: 61,
               borderBottomWidth: 1,
-              borderColor: '#e8e8ea'
+              borderColor: '#E3E8EE'
             }}>
               <VerticalBar
                 menuCollapsed={menuCollapsed}
@@ -1750,11 +1752,11 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           // <View style={{
           //   width: dimensions.window.width,
           //   height: dimensions.window.height,
-          //   borderColor: '#e8e8ea',
-          //   backgroundColor: '#f7f7f7',
+          //   borderColor: '#E3E8EE',
+          //   backgroundColor: '#f7fafc',
           // }}>
           //   <View style={{
-          //     backgroundColor: '#f7f7f7',
+          //     backgroundColor: '#f7fafc',
           //     width: dimensions.window.width,
           //     height: dimensions.window.height - 30,
           //     maxWidth: 1000, alignSelf: 'center'
@@ -1809,7 +1811,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           //     />
           //     {
           //       reLoading ? <View style={[styles(channelId).activityContainer, styles(channelId).horizontal]}>
-          //         <ActivityIndicator color={'#818385'} />
+          //         <ActivityIndicator color={'#50566B'} />
           //       </View>
           //         : <View style={[styles(channelId).activityContainer, styles(channelId).horizontal]}>
           //           <CardsList
@@ -1841,14 +1843,14 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 height: (menuCollapsed ? dimensions.window.height - 60 : 0),
                 // paddingHorizontal: dimensions.window.width < 1024 ? 0 : 30,
                 paddingTop: 10,
-                // backgroundColor: '#f7f7f7',
+                // backgroundColor: '#f7fafc',
                 backgroundColor: '#fff',
                 position: dimensions.window.width < 1024 ? 'absolute' : 'relative'
               }}
             >
               {
                 dimensions.window.width < 1024 ? null : <View style={{ flexDirection: 'column', flex: 1, width: '100%', justifyContent: 'center', backgroundColor: '#fff' }}>
-                  <Text style={{ fontSize: 20, color: '##1D1D20', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#fff' }}>
+                  <Text style={{ fontSize: 20, color: '##1A2036', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#fff' }}>
                     Select cue to view.
                   </Text>
                 </View>
@@ -1888,7 +1890,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         }
       </View>
       {
-        showHome ?
+        showHome && !reLoading ?
           <TouchableOpacity
             onPress={() => {
               setCueId('')
@@ -1909,18 +1911,18 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             style={{
               position: 'absolute',
               marginRight: Dimensions.get('window').width >= 1100 ? (((Dimensions.get('window').width - 1100) / 2) - 25) : 20,
-              marginBottom: Dimensions.get('window').width < 1024 && (modalType !== 'Create' && modalType !== 'Update') ? 95 : 25,
+              marginBottom: Dimensions.get('window').width < 1024 ? 85 : 25,
               zIndex: showLoginWindow ? 40 : 600,
               right: 0,
               justifyContent: 'center',
               bottom: 0,
-              width: 54, height: 54, borderRadius: 27, backgroundColor: '#007AFF',
-              borderColor: '#e8e8ea',
+              width: 56, height: 56, borderRadius: 27, backgroundColor: '#5469D4',
+              borderColor: '#E3E8EE',
               borderWidth: 1
             }}
           >
             <Text style={{ color: '#fff', width: '100%', textAlign: 'center' }}>
-              <Ionicons name='add-outline' size={35} />
+              <Ionicons name='pencil-outline' size={25} />
             </Text>
           </TouchableOpacity> : null
       }
@@ -1929,8 +1931,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           <View style={{
             position: 'absolute',
             zIndex: showLoginWindow ? 40 : 1000,
-            backgroundColor: '#f7f7f7',
-            borderColor: '#e8e8ea',
+            backgroundColor: '#f7fafc',
+            borderColor: '#E3E8EE',
             borderTopWidth: 1,
             alignSelf: 'flex-end',
             width: '100%',
@@ -1942,58 +1944,58 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           }}>
             <TouchableOpacity
               style={{
-                backgroundColor: '#f7f7f7',
+                backgroundColor: '#f7fafc',
                 width: '25%'
               }}
               onPress={() => setOption('To Do')}
             >
               <Text style={{ textAlign: 'center' }}>
-                <Ionicons name='journal-outline' size={22} color={option === 'To Do' ? '#007AFF' : '#1D1D20'} />
+                <Ionicons name='list-outline' size={21} color={option === 'To Do' ? '#5469D4' : '#1A2036'} />
               </Text>
-              <Text style={{ fontSize: 11, color: option === 'To Do' ? '#007AFF' : '#1D1D20', paddingTop: 5, textAlign: 'center' }}>
-                To Do
+              <Text style={{ fontSize: 11, color: option === 'To Do' ? '#5469D4' : '#1A2036', paddingTop: 6, textAlign: 'center' }}>
+                Agenda
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={{
-                backgroundColor: '#f7f7f7',
+                backgroundColor: '#f7fafc',
                 width: '25%'
               }}
               onPress={() => setOption('Classroom')}
             >
               <Text style={{ textAlign: 'center' }}>
-                <Ionicons name='school-outline' size={22} color={option === 'Classroom' ? '#007AFF' : '#1D1D20'} />
+                <Ionicons name='school-outline' size={22} color={option === 'Classroom' ? '#5469D4' : '#1A2036'} />
               </Text>
-              <Text style={{ fontSize: 11, color: option === 'Classroom' ? '#007AFF' : '#1D1D20', paddingTop: 5, textAlign: 'center' }}>
-                Coursework
+              <Text style={{ fontSize: 11, color: option === 'Classroom' ? '#5469D4' : '#1A2036', paddingTop: 5, textAlign: 'center' }}>
+                Classroom
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={{
-                backgroundColor: '#f7f7f7',
+                backgroundColor: '#f7fafc',
                 width: '25%'
               }}
               onPress={() => setOption('Performance')}
             >
               <Text style={{ textAlign: 'center' }}>
-                <Ionicons name='speedometer-outline' size={22} color={option === 'Performance' ? '#007AFF' : '#1D1D20'} />
+                <Ionicons name='speedometer-outline' size={22} color={option === 'Performance' ? '#5469D4' : '#1A2036'} />
               </Text>
-              <Text style={{ fontSize: 11, color: option === 'Performance' ? '#007AFF' : '#1D1D20', paddingTop: 5, textAlign: 'center' }}>
-                Performance
+              <Text style={{ fontSize: 11, color: option === 'Performance' ? '#5469D4' : '#1A2036', paddingTop: 5, textAlign: 'center' }}>
+                Progress
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={{
-                backgroundColor: '#f7f7f7',
+                backgroundColor: '#f7fafc',
                 //marginHorizontal: 20,
                 width: '25%'
               }}
               onPress={() => setOption('Inbox')}
             >
               <Text style={{ textAlign: 'center' }}>
-                <Ionicons name='mail-outline' size={22} color={option === 'Inbox' ? '#007AFF' : '#1D1D20'} />
+                <Ionicons name='chatbubble-outline' size={21} color={option === 'Inbox' ? '#5469D4' : '#1A2036'} />
               </Text>
-              <Text style={{ fontSize: 11, color: option === 'Inbox' ? '#007AFF' : '#1D1D20', paddingTop: 5, textAlign: 'center' }}>
+              <Text style={{ fontSize: 11, color: option === 'Inbox' ? '#5469D4' : '#1A2036', paddingTop: 6, textAlign: 'center' }}>
                 Inbox
               </Text>
             </TouchableOpacity>
@@ -2024,7 +2026,7 @@ const styles = (channelId: string) => StyleSheet.create({
     width: '100%',
     // maxWidth: 1000,
     justifyContent: "center",
-    backgroundColor: '#f7f7f7'
+    backgroundColor: '#f7fafc'
   },
   horizontal: {
     flexDirection: "row",
@@ -2032,7 +2034,7 @@ const styles = (channelId: string) => StyleSheet.create({
   },
   input: {
     width: '100%',
-    borderBottomColor: '#f7f7f7',
+    borderBottomColor: '#f7fafc',
     borderBottomWidth: 1,
     fontSize: 14,
     paddingTop: 13,

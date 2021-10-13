@@ -921,7 +921,7 @@
 
 "@babel/plugin-transform-runtime@^7.0.0":
   version "7.14.5"
-  resolved "https://registry.yarnpkg.com/@babel/plugin-transform-runtime/-/plugin-transform-runtime-7.14.5.tgz#30491dad49c6059f7f7f75ee8896a0089e987523"
+  resolved "https://registry.yarnpkg.com/@babel/plugin-transform-runtime/-/plugin-transform-runtime-7.14.5.tgz#30491dad49c6059f7f7f95ee8896a0089e987523"
   integrity "sha1-MEkdrUnGBZ+Pj6XuiJagCJ6YdSM= sha512-fPMBhh1AV8ZyneiCIA+wYYUH1arzlXR1UMcApjvchDhfKxhy2r2lReJv8uHEyihi4IFIGlr1Pdx7S5fkESDQsg=="
   dependencies:
     "@babel/helper-module-imports" "^7.14.5"
@@ -2203,14 +2203,9 @@
   resolved "https://npm.mobiscroll.com/@mobiscroll%2freact/-/react-5.9.1.tgz#a501b80af4e51e7c0b8df0471274e4a760093fb5"
   integrity "sha1-pQG4CvTlHnwLjfBHEnTkp2AJP7U= sha512-gzd2DC6SHt+lFouL5oBA1cM1By1YBuSkcMXDDQjh6WmwbRybsa4sD6DFH/aWBgGV2MxdJIhSLkQ7vjM8Sf4tfg=="
 
-"@mobiscroll/react@^4.10.9":
-  version "4.10.9"
-  resolved "https://npm.mobiscroll.com/@mobiscroll%2freact/-/react-4.10.9.tgz#b231e5123b51d9b5b9f1db205ff2ddd9923401f5"
-  integrity "sha1-sjHlEjtR2bW58dsgX/Ld2ZI0AfU= sha512-Gksq6FsTRXG0qJIy2JOLDElMkbribzducbyMB/LLopoe19mHM5EJW+nfvdrkE263q7eSbSECPSNqLnN5v1/WPA=="
-
-"@mobiscroll/react@file:./src/lib/mobiscroll-package/mobiscroll-react-v5.9.1.tgz":
-  version "5.9.1"
-  resolved "file:./src/lib/mobiscroll-package/mobiscroll-react-v5.9.1.tgz#022e36ee361ca3f6ab462c77ed0c47a3ad4b9eb0"
+"@mobiscroll/react@file:./src/lib/mobiscroll-package/mobiscroll-react-v5.11.0.tgz":
+  version "5.11.0"
+  resolved "file:./src/lib/mobiscroll-package/mobiscroll-react-v5.11.0.tgz#5be023e53b9ab25a89a5110066f4052cb42177ba"
 
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
@@ -14478,6 +14473,11 @@ use-composed-ref@^1.0.0:
   integrity "sha1-kiDk6UqXt7AtfSfq6rCzcDRDi7w= sha512-my1lNHGWsSDAhhVAT4MKs6IjBUtG6ZG11uUqexPH9PptiIZDQOzaF4f5tEbJ2+7qvNbtXNBbU3SfmN+fXlWDhg=="
   dependencies:
     ts-essentials "^2.0.3"
+
+use-dynamic-refs@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/use-dynamic-refs/-/use-dynamic-refs-1.0.0.tgz#934b9448d59773ef299f65f36ffc87c343e40353"
+  integrity "sha1-k0uUSNWXc+8pn2Xzb/yHw0PkA1M= sha512-1Ky+Jaj6MIpTRz6NTaCLVm/iDXfRNwUMH9X7BkLtgSL2RCXHQhK2p9SVhut8jZPDfxLDtOIYNM3txsiLXd4yVQ=="
 
 use-elapsed-time@2.1.8:
   version "2.1.8"

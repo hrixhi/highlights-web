@@ -494,7 +494,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
     }, [props.cueId, props.channelId])
 
 
-    const DragHandle = SortableHandle(() => (<Text style={{ marginRight: 10 }}> <Ionicons name='menu-outline' size={22} color='#818385' /> </Text>))
+    const DragHandle = SortableHandle(() => (<Text style={{ marginRight: 10 }}> <Ionicons name='menu-outline' size={22} color='#50566B' /> </Text>))
 
     const SortableItem = SortableElement(({ value, sortIndex }: any) => {
 
@@ -519,7 +519,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     paddingHorizontal: 20,
                     backgroundColor: '#fff',
                     borderWidth: 1,
-                    borderColor: value._id === props.cue._id ? '#000' : '#e9e9ec',
+                    borderColor: value._id === props.cue._id ? '#1A2036' : '#e9e9ec',
                     flexDirection: 'row'
                 }}>
 
@@ -595,7 +595,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     paddingHorizontal: 20,
                     backgroundColor: '#fff',
                     borderWidth: 1,
-                    borderColor: value._id === props.cue._id ? '#000' : '#e9e9ec',
+                    borderColor: value._id === props.cue._id ? '#1A2036' : '#e9e9ec',
                     flexDirection: 'row'
                 }}>
 
@@ -703,10 +703,11 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     style={{
                         width: 300,
                         maxWidth: '100%',
-                        borderBottom: '1px solid #e8e8ea',
+                        borderBottom: '1px solid #E3E8EE',
                         fontSize: 14,
                         paddingTop: 13,
                         paddingBottom: 13,
+                        borderRadius: 0,
                         marginTop: 0,
                         marginBottom: 15
                     }}
@@ -721,7 +722,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     <ScrollView
                         style={{
                             width: "100%",
-                            height: 300,
+                            height: 350,
                             backgroundColor: "white",
                             borderTopLeftRadius: 0,
                             borderTopRightRadius: 0,
@@ -751,7 +752,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         paddingHorizontal: 20,
                                         backgroundColor: '#fff',
                                         borderWidth: 1,
-                                        borderColor: cue._id === props.cue._id ? '#000' : '#e9e9ec',
+                                        borderColor: cue._id === props.cue._id ? '#1A2036' : '#e9e9ec',
                                         flexDirection: 'row'
                                     }}>
 
@@ -788,7 +789,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         style={{
                                             justifyContent: 'center',
                                             alignSelf: 'flex-end',
-                                            width: 20, height: 20, borderRadius: 10, backgroundColor: '#007AFF'
+                                            width: 20, height: 20, borderRadius: 10, backgroundColor: '#5469D4'
                                         }}
                                     >
                                         <Text style={{ color: '#fff', width: '100%', textAlign: 'center' }}>
@@ -803,7 +804,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     </ScrollView>
                     :
                     <View>
-                        <Text style={{ fontSize: 14, color: '#818385', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#fff', paddingVertical: 20 }}>
+                        <Text style={{ fontSize: 14, color: '#50566B', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#fff', paddingVertical: 20 }}>
                             No Content to select.
                         </Text>
                     </View>}
@@ -818,7 +819,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 >
                     {
                         selectedCues.length > 0 ? <SortableList items={selectedCues} onSortEnd={onSortEnd} useDragHandle /> : <View >
-                            <Text style={{ fontSize: 14, color: '#818385', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#fff', }}>
+                            <Text style={{ fontSize: 14, color: '#50566B', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#fff', }}>
                                 No Selection
                             </Text>
                         </View>
@@ -887,7 +888,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 lineHeight: 35,
                                 color: "white",
                                 fontSize: 12,
-                                backgroundColor: "#007AFF",
+                                backgroundColor: "#5469D4",
                                 borderRadius: 15,
                                 paddingHorizontal: 20,
                                 fontFamily: "inter",
@@ -929,9 +930,9 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             style={{
                                 textAlign: 'center',
                                 lineHeight: 35,
-                                color: '#007aff',
+                                color: '#5469D4',
                                 borderWidth: 1,
-                                borderColor: '#007aff',
+                                borderColor: '#5469D4',
                                 fontSize: 12,
                                 paddingHorizontal: 20,
                                 fontFamily: 'inter',
@@ -959,7 +960,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
         if (folderCuesToDisplay.length === 0) {
             return <View >
-                <Text style={{ fontSize: 14, color: '#818385', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#fff', }}>
+                <Text style={{ fontSize: 14, color: '#50566B', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#fff', }}>
                     Fetching cues...
                 </Text>
             </View>
@@ -979,7 +980,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     setFolderCuesToDisplay(cuesInOrder)
 
                 }}>
-                    <Ionicons name='arrow-back-outline' size={22} color={'#818385'} />
+                    <Ionicons name='arrow-back-outline' size={22} color={'#50566B'} />
                 </TouchableOpacity>
             </View>
 
@@ -988,10 +989,11 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 style={{
                     width: 300,
                     maxWidth: '100%',
-                    borderBottom: '1px solid #e8e8ea',
+                    borderBottom: '1px solid #E3E8EE',
                     fontSize: 14,
                     paddingTop: 13,
                     paddingBottom: 13,
+                    borderRadius: 0,
                     marginTop: 0,
                     marginBottom: 15
                 }}
@@ -1005,7 +1007,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 <ScrollView
                     style={{
                         width: "100%",
-                        height: 300,
+                        height: 350,
                         backgroundColor: "white",
                         borderTopLeftRadius: 0,
                         borderTopRightRadius: 0,
@@ -1030,12 +1032,12 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     maxWidth: 300,
                                     width: '100%',
                                     height: '100%',
-                                    borderRadius: 1,
+                                    borderRadius: 10,
                                     padding: 15,
                                     paddingHorizontal: 20,
                                     backgroundColor: '#fff',
                                     borderWidth: 1,
-                                    borderColor: cue._id === props.cue._id ? '#000' : '#e9e9ec',
+                                    borderColor: cue._id === props.cue._id ? '#1A2036' : '#e9e9ec',
                                     flexDirection: 'row'
                                 }}>
 
@@ -1072,7 +1074,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     style={{
                                         justifyContent: 'center',
                                         alignSelf: 'flex-end',
-                                        width: 20, height: 20, borderRadius: 10, backgroundColor: '#007AFF'
+                                        width: 20, height: 20, borderRadius: 10, backgroundColor: '#5469D4'
                                     }}
                                 >
                                     <Text style={{ color: '#fff', width: '100%', textAlign: 'center' }}>
@@ -1087,7 +1089,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 </ScrollView>
                 :
                 <View>
-                    <Text style={{ fontSize: 14, color: '#818385', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#fff', paddingVertical: 20 }}>
+                    <Text style={{ fontSize: 14, color: '#50566B', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#fff', paddingVertical: 20 }}>
                         No Content to select.
                     </Text>
                 </View>}
@@ -1154,7 +1156,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 lineHeight: 35,
                                 color: "white",
                                 fontSize: 12,
-                                backgroundColor: "#007AFF",
+                                backgroundColor: "#5469D4",
                                 borderRadius: 15,
                                 paddingHorizontal: 20,
                                 fontFamily: "inter",
@@ -1178,13 +1180,13 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
         </View> :
             <View style={{ width: '100%', marginTop: 10 }}>
-                <Text style={{ fontSize: 14, color: '#000', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#fff', }}>
+                <Text style={{ fontSize: 14, color: '#1A2036', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#fff', }}>
                     {folder.title}
                 </Text>
                 <ScrollView
                     style={{
                         width: "100%",
-                        // height: 300,
+                        // height: 350,
                         backgroundColor: "white",
                         borderTopLeftRadius: 0,
                         borderTopRightRadius: 0,
@@ -1213,12 +1215,12 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     maxWidth: 300,
                                     width: '100%',
                                     height: '100%',
-                                    borderRadius: 1,
+                                    borderRadius: 10,
                                     padding: 15,
                                     paddingHorizontal: 20,
                                     backgroundColor: '#fff',
                                     borderWidth: 1,
-                                    borderColor: cue._id === props.cue._id ? '#000' : '#e9e9ec',
+                                    borderColor: cue._id === props.cue._id ? '#1A2036' : '#e9e9ec',
                                     flexDirection: 'row'
                                 }}>
 
@@ -1274,7 +1276,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     lineHeight: 35,
                                     color: "white",
                                     fontSize: 12,
-                                    backgroundColor: "#007AFF",
+                                    backgroundColor: "#5469D4",
                                     borderRadius: 15,
                                     paddingHorizontal: 20,
                                     fontFamily: "inter",
@@ -1339,9 +1341,11 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 style={{
                                     textAlign: "center",
                                     lineHeight: 35,
-                                    color: "white",
+                                    backgroundColor: "white",
+                                    color: '#5469D4',
                                     fontSize: 12,
-                                    backgroundColor: "#007AFF",
+                                    borderWidth: 1,
+                                    borderColor: "#5469D4",
                                     borderRadius: 15,
                                     paddingHorizontal: 20,
                                     fontFamily: "inter",
@@ -1365,122 +1369,21 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
 
 
-    const windowHeight = Dimensions.get('window').width < 1024 ? Dimensions.get('window').height - 30 : Dimensions.get('window').height;
+    const windowHeight = Dimensions.get('window').width < 1024 ? Dimensions.get('window').height : Dimensions.get('window').height;
 
 
     const FolderView = <ScrollView
         nestedScrollEnabled={true}
         showsVerticalScrollIndicator={false}
         horizontal={false}
-        style={{
-            borderTopRightRadius: 0,
-            borderTopLeftRadius: 0,
-        }}
         contentContainerStyle={{
-            borderTopRightRadius: 0,
-            borderTopLeftRadius: 0,
-            // minHeight: windowHeight
+            maxHeight: Dimensions.get('window').height
         }}
     >
-        <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 30, backgroundColor: 'white' }}>
-            {/* <Ionicons name='chevron-down' size={17} color={'#e0e0e0'} /> */}
+        <Text style={{ width: '100%', textAlign: 'center', height: 0, paddingBottom: 30, backgroundColor: 'white' }}>
+            {/* <Ionicons name='chevron-down' size={15} color={'#e0e0e0'} /> */}
         </Text>
         {!createNewFolder && folderId === "" ? <View style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            {channelFolders.length > 0 ? <Menu
-                onSelect={async (choice: any) => {
-                    // setCalendarChoice(choice)
-
-                    if (addingToFolder) {
-                        return;
-                    }
-                    // Add to folder and if successful set folder id to the folder added to
-
-                    const server = fetchAPI('')
-
-                    setAddingToFolder(true)
-
-                    server.mutate({
-                        mutation: addToFolder,
-                        variables: {
-                            cueId: props.cue._id,
-                            folderId: choice
-                        }
-                    }).then(async res => {
-
-                        // Update cue locally with the new Unread count so that the Unread count reflects in real time
-                        if (!res.data.folder.addToFolder) {
-                            Alert("Could not add to list. Try again.")
-                            setAddingToFolder(false)
-                            return;
-                        }
-
-                        setAddingToFolder(false);
-                        setFolderId(choice)
-
-                    }).catch((e) => {
-                        Alert("Could not add to list. Try again.")
-                        setAddingToFolder(false)
-                    })
-
-
-                }}>
-                <MenuTrigger>
-                    <View
-                        // onPress={async () => {
-
-                        // }}
-                        style={{
-                            backgroundColor: 'white',
-                            overflow: 'hidden',
-                            height: 35,
-                            // marginTop: 15,
-                            justifyContent: 'center',
-                            flexDirection: 'row',
-                        }}>
-                        <Text style={{
-                            textAlign: 'center',
-                            lineHeight: 30,
-                            color: '#fff',
-                            fontSize: 12,
-                            backgroundColor: '#3abb83',
-                            paddingHorizontal: 20,
-                            fontFamily: 'inter',
-                            height: 30,
-                            // width: 100,
-                            borderRadius: 15,
-                            textTransform: 'uppercase'
-                        }}>
-                            Add to List {<Ionicons name='caret-forward-outline' size={12} />}
-                        </Text>
-                    </View>
-                </MenuTrigger>
-                <MenuOptions customStyles={{
-                    optionsContainer: {
-                        padding: 10,
-                        borderRadius: 15,
-                        shadowOpacity: 0,
-                        borderWidth: 1,
-                        borderColor: '#e9e9ec',
-                        overflow: 'scroll',
-                        maxHeight: '100%'
-                    }
-                }}>
-
-                    {
-                        channelFolders.map((folder: any) => {
-                            return (<MenuOption
-                                key={folder._id}
-                                value={folder._id}>
-                                <View style={{ display: 'flex', flexDirection: 'row', }}>
-                                    <Text style={{ marginLeft: 5 }}>
-                                        {folder.title}
-                                    </Text>
-                                </View>
-                            </MenuOption>)
-                        })
-                    }
-                </MenuOptions>
-            </Menu> : null}
 
             <TouchableOpacity
                 onPress={() => {
@@ -1497,27 +1400,120 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     backgroundColor: 'white',
                     overflow: 'hidden',
                     height: 35,
-                    marginTop: channelFolders.length > 0 ? 15 : 0,
+                    // marginTop: 15,
+                    marginBottom: 15,
                     justifyContent: 'center',
                     flexDirection: 'row',
                 }}>
                 <Text style={{
                     textAlign: 'center',
                     lineHeight: 35,
-                    color: '#007aff',
-                    borderWidth: 1,
-                    borderColor: '#007aff',
+                    color: '#fff',
+                    // borderWidth: 1,
+                    backgroundColor: '#5469D4',
                     fontSize: 12,
                     paddingHorizontal: 20,
                     fontFamily: 'inter',
                     height: 35,
                     borderRadius: 15,
+                    width: 150,
                     textTransform: 'uppercase'
                 }}>
-                    Add Files {<Ionicons name='document-outline' size={12} />}
+                    Add Files
                 </Text>
             </TouchableOpacity>
         </View> : null}
+        {channelFolders.length > 0 ? <Menu
+            onSelect={async (choice: any) => {
+                // setCalendarChoice(choice)
+
+                if (addingToFolder) {
+                    return;
+                }
+                // Add to folder and if successful set folder id to the folder added to
+
+                const server = fetchAPI('')
+
+                setAddingToFolder(true)
+
+                server.mutate({
+                    mutation: addToFolder,
+                    variables: {
+                        cueId: props.cue._id,
+                        folderId: choice
+                    }
+                }).then(async res => {
+
+                    // Update cue locally with the new Unread count so that the Unread count reflects in real time
+                    if (!res.data.folder.addToFolder) {
+                        Alert("Could not add to list. Try again.")
+                        setAddingToFolder(false)
+                        return;
+                    }
+
+                    setAddingToFolder(false);
+                    setFolderId(choice)
+
+                }).catch((e) => {
+                    Alert("Could not add to list. Try again.")
+                    setAddingToFolder(false)
+                })
+            }}>
+            <MenuTrigger>
+                <View
+                    style={{
+                        backgroundColor: 'white',
+                        overflow: 'hidden',
+                        height: 35,
+                        marginBottom: 20,
+                        justifyContent: 'center',
+                        flexDirection: 'row',
+                    }}>
+                    <Text style={{
+                        textAlign: 'center',
+                        lineHeight: 35,
+                        color: '#5469D4',
+                        borderWidth: 1,
+                        borderColor: '#5469D4',
+                        fontSize: 12,
+                        paddingHorizontal: 20,
+                        fontFamily: 'inter',
+                        width: 150,
+                        height: 35,
+                        borderRadius: 15,
+                        textTransform: 'uppercase'
+                    }}>
+                        Add to Folder
+                    </Text>
+                </View>
+            </MenuTrigger>
+            <MenuOptions customStyles={{
+                optionsContainer: {
+                    padding: 10,
+                    borderRadius: 15,
+                    shadowOpacity: 0,
+                    borderWidth: 1,
+                    borderColor: '#e9e9ec',
+                    overflow: 'scroll',
+                    maxHeight: '100%'
+                }
+            }}>
+
+                {
+                    channelFolders.map((folder: any) => {
+                        return (<MenuOption
+                            key={folder._id}
+                            value={folder._id}>
+                            <View style={{ display: 'flex', flexDirection: 'row', }}>
+                                <Text style={{ marginLeft: 5 }}>
+                                    {folder.title}
+                                </Text>
+                            </View>
+                        </MenuOption>)
+                    })
+                }
+            </MenuOptions>
+        </Menu> : null}
 
         {createNewFolder ? renderCreateNewFolderOptions() : null}
 
@@ -1627,7 +1623,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         props.closeModal()
                                     }}>
                                     <Text>
-                                        <Ionicons name='arrow-back-outline' size={24} color={'#818385'} />
+                                        <Ionicons name='arrow-back-outline' size={25} color={'#50566B'} />
                                     </Text>
                                 </TouchableOpacity>
                             </View>
@@ -1643,7 +1639,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 setShowFolder(!showFolder)
                             }}>
                             <Text>
-                                <Ionicons name={showFolder ? 'close-outline' : 'document-attach-outline'} size={24} color={'#007aff'} />
+                                <Ionicons name={showFolder ? 'close-outline' : 'document-attach-outline'} size={25} color={'#5469D4'} />
                             </Text>
                         </TouchableOpacity> 
                     </View>
@@ -1661,7 +1657,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 setShowComments(false)
                             }}>
                             <Text style={showOriginal ? styles.allGrayFill : styles.all}>
-                                <Ionicons name='document-outline' size={17} />
+                                <Ionicons name='newspaper-outline' size={15} />
                             </Text>
                             <Text style={showOriginal ? styles.allGrayFill : styles.all}>
                                 Content
@@ -1680,13 +1676,13 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             }}>
 
                             <Text style={styles.all}>
-                                <Ionicons name='options-outline' size={17} />
+                                <Ionicons name='options-outline' size={15} />
                             </Text>
                             <Text style={styles.all}>
-                                Options
+                                Settings
                             </Text>
                         </TouchableOpacity>
-                        <TouchableOpacity
+                        {/* <TouchableOpacity
                             style={{
                                 justifyContent: "center",
                                 flexDirection: "column"
@@ -1698,13 +1694,13 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 setShowComments(true)
                             }}>
                             <Text style={styles.all}>
-                                <Ionicons name='chatbubbles-outline' size={17} />
-                                {/* {props.cue.unreadThreads > 0 ? <View style={styles.badge} /> : null} */}
+                                <Ionicons name='chatbubbles-outline' size={15} />
+                                {/* {props.cue.unreadThreads > 0 ? <View style={styles.badge} /> : null} 
                             </Text>
                             <Text style={styles.all}>
                                 Q&A
                             </Text>
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                         {
                             !submission || (channelOwner && submission) || isQuiz ? null :
                                 <TouchableOpacity
@@ -1719,7 +1715,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         setShowOptions(false)
                                     }}>
                                     <Text style={!showOriginal && !viewStatus && !showOptions && !showComments ? styles.allGrayFill : styles.all}>
-                                        <Ionicons name='document-attach-outline' size={17} />
+                                        <Ionicons name='document-attach-outline' size={15} />
                                     </Text>
                                     <Text style={!showOriginal && !viewStatus && !showOptions && !showComments ? styles.allGrayFill : styles.all}>
                                         Submission
@@ -1741,7 +1737,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         setShowOptions(false)
                                     }}>
                                     <Text style={viewStatus ? styles.allGrayFill : styles.all}>
-                                        <Ionicons name='checkmark-done-outline' size={17} />
+                                        <Ionicons name='stats-chart-outline' size={15} />
                                     </Text>
                                     <Text style={viewStatus ? styles.allGrayFill : styles.all}>
                                         Engagement
@@ -1818,7 +1814,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         borderTopLeftRadius: 0,
                         borderTopRightRadius: 0,
                     }}>
-                        <ActivityIndicator color={'#818385'} />
+                        <ActivityIndicator color={'#50566B'} />
                     </View>
                     :
                     <View style={{ width: '100%', flexDirection: 'row' }}>
@@ -1833,7 +1829,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 borderTopLeftRadius: 0,
                                 borderTopRightRadius: 0,
                             }}>
-                                <ActivityIndicator color={'#818385'} />
+                                <ActivityIndicator color={'#50566B'} />
                             </View> : FolderView}
                         </View> : null}
                         <View style={{ paddingLeft: showFolder ? 20 : 0, width: showFolder ? '80%' : '100%', backgroundColor: 'white' }}>
@@ -1851,7 +1847,7 @@ export default Update
 const styles: any = StyleSheet.create({
     all: {
         fontSize: 10,
-        color: '#43434f',
+        color: '#50566B',
         height: 20,
         paddingHorizontal: 5,
         backgroundColor: '#fff',
@@ -1862,7 +1858,7 @@ const styles: any = StyleSheet.create({
     },
     allGrayFill: {
         fontSize: 10,
-        color: '#007AFF',
+        color: '#5469D4',
         height: 20,
         paddingHorizontal: 5,
         textAlign: 'center',

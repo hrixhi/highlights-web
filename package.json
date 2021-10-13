@@ -18,7 +18,7 @@
         "@expo/vector-icons": "^12.0.0",
         "@expo/webpack-config": "~0.12.45",
         "@flyerhq/react-native-keyboard-accessory-view": "^2.1.1",
-        "@mobiscroll/react": "file:./src/lib/mobiscroll-package/mobiscroll-react-v5.9.1.tgz",
+        "@mobiscroll/react": "file:./src/lib/mobiscroll-package/mobiscroll-react-v5.11.0.tgz",
         "@mobiscroll/react5": "npm:@mobiscroll/react@^5.9.1",
         "@pdftron/pdfjs-express": "^8.0.1",
         "@pdftron/webviewer": "^8.0.1",

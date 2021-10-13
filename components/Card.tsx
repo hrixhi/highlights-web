@@ -14,7 +14,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     const starred = props.cue.starred;
     const { title } = htmlStringParser(props.cue.channelId && props.cue.channelId !== '' ? props.cue.original : props.cue.cue)
     const [showScore, setShowScore] = useState(false);
-    const [colorCode, setColorCode] = useState('#1D1D20');
+    const [colorCode, setColorCode] = useState('#1A2036');
     const [isOwner, setIsOwner] = useState(false)
 
     useEffect(() => {
@@ -66,7 +66,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             props.cue.starred ?
                                 <Text style={{
                                     textAlign: 'right',
-                                    lineHeight: 30,
+                                    lineHeight: 35,
                                     marginTop: -20,
                                     paddingRight: 30,
                                     position: 'absolute',
@@ -87,7 +87,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         {
                             props.cue.graded && showScore && !isOwner ? <Text style={{
                                 fontSize: 9,
-                                color: '#007AFF',
+                                color: '#5469D4',
                                 marginLeft: 10, textAlign: 'right'
                             }}>
                                 {props.cue.score}%
@@ -107,30 +107,19 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         {
                             props.cue.status && (props.cue.status !== 'read' && props.cue.status !== 'submitted')
                                 ?
-                                <Text style={{
-                                    width: 20,
-                                    height: 20,
-                                    borderRadius: 12,
-                                    overflow: 'hidden',
-                                    backgroundColor: '#f94144',
-                                    textAlign: 'center',
-                                    zIndex: 150,
-                                    marginLeft: 10,
-                                    marginTop: 12,
-                                    color: 'white', lineHeight: 20, fontSize: 10
-                                }}>
-                                    !
+                                <Text style={{ paddingTop: 6 }}>
+                                    <Ionicons name='alert-circle-outline' size={15} color='#f94144' />
                                 </Text>
                                 : null
                         }
-                        {
+                        {/* {
                             props.cue.channelId && props.cue.unreadThreads !== 0 ?
                                 <Text style={{
                                     width: 20,
                                     height: 20,
                                     borderRadius: 12,
                                     overflow: 'hidden',
-                                    backgroundColor: '#007AFF',
+                                    backgroundColor: '#5469D4',
                                     textAlign: 'center',
                                     zIndex: 150,
                                     marginLeft: 5,
@@ -139,7 +128,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                 }}>
                                     {props.cue.unreadThreads}
                                 </Text> : <Text style={{ width: 25 }} />
-                        }
+                        } */}
                     </View>
                 </View>
             </TouchableOpacity>
@@ -168,7 +157,7 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
         paddingHorizontal: 10,
         backgroundColor: '#fff',
         borderWidth: 1,
-        borderColor: '#e8e8ea'
+        borderColor: '#E3E8EE'
     },
     flipCard: {
         height: '100%',
@@ -176,7 +165,7 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
         borderRadius: 0,
         padding: 13,
         color: '#fff',
-        backgroundColor: colorScheme === 'light' ? '#1D1D20' : 'white'
+        backgroundColor: colorScheme === 'light' ? '#1A2036' : 'white'
     },
     descriptionFlip: {
         color: '#fff',
@@ -190,7 +179,7 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
     flipText: {
         height: '100%',
         color: '#fff',
-        backgroundColor: colorScheme === 'light' ? '#1D1D20' : 'white'
+        backgroundColor: colorScheme === 'light' ? '#1A2036' : 'white'
     },
     dateContainer: {
         fontSize: 10,
@@ -206,7 +195,7 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
         display: 'flex',
         flexDirection: 'row',
         color: '#fff',
-        backgroundColor: colorScheme === 'light' ? '#1D1D20' : 'white'
+        backgroundColor: colorScheme === 'light' ? '#1A2036' : 'white'
     },
     date: {
         fontSize: 9,
@@ -231,8 +220,8 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
         color: col
     },
     titleFlip: {
-        color: colorScheme === 'light' ? '#fff' : '#1D1D20',
-        backgroundColor: colorScheme === 'light' ? '#1D1D20' : '#fff',
+        color: colorScheme === 'light' ? '#fff' : '#1A2036',
+        backgroundColor: colorScheme === 'light' ? '#1A2036' : '#fff',
         fontFamily: 'inter',
         fontSize: 13,
         // ,

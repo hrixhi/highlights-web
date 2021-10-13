@@ -36,73 +36,73 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
     useEffect(() => {
         (
             async () => {
-              const u = await AsyncStorage.getItem('user')
-              if (u) {
-                const parsedUser: any = JSON.parse(u)
-                
-                // FILTERS PENDING
+                const u = await AsyncStorage.getItem('user')
+                if (u) {
+                    const parsedUser: any = JSON.parse(u)
 
-                const temp: any = {}
-                const tabMap: any = {}
-                const ownMap: any = {}
-                props.subscriptions.map((item: any, ind: any) => {
-                    temp[ind] = true
-                    if (item.channelCreatedBy.toString() === parsedUser._id.toString()) {
-                        tabMap[ind] = 'scores'
-                        ownMap[ind] = true
-                    } else {
-                        tabMap[ind] = 'overview'
-                        ownMap[ind] = false
-                    }
-                    
-                })
-                setCollpaseMap(temp)
-                setActiveTabMap(tabMap)
-                setOwnersMap(ownMap)
+                    // FILTERS PENDING
 
-                const tempSc: any = {}
-                scores.map((sc: any) => {
-                    if (!tempSc[sc.channelId]) {
-                        tempSc[sc.channelId] = sc
-                    }
-                })
-                setScore(tempSc)
+                    const temp: any = {}
+                    const tabMap: any = {}
+                    const ownMap: any = {}
+                    props.subscriptions.map((item: any, ind: any) => {
+                        temp[ind] = true
+                        if (item.channelCreatedBy.toString() === parsedUser._id.toString()) {
+                            tabMap[ind] = 'scores'
+                            ownMap[ind] = true
+                        } else {
+                            tabMap[ind] = 'overview'
+                            ownMap[ind] = false
+                        }
 
-                const tempAtt: any = {}
-                attendances.map((att: any) => {
-                    if (tempAtt[att.channelId]) {
-                        tempAtt[att.channelId].push(att)
-                    } else {
-                        tempAtt[att.channelId] = [att]
-                    }
-                })
-                setAttendance(tempAtt)
+                    })
+                    setCollpaseMap(temp)
+                    setActiveTabMap(tabMap)
+                    setOwnersMap(ownMap)
 
-                const tempDate: any = {}
-                dates.map((dt: any) => {
-                    if (tempDate[dt.channelId]) {
-                        tempDate[dt.channelId].push(dt)
-                    } else {
-                        tempDate[dt.channelId] = [dt]
-                    }
-                })
-                setDate(tempDate)
+                    const tempSc: any = {}
+                    scores.map((sc: any) => {
+                        if (!tempSc[sc.channelId]) {
+                            tempSc[sc.channelId] = sc
+                        }
+                    })
+                    setScore(tempSc)
 
-                const tempThread: any = {}
-                threads.map((t: any) => {
-                    if (tempThread[t.channelId]) {
-                        tempThread[t.channelId].push(t)
-                    } else {
-                        tempThread[t.channelId] = [t]
-                    }
-                })
-                setThread(tempThread)
+                    const tempAtt: any = {}
+                    attendances.map((att: any) => {
+                        if (tempAtt[att.channelId]) {
+                            tempAtt[att.channelId].push(att)
+                        } else {
+                            tempAtt[att.channelId] = [att]
+                        }
+                    })
+                    setAttendance(tempAtt)
 
-                setLoading(false)
-              } 
+                    const tempDate: any = {}
+                    dates.map((dt: any) => {
+                        if (tempDate[dt.channelId]) {
+                            tempDate[dt.channelId].push(dt)
+                        } else {
+                            tempDate[dt.channelId] = [dt]
+                        }
+                    })
+                    setDate(tempDate)
+
+                    const tempThread: any = {}
+                    threads.map((t: any) => {
+                        if (tempThread[t.channelId]) {
+                            tempThread[t.channelId].push(t)
+                        } else {
+                            tempThread[t.channelId] = [t]
+                        }
+                    })
+                    setThread(tempThread)
+
+                    setLoading(false)
+                }
             }
         )()
-       
+
 
     }, [attendances, dates, props.filterStart, props.filterEnd, threads, scores, props.subscriptions])
 
@@ -187,7 +187,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
 
 
         return (<View style={{ flexDirection: "row", marginBottom: 20, paddingTop: 5 }}>
-             {isOwner ? null : <TouchableOpacity
+            {isOwner ? null : <TouchableOpacity
                 style={{
                     justifyContent: "center",
                     flexDirection: "column"
@@ -198,7 +198,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     setActiveTabMap(temp)
                 }}>
                 <Text style={activeTab === 'overview' ? styles.allGrayFill : styles.all}>
-                    <Ionicons name='clipboard-outline' size={17} />
+                    <Ionicons name='clipboard-outline' size={15} />
                 </Text>
                 <Text style={activeTab === 'overview' ? styles.allGrayFill : styles.all}>
                     Overview
@@ -215,7 +215,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     setActiveTabMap(temp)
                 }}>
                 <Text style={activeTab === 'scores' ? styles.allGrayFill : styles.all}>
-                    <Ionicons name='stats-chart-outline' size={17} />
+                    <Ionicons name='stats-chart-outline' size={15} />
                 </Text>
                 <Text style={activeTab === 'scores' ? styles.allGrayFill : styles.all}>
                     Scores
@@ -246,7 +246,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     setActiveTabMap(temp)
                 }}>
                 <Text style={activeTab === 'attendance' ? styles.allGrayFill : styles.all}>
-                    <Ionicons name='hand-left-outline' size={17} />
+                    <Ionicons name='hand-left-outline' size={15} />
                 </Text>
                 <Text style={activeTab === 'attendance' ? styles.allGrayFill : styles.all}>
                     Attendance
@@ -256,7 +256,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
     }
 
     const chartConfig = {
-        backgroundColor: '#000000',
+        backgroundColor: '#1A2036',
         backgroundGradientFrom: '#1E2923',
         backgroundGradientTo: '#08130D',
         fontFamily: "inter",
@@ -281,35 +281,33 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
             alignSelf: 'center',
             marginTop: 100,
         }}>
-            <ActivityIndicator color={'#818385'} />
+            <ActivityIndicator color={'#50566B'} />
         </View>
     }
 
     return <View style={{
         width: "100%",
-        height: windowHeight - 85,
+        // height: windowHeight - ,
         backgroundColor: "white",
         borderTopRightRadius: 0,
         borderTopLeftRadius: 0,
         flexDirection: width < 1024 ? 'column' : 'row',
-        // paddingTop: 20
     }}>
         <View style={{ width: '100%', }}>
             <ScrollView
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{
-                    maxHeight: windowHeight - 100,
-                    paddingTop: 10
+                    maxHeight: width < 1024 ? Dimensions.get("window").height - 115 : Dimensions.get("window").height - 52,
                 }}
             >
                 {
                     props.subscriptions.map((sub: any, ind: any) => {
                         return <View style={{
                             backgroundColor: '#fff',
-                            borderColor: '#e8e8ea',
+                            borderColor: '#E3E8EE',
                             borderBottomWidth: 1,
-                            paddingTop: 0,
-                            marginBottom: 10,
+                            marginTop: 10,
+                            // paddingBottom: 5,
                             width: '100%'
                         }}>
                             <View style={{ flexDirection: 'row', paddingBottom: collapseMap[ind] ? 0 : 0, maxWidth: 1000, alignSelf: 'center', width: '100%' }}>
@@ -326,19 +324,19 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 >
                                     <Text style={{
                                         fontSize: 16,
-                                        paddingBottom: 20,
+                                        paddingBottom: 15,
                                         paddingTop: 10,
                                         fontFamily: 'inter',
                                         // flex: 1,
                                         flexDirection: 'row',
-                                        lineHeight: 23,
+                                        lineHeight: 16,
                                     }}>
                                         <View style={{
-                                            width: 16,
+                                            width: 14,
                                             marginRight: 5,
-                                            height: 16,
+                                            height: 14,
                                             borderRadius: 9,
-                                            marginTop: 1,
+                                            // marginTop: 1,
                                             backgroundColor: sub.colorCode
                                         }} /> {sub.channelName}
                                     </Text>
@@ -357,7 +355,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                         paddingTop: 5,
                                         paddingLeft: 5
                                     }}>
-                                        <Ionicons name={!collapseMap[ind] ? 'chevron-up-outline' : 'chevron-down-outline'} size={20} color={'#007AFF'} />
+                                        <Ionicons name={!collapseMap[ind] ? 'chevron-up-outline' : 'chevron-down-outline'} size={20} color={!collapseMap[ind] ? '#50566B' : '#5469D4'} />
                                     </Text>
                                 </TouchableOpacity>
                             </View>
@@ -383,7 +381,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                     <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
                                                         <Text style={{
                                                             flex: 1, flexDirection: 'row',
-                                                            color: '#818385',
+                                                            color: '#50566B',
                                                             fontSize: 17, lineHeight: 25,
                                                             fontFamily: 'inter'
                                                         }} ellipsizeMode='tail'>
@@ -400,7 +398,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                     <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
                                                         <Text style={{
                                                             flex: 1, flexDirection: 'row',
-                                                            color: '#818385',
+                                                            color: '#50566B',
                                                             fontSize: 17, lineHeight: 25,
                                                             fontFamily: 'inter'
                                                         }} ellipsizeMode='tail'>
@@ -417,7 +415,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                     <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
                                                         <Text style={{
                                                             flex: 1, flexDirection: 'row',
-                                                            color: '#818385',
+                                                            color: '#50566B',
                                                             fontSize: 17, lineHeight: 25,
                                                             fontFamily: 'inter'
                                                         }} ellipsizeMode='tail'>
@@ -434,7 +432,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                     <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 25 }}>
                                                         <Text style={{
                                                             flex: 1, flexDirection: 'row',
-                                                            color: '#818385',
+                                                            color: '#50566B',
                                                             fontSize: 14, lineHeight: 25,
                                                             fontFamily: 'inter'
                                                         }} ellipsizeMode='tail'>
@@ -451,7 +449,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                     <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 25 }}>
                                                         <Text style={{
                                                             flex: 1, flexDirection: 'row',
-                                                            color: '#818385',
+                                                            color: '#50566B',
                                                             fontSize: 14, lineHeight: 25,
                                                             fontFamily: 'inter'
                                                         }} ellipsizeMode='tail'>
@@ -468,7 +466,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                     <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 25 }}>
                                                         <Text style={{
                                                             flex: 1, flexDirection: 'row',
-                                                            color: '#818385',
+                                                            color: '#50566B',
                                                             fontSize: 14, lineHeight: 25,
                                                             fontFamily: 'inter'
                                                         }} ellipsizeMode='tail'>
@@ -485,7 +483,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                     <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
                                                         <Text style={{
                                                             flex: 1, flexDirection: 'row',
-                                                            color: '#818385',
+                                                            color: '#50566B',
                                                             fontSize: 17, lineHeight: 25,
                                                             fontFamily: 'inter'
                                                         }} ellipsizeMode='tail'>
@@ -502,7 +500,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                     <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
                                                         <Text style={{
                                                             flex: 1, flexDirection: 'row',
-                                                            color: '#818385',
+                                                            color: '#50566B',
                                                             fontSize: 17, lineHeight: 25,
                                                             fontFamily: 'inter'
                                                         }} ellipsizeMode='tail'>
@@ -538,7 +536,7 @@ const styles = StyleSheet.create({
     },
     all: {
         fontSize: 10,
-        color: '#43434f',
+        color: '#50566B',
         height: 20,
         paddingHorizontal: 5,
         backgroundColor: '#fff',
@@ -549,7 +547,7 @@ const styles = StyleSheet.create({
     },
     allGrayFill: {
         fontSize: 10,
-        color: '#007AFF',
+        color: '#5469D4',
         height: 20,
         paddingHorizontal: 5,
         backgroundColor: '#fff',

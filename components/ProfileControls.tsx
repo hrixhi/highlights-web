@@ -351,7 +351,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
       <View style={styles.screen} key={1}>
         <View style={{ width: "100%", backgroundColor: "white" }}>
           <View style={styles.colorBar}>
-            <Text style={{ fontSize: 20, color: "#818385" }}>
+            <Text style={{ fontSize: 20, color: "#50566B" }}>
               {PreferredLanguageText('internetRequiried')}
             </Text>
           </View>
@@ -371,7 +371,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
           style={{
             fontSize: 12,
             paddingTop: 10,
-            color: "#818385",
+            color: "#50566B",
             fontFamily: "overpass",
             paddingBottom: 25,
             // textAlign: "center"
@@ -380,7 +380,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
           {!loggedIn ? PreferredLanguageText('createAccount') : ""}
         </Text> */}
         <View style={{ width: '100%', flexDirection: 'row', flex: 1, justifyContent: 'center' }}>
-          <View style={{ maxWidth: 350, width: '100%' }}>
+          <View style={{ maxWidth: 400, width: '100%' }}>
             {showSavePassword ? (
               <View
                 style={{
@@ -393,7 +393,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                 <Text style={{
                   fontSize: 14,
                   // fontFamily: 'inter',
-                  color: '#1D1D20'
+                  color: '#1A2036'
                 }}>
                   {PreferredLanguageText('currentPassword')}
                 </Text>
@@ -402,12 +402,12 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                   value={currentPassword}
                   placeholder={""}
                   onChangeText={val => setCurrentPassword(val)}
-                  placeholderTextColor={"#818385"}
+                  placeholderTextColor={"#50566B"}
                 />
                 <Text style={{
                   fontSize: 14,
                   // fontFamily: 'inter',
-                  color: '#1D1D20'
+                  color: '#1A2036'
                 }}>
                   {PreferredLanguageText('newPassword')}
                 </Text>
@@ -416,7 +416,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                   value={newPassword}
                   placeholder={""}
                   onChangeText={val => setNewPassword(val)}
-                  placeholderTextColor={"#818385"}
+                  placeholderTextColor={"#50566B"}
                   errorText={newPasswordValidError}
                   footerMessage={
                     PreferredLanguageText('atleast8char')
@@ -425,7 +425,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                 <Text style={{
                   fontSize: 14,
                   // fontFamily: 'inter',
-                  color: '#1D1D20'
+                  color: '#1A2036'
                 }}>
                   {PreferredLanguageText('confirmNewPassword')}
                 </Text>
@@ -434,7 +434,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                   value={confirmNewPassword}
                   placeholder={""}
                   onChangeText={val => setConfirmNewPassword(val)}
-                  placeholderTextColor={"#818385"}
+                  placeholderTextColor={"#50566B"}
                   errorText={confirmNewPasswordError}
                 />
               </View>
@@ -471,7 +471,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                         flexDirection: 'row'
                       }}>
                       <Text>
-                        <Ionicons name={'trash-outline'} size={20} color={'#818385'} />
+                        <Ionicons name={'trash-outline'} size={20} color={'#50566B'} />
                       </Text>
                     </TouchableOpacity> : <FileUpload
                       onUpload={(u: any, t: any) => {
@@ -484,7 +484,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                   marginTop: 20,
                   fontSize: 14,
                   // fontFamily: 'inter',
-                  color: '#1D1D20'
+                  color: '#1A2036'
                 }}>
                   {PreferredLanguageText('email')}
                 </Text>
@@ -493,14 +493,14 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                   value={email}
                   placeholder={""}
                   onChangeText={val => setEmail(val)}
-                  placeholderTextColor={"#818385"}
+                  placeholderTextColor={"#50566B"}
                   required={true}
                   errorText={emailValidError}
                 />
                 <Text style={{
                   fontSize: 14,
                   // fontFamily: 'inter',
-                  color: '#1D1D20'
+                  color: '#1A2036'
                 }}>
                   {PreferredLanguageText('fullName')}
                 </Text>
@@ -508,13 +508,13 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                   value={fullName}
                   placeholder={""}
                   onChangeText={val => setFullName(val)}
-                  placeholderTextColor={"#818385"}
+                  placeholderTextColor={"#50566B"}
                   required={true}
                 />
                 {/* <Text style={{
                   fontSize: 14,
                   fontFamily: 'inter',
-                  color: '#1D1D20'
+                  color: '#1A2036'
                 }}>
                   {PreferredLanguageText('displayName')}
                 </Text>
@@ -522,7 +522,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                   value={displayName}
                   placeholder={""}
                   onChangeText={val => setDisplayName(val)}
-                  placeholderTextColor={"#818385"}
+                  placeholderTextColor={"#50566B"}
                   required={true}
                 /> */}
                 {loggedIn ? null : (
@@ -531,7 +531,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                       style={{
                         fontSize: 14,
                         // fontFamily: 'inter',
-                        color: '#1D1D20'
+                        color: '#1A2036'
                       }}
                     >
                       {PreferredLanguageText('password')}
@@ -540,7 +540,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                       value={password}
                       placeholder={""}
                       onChangeText={val => setPassword(val)}
-                      placeholderTextColor={"#818385"}
+                      placeholderTextColor={"#50566B"}
                       secureTextEntry={true}
                       required={true}
                       footerMessage={
@@ -552,7 +552,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                       style={{
                         fontSize: 14,
                         // fontFamily: 'inter',
-                        color: '#1D1D20'
+                        color: '#1A2036'
                       }}
                     >
                       {PreferredLanguageText('confirmPassword')}
@@ -561,7 +561,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                       value={confirmPassword}
                       placeholder={""}
                       onChangeText={val => setConfirmPassword(val)}
-                      placeholderTextColor={"#818385"}
+                      placeholderTextColor={"#50566B"}
                       secureTextEntry={true}
                       required={true}
                       errorText={confirmPasswordError}
@@ -598,7 +598,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                     lineHeight: 35,
                     color: "white",
                     fontSize: 12,
-                    backgroundColor: "#007AFF",
+                    backgroundColor: "#5469D4",
                     paddingHorizontal: 20,
                     fontFamily: "inter",
                     height: 35,
@@ -607,7 +607,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                     textTransform: "uppercase"
                   }}
                 >
-                  {loggedIn ? (showSavePassword ? PreferredLanguageText('update') : PreferredLanguageText('save')) : PreferredLanguageText('signUp')} <Ionicons name='arrow-forward-outline' size={12} />
+                  {loggedIn ? (showSavePassword ? PreferredLanguageText('update') : PreferredLanguageText('save')) : PreferredLanguageText('signUp')}
                 </Text>
               </TouchableOpacity>
               {loggedIn ? (
@@ -627,10 +627,10 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                     style={{
                       textAlign: "center",
                       lineHeight: 35,
-                      color: '#007aff',
+                      color: '#5469D4',
                       borderWidth: 1,
                       borderRadius: 15,
-                      borderColor: '#007aff',
+                      borderColor: '#5469D4',
                       backgroundColor: '#fff',
                       fontSize: 12,
                       paddingHorizontal: 20,
@@ -640,7 +640,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                       textTransform: "uppercase"
                     }}
                   >
-                    {showSavePassword ? <Ionicons name='arrow-back-outline' size={12} color='#818385' /> : null} {showSavePassword ? PreferredLanguageText('back') : PreferredLanguageText('password')} {showSavePassword ? null : <Ionicons name='settings-outline' size={12} />}
+                    {showSavePassword ? PreferredLanguageText('back') : PreferredLanguageText('password')}
                   </Text>
                 </TouchableOpacity>
               ) : null}
@@ -664,10 +664,10 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
               >
                 <Text
                   style={{
-                    color: '#007aff',
+                    color: '#5469D4',
                     borderWidth: 1,
                     borderRadius: 15,
-                    borderColor: '#007aff',
+                    borderColor: '#5469D4',
                     backgroundColor: '#fff',
                     fontSize: 12,
                     textAlign: "center",
@@ -679,7 +679,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                     width: 175,
                   }}
                 >
-                  {loggedIn ? PreferredLanguageText('logout') : PreferredLanguageText('login')} <Ionicons name='power-outline' size={12} />
+                  {loggedIn ? PreferredLanguageText('logout') : PreferredLanguageText('login')}
                 </Text>
               </TouchableOpacity>
               {loggedIn ? (
@@ -702,17 +702,17 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                       paddingHorizontal: 20,
                       fontFamily: "inter",
                       height: 35,
-                      color: '#007aff',
+                      color: '#5469D4',
                       borderWidth: 1,
                       borderRadius: 15,
-                      borderColor: '#007aff',
+                      borderColor: '#5469D4',
                       backgroundColor: '#fff',
                       fontSize: 12,
                       width: 175,
                       textTransform: "uppercase"
                     }}
                   >
-                    {zoomInfo ? 'Disconnect Zoom' : 'Connect Zoom'} {zoomInfo ? <Ionicons name='enter-outline' size={12} /> : <Ionicons name='exit-outline' size={12} />}
+                    {zoomInfo ? 'Disconnect Zoom' : 'Connect Zoom'}
                   </Text>
                 </TouchableOpacity>
               ) : null}
@@ -741,24 +741,24 @@ const styles = StyleSheet.create({
   outline: {
     borderRadius: 0,
     borderWidth: 1,
-    borderColor: "#818385"
+    borderColor: "#50566B"
   },
   all: {
     fontSize: 14,
-    color: "#818385",
+    color: "#50566B",
     height: 22,
     paddingHorizontal: 10,
     backgroundColor: "white"
   },
   allOutline: {
     fontSize: 14,
-    color: "#818385",
+    color: "#50566B",
     height: 22,
     paddingHorizontal: 10,
     backgroundColor: "white",
     borderRadius: 0,
     borderWidth: 1,
-    borderColor: "#818385"
+    borderColor: "#50566B"
   },
   colorBar: {
     width: "100%",

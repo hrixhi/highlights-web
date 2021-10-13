@@ -36,12 +36,12 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                         </Text> : null}
                     </View>
                     <View style={{
-                        backgroundColor: '#f7f7f7',
+                        backgroundColor: '#f7fafc',
                         width: '100%', flex: 1,
                         height: '100%',
                         flexDirection: 'row'
                     }}>
-                        <View style={{ flex: 1, backgroundColor: '#f7f7f7' }}>
+                        <View style={{ flex: 1, backgroundColor: '#f7fafc' }}>
                             <Text
                                 ellipsizeMode={'tail'}
                                 numberOfLines={1}
@@ -52,7 +52,7 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                                     // flex: 1,
                                     marginTop: props.option === "Channels" ? 0 : 7,
                                     marginBottom: props.option === "Channels" ? 7 : 0,
-                                    color: '##1D1D20',
+                                    color: '##1A2036',
                                     flexDirection: 'row', flex: 1,
                                 }}>
                                 {props.title}
@@ -69,7 +69,7 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                                 <TouchableOpacity
                                     onPress={() => props.handleSub()}
                                 >
-                                    <Text style={{ textAlign: 'center', fontSize: 12, paddingTop: 5, color: '#007AFF', backgroundColor: '#f8f8fa' }} ellipsizeMode='tail'>
+                                    <Text style={{ textAlign: 'center', fontSize: 12, paddingTop: 5, color: '#5469D4', backgroundColor: '#f8f8fa' }} ellipsizeMode='tail'>
                                         Join
                                     </Text>
                                 </TouchableOpacity>
@@ -98,9 +98,9 @@ const styles: any = (colorScheme: any) => StyleSheet.create({
         borderRadius: 10,
         padding: 10,
         paddingHorizontal: 10,
-        backgroundColor: '#f7f7f7',
+        backgroundColor: '#f7fafc',
         borderWidth: 1,
-        borderColor: '#e8e8ea'
+        borderColor: '#E3E8EE'
     },
     flipCard: {
         height: '100%',
@@ -108,7 +108,7 @@ const styles: any = (colorScheme: any) => StyleSheet.create({
         borderRadius: 0,
         padding: 13,
         color: '#fff',
-        backgroundColor: colorScheme === 'light' ? '#1D1D20' : 'white'
+        backgroundColor: colorScheme === 'light' ? '#1A2036' : 'white'
     },
     descriptionFlip: {
         color: '#fff',
@@ -117,19 +117,19 @@ const styles: any = (colorScheme: any) => StyleSheet.create({
     },
     text: {
         // height: '100%',
-        backgroundColor: '#f7f7f7'
+        backgroundColor: '#f7fafc'
     },
     flipText: {
         height: '100%',
         color: '#fff',
-        backgroundColor: colorScheme === 'light' ? '#1D1D20' : '#f7f7f7'
+        backgroundColor: colorScheme === 'light' ? '#1A2036' : '#f7fafc'
     },
     dateContainer: {
         fontSize: 10,
         marginBottom: 5,
         color: '#fff',
         // height: '25%',
-        backgroundColor: '#f7f7f7',
+        backgroundColor: '#f7fafc',
         display: 'flex',
         flexDirection: 'row'
     },
@@ -139,17 +139,17 @@ const styles: any = (colorScheme: any) => StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         color: '#fff',
-        backgroundColor: colorScheme === 'light' ? '#1D1D20' : '#f7f7f7'
+        backgroundColor: colorScheme === 'light' ? '#1A2036' : '#f7fafc'
     },
     date: {
         fontSize: 10,
-        color: colorScheme === 'light' ? '#f7f7f7' : '#333333',
+        color: colorScheme === 'light' ? '#f7fafc' : '#333333',
         marginLeft: 10,
         lineHeight: 10
     },
     date2: {
         fontSize: 10,
-        color: colorScheme === 'light' ? '#f7f7f7' : '#333333',
+        color: colorScheme === 'light' ? '#f7fafc' : '#333333',
         marginLeft: 10,
         lineHeight: 10,
         textAlign: 'right',
@@ -161,13 +161,13 @@ const styles: any = (colorScheme: any) => StyleSheet.create({
     //     lineHeight: 20,
     //     // flex: 1,
     //     marginTop: 7,
-    //     color: '##1D1D20',
+    //     color: '##1A2036',
     //     flexDirection: 'row', flex: 1,
     //     // height: '50%'
     // },
     titleFlip: {
-        color: colorScheme === 'light' ? '#1D1D20' : '#1D1D20',
-        backgroundColor: colorScheme === 'light' ? '#f7f7f7' : '#f7f7f7',
+        color: colorScheme === 'light' ? '#1A2036' : '#1A2036',
+        backgroundColor: colorScheme === 'light' ? '#f7fafc' : '#f7fafc',
         fontFamily: 'inter',
         fontSize: 13,
         // ,
