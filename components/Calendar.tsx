@@ -1533,6 +1533,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 // overflow: 'hidden',
                                                 // marginTop: 20,
                                                 marginBottom: Dimensions.get('window').width < 1024 ? 0 : 0,
+                                                borderBottomWidth: tab === 'Agenda' ? 0 : 1,
                                                 borderWidth: tab !== 'Add' && 'Activity' ? 1 : 0,
                                                 // borderRightWidth: tab === 'Activity' ? 0 : 1,
                                                 // borderLeftWidth: tab === 'Activity' ? 0 : 1,
@@ -1551,6 +1552,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         data={events}
                                                         themeVariant="light"
                                                         // height={}
+
                                                         onEventClick={onSelectEvent}
                                                         renderEventContent={renderEventContent}
                                                     /> : (
