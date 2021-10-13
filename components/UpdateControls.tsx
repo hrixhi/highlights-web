@@ -2283,7 +2283,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             props.setShowFolder(!props.showFolder)
                         }}>
                         <Text>
-                            <Ionicons name={props.showFolder ? 'backspace-outline' : 'folder-outline'} size={20} color={props.folderId !== "" ? '#5469D4' : '#50566B'} />
+                            <Ionicons name={props.showFolder ? 'backspace-outline' : 'folder-open-outline'} size={20} color={'#5469D4'} />
                         </Text>
                     </TouchableOpacity>
                 </View> : null}
