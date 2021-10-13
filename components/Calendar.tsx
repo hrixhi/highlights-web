@@ -1286,7 +1286,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     const renderTabs = (activeTab: any) => {
 
-        return (<View style={{ flexDirection: "row", flex: 1, marginBottom: 30, marginTop: 10, paddingVertical: 10 }}>
+        return (<View style={{ flexDirection: "row", flex: 1, marginBottom: 20, marginTop: 10, paddingVertical: 10 }}>
             {
                 tab !== 'Add' ? <TouchableOpacity
                     style={{

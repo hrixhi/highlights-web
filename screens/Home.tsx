@@ -1454,7 +1454,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 showForgotPassword ? '' : PreferredLanguageText('login')
               }
             </Text> */}
-            <Text style={{ fontSize: 12, color: '#50566B', fontFamily: 'overpass', paddingBottom: 25, textAlign: 'center' }}>
+            <Text style={{ fontSize: 15, color: '#50566B', fontFamily: 'overpass', paddingBottom: 30, textAlign: 'center' }}>
               {
                 showForgotPassword ? PreferredLanguageText('temporaryPassword') : PreferredLanguageText('continueLeftOff')
               }

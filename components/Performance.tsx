@@ -306,8 +306,8 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             backgroundColor: '#fff',
                             borderColor: '#E3E8EE',
                             borderBottomWidth: 1,
-                            paddingTop: 10,
-                            paddingBottom: 5,
+                            marginTop: 10,
+                            // paddingBottom: 5,
                             width: '100%'
                         }}>
                             <View style={{ flexDirection: 'row', paddingBottom: collapseMap[ind] ? 0 : 0, maxWidth: 1000, alignSelf: 'center', width: '100%' }}>
@@ -324,7 +324,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 >
                                     <Text style={{
                                         fontSize: 16,
-                                        paddingBottom: 10,
+                                        paddingBottom: 15,
                                         paddingTop: 10,
                                         fontFamily: 'inter',
                                         // flex: 1,

@@ -843,7 +843,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                         paddingVertical: 15,
                         // paddingHorizontal: width < 1024 ? 0 : 20,
                         width: '100%',
-                        marginTop: 7,
+                        marginTop: 10,
                         height: Dimensions.get('window').height - 120,
                         backgroundColor: 'white',
                         overflow: 'scroll'
@@ -984,7 +984,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                         // color: '#1A2036',
                                                         fontSize: 10,
                                                         // backgroundColor: '#f7fafc',
-                                                        paddingHorizontal: 20,
+                                                        // paddingHorizontal: 20,
                                                         // marginRight: 15,
                                                         // fontFamily: 'inter',
                                                         height: 20,
@@ -1506,7 +1506,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                 </ScrollView>
                                                             </View>
                                                             :
-                                                            <View style={{ backgroundColor: '#fff', paddingTop: 20 }}>
+                                                            <View style={{ backgroundColor: '#fff', paddingTop: 35 }}>
                                                                 <ScrollView
                                                                     showsVerticalScrollIndicator={false}
                                                                     horizontal={false}
@@ -1518,7 +1518,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                         borderColor: '#E3E8EE',
                                                                         borderRadius: 0,
                                                                         width: '100%',
-                                                                        maxHeight: windowHeight - 215,
+                                                                        maxHeight: windowHeight - 230,
                                                                         // overflow: 'hidden'
                                                                     }}
                                                                 >
