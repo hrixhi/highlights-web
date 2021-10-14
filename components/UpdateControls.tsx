@@ -2283,7 +2283,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             props.setShowFolder(!props.showFolder)
                         }}>
                         <Text>
-                            <Ionicons name={props.showFolder ? 'backspace-outline' : 'folder-open-outline'} size={20} color={'#5469D4'} />
+                            <Ionicons name={props.showFolder ? 'backspace-outline' : 'folder-open-outline'} size={20} color={props.showFolder ? '#50566B' : '#5469D4'} />
                         </Text>
                     </TouchableOpacity>
                 </View> : null}
@@ -5067,7 +5067,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         (props.showOriginal && !props.cue.channelId && imported) || // Local Cues
                                         (!props.showOriginal && isOwner && (props.cue.channelId && props.cue.channelId !== '')) || // no submission as owner
                                         (!props.showOriginal && submissionImported && !isOwner) ||  // submitted as non owner
-                                        (!props.showOriginal && !submission && (props.cue.channelId && props.cue.channelId !== '')) ||  // my notes
+                                        (!props.showOriginal && !submission && (props.cue.channelId && props.cue.channelId !== '')) ||  // My Workspace
                                         isQuiz
                                         || (!props.showOriginal && (props.cue.releaseSubmission || (!allowLateSubmission && new Date() > deadline) || (allowLateSubmission && new Date() > availableUntil)))
                                         ? null :

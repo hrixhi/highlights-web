@@ -1288,36 +1288,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
         return (<View style={{ flexDirection: "row", flex: 1, marginBottom: 20, marginTop: 10, paddingVertical: 10 }}>
             {
-                tab !== 'Add' && tab !== 'Activity' ? <TouchableOpacity
-                    onPress={() => {
-                        setTab(tabs[4])
-                    }}
-                    disabled={isCreatingEvents}
-                    style={{
-                        backgroundColor: "white",
-                        overflow: "hidden",
-                        height: 35,
-                        // marginTop: -20
-                        // marginBottom: 20
-                    }}>
-                    <Text
-                        style={{
-                            textAlign: "center",
-                            lineHeight: 35,
-                            color: '#5469D4',
-                            fontSize: 12,
-                            borderWidth: 1,
-                            borderColor: '#5469D4',
-                            paddingHorizontal: 20,
-                            fontFamily: "inter",
-                            height: 35,
-                            // width: 125,
-                            borderRadius: 15,
-                            textTransform: "uppercase"
-                        }}>
-                        Add
-                    </Text>
-                </TouchableOpacity> : (
+                tab !== 'Add' && tab !== 'Activity' ? null : (
                     tab === 'Activity' ? null :
                         <TouchableOpacity
                             onPress={() => {
@@ -1336,7 +1307,88 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         </TouchableOpacity>
                 )
             }
+            {
+                tab !== 'Add' ? <label style={{ width: 150 }}>
+                    <Select
+                        touchUi={true}
+                        themeVariant="light"
+                        value={tab}
+                        onChange={(val: any) => {
+                            switch (val.value) {
+                                case tabs[0]:
+                                    setEditEvent(null)
+                                    setTab(tabs[0])
+                                    break;
+                                case tabs[1]:
+                                    setEditEvent(null)
+                                    setTab(tabs[1])
+                                    break;
+                                case tabs[2]:
+                                    setEditEvent(null)
+                                    setTab(tabs[2])
+                                    break;
+                                case tabs[3]:
+                                    setEditEvent(null)
+                                    setTab(tabs[3])
+                                    break;
+                                default:
+                                    setEditEvent(null)
+                                    setTab(tabs[0])
+                                    break;
+                            }
+                        }}
+                        responsive={{
+                            small: {
+                                display: 'bubble'
+                            },
+                            medium: {
+                                touchUi: false,
+                            }
+                        }}
+                        data={tabOptions.map((tab: any) => {
+                            return {
+                                value: tab,
+                                text: tab === 'Agenda' ? 'To-Do' : tab
+                            }
+                        })}
+                    />
 
+                </label> : null
+            }
+            <View style={{ flex: 1, flexDirection: 'row' }} />
+            {
+                tab !== 'Add' && tab !== 'Activity' ? <TouchableOpacity
+                    onPress={() => {
+                        setTab(tabs[4])
+                    }}
+                    disabled={isCreatingEvents}
+                    style={{
+                        backgroundColor: "white",
+                        overflow: "hidden",
+                        height: 35,
+                        marginTop: 5
+                        // marginBottom: 20
+                    }}>
+                    <Text
+                        style={{
+                            textAlign: "center",
+                            lineHeight: 35,
+                            color: '#5469D4',
+                            fontSize: 12,
+                            borderWidth: 1,
+                            borderColor: '#5469D4',
+                            paddingHorizontal: 20,
+                            fontFamily: "inter",
+                            height: 35,
+                            // paddingTop: 2
+                            // width: 125,
+                            borderRadius: 15,
+                            textTransform: "uppercase"
+                        }}>
+                        ADD
+                    </Text>
+                </TouchableOpacity> : null
+            }
             {
                 tab === tabs[3] && unreadCount !== 0 ?
                     <TouchableOpacity
@@ -1406,55 +1458,6 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         </Text>
                     </TouchableOpacity>
                     : null
-            }
-            <View style={{ flex: 1, flexDirection: 'row' }} />
-            {
-                tab !== 'Add' ? <label style={{ width: 150 }}>
-                    <Select
-                        touchUi={true}
-                        themeVariant="light"
-                        value={tab}
-                        onChange={(val: any) => {
-                            switch (val.value) {
-                                case tabs[0]:
-                                    setEditEvent(null)
-                                    setTab(tabs[0])
-                                    break;
-                                case tabs[1]:
-                                    setEditEvent(null)
-                                    setTab(tabs[1])
-                                    break;
-                                case tabs[2]:
-                                    setEditEvent(null)
-                                    setTab(tabs[2])
-                                    break;
-                                case tabs[3]:
-                                    setEditEvent(null)
-                                    setTab(tabs[3])
-                                    break;
-                                default:
-                                    setEditEvent(null)
-                                    setTab(tabs[0])
-                                    break;
-                            }
-                        }}
-                        responsive={{
-                            small: {
-                                display: 'bubble'
-                            },
-                            medium: {
-                                touchUi: false,
-                            }
-                        }}
-                        data={tabOptions.map((tab: any) => {
-                            return {
-                                value: tab,
-                                text: tab === 'Agenda' ? 'To-Do' : tab
-                            }
-                        })}
-                    />
-
-                </label> : null
             }
         </View>)
     }
@@ -1549,8 +1552,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 // overflow: 'hidden',
                                                 // marginTop: 20,
                                                 marginBottom: Dimensions.get('window').width < 1024 ? 0 : 0,
-                                                borderBottomWidth: tab === 'Agenda' ? 0 : 1,
-                                                borderWidth: tab !== 'Add' && 'Activity' ? 1 : 0,
+                                                borderBottomWidth: tab === 'Agenda' ? 0 : 2,
+                                                borderWidth: tab !== 'Add' && 'Activity' ? 2 : 0,
                                                 // borderRightWidth: tab === 'Activity' ? 0 : 1,
                                                 // borderLeftWidth: tab === 'Activity' ? 0 : 1,
                                                 borderColor: '#E3E8EE',

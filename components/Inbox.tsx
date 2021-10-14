@@ -910,93 +910,6 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                             // </TouchableOpacity>
                                         }
                                         {
-                                            showNewGroup || showChat || !showDirectory ? null :
-                                                <TouchableOpacity
-                                                    onPress={() => {
-                                                        setShowNewGroup(!showNewGroup)
-                                                    }}
-                                                    style={{
-                                                        backgroundColor: 'white',
-                                                        overflow: 'hidden',
-                                                        height: 35,
-                                                        // marginLeft: 15,
-                                                        marginTop: 15,
-                                                        justifyContent: 'center',
-                                                        flexDirection: 'row'
-                                                    }}>
-                                                    <Text style={{
-                                                        textAlign: 'center',
-                                                        lineHeight: 35,
-                                                        color: '#5469D4',
-                                                        fontSize: 12,
-                                                        borderColor: '#5469D4',
-                                                        paddingHorizontal: 20,
-                                                        borderWidth: 1,
-                                                        fontFamily: 'inter',
-                                                        height: 35,
-                                                        // width: 100,
-                                                        borderRadius: 15,
-                                                        textTransform: 'uppercase'
-                                                    }}>
-                                                        New Group
-                                                    </Text>
-                                                </TouchableOpacity>
-                                        }
-                                        {
-                                            showNewGroup || showChat || showDirectory ? null :
-                                                <TouchableOpacity
-                                                    onPress={() => {
-                                                        setShowDirectory(!showDirectory)
-                                                    }}
-                                                    style={{
-                                                        backgroundColor: 'white',
-                                                        overflow: 'hidden',
-                                                        height: 35,
-                                                        // marginLeft: 15,
-                                                        marginTop: 15,
-                                                        justifyContent: 'center',
-                                                        flexDirection: 'row'
-                                                    }}>
-                                                    <Text style={{
-                                                        textAlign: 'center',
-                                                        lineHeight: 35,
-                                                        color: '#5469D4',
-                                                        fontSize: 12,
-                                                        borderColor: '#5469D4',
-                                                        paddingHorizontal: 20,
-                                                        borderWidth: 1,
-                                                        fontFamily: 'inter',
-                                                        height: 35,
-                                                        // width: 100,
-                                                        borderRadius: 15,
-                                                        textTransform: 'uppercase'
-                                                    }}>
-                                                        Contacts
-                                                    </Text>
-                                                </TouchableOpacity>
-                                        }
-                                        {/* Show user / group name if you open the chat */}
-                                        {showChat ?
-                                            <TouchableOpacity disabled={!isChatGroup} onPress={() => setViewGroup(true)} style={{ flexDirection: 'row', alignItems: 'center', flex: 1, width: '100%', paddingVertical: 7, borderBottomWidth: 1, borderBottomColor: '#f2f2fa', paddingHorizontal: 10 }} >
-                                                <Image
-                                                    style={{
-                                                        height: 50,
-                                                        width: 50,
-                                                        borderRadius: 75,
-
-                                                        // marginTop: 20,
-                                                        alignSelf: 'center'
-                                                    }}
-                                                    source={{ uri: chatImg }}
-                                                />
-                                                <Text style={{
-                                                    fontFamily: 'inter', fontSize: 16, paddingLeft: 20
-                                                }}>
-                                                    {chatName}
-                                                </Text>
-                                            </TouchableOpacity>
-                                            : <View style={{ flexDirection: 'row', flex: 1 }} />}
-                                        {
                                             showDirectory && !showChat && !showNewGroup ?
                                                 <View style={{ backgroundColor: '#fff', paddingTop: 15 }}>
                                                     <View style={{ flexDirection: 'row', backgroundColor: '#fff' }}>
@@ -1020,20 +933,104 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                             />
 
                                                         </label>
-
                                                     </View>
                                                     {/* <Text style={{ fontSize: 10, color: '#1A2036', paddingLeft: 5, paddingTop: 10 }}>
                                                         Channel
                                                     </Text> */}
                                                 </View> : null
                                         }
-                                    </View>
+                                        {/* Show user / group name if you open the chat */}
+                                        {showChat ?
+                                            <TouchableOpacity disabled={!isChatGroup} onPress={() => setViewGroup(true)} style={{ flexDirection: 'row', alignItems: 'center', flex: 1, width: '100%', paddingVertical: 7, borderBottomWidth: 1, borderBottomColor: '#f2f2fa', paddingHorizontal: 10 }} >
+                                                <Image
+                                                    style={{
+                                                        height: 50,
+                                                        width: 50,
+                                                        borderRadius: 75,
 
+                                                        // marginTop: 20,
+                                                        alignSelf: 'center'
+                                                    }}
+                                                    source={{ uri: chatImg }}
+                                                />
+                                                <Text style={{
+                                                    fontFamily: 'inter', fontSize: 16, paddingLeft: 20
+                                                }}>
+                                                    {chatName}
+                                                </Text>
+                                            </TouchableOpacity>
+                                            : null}
+                                        <View style={{ flexDirection: 'row', flex: 1 }} />
+                                        {
+                                            showNewGroup || showChat || !showDirectory ? null :
+                                                <TouchableOpacity
+                                                    onPress={() => {
+                                                        setShowNewGroup(!showNewGroup)
+                                                    }}
+                                                    style={{
+                                                        backgroundColor: "white",
+                                                        overflow: "hidden",
+                                                        height: 35,
+                                                        marginTop: 5
+                                                        // marginBottom: 20
+                                                    }}>
+                                                    <Text
+                                                        style={{
+                                                            textAlign: "center",
+                                                            lineHeight: 35,
+                                                            color: '#5469D4',
+                                                            fontSize: 12,
+                                                            borderWidth: 1,
+                                                            borderColor: '#5469D4',
+                                                            paddingHorizontal: 20,
+                                                            fontFamily: "inter",
+                                                            height: 35,
+                                                            // paddingTop: 2
+                                                            // width: 125,
+                                                            borderRadius: 15,
+                                                            textTransform: "uppercase"
+                                                        }}>
+                                                        NEW GROUP
+                                                    </Text>
+                                                </TouchableOpacity>
+                                        }
+                                        {
+                                            showNewGroup || showChat || showDirectory ? null :
+                                                <TouchableOpacity
+                                                    onPress={() => {
+                                                        setShowDirectory(!showDirectory)
+                                                    }}
+                                                    style={{
+                                                        backgroundColor: "white",
+                                                        overflow: "hidden",
+                                                        height: 35,
+                                                        marginTop: 5
+                                                        // marginBottom: 20
+                                                    }}>
+                                                    <Text
+                                                        style={{
+                                                            textAlign: "center",
+                                                            lineHeight: 35,
+                                                            color: '#5469D4',
+                                                            fontSize: 12,
+                                                            borderWidth: 1,
+                                                            borderColor: '#5469D4',
+                                                            paddingHorizontal: 20,
+                                                            fontFamily: "inter",
+                                                            height: 35,
+                                                            // paddingTop: 2
+                                                            // width: 125,
+                                                            borderRadius: 15,
+                                                            textTransform: "uppercase"
+                                                        }}>
+                                                        CONTACTS
+                                                    </Text>
+                                                </TouchableOpacity>
+                                        }
+                                    </View>
                                     {
                                         viewGroup ?
-                                            <View style={{ marginTop: 30 }}>
-
-
+                                            <View style={{ marginTop: 20 }}>
                                                 {/*  */}
                                                 {
                                                     userId === groupCreatedBy ?
@@ -1433,13 +1430,13 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                         showDirectory ?
                                                             <View style={{
                                                                 flex: 1, width: '100%',
-                                                                borderWidth: 1,
+                                                                borderWidth: 2,
                                                                 // borderRightWidth: 0,
                                                                 // borderLeftWidth: 0,
                                                                 borderRadius: 0,
                                                                 borderColor: '#E3E8EE',
                                                                 overflow: 'hidden',
-                                                                marginTop: 30
+                                                                marginTop: 20
                                                             }}>
                                                                 <ScrollView contentContainerStyle={{
                                                                     maxHeight: windowHeight - 215,
@@ -1472,8 +1469,8 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                                 <View style={{ backgroundColor: '#fff', padding: 5 }}>
                                                                                     <Image
                                                                                         style={{
-                                                                                            height: 25,
-                                                                                            width: 25,
+                                                                                            height: 35,
+                                                                                            width: 35,
                                                                                             marginTop: 5,
                                                                                             marginBottom: 5,
                                                                                             borderRadius: 75,
@@ -1502,13 +1499,13 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                 </ScrollView>
                                                             </View>
                                                             :
-                                                            <View style={{ backgroundColor: '#fff', paddingTop: 35 }}>
+                                                            <View style={{ backgroundColor: '#fff', paddingTop: 20 }}>
                                                                 <ScrollView
                                                                     showsVerticalScrollIndicator={false}
                                                                     horizontal={false}
                                                                     // style={{ height: '100%' }}
                                                                     contentContainerStyle={{
-                                                                        borderWidth: 1,
+                                                                        borderWidth: 2,
                                                                         // borderRightWidth: 0,
                                                                         // borderLeftWidth: 0,
                                                                         borderColor: '#E3E8EE',
@@ -1565,8 +1562,8 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                                     <View style={{ backgroundColor: '#fff', padding: 5 }}>
                                                                                         <Image
                                                                                             style={{
-                                                                                                height: 25,
-                                                                                                width: 25,
+                                                                                                height: 35,
+                                                                                                width: 35,
                                                                                                 marginTop: 5,
                                                                                                 marginBottom: 5,
                                                                                                 borderRadius: 75,

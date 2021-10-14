@@ -186,7 +186,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
         const isOwner = ownersMap[index]
 
 
-        return (<View style={{ flexDirection: "row", marginBottom: 20, paddingTop: 5 }}>
+        return (<View style={{ flexDirection: "row", marginBottom: 20, paddingTop: 10 }}>
             {isOwner ? null : <TouchableOpacity
                 style={{
                     justifyContent: "center",
@@ -198,11 +198,11 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     setActiveTabMap(temp)
                 }}>
                 <Text style={activeTab === 'overview' ? styles.allGrayFill : styles.all}>
-                    <Ionicons name='clipboard-outline' size={15} />
+                    <Ionicons name='clipboard-outline' size={20} />
                 </Text>
-                <Text style={activeTab === 'overview' ? styles.allGrayFill : styles.all}>
+                {/* <Text style={activeTab === 'overview' ? styles.allGrayFill : styles.all}>
                     Overview
-                </Text>
+                </Text> */}
             </TouchableOpacity>}
             <TouchableOpacity
                 style={{
@@ -215,11 +215,11 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     setActiveTabMap(temp)
                 }}>
                 <Text style={activeTab === 'scores' ? styles.allGrayFill : styles.all}>
-                    <Ionicons name='stats-chart-outline' size={15} />
+                    <Ionicons name='stats-chart-outline' size={20} />
                 </Text>
-                <Text style={activeTab === 'scores' ? styles.allGrayFill : styles.all}>
+                {/* <Text style={activeTab === 'scores' ? styles.allGrayFill : styles.all}>
                     Scores
-                </Text>
+                </Text> */}
             </TouchableOpacity>
             {/* <TouchableOpacity
                 style={{
@@ -246,11 +246,11 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     setActiveTabMap(temp)
                 }}>
                 <Text style={activeTab === 'attendance' ? styles.allGrayFill : styles.all}>
-                    <Ionicons name='hand-left-outline' size={15} />
+                    <Ionicons name='calendar-outline' size={20} />
                 </Text>
-                <Text style={activeTab === 'attendance' ? styles.allGrayFill : styles.all}>
+                {/* <Text style={activeTab === 'attendance' ? styles.allGrayFill : styles.all}>
                     Attendance
-                </Text>
+                </Text> */}
             </TouchableOpacity>
         </View>)
     }
@@ -538,7 +538,7 @@ const styles = StyleSheet.create({
         fontSize: 10,
         color: '#50566B',
         height: 20,
-        paddingHorizontal: 5,
+        paddingHorizontal: 10,
         backgroundColor: '#fff',
         // textTransform: 'uppercase',
         lineHeight: 20,
@@ -549,7 +549,7 @@ const styles = StyleSheet.create({
         fontSize: 10,
         color: '#5469D4',
         height: 20,
-        paddingHorizontal: 5,
+        paddingHorizontal: 10,
         backgroundColor: '#fff',
         // textTransform: 'uppercase',
         lineHeight: 20,

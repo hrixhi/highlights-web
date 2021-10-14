@@ -367,7 +367,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
         <View style={styles.screen} key={1}>
             <View style={{ width: '100%', maxWidth: 1000, paddingBottom: 25 }}>
                 <View style={{ flexDirection: 'row', width: '100%', height: 50, marginBottom: 10 }}>
-                    <View style={{ flexDirection: 'row' }}>
+                    <View style={{ flexDirection: 'row', flex: 1 }}>
                         {
                             showCreate ? <TouchableOpacity
                                 onPress={() => {
@@ -410,7 +410,6 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     marginTop: 5,
                                     justifyContent: 'center',
                                     flexDirection: 'row',
-                                    // alignSelf: 'flex-end'
                                 }}>
                                 <Text style={{
                                     textAlign: 'center',
@@ -439,7 +438,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                     }}>
                         <View
                             style={{
-                                borderWidth: channels.length === 0 ? 0 : 1,
+                                borderWidth: channels.length === 0 ? 0 : 2,
                                 borderColor: '#E3E8EE',
                                 overflow: 'hidden',
                                 borderRadius: 0
@@ -456,7 +455,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             return sub.channelId === channel._id
                                         })
 
-                                        let role = 'Subscribed';
+                                        let role = 'Viewer';
 
                                         // Check if user is a moderator or the owner
                                         if (subscribed && userId !== "") {
@@ -464,9 +463,9 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             const isModerator = channel.owners.includes(userId);
 
                                             if (channel.channelCreator === userId) {
-                                                role = "Owner";
+                                                role = "Editor";
                                             } else if (isModerator) {
-                                                role = "Moderator"
+                                                role = "Editor"
                                             }
 
                                         }
@@ -483,8 +482,8 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             <View style={{ backgroundColor: '#fff', padding: 5 }}>
                                                 <Image
                                                     style={{
-                                                        height: 25,
-                                                        width: 25,
+                                                        height: 35,
+                                                        width: 35,
                                                         marginTop: 5,
                                                         marginBottom: 5,
                                                         borderRadius: 75,

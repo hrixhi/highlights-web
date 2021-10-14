@@ -248,9 +248,9 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
         const temp: any = {}
         const tempCat: any = {}
         const mycues: any[] = []
-        temp['My Notes'] = []
+        temp['My Workspace'] = []
         const tempCollapse: any = {}
-        tempCollapse['My Notes'] = false
+        tempCollapse['My Workspace'] = false
         const tempSelected: any = {}
 
         const tempFolders: any = {}
@@ -352,13 +352,13 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
             }
         })
 
-        temp['My Notes'] = mycues
+        temp['My Workspace'] = mycues
         if (!cat['']) {
             delete cat['']
         }
-        tempCat['My Notes'] = Object.keys(cat)
-        tempSelected['My Notes'] = ''
-        tempIndexes['My Notes'] = 0
+        tempCat['My Workspace'] = Object.keys(cat)
+        tempSelected['My Workspace'] = ''
+        tempIndexes['My Workspace'] = 0
 
         setCueMap(temp)
         setCollapseMap(tempCollapse)
@@ -769,7 +769,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
         return (<View style={{
             flexDirection: "row", marginBottom: 30,
-            paddingTop: 5,
+            paddingTop: 10,
             //paddingVertical: 20 
         }}>
             <TouchableOpacity
@@ -783,11 +783,11 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     setIndexMap(temp)
                 }}>
                 <Text style={activeTab === 'Content' ? styles.allGrayFill1 : styles.all1}>
-                    <Ionicons name='book-outline' size={15} />
+                    <Ionicons name='library-outline' size={20} />
                 </Text>
-                <Text style={activeTab === 'Content' ? styles.allGrayFill1 : styles.all1}>
+                {/* <Text style={activeTab === 'Content' ? styles.allGrayFill1 : styles.all1}>
                     Library
-                </Text>
+                </Text> */}
             </TouchableOpacity>
             <TouchableOpacity
                 style={{
@@ -800,11 +800,11 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     setIndexMap(temp)
                 }}>
                 <Text style={activeTab === 'Meet' ? styles.allGrayFill1 : styles.all1}>
-                    <Ionicons name='videocam-outline' size={15} />
+                    <Ionicons name='videocam-outline' size={20} />
                 </Text>
-                <Text style={activeTab === 'Meet' ? styles.allGrayFill1 : styles.all1}>
+                {/* <Text style={activeTab === 'Meet' ? styles.allGrayFill1 : styles.all1}>
                     Meet
-                </Text>
+                </Text> */}
             </TouchableOpacity>
             <TouchableOpacity
                 style={{
@@ -817,11 +817,11 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     setIndexMap(temp)
                 }}>
                 <Text style={activeTab === 'Discuss' ? styles.allGrayFill1 : styles.all1}>
-                    <Ionicons name='chatbubbles-outline' size={15} />
+                    <Ionicons name='chatbubbles-outline' size={20} />
                 </Text>
-                <Text style={activeTab === 'Discuss' ? styles.allGrayFill1 : styles.all1}>
+                {/* <Text style={activeTab === 'Discuss' ? styles.allGrayFill1 : styles.all1}>
                     Discuss
-                </Text>
+                </Text> */}
             </TouchableOpacity>
             {
                 key.split('-SPLIT-')[2] === userId ?
@@ -836,11 +836,11 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             setIndexMap(temp)
                         }}>
                         <Text style={activeTab === 'Settings' ? styles.allGrayFill1 : styles.all1}>
-                            <Ionicons name='cog-outline' size={15} />
+                            <Ionicons name='build-outline' size={20} />
                         </Text>
-                        <Text style={activeTab === 'Settings' ? styles.allGrayFill1 : styles.all1}>
+                        {/* <Text style={activeTab === 'Settings' ? styles.allGrayFill1 : styles.all1}>
                             Settings
-                        </Text>
+                        </Text> */}
                     </TouchableOpacity>
                     : null
             }
@@ -854,7 +854,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
         })
         setCueIds(temp)
         setFolderId(cue.folderId)
-        setEditFolderChannelId(swiperCue.channelId ? swiperCue.channelId : 'My Notes')
+        setEditFolderChannelId(swiperCue.channelId ? swiperCue.channelId : 'My Workspace')
     }, [folderIdsMap])
 
     const width = Dimensions.get("window").width;
@@ -1013,7 +1013,8 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             paddingTop: 10,
                                             fontFamily: 'inter',
                                             flex: 1,
-                                            lineHeight: 16
+                                            lineHeight: 16,
+                                            color: collapseMap[key] ? '#5469D4' : '#1A2036',
                                         }}>
                                             <View style={{
                                                 width: 14,
@@ -1026,7 +1027,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         </Text>
                                     </TouchableOpacity>
                                     {collapseMap[key] ? renderTabs(key) : null}
-                                    <View style={{ backgroundColor: '#fff', paddingTop: 5, paddingLeft: 5 }}>
+                                    <View style={{ backgroundColor: '#fff', paddingTop: 5, paddingLeft: 15 }}>
                                         <View style={{ flexDirection: 'row', justifyContent: 'center', display: 'flex', backgroundColor: '#fff' }}>
                                             <TouchableOpacity
                                                 onPress={() => {
@@ -1065,7 +1066,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 fontFamily: 'inter',
                                                 flex: 1,
                                                 lineHeight: 16,
-                                                color: '#5469D4'
+                                                color: collapseMap[key] ? '#5469D4' : '#50566B'
                                             }}>
                                             <View style={{
                                                 width: 14,
@@ -1078,7 +1079,11 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         </Text>
                                     </TouchableOpacity>
                                     <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', backgroundColor: '#fff', paddingTop: 10 }}>
-                                        <View style={{ flexDirection: 'row', justifyContent: 'center', display: 'flex', backgroundColor: '#fff' }}>
+                                        <View style={{
+                                            flexDirection: 'row',
+                                            paddingLeft: 15,
+                                            justifyContent: 'center', display: 'flex', backgroundColor: '#fff'
+                                        }}>
                                             <TouchableOpacity
                                                 onPress={() => {
                                                     const tempCollapse = JSON.parse(JSON.stringify(collapseMap))
@@ -1102,7 +1107,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 (
                                     collapseMap[key] ?
                                         <View
-                                            style={{ width: '100%', paddingBottom: 20 }}
+                                            style={{ width: '100%', paddingBottom: 100 }}
                                             key={editFolderChannelId.toString() + cueIds.toString() + cueMap.toString()}>
                                             {
                                                 indexMap[key] !== 0 ?
@@ -1206,8 +1211,8 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                     cueIds={cueIds}
                                                                                     onLongPress={() => {
                                                                                         setCueIds([])
-                                                                                        setEditFolderChannelId(cue.channelId ? cue.channelId : 'My Notes')
-                                                                                        // alert(cue.channelId ? cue.channelId : 'My Notes')
+                                                                                        setEditFolderChannelId(cue.channelId ? cue.channelId : 'My Workspace')
+                                                                                        // alert(cue.channelId ? cue.channelId : 'My Workspace')
                                                                                     }}
                                                                                     add={() => {
                                                                                         const temp = JSON.parse(JSON.stringify(cueIds))
@@ -1256,8 +1261,8 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     </View>
                 })
             }
-        </ScrollView>
-    </View>
+        </ScrollView >
+    </View >
 
     return (
         <View style={{
@@ -1266,7 +1271,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
             <View style={{
                 backgroundColor: '#f7fafc',
                 borderColor: '#E3E8EE',
-                borderBottomWidth: 1,
+                borderBottomWidth: 2,
                 overflow: 'hidden',
                 paddingHorizontal: Dimensions.get('window').width < 1024 ? 20 : 0,
                 flexDirection: 'row',
@@ -1285,8 +1290,17 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     flex: 1,
                     height: 48
                 }}>
-                    <View style={{ flexDirection: 'row', backgroundColor: '#f7fafc', flex: 1, height: 50, paddingTop: 0 }}>
-                        <Image
+                    {
+                        Dimensions.get('window').width < 1024 ?
+                            null :
+                            <View style={{
+                                flexDirection: 'row',
+                                backgroundColor: '#f7fafc',
+                                flex: 1,
+                                height: 50,
+                                paddingTop: 0
+                            }}>
+                                {/* <Image
                             source={logo}
                             style={{
                                 width: 50,
@@ -1295,10 +1309,8 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 marginRight: 0
                             }}
                             resizeMode={'contain'}
-                        />
-                        {
-                            Dimensions.get('window').width < 1024 ?
-                                null : <View style={{ flexDirection: 'row', paddingLeft: 30, flex: 1, backgroundColor: '#f7fafc', paddingTop: 1 }}>
+                        /> */}
+                                <View style={{ flexDirection: 'row', paddingRight: 30, flex: 1, backgroundColor: '#f7fafc', paddingTop: 1 }}>
                                     {
                                         props.options.map((op: any) => {
                                             if (op === 'Settings' || op === 'Channels') {
@@ -1317,7 +1329,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     props.setOption(op)
                                                 }}>
                                                 <Text style={op === props.option ? styles.allGrayFill : styles.all}>
-                                                    {op === 'Classroom' ? 'Classroom' : (
+                                                    {op === 'Classroom' ? 'Workspace' : (
                                                         op === 'Performance' ? 'Progress' : (op === 'To Do' ? 'Agenda' : op)
                                                     )}
                                                 </Text>
@@ -1325,21 +1337,14 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         })
                                     }
                                 </View>
-                        }
-                    </View>
+                            </View>
+                    }
                     <View style={{
                         flexDirection: 'row',
-                        justifyContent: Dimensions.get('window').width < 1024 ? 'flex-start' : 'flex-end',
-                        backgroundColor: '#f7fafc'
+                        // justifyContent: Dimensions.get('window').width < 1024 ? 'flex-start' : 'flex-end',
+                        backgroundColor: '#f7fafc',
+                        width: Dimensions.get('window').width < 1024 ? '100%' : 'auto',
                     }}>
-                        {props.option === "To Do" || props.option === "Classroom" ? <TouchableOpacity style={{ backgroundColor: 'none' }} onPress={() => {
-                            setShowFilterPopup(true)
-                        }}>
-                            <Text style={{ fontSize: 10, color: '#50566B', paddingTop: 9, textAlign: 'right' }}>
-                                Filter <Ionicons name="chevron-down-outline" size={10} />
-                            </Text>
-
-                        </TouchableOpacity> : null}
                         <TextInput
                             value={searchTerm}
                             style={{
@@ -1347,20 +1352,39 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 color: '#50566B',
                                 borderColor: "#E3E8EE",
                                 borderBottomWidth: 1,
-                                fontSize: 11,
+                                fontSize: 10,
                                 padding: 5,
                                 // paddingVertical: 8,
-                                marginTop: -10,
+                                marginTop: -7,
+                                marginRight: 2,
                                 flex: 1, flexDirection: 'row',
-                                marginLeft: 20,
-                                marginRight: 20,
+                                // marginLeft: 20,
+                                // marginRight: 25,
                                 maxWidth: 200
                             }}
                             placeholder={"🔍"}
                             onChangeText={(val) => setSearchTerm(val)}
-                            placeholderTextColor={"#E3E8EE"}
-                        /> <Menu
-                            style={{ marginLeft: 0, right: 0, marginTop: -7 }}
+                            placeholderTextColor={"#50566B"}
+                        />
+                        {
+                            Dimensions.get('window').width < 1024 ?
+                                <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#f7fafc' }} />
+                                : null
+                        }
+                        {props.option === "To Do" || props.option === "Classroom" ?
+                            <TouchableOpacity style={{ backgroundColor: 'none', marginLeft: 20 }} onPress={() => {
+                                setShowFilterPopup(true)
+                            }}>
+                                <Text style={{ fontSize: 10, color: '#50566B', paddingTop: 9, textAlign: 'right' }}>
+                                    Filter <Ionicons name="chevron-down-outline" size={10} />
+                                </Text>
+
+                            </TouchableOpacity> : null}
+                        <Menu
+                            style={{
+                                marginLeft: 20,
+                                right: 0, marginTop: -7
+                            }}
                             onSelect={(op: any) => props.setOption(op)}>
                             <MenuTrigger>
                                 <Image
@@ -1383,19 +1407,19 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     shadowOpacity: 0,
                                     borderWidth: 1,
                                     borderColor: '#E3E8EE',
-                                    maxWidth: 125
+                                    maxWidth: 150
                                 }
                             }}>
                                 <MenuOption
                                     value={'Channels'}>
                                     <Text style={{ fontFamily: 'inter' }}>
-                                        <Ionicons name='settings-outline' size={12} />&nbsp;&nbsp;Courses
+                                        <Ionicons name='file-tray-stacked-outline' size={12} />&nbsp;&nbsp;Workspaces
                                     </Text>
                                 </MenuOption>
                                 <MenuOption
                                     value={'Settings'}>
                                     <Text style={{ fontFamily: 'inter' }}>
-                                        <Ionicons name='person-circle-outline' size={12} />&nbsp;&nbsp;Account
+                                        <Ionicons name='person-circle-outline' size={12} />&nbsp;&nbsp;Profile
                                     </Text>
                                 </MenuOption>
                             </MenuOptions>
@@ -1584,17 +1608,17 @@ export default React.memo(Dashboard, (prev, next) => {
 
 const styleObject: any = () => StyleSheet.create({
     all: {
-        fontSize: 12,
+        fontSize: 14,
         color: '#1A2036',
         height: 24,
         paddingHorizontal: 15,
         backgroundColor: '#f7fafc',
         lineHeight: 24,
         fontFamily: 'inter',
-        textTransform: 'uppercase'
+        // textTransform: 'uppercase'
     },
     allGrayFill: {
-        fontSize: 12,
+        fontSize: 14,
         color: '#fff',
         paddingHorizontal: 15,
         borderRadius: 12,
@@ -1602,28 +1626,28 @@ const styleObject: any = () => StyleSheet.create({
         lineHeight: 24,
         height: 24,
         fontFamily: 'inter',
-        textTransform: 'uppercase'
+        // textTransform: 'uppercase'
     },
     all1: {
         fontSize: 10,
         color: '#50566B',
         height: 20,
-        paddingHorizontal: 5,
+        paddingHorizontal: 15,
         backgroundColor: '#fff',
         // textTransform: 'uppercase',
         lineHeight: 20,
-        // fontFamily: 'inter',
+        fontFamily: 'inter',
         textAlign: 'center'
     },
     allGrayFill1: {
         fontSize: 10,
         color: '#5469D4',
         height: 20,
-        paddingHorizontal: 5,
+        paddingHorizontal: 15,
         backgroundColor: '#fff',
         // textTransform: 'uppercase',
         lineHeight: 20,
-        // fontFamily: 'inter',
+        fontFamily: 'inter',
         textAlign: 'center'
     },
     col: {

@@ -66,7 +66,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             props.cue.starred ?
                                 <Text style={{
                                     textAlign: 'right',
-                                    lineHeight: 35,
+                                    lineheight: 35,
                                     marginTop: -20,
                                     paddingRight: 30,
                                     position: 'absolute',
@@ -132,6 +132,18 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     </View>
                 </View>
             </TouchableOpacity>
+            <View
+                style={{
+                    backgroundColor: colorChoices[props.cue.color],
+                    flex: 1,
+                    borderLeftWidth: 2,
+                    borderColor: '#E3E8EE',
+                    opacity: 0.9
+                    // borderTopLeftRadius: 8,
+                    // borderBottomLeftRadius: 8,
+                }}
+            >
+            </View>
         </View>
     );
 }
@@ -143,21 +155,24 @@ export default React.memo(Card, (prev, next) => {
 const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.create({
     swiper: {
         height: '100%',
-        borderRadius: 10,
+        // borderRadius: 10,
         overflow: 'hidden',
         maxWidth: 175,
-        width: '100%'
+        width: '100%',
+        borderWidth: 2,
+        borderColor: '#E3E8EE',
+        flexDirection: 'row'
     },
     card: {
         maxWidth: 210,
         height: '100%',
-        borderRadius: 10,
-        width: '100%',
+        // borderTopRightRadius: 10,
+        // borderBottomRightRadius: 10,
+        // borderTop
+        width: '95%',
         padding: 10,
         paddingHorizontal: 10,
         backgroundColor: '#fff',
-        borderWidth: 1,
-        borderColor: '#E3E8EE'
     },
     flipCard: {
         height: '100%',
@@ -217,7 +232,7 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
         lineHeight: 20,
         flex: 1,
         marginTop: 5,
-        color: col
+        color: '#50566B'
     },
     titleFlip: {
         color: colorScheme === 'light' ? '#fff' : '#1A2036',

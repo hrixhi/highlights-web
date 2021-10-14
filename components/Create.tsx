@@ -78,7 +78,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
   const [channels, setChannels] = useState<any[]>([]);
   const [channelOptions, setChannelOptions] = useState<any[]>([]);
   const [channelId, setChannelId] = useState<any>("");
-  const [selectedChannel, setSelectedChannel] = useState<any>("My Notes")
+  const [selectedChannel, setSelectedChannel] = useState<any>("My Workspace")
   const [endPlayAt, setEndPlayAt] = useState(
     new Date(current.getTime() + 1000 * 60 * 60)
   );
@@ -562,8 +562,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
           if (res.data.channel.findByUserId) {
             setChannels(res.data.channel.findByUserId);
             const options = [{
-              value: 'My Notes',
-              text: 'My Notes'
+              value: 'My Workspace',
+              text: 'My Workspace'
             }];
 
             res.data.channel.findByUserId.map((channel: any) => {
@@ -1562,8 +1562,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
 
                             const channel = val.value;
 
-                            if (channel === "My Notes") {
-                              setSelectedChannel("My Notes")
+                            if (channel === "My Workspace") {
+                              setSelectedChannel("My Workspace")
                               setChannelId("");
                               setCustomCategories(localCustomCategories);
                               setCustomCategory("None");

@@ -1890,7 +1890,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         }
       </View>
       {
-        showHome && !reLoading ?
+        showHome && !reLoading && option === 'Classroom' ?
           <TouchableOpacity
             onPress={() => {
               setCueId('')
@@ -1916,7 +1916,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               right: 0,
               justifyContent: 'center',
               bottom: 0,
-              width: 56, height: 56, borderRadius: 27, backgroundColor: '#5469D4',
+              width: 54, height: 54, borderRadius: 27, backgroundColor: '#5469D4',
               borderColor: '#E3E8EE',
               borderWidth: 1
             }}
@@ -1933,7 +1933,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             zIndex: showLoginWindow ? 40 : 1000,
             backgroundColor: '#f7fafc',
             borderColor: '#E3E8EE',
-            borderTopWidth: 1,
+            borderTopWidth: 2,
             alignSelf: 'flex-end',
             width: '100%',
             paddingTop: 10,
@@ -1967,7 +1967,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 <Ionicons name='school-outline' size={22} color={option === 'Classroom' ? '#5469D4' : '#1A2036'} />
               </Text>
               <Text style={{ fontSize: 11, color: option === 'Classroom' ? '#5469D4' : '#1A2036', paddingTop: 5, textAlign: 'center' }}>
-                Classroom
+                Workspace
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
