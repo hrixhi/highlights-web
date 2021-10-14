@@ -75,6 +75,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   const [loadDiscussionForChannelId, setLoadDiscussionForChannelId] = useState('');
   const [openChannelId, setOpenChannelId] = useState('');
 
+  const [tab, setTab] = useState('Agenda')
+  const [showDirectory, setShowDirectory] = useState<any>(false)
 
   // Notifications count for Top Bar
   const [unreadDiscussionThreads, setUnreadDiscussionThreads] = useState(0)
@@ -101,7 +103,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   const [filterEnd, setFilterEnd] = useState<any>(null)
 
   const [option, setOption] = useState('To Do')
-  const [options] = useState(['To Do', 'Classroom', 'Performance', 'Inbox', 'Channels', 'Settings'])
+  const [options] = useState(['To Do', 'Classroom', 'Inbox', 'Performance', 'Channels', 'Settings'])
 
   const [navOptions] = useState([
     {
@@ -1231,7 +1233,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         setChannelId('')
       }
     }
-    setOption('To Do')
+    // setOption('To Do')
     loadData(true)
   }, [sheetRef, fadeAnimation, modalType, filterChoice])
 
@@ -1415,7 +1417,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
   console.log("Option", option);
 
   return (
-    <View style={styles(channelId).container} key={showHome.toString() + option.toString()}>
+    <View style={styles(channelId).container} key={showHome.toString() + option.toString() + tab.toString()}>
       {
         showLoginWindow ? <View style={{
           width: '100%',
@@ -1608,6 +1610,10 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                   <ActivityIndicator color={'#50566B'} />
                 </View> :
                 <Dashboard
+                  setTab={(val: any) => setTab(val)}
+                  tab={tab}
+                  showDirectory={showDirectory}
+                  setShowDirectory={(val: any) => setShowDirectory(val)}
                   setOption={(op: any) => setOption(op)}
                   option={option}
                   options={options}
@@ -1642,7 +1648,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                   openUpdate={(index: any, key: any, pageNumber: any, _id: any, by: any, cId: any) => openUpdate(index, key, pageNumber, _id, by, cId)}
                   calendarCues={cues}
                   openCueFromCalendar={openCueFromCalendar}
-                  key={option.toString() + showHome.toString()}
+                  key={option.toString() + showHome.toString() + tab.toString() + showDirectory.toString()}
                   openDiscussionFromActivity={(channelId: string) => {
                     setOption('Classroom')
                     setLoadDiscussionForChannelId(channelId)
@@ -1748,91 +1754,6 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 meetingOn={meetingOn}
               />
             </View>
-          // FULL MENU
-          // <View style={{
-          //   width: dimensions.window.width,
-          //   height: dimensions.window.height,
-          //   borderColor: '#E3E8EE',
-          //   backgroundColor: '#f7fafc',
-          // }}>
-          //   <View style={{
-          //     backgroundColor: '#f7fafc',
-          //     width: dimensions.window.width,
-          //     height: dimensions.window.height - 30,
-          //     maxWidth: 1000, alignSelf: 'center'
-          //   }}>
-          //     <BottomBar
-          //       cues={dateFilteredCues}
-          //       openWalkthrough={() => openModal('Walkthrough')}
-          //       openCalendar={() => openModal('Calendar')}
-          //       openCreate={() => openModal('Create')}
-          //       openChannels={() => openModal('Channels')}
-          //       openProfile={() => openModal('Profile')}
-          //       closeModal={() => closeModal()}
-          //       showHome={() => {
-          //         setShowHome(true)
-          //         setMenuCollapsed(true)
-          //       }}
-          //       hideMenu={() => setMenuCollapsed(true)}
-          //       showMenu={() => setMenuCollapsed(false)}
-          //       filterChoice={filterChoice}
-          //       handleFilterChange={(choice: any) => handleFilterChange(choice)}
-          //       key={Math.random()}
-          //       customCategories={customCategories}
-          //       subscriptions={subscriptions}
-          //       setChannelId={(id: string) => setChannelId(id)}
-          //       setChannelCreatedBy={(id: any) => setChannelCreatedBy(id)}
-          //       setChannelFilterChoice={(choice: string) => setChannelFilterChoice(choice)}
-          //       channelFilterChoice={channelFilterChoice}
-          //       filterStart={filterStart}
-          //       filterEnd={filterEnd}
-          //       setFilterStart={(s: any) => setFilterStart(s)}
-          //       setFilterEnd={(e: any) => setFilterEnd(e)}
-          //       channelId={channelId}
-          //       channelCreatedBy={channelCreatedBy}
-          //       loadData={() => loadData()}
-          //       // setChannelFilterChoice={(choice: any) => setChannelFilterChoice(choice)}
-          //       openDiscussion={() => openModal('Discussion')}
-          //       openSubscribers={() => openModal('Subscribers')}
-          //       openGrades={() => openModal('Grades')}
-          //       unsubscribe={() => unsubscribeChannel()}
-          //       deleteChannel={() => deleteChannel()}
-          //       openMeeting={() => {
-          //         openModal('Meeting')
-          //         setMenuCollapsed(true)
-          //       }}
-          //       openChannelSettings={() => {
-          //         openModal('ChannelSettings')
-          //         setMenuCollapsed(true)
-          //       }}
-          //       unreadDiscussionThreads={unreadDiscussionThreads}
-          //       unreadMessages={unreadMessages}
-          //       meetingOn={meetingOn}
-          //     />
-          //     {
-          //       reLoading ? <View style={[styles(channelId).activityContainer, styles(channelId).horizontal]}>
-          //         <ActivityIndicator color={'#50566B'} />
-          //       </View>
-          //         : <View style={[styles(channelId).activityContainer, styles(channelId).horizontal]}>
-          //           <CardsList
-          //             pageNumber={pageNumber}
-          //             fadeAnimation={fadeAnimation}
-          //             key={JSON.stringify(filterChoice) + JSON.stringify(channelId) + JSON.stringify(dateFilteredCues) + JSON.stringify(channelFilterChoice)}
-          //             cues={dateFilteredCues}
-          //             channelId={channelId}
-          //             createdBy={channelCreatedBy}
-          //             filterChoice={filterChoice}
-          //             openUpdate={(index: any, key: any, pageNumber: any, _id: any, by: any, cId: any) => {
-          //               openUpdate(index, key, pageNumber, _id, by, cId)
-          //               setMenuCollapsed(true)
-          //             }}
-          //             channelFilterChoice={channelFilterChoice}
-          //             subscriptions={subscriptions}
-          //           />
-          //         </View>
-          //     }
-          //   </View>
-          // </View >
         }
         {
           (!menuCollapsed && dimensions.window.width < 1024) || showHome ? null :
@@ -1890,39 +1811,57 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         }
       </View>
       {
-        showHome && !reLoading && option === 'Classroom' ?
+        showHome && !reLoading && (
+          (option === 'Classroom')
+          || (option === 'To Do' && tab !== 'Add')
+          || (option === 'Inbox' && !showDirectory)
+        ) ?
           <TouchableOpacity
             onPress={() => {
-              setCueId('')
-              setModalType('')
-              setCreatedBy('')
-              setChannelFilterChoice('All')
-              if (modalType === 'Create' || modalType === 'Update') {
-                fadeAnimation.setValue(0)
-                if (modalType === 'Update' && filterChoice === 'All-Channels') {
-                  setChannelId('')
+              if (option === 'Classroom') {
+                setCueId('')
+                setModalType('')
+                setCreatedBy('')
+                setChannelFilterChoice('All')
+                if (modalType === 'Create' || modalType === 'Update') {
+                  fadeAnimation.setValue(0)
+                  if (modalType === 'Update' && filterChoice === 'All-Channels') {
+                    setChannelId('')
+                  }
                 }
+                loadData(true)
+                openModal('Create')
+                setShowHome(false)
+                setMenuCollapsed(true)
+              } else if (option === 'To Do') {
+                setTab('Add')
+              } else {
+                setShowDirectory(true)
               }
-              loadData(true)
-              openModal('Create')
-              setShowHome(false)
-              setMenuCollapsed(true)
             }}
             style={{
               position: 'absolute',
               marginRight: Dimensions.get('window').width >= 1100 ? (((Dimensions.get('window').width - 1100) / 2) - 25) : 20,
-              marginBottom: Dimensions.get('window').width < 1024 ? 85 : 25,
+              marginBottom: Dimensions.get('window').width < 1024 ? 77 : 25,
               zIndex: showLoginWindow ? 40 : 600,
               right: 0,
               justifyContent: 'center',
               bottom: 0,
-              width: 54, height: 54, borderRadius: 27, backgroundColor: '#5469D4',
+              width: 56, height: 56, borderRadius: 28, backgroundColor: '#5469D4',
               borderColor: '#E3E8EE',
-              borderWidth: 1
+              borderWidth: 2
             }}
           >
             <Text style={{ color: '#fff', width: '100%', textAlign: 'center' }}>
-              <Ionicons name='pencil-outline' size={25} />
+              {
+                (option === 'Classroom') ?
+                  <Ionicons name='pencil-outline' size={25} />
+                  : (
+                    option === 'To Do' ? <Ionicons name='add-outline' size={35} />
+                      : <Ionicons name='person-add-outline' size={21} />
+                  )
+              }
+
             </Text>
           </TouchableOpacity> : null
       }
@@ -1933,72 +1872,41 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             zIndex: showLoginWindow ? 40 : 1000,
             backgroundColor: '#f7fafc',
             borderColor: '#E3E8EE',
-            borderTopWidth: 2,
-            alignSelf: 'flex-end',
+            borderBottomWidth: 2,
+            // alignSelf: 'flex-end',
             width: '100%',
-            paddingTop: 10,
+            paddingTop: 14,
             paddingBottom: 10,
             paddingHorizontal: Dimensions.get('window').width < 1024 ? 20 : 40,
             flexDirection: 'row',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            height: 54
           }}>
-            <TouchableOpacity
-              style={{
-                backgroundColor: '#f7fafc',
-                width: '25%'
-              }}
-              onPress={() => setOption('To Do')}
-            >
-              <Text style={{ textAlign: 'center' }}>
-                <Ionicons name='list-outline' size={21} color={option === 'To Do' ? '#5469D4' : '#1A2036'} />
-              </Text>
-              <Text style={{ fontSize: 11, color: option === 'To Do' ? '#5469D4' : '#1A2036', paddingTop: 6, textAlign: 'center' }}>
-                Agenda
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{
-                backgroundColor: '#f7fafc',
-                width: '25%'
-              }}
-              onPress={() => setOption('Classroom')}
-            >
-              <Text style={{ textAlign: 'center' }}>
-                <Ionicons name='school-outline' size={22} color={option === 'Classroom' ? '#5469D4' : '#1A2036'} />
-              </Text>
-              <Text style={{ fontSize: 11, color: option === 'Classroom' ? '#5469D4' : '#1A2036', paddingTop: 5, textAlign: 'center' }}>
-                Workspace
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{
-                backgroundColor: '#f7fafc',
-                width: '25%'
-              }}
-              onPress={() => setOption('Performance')}
-            >
-              <Text style={{ textAlign: 'center' }}>
-                <Ionicons name='speedometer-outline' size={22} color={option === 'Performance' ? '#5469D4' : '#1A2036'} />
-              </Text>
-              <Text style={{ fontSize: 11, color: option === 'Performance' ? '#5469D4' : '#1A2036', paddingTop: 5, textAlign: 'center' }}>
-                Progress
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{
-                backgroundColor: '#f7fafc',
-                //marginHorizontal: 20,
-                width: '25%'
-              }}
-              onPress={() => setOption('Inbox')}
-            >
-              <Text style={{ textAlign: 'center' }}>
-                <Ionicons name='chatbubble-outline' size={21} color={option === 'Inbox' ? '#5469D4' : '#1A2036'} />
-              </Text>
-              <Text style={{ fontSize: 11, color: option === 'Inbox' ? '#5469D4' : '#1A2036', paddingTop: 6, textAlign: 'center' }}>
-                Inbox
-              </Text>
-            </TouchableOpacity>
+            {
+              options.map((op: any) => {
+                if (op === 'Settings' || op === 'Channels') {
+                  return
+                }
+                return <TouchableOpacity
+                  style={{
+                    backgroundColor: '#f7fafc'
+                  }}
+                  onPress={() => {
+                    // if (op === 'To Do') {
+                    //   setFilterEventsType('')
+                    //   setFilterByChannel('')
+                    //   setActivityChannelId('')
+                    // }
+                    setOption(op)
+                  }}>
+                  <Text style={op === option ? styles('').allGrayFill : styles('').all}>
+                    {op === 'Classroom' ? 'Workspace' : (
+                      op === 'Performance' ? 'Progress' : (op === 'To Do' ? 'Agenda' : op)
+                    )}
+                  </Text>
+                </TouchableOpacity>
+              })
+            }
           </View> : null
       }
       {/* </View>
@@ -2014,6 +1922,27 @@ const styles = (channelId: string) => StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     height: "100%",
+  },
+  all: {
+    fontSize: 14,
+    color: '#1A2036',
+    height: 24,
+    paddingHorizontal: 15,
+    backgroundColor: '#f7fafc',
+    lineHeight: 24,
+    fontFamily: 'inter',
+    // textTransform: 'uppercase'
+  },
+  allGrayFill: {
+    fontSize: 14,
+    color: '#fff',
+    paddingHorizontal: 15,
+    borderRadius: 12,
+    backgroundColor: '#1A2036',
+    lineHeight: 24,
+    height: 24,
+    fontFamily: 'inter',
+    // textTransform: 'uppercase'
   },
   activityContainer: {
     borderTopWidth: 0,

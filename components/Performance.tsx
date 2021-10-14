@@ -173,7 +173,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
 
     const width = Dimensions.get("window").width;
     const windowHeight =
-        width < 1024 ? Dimensions.get("window").height - 30 : Dimensions.get("window").height;
+        width < 1024 ? Dimensions.get("window").height - 0 : Dimensions.get("window").height;
 
     const data = [["Channel", "Score", "Total"]];
     scores.map((score: any) => {
@@ -198,7 +198,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     setActiveTabMap(temp)
                 }}>
                 <Text style={activeTab === 'overview' ? styles.allGrayFill : styles.all}>
-                    <Ionicons name='clipboard-outline' size={20} />
+                    <Ionicons name='clipboard-outline' size={17} />
                 </Text>
                 {/* <Text style={activeTab === 'overview' ? styles.allGrayFill : styles.all}>
                     Overview
@@ -215,7 +215,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     setActiveTabMap(temp)
                 }}>
                 <Text style={activeTab === 'scores' ? styles.allGrayFill : styles.all}>
-                    <Ionicons name='stats-chart-outline' size={20} />
+                    <Ionicons name='stats-chart-outline' size={17} />
                 </Text>
                 {/* <Text style={activeTab === 'scores' ? styles.allGrayFill : styles.all}>
                     Scores
@@ -246,7 +246,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     setActiveTabMap(temp)
                 }}>
                 <Text style={activeTab === 'attendance' ? styles.allGrayFill : styles.all}>
-                    <Ionicons name='calendar-outline' size={20} />
+                    <Ionicons name='calendar-outline' size={17} />
                 </Text>
                 {/* <Text style={activeTab === 'attendance' ? styles.allGrayFill : styles.all}>
                     Attendance
@@ -305,7 +305,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         return <View style={{
                             backgroundColor: '#fff',
                             borderColor: '#E3E8EE',
-                            borderBottomWidth: 1,
+                            borderBottomWidth: ind === props.subscriptions.length - 1 ? 0 : 1,
                             marginTop: 10,
                             // paddingBottom: 5,
                             width: '100%'
@@ -353,9 +353,9 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                         textAlign: 'center',
                                         lineHeight: 30,
                                         paddingTop: 5,
-                                        paddingLeft: 5
+                                        paddingLeft: 7
                                     }}>
-                                        <Ionicons name={!collapseMap[ind] ? 'chevron-up-outline' : 'chevron-down-outline'} size={20} color={!collapseMap[ind] ? '#50566B' : '#5469D4'} />
+                                        <Ionicons name={!collapseMap[ind] ? 'chevron-up-outline' : 'chevron-down-outline'} size={17} color={!collapseMap[ind] ? '#50566B' : '#5469D4'} />
                                     </Text>
                                 </TouchableOpacity>
                             </View>

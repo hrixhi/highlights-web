@@ -438,7 +438,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                     }}>
                         <View
                             style={{
-                                borderWidth: channels.length === 0 ? 0 : 2,
+                                // borderWidth: channels.length === 0 ? 0 : 2,
                                 borderColor: '#E3E8EE',
                                 overflow: 'hidden',
                                 borderRadius: 0
@@ -473,11 +473,12 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         return <View
                                             // onPress={() => handleSub(channel.name)}
                                             style={{
-                                                backgroundColor: '#f7fafc',
+                                                backgroundColor: '#fff',
                                                 flexDirection: 'row',
                                                 borderColor: '#E3E8EE',
                                                 borderBottomWidth: ind === channels.length - 1 ? 0 : 1,
-                                                width: '100%'
+                                                width: '100%',
+                                                paddingVertical: 5
                                             }}>
                                             <View style={{ backgroundColor: '#fff', padding: 5 }}>
                                                 <Image
@@ -485,6 +486,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                         height: 35,
                                                         width: 35,
                                                         marginTop: 5,
+                                                        marginLeft: 5,
                                                         marginBottom: 5,
                                                         borderRadius: 75,
                                                         // marginTop: 20,
@@ -494,11 +496,11 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 />
                                             </View>
                                             <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
+                                                <Text style={{ fontSize: 15, padding: 5, fontFamily: 'inter', marginTop: 5 }} ellipsizeMode='tail'>
+                                                    {channel.name}
+                                                </Text>
                                                 <Text style={{ fontSize: 11, padding: 5 }} ellipsizeMode='tail'>
                                                     {channel.createdByUsername}
-                                                </Text>
-                                                <Text style={{ fontSize: 13, padding: 5, fontFamily: 'inter' }} ellipsizeMode='tail'>
-                                                    {channel.name}
                                                 </Text>
                                             </View>
                                             <View style={{ padding: 10 }}>
@@ -508,14 +510,14 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                             onPress={() => handleSub(channel.name)}
                                                         >
                                                             <Text style={{ textAlign: 'center', fontSize: 13, color: '#5469D4' }} ellipsizeMode='tail'>
-                                                                Join
+                                                                <Ionicons name='enter-outline' size={17} />
                                                             </Text>
                                                         </TouchableOpacity>
                                                     </View> : <View style={{ flex: 1, paddingLeft: 10, flexDirection: 'column', justifyContent: 'center' }}>
                                                         <Text style={{
                                                             textAlign: 'center', fontSize: 13,
                                                             fontFamily: 'inter',
-                                                            color: role === "Owner" || role === "Moderator" ? '#F94144' : '#35Ac78'
+                                                            color: channel.channelCreator === userId ? '#1A2036' : '#50566B'
                                                         }}>
                                                             {role}
                                                         </Text>

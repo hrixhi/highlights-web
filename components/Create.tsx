@@ -77,6 +77,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
   const [addCustomCategory, setAddCustomCategory] = useState(false);
   const [channels, setChannels] = useState<any[]>([]);
   const [channelOptions, setChannelOptions] = useState<any[]>([]);
+  const [showOptions, setShowOptions] = useState(false)
   const [channelId, setChannelId] = useState<any>("");
   const [selectedChannel, setSelectedChannel] = useState<any>("My Workspace")
   const [endPlayAt, setEndPlayAt] = useState(
@@ -1013,149 +1014,124 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
         <View style={{ flexDirection: "row" }}>
           <TouchableOpacity
             style={{
-              justifyContent: 'center',
-              flexDirection: 'column',
+              paddingTop: 10,
               marginRight: 20
             }}
             onPress={() => {
-              props.closeModal()
+              if (showOptions) {
+                setShowOptions(false)
+              } else {
+                props.closeModal()
+              }
             }}>
             <Text>
               <Ionicons name='arrow-back-outline' size={25} color={'#50566B'} />
             </Text>
           </TouchableOpacity>
-        </View>
-        <View
-          style={{
-            width: "100%",
-            display: "flex",
-            flexDirection: "row",
-            paddingBottom: 4,
-            marginTop: 0,
-            backgroundColor: "white",
-            borderBottomWidth: imported || isQuiz ? 0 : 1,
-            borderBottomColor: '#f7fafc'
-          }}
-          onTouchStart={() => Keyboard.dismiss()}
-        >
-          <View
-            style={{
-              flexDirection: "row",
-              flex: 1,
-            }}
-          >
-            {/* {showImportOptions ? null : (
-              <RichToolbar
-                key={reloadEditorKey.toString()}
-                style={{
-                  flexWrap: "wrap",
-                  backgroundColor: "white",
-                  height: 28,
-                  overflow: "visible",
-                }}
-                iconSize={12}
-                editor={RichText}
-                disabled={false}
-                iconTint={"#1A2036"}
-                selectedIconTint={"#1A2036"}
-                disabledIconTint={"#1A2036"}
-                actions={
-                  imported || isQuiz
-                    ? [""]
-                    : [
-                      actions.setBold,
-                      actions.setItalic,
-                      actions.setUnderline,
-                      actions.insertBulletsList,
-                      actions.insertOrderedList,
-                      actions.checkboxList,
-                      actions.insertLink,
-                      actions.insertImage,
-                      // "insertCamera",
-                      actions.undo,
-                      actions.redo,
-                      "clear",
-                    ]
-                }
-                iconMap={{
-                  ["insertCamera"]: ({ tintColor }) => (
-                    <Ionicons
-                      name="camera-outline"
-                      size={15}
-                      color={tintColor}
-                    />
-                  ),
-                  ["clear"]: ({ tintColor }) => (
-                    <Ionicons
-                      name="trash-outline"
-                      size={13}
-                      color={tintColor}
-                      onPress={() => clearAll()}
-                    />
-                  ),
-                }}
-                onPressAddImage={galleryCallback}
-                insertCamera={cameraCallback}
-              />
-            )} */}
-
-          </View>
-          <View style={{ flexDirection: "row" }}>
-            {!isQuiz && !imported ? (
-              <Text
-                style={{
-                  lineHeight: 35,
-                  textAlign: "right",
-                  paddingRight: 20,
-                  // textTransform: "uppercase",
-                  fontSize: 12,
-                  fontFamily: 'inter',
-                  color: '#5469D4',
-                }}
-                onPress={() => setShowEquationEditor(!showEquationEditor)}
-              >
-                {showEquationEditor
-                  ? PreferredLanguageText("hide")
-                  : PreferredLanguageText("formula")}
-              </Text>
-            ) : null}
-            {isQuiz || imported ? null : (
-              <FileUpload
-                back={() => setShowImportOptions(false)}
-                onUpload={(u: any, t: any) => {
-                  const obj = { url: u, type: t, title };
-                  setCue(JSON.stringify(obj));
-                  setShowImportOptions(false);
-                }}
-              />
-            )}
+          <View style={{ flexDirection: 'row', justifyContent: 'flex-end', flex: 1, paddingTop: 20 }}>
             {
-              role === 'instructor' ? <Text
-                style={{
-                  color: "#5469D4",
-                  lineHeight: 35,
-                  textAlign: "right",
-                  // paddingRight: 10,
-                  paddingLeft: 20,
-                  // textTransform: "uppercase",
-                  fontSize: 12,
-                  fontFamily: 'inter',
-                }}
-                onPress={() => {
-                  if (isQuiz) {
-                    clearAll()
-                    return
-                  }
-                  setIsQuiz(true);
-                  setSubmission(true);
-                }}
-              >
-                {isQuiz ? 'Clear' : PreferredLanguageText("quiz")}
-              </Text> : null
+              showOptions ? null :
+                <TouchableOpacity
+                  onPress={() => setShowOptions(true)}
+                  disabled={isSubmitting}
+                  style={{
+                    borderRadius: 15,
+                    backgroundColor: "white",
+                  }}
+                >
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      lineHeight: 35,
+                      color: "#5469D4",
+                      borderWidth: 1,
+                      fontSize: 12,
+                      borderColor: "#5469D4",
+                      borderRadius: 15,
+                      paddingHorizontal: 20,
+                      fontFamily: "inter",
+                      overflow: "hidden",
+                      height: 35,
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    NEXT
+                  </Text>
+                </TouchableOpacity>
             }
           </View>
         </View>
-        {showEquationEditor ? (
+        {
+          showOptions ? null : <View
+            style={{
+              width: "100%",
+              display: "flex",
+              flexDirection: "row",
+              paddingBottom: 4,
+              marginTop: 0,
+              backgroundColor: "white",
+              borderBottomWidth: imported || isQuiz ? 0 : 0,
+              borderBottomColor: '#f7fafc'
+            }}
+            onTouchStart={() => Keyboard.dismiss()}
+          >
+            <View style={{ flexDirection: "row", paddingTop: 20 }}>
+              {!isQuiz && !imported ? (
+                <Text
+                  style={{
+                    lineHeight: 35,
+                    textAlign: "right",
+                    paddingRight: 20,
+                    // textTransform: "uppercase",
+                    fontSize: 12,
+                    fontFamily: 'inter',
+                    color: '#5469D4',
+                  }}
+                  onPress={() => setShowEquationEditor(!showEquationEditor)}
+                >
+                  {showEquationEditor
+                    ? PreferredLanguageText("hide")
+                    : PreferredLanguageText("formula")}
+                </Text>
+              ) : null}
+              {isQuiz || imported ? null : (
+                <FileUpload
+                  back={() => setShowImportOptions(false)}
+                  onUpload={(u: any, t: any) => {
+                    const obj = { url: u, type: t, title };
+                    setCue(JSON.stringify(obj));
+                    setShowImportOptions(false);
+                  }}
+                />
+              )}
+              {
+                role === 'instructor' ? <Text
+                  style={{
+                    color: "#5469D4",
+                    lineHeight: 35,
+                    textAlign: "right",
+                    // paddingRight: 10,
+                    paddingLeft: 20,
+                    // textTransform: "uppercase",
+                    fontSize: 12,
+                    fontFamily: 'inter',
+                  }}
+                  onPress={() => {
+                    if (isQuiz) {
+                      clearAll()
+                      return
+                    }
+                    setIsQuiz(true);
+                    setSubmission(true);
+                  }}
+                >
+                  {isQuiz ? 'Clear' : PreferredLanguageText("quiz")}
+                </Text> : null
+              }
+            </View>
+          </View>
+        }
+        {showEquationEditor && !showOptions ? (
           <View
             style={{
               width: "100%",
@@ -1202,910 +1178,532 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
             </TouchableOpacity>
           </View>
         ) : null}
-        {showFormulaGuide ? <FormulaGuide show={showFormulaGuide} onClose={() => setShowFormulaGuide(false)} /> : null}
+        {showFormulaGuide && !showOptions ? <FormulaGuide show={showFormulaGuide} onClose={() => setShowFormulaGuide(false)} /> : null}
         <View
           style={{ paddingBottom: 100 }}
-        // showsVerticalScrollIndicator={false}
-        // scrollEnabled={true}
-        // scrollEventThrottle={1}
-        // keyboardDismissMode={"on-drag"}
-        // overScrollMode={"always"}
-        // nestedScrollEnabled={true}
         >
-          {imported || isQuiz ? (
-            <View
-              style={{
-                // display: "flex",
-                flexDirection: width < 1024 ? "column" : "row",
-                // overflow: "visible",
-              }}
-            >
+          {
+            showOptions ?
               <View
                 style={{
-                  width: width < 1024 ? "100%" : "50%",
-                  maxWidth: 400,
-                  borderRightWidth: 0,
-                  borderColor: "#E3E8EE",
-                  // paddingRight: 15,
-                  // display: "flex",
-                  // paddingLeft: isQuiz && Dimensions.get('window').width > 768 ? 20 : 0,
-                  flexDirection: "row",
-                }}
-              >
-                <TextareaAutosize
-                  value={title}
-                  style={{
-                    width: "100%",
-                    maxWidth: '100%',
-                    borderBottom: '1px solid #E3E8EE',
-                    fontSize: 14,
-                    paddingTop: 13,
-                    paddingBottom: 13,
-                    marginTop: 12,
-                    marginBottom: 15,
-                    borderRadius: 0,
-                  }}
-                  // style={styles.input}
-                  minRows={1}
-                  placeholder={PreferredLanguageText("title")}
-                  onChange={(e: any) => setTitle(e.target.value)}
-                />
-                {
-                  !isQuiz ?
-                    <TouchableOpacity
-                      style={{
-                        marginLeft: 15,
-                        paddingTop: 15,
-                      }}
-                      onPress={() => clearAll()}
-                    >
-                      <Ionicons
-                        name="trash-outline"
-                        color="#50566B"
-                        size={15}
-                        style={{ alignSelf: "center" }}
-                      />
-                      <Text
-                        style={{
-                          fontSize: 10,
-                          color: "#50566B",
-                          textAlign: "center",
-                        }}
-                      >
-                        Clear
-                      </Text>
-                    </TouchableOpacity> : null
-                }
-              </View>
-            </View>
-          ) : null}
-          <View
-            style={{
-              width: "100%",
-              minHeight: isQuiz ? 0 : 500,
-              backgroundColor: "white",
-            }}
-          >
-            {isQuiz ? (
-              <View
-                style={{
-                  width: "100%",
-                  flexDirection: "column",
-                }}
-              >
-                <View style={{
-                  backgroundColor: '#fff',
-                  // paddingLeft: Dimensions.get('window').width > 768 ? 20 : 0,
-                  flexDirection: 'row',
-                  width: '100%'
-                }}>
-                  <View style={{
-                    width: '100%',
-                    // paddingRight: Dimensions.get('window').width > 768 ? 15 : 0,
-                    paddingTop: 15
-                  }}>
-                    {/* <TextareaAutosize
-                      value={quizInstructions}
-                      placeholder="Instructions"
-                      minRows={3}
-                      style={{
-                        width: "100%",
-                        maxWidth: '100%',
-                        borderBottom: '1px solid #E3E8EE',
-                        fontSize: 14,
-                        paddingTop: 13,
-                        paddingBottom: 13,
-                        marginTop: 0,
-                        marginBottom: 5
-                      }}
-                      onChange={(e) => setQuizInstructions(e.target.value)}
-                      required={false}
-                    /> */}
-                    <Editor
-                      // onInit={(evt, editor) => RichText.current = editor}
-                      initialValue={initialQuizInstructions}
-                      apiKey="ip4jckmpx73lbu6jgyw9oj53g0loqddalyopidpjl23fx7tl"
-                      init={{
-                        skin: "snow",
-                        // toolbar_sticky: true,
-                        indent: false,
-                        branding: false,
-                        placeholder: 'Instructions',
-                        autoresize_on_init: false,
-                        autoresize_min_height: 200,
-                        height: 200,
-                        min_height: 200,
-                        paste_data_images: true,
-                        images_upload_url: 'https://api.cuesapp.co/api/imageUploadEditor',
-                        mobile: {
-                          plugins: 'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize'
-                        },
-                        plugins: 'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize',
-                        menu: { // this is the complete default configuration
-                          file: { title: 'File', items: 'newdocument' },
-                          edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall' },
-                          insert: { title: 'Insert', items: 'link media | template hr' },
-                          view: { title: 'View', items: 'visualaid' },
-                          format: { title: 'Format', items: 'bold italic underline strikethrough superscript subscript | formats | removeformat' },
-                          table: { title: 'Table', items: 'inserttable tableprops deletetable | cell row column' },
-                          tools: { title: 'Tools', items: 'spellchecker code' }
-                        },
-                        // menubar: 'file edit view insert format tools table tc help',
-                        menubar: false,
-                        toolbar: 'undo redo | bold italic underline strikethrough |  numlist bullist checklist | forecolor backcolor permanentpen removeformat | table image media pageembed link | charmap emoticons superscript subscript',
-                        importcss_append: true,
-                        image_caption: true,
-                        quickbars_selection_toolbar: 'bold italic underline | quicklink h2 h3 quickimage quicktable',
-                        noneditable_noneditable_class: 'mceNonEditable',
-                        toolbar_mode: 'sliding',
-                        // tinycomments_mode: 'embedded',
-                        content_style: ".mce-content-body[data-mce-placeholder]:not(.mce-visualblocks)::before{color: #50566B;}",
-                        // contextmenu: 'link image table configurepermanentpen',
-                        // a11y_advanced_options: true,
-                        extended_valid_elements: "svg[*],defs[*],pattern[*],desc[*],metadata[*],g[*],mask[*],path[*],line[*],marker[*],rect[*],circle[*],ellipse[*],polygon[*],polyline[*],linearGradient[*],radialGradient[*],stop[*],image[*],view[*],text[*],textPath[*],title[*],tspan[*],glyph[*],symbol[*],switch[*],use[*]"
-                        // skin: useDarkMode ? 'oxide-dark' : 'oxide',
-                        // content_css: useDarkMode ? 'dark' : 'default',
-
-                      }}
-                      onChange={(e: any) => {
-                        setQuizInstructions(e.target.getContent())
-                      }}
-                    />
-                  </View>
-                </View>
-                <QuizCreate
-                  problems={problems}
-                  headers={headers}
-                  setProblems={(p: any) => setProblems(p)}
-                  setHeaders={(h: any) => setHeaders(h)}
-                />
-              </View>
-            ) : imported ? (
-              type === "mp4" ||
-                type === "oga" ||
-                type === "mov" ||
-                type === "wmv" ||
-                type === "mp3" ||
-                type === "mov" ||
-                type === "mpeg" ||
-                type === "mp2" ||
-                type === "wav" ? (
-                <ReactPlayer
-                  url={url}
-                  controls={true}
-                  onContextMenu={(e: any) => e.preventDefault()}
-                  config={{
-                    file: { attributes: { controlsList: "nodownload" } },
-                  }}
-                  width={'100%'}
-                  height={'100%'}
-                />
-              ) : (
-                <View key={url} style={{ flex: 1, maxHeight: 800 }}>
-                  {/* <Webview key={url} url={url} /> */}
-                  <div className="webviewer" ref={RichText} style={{ height: "80vh", borderWidth: 1, borderColor: '#E3E8EE', borderRadius: 0 }}></div>
-                </View>
-              )
-            ) : null}
-            {/* <RichEditor
-              key={reloadEditorKey.toString()}
-              containerStyle={{
-                height,
-                backgroundColor: "#fff",
-                padding: 3,
-                paddingTop: 5,
-                paddingBottom: 10,
-                // borderRadius: 15,
-                display: isQuiz || imported ? "none" : "flex",
-              }}
-              ref={RichText}
-              style={{
-                width: "100%",
-                backgroundColor: "#fff",
-                // borderRadius: 15,
-                minHeight: 550,
-                display: isQuiz || imported ? "none" : "flex",
-                // borderTopWidth: 0.5,
-                // borderColor: "#50566B",
-              }}
-              editorStyle={{
-                backgroundColor: "#fff",
-                placeholderColor: "#50566B",
-                color: "#1A2036",
-                contentCSSText: "font-size: 14px;",
-              }}
-              initialContentHTML={cue}
-              onScroll={() => Keyboard.dismiss()}
-              placeholder={PreferredLanguageText("title")}
-              onChange={(text) => {
-                const modifedText = text.split("&amp;").join("&");
-                setCue(modifedText);
-              }}
-              onHeightChange={handleHeightChange}
-              onBlur={() => Keyboard.dismiss()}
-              allowFileAccess={true}
-              allowFileAccessFromFileURLs={true}
-              allowUniversalAccessFromFileURLs={true}
-              allowsFullscreenVideo={true}
-              allowsInlineMediaPlayback={true}
-              allowsLinkPreview={true}
-              allowsBackForwardNavigationGestures={true}
-            /> */}
-            {isQuiz || imported ? null : <Editor
-              onInit={(evt, editor) => editorRef.current = editor}
-              initialValue={cueDraft !== "" ? cueDraft : "<h2>Title</h2>"}
-              apiKey="ip4jckmpx73lbu6jgyw9oj53g0loqddalyopidpjl23fx7tl"
-              init={{
-                skin: "snow",
-                // toolbar_sticky: true,
-                branding: false,
-                placeholder: 'Content...',
-                min_height: 500,
-                paste_data_images: true,
-                images_upload_url: 'https://api.cuesapp.co/api/imageUploadEditor',
-                mobile: {
-                  plugins: 'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize'
-                },
-                plugins: 'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize',
-                menu: { // this is the complete default configuration
-                  file: { title: 'File', items: 'newdocument' },
-                  edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall' },
-                  insert: { title: 'Insert', items: 'link media | template hr' },
-                  view: { title: 'View', items: 'visualaid' },
-                  format: { title: 'Format', items: 'bold italic underline strikethrough superscript subscript | formats | removeformat' },
-                  table: { title: 'Table', items: 'inserttable tableprops deletetable | cell row column' },
-                  tools: { title: 'Tools', items: 'spellchecker code' }
-                },
-                // menubar: 'file edit view insert format tools table tc help',
-                menubar: false,
-                toolbar: 'undo redo | bold italic underline strikethrough | superscript subscript | fontselect fontSizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat  pagebreak | table image media pageembed link | preview print | charmap emoticons |  ltr rtl | showcomments addcomment',
-                importcss_append: true,
-                image_caption: true,
-                quickbars_selection_toolbar: 'bold italic underline | quicklink h2 h3 quickimage quicktable',
-                noneditable_noneditable_class: 'mceNonEditable',
-                toolbar_mode: 'sliding',
-                content_style: ".mce-content-body[data-mce-placeholder]:not(.mce-visualblocks)::before{color: #50566B;}",
-                // tinycomments_mode: 'embedded',
-                // content_style: '.mymention{ color: gray; }',
-                // contextmenu: 'link image table configurepermanentpen',
-                // a11y_advanced_options: true,
-                extended_valid_elements: "svg[*],defs[*],pattern[*],desc[*],metadata[*],g[*],mask[*],path[*],line[*],marker[*],rect[*],circle[*],ellipse[*],polygon[*],polyline[*],linearGradient[*],radialGradient[*],stop[*],image[*],view[*],text[*],textPath[*],title[*],tspan[*],glyph[*],symbol[*],switch[*],use[*]"
-                // skin: useDarkMode ? 'oxide-dark' : 'oxide',
-                // content_css: useDarkMode ? 'dark' : 'default',
-              }}
-              onChange={(e: any) => setCue(e.target.getContent())}
-
-            />}
-          </View>
-          <View
-            style={{
-              width: '100%',
-              display: "flex",
-              flexDirection: "column",
-              marginHorizontal: 10,
-              maxWidth: 1000, alignSelf: 'center',
-              // marginLeft: width < 1024 ? 0 : 200
-            }}
-          >
-            {channels.length !== 0 ? (
-              <View
-                style={{
+                  width: '100%',
                   display: "flex",
-                  overflow: "visible",
+                  flexDirection: "column",
+                  marginHorizontal: 10,
+                  maxWidth: 1000, alignSelf: 'center',
+                  // marginLeft: width < 1024 ? 0 : 200
                 }}
               >
-                <View
-                  style={{
-                    flexDirection: width < 1024 ? 'column' : "row",
-                    borderRightWidth: 0,
-                    borderColor: "#E3E8EE",
-                    paddingTop: 40
-                  }}
-                >
+                {channels.length !== 0 ? (
                   <View
                     style={{
-                      flex: 1, flexDirection: 'row',
-                      paddingBottom: 15,
-                      backgroundColor: "white",
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontSize: 14,
-                        color: '#1A2036'
-                      }}
-                    >
-                      Share With
-                    </Text>
-                  </View>
-                  <View
-                    style={{
-                      // display: "flex",
-                      // flexDirection: "row",
-                      backgroundColor: "white",
+                      display: "flex",
+                      overflow: "visible",
                     }}
                   >
                     <View
                       style={{
-                        // width: "85%",
-                        backgroundColor: "white",
-                        display: "flex",
+                        flexDirection: width < 1024 ? 'column' : "row",
+                        borderRightWidth: 0,
+                        borderColor: "#E3E8EE",
+                        paddingTop: 40
                       }}
                     >
-                      <label style={{ width: 180 }}>
-                        <Select
-                          touchUi={true}
-                          value={selectedChannel}
-                          // rows={channels.length + 1}
-                          themeVariant="light"
-                          onChange={(val) => {
-
-                            const channel = val.value;
-
-                            if (channel === "My Workspace") {
-                              setSelectedChannel("My Workspace")
-                              setChannelId("");
-                              setCustomCategories(localCustomCategories);
-                              setCustomCategory("None");
-                              setAddCustomCategory(false);
-                              setSubmission(false);
-                              setGradeWeight(0);
-                              setGraded(false);
-                              setSelected([]);
-                              setSubscribers([]);
-                              setProblems([]);
-                              setIsQuiz(false);
-                              setChannelName("");
-                              setTimer(false);
-                            } else {
-                              const match = channels.find((c: any) => {
-                                return c._id === channel
-                              })
-                              setSelectedChannel(match._id)
-                              setChannelId(match._id);
-                              setChannelName(match.name);
-                              setAddCustomCategory(false);
-                              setCustomCategory("None");
-                              setSubmission(isQuiz ? true : false);
-                              setGradeWeight(0);
-                              setGraded(false);
-                            }
-                          }}
-                          responsive={{
-                            small: {
-                              display: 'bubble'
-                            },
-                            medium: {
-                              touchUi: false
-                            }
-                          }}
-                          data={channelOptions}
-                        />
-
-
-                      </label>
-                      {/* <Menu
-                        onSelect={(channel: any) => {
-                          if (channel === "") {
-                            setChannelId("");
-                            setCustomCategories(localCustomCategories);
-                            setCustomCategory("");
-                            setAddCustomCategory(false);
-                            setSubmission(false);
-                            setGradeWeight(0);
-                            setGraded(false);
-                            setSelected([]);
-                            setSubscribers([]);
-                            setProblems([]);
-                            setIsQuiz(false);
-                            setChannelName("");
-                            setTimer(false);
-                          } else {
-                            setChannelId(channel._id);
-                            setChannelName(channel.name);
-                            setAddCustomCategory(false);
-                            setCustomCategory("");
-                            setSubmission(isQuiz ? true : false);
-                            setGradeWeight(0);
-                            setGraded(false);
-                          }
+                      <View
+                        style={{
+                          flex: 1, flexDirection: 'row',
+                          paddingBottom: 15,
+                          backgroundColor: "white",
                         }}
                       >
-                        <MenuTrigger>
+                        <Text
+                          style={{
+                            fontSize: 14,
+                            color: '#1A2036',
+                            fontFamily: 'inter'
+                          }}
+                        >
+                          For
+                        </Text>
+                      </View>
+                      <View
+                        style={{
+                          // display: "flex",
+                          // flexDirection: "row",
+                          backgroundColor: "white",
+                        }}
+                      >
+                        <View
+                          style={{
+                            // width: "85%",
+                            backgroundColor: "white",
+                            display: "flex",
+                          }}
+                        >
+                          <label style={{ width: 180 }}>
+                            <Select
+                              touchUi={true}
+                              value={selectedChannel}
+                              // rows={channels.length + 1}
+                              themeVariant="light"
+                              onChange={(val) => {
+
+                                const channel = val.value;
+
+                                if (channel === "My Workspace") {
+                                  setSelectedChannel("My Workspace")
+                                  setChannelId("");
+                                  setCustomCategories(localCustomCategories);
+                                  setCustomCategory("None");
+                                  setAddCustomCategory(false);
+                                  setSubmission(false);
+                                  setGradeWeight(0);
+                                  setGraded(false);
+                                  setSelected([]);
+                                  setSubscribers([]);
+                                  setProblems([]);
+                                  setIsQuiz(false);
+                                  setChannelName("");
+                                  setTimer(false);
+                                } else {
+                                  const match = channels.find((c: any) => {
+                                    return c._id === channel
+                                  })
+                                  setSelectedChannel(match._id)
+                                  setChannelId(match._id);
+                                  setChannelName(match.name);
+                                  setAddCustomCategory(false);
+                                  setCustomCategory("None");
+                                  setSubmission(isQuiz ? true : false);
+                                  setGradeWeight(0);
+                                  setGraded(false);
+                                }
+                              }}
+                              responsive={{
+                                small: {
+                                  display: 'bubble'
+                                },
+                                medium: {
+                                  touchUi: false
+                                }
+                              }}
+                              data={channelOptions}
+                            />
+                          </label>
+                        </View>
+                      </View>
+                    </View>
+
+                    {
+                      channelId !== '' ? <View style={{ width: "100%", flexDirection: width < 1024 ? 'column' : "row", paddingTop: 40 }}>
+                        <View
+                          style={{
+                            flex: 1, flexDirection: 'row',
+                            paddingBottom: 15,
+                            backgroundColor: "white",
+                          }}
+                        >
                           <Text
                             style={{
-                              // fontFamily: "inter",
-                              fontSize: 12,
-                              color: "#50566B",
-                              textAlign: "right",
-                              paddingRight: 10,
-                              // paddingTop: 5
+                              fontSize: 14,
+                              // fontWeight: 'bold',
+                              color: '#1A2036',
+                              fontFamily: 'inter'
                             }}
                           >
-                            {channelName === "" ? "My Cues" : channelName}
-                            <Ionicons name="chevron-down-outline" size={15} />
+                            Share With All
                           </Text>
-                        </MenuTrigger>
-                        <MenuOptions
-                          customStyles={{
-                            optionsContainer: {
-                              padding: 10,
-                              borderRadius: 15,
-                              shadowOpacity: 0,
-                              borderWidth: 1,
-                              borderColor: "#E3E8EE",
-                              overflow: 'scroll',
-                              maxHeight: '100%'
-                            },
-                          }}
-                        >
-                          <MenuOption value={""}>
-                            <Text>{PreferredLanguageText("myCues")}</Text>
-                          </MenuOption>
-                          {channels.map((channel: any) => {
-                            return (
-                              <MenuOption value={channel}>
-                                <Text>{channel.name}</Text>
-                              </MenuOption>
-                            );
-                          })}
-                        </MenuOptions>
-                      </Menu> */}
-
-
-                    </View>
-                  </View>
-                </View>
-
-                {
-                  channelId !== '' ? <View style={{ width: "100%", flexDirection: width < 1024 ? 'column' : "row", paddingTop: 40 }}>
-                    <View
-                      style={{
-                        flex: 1, flexDirection: 'row',
-                        paddingBottom: 15,
-                        backgroundColor: "white",
-                      }}
-                    >
-                      <Text
-                        style={{
-                          fontSize: 14,
-                          fontWeight: 'bold',
-                          color: '#1A2036'
-                        }}
-                      >
-                        Share With All
-                      </Text>
-                    </View>
-                    <View>
-                      <View
-                        style={{
-                          backgroundColor: "white",
-                          height: 40,
-                          marginRight: 10,
-                          flexDirection: 'row',
-                          justifyContent: 'flex-end'
-                        }}
-                      >
-                        <Switch
-                          value={!limitedShare}
-                          onValueChange={() => {
-                            setLimitedShare(!limitedShare);
-                          }}
-                          style={{ height: 20 }}
-                          trackColor={{
-                            false: "#F8F9FA",
-                            true: "#5469D4",
-                          }}
-                          activeThumbColor="white"
-                        />
-                      </View>
-                      {channelId !== "" && limitedShare ? (
-                        <View
-                          style={{
-                            flexDirection: "column",
-                            overflow: "scroll",
-                          }}
-                        >
-                          <View style={{ width: "100%", padding: 5, height: "auto", maxWidth: 350 }}>
-                            {/* <Multiselect
-                              placeholder="Share with..."
-                              displayValue="name"
-                              // key={userDropdownOptions.toString()}
-                              // style={{ width: '100%', color: '#1A2036',
-                              //     optionContainer: { // To change css for option container
-                              //         zIndex: 9999
-                              //     }
-                              // }}
-                              options={subscribers} // Options to display in the dropdown
-                              selectedValues={selected} // Preselected value to persist in dropdown
-                              onSelect={(e, f) => {
-                                console.log('on select values', e)
-                                setSelected(e);
-                                return true;
-                              }} // Function will trigger on select event
-                              onRemove={(e, f) => {
-                                setSelected(e);
-                                return true;
-                              }}
-                            /> */}
-                            <label>
-                              <Select
-                                touchUi={true}
-                                placeholder="Select..."
-                                themeVariant="light"
-                                value={selected}
-                                data={subscribers}
-                                selectMultiple={true}
-                                onChange={(val: any) => {
-                                  setSelected(val.value)
-                                }}
-                                responsive={{
-                                  small: {
-                                    display: 'bubble'
-                                  },
-                                  medium: {
-                                    touchUi: false,
-                                  }
-                                }}
-                                minWidth={[60, 320]}
-                              // minWidth={[60, 320]}
-                              />
-                            </label>
-                          </View>
                         </View>
-                      ) : null}
-                    </View>
-                  </View>
-                    : null
-                }
-
-                {channelId !== "" ? (
-                  <View style={{ width: "100%", flexDirection: width < 1024 ? 'column' : "row", paddingTop: 40 }}>
-                    <View
-                      style={{
-                        flex: 1, flexDirection: 'row',
-                        paddingBottom: 15,
-                        backgroundColor: "white",
-                      }}
-                    >
-                      <Text
-                        style={{
-                          fontSize: 14,
-                          color: '#1A2036'
-                        }}
-                      >
-                        {PreferredLanguageText("submissionRequired")}
-                      </Text>
-                    </View>
-                    <View>
-                      <View
-                        style={{
-                          backgroundColor: "white",
-                          height: 40,
-                          marginRight: 10,
-                          flexDirection: 'row',
-                          justifyContent: 'flex-end'
-                        }}
-                      >
-                        <Switch
-                          disabled={isQuiz}
-                          value={submission}
-                          onValueChange={() => {
-                            setSubmission(!submission);
-                          }}
-                          style={{ height: 20 }}
-                          trackColor={{
-                            false: "#E3E8EE",
-                            true: "#5469D4",
-                          }}
-                          activeThumbColor="white"
-                        />
-                      </View>
-                      <View style={{ width: "100%", marginBottom: 15 }}>
-                        <View style={{}}>
-                          {submission ? (
-                            <View
-                              style={{
-                                width: "100%",
-                                display: "flex",
-                                flexDirection: "row",
-                                backgroundColor: "white",
-                                alignItems: 'center'
-                              }}
-                            >
-                              <Text style={styles.text}>Available</Text>
-                              {/* <DatePicker
-                                appearance={'subtle'}
-                                format="YYYY-MM-DD HH:mm"
-                                preventOverflow={true}
-                                value={initiateAt}
-                                onChange={(event: any) => {
-                                  const date = new Date(event);
-                                  const roundValue = roundSeconds(date)
-                                  if (date < new Date()) return;
-                                  setInitiateAt(roundValue);
-                                }}
-                                size={"xs"}
-                              // isValidDate={disablePastDt}
-                              /> */}
-                              <MobiscrollDatePicker
-                                controls={['date', 'time']}
-                                touchUi={true}
-                                value={initiateAt}
-                                themeVariant="light"
-                                inputComponent="input"
-                                inputProps={{
-                                  placeholder: 'Please Select...'
-                                }}
-                                onChange={(event: any) => {
-                                  const date = new Date(event.value);
-                                  const roundValue = roundSeconds(date)
-                                  if (date < new Date()) return;
-                                  setInitiateAt(roundValue);
-                                }}
-                                responsive={{
-                                  xsmall: {
-                                    controls: ['date', 'time'],
-                                    display: 'bottom',
-                                    touchUi: true
-                                  },
-                                  // small: {
-                                  //     controls: ['date', 'time'],
-                                  //     display: 'anchored',
-                                  //     touchUi: true
-                                  // },
-                                  medium: {
-                                    controls: ['date', 'time'],
-                                    display: 'anchored',
-                                    touchUi: false
-                                  },
-                                }}
-
-                              />
-                            </View>
-                          ) : null}
-                        </View>
-                      </View>
-
-                      {/* Add it here */}
-
-                      <View style={{ width: "100%" }}>
-                        <View style={{ flexDirection: "row" }}>
-                          {submission ? (
-                            <View
-                              style={{
-                                width: "100%",
-                                display: "flex",
-                                flexDirection: "row",
-                                backgroundColor: "white",
-                                alignItems: 'center'
-                                // marginLeft: 50,
-                              }}
-                            >
-                              <Text style={styles.text}>
-                                {PreferredLanguageText("deadline")}
-                              </Text>
-                              {/* <DatePicker
-                                format="YYYY-MM-DD HH:mm"
-                                preventOverflow={true}
-                                appearance={'subtle'}
-                                value={deadline}
-                                onChange={(event: any) => {
-                                  const date = new Date(event);
-                                  if (date < new Date()) return;
-                                  const roundValue = roundSeconds(date)
-                                  setDeadline(roundValue);
-                                }}
-                                size={"xs"}
-                              // isValidDate={disablePastDt}
-                              /> */}
-                              <MobiscrollDatePicker
-                                controls={['date', 'time']}
-                                touchUi={true}
-                                theme="ios"
-                                value={deadline}
-                                themeVariant="light"
-                                inputComponent="input"
-                                inputProps={{
-                                  placeholder: 'Please Select...'
-                                }}
-                                onChange={(event: any) => {
-                                  const date = new Date(event.value);
-                                  if (date < new Date()) return;
-                                  const roundValue = roundSeconds(date)
-                                  setDeadline(roundValue);
-                                }}
-                                responsive={{
-                                  xsmall: {
-                                    controls: ['date', 'time'],
-                                    display: 'bottom',
-                                    touchUi: true
-                                  },
-                                  // small: {
-                                  //     controls: ['date', 'time'],
-                                  //     display: 'anchored',
-                                  //     touchUi: true
-                                  // },
-                                  medium: {
-                                    controls: ['date', 'time'],
-                                    display: 'anchored',
-                                    touchUi: false
-                                  },
-                                }}
-
-                              />
-                            </View>
-                          ) : null}
-                        </View>
-
-                        {/* Add it here */}
-                      </View>
-                    </View>
-                  </View>
-                ) : null}
-                {submission ? (
-                  <View style={{ width: "100%", flexDirection: width < 1024 ? 'column' : 'row', paddingTop: 40 }}>
-                    <View
-                      style={{
-                        flex: 1, flexDirection: 'row',
-                        paddingBottom: 15,
-                        backgroundColor: "white",
-                      }}
-                    >
-                      <Text
-                        style={{
-                          fontSize: 14,
-                          color: '#1A2036'
-                        }}
-                      >
-                        Grade Weight
-                      </Text>
-                    </View>
-                    <View>
-                      <View>
-                        <View
-                          style={{
-                            backgroundColor: "white",
-                            height: 40,
-                            marginRight: 10,
-                            flexDirection: 'row',
-                            justifyContent: 'flex-end'
-                          }}
-                        >
-                          <Switch
-                            value={graded}
-                            onValueChange={() => setGraded(!graded)}
-                            style={{ height: 20 }}
-                            trackColor={{
-                              false: "#E3E8EE",
-                              true: "#50566B",
-                            }}
-                            activeThumbColor="white"
-                          />
-                        </View>
-                      </View>
-                      <View>
-                        {graded ? (
+                        <View>
                           <View
                             style={{
-                              // width: "100%",
-                              // display: "flex",
-                              flexDirection: 'row',
-                              justifyContent: 'flex-end',
                               backgroundColor: "white",
-                              // alignItems: 'center'
+                              height: 40,
+                              marginRight: 10,
+                              flexDirection: 'row',
+                              justifyContent: 'flex-end'
                             }}
                           >
-                            <Text style={{
-                              fontSize: 12,
-                              color: "#50566B",
-                              textAlign: "left",
-                              paddingHorizontal: 10,
-                              paddingTop: 20
-                            }}>
-                              {PreferredLanguageText("percentageOverall")}
-                            </Text>
-                            <TextInput
-                              value={gradeWeight}
-                              style={{
-                                width: "25%",
-                                borderBottomColor: "#f7fafc",
-                                borderBottomWidth: 1,
-                                fontSize: 14,
-                                padding: 15,
-                                paddingVertical: 12,
-                                marginTop: 0,
+                            <Switch
+                              value={!limitedShare}
+                              onValueChange={() => {
+                                setLimitedShare(!limitedShare);
                               }}
-                              placeholder={"0-100"}
-                              onChangeText={(val) => setGradeWeight(val)}
-                              placeholderTextColor={"#50566B"}
+                              style={{ height: 20 }}
+                              trackColor={{
+                                false: "#F8F9FA",
+                                true: "#5469D4",
+                              }}
+                              activeThumbColor="white"
                             />
                           </View>
-                        ) : null}
-                      </View>
-                    </View>
-                  </View>
-                ) : null}
-
-                {/* Late Submissions */}
-
-                {submission ? (
-                  <View style={{ width: "100%", flexDirection: width < 1024 ? 'column' : 'row', paddingTop: 40 }}>
-                    <View
-                      style={{
-                        flex: 1, flexDirection: 'row',
-                        paddingBottom: 15,
-                        backgroundColor: "white",
-                      }}
-                    >
-                      <Text
-                        style={{
-                          fontSize: 14,
-                          color: '#1A2036'
-                        }}
-                      >
-                        Late Submission
-                      </Text>
-                    </View>
-                    <View>
-                      <View>
-                        <View
-                          style={{
-                            backgroundColor: "white",
-                            height: 40,
-                            marginRight: 10,
-                            flexDirection: 'row',
-                            justifyContent: 'flex-end'
-                          }}
-                        >
-                          <Switch
-                            value={allowLateSubmission}
-                            onValueChange={() => setAllowLateSubmission(!allowLateSubmission)}
-                            style={{ height: 20 }}
-                            trackColor={{
-                              false: "#E3E8EE",
-                              true: "#50566B",
-                            }}
-                            activeThumbColor="white"
-                          />
+                          {channelId !== "" && limitedShare ? (
+                            <View
+                              style={{
+                                flexDirection: "column",
+                                overflow: "scroll",
+                              }}
+                            >
+                              <View style={{ width: "100%", padding: 5, height: "auto", maxWidth: 350 }}>
+                                <label>
+                                  <Select
+                                    touchUi={true}
+                                    placeholder="Select..."
+                                    themeVariant="light"
+                                    value={selected}
+                                    data={subscribers}
+                                    selectMultiple={true}
+                                    onChange={(val: any) => {
+                                      setSelected(val.value)
+                                    }}
+                                    responsive={{
+                                      small: {
+                                        display: 'bubble'
+                                      },
+                                      medium: {
+                                        touchUi: false,
+                                      }
+                                    }}
+                                    minWidth={[60, 320]}
+                                  // minWidth={[60, 320]}
+                                  />
+                                </label>
+                              </View>
+                            </View>
+                          ) : null}
                         </View>
                       </View>
-                      <View>
-                        {allowLateSubmission ? (
-                          <View
+                        : null
+                    }
+
+                    {channelId !== "" ? (
+                      <View style={{ width: "100%", flexDirection: width < 1024 ? 'column' : "row", paddingTop: 40 }}>
+                        <View
+                          style={{
+                            flex: 1, flexDirection: 'row',
+                            paddingBottom: 15,
+                            backgroundColor: "white",
+                          }}
+                        >
+                          <Text
                             style={{
-                              width: "100%",
-                              display: "flex",
-                              flexDirection: "row",
-                              backgroundColor: "white",
-                              alignItems: 'center'
-                              // marginLeft: 50,
+                              fontSize: 14,
+                              color: '#1A2036',
+                              fontFamily: 'inter'
                             }}
                           >
-                            <Text style={styles.text}>
-                              Available Until
-                            </Text>
-                            {/* <DatePicker
+                            {PreferredLanguageText("submissionRequired")}
+                          </Text>
+                        </View>
+                        <View>
+                          <View
+                            style={{
+                              backgroundColor: "white",
+                              height: 40,
+                              marginRight: 10,
+                              flexDirection: 'row',
+                              justifyContent: 'flex-end'
+                            }}
+                          >
+                            <Switch
+                              disabled={isQuiz}
+                              value={submission}
+                              onValueChange={() => {
+                                setSubmission(!submission);
+                              }}
+                              style={{ height: 20 }}
+                              trackColor={{
+                                false: "#E3E8EE",
+                                true: "#5469D4",
+                              }}
+                              activeThumbColor="white"
+                            />
+                          </View>
+                          <View style={{ width: "100%", marginBottom: 15 }}>
+                            <View style={{}}>
+                              {submission ? (
+                                <View
+                                  style={{
+                                    width: "100%",
+                                    display: "flex",
+                                    flexDirection: "row",
+                                    backgroundColor: "white",
+                                    alignItems: 'center'
+                                  }}
+                                >
+                                  <Text style={styles.text}>Available</Text>
+                                  {/* <DatePicker
+                                appearance={'subtle'}
+                                format="YYYY-MM-DD HH:mm"
+                                preventOverflow={true}
+                                value={initiateAt}
+                                onChange={(event: any) => {
+                                  const date = new Date(event);
+                                  const roundValue = roundSeconds(date)
+                                  if (date < new Date()) return;
+                                  setInitiateAt(roundValue);
+                                }}
+                                size={"xs"}
+                              // isValidDate={disablePastDt}
+                              /> */}
+                                  <MobiscrollDatePicker
+                                    controls={['date', 'time']}
+                                    touchUi={true}
+                                    value={initiateAt}
+                                    themeVariant="light"
+                                    inputComponent="input"
+                                    inputProps={{
+                                      placeholder: 'Please Select...'
+                                    }}
+                                    onChange={(event: any) => {
+                                      const date = new Date(event.value);
+                                      const roundValue = roundSeconds(date)
+                                      if (date < new Date()) return;
+                                      setInitiateAt(roundValue);
+                                    }}
+                                    responsive={{
+                                      xsmall: {
+                                        controls: ['date', 'time'],
+                                        display: 'bottom',
+                                        touchUi: true
+                                      },
+                                      // small: {
+                                      //     controls: ['date', 'time'],
+                                      //     display: 'anchored',
+                                      //     touchUi: true
+                                      // },
+                                      medium: {
+                                        controls: ['date', 'time'],
+                                        display: 'anchored',
+                                        touchUi: false
+                                      },
+                                    }}
+
+                                  />
+                                </View>
+                              ) : null}
+                            </View>
+                          </View>
+
+                          {/* Add it here */}
+
+                          <View style={{ width: "100%" }}>
+                            <View style={{ flexDirection: "row" }}>
+                              {submission ? (
+                                <View
+                                  style={{
+                                    width: "100%",
+                                    display: "flex",
+                                    flexDirection: "row",
+                                    backgroundColor: "white",
+                                    alignItems: 'center'
+                                    // marginLeft: 50,
+                                  }}
+                                >
+                                  <Text style={styles.text}>
+                                    {PreferredLanguageText("deadline")}
+                                  </Text>
+                                  {/* <DatePicker
+                                format="YYYY-MM-DD HH:mm"
+                                preventOverflow={true}
+                                appearance={'subtle'}
+                                value={deadline}
+                                onChange={(event: any) => {
+                                  const date = new Date(event);
+                                  if (date < new Date()) return;
+                                  const roundValue = roundSeconds(date)
+                                  setDeadline(roundValue);
+                                }}
+                                size={"xs"}
+                              // isValidDate={disablePastDt}
+                              /> */}
+                                  <MobiscrollDatePicker
+                                    controls={['date', 'time']}
+                                    touchUi={true}
+                                    theme="ios"
+                                    value={deadline}
+                                    themeVariant="light"
+                                    inputComponent="input"
+                                    inputProps={{
+                                      placeholder: 'Please Select...'
+                                    }}
+                                    onChange={(event: any) => {
+                                      const date = new Date(event.value);
+                                      if (date < new Date()) return;
+                                      const roundValue = roundSeconds(date)
+                                      setDeadline(roundValue);
+                                    }}
+                                    responsive={{
+                                      xsmall: {
+                                        controls: ['date', 'time'],
+                                        display: 'bottom',
+                                        touchUi: true
+                                      },
+                                      // small: {
+                                      //     controls: ['date', 'time'],
+                                      //     display: 'anchored',
+                                      //     touchUi: true
+                                      // },
+                                      medium: {
+                                        controls: ['date', 'time'],
+                                        display: 'anchored',
+                                        touchUi: false
+                                      },
+                                    }}
+
+                                  />
+                                </View>
+                              ) : null}
+                            </View>
+
+                            {/* Add it here */}
+                          </View>
+                        </View>
+                      </View>
+                    ) : null}
+                    {submission ? (
+                      <View style={{ width: "100%", flexDirection: width < 1024 ? 'column' : 'row', paddingTop: 40 }}>
+                        <View
+                          style={{
+                            flex: 1, flexDirection: 'row',
+                            paddingBottom: 15,
+                            backgroundColor: "white",
+                          }}
+                        >
+                          <Text
+                            style={{
+                              fontSize: 14,
+                              color: '#1A2036',
+                              fontFamily: 'inter'
+                            }}
+                          >
+                            Grade Weight
+                          </Text>
+                        </View>
+                        <View>
+                          <View>
+                            <View
+                              style={{
+                                backgroundColor: "white",
+                                height: 40,
+                                marginRight: 10,
+                                flexDirection: 'row',
+                                justifyContent: 'flex-end'
+                              }}
+                            >
+                              <Switch
+                                value={graded}
+                                onValueChange={() => setGraded(!graded)}
+                                style={{ height: 20 }}
+                                trackColor={{
+                                  false: "#E3E8EE",
+                                  true: "#50566B",
+                                }}
+                                activeThumbColor="white"
+                              />
+                            </View>
+                          </View>
+                          <View>
+                            {graded ? (
+                              <View
+                                style={{
+                                  // width: "100%",
+                                  // display: "flex",
+                                  flexDirection: 'row',
+                                  justifyContent: 'flex-end',
+                                  backgroundColor: "white",
+                                  // alignItems: 'center'
+                                }}
+                              >
+                                <Text style={{
+                                  fontSize: 12,
+                                  color: "#50566B",
+                                  textAlign: "left",
+                                  paddingHorizontal: 10,
+                                  paddingTop: 20
+                                }}>
+                                  {PreferredLanguageText("percentageOverall")}
+                                </Text>
+                                <TextInput
+                                  value={gradeWeight}
+                                  style={{
+                                    width: "25%",
+                                    borderBottomColor: "#f7fafc",
+                                    borderBottomWidth: 1,
+                                    fontSize: 14,
+                                    padding: 15,
+                                    paddingVertical: 12,
+                                    marginTop: 0,
+                                  }}
+                                  placeholder={"0-100"}
+                                  onChangeText={(val) => setGradeWeight(val)}
+                                  placeholderTextColor={"#50566B"}
+                                />
+                              </View>
+                            ) : null}
+                          </View>
+                        </View>
+                      </View>
+                    ) : null}
+                    {/* Late Submissions */}
+                    {submission ? (
+                      <View style={{ width: "100%", flexDirection: width < 1024 ? 'column' : 'row', paddingTop: 40 }}>
+                        <View
+                          style={{
+                            flex: 1, flexDirection: 'row',
+                            paddingBottom: 15,
+                            backgroundColor: "white",
+                          }}
+                        >
+                          <Text
+                            style={{
+                              fontSize: 14,
+                              color: '#1A2036',
+                              fontFamily: 'inter'
+                            }}
+                          >
+                            Late Submission
+                          </Text>
+                        </View>
+                        <View>
+                          <View>
+                            <View
+                              style={{
+                                backgroundColor: "white",
+                                height: 40,
+                                marginRight: 10,
+                                flexDirection: 'row',
+                                justifyContent: 'flex-end'
+                              }}
+                            >
+                              <Switch
+                                value={allowLateSubmission}
+                                onValueChange={() => setAllowLateSubmission(!allowLateSubmission)}
+                                style={{ height: 20 }}
+                                trackColor={{
+                                  false: "#E3E8EE",
+                                  true: "#50566B",
+                                }}
+                                activeThumbColor="white"
+                              />
+                            </View>
+                          </View>
+                          <View>
+                            {allowLateSubmission ? (
+                              <View
+                                style={{
+                                  width: "100%",
+                                  display: "flex",
+                                  flexDirection: "row",
+                                  backgroundColor: "white",
+                                  alignItems: 'center'
+                                  // marginLeft: 50,
+                                }}
+                              >
+                                <Text style={styles.text}>
+                                  Available Until
+                                </Text>
+                                {/* <DatePicker
                               format="YYYY-MM-DD HH:mm"
                               preventOverflow={true}
                               appearance={'subtle'}
@@ -2119,449 +1717,451 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                               size={"xs"}
                             // isValidDate={disablePastDt}
                             /> */}
-                            <MobiscrollDatePicker
-                              controls={['date', 'time']}
-                              touchUi={true}
-                              theme="ios"
-                              value={availableUntil}
-                              themeVariant="light"
-                              inputComponent="input"
-                              inputProps={{
-                                placeholder: 'Please Select...'
-                              }}
-                              onChange={(event: any) => {
-                                const date = new Date(event.value);
-                                if (date < deadline) return;
-                                const roundValue = roundSeconds(date)
-                                setAvailableUntil(roundValue);
-                              }}
-                              responsive={{
-                                xsmall: {
-                                  controls: ['date', 'time'],
-                                  display: 'bottom',
-                                  touchUi: true
-                                },
-                                // small: {
-                                //     controls: ['date', 'time'],
-                                //     display: 'anchored',
-                                //     touchUi: true
-                                // },
-                                medium: {
-                                  controls: ['date', 'time'],
-                                  display: 'anchored',
-                                  touchUi: false
-                                },
-                              }}
+                                <MobiscrollDatePicker
+                                  controls={['date', 'time']}
+                                  touchUi={true}
+                                  theme="ios"
+                                  value={availableUntil}
+                                  themeVariant="light"
+                                  inputComponent="input"
+                                  inputProps={{
+                                    placeholder: 'Please Select...'
+                                  }}
+                                  onChange={(event: any) => {
+                                    const date = new Date(event.value);
+                                    if (date < deadline) return;
+                                    const roundValue = roundSeconds(date)
+                                    setAvailableUntil(roundValue);
+                                  }}
+                                  responsive={{
+                                    xsmall: {
+                                      controls: ['date', 'time'],
+                                      display: 'bottom',
+                                      touchUi: true
+                                    },
+                                    // small: {
+                                    //     controls: ['date', 'time'],
+                                    //     display: 'anchored',
+                                    //     touchUi: true
+                                    // },
+                                    medium: {
+                                      controls: ['date', 'time'],
+                                      display: 'anchored',
+                                      touchUi: false
+                                    },
+                                  }}
 
+                                />
+                              </View>
+                            ) : null}
+                          </View>
+                        </View>
+                      </View>
+                    ) : null}
+
+                    {/* Allowed attempts */}
+
+                    {submission && isQuiz ? (
+                      <View style={{ width: "100%", flexDirection: width < 1024 ? 'column' : 'row', paddingTop: 40 }}>
+                        <View
+                          style={{
+                            flex: 1, flexDirection: 'row',
+                            backgroundColor: "white",
+                          }}
+                        >
+                          <Text
+                            style={{
+                              fontSize: 14,
+                              color: '#1A2036',
+                              fontFamily: 'inter'
+                            }}
+                          >
+                            Multiple Attempts
+                          </Text>
+                        </View>
+                        <View>
+                          <View
+                            style={{
+                              backgroundColor: "white",
+                              height: 40,
+                              marginRight: 10,
+                              flexDirection: 'row',
+                              justifyContent: 'flex-end',
+                            }}
+                          >
+                            <Switch
+                              value={unlimitedAttempts}
+                              onValueChange={() => {
+                                if (!unlimitedAttempts) {
+                                  setAttempts("")
+                                } else {
+                                  setAttempts('1')
+                                }
+                                setUnlimitedAttempts(!unlimitedAttempts)
+                              }}
+                              style={{ height: 20 }}
+                              trackColor={{
+                                false: "#F8F9FA",
+                                true: "#50566B",
+                              }}
+                              activeThumbColor="white"
                             />
                           </View>
-                        ) : null}
+                          {!unlimitedAttempts ? (
+                            <View
+                              style={{
+                                width: "100%",
+                                display: "flex",
+                                flexDirection: "row",
+                                backgroundColor: "white",
+                                justifyContent: 'flex-end',
+                                alignItems: 'center'
+                              }}
+                            >
+                              <Text style={styles.text}>
+                                Allowed attempts
+                              </Text>
+                              <TextInput
+                                value={attempts}
+                                style={{
+                                  width: "25%",
+                                  borderBottomColor: "#F8F9FA",
+                                  borderBottomWidth: 1,
+                                  fontSize: 14,
+                                  padding: 15,
+                                  paddingVertical: 12,
+                                  marginTop: 0,
+                                }}
+                                placeholder={""}
+                                onChangeText={(val) => {
+                                  if (Number.isNaN(Number(val))) return;
+                                  setAttempts(val)
+                                }}
+                                placeholderTextColor={"#50566B"}
+                              />
+                            </View>
+                          ) : null}
+                        </View>
                       </View>
-                    </View>
+                    ) : null}
                   </View>
                 ) : null}
 
-                {/* Allowed attempts */}
+                <View
+                  style={{
+                    display: "flex",
+                  }}
+                >
+                  <View
+                    style={{
+                      width: "100%",
+                      borderRightWidth: 0,
+                      borderColor: "#E3E8EE",
+                    }}
+                  >
+                    <View style={{ width: "100%", backgroundColor: "white", flexDirection: width < 1024 ? 'column' : 'row', paddingTop: 40 }}>
+                      <View
+                        style={{
+                          flex: 1, flexDirection: 'row',
+                          paddingBottom: 15,
+                          backgroundColor: "white",
+                        }}
+                      >
+                        <Text
+                          style={{
+                            fontSize: 14,
+                            fontFamily: 'inter',
+                            color: '#1A2036'
+                          }}
+                        >
+                          {PreferredLanguageText("category")}
+                        </Text>
+                      </View>
+                      <View
+                        style={{
+                          // width: "100%",
+                          // display: "flex",
+                          flexDirection: "row",
+                          backgroundColor: "white",
+                          alignItems: 'center'
+                        }}
+                      >
+                        <View style={{ width: "85%", backgroundColor: "white" }}>
+                          {addCustomCategory ? (
+                            <View style={styles.colorBar}>
+                              <TextInput
+                                value={customCategory}
+                                style={styles.allGrayOutline}
+                                placeholder={"Enter Category"}
+                                onChangeText={(val) => {
+                                  setCustomCategory(val);
+                                }}
+                                placeholderTextColor={"#50566B"}
+                              />
+                            </View>
+                          ) : (
 
-                {submission && isQuiz ? (
-                  <View style={{ width: "100%", flexDirection: width < 1024 ? 'column' : 'row', paddingTop: 40 }}>
+                            <label style={{ width: 180 }}>
+                              <Select
+                                touchUi={true}
+                                cssClass="customDropdown"
+                                value={customCategory}
+                                rows={customCategories.length + 1}
+                                data={categoriesOptions}
+                                themeVariant="light"
+                                onChange={(val: any) => {
+                                  setCustomCategory(val.value)
+                                }}
+                                responsive={{
+                                  small: {
+                                    display: 'bubble'
+                                  },
+                                  medium: {
+                                    touchUi: false,
+                                  }
+                                }}
+                              />
+                            </label>
+                          )}
+                        </View>
+                        <View style={{ width: "15%", backgroundColor: "white", paddingLeft: 20 }}>
+                          <TouchableOpacity
+                            onPress={() => {
+                              if (addCustomCategory) {
+                                setCustomCategory("None");
+                                setAddCustomCategory(false);
+                              } else {
+                                setCustomCategory("");
+                                setAddCustomCategory(true);
+                              }
+                            }}
+                            style={{ backgroundColor: "white" }}
+                          >
+                            <Text
+                              style={{
+                                textAlign: "center",
+                                lineHeight: 20,
+                                width: "100%",
+                              }}
+                            >
+                              <Ionicons
+                                name={addCustomCategory ? "close" : "add"}
+                                size={15}
+                                color={"#1A2036"}
+                              />
+                            </Text>
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+                    </View>
+                  </View>
+                  <View
+                    style={{
+                      width: "100%",
+                      borderRightWidth: 0,
+                      borderColor: "#E3E8EE",
+                      flexDirection: width < 1024 ? 'column' : 'row', paddingTop: 40
+                    }}
+                  >
                     <View
                       style={{
                         flex: 1, flexDirection: 'row',
+                        paddingBottom: 15,
                         backgroundColor: "white",
                       }}
                     >
                       <Text
                         style={{
                           fontSize: 14,
-                          color: '#1A2036'
+                          color: '#1A2036',
+                          fontFamily: 'inter'
                         }}
                       >
-                        Unlimited Attempts
+                        {PreferredLanguageText("priority")}
                       </Text>
                     </View>
-                    <View>
-                      <View
-                        style={{
-                          backgroundColor: "white",
-                          height: 40,
-                          marginRight: 10,
-                          flexDirection: 'row',
-                          justifyContent: 'flex-end',
-                        }}
-                      >
-                        <Switch
-                          value={unlimitedAttempts}
-                          onValueChange={() => {
-                            if (!unlimitedAttempts) {
-                              setAttempts("")
-                            } else {
-                              setAttempts('1')
-                            }
-                            setUnlimitedAttempts(!unlimitedAttempts)
-                          }}
-                          style={{ height: 20 }}
-                          trackColor={{
-                            false: "#F8F9FA",
-                            true: "#50566B",
-                          }}
-                          activeThumbColor="white"
-                        />
+                    <View
+                      style={{
+                        // width: "100%",
+                        // display: "flex",
+                        flexDirection: "row",
+                        backgroundColor: "white",
+                      }}
+                    >
+                      <View style={{ width: "100%", backgroundColor: "white" }}>
+                        <ScrollView
+                          style={{ ...styles.colorBar, height: 20 }}
+                          horizontal={true}
+                          showsHorizontalScrollIndicator={false}
+                        >
+                          {colorChoices.map((c: string, i: number) => {
+                            return (
+                              <View
+                                style={
+                                  color === i
+                                    ? styles.colorContainerOutline
+                                    : styles.colorContainer
+                                }
+                                key={Math.random()}
+                              >
+                                <TouchableOpacity
+                                  style={{
+                                    width: 12,
+                                    height: 12,
+                                    borderRadius: 6,
+                                    backgroundColor: colorChoices[i],
+                                  }}
+                                  onPress={() => {
+                                    setColor(i);
+                                  }}
+                                />
+                              </View>
+                            );
+                          })}
+                        </ScrollView>
                       </View>
-                      {!unlimitedAttempts ? (
-                        <View
-                          style={{
-                            width: "100%",
-                            display: "flex",
-                            flexDirection: "row",
-                            backgroundColor: "white",
-                            justifyContent: 'flex-end',
-                            alignItems: 'center'
-                          }}
-                        >
-                          <Text style={styles.text}>
-                            Allowed attempts
-                          </Text>
-                          <TextInput
-                            value={attempts}
-                            style={{
-                              width: "25%",
-                              borderBottomColor: "#F8F9FA",
-                              borderBottomWidth: 1,
-                              fontSize: 14,
-                              padding: 15,
-                              paddingVertical: 12,
-                              marginTop: 0,
-                            }}
-                            placeholder={""}
-                            onChangeText={(val) => {
-                              if (Number.isNaN(Number(val))) return;
-                              setAttempts(val)
-                            }}
-                            placeholderTextColor={"#50566B"}
-                          />
-                        </View>
-                      ) : null}
                     </View>
                   </View>
-                ) : null}
-              </View>
-            ) : null}
-
-            <View
-              style={{
-                display: "flex",
-              }}
-            >
-              <View
-                style={{
-                  width: "100%",
-                  borderRightWidth: 0,
-                  borderColor: "#E3E8EE",
-                }}
-              >
-                <View style={{ width: "100%", backgroundColor: "white", flexDirection: width < 1024 ? 'column' : 'row', paddingTop: 40 }}>
-                  <View
-                    style={{
-                      flex: 1, flexDirection: 'row',
-                      paddingBottom: 15,
-                      backgroundColor: "white",
-                    }}
-                  >
-                    <Text
+                </View>
+                <View
+                  style={{
+                    width: "100%",
+                    // paddingTop: 15,
+                    flexDirection: "column",
+                  }}
+                >
+                  <View style={{ width: "100%", flexDirection: width < 1024 ? 'column' : 'row', paddingTop: 40 }}>
+                    <View
                       style={{
-                        fontSize: 14,
-                        color: '#1A2036'
+                        flex: 1, flexDirection: 'row',
+                        paddingBottom: 15,
+                        backgroundColor: "white",
                       }}
                     >
-                      {PreferredLanguageText("category")}
-                    </Text>
-                  </View>
-                  <View
-                    style={{
-                      // width: "100%",
-                      // display: "flex",
-                      flexDirection: "row",
-                      backgroundColor: "white",
-                      alignItems: 'center'
-                    }}
-                  >
-                    <View style={{ width: "85%", backgroundColor: "white" }}>
-                      {addCustomCategory ? (
-                        <View style={styles.colorBar}>
-                          <TextInput
-                            value={customCategory}
-                            style={styles.allGrayOutline}
-                            placeholder={"Enter Category"}
-                            onChangeText={(val) => {
-                              setCustomCategory(val);
-                            }}
-                            placeholderTextColor={"#50566B"}
-                          />
-                        </View>
-                      ) : (
-
-                        <label style={{ width: 180 }}>
-                          <Select
-                            touchUi={true}
-                            cssClass="customDropdown"
-                            value={customCategory}
-                            rows={customCategories.length + 1}
-                            data={categoriesOptions}
-                            themeVariant="light"
-                            onChange={(val: any) => {
-                              setCustomCategory(val.value)
-                            }}
-                            responsive={{
-                              small: {
-                                display: 'bubble'
-                              },
-                              medium: {
-                                touchUi: false,
-                              }
-                            }}
-                          />
-
-                        </label>
-
-
-                      )}
-                    </View>
-                    <View style={{ width: "15%", backgroundColor: "white", paddingLeft: 20 }}>
-                      <TouchableOpacity
-                        onPress={() => {
-                          if (addCustomCategory) {
-                            setCustomCategory("None");
-                            setAddCustomCategory(false);
-                          } else {
-                            setCustomCategory("");
-                            setAddCustomCategory(true);
-                          }
+                      <Text
+                        style={{
+                          fontSize: 14,
+                          color: '#1A2036',
+                          fontFamily: 'inter'
                         }}
-                        style={{ backgroundColor: "white" }}
                       >
-                        <Text
-                          style={{
-                            textAlign: "center",
-                            lineHeight: 20,
-                            width: "100%",
-                          }}
-                        >
-                          <Ionicons
-                            name={addCustomCategory ? "close" : "add"}
-                            size={15}
-                            color={"#1A2036"}
-                          />
-                        </Text>
-                      </TouchableOpacity>
+                        Remind
+                      </Text>
                     </View>
-                  </View>
-                </View>
-              </View>
-              <View
-                style={{
-                  width: "100%",
-                  borderRightWidth: 0,
-                  borderColor: "#E3E8EE",
-                  flexDirection: width < 1024 ? 'column' : 'row', paddingTop: 40
-                }}
-              >
-                <View
-                  style={{
-                    flex: 1, flexDirection: 'row',
-                    paddingBottom: 15,
-                    backgroundColor: "white",
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontSize: 14,
-                      color: '#1A2036'
-                    }}
-                  >
-                    {PreferredLanguageText("priority")}
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    // width: "100%",
-                    // display: "flex",
-                    flexDirection: "row",
-                    backgroundColor: "white",
-                  }}
-                >
-                  <View style={{ width: "100%", backgroundColor: "white" }}>
-                    <ScrollView
-                      style={{ ...styles.colorBar, height: 20 }}
-                      horizontal={true}
-                      showsHorizontalScrollIndicator={false}
-                    >
-                      {colorChoices.map((c: string, i: number) => {
-                        return (
-                          <View
-                            style={
-                              color === i
-                                ? styles.colorContainerOutline
-                                : styles.colorContainer
-                            }
-                            key={Math.random()}
-                          >
-                            <TouchableOpacity
-                              style={{
-                                width: 12,
-                                height: 12,
-                                borderRadius: 6,
-                                backgroundColor: colorChoices[i],
-                              }}
-                              onPress={() => {
-                                setColor(i);
-                              }}
-                            />
-                          </View>
-                        );
-                      })}
-                    </ScrollView>
-                  </View>
-                </View>
-              </View>
-            </View>
-            <View
-              style={{
-                width: "100%",
-                // paddingTop: 15,
-                flexDirection: "column",
-              }}
-            >
-              <View style={{ width: "100%", flexDirection: width < 1024 ? 'column' : 'row', paddingTop: 40 }}>
-                <View
-                  style={{
-                    flex: 1, flexDirection: 'row',
-                    paddingBottom: 15,
-                    backgroundColor: "white",
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontSize: 14,
-                      color: '#1A2036'
-                    }}
-                  >
-                    Reminder
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    backgroundColor: "white",
-                    //  width: "100%",
-                    height: 40,
-                    marginRight: 10,
-                  }}
-                >
-                  <Switch
-                    value={notify}
-                    onValueChange={() => {
-                      if (notify) {
-                        // setShuffle(false)
-                        setFrequency("0");
-                      } else {
-                        // setShuffle(true)
-                        setFrequency("1-D");
-                      }
-                      setPlayChannelCueIndef(true);
-                      setNotify(!notify);
-                    }}
-                    style={{ height: 20 }}
-                    trackColor={{
-                      false: "#E3E8EE",
-                      true: "#5469D4",
-                    }}
-                    activeThumbColor="white"
-                  />
-                </View>
-              </View>
-              {notify ? (
-                <View style={{ width: "100%", flexDirection: width < 1024 ? 'column' : 'row', paddingTop: 40 }}>
-                  <View
-                    style={{
-                      flex: 1, flexDirection: 'row',
-                      paddingBottom: 15,
-                      backgroundColor: "white",
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontSize: 14,
-                        color: '#1A2036'
-                      }}
-                    >
-                      Recurring
-                    </Text>
-                  </View>
-                  <View style={{}}>
                     <View
                       style={{
                         backgroundColor: "white",
+                        //  width: "100%",
                         height: 40,
                         marginRight: 10,
-                        flexDirection: 'row',
-                        justifyContent: 'flex-end'
                       }}
                     >
                       <Switch
-                        value={!shuffle}
-                        onValueChange={() => setShuffle(!shuffle)}
+                        value={notify}
+                        onValueChange={() => {
+                          if (notify) {
+                            // setShuffle(false)
+                            setFrequency("0");
+                          } else {
+                            // setShuffle(true)
+                            setFrequency("1-D");
+                          }
+                          setPlayChannelCueIndef(true);
+                          setNotify(!notify);
+                        }}
                         style={{ height: 20 }}
                         trackColor={{
                           false: "#E3E8EE",
-                          true: "#50566B",
+                          true: "#5469D4",
                         }}
                         activeThumbColor="white"
                       />
                     </View>
-                    {!shuffle ? (
+                  </View>
+                  {notify ? (
+                    <View style={{ width: "100%", flexDirection: width < 1024 ? 'column' : 'row', paddingTop: 40 }}>
                       <View
                         style={{
-                          display: "flex",
-                          flexDirection: "row",
+                          flex: 1, flexDirection: 'row',
+                          paddingBottom: 15,
                           backgroundColor: "white",
-                          alignItems: 'center'
                         }}
                       >
-                        <Text style={{
-                          fontSize: 12,
-                          color: "#50566B",
-                          textAlign: "right",
-                          paddingRight: 10,
-                          paddingBottom: 10
-                        }}>
-                          {PreferredLanguageText("remindEvery")}
+                        <Text
+                          style={{
+                            fontSize: 14,
+                            color: '#1A2036',
+                            fontFamily: 'inter'
+                          }}
+                        >
+                          Repeat
                         </Text>
-                        <label style={{ width: 140 }}>
-                          <Select
-                            touchUi={true}
-                            themeVariant="light"
-                            value={frequency}
-                            rows={timedFrequencyOptions.length}
-                            onChange={(val: any) => {
-                              setFrequency(val.value);
+                      </View>
+                      <View style={{}}>
+                        <View
+                          style={{
+                            backgroundColor: "white",
+                            height: 40,
+                            marginRight: 10,
+                            flexDirection: 'row',
+                            justifyContent: 'flex-end'
+                          }}
+                        >
+                          <Switch
+                            value={!shuffle}
+                            onValueChange={() => setShuffle(!shuffle)}
+                            style={{ height: 20 }}
+                            trackColor={{
+                              false: "#E3E8EE",
+                              true: "#50566B",
                             }}
-                            responsive={{
-                              small: {
-                                display: 'bubble'
-                              },
-                              medium: {
-                                touchUi: false,
-                              }
-                            }}
-                            data={timedFrequencyOptions.map((freq: any) => {
-                              return {
-                                value: freq.value,
-                                text: freq.label
-                              }
-                            })}
+                            activeThumbColor="white"
                           />
-                        </label>
-                        {/* <Menu
+                        </View>
+                        {!shuffle ? (
+                          <View
+                            style={{
+                              display: "flex",
+                              flexDirection: "row",
+                              backgroundColor: "white",
+                              alignItems: 'center'
+                            }}
+                          >
+                            <Text style={{
+                              fontSize: 12,
+                              color: "#50566B",
+                              textAlign: "right",
+                              paddingRight: 10,
+                              paddingBottom: 10
+                            }}>
+                              {PreferredLanguageText("remindEvery")}
+                            </Text>
+                            <label style={{ width: 140 }}>
+                              <Select
+                                touchUi={true}
+                                themeVariant="light"
+                                value={frequency}
+                                rows={timedFrequencyOptions.length}
+                                onChange={(val: any) => {
+                                  setFrequency(val.value);
+                                }}
+                                responsive={{
+                                  small: {
+                                    display: 'bubble'
+                                  },
+                                  medium: {
+                                    touchUi: false,
+                                  }
+                                }}
+                                data={timedFrequencyOptions.map((freq: any) => {
+                                  return {
+                                    value: freq.value,
+                                    text: freq.label
+                                  }
+                                })}
+                              />
+                            </label>
+                            {/* <Menu
                           onSelect={(cat: any) => {
                             setFrequency(cat.value);
                             setFrequencyName(cat.label);
@@ -2607,31 +2207,31 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                             })}
                           </MenuOptions>
                         </Menu> */}
-                      </View>
-                    ) : (
-                      <View
-                        style={{
-                          width: "100%",
-                          display: "flex",
-                          flexDirection: "row",
-                          backgroundColor: "white",
-                        }}
-                      >
-                        <View>
-                          <Text style={
-                            {
-                              fontSize: 12,
-                              color: "#50566B",
-                              textAlign: "right",
-                              paddingRight: 10,
-                              marginTop: 5
-                            }
-                          }>
-                            {PreferredLanguageText("RemindOn")}
-                          </Text>
-                        </View>
-                        <View>
-                          {/* <DatePicker
+                          </View>
+                        ) : (
+                          <View
+                            style={{
+                              width: "100%",
+                              display: "flex",
+                              flexDirection: "row",
+                              backgroundColor: "white",
+                            }}
+                          >
+                            <View>
+                              <Text style={
+                                {
+                                  fontSize: 12,
+                                  color: "#50566B",
+                                  textAlign: "right",
+                                  paddingRight: 10,
+                                  marginTop: 5
+                                }
+                              }>
+                                {PreferredLanguageText("RemindOn")}
+                              </Text>
+                            </View>
+                            <View>
+                              {/* <DatePicker
                             format="YYYY-MM-DD HH:mm"
                             value={endPlayAt}
                             preventOverflow={true}
@@ -2645,102 +2245,103 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                             // isValidDate={disablePastDt}
                             size={"xs"}
                           /> */}
-                          <MobiscrollDatePicker
-                            controls={['date', 'time']}
-                            touchUi={true}
-                            theme="ios"
-                            value={endPlayAt}
-                            themeVariant="light"
-                            inputComponent="input"
-                            inputProps={{
-                              placeholder: 'Please Select...'
-                            }}
-                            onChange={(event: any) => {
-                              const date = new Date(event.value);
-                              if (date < new Date()) return;
+                              <MobiscrollDatePicker
+                                controls={['date', 'time']}
+                                touchUi={true}
+                                theme="ios"
+                                value={endPlayAt}
+                                themeVariant="light"
+                                inputComponent="input"
+                                inputProps={{
+                                  placeholder: 'Please Select...'
+                                }}
+                                onChange={(event: any) => {
+                                  const date = new Date(event.value);
+                                  if (date < new Date()) return;
 
-                              setEndPlayAt(date);
-                            }}
-                            responsive={{
-                              xsmall: {
-                                controls: ['date', 'time'],
-                                display: 'bottom',
-                                touchUi: true
-                              },
-                              // small: {
-                              //     controls: ['date', 'time'],
-                              //     display: 'anchored',
-                              //     touchUi: true
-                              // },
-                              medium: {
-                                controls: ['date', 'time'],
-                                display: 'anchored',
-                                touchUi: false
-                              },
-                            }}
+                                  setEndPlayAt(date);
+                                }}
+                                responsive={{
+                                  xsmall: {
+                                    controls: ['date', 'time'],
+                                    display: 'bottom',
+                                    touchUi: true
+                                  },
+                                  // small: {
+                                  //     controls: ['date', 'time'],
+                                  //     display: 'anchored',
+                                  //     touchUi: true
+                                  // },
+                                  medium: {
+                                    controls: ['date', 'time'],
+                                    display: 'anchored',
+                                    touchUi: false
+                                  },
+                                }}
 
-                          />
+                              />
 
-                        </View>
+                            </View>
+                          </View>
+                        )}
                       </View>
-                    )}
-                  </View>
-                </View>
-              ) : null}
-              {notify && !shuffle ? (
-                <View style={{ width: "100%", flexDirection: width < 1024 ? 'column' : 'row', paddingTop: 40 }}>
-                  <View
-                    style={{
-                      flex: 1, flexDirection: 'row',
-                      paddingBottom: 15,
-                      backgroundColor: "white",
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontSize: 14,
-                        color: '#1A2036'
-                      }}
-                    >
-                      Indefinite
-                    </Text>
-                  </View>
-                  <View style={{}}>
-                    <View
-                      style={{
-                        backgroundColor: "white",
-                        height: 40,
-                        flexDirection: 'row',
-                        justifyContent: 'flex-end',
-                        marginRight: 10,
-                      }}
-                    >
-                      <Switch
-                        value={playChannelCueIndef}
-                        onValueChange={() =>
-                          setPlayChannelCueIndef(!playChannelCueIndef)
-                        }
-                        style={{ height: 20 }}
-                        trackColor={{
-                          false: "#E3E8EE",
-                          true: "#50566B",
-                        }}
-                        activeThumbColor="white"
-                      />
                     </View>
-                    {playChannelCueIndef ? null : (
+                  ) : null}
+                  {notify && !shuffle ? (
+                    <View style={{ width: "100%", flexDirection: width < 1024 ? 'column' : 'row', paddingTop: 40 }}>
                       <View
                         style={{
-                          width: "100%",
-                          display: "flex",
-                          flexDirection: "row",
+                          flex: 1, flexDirection: 'row',
+                          paddingBottom: 15,
                           backgroundColor: "white",
                         }}
                       >
-                        <Text style={styles.text}>
-                          {PreferredLanguageText("remindTill")}
+                        <Text
+                          style={{
+                            fontSize: 14,
+                            fontFamily: 'inter',
+                            color: '#1A2036'
+                          }}
+                        >
+                          Indefinitely
                         </Text>
-                        {/* <DatePicker
+                      </View>
+                      <View style={{}}>
+                        <View
+                          style={{
+                            backgroundColor: "white",
+                            height: 40,
+                            flexDirection: 'row',
+                            justifyContent: 'flex-end',
+                            marginRight: 10,
+                          }}
+                        >
+                          <Switch
+                            value={playChannelCueIndef}
+                            onValueChange={() =>
+                              setPlayChannelCueIndef(!playChannelCueIndef)
+                            }
+                            style={{ height: 20 }}
+                            trackColor={{
+                              false: "#E3E8EE",
+                              true: "#50566B",
+                            }}
+                            activeThumbColor="white"
+                          />
+                        </View>
+                        {playChannelCueIndef ? null : (
+                          <View
+                            style={{
+                              width: "100%",
+                              display: "flex",
+                              flexDirection: "row",
+                              backgroundColor: "white",
+                            }}
+                          >
+                            <Text style={styles.text}>
+                              {PreferredLanguageText("remindTill")}
+                            </Text>
+                            {/* <DatePicker
                           format="YYYY-MM-DD HH:mm"
                           value={endPlayAt}
                           preventOverflow={true}
@@ -2754,309 +2355,584 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           size={"xs"}
                         /> */}
 
-                        <MobiscrollDatePicker
-                          controls={['date', 'time']}
-                          touchUi={true}
-                          theme="ios"
-                          value={endPlayAt}
-                          themeVariant="light"
-                          inputComponent="input"
-                          inputProps={{
-                            placeholder: 'Please Select...'
-                          }}
-                          onChange={(event: any) => {
-                            const date = new Date(event.value);
-                            if (date < new Date()) return;
-                            setEndPlayAt(date);
-                          }}
-                          responsive={{
-                            xsmall: {
-                              controls: ['date', 'time'],
-                              display: 'bottom',
-                              touchUi: true
-                            },
-                            // small: {
-                            //     controls: ['date', 'time'],
-                            //     display: 'anchored',
-                            //     touchUi: true
-                            // },
-                            medium: {
-                              controls: ['date', 'time'],
-                              display: 'anchored',
-                              touchUi: false
-                            },
-                          }}
-
-                        />
-
-                      </View>
-                    )}
-                  </View>
-                </View>
-              ) : null}
-            </View>
-            {/* Timed Quiz */}
-            {isQuiz ? (
-              <View style={{ width: "100%", flexDirection: width < 1024 ? 'column' : 'row', paddingTop: 40 }}>
-                <View
-                  style={{
-                    flex: 1, flexDirection: 'row',
-                    paddingBottom: 15,
-                    backgroundColor: "white",
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontSize: 15,
-                      color: '#1A2036'
-                    }}
-                  >
-                    Timed
-                  </Text>
-                </View>
-                <View>
-                  <View
-                    style={{
-                      backgroundColor: "white",
-                      height: 40,
-                      marginRight: 10,
-                      flexDirection: 'row',
-                      justifyContent: 'flex-end',
-                    }}
-                  >
-                    <Switch
-                      value={timer}
-                      onValueChange={() => {
-                        if (timer) {
-                          setDuration({
-                            hours: 1,
-                            minutes: 0,
-                            seconds: 0,
-                          });
-                        }
-                        setTimer(!timer);
-                      }}
-                      style={{ height: 20 }}
-                      trackColor={{
-                        false: "#E3E8EE",
-                        true: "#50566B",
-                      }}
-                      activeThumbColor="white"
-                    />
-                  </View>
-                  {timer ? (
-                    <View
-                      style={{
-                        borderRightWidth: 0,
-                        paddingTop: 0,
-                        borderColor: "#E3E8EE",
-                        flexDirection: 'row'
-                      }}
-                    >
-                      <View>
-                        <Menu onSelect={(hour: any) => setDuration({
-                          ...duration,
-                          hours: hour
-                        })}>
-                          <MenuTrigger>
-                            <Text
-                              style={{
-                                // fontFamily: "inter",
-                                fontSize: 15,
-                                color: "#1A2036",
+                            <MobiscrollDatePicker
+                              controls={['date', 'time']}
+                              touchUi={true}
+                              theme="ios"
+                              value={endPlayAt}
+                              themeVariant="light"
+                              inputComponent="input"
+                              inputProps={{
+                                placeholder: 'Please Select...'
                               }}
-                            >
-                              {duration.hours} H <Ionicons name="chevron-down-outline" size={15} /> &nbsp;&nbsp;:&nbsp;&nbsp;
-                            </Text>
-                          </MenuTrigger>
-                          <MenuOptions
-                            customStyles={{
-                              optionsContainer: {
-                                padding: 10,
-                                borderRadius: 15,
-                                shadowOpacity: 0,
-                                borderWidth: 1,
-                                borderColor: "#E3E8EE",
-                                overflow: 'scroll',
-                                maxHeight: '100%'
-                              },
-                            }}
-                          >
-                            {hours.map((hour: any) => {
-                              return (
-                                <MenuOption value={hour}>
-                                  <Text>{hour}</Text>
-                                </MenuOption>
-                              );
-                            })}
-                          </MenuOptions>
-                        </Menu>
-                      </View>
-                      <View>
-                        <Menu onSelect={(min: any) => setDuration({
-                          ...duration,
-                          minutes: min
-                        })}>
-                          <MenuTrigger>
-                            <Text
-                              style={{
-                                // fontFamily: "inter",
-                                fontSize: 15,
-                                color: "#1A2036",
+                              onChange={(event: any) => {
+                                const date = new Date(event.value);
+                                if (date < new Date()) return;
+                                setEndPlayAt(date);
                               }}
-                            >
-                              {duration.minutes}  m  <Ionicons name="chevron-down-outline" size={15} />
-                            </Text>
-                          </MenuTrigger>
-                          <MenuOptions
-                            customStyles={{
-                              optionsContainer: {
-                                padding: 10,
-                                borderRadius: 15,
-                                shadowOpacity: 0,
-                                borderWidth: 1,
-                                borderColor: "#E3E8EE",
-                                overflow: 'scroll',
-                                maxHeight: '100%'
-                              },
-                            }}
-                          >
-                            {minutes.map((min: any) => {
-                              return (
-                                <MenuOption value={min}>
-                                  <Text>{min}</Text>
-                                </MenuOption>
-                              );
-                            })}
-                          </MenuOptions>
-                        </Menu>
+                              responsive={{
+                                xsmall: {
+                                  controls: ['date', 'time'],
+                                  display: 'bottom',
+                                  touchUi: true
+                                },
+                                // small: {
+                                //     controls: ['date', 'time'],
+                                //     display: 'anchored',
+                                //     touchUi: true
+                                // },
+                                medium: {
+                                  controls: ['date', 'time'],
+                                  display: 'anchored',
+                                  touchUi: false
+                                },
+                              }}
+
+                            />
+
+                          </View>
+                        )}
                       </View>
                     </View>
                   ) : null}
                 </View>
-              </View>
-            ) : null}
+                {/* Timed Quiz */}
+                {isQuiz ? (
+                  <View style={{ width: "100%", flexDirection: width < 1024 ? 'column' : 'row', paddingTop: 40 }}>
+                    <View
+                      style={{
+                        flex: 1, flexDirection: 'row',
+                        paddingBottom: 15,
+                        backgroundColor: "white",
+                      }}
+                    >
+                      <Text
+                        style={{
+                          fontSize: 14,
+                          fontFamily: 'inter',
+                          color: '#1A2036'
+                        }}
+                      >
+                        Timed
+                      </Text>
+                    </View>
+                    <View>
+                      <View
+                        style={{
+                          backgroundColor: "white",
+                          height: 40,
+                          marginRight: 10,
+                          flexDirection: 'row',
+                          justifyContent: 'flex-end',
+                        }}
+                      >
+                        <Switch
+                          value={timer}
+                          onValueChange={() => {
+                            if (timer) {
+                              setDuration({
+                                hours: 1,
+                                minutes: 0,
+                                seconds: 0,
+                              });
+                            }
+                            setTimer(!timer);
+                          }}
+                          style={{ height: 20 }}
+                          trackColor={{
+                            false: "#E3E8EE",
+                            true: "#50566B",
+                          }}
+                          activeThumbColor="white"
+                        />
+                      </View>
+                      {timer ? (
+                        <View
+                          style={{
+                            borderRightWidth: 0,
+                            paddingTop: 0,
+                            borderColor: "#E3E8EE",
+                            flexDirection: 'row'
+                          }}
+                        >
+                          <View>
+                            <Menu onSelect={(hour: any) => setDuration({
+                              ...duration,
+                              hours: hour
+                            })}>
+                              <MenuTrigger>
+                                <Text
+                                  style={{
+                                    // fontFamily: "inter",
+                                    fontSize: 15,
+                                    color: "#1A2036",
+                                  }}
+                                >
+                                  {duration.hours} H <Ionicons name="chevron-down-outline" size={15} /> &nbsp;&nbsp;:&nbsp;&nbsp;
+                                </Text>
+                              </MenuTrigger>
+                              <MenuOptions
+                                customStyles={{
+                                  optionsContainer: {
+                                    padding: 10,
+                                    borderRadius: 15,
+                                    shadowOpacity: 0,
+                                    borderWidth: 1,
+                                    borderColor: "#E3E8EE",
+                                    overflow: 'scroll',
+                                    maxHeight: '100%'
+                                  },
+                                }}
+                              >
+                                {hours.map((hour: any) => {
+                                  return (
+                                    <MenuOption value={hour}>
+                                      <Text>{hour}</Text>
+                                    </MenuOption>
+                                  );
+                                })}
+                              </MenuOptions>
+                            </Menu>
+                          </View>
+                          <View>
+                            <Menu onSelect={(min: any) => setDuration({
+                              ...duration,
+                              minutes: min
+                            })}>
+                              <MenuTrigger>
+                                <Text
+                                  style={{
+                                    // fontFamily: "inter",
+                                    fontSize: 15,
+                                    color: "#1A2036",
+                                  }}
+                                >
+                                  {duration.minutes}  m  <Ionicons name="chevron-down-outline" size={15} />
+                                </Text>
+                              </MenuTrigger>
+                              <MenuOptions
+                                customStyles={{
+                                  optionsContainer: {
+                                    padding: 10,
+                                    borderRadius: 15,
+                                    shadowOpacity: 0,
+                                    borderWidth: 1,
+                                    borderColor: "#E3E8EE",
+                                    overflow: 'scroll',
+                                    maxHeight: '100%'
+                                  },
+                                }}
+                              >
+                                {minutes.map((min: any) => {
+                                  return (
+                                    <MenuOption value={min}>
+                                      <Text>{min}</Text>
+                                    </MenuOption>
+                                  );
+                                })}
+                              </MenuOptions>
+                            </Menu>
+                          </View>
+                        </View>
+                      ) : null}
+                    </View>
+                  </View>
+                ) : null}
 
-            {/* if Quiz then ask Shuffle */}
-            {isQuiz ? (
-              <View style={{ width: "100%", flexDirection: width < 1024 ? 'column' : 'row', paddingTop: 40 }}>
+                {/* if Quiz then ask Shuffle */}
+                {isQuiz ? (
+                  <View style={{ width: "100%", flexDirection: width < 1024 ? 'column' : 'row', paddingTop: 40 }}>
+                    <View
+                      style={{
+                        flex: 1, flexDirection: 'row',
+                        paddingBottom: 15,
+                        backgroundColor: "white",
+                      }}
+                    >
+                      <Text
+                        style={{
+                          fontSize: 14,
+                          fontFamily: 'inter',
+                          color: '#1A2036'
+                        }}
+                      >
+                        Random Order
+                      </Text>
+                    </View>
+                    <View>
+                      <View
+                        style={{
+                          backgroundColor: "white",
+                          height: 40,
+                          flexDirection: 'row',
+                          justifyContent: 'flex-end',
+                          marginRight: 10,
+                        }}
+                      >
+                        <Switch
+                          value={shuffleQuiz}
+                          onValueChange={() => setShuffleQuiz(!shuffleQuiz)}
+                          style={{ height: 20 }}
+                          trackColor={{
+                            false: "#E3E8EE",
+                            true: "#50566B",
+                          }}
+                          activeThumbColor="white"
+                        />
+                      </View>
+                    </View>
+                  </View>
+                ) : null}
+              </View>
+              : <>
+                {imported || isQuiz ? (
+                  <View
+                    style={{
+                      // display: "flex",
+                      flexDirection: width < 1024 ? "column" : "row",
+                      // overflow: "visible",
+                    }}
+                  >
+                    <View
+                      style={{
+                        width: width < 1024 ? "100%" : "50%",
+                        maxWidth: 400,
+                        borderRightWidth: 0,
+                        borderColor: "#E3E8EE",
+                        // paddingRight: 15,
+                        // display: "flex",
+                        // paddingLeft: isQuiz && Dimensions.get('window').width > 768 ? 20 : 0,
+                        flexDirection: "row",
+                      }}
+                    >
+                      <TextareaAutosize
+                        value={title}
+                        style={{
+                          width: "100%",
+                          maxWidth: '100%',
+                          borderBottom: '1px solid #E3E8EE',
+                          fontSize: 14,
+                          paddingTop: 13,
+                          paddingBottom: 13,
+                          marginTop: 12,
+                          marginBottom: 15,
+                          borderRadius: 0,
+                        }}
+                        // style={styles.input}
+                        minRows={1}
+                        placeholder={PreferredLanguageText("title")}
+                        onChange={(e: any) => setTitle(e.target.value)}
+                      />
+                      {
+                        !isQuiz ?
+                          <TouchableOpacity
+                            style={{
+                              marginLeft: 15,
+                              paddingTop: 15,
+                            }}
+                            onPress={() => clearAll()}
+                          >
+                            <Ionicons
+                              name="trash-outline"
+                              color="#50566B"
+                              size={15}
+                              style={{ alignSelf: "center" }}
+                            />
+                            <Text
+                              style={{
+                                fontSize: 10,
+                                color: "#50566B",
+                                textAlign: "center",
+                              }}
+                            >
+                              Clear
+                            </Text>
+                          </TouchableOpacity> : null
+                      }
+                    </View>
+                  </View>
+                ) : null}
                 <View
                   style={{
-                    flex: 1, flexDirection: 'row',
-                    paddingBottom: 15,
+                    width: "100%",
+                    minHeight: isQuiz ? 0 : 500,
                     backgroundColor: "white",
                   }}
                 >
-                  <Text
-                    style={{
-                      fontSize: 14,
-                      color: '#1A2036'
-                    }}
-                  >
-                    Random Order
-                  </Text>
-                </View>
-                <View>
-                  <View
-                    style={{
-                      backgroundColor: "white",
-                      height: 40,
-                      flexDirection: 'row',
-                      justifyContent: 'flex-end',
-                      marginRight: 10,
-                    }}
-                  >
-                    <Switch
-                      value={shuffleQuiz}
-                      onValueChange={() => setShuffleQuiz(!shuffleQuiz)}
-                      style={{ height: 20 }}
-                      trackColor={{
-                        false: "#E3E8EE",
-                        true: "#50566B",
+                  {isQuiz ? (
+                    <View
+                      style={{
+                        width: "100%",
+                        flexDirection: "column",
                       }}
-                      activeThumbColor="white"
-                    />
-                  </View>
+                    >
+                      <View style={{
+                        backgroundColor: '#fff',
+                        // paddingLeft: Dimensions.get('window').width > 768 ? 20 : 0,
+                        flexDirection: 'row',
+                        width: '100%'
+                      }}>
+                        <View style={{
+                          width: '100%',
+                          // paddingRight: Dimensions.get('window').width > 768 ? 15 : 0,
+                          paddingTop: 15
+                        }}>
+                          <Editor
+                            // onInit={(evt, editor) => RichText.current = editor}
+                            initialValue={initialQuizInstructions}
+                            apiKey="ip4jckmpx73lbu6jgyw9oj53g0loqddalyopidpjl23fx7tl"
+                            init={{
+                              skin: "snow",
+                              // toolbar_sticky: true,
+                              indent: false,
+                              branding: false,
+                              placeholder: 'Instructions',
+                              autoresize_on_init: false,
+                              autoresize_min_height: 200,
+                              height: 200,
+                              min_height: 200,
+                              paste_data_images: true,
+                              images_upload_url: 'https://api.cuesapp.co/api/imageUploadEditor',
+                              mobile: {
+                                plugins: 'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize'
+                              },
+                              plugins: 'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize',
+                              menu: { // this is the complete default configuration
+                                file: { title: 'File', items: 'newdocument' },
+                                edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall' },
+                                insert: { title: 'Insert', items: 'link media | template hr' },
+                                view: { title: 'View', items: 'visualaid' },
+                                format: { title: 'Format', items: 'bold italic underline strikethrough superscript subscript | formats | removeformat' },
+                                table: { title: 'Table', items: 'inserttable tableprops deletetable | cell row column' },
+                                tools: { title: 'Tools', items: 'spellchecker code' }
+                              },
+                              // menubar: 'file edit view insert format tools table tc help',
+                              menubar: false,
+                              toolbar: 'undo redo | bold italic underline strikethrough |  numlist bullist checklist | forecolor backcolor permanentpen removeformat | table image media pageembed link | charmap emoticons superscript subscript',
+                              importcss_append: true,
+                              image_caption: true,
+                              quickbars_selection_toolbar: 'bold italic underline | quicklink h2 h3 quickimage quicktable',
+                              noneditable_noneditable_class: 'mceNonEditable',
+                              toolbar_mode: 'sliding',
+                              // tinycomments_mode: 'embedded',
+                              content_style: ".mce-content-body[data-mce-placeholder]:not(.mce-visualblocks)::before{color: #50566B;}",
+                              // contextmenu: 'link image table configurepermanentpen',
+                              // a11y_advanced_options: true,
+                              extended_valid_elements: "svg[*],defs[*],pattern[*],desc[*],metadata[*],g[*],mask[*],path[*],line[*],marker[*],rect[*],circle[*],ellipse[*],polygon[*],polyline[*],linearGradient[*],radialGradient[*],stop[*],image[*],view[*],text[*],textPath[*],title[*],tspan[*],glyph[*],symbol[*],switch[*],use[*]"
+                              // skin: useDarkMode ? 'oxide-dark' : 'oxide',
+                              // content_css: useDarkMode ? 'dark' : 'default',
+
+                            }}
+                            onChange={(e: any) => {
+                              setQuizInstructions(e.target.getContent())
+                            }}
+                          />
+                        </View>
+                      </View>
+                      <QuizCreate
+                        problems={problems}
+                        headers={headers}
+                        setProblems={(p: any) => setProblems(p)}
+                        setHeaders={(h: any) => setHeaders(h)}
+                      />
+                    </View>
+                  ) : imported ? (
+                    type === "mp4" ||
+                      type === "oga" ||
+                      type === "mov" ||
+                      type === "wmv" ||
+                      type === "mp3" ||
+                      type === "mov" ||
+                      type === "mpeg" ||
+                      type === "mp2" ||
+                      type === "wav" ? (
+                      <ReactPlayer
+                        url={url}
+                        controls={true}
+                        onContextMenu={(e: any) => e.preventDefault()}
+                        config={{
+                          file: { attributes: { controlsList: "nodownload" } },
+                        }}
+                        width={'100%'}
+                        height={'100%'}
+                      />
+                    ) : (
+                      <View key={url} style={{ flex: 1, maxHeight: 800 }}>
+                        {/* <Webview key={url} url={url} /> */}
+                        <div className="webviewer" ref={RichText} style={{ height: "80vh", borderWidth: 1, borderColor: '#E3E8EE', borderRadius: 0 }}></div>
+                      </View>
+                    )
+                  ) : null}
+                  {/* <RichEditor
+              key={reloadEditorKey.toString()}
+              containerStyle={{
+                height,
+                backgroundColor: "#fff",
+                padding: 3,
+                paddingTop: 5,
+                paddingBottom: 10,
+                // borderRadius: 15,
+                display: isQuiz || imported ? "none" : "flex",
+              }}
+              ref={RichText}
+              style={{
+                width: "100%",
+                backgroundColor: "#fff",
+                // borderRadius: 15,
+                minHeight: 550,
+                display: isQuiz || imported ? "none" : "flex",
+                // borderTopWidth: 0.5,
+                // borderColor: "#50566B",
+              }}
+              editorStyle={{
+                backgroundColor: "#fff",
+                placeholderColor: "#50566B",
+                color: "#1A2036",
+                contentCSSText: "font-size: 14px;",
+              }}
+              initialContentHTML={cue}
+              onScroll={() => Keyboard.dismiss()}
+              placeholder={PreferredLanguageText("title")}
+              onChange={(text) => {
+                const modifedText = text.split("&amp;").join("&");
+                setCue(modifedText);
+              }}
+              onHeightChange={handleHeightChange}
+              onBlur={() => Keyboard.dismiss()}
+              allowFileAccess={true}
+              allowFileAccessFromFileURLs={true}
+              allowUniversalAccessFromFileURLs={true}
+              allowsFullscreenVideo={true}
+              allowsInlineMediaPlayback={true}
+              allowsLinkPreview={true}
+              allowsBackForwardNavigationGestures={true}
+            /> */}
+                  {isQuiz || imported ? null : <Editor
+                    onInit={(evt, editor) => editorRef.current = editor}
+                    initialValue={cueDraft !== "" ? cueDraft : "<h2>Title</h2>"}
+                    apiKey="ip4jckmpx73lbu6jgyw9oj53g0loqddalyopidpjl23fx7tl"
+                    init={{
+                      skin: "snow",
+                      // toolbar_sticky: true,
+                      branding: false,
+                      placeholder: 'Content...',
+                      min_height: 500,
+                      paste_data_images: true,
+                      images_upload_url: 'https://api.cuesapp.co/api/imageUploadEditor',
+                      mobile: {
+                        plugins: 'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize'
+                      },
+                      plugins: 'print preview powerpaste casechange importcss searchreplace autolink save directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists checklist wordcount textpattern noneditable help formatpainter pageembed charmap emoticons advtable autoresize',
+                      menu: { // this is the complete default configuration
+                        file: { title: 'File', items: 'newdocument' },
+                        edit: { title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall' },
+                        insert: { title: 'Insert', items: 'link media | template hr' },
+                        view: { title: 'View', items: 'visualaid' },
+                        format: { title: 'Format', items: 'bold italic underline strikethrough superscript subscript | formats | removeformat' },
+                        table: { title: 'Table', items: 'inserttable tableprops deletetable | cell row column' },
+                        tools: { title: 'Tools', items: 'spellchecker code' }
+                      },
+                      // menubar: 'file edit view insert format tools table tc help',
+                      menubar: false,
+                      toolbar: 'undo redo | bold italic underline strikethrough | superscript subscript | fontselect fontSizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat  pagebreak | table image media pageembed link | preview print | charmap emoticons |  ltr rtl | showcomments addcomment',
+                      importcss_append: true,
+                      image_caption: true,
+                      quickbars_selection_toolbar: 'bold italic underline | quicklink h2 h3 quickimage quicktable',
+                      noneditable_noneditable_class: 'mceNonEditable',
+                      toolbar_mode: 'sliding',
+                      content_style: ".mce-content-body[data-mce-placeholder]:not(.mce-visualblocks)::before{color: #50566B;}",
+                      // tinycomments_mode: 'embedded',
+                      // content_style: '.mymention{ color: gray; }',
+                      // contextmenu: 'link image table configurepermanentpen',
+                      // a11y_advanced_options: true,
+                      extended_valid_elements: "svg[*],defs[*],pattern[*],desc[*],metadata[*],g[*],mask[*],path[*],line[*],marker[*],rect[*],circle[*],ellipse[*],polygon[*],polyline[*],linearGradient[*],radialGradient[*],stop[*],image[*],view[*],text[*],textPath[*],title[*],tspan[*],glyph[*],symbol[*],switch[*],use[*]"
+                      // skin: useDarkMode ? 'oxide-dark' : 'oxide',
+                      // content_css: useDarkMode ? 'dark' : 'default',
+                    }}
+                    onChange={(e: any) => setCue(e.target.getContent())}
+                  />}
+                </View>
+              </>
+          }
+          {
+            !showOptions ? null :
+              <View style={styles.footer}>
+                <View
+                  style={{
+                    flex: 1,
+                    backgroundColor: "white",
+                    justifyContent: "center",
+                    display: "flex",
+                    flexDirection: "row",
+                    height: 50,
+                    paddingTop: 10,
+                  }}
+                >
+                  <TouchableOpacity
+                    onPress={async () => {
+                      if (isQuiz) {
+
+                        if (channelId === "") {
+                          Alert("Select a channel to share quiz.")
+                          return;
+                        }
+
+                        createNewQuiz();
+                      } else {
+                        await handleCreate();
+                      }
+                    }}
+                    disabled={isSubmitting}
+                    style={{
+                      borderRadius: 15,
+                      backgroundColor: "white",
+                    }}
+                  >
+                    {channelId === "" ? (
+                      <Text
+                        style={{
+                          textAlign: "center",
+                          lineHeight: 35,
+                          color: "white",
+                          fontSize: 12,
+                          backgroundColor: "#5469D4",
+                          borderRadius: 15,
+                          paddingHorizontal: 20,
+                          fontFamily: "inter",
+                          overflow: "hidden",
+                          height: 35,
+                          textTransform: "uppercase",
+                        }}
+                      >
+                        {isSubmitting
+                          ? 'Creating...'
+                          : 'Create'}
+                      </Text>
+                    ) : (
+                      <Text
+                        style={{
+                          textAlign: "center",
+                          lineHeight: 35,
+                          color: "white",
+                          fontSize: 12,
+                          backgroundColor: "#5469D4",
+                          borderRadius: 15,
+                          paddingHorizontal: 20,
+                          fontFamily: "inter",
+                          overflow: "hidden",
+                          height: 35,
+                          textTransform: "uppercase",
+                        }}
+                      >
+                        {isSubmitting
+                          ? 'Creating...'
+                          : 'CREATE'}
+                      </Text>
+                    )}
+                  </TouchableOpacity>
                 </View>
               </View>
-            ) : null}
-          </View>
-          <View style={styles.footer}>
-            <View
-              style={{
-                flex: 1,
-                backgroundColor: "white",
-                justifyContent: "center",
-                display: "flex",
-                flexDirection: "row",
-                height: 50,
-                paddingTop: 10,
-              }}
-            >
-              <TouchableOpacity
-                onPress={async () => {
-                  if (isQuiz) {
-
-                    if (channelId === "") {
-                      Alert("Select a channel to share quiz.")
-                      return;
-                    }
-
-                    createNewQuiz();
-                  } else {
-                    await handleCreate();
-                  }
-                }}
-                disabled={isSubmitting}
-                style={{
-                  borderRadius: 15,
-                  backgroundColor: "white",
-                }}
-              >
-                {channelId === "" ? (
-                  <Text
-                    style={{
-                      textAlign: "center",
-                      lineHeight: 35,
-                      color: "white",
-                      fontSize: 12,
-                      backgroundColor: "#5469D4",
-                      borderRadius: 15,
-                      paddingHorizontal: 20,
-                      fontFamily: "inter",
-                      overflow: "hidden",
-                      height: 35,
-                      textTransform: "uppercase",
-                    }}
-                  >
-                    {isSubmitting
-                      ? 'Creating...'
-                      : 'Create'}
-                  </Text>
-                ) : (
-                  <Text
-                    style={{
-                      textAlign: "center",
-                      lineHeight: 35,
-                      color: "white",
-                      fontSize: 12,
-                      backgroundColor: "#5469D4",
-                      borderRadius: 15,
-                      paddingHorizontal: 20,
-                      fontFamily: "inter",
-                      overflow: "hidden",
-                      height: 35,
-                      textTransform: "uppercase",
-                    }}
-                  >
-                    {isSubmitting
-                      ? 'Creating...'
-                      : 'CREATE'}
-                  </Text>
-                )}
-              </TouchableOpacity>
-            </View>
-          </View>
+          }
           {/* Collapsible ends here */}
         </View>
       </Animated.View>

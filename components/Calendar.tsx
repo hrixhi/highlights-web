@@ -35,6 +35,13 @@ import { Select } from '@mobiscroll/react'
 
 
 const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
+
+    const [tab, setTab] = useState(props.tab)
+
+    useEffect(() => {
+        props.setTab(tab)
+    }, [tab])
+
     const [modalAnimation] = useState(new Animated.Value(1));
     const [loading, setLoading] = useState(true);
     const [events, setEvents] = useState<any[]>([]);
@@ -92,7 +99,6 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     const tabs = ['Agenda', 'Schedule', 'Calendar', 'Activity', 'Add']
     const tabOptions = ['Agenda', 'Schedule', 'Calendar', 'Activity']
-    const [tab, setTab] = useState('Agenda')
 
     useEffect(() => {
         (
@@ -677,7 +683,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
             if (user._id === event.createdBy && new Date(event.end) > new Date() && event.eventId) {
 
                 setEditEvent(event)
-                setTab('Add')
+                props.setTab('Add')
                 // setShowAddEvent(true)
 
             } else if (user._id === event.createdBy && new Date(event.end) < new Date() && event.eventId) {
@@ -781,7 +787,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     const width = Dimensions.get("window").width;
     const windowHeight =
-        width < 1024 ? Dimensions.get("window").height - 30 : Dimensions.get("window").height;
+        width < 1024 ? Dimensions.get("window").height - 0 : Dimensions.get("window").height;
 
     const f: any = eventFrequencyOptions.find((item) => {
         return item.value === frequency
@@ -1245,6 +1251,31 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
         </View>)
     }
 
+    const onChangeVal = useCallback((val: any) => {
+        switch (val.value) {
+            case tabs[0]:
+                setEditEvent(null)
+                setTab(tabs[0])
+                break;
+            case tabs[1]:
+                setEditEvent(null)
+                setTab(tabs[1])
+                break;
+            case tabs[2]:
+                setEditEvent(null)
+                setTab(tabs[2])
+                break;
+            case tabs[3]:
+                setEditEvent(null)
+                setTab(tabs[3])
+                break;
+            default:
+                setEditEvent(null)
+                setTab(tabs[4])
+                break;
+        }
+    }, [tabs])
+
     const renderEventContent = ((data: any) => {
 
         // Add buttons to view event, edit event, join meeting, etc
@@ -1260,7 +1291,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     color: data.original.submitted ? '#35AC78' : (!assingmentDue ? '#5469D4' : '#F94144'),
                     borderRadius: 12,
                     padding: 4,
-                    fontSize: 11,
+                    fontSize: 12,
                     borderWidth: 1,
                 }}>
                     {data.original.submitted ? "SUBMITTED" : (assingmentDue ? "MISSING" : "PENDING")}
@@ -1285,7 +1316,6 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
     console.log("Tab", tab);
 
     const renderTabs = (activeTab: any) => {
-
         return (<View style={{ flexDirection: "row", flex: 1, marginBottom: 20, marginTop: 10, paddingVertical: 10 }}>
             {
                 tab !== 'Add' && tab !== 'Activity' ? null : (
@@ -1293,7 +1323,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         <TouchableOpacity
                             onPress={() => {
                                 setEditEvent(null)
-                                setTab(tabs[0])
+                                props.setTab(tabs[0])
                             }}
                             style={{
                                 paddingRight: 20,
@@ -1313,30 +1343,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         touchUi={true}
                         themeVariant="light"
                         value={tab}
-                        onChange={(val: any) => {
-                            switch (val.value) {
-                                case tabs[0]:
-                                    setEditEvent(null)
-                                    setTab(tabs[0])
-                                    break;
-                                case tabs[1]:
-                                    setEditEvent(null)
-                                    setTab(tabs[1])
-                                    break;
-                                case tabs[2]:
-                                    setEditEvent(null)
-                                    setTab(tabs[2])
-                                    break;
-                                case tabs[3]:
-                                    setEditEvent(null)
-                                    setTab(tabs[3])
-                                    break;
-                                default:
-                                    setEditEvent(null)
-                                    setTab(tabs[0])
-                                    break;
-                            }
-                        }}
+                        onChange={(val: any) => onChangeVal(val)}
                         responsive={{
                             small: {
                                 display: 'bubble'
@@ -1345,10 +1352,10 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 touchUi: false,
                             }
                         }}
-                        data={tabOptions.map((tab: any) => {
+                        data={tabOptions.map((t: any) => {
                             return {
-                                value: tab,
-                                text: tab === 'Agenda' ? 'To-Do' : tab
+                                value: t,
+                                text: t === 'Agenda' ? 'To-Do' : t
                             }
                         })}
                     />
@@ -1356,10 +1363,10 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 </label> : null
             }
             <View style={{ flex: 1, flexDirection: 'row' }} />
-            {
+            {/* {
                 tab !== 'Add' && tab !== 'Activity' ? <TouchableOpacity
                     onPress={() => {
-                        setTab(tabs[4])
+                        props.setTab(tabs[4])
                     }}
                     disabled={isCreatingEvents}
                     style={{
@@ -1388,7 +1395,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         ADD
                     </Text>
                 </TouchableOpacity> : null
-            }
+            } */}
             {
                 tab === tabs[3] && unreadCount !== 0 ?
                     <TouchableOpacity
@@ -1489,7 +1496,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
             }}>
             <View style={{
                 width: '100%', flexDirection: Dimensions.get('window').width < 1024 ? 'column' : 'row',
-                paddingTop: 20
+                // paddingTop: 20
             }}>
                 <View style={{
                     width: Dimensions.get('window').width < 1024 ? '100%' : '100%',
@@ -1500,7 +1507,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         style={{
                             width: "100%",
                             // height: 620,
-                            paddingBottom: 20,
+                            // paddingBottom: 20,
                             backgroundColor: "white",
                             borderTopRightRadius: 0,
                             borderTopLeftRadius: 0
@@ -1552,8 +1559,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 // overflow: 'hidden',
                                                 // marginTop: 20,
                                                 marginBottom: Dimensions.get('window').width < 1024 ? 0 : 0,
-                                                borderBottomWidth: tab === 'Agenda' ? 0 : 2,
-                                                borderWidth: tab !== 'Add' && 'Activity' ? 2 : 0,
+                                                borderBottomWidth: tab === 'Agenda' || tab === 'Add' || tab === 'Activity' ? 0 : 2,
+                                                borderWidth: tab !== 'Add' && tab !== 'Activity' ? 2 : 0,
                                                 // borderRightWidth: tab === 'Activity' ? 0 : 1,
                                                 // borderLeftWidth: tab === 'Activity' ? 0 : 1,
                                                 borderColor: '#E3E8EE',
@@ -1690,41 +1697,41 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                                     // borderRightWidth: 1,
                                                                                                     borderBottomWidth: index === activity.length - 1 ? 0 : 1,
                                                                                                     // minWidth: 600, // flex: 1,
-                                                                                                    width: '100%'
+                                                                                                    width: '100%',
+                                                                                                    paddingVertical: 5
                                                                                                 }}>
-                                                                                                <View style={{ backgroundColor: '#fff', padding: 0, flexDirection: 'row', width: 125 }}>
+                                                                                                <View style={{
+                                                                                                    backgroundColor: '#fff',
+                                                                                                    padding: 20,
+                                                                                                    flexDirection: 'row',
+                                                                                                    // width: 125
+                                                                                                }}>
                                                                                                     <View style={{
-                                                                                                        width: 9,
-                                                                                                        height: 9,
+                                                                                                        width: 14,
+                                                                                                        height: 14,
                                                                                                         borderRadius: 12,
                                                                                                         // marginRight: 5,
-                                                                                                        margin: 20,
                                                                                                         backgroundColor: act.colorCode
                                                                                                     }} />
-                                                                                                    <Text style={{ fontSize: 12, paddingVertical: 18, fontFamily: 'inter' }} ellipsizeMode='tail'>
+                                                                                                </View>
+                                                                                                <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
+                                                                                                    <Text style={{ fontSize: 15, padding: 5, fontFamily: 'inter', marginTop: 5 }} ellipsizeMode='tail'>
                                                                                                         {act.channelName}
                                                                                                     </Text>
-                                                                                                </View>
-                                                                                                <View style={{ flex: 1, backgroundColor: '#fff', padding: 0, flexDirection: 'row' }}>
-                                                                                                    <View>
-                                                                                                        <Text style={{ fontSize: 13, padding: 5, paddingTop: 10, paddingBottom: 5, fontFamily: 'inter' }} ellipsizeMode='tail'>
-                                                                                                            {act.title}
-                                                                                                        </Text>
-                                                                                                        <Text style={{ fontSize: 11, padding: 5 }} ellipsizeMode='tail'>
-                                                                                                            {act.subtitle}
-                                                                                                        </Text>
-                                                                                                    </View>
+                                                                                                    <Text style={{ fontSize: 12, padding: 5 }} ellipsizeMode='tail'>
+                                                                                                        {act.title} - {act.subtitle}
+                                                                                                    </Text>
                                                                                                 </View>
                                                                                                 <View style={{ backgroundColor: '#fff', padding: 0, flexDirection: 'row', alignSelf: 'center' }} >
                                                                                                     <Text style={{ fontSize: 13, padding: 5, lineHeight: 13 }} ellipsizeMode='tail'>
                                                                                                         {act.status === 'unread' ?
-                                                                                                            <Ionicons name='alert-circle-outline' color='#f94144' size={23} /> : null}
+                                                                                                            <Ionicons name='alert-circle-outline' color='#f94144' size={17} /> : null}
                                                                                                     </Text>
-                                                                                                    <Text style={{ fontSize: 11, padding: 5, lineHeight: 13 }} ellipsizeMode='tail'>
+                                                                                                    <Text style={{ fontSize: 12, padding: 5, lineHeight: 13 }} ellipsizeMode='tail'>
                                                                                                         {emailTimeDisplay(act.date)}
                                                                                                     </Text>
                                                                                                     <Text style={{ fontSize: 13, padding: 5, lineHeight: 13 }} ellipsizeMode='tail'>
-                                                                                                        <Ionicons name='chevron-forward-outline' size={20} color='#5469D4' />
+                                                                                                        <Ionicons name='chevron-forward-outline' size={17} color='#5469D4' />
                                                                                                     </Text>
                                                                                                 </View>
                                                                                             </TouchableOpacity>

@@ -1571,7 +1571,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                         borderRadius: 0,
                                                         borderWidth: 1,
                                                         borderColor: '#E3E8EE',
-                                                        // maxHeight: props.cueId ? windowHeight - 300 : '100%',
+                                                        // maxHeight: props.cueId ? windowHeight - 00 : '100%',
                                                         // marginBottom: props.cueId ? 20 : 0,
                                                         maxWidth: 1000,
                                                         marginBottom: 50,
@@ -1653,8 +1653,8 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                 <View style={{ backgroundColor: '#fff', padding: 5 }}>
                                                                     <Image
                                                                         style={{
-                                                                            height: 25,
-                                                                            width: 25,
+                                                                            height: 35,
+                                                                            width: 35,
                                                                             marginTop: 5,
                                                                             marginBottom: 5,
                                                                             borderRadius: 75,

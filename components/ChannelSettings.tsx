@@ -70,22 +70,22 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
             text: 'All'
         },
         {
-          value: 'student',
-          text: 'Student'
-        }, 
+            value: 'student',
+            text: 'Student'
+        },
         {
-          value: 'instructor',
-          text: 'Instructor'
+            value: 'instructor',
+            text: 'Instructor'
         }
     ]
 
     const gradeOptions = grades.map((g: any) => {
         return {
-          value: g,
-          text: g
+            value: g,
+            text: g
         }
     })
-    
+
     const filterGradeOptions = [
         {
             value: 'All',
@@ -96,15 +96,15 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
 
     const sectionOptions = sections.map((s: any) => {
         return {
-          value: s,
-          text: s
+            value: s,
+            text: s
         }
     })
 
     const filterSectionOptions = [
         {
-          value: 'All',
-          text: 'All'
+            value: 'All',
+            text: 'All'
         },
         ...sectionOptions
     ]
@@ -283,25 +283,25 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         </MenuOptions>
                     </Menu> */}
                     <label style={{ width: 120 }}>
-                              <Select
-                                touchUi={true}
-                                value={activeRole}
-                                rows={3}
-                                themeVariant="light"
-                                onChange={(val: any) => {
-                                  setActiveRole(val.value)
-                                }}
-                                responsive={{
-                                  small: {
+                        <Select
+                            touchUi={true}
+                            value={activeRole}
+                            rows={3}
+                            themeVariant="light"
+                            onChange={(val: any) => {
+                                setActiveRole(val.value)
+                            }}
+                            responsive={{
+                                small: {
                                     display: 'bubble'
-                                  },
-                                  medium: {
+                                },
+                                medium: {
                                     touchUi: false
-                                  }
-                                }}
-                                data={filterRoleOptions}
-                              />
-                            </label>
+                                }
+                            }}
+                            data={filterRoleOptions}
+                        />
+                    </label>
                 </View>
                 <Text style={{ fontSize: 10, color: '#1A2036', paddingTop: 7, textAlign: 'center', backgroundColor: 'white' }}>
                     Roles
@@ -360,25 +360,25 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         </MenuOptions>
                     </Menu> */}
                     <label style={{ width: 120 }}>
-                                  <Select
-                                    touchUi={true}
-                                    value={activeGrade}
-                                    // rows={filterGradeOptions.length}
-                                    themeVariant="light"
-                                    onChange={(val: any) => {
-                                      setActiveGrade(val.value)
-                                    }}
-                                    responsive={{
-                                      small: {
-                                        display: 'bubble'
-                                      },
-                                      medium: {
-                                        touchUi: false
-                                      }
-                                    }}
-                                    data={filterGradeOptions}
-                                  />
-                                </label>
+                        <Select
+                            touchUi={true}
+                            value={activeGrade}
+                            // rows={filterGradeOptions.length}
+                            themeVariant="light"
+                            onChange={(val: any) => {
+                                setActiveGrade(val.value)
+                            }}
+                            responsive={{
+                                small: {
+                                    display: 'bubble'
+                                },
+                                medium: {
+                                    touchUi: false
+                                }
+                            }}
+                            data={filterGradeOptions}
+                        />
+                    </label>
                 </View>
                 <Text style={{ fontSize: 10, color: '#1A2036', paddingTop: 7, textAlign: 'center', backgroundColor: 'white', paddingLeft: 20 }}>
                     Grades
@@ -438,25 +438,25 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                     </Menu> */}
 
                     <label style={{ width: 120 }}>
-                                  <Select
-                                    touchUi={true}
-                                    value={activeSection}
-                                    // rows={sectionOptions.length}
-                                    themeVariant="light"
-                                    onChange={(val: any) => {
-                                      setActiveSection(val.value)
-                                    }}
-                                    responsive={{
-                                      small: {
-                                        display: 'bubble'
-                                      },
-                                      medium: {
-                                        touchUi: false
-                                      }
-                                    }}
-                                    data={filterSectionOptions}
-                                  />
-                              </label>
+                        <Select
+                            touchUi={true}
+                            value={activeSection}
+                            // rows={sectionOptions.length}
+                            themeVariant="light"
+                            onChange={(val: any) => {
+                                setActiveSection(val.value)
+                            }}
+                            responsive={{
+                                small: {
+                                    display: 'bubble'
+                                },
+                                medium: {
+                                    touchUi: false
+                                }
+                            }}
+                            data={filterSectionOptions}
+                        />
+                    </label>
                 </View>
                 <Text style={{ fontSize: 10, color: '#1A2036', paddingTop: 7, textAlign: 'center', paddingLeft: 20 }}>
                     Sections
@@ -1116,7 +1116,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
             <View style={{ width: '100%', backgroundColor: 'white', paddingTop: 30 }}>
                 <View
                     style={{
-                        maxWidth: 500,
+                        maxWidth: 350,
                         alignSelf: 'center',
                         minHeight: 100,
                     }}
@@ -1461,6 +1461,7 @@ const styles = StyleSheet.create({
         // paddingRight: 20,
         // paddingLeft: Dimensions.get('window').width < 1024 ? 20 : 0,
         width: '100%',
+        maxWidth: '100%',
         // overflow: 'scroll',
         // flex: 1,
         backgroundColor: 'white',

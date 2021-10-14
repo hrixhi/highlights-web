@@ -73,7 +73,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     width: '97%',
                                     zIndex: 20
                                 }}>
-                                    <Ionicons name='bookmark' size={18} color={starred ? '#f94144' : '#fff'} />
+                                    <Ionicons name='bookmark' size={18} color={starred ? '#f94144' : '#f7fafc'} />
                                 </Text>
                                 : null
                         } */}
@@ -95,7 +95,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         }
                     </View>
                     <View style={{
-                        backgroundColor: '#fff',
+                        backgroundColor: '#f7fafc',
                         width: '100%', flexDirection: 'row', flex: 1, height: '75%'
                     }}>
                         <Text
@@ -172,35 +172,35 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
         width: '95%',
         padding: 10,
         paddingHorizontal: 10,
-        backgroundColor: '#fff',
+        backgroundColor: '#f7fafc',
     },
     flipCard: {
         height: '100%',
         width: '100%',
         borderRadius: 0,
         padding: 13,
-        color: '#fff',
+        color: '#f7fafc',
         backgroundColor: colorScheme === 'light' ? '#1A2036' : 'white'
     },
     descriptionFlip: {
-        color: '#fff',
+        color: '#f7fafc',
         fontSize: 13,
         // height: '25%',
     },
     text: {
         height: '100%',
-        backgroundColor: '#fff'
+        backgroundColor: '#f7fafc'
     },
     flipText: {
         height: '100%',
-        color: '#fff',
+        color: '#f7fafc',
         backgroundColor: colorScheme === 'light' ? '#1A2036' : 'white'
     },
     dateContainer: {
         fontSize: 10,
-        color: '#fff',
+        color: '#f7fafc',
         height: '25%',
-        backgroundColor: '#fff',
+        backgroundColor: '#f7fafc',
         display: 'flex',
         flexDirection: 'row'
     },
@@ -209,18 +209,18 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
         height: '25%',
         display: 'flex',
         flexDirection: 'row',
-        color: '#fff',
+        color: '#f7fafc',
         backgroundColor: colorScheme === 'light' ? '#1A2036' : 'white'
     },
     date: {
         fontSize: 9,
-        color: colorScheme === 'light' ? '#fff' : '#333333',
+        color: colorScheme === 'light' ? '#f7fafc' : '#333333',
         marginLeft: 10,
         lineHeight: 10
     },
     date2: {
         fontSize: 9,
-        color: colorScheme === 'light' ? '#fff' : '#333333',
+        color: colorScheme === 'light' ? '#f7fafc' : '#333333',
         // marginLeft: 10,
         lineHeight: 10,
         textAlign: 'left',
@@ -235,8 +235,8 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
         color: '#50566B'
     },
     titleFlip: {
-        color: colorScheme === 'light' ? '#fff' : '#1A2036',
-        backgroundColor: colorScheme === 'light' ? '#1A2036' : '#fff',
+        color: colorScheme === 'light' ? '#f7fafc' : '#1A2036',
+        backgroundColor: colorScheme === 'light' ? '#1A2036' : '#f7fafc',
         fontFamily: 'inter',
         fontSize: 13,
         // ,
@@ -246,7 +246,7 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
     },
     description: {
         fontSize: 13,
-        color: colorScheme === 'light' ? '#fff' : '#333333',
+        color: colorScheme === 'light' ? '#f7fafc' : '#333333',
         // height: '30%'
     }
 });

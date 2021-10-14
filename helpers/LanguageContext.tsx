@@ -27,7 +27,7 @@ const EnglishBank: { [key: string]: string } = {
     new: "New", // Done,
     newGroup: "New Group",
     noGroups: "No group chats.",
-    formula: "Formula", // Done
+    formula: "Equation", // Done
     hide: "Hide", // Done
     import: "Import", // Done
     quiz: "Quiz", // Done

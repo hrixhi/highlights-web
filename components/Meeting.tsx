@@ -256,7 +256,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
     }, [isOwner, userId, props.channelId])
 
     const windowHeight =
-        Dimensions.get("window").width < 1024 ? Dimensions.get("window").height - 30 : Dimensions.get("window").height;
+        Dimensions.get("window").width < 1024 ? Dimensions.get("window").height - 0 : Dimensions.get("window").height;
 
     if (name === "") {
         return null;
