@@ -33,13 +33,15 @@ const Channels: React.FunctionComponent<{ [label: string]: any }> = (props: any)
                 // alignSelf: 'center',
                 // paddingLeft: 20
             }}>
-                <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 10 }}>
-                    {/* <Ionicons name='chevron-down' size={15} color={'#e0e0e0'} /> */}
-                </Text>
+                {/* <Text style={{ width: '100%', textAlign: 'center', height: 15, paddingBottom: 10 }}>
+                    {/* <Ionicons name='chevron-down' size={15} color={'#e0e0e0'} />
+                </Text> */}
                 <ChannelControls
                     subscriptions={props.subscriptions}
                     closeModal={() => props.closeModal()}
                     refreshSubscriptions={props.refreshSubscriptions}
+                    setShowCreate={(val: any) => props.setShowCreate(val)}
+                    showCreate={props.showCreate}
                 />
             </ScrollView>
         </View >

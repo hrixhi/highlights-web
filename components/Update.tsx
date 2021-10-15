@@ -528,14 +528,16 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     borderRadius: 0,
                     padding: 10,
                     paddingHorizontal: 10,
-                    backgroundColor: '#fff',
+                    backgroundColor: '#f7fafc',
                     flexDirection: 'row'
                 }}>
 
                 <DragHandle />
 
-                <View style={{ flexDirection: 'column', justifyContent: 'center', marginRight: 10 }}>
-                    <Ionicons name={getContentIcon(value.channelId && value.channelId !== '' ? value.original : value.cue)} size={18} />
+                <View style={{
+                    flexDirection: 'column', justifyContent: 'center', marginRight: 10, backgroundColor: '#f7fafc',
+                }}>
+                    <Ionicons name={getContentIcon(value.channelId && value.channelId !== '' ? value.original : value.cue)} size={17} />
                 </View>
 
                 <Text
@@ -624,14 +626,16 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     borderRadius: 0,
                     padding: 10,
                     paddingHorizontal: 10,
-                    backgroundColor: '#fff',
+                    backgroundColor: '#f7fafc',
                     flexDirection: 'row'
                 }}>
 
                 <DragHandle />
 
-                <View style={{ flexDirection: 'column', justifyContent: 'center', marginRight: 10 }}>
-                    <Ionicons name={getContentIcon(value.channelId && value.channelId !== '' ? value.original : value.cue)} size={18} />
+                <View style={{
+                    flexDirection: 'column', justifyContent: 'center', marginRight: 10, backgroundColor: '#f7fafc',
+                }}>
+                    <Ionicons name={getContentIcon(value.channelId && value.channelId !== '' ? value.original : value.cue)} size={17} />
                 </View>
 
                 <Text
@@ -820,11 +824,13 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         borderRadius: 0,
                                         padding: 10,
                                         paddingHorizontal: 10,
-                                        backgroundColor: '#fff',
+                                        backgroundColor: '#f7fafc',
                                         flexDirection: 'row'
                                     }}>
-                                    <View style={{ flexDirection: 'column', justifyContent: 'center', marginRight: 10 }}>
-                                        <Ionicons name={getContentIcon(cue.channelId && cue.channelId !== '' ? cue.original : cue.cue)} size={18} />
+                                    <View style={{
+                                        flexDirection: 'column', justifyContent: 'center', marginRight: 10, backgroundColor: '#f7fafc',
+                                    }}>
+                                        <Ionicons name={getContentIcon(cue.channelId && cue.channelId !== '' ? cue.original : cue.cue)} size={17} />
                                     </View>
                                     <Text
                                         ellipsizeMode={'tail'}
@@ -1103,11 +1109,13 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     borderRadius: 0,
                                     padding: 10,
                                     paddingHorizontal: 10,
-                                    backgroundColor: '#fff',
+                                    backgroundColor: '#f7fafc',
                                     flexDirection: 'row'
                                 }}>
-                                <View style={{ flexDirection: 'column', justifyContent: 'center', marginRight: 10 }}>
-                                    <Ionicons name={getContentIcon(cue.channelId && cue.channelId !== '' ? cue.original : cue.cue)} size={18} />
+                                <View style={{
+                                    flexDirection: 'column', justifyContent: 'center', marginRight: 10, backgroundColor: '#f7fafc',
+                                }}>
+                                    <Ionicons name={getContentIcon(cue.channelId && cue.channelId !== '' ? cue.original : cue.cue)} size={17} />
                                 </View>
 
                                 <Text
@@ -1444,12 +1452,16 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     borderRadius: 0,
                                     padding: 10,
                                     paddingHorizontal: 10,
-                                    backgroundColor: '#fff',
+                                    backgroundColor: '#f7fafc',
                                     flexDirection: 'row'
                                 }}>
 
-                                <View style={{ flexDirection: 'column', justifyContent: 'center', marginRight: 10 }}>
-                                    <Ionicons name={getContentIcon(cue.channelId && cue.channelId !== '' ? cue.original : cue.cue)} size={18} />
+                                <View style={{
+                                    flexDirection: 'column',
+                                    backgroundColor: '#f7fafc',
+                                    justifyContent: 'center', marginRight: 10
+                                }}>
+                                    <Ionicons name={getContentIcon(cue.channelId && cue.channelId !== '' ? cue.original : cue.cue)} size={17} />
                                 </View>
 
                                 <Text
@@ -1542,7 +1554,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     fontFamily: 'inter',
                     color: '#5469D4',
                 }}>
-                    Group Content
+                    Group
                 </Text>
             </TouchableOpacity>
             {channelFolders.length > 0 && channelOwner && folderId === "" && !createNewFolder ? <Menu
@@ -1602,7 +1614,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             fontFamily: 'inter',
                             color: '#5469D4',
                         }}>
-                            Add to Folder
+                            Add to Group
                         </Text>
                     </View>
                 </MenuTrigger>

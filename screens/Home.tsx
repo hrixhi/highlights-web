@@ -77,6 +77,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
   const [tab, setTab] = useState('Agenda')
   const [showDirectory, setShowDirectory] = useState<any>(false)
+  const [showCreate, setShowCreate] = useState(false)
+  const [showHelp, setShowHelp] = useState(false)
 
   // Notifications count for Top Bar
   const [unreadDiscussionThreads, setUnreadDiscussionThreads] = useState(0)
@@ -1612,6 +1614,10 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 <Dashboard
                   setTab={(val: any) => setTab(val)}
                   tab={tab}
+                  setShowCreate={(val: any) => setShowCreate(val)}
+                  showCreate={showCreate}
+                  setShowHelp={(val: any) => setShowHelp(val)}
+                  showHelp={showHelp}
                   showDirectory={showDirectory}
                   setShowDirectory={(val: any) => setShowDirectory(val)}
                   setOption={(op: any) => setOption(op)}
@@ -1648,7 +1654,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                   openUpdate={(index: any, key: any, pageNumber: any, _id: any, by: any, cId: any) => openUpdate(index, key, pageNumber, _id, by, cId)}
                   calendarCues={cues}
                   openCueFromCalendar={openCueFromCalendar}
-                  key={option.toString() + showHome.toString() + tab.toString() + showDirectory.toString()}
+                  key={option.toString() + showHome.toString() + tab.toString() + showDirectory.toString() + showCreate.toString() + showHelp.toString()}
                   openDiscussionFromActivity={(channelId: string) => {
                     setOption('Classroom')
                     setLoadDiscussionForChannelId(channelId)
@@ -1815,6 +1821,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           (option === 'Classroom')
           || (option === 'To Do' && tab !== 'Add')
           || (option === 'Inbox' && !showDirectory)
+          || (option === 'Channels' && !showCreate)
+          || (option === 'Settings' && !showHelp)
         ) ?
           <TouchableOpacity
             onPress={() => {
@@ -1835,6 +1843,10 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 setMenuCollapsed(true)
               } else if (option === 'To Do') {
                 setTab('Add')
+              } else if (option === 'Channels') {
+                setShowCreate(true)
+              } else if (option === 'Settings') {
+                setShowHelp(true)
               } else {
                 setShowDirectory(true)
               }
@@ -1858,7 +1870,12 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                   <Ionicons name='pencil-outline' size={25} />
                   : (
                     option === 'To Do' ? <Ionicons name='add-outline' size={35} />
-                      : <Ionicons name='person-add-outline' size={21} />
+                      : (option === 'Channels' ? <Ionicons name='create-outline' size={21} /> :
+                        (
+                          option === 'Inbox' ? <Ionicons name='person-add-outline' size={21} /> :
+                            <Ionicons name='help-outline' size={21} />
+                        )
+                      )
                   )
               }
 

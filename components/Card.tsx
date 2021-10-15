@@ -73,7 +73,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     width: '97%',
                                     zIndex: 20
                                 }}>
-                                    <Ionicons name='bookmark' size={18} color={starred ? '#f94144' : '#f7fafc'} />
+                                    <Ionicons name='bookmark' size={17} color={starred ? '#f94144' : '#f7fafc'} />
                                 </Text>
                                 : null
                         } */}

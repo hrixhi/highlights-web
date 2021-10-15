@@ -9,8 +9,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const colorScheme = 'dark'
     const styleObject = styles(colorScheme)
-
-
     return (
         <View
             style={props.style ? props.style : styleObject.swiper}
@@ -23,13 +21,13 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                 style={styleObject.card}>
                 <View style={styleObject.text}>
                     <View style={styleObject.dateContainer}>
-                        {props.colorCode !== "" ? <View style={{
+                        {/* {props.colorCode !== "" ? <View style={{
                             width: 9,
                             height: 9,
                             borderRadius: 12,
                             // marginTop: 1,
                             backgroundColor: props.colorCode
-                        }} /> : null}
+                        }} /> : null} */}
 
                         {props.channelName !== "" && props.option !== "Channels" ? <Text style={styleObject.date}>
                             {props.channelName}
@@ -41,7 +39,7 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                         height: '100%',
                         flexDirection: 'row'
                     }}>
-                        <View style={{ flex: 1, backgroundColor: '#f7fafc' }}>
+                        <View style={{ flex: 1, backgroundColor: '#f7fafc', flexDirection: 'row' }}>
                             <Text
                                 ellipsizeMode={'tail'}
                                 numberOfLines={1}
@@ -50,9 +48,9 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                                     fontSize: 12,
                                     lineHeight: 20,
                                     // flex: 1,
-                                    marginTop: props.option === "Channels" ? 0 : 7,
-                                    marginBottom: props.option === "Channels" ? 7 : 0,
-                                    color: '##1A2036',
+                                    marginTop: 7,
+                                    marginBottom: 7,
+                                    color: '#50566B',
                                     flexDirection: 'row', flex: 1,
                                 }}>
                                 {props.title}
@@ -65,12 +63,13 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                                 </Text>
 
                                 : null} */}
-                            {props.option === "Channels" && !props.subscribed ? <View style={{ flex: 1, paddingLeft: 10, backgroundColor: '#f8f8fa' }}>
+                            {props.option === "Channels" && !props.subscribed ? <View style={{ paddingLeft: 10, backgroundColor: '#f7fafc' }}>
                                 <TouchableOpacity
                                     onPress={() => props.handleSub()}
+                                    style={{ marginTop: 10 }}
                                 >
-                                    <Text style={{ textAlign: 'center', fontSize: 12, paddingTop: 5, color: '#5469D4', backgroundColor: '#f8f8fa' }} ellipsizeMode='tail'>
-                                        Join
+                                    <Text style={{ backgroundColor: '#f7fafc' }}>
+                                        <Ionicons name='enter-outline' size={17} color='#5469D4' />
                                     </Text>
                                 </TouchableOpacity>
                             </View> : null}
@@ -79,6 +78,23 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
 
                 </View>
             </TouchableOpacity>
+            {
+                props.colorCode !== "" ?
+                    <View
+                        style={{
+                            backgroundColor: props.colorCode,
+                            flex: 1,
+                            borderLeftWidth: 2,
+                            borderColor: '#E3E8EE',
+                            opacity: 0.9
+                            // borderTopLeftRadius: 8,
+                            // borderBottomLeftRadius: 8,
+                        }}
+                    >
+                    </View>
+                    : <View style={{ flex: 1, backgroundColor: '#f7fafc' }} />
+            }
+
         </View >
     );
 }
@@ -88,30 +104,36 @@ export default SearchResultCard
 const styles: any = (colorScheme: any) => StyleSheet.create({
     swiper: {
         height: '100%',
-        borderRadius: 0,
+        maxHeight: 75,
+        // borderRadius: 10,
         overflow: 'hidden',
-        maxWidth: 175
+        maxWidth: 175,
+        width: '100%',
+        borderWidth: 2,
+        borderColor: '#E3E8EE',
+        flexDirection: 'row'
     },
     card: {
-        // maxWidth: 200,
+        maxWidth: 210,
         height: '100%',
-        borderRadius: 10,
+        // borderTopRightRadius: 10,
+        // borderBottomRightRadius: 10,
+        // borderTop
+        width: '96%',
         padding: 10,
         paddingHorizontal: 10,
         backgroundColor: '#f7fafc',
-        borderWidth: 1,
-        borderColor: '#E3E8EE'
     },
     flipCard: {
         height: '100%',
         width: '100%',
         borderRadius: 0,
         padding: 13,
-        color: '#fff',
+        color: '#f7fafc',
         backgroundColor: colorScheme === 'light' ? '#1A2036' : 'white'
     },
     descriptionFlip: {
-        color: '#fff',
+        color: '#f7fafc',
         fontSize: 13,
         // height: '25%',
     },
@@ -121,13 +143,13 @@ const styles: any = (colorScheme: any) => StyleSheet.create({
     },
     flipText: {
         height: '100%',
-        color: '#fff',
+        color: '#f7fafc',
         backgroundColor: colorScheme === 'light' ? '#1A2036' : '#f7fafc'
     },
     dateContainer: {
         fontSize: 10,
         marginBottom: 5,
-        color: '#fff',
+        color: '#f7fafc',
         // height: '25%',
         backgroundColor: '#f7fafc',
         display: 'flex',
@@ -138,13 +160,13 @@ const styles: any = (colorScheme: any) => StyleSheet.create({
         height: '25%',
         display: 'flex',
         flexDirection: 'row',
-        color: '#fff',
+        color: '#f7fafc',
         backgroundColor: colorScheme === 'light' ? '#1A2036' : '#f7fafc'
     },
     date: {
-        fontSize: 10,
+        fontSize: 9,
         color: colorScheme === 'light' ? '#f7fafc' : '#333333',
-        marginLeft: 10,
+        // marginLeft: 10,
         lineHeight: 10
     },
     date2: {

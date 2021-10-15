@@ -832,7 +832,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                         }
 
                                                     }}
-                                                    size={18}
+                                                    size={17}
                                                 />}
                                         </View>
                                     </View>

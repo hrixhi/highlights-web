@@ -31,7 +31,6 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
   const [fullName, setFullName] = useState("");
   const [userFound, setUserFound] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
-  const [showSavePassword, setShowSavePassword] = useState(false);
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
@@ -69,7 +68,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
     const user = JSON.parse(u);
     const server = fetchAPI("");
 
-    if (showSavePassword) {
+    if (props.showSavePassword) {
       // reset password
       server
         .mutate({
@@ -160,7 +159,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
     displayName,
     fullName,
     confirmPassword,
-    showSavePassword,
+    props.showSavePassword,
     newPassword,
     currentPassword
   ]);
@@ -199,7 +198,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
   useEffect(() => {
     // Reset Password state
     if (
-      showSavePassword &&
+      props.showSavePassword &&
       currentPassword &&
       newPassword &&
       confirmNewPassword &&
@@ -212,7 +211,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
 
     // Logged in
     if (
-      !showSavePassword &&
+      !props.showSavePassword &&
       loggedIn &&
       fullName &&
       displayName &&
@@ -251,7 +250,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
     emailValidError,
     passwordValidError,
     confirmPasswordError,
-    showSavePassword,
+    props.showSavePassword,
     currentPassword,
     newPassword,
     confirmNewPassword,
@@ -363,25 +362,16 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
   return (
     <View style={styles.screen} key={1}>
       <ScrollView
-        style={{ width: "100%", backgroundColor: "white" }}
+        style={{
+          width: "100%",
+          maxHeight: Dimensions.get("window").width < 1024 ? Dimensions.get("window").height - 115 : Dimensions.get("window").height - 52,
+          backgroundColor: "white"
+        }}
         showsVerticalScrollIndicator={false}
       >
-        {/*}
-        <Text
-          style={{
-            fontSize: 12,
-            paddingTop: 10,
-            color: "#50566B",
-            fontFamily: "overpass",
-            paddingBottom: 25,
-            // textAlign: "center"
-          }}
-        >
-          {!loggedIn ? PreferredLanguageText('createAccount') : ""}
-        </Text> */}
         <View style={{ width: '100%', flexDirection: 'row', flex: 1, justifyContent: 'center' }}>
           <View style={{ maxWidth: 400, width: '100%' }}>
-            {showSavePassword ? (
+            {props.showSavePassword ? (
               <View
                 style={{
                   width: "100%",
@@ -443,7 +433,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                 style={{
                   width: "100%",
                   backgroundColor: "white",
-                  // paddingTop: 20,
+                  paddingTop: 20,
                   paddingBottom: 20
                 }}
               >
@@ -607,12 +597,12 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                     textTransform: "uppercase"
                   }}
                 >
-                  {loggedIn ? (showSavePassword ? PreferredLanguageText('update') : PreferredLanguageText('save')) : PreferredLanguageText('signUp')}
+                  {loggedIn ? (props.showSavePassword ? PreferredLanguageText('update') : PreferredLanguageText('save')) : PreferredLanguageText('signUp')}
                 </Text>
               </TouchableOpacity>
-              {loggedIn ? (
+              {loggedIn && !props.showSavePassword ? (
                 <TouchableOpacity
-                  onPress={() => setShowSavePassword(!showSavePassword)}
+                  onPress={() => props.setShowSavePassword(!props.showSavePassword)}
                   style={{
                     backgroundColor: "white",
                     overflow: "hidden",
@@ -640,49 +630,52 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                       textTransform: "uppercase"
                     }}
                   >
-                    {showSavePassword ? PreferredLanguageText('back') : PreferredLanguageText('password')}
+                    {props.showSavePassword ? PreferredLanguageText('back') : PreferredLanguageText('password')}
                   </Text>
                 </TouchableOpacity>
               ) : null}
-              <TouchableOpacity
-                onPress={() => {
-                  if (loggedIn) {
-                    logout();
-                  } else {
-                    window.location.reload();
-                  }
-                }}
-                style={{
-                  backgroundColor: "white",
-                  overflow: "hidden",
-                  height: 35,
-                  marginTop: 15,
-                  // width: "100%",
-                  justifyContent: "center",
-                  flexDirection: "row",
-                }}
-              >
-                <Text
-                  style={{
-                    color: '#5469D4',
-                    borderWidth: 1,
-                    borderRadius: 15,
-                    borderColor: '#5469D4',
-                    backgroundColor: '#fff',
-                    fontSize: 12,
-                    textAlign: "center",
-                    lineHeight: 35,
-                    paddingHorizontal: 20,
-                    fontFamily: "inter",
-                    height: 35,
-                    textTransform: 'uppercase',
-                    width: 175,
-                  }}
-                >
-                  {loggedIn ? PreferredLanguageText('logout') : PreferredLanguageText('login')}
-                </Text>
-              </TouchableOpacity>
-              {loggedIn ? (
+              {
+                props.showSavePassword ? null :
+                  <TouchableOpacity
+                    onPress={() => {
+                      if (loggedIn) {
+                        logout();
+                      } else {
+                        window.location.reload();
+                      }
+                    }}
+                    style={{
+                      backgroundColor: "white",
+                      overflow: "hidden",
+                      height: 35,
+                      marginTop: 15,
+                      // width: "100%",
+                      justifyContent: "center",
+                      flexDirection: "row",
+                    }}
+                  >
+                    <Text
+                      style={{
+                        color: '#5469D4',
+                        borderWidth: 1,
+                        borderRadius: 15,
+                        borderColor: '#5469D4',
+                        backgroundColor: '#fff',
+                        fontSize: 12,
+                        textAlign: "center",
+                        lineHeight: 35,
+                        paddingHorizontal: 20,
+                        fontFamily: "inter",
+                        height: 35,
+                        textTransform: 'uppercase',
+                        width: 175,
+                      }}
+                    >
+                      {loggedIn ? PreferredLanguageText('logout') : PreferredLanguageText('login')}
+                    </Text>
+                  </TouchableOpacity>
+              }
+              {loggedIn && !props.showSavePassword ? (
                 <TouchableOpacity
                   onPress={() => handleZoomAuth()}
                   style={{
@@ -716,9 +709,11 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                   </Text>
                 </TouchableOpacity>
               ) : null}
-              <View style={{ flexDirection: 'row', justifyContent: 'center', paddingBottom: 20, width: '100%', marginTop: 30, marginBottom: 100 }}>
-                <LanguageSelect />
-              </View>
+              {
+                props.showHelp || props.showSaveCue ? null : <View style={{ flexDirection: 'row', justifyContent: 'center', paddingBottom: 20, width: '100%', marginTop: 30, marginBottom: 100 }}>
+                  <LanguageSelect />
+                </View>
+              }
             </View>
           </View>
         </View>
@@ -731,12 +726,11 @@ export default ProfileControls;
 
 const styles = StyleSheet.create({
   screen: {
-    // paddingHorizontal: Dimensions.get("window").width < 1024 ? 0 : 20,
-    width: "100%",
-    maxWidth: 1000,
-    alignSelf: 'center',
-    height: Dimensions.get("window").height - 110,
-    backgroundColor: "white"
+    width: '100%',
+    height: Dimensions.get("window").width < 1024 ? Dimensions.get("window").height - 115 : Dimensions.get("window").height - 52,
+    backgroundColor: 'white',
+    justifyContent: 'center',
+    flexDirection: 'row'
   },
   outline: {
     borderRadius: 0,

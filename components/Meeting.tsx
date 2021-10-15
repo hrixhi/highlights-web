@@ -195,66 +195,6 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
         }).start();
     }, [props.channelCreatedBy, props.channelId]);
 
-    const handleEnterClassroom = useCallback(async () => {
-
-        const u = await AsyncStorage.getItem('user')
-        if (u) {
-            const user = JSON.parse(u)
-            if (user.zoomInfo) {
-
-                // Zoom is connected
-                const server = fetchAPI('')
-                server.mutate({
-                    mutation: meetingRequest,
-                    variables: {
-                        userId,
-                        channelId: props.channelId,
-                        isOwner: isOwner
-                    }
-                }).then(res => {
-                    console.log(res)
-                    if (res.data && res.data.channel.meetingRequest !== 'error') {
-                        server
-                            .mutate({
-                                mutation: markAttendance,
-                                variables: {
-                                    userId: userId,
-                                    channelId: props.channelId
-                                }
-                            })
-                        window.open(res.data.channel.meetingRequest, "_blank");
-                    } else {
-                        Alert("Classroom not in session. Waiting for instructor.")
-                    }
-                }).catch(err => {
-                    Alert("Something went wrong.")
-                })
-            } else {
-
-                Alert("Connect with Zoom to enter meeting.")
-
-                // LIVE
-                // const clientId = 'yRzKFwGRTq8bNKLQojwnA'
-                // const redirectUri = 'https://web.cuesapp.co/zoom_auth'
-                // DEV   
-                const redirectUri = 'http://localhost:19006/zoom_auth'
-                const clientId = 'PAfnxrFcSd2HkGnn9Yq96A'
-
-                const url = `https://zoom.us/oauth/authorize?response_type=code&client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${userId}`
-
-                if (Platform.OS === 'ios' || Platform.OS === 'android') {
-                    Linking.openURL(url)
-                } else {
-                    window.open(url)
-                }
-
-            }
-        } else {
-            return
-        }
-
-    }, [isOwner, userId, props.channelId])
-
     const windowHeight =
         Dimensions.get("window").width < 1024 ? Dimensions.get("window").height - 0 : Dimensions.get("window").height;
 

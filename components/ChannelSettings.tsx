@@ -1108,15 +1108,12 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
         return match
     })
 
-
-
-
     return (
         <View style={styles.screen} >
             <View style={{ width: '100%', backgroundColor: 'white', paddingTop: 30 }}>
                 <View
                     style={{
-                        maxWidth: 350,
+                        maxWidth: 400,
                         alignSelf: 'center',
                         minHeight: 100,
                     }}

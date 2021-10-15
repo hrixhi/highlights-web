@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { ActivityIndicator, StyleSheet, Image, Dimensions, Linking, ScrollView } from 'react-native';
+import { ActivityIndicator, StyleSheet, Image, Dimensions, Linking, ScrollView, Platform } from 'react-native';
 import { View, Text, TouchableOpacity } from '../components/Themed';
 import { Ionicons } from '@expo/vector-icons';
 import _ from 'lodash'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { fetchAPI } from '../graphql/FetchAPI';
-import { creatFolder, getActivity, getOrganisation, getSearch, updateFolder, checkChannelStatus, subscribe } from '../graphql/QueriesAndMutations';
+import { creatFolder, getActivity, getOrganisation, getSearch, updateFolder, checkChannelStatus, subscribe, markAttendance, meetingRequest } from '../graphql/QueriesAndMutations';
 import logo from './default-images/cues-logo-black-exclamation-hidden.jpg'
 import Profile from './Profile';
 import Walkthrough from './Walkthrough';
@@ -231,6 +231,67 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
         }
 
     }, [scrollViewRef.current, channelKeyList, channelHeightList, loadDiscussionForChannelId, indexMap])
+
+    const handleEnterClassroom = useCallback(async () => {
+
+        const u = await AsyncStorage.getItem('user')
+
+        if (u) {
+            const user = JSON.parse(u)
+            if (user.zoomInfo) {
+
+                // Zoom is connected
+                const server = fetchAPI('')
+                server.mutate({
+                    mutation: meetingRequest,
+                    variables: {
+                        userId,
+                        channelId: props.channelId,
+                        isOwner: user._id.toString().trim() === props.channelCreatedBy
+                    }
+                }).then(res => {
+                    console.log(res)
+                    if (res.data && res.data.channel.meetingRequest !== 'error') {
+                        server
+                            .mutate({
+                                mutation: markAttendance,
+                                variables: {
+                                    userId: userId,
+                                    channelId: props.channelId
+                                }
+                            })
+                        window.open(res.data.channel.meetingRequest, "_blank");
+                    } else {
+                        Alert("Classroom not in session. Waiting for instructor.")
+                    }
+                }).catch(err => {
+                    Alert("Something went wrong.")
+                })
+            } else {
+
+                Alert("Connect with Zoom to enter meeting.")
+
+                // LIVE
+                // const clientId = 'yRzKFwGRTq8bNKLQojwnA'
+                // const redirectUri = 'https://web.cuesapp.co/zoom_auth'
+                // DEV   
+                const redirectUri = 'http://localhost:19006/zoom_auth'
+                const clientId = 'PAfnxrFcSd2HkGnn9Yq96A'
+
+                const url = `https://zoom.us/oauth/authorize?response_type=code&client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${userId}`
+
+                if (Platform.OS === 'ios' || Platform.OS === 'android') {
+                    Linking.openURL(url)
+                } else {
+                    window.open(url)
+                }
+
+            }
+        } else {
+            return
+        }
+
+    }, [userId, props.channelId, props.channelCreatedBy])
 
     useEffect(() => {
         (
@@ -538,38 +599,38 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
     }, [props.closeModal])
 
     const searchResults = <View
-        key={cueMap.toString()}
+        key={cueMap.toString() + JSON.stringify(results)}
         style={{
             flexDirection: 'row',
-            height: Dimensions.get("window").height - 75,
+            height: Dimensions.get("window").width < 1024 ? Dimensions.get("window").height - 115 : Dimensions.get("window").height - 52,
             width: '100%',
             overflow: 'hidden',
             justifyContent: 'center',
-            paddingTop: 20
         }}>
         <View style={{
             width: '100%',
             maxWidth: 1000,
             paddingHorizontal: Dimensions.get('window').width < 1024 ? 20 : 0
         }}>
+            <Text style={{
+                fontSize: 20,
+                paddingBottom: 10,
+                paddingTop: 15,
+                fontFamily: 'inter',
+                // flex: 1,
+                lineHeight: 23,
+                color: '#5469D4'
+            }}>
+                <Ionicons name='search-outline' size={22} color="#50566B" />
+            </Text>
             <ScrollView
                 showsVerticalScrollIndicator={false}
-                horizontal={false}
+                horizontal={true}
+                nestedScrollEnabled={true}
                 contentContainerStyle={{
                     width: '100%',
                 }}
             >
-                <Text style={{
-                    fontSize: 20,
-                    paddingBottom: 20,
-                    paddingTop: 7,
-                    fontFamily: 'inter',
-                    flex: 1,
-                    lineHeight: 23,
-                    color: '#5469D4'
-                }}>
-                    <Ionicons name='search-outline' size={22} color="#50566B" />
-                </Text>
                 {
                     (!loadingSearchResults && results && results[searchOptions[0]].length === 0 && results[searchOptions[1]].length === 0 && results[searchOptions[2]].length === 0 && results[searchOptions[3]].length === 0) ? <Text style={{
                         fontSize: 14,
@@ -594,169 +655,162 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         <ActivityIndicator color={"#50566B"} />
                     </View> : null
                 }
-                {
-                    searchOptions.map((option: any) => {
+                <View style={{ flexDirection: 'row' }}>
+                    {
+                        searchOptions.map((option: any) => {
 
-                        if (results[option].length === 0 || loadingSearchResults) {
-                            return null
-                        }
+                            if (results[option].length === 0 || loadingSearchResults) {
+                                return null
+                            }
 
-                        return <View style={{ marginBottom: 20, backgroundColor: '#fff' }}>
-                            <Text style={{
-                                paddingBottom: 20,
-                                // paddingTop: 10,
-                                flex: 1,
-                                backgroundColor: '#fff',
-                                color: '#50566B',
-                                fontSize: 14,
-                                lineHeight: 25,
-                                fontFamily: 'inter'
-                            }}>
-                                {option}
-                            </Text>
-                            <ScrollView
-                                showsVerticalScrollIndicator={false}
-                                horizontal={true}
-                                // style={{ height: '100%' }}
-                                contentContainerStyle={{
-                                    // borderWidth: 2,
-                                    width: '100%',
-                                    // height: windowHeight - 200,
-                                }}
-                            >
-                                {results[option].map((obj: any, index: any) => {
+                            return <View style={{ marginRight: 20, backgroundColor: '#fff' }}>
+                                <Text style={{
+                                    paddingBottom: 15,
+                                    // paddingTop: 10,
+                                    flex: 1,
+                                    backgroundColor: '#fff',
+                                    color: '#50566B',
+                                    fontSize: 12,
+                                    lineHeight: 25,
+                                    fontFamily: 'inter'
+                                }}>
+                                    {option}
+                                </Text>
+                                <ScrollView>
+                                    {results[option].map((obj: any, index: any) => {
 
-                                    let t = ''
-                                    let s = ''
-                                    let channelName = ''
-                                    let colorCode = ''
-                                    let subscribed = false;
+                                        let t = ''
+                                        let s = ''
+                                        let channelName = ''
+                                        let colorCode = ''
+                                        let subscribed = false;
 
-                                    if (option === 'Classroom') {
-                                        const { title, subtitle } = htmlStringParser(obj.cue)
-                                        t = title
-                                        s = subtitle
-                                        const filterChannel = props.subscriptions.filter((channel: any) => {
-                                            return channel.channelId === obj.channelId
-                                        })
-
-                                        if (filterChannel && filterChannel.length !== 0) {
-                                            channelName = filterChannel[0].channelName
-                                            colorCode = filterChannel[0].colorCode
-                                        }
-                                    } else if (option === 'Channels') {
-                                        t = obj.name
-
-                                        channelName = obj.name
-                                        // Determine if already subscribed or not
-                                        const existingSubscription = props.subscriptions.filter((channel: any) => {
-                                            return channel.channelId === obj._id
-                                        })
-
-                                        if (existingSubscription && existingSubscription.length !== 0) {
-                                            subscribed = true
-                                        }
-
-                                    } else if (option === 'Threads') {
-                                        if (obj.message[0] === '{' && obj.message[obj.message.length - 1] === '}') {
-                                            const o = JSON.parse(obj.message)
-                                            t = (o.title)
-                                            s = (o.type)
-                                        } else {
-                                            const { title, subtitle } = htmlStringParser(obj.message)
+                                        if (option === 'Classroom') {
+                                            const { title, subtitle } = htmlStringParser(obj.cue)
                                             t = title
                                             s = subtitle
+                                            const filterChannel = props.subscriptions.filter((channel: any) => {
+                                                return channel.channelId === obj.channelId
+                                            })
+
+                                            if (filterChannel && filterChannel.length !== 0) {
+                                                channelName = filterChannel[0].channelName
+                                                colorCode = filterChannel[0].colorCode
+                                            }
+                                        } else if (option === 'Channels') {
+                                            t = obj.name
+
+                                            channelName = obj.name
+                                            // Determine if already subscribed or not
+                                            const existingSubscription = props.subscriptions.filter((channel: any) => {
+                                                return channel.channelId === obj._id
+                                            })
+
+                                            if (existingSubscription && existingSubscription.length !== 0) {
+                                                subscribed = true
+                                            }
+
+                                        } else if (option === 'Threads') {
+                                            if (obj.message[0] === '{' && obj.message[obj.message.length - 1] === '}') {
+                                                const o = JSON.parse(obj.message)
+                                                t = (o.title)
+                                                s = (o.type)
+                                            } else {
+                                                const { title, subtitle } = htmlStringParser(obj.message)
+                                                t = title
+                                                s = subtitle
+                                            }
+                                            const filterChannel = props.subscriptions.filter((channel: any) => {
+                                                return channel.channelId === obj.channelId
+                                            })
+
+                                            if (filterChannel && filterChannel.length !== 0) {
+                                                channelName = filterChannel[0].channelName
+                                                colorCode = filterChannel[0].colorCode
+                                            }
+                                        } else if (option === 'Messages') {
+                                            if (obj.message[0] === '{' && obj.message[obj.message.length - 1] === '}') {
+                                                const o = JSON.parse(obj.message)
+                                                t = (o.title)
+                                                s = (o.type)
+                                            } else {
+                                                const { title, subtitle } = htmlStringParser(obj.message)
+                                                t = title
+                                                s = subtitle
+                                            }
                                         }
-                                        const filterChannel = props.subscriptions.filter((channel: any) => {
-                                            return channel.channelId === obj.channelId
-                                        })
 
-                                        if (filterChannel && filterChannel.length !== 0) {
-                                            channelName = filterChannel[0].channelName
-                                            colorCode = filterChannel[0].colorCode
-                                        }
-                                    } else if (option === 'Messages') {
-                                        if (obj.message[0] === '{' && obj.message[obj.message.length - 1] === '}') {
-                                            const o = JSON.parse(obj.message)
-                                            t = (o.title)
-                                            s = (o.type)
-                                        } else {
-                                            const { title, subtitle } = htmlStringParser(obj.message)
-                                            t = title
-                                            s = subtitle
-                                        }
-                                    }
+                                        return <View style={{
+                                            height: 70,
+                                            marginBottom: 15,
+                                            maxWidth: 175,
+                                            backgroundColor: '#fff',
+                                            alignSelf: 'center',
+                                            width: '98%'
+                                        }} key={index}>
+                                            <SearchResultCard
+                                                title={t}
+                                                subtitle={s}
+                                                channelName={channelName}
+                                                colorCode={colorCode}
+                                                option={option}
+                                                subscribed={subscribed}
+                                                handleSub={() => handleSub(channelName)}
+                                                onPress={async () => {
+                                                    if (option === 'Classroom') {
+                                                        props.openCueFromCalendar(obj.channelId, obj._id, obj.createdBy)
+                                                        setSearchTerm("")
+                                                    } else if (option === 'Threads') {
 
-                                    return <View style={{
-                                        height: option === "Channels" ? 80 : 70,
-                                        marginRight: 15,
-                                        maxWidth: 175,
-                                        backgroundColor: '#fff',
-                                        alignSelf: 'center',
-                                        width: '98%'
-                                    }} key={index}>
-                                        <SearchResultCard
-                                            title={t}
-                                            subtitle={s}
-                                            channelName={channelName}
-                                            colorCode={colorCode}
-                                            option={option}
-                                            subscribed={subscribed}
-                                            handleSub={() => handleSub(channelName)}
-                                            onPress={async () => {
-                                                if (option === 'Classroom') {
-                                                    props.openCueFromCalendar(obj.channelId, obj._id, obj.createdBy)
-                                                    setSearchTerm("")
-                                                } else if (option === 'Threads') {
+                                                        await AsyncStorage.setItem("openThread", obj.parentId && obj.parentId !== "" ? obj.parentId : obj._id)
 
-                                                    await AsyncStorage.setItem("openThread", obj.parentId && obj.parentId !== "" ? obj.parentId : obj._id)
+                                                        if (obj.cueId && obj.cueId !== "") {
 
-                                                    if (obj.cueId && obj.cueId !== "") {
+                                                            props.openQAFromSearch(obj.channelId, obj.cueId)
 
-                                                        props.openQAFromSearch(obj.channelId, obj.cueId)
+                                                        } else {
 
-                                                    } else {
-
-                                                        props.openDiscussionFromSearch(obj.channelId)
+                                                            props.openDiscussionFromSearch(obj.channelId)
 
 
-                                                        props.setLoadDiscussionForChannelId(obj.channelId)
+                                                            props.setLoadDiscussionForChannelId(obj.channelId)
+                                                        }
+
+                                                        setSearchTerm("")
+
+
+
+                                                    } else if (option === 'Messages') {
+
+                                                        // open chat and set Chat ID and users in Async storage to open that specific chat
+
+                                                        await AsyncStorage.setItem("openChat", JSON.stringify({
+                                                            _id: obj.groupId,
+                                                            users: obj.users
+                                                        }))
+
+                                                        props.setOption("Inbox")
+
+                                                        setSearchTerm("")
+
+                                                    } else if (option === "Channels") {
+
+                                                        if (subscribed) {
+                                                            // Open the channel meeting
+                                                            props.openChannelFromActivity(obj._id)
+                                                        }
                                                     }
 
-                                                    setSearchTerm("")
 
-
-
-                                                } else if (option === 'Messages') {
-
-                                                    // open chat and set Chat ID and users in Async storage to open that specific chat
-
-                                                    await AsyncStorage.setItem("openChat", JSON.stringify({
-                                                        _id: obj.groupId,
-                                                        users: obj.users
-                                                    }))
-
-                                                    props.setOption("Inbox")
-
-                                                    setSearchTerm("")
-
-                                                } else if (option === "Channels") {
-
-                                                    if (subscribed) {
-                                                        // Open the channel meeting
-                                                        props.openChannelFromActivity(obj._id)
-                                                    }
-                                                }
-
-
-                                            }}
-                                        />
-                                    </View>
-                                })}
-                            </ScrollView>
-                        </View>
-                    })
-                }
+                                                }}
+                                            />
+                                        </View>
+                                    })}
+                                </ScrollView>
+                            </View>
+                        })
+                    }
+                </View>
             </ScrollView>
         </View>
     </View>
@@ -794,11 +848,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     justifyContent: "center",
                     flexDirection: "column"
                 }}
-                onPress={() => {
-                    const temp = JSON.parse(JSON.stringify(indexMap))
-                    temp[key] = 1
-                    setIndexMap(temp)
-                }}>
+                onPress={() => handleEnterClassroom()}>
                 <Text style={activeTab === 'Meet' ? styles.allGrayFill1 : styles.all1}>
                     <Ionicons name='videocam-outline' size={17} />
                 </Text>
@@ -1351,10 +1401,10 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             value={searchTerm}
                             style={{
                                 // width: "100%",
-                                color: '#50566B',
+                                color: '#5469D4',
                                 borderColor: "#E3E8EE",
                                 borderBottomWidth: 2,
-                                fontSize: 10,
+                                fontSize: 11,
                                 padding: 5,
                                 // paddingVertical: 8,
                                 marginTop: -8,
@@ -1377,7 +1427,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             <TouchableOpacity style={{ backgroundColor: 'none', marginLeft: 20 }} onPress={() => {
                                 setShowFilterPopup(true)
                             }}>
-                                <Text style={{ fontSize: 10, color: '#50566B', paddingTop: 8, textAlign: 'right', fontFamily: 'inter' }}>
+                                <Text style={{ fontSize: 11, color: '#50566B', paddingTop: 8, textAlign: 'right', fontFamily: 'inter' }}>
                                     Filter <Ionicons name="chevron-down-outline" size={10} />
                                 </Text>
 
@@ -1385,14 +1435,14 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         <Menu
                             style={{
                                 marginLeft: 20,
-                                right: 0, 
+                                right: 0,
                                 // marginTop: -5
                                 marginTop: 4
                             }}
                             onSelect={(op: any) => props.setOption(op)}>
                             <MenuTrigger>
                                 <Text>
-                                    <Ionicons name="settings-outline" size={17} color='#50566B' />
+                                    <Ionicons name="settings-outline" size={17} color={props.option === 'Settings' || props.option === 'Channels' ? '#5469D4' : '#50566B'} />
                                 </Text>
                                 {/* <Image
                                     style={{
@@ -1410,7 +1460,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             <MenuOptions customStyles={{
                                 optionsContainer: {
                                     padding: 10,
-                                    borderRadius: 15,
+                                    borderRadius: 0,
                                     shadowOpacity: 0,
                                     borderWidth: 1,
                                     borderColor: '#E3E8EE',
@@ -1419,13 +1469,13 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             }}>
                                 <MenuOption
                                     value={'Channels'}>
-                                    <Text style={{ fontFamily: 'inter' }}>
+                                    <Text style={{ fontFamily: 'inter', fontSize: 12 }}>
                                         <Ionicons name='file-tray-stacked-outline' size={12} />&nbsp;&nbsp;Workspaces
                                     </Text>
                                 </MenuOption>
                                 <MenuOption
                                     value={'Settings'}>
-                                    <Text style={{ fontFamily: 'inter' }}>
+                                    <Text style={{ fontFamily: 'inter', fontSize: 12 }}>
                                         <Ionicons name='person-circle-outline' size={12} />&nbsp;&nbsp;Profile
                                     </Text>
                                 </MenuOption>
@@ -1451,11 +1501,15 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 saveDataInCloud={() => props.saveDataInCloud()}
                                 reOpenProfile={() => props.reOpenProfile()}
                                 reloadData={() => props.reloadData()}
+                                setShowHelp={(val: any) => props.setShowHelp(val)}
+                                showHelp={props.showHelp}
                             /> : null
                     }
                     {
                         props.option === 'Channels' ?
                             <Channels
+                                setShowCreate={(val: any) => props.setShowCreate(val)}
+                                showCreate={props.showCreate}
                                 closeModal={() => { }}
                                 subscriptions={props.subscriptions}
                                 refreshSubscriptions={props.refreshSubscriptions}

@@ -24,7 +24,6 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
     const [fullName, setFullName] = useState('')
     const [temporary, setTemporary] = useState(false)
     const [userFound, setUserFound] = useState(false)
-    const [showCreate, setShowCreate] = useState(false)
 
     const [school, setSchool] = useState<any>(null)
     const [role, setRole] = useState('')
@@ -319,19 +318,19 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
         }
     }, [role, school])
 
-    if (!userFound) {
-        return <View style={styles.screen} key={1}>
-            <View style={{ width: '100%', backgroundColor: 'white' }}>
-                <View style={styles.colorBar}>
-                    <Text style={{
-                        fontSize: 20, color: '#50566B'
-                    }}>
-                        {PreferredLanguageText('internetRequired')}
-                    </Text>
-                </View>
-            </View>
-        </View>
-    }
+    // if (!userFound) {
+    //     return <View style={styles.screen} key={1}>
+    //         <View style={{ width: '100%', backgroundColor: 'white' }}>
+    //             <View style={styles.colorBar}>
+    //                 <Text style={{
+    //                     fontSize: 20, color: '#50566B'
+    //                 }}>
+    //                     {PreferredLanguageText('internetRequired')}
+    //                 </Text>
+    //             </View>
+    //         </View>
+    //     </View>
+    // }
 
     if (loading) {
         return <View style={{
@@ -366,71 +365,29 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
     return (
         <View style={styles.screen} key={1}>
             <View style={{ width: '100%', maxWidth: 1000, paddingBottom: 25 }}>
-                <View style={{ flexDirection: 'row', width: '100%', height: 50, marginBottom: 10 }}>
-                    <View style={{ flexDirection: 'row', flex: 1 }}>
-                        {
-                            showCreate ? <TouchableOpacity
-                                onPress={() => {
-                                    setShowCreate(false)
-                                }}
-                                style={{
-                                    paddingRight: 20,
-                                    paddingTop: 10,
-                                    alignSelf: 'flex-start',
-                                    paddingBottom: 10
-                                }}
-                            >
-                                <Text style={{ lineHeight: 35, width: '100%', textAlign: 'center' }}>
-                                    <Ionicons name='arrow-back-outline' size={25} color={'#50566B'} />
-                                </Text>
-                            </TouchableOpacity> : null
-                            // <Text style={{
-                            //     fontSize: 20,
-                            //     // paddingBottom: 40,
-                            //     paddingTop: 10,
-                            //     fontFamily: 'inter',
-                            //     flex: 1,
-                            //     lineHeight: 23,
-                            //     color: '#1A2036'
-                            // }}>
-                            //     <Ionicons name='radio-outline' size={25} color={'#5469D4'} />
-                            // </Text>
-                        }
-                    </View>
-                    {
-                        showCreate ? null :
-                            <TouchableOpacity
-                                onPress={() => {
-                                    setShowCreate(true)
-                                }}
-                                style={{
-                                    backgroundColor: 'white',
-                                    overflow: 'hidden',
-                                    height: 35,
-                                    marginTop: 5,
-                                    justifyContent: 'center',
-                                    flexDirection: 'row',
-                                }}>
-                                <Text style={{
-                                    textAlign: 'center',
-                                    lineHeight: 35,
-                                    color: '#5469D4',
-                                    fontSize: 12,
-                                    borderColor: '#5469D4',
-                                    paddingHorizontal: 20,
-                                    fontFamily: 'inter',
-                                    height: 35,
-                                    // width: 100,
-                                    borderRadius: 15,
-                                    borderWidth: 1,
-                                    textTransform: 'uppercase'
-                                }}>
-                                    Create
-                                </Text>
-                            </TouchableOpacity>
-                    }
-                </View>
-                {!showCreate ?
+                {
+                    props.showCreate ?
+                        <View style={{ flexDirection: 'row', width: '100%', height: 50, marginBottom: 10 }}>
+                            <View style={{ flexDirection: 'row', flex: 1 }}>
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        props.setShowCreate(false)
+                                    }}
+                                    style={{
+                                        paddingRight: 20,
+                                        paddingTop: 10,
+                                        alignSelf: 'flex-start',
+                                        paddingBottom: 10
+                                    }}
+                                >
+                                    <Text style={{ lineHeight: 35, width: '100%', textAlign: 'center' }}>
+                                        <Ionicons name='arrow-back-outline' size={25} color={'#50566B'} />
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View> : null
+                }
+                {!props.showCreate ?
                     <View style={{
                         backgroundColor: '#fff',
                         width: '100%',
@@ -445,7 +402,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                             }}
                         >
                             <ScrollView contentContainerStyle={{
-                                maxHeight: Dimensions.get('window').width < 1024 ? Dimensions.get('window').height - 250 : Dimensions.get('window').height - 175,
+                                maxHeight: Dimensions.get("window").width < 1024 ? Dimensions.get("window").height - 115 : Dimensions.get("window").height - 52,
                                 width: '100%',
                             }}>
                                 {
@@ -463,7 +420,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             const isModerator = channel.owners.includes(userId);
 
                                             if (channel.channelCreator === userId) {
-                                                role = "Editor";
+                                                role = "Owner";
                                             } else if (isModerator) {
                                                 role = "Editor"
                                             }
@@ -517,7 +474,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                         <Text style={{
                                                             textAlign: 'center', fontSize: 13,
                                                             fontFamily: 'inter',
-                                                            color: channel.channelCreator === userId ? '#1A2036' : '#50566B'
+                                                            color: (channel.channelCreator === userId || channel.owners.includes(userId)) ? '#5469D4' : '#50566B'
                                                         }}>
                                                             {role}
                                                         </Text>
@@ -711,10 +668,10 @@ export default ChannelControls;
 
 const styles = StyleSheet.create({
     screen: {
-        paddingVertical: 15,
+        // paddingVertical: 15,
         // paddingHorizontal: Dimensions.get('window').width < 1024 ? 0 : 20,
         width: '100%',
-        height: Dimensions.get('window').height - 150,
+        maxHeight: Dimensions.get("window").width < 1024 ? Dimensions.get("window").height - 115 : Dimensions.get("window").height - 52,
         backgroundColor: 'white',
         justifyContent: 'center',
         flexDirection: 'row'

@@ -2526,7 +2526,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         marginTop: 5,
                                     }}>
                                     <Text>
-                                        <Ionicons name={'trash-outline'} size={18} color={'#50566B'} />
+                                        <Ionicons name={'trash-outline'} size={17} color={'#50566B'} />
                                     </Text>
                                 </TouchableOpacity> : null
                         }
@@ -3028,7 +3028,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
             {
                 props.showOriginal ? null : <View style={{ width: '100%', paddingBottom: 50, display: 'flex', flexDirection: 'column', }}>
-                    {!viewSubmission ? (submissionImported ? null : <View style={{}}>
+                    {!viewSubmission ? (submissionImported ? null : <View style={{ paddingTop: 12 }}>
                         {props.cue.releaseSubmission || (!allowLateSubmission && new Date() > deadline) || (allowLateSubmission && new Date() > availableUntil) ? null : renderRichEditorModified()}
                         {renderFooter()}
                     </View>) : <View key={JSON.stringify(submissionImported) + JSON.stringify(viewSubmission) + JSON.stringify(props.showOriginal)}>
@@ -3048,7 +3048,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             </div>
         }
 
-        return (<View style={{ width: '100%' }}>
+        return (<View style={{ width: '100%', paddingTop: 12 }}>
             <Editor
                 onInit={(evt, editor) => editorRef.current = editor}
                 initialValue={initialOriginal}
@@ -5218,7 +5218,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                                 marginTop: 5,
                                                             }}>
                                                             <Text>
-                                                                <Ionicons name={'trash-outline'} size={18} color={'#50566B'} />
+                                                                <Ionicons name={'trash-outline'} size={17} color={'#50566B'} />
                                                             </Text>
                                                         </TouchableOpacity>
                                                 }
@@ -5230,7 +5230,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                 marginTop: 5,
                                             }}>
                                             <Text>
-                                                <Ionicons name={'trash-outline'} size={18} color={'#50566B'} />
+                                                <Ionicons name={'trash-outline'} size={17} color={'#50566B'} />
                                             </Text>
                                         </TouchableOpacity>}
                                     </View>

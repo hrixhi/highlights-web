@@ -128,7 +128,7 @@ const OverviewCueCard: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     width: '97%',
                                     zIndex: 20
                                 }}>
-                                    <Ionicons name='bookmark' size={18} color={starred ? '#f94144' : '#fff'} />
+                                    <Ionicons name='bookmark' size={17} color={starred ? '#f94144' : '#fff'} />
                                 </Text>
                                 : null
                         }

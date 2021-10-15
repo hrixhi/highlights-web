@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Animated, Dimensions, Keyboard } from 'react-native';
+import { Animated, Dimensions, Keyboard, ScrollView } from 'react-native';
 import { Text, View } from './Themed';
 import ProfileControls from './ProfileControls';
 
@@ -24,12 +24,13 @@ const Profile: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
         }}
             onTouchMove={() => Keyboard.dismiss()}
         >
-            <Animated.View style={{
-                width: '100%',
+            <View style={{
+                flex: 1,
                 paddingHorizontal: 0,
+                // minHeight: '100%',
                 backgroundColor: 'white',
-                opacity: modalAnimation,
-                alignSelf: 'center'
+                //opacity: modalAnimation,
+                // alignSelf: 'center',
                 // paddingLeft: 20
             }}>
                 <ProfileControls
@@ -37,8 +38,10 @@ const Profile: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                     reOpenProfile={() => props.reOpenProfile()}
                     closeModal={() => props.closeModal()}
                     reloadData={() => props.reloadData()}
+                    setShowSavePassword={(val: any) => props.setShowSavePassword(val)}
+                    showSavePassword={props.showSavePassword}
                 />
-            </Animated.View>
+            </View>
         </View >
     );
 }

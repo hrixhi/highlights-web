@@ -13,8 +13,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
 
     const [modalAnimation] = useState(new Animated.Value(0))
     const [isInstructor, setIsInstructor] = useState(false)
-    const [showHelp, setShowHelp] = useState(false)
-
+    const [showSavePassword, setShowSavePassword] = useState(false);
     const [options, setOptions] = useState<any[]>([
         // instructors
         {
@@ -294,12 +293,13 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
         }).start();
     }, [])
 
-    const windowHeight = Dimensions.get('window').width < 1024 ? Dimensions.get('window').height  : Dimensions.get('window').height - 100;
+    const windowHeight = Dimensions.get('window').height;
 
     return (
         <View style={{
             width: '100%',
-            height: windowHeight,
+            height: '100%',
+            maxHeight: Dimensions.get("window").width < 1024 ? Dimensions.get("window").height - 115 : Dimensions.get("window").height - 52,
             backgroundColor: '#fff',
             borderTopLeftRadius: 0,
             borderTopRightRadius: 0,
@@ -314,80 +314,36 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     borderTopLeftRadius: 0,
                     borderTopRightRadius: 0
                 }}>
-                <View style={{ flexDirection: 'row', width: '100%', height: 50, marginBottom: 10, marginTop: 20 }}>
-                    <View style={{ flexDirection: 'row' }}>
-                        {
-                            showHelp ? <TouchableOpacity
-                                onPress={() => {
-                                    setShowHelp(false)
-                                }}
-                                style={{
-                                    paddingRight: 20,
-                                    paddingTop: 5,
-                                    alignSelf: 'flex-start'
-                                }}
-                            >
-                                <Text style={{ lineHeight: 35, width: '100%', textAlign: 'center' }}>
-                                    <Ionicons name='arrow-back-outline' size={25} color={'#50566B'} />
-                                </Text>
-                            </TouchableOpacity> : null
-                            // <Text
-                            //     style={{
-                            //         fontSize: 20,
-                            //         paddingBottom: 30,
-                            //         fontFamily: 'inter',
-                            //         // textTransform: "uppercase",
-                            //         // paddingLeft: 10,
-                            //         // flex: 1,
-                            //         maxWidth: 500, alignSelf: 'center',
-                            //         width: '100%',
-                            //         lineHeight: 25,
-                            //         paddingTop: 10,
-                            //     }}>
-                            //     <Ionicons name='settings-outline' size={23} />
-                            // </Text>
-                        }
-                    </View>
-                    {
-                        showHelp ? null :
-                            <TouchableOpacity
-                                onPress={() => {
-                                    setShowHelp(true)
-                                }}
-                                style={{
-                                    backgroundColor: 'white',
-                                    overflow: 'hidden',
-                                    // height: 35,
-                                    marginTop: 5,
-                                    justifyContent: 'center',
-                                    flexDirection: 'row',
-                                    // alignSelf: 'flex-end'
-                                }}>
-                                <Text
+                {
+                    props.showHelp || showSavePassword ?
+                        <View style={{ flexDirection: 'row', width: '100%', height: 50, marginBottom: 10, marginTop: 20 }}>
+                            <View style={{ flexDirection: 'row' }}>
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        props.setShowHelp(false)
+                                        setShowSavePassword(false)
+                                    }}
                                     style={{
-                                        fontSize: 20,
-                                        paddingBottom: 10,
-                                        fontFamily: 'inter',
-                                        // textTransform: "uppercase",
-                                        // paddingLeft: 10,
-                                        // flex: 1,
-                                        maxWidth: 500, alignSelf: 'center',
-                                        width: '100%',
-                                        lineHeight: 25,
-                                        paddingTop: 7,
-                                    }}>
-                                    <Ionicons name='help-circle-outline' size={22} color="#5469D4" />
-                                </Text>
-                            </TouchableOpacity>
-                    }
-                </View>
+                                        paddingRight: 20,
+                                        paddingTop: 5,
+                                        alignSelf: 'flex-start'
+                                    }}
+                                >
+                                    <Text style={{ lineHeight: 35, width: '100%', textAlign: 'center' }}>
+                                        <Ionicons name='arrow-back-outline' size={25} color={'#50566B'} />
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                        : null
+                }
                 <View style={{
                     width: '100%',
                     flexDirection: 'row',
                     // paddingTop: 30
                 }}>
                     {
-                        !showHelp ? <View style={{
+                        !props.showHelp ? <View style={{
                             width: '100%',
                             // paddingRight: Dimensions.get('window').width < 1024 ? 0 : 25,
                             // marginRight: Dimensions.get('window').width < 1024 ? 0 : 20,
@@ -399,6 +355,8 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 saveDataInCloud={() => props.saveDataInCloud()}
                                 reOpenProfile={() => props.reOpenProfile()}
                                 reloadData={() => props.reloadData()}
+                                setShowSavePassword={(val: any) => setShowSavePassword(val)}
+                                showSavePassword={showSavePassword}
                             />
                         </View> :
                             <View style={{
@@ -407,7 +365,8 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 <ScrollView
                                     contentContainerStyle={{
                                         marginTop: 25, backgroundColor: '#fff',
-                                        height: windowHeight - 50, paddingBottom: 75,
+                                        maxHeight: Dimensions.get('window').width < 1024 ? windowHeight - 104 - 110 : windowHeight - 52 - 110,
+                                        paddingBottom: 75,
                                         width: '100%',
                                         maxWidth: 1000, alignSelf: 'center'
                                     }}
