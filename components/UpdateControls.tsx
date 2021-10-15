@@ -2194,7 +2194,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 iconMap={{
                     ["insertCamera"]: ({ tintColor }) => <Ionicons name="camera-outline" size={15} color={tintColor} />,
                     ["clear"]: ({ tintColor }) => (
-                        <Ionicons name="trash-outline" size={13} color={tintColor} onPress={() => clearAll()} />
+                        <Ionicons name="close-circle-outline" size={13} color={tintColor} onPress={() => clearAll()} />
                     )
                 }}
                 onPressAddImage={galleryCallback}
@@ -2526,7 +2526,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         marginTop: 5,
                                     }}>
                                     <Text>
-                                        <Ionicons name={'trash-outline'} size={17} color={'#50566B'} />
+                                        <Ionicons name={'close-circle-outline'} size={17} color={'#50566B'} />
                                     </Text>
                                 </TouchableOpacity> : null
                         }
@@ -5032,7 +5032,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 //     || (((props.cue.graded && submission && !isOwner) && !props.showOriginal) || (!props.showOriginal && showImportOptions))
                                 //     || (!props.showOriginal && submissionImported) || (imported && props.showOriginal) || props.showOptions || props.showComments || viewSubmission
                                 //     ? 0 : 1,
-                                // marginTop: 20,
+                                marginTop: 20,
                                 borderBottomColor: '#f7fafc'
                             }}
                         />
@@ -5218,7 +5218,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                                 marginTop: 5,
                                                             }}>
                                                             <Text>
-                                                                <Ionicons name={'trash-outline'} size={17} color={'#50566B'} />
+                                                                <Ionicons name={'close-circle-outline'} size={17} color={'#50566B'} />
                                                             </Text>
                                                         </TouchableOpacity>
                                                 }
@@ -5230,7 +5230,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                 marginTop: 5,
                                             }}>
                                             <Text>
-                                                <Ionicons name={'trash-outline'} size={17} color={'#50566B'} />
+                                                <Ionicons name={'close-circle-outline'} size={17} color={'#50566B'} />
                                             </Text>
                                         </TouchableOpacity>}
                                     </View>

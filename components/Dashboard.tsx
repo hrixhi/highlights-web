@@ -1317,13 +1317,12 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
     return (
         <View style={{
             height: windowHeight,
-            flexDirection: width < 1024 ? 'column-reverse' : 'column'
+            // flexDirection: width < 1024 ? 'column-reverse' : 'column'
         }}>
             <View style={{
                 backgroundColor: '#f7fafc',
                 borderColor: '#E3E8EE',
-                borderBottomWidth: width < 1024 ? 0 : 2,
-                borderTopWidth: width < 1024 ? 2 : 0,
+                borderBottomWidth: 2,
                 overflow: 'hidden',
                 paddingHorizontal: Dimensions.get('window').width < 1024 ? 20 : 0,
                 flexDirection: 'row',
@@ -1403,7 +1402,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 // width: "100%",
                                 color: '#5469D4',
                                 borderColor: "#E3E8EE",
-                                borderBottomWidth: 2,
+                                borderBottomWidth: 1,
                                 fontSize: 11,
                                 padding: 5,
                                 paddingLeft: 0,
@@ -1443,7 +1442,10 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             onSelect={(op: any) => props.setOption(op)}>
                             <MenuTrigger>
                                 <Text>
-                                    <Ionicons name="settings-outline" size={17} color={props.option === 'Settings' || props.option === 'Channels' ? '#5469D4' : '#50566B'} />
+                                    <Ionicons
+                                        name={props.option === 'Settings' ? 'person-circle-outline' : (props.option === 'Channels' ? 'file-tray-stacked-outline' : "settings-outline")}
+                                        size={17}
+                                        color={props.option === 'Settings' || props.option === 'Channels' ? '#5469D4' : '#50566B'} />
                                 </Text>
                                 {/* <Image
                                     style={{

@@ -800,9 +800,9 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 <View style={{ width: "100%", paddingTop: width < 1024 ? 40 : 40, paddingBottom: 15, backgroundColor: "white" }}>
                     <Text style={{
                         fontSize: 14,
-                        // fontFamily: 'inter',
+                        fontFamily: 'inter',
                         color: '#1A2036'
-                    }}>Recurring</Text>
+                    }}>Repeat</Text>
                 </View>
                 <View
                     style={{
@@ -829,10 +829,10 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     <Text
                         style={{
                             fontSize: 14,
-                            // fontFamily: 'inter',
+                            fontFamily: 'inter',
                             color: '#1A2036'
                         }}>
-                        Repeat every
+                        Interval
                     </Text>
                 </View>
                 <View
@@ -874,9 +874,9 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 <View style={{ width: "100%", paddingTop: width < 1024 ? 20 : 40, paddingBottom: 15, backgroundColor: "white" }}>
                     <Text style={{
                         fontSize: 14,
-                        // fontFamily: 'inter',
+                        fontFamily: 'inter',
                         color: '#1A2036'
-                    }}>Repeat until</Text>
+                    }}>End</Text>
                 </View>
                 <View
                     style={{
@@ -967,7 +967,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     <View style={{ width: "100%", paddingTop: width < 1024 ? 40 : 30, paddingBottom: 15, backgroundColor: "white" }}>
                         <Text style={{
                             fontSize: 14,
-                            // fontFamily: 'inter',
+                            fontFamily: 'inter',
                             color: '#1A2036'
                         }}>Lecture</Text>
                     </View>
@@ -1033,7 +1033,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     <Text
                         style={{
                             fontSize: 14,
-                            // fontFamily: 'inter',
+                            fontFamily: 'inter',
                             color: '#1A2036'
                         }}>
                         Shared with {editChannelName}
@@ -1753,7 +1753,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                             <Text
                                                                                                 style={{
                                                                                                     fontSize: 14,
-                                                                                                    // fontFamily: 'inter',
+                                                                                                    fontFamily: 'inter',
                                                                                                     color: '#1A2036'
                                                                                                 }}>
                                                                                                 Event
@@ -1772,7 +1772,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                             <Text
                                                                                                 style={{
                                                                                                     fontSize: 14,
-                                                                                                    // fontFamily: 'inter',
+                                                                                                    fontFamily: 'inter',
                                                                                                     color: '#1A2036'
                                                                                                 }}>
                                                                                                 Description
@@ -1789,7 +1789,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                     <View style={{ display: 'flex', width: '100%', maxWidth: 400 }} >
                                                                                         <View
                                                                                             style={{
-                                                                                                width: '100%', maxWidth: 400,
+                                                                                                width: '100%',
+                                                                                                 maxWidth: 400,
                                                                                                 paddingVertical: 15
                                                                                             }}>
                                                                                             <Text style={styles.text}>{PreferredLanguageText("start")}</Text>
@@ -1896,7 +1897,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                                     <Text
                                                                                                         style={{
                                                                                                             fontSize: 14,
-                                                                                                            // fontFamily: 'inter',
+                                                                                                            fontFamily: 'inter',
                                                                                                             color: '#1A2036'
                                                                                                         }}>
                                                                                                         Channel
@@ -2012,7 +2013,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                                         borderRadius: 15,
                                                                                                         textTransform: "uppercase"
                                                                                                     }}>
-                                                                                                    {isCreatingEvents ? "CREATING..." : "CREATE"} <Ionicons name='create-outline' size={12} />
+                                                                                                    {isCreatingEvents ? "..." : "CREATE"}
                                                                                                 </Text>
                                                                                             </TouchableOpacity>
                                                                                         </View> : null}
@@ -2086,7 +2087,7 @@ const styles: any = StyleSheet.create({
     },
     text: {
         fontSize: 14,
-        // fontFamily: 'inter',
+        fontFamily: 'inter',
         color: '#1A2036',
         marginBottom: 10
     },

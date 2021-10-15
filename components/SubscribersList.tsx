@@ -1173,7 +1173,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                 showSubmission || showChat || showAddUsers || showNewGroup ?
                     <View style={{ backgroundColor: 'white', paddingBottom: 15, width: '100%', flexDirection: 'row', justifyContent: 'center' }}>
                         <View style={{ flexDirection: 'row', width: '100%', maxWidth: 1000 }}>
-                            <TouchableOpacity
+                            {/* <TouchableOpacity
                                 key={Math.random()}
                                 style={{
                                     backgroundColor: 'white'
@@ -1203,7 +1203,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 }}>
                                     <Ionicons name='arrow-back-outline' size={25} color={'#50566B'} />
                                 </Text>
-                            </TouchableOpacity>
+                            </TouchableOpacity> */}
                             {
                                 loadedChatWithUser && loadedChatWithUser !== {} && !showNewGroup && !showAddUsers && users.length < 3 && !showSubmission ?
                                     <View style={{ marginHorizontal: 20, paddingTop: 5 }}>
@@ -1776,21 +1776,10 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                     :
                                                     null
                                             }
-                                            <View style={{ width: '100%', marginBottom: 20 }}>
-                                                <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                                                    <Ionicons name='checkmark-outline' size={22} color={"#53BE68"} />
-                                                    <Text style={{ fontSize: 14, paddingLeft: 5 }}>
-                                                        Turned In at {moment(new Date(parseInt(submittedAt))).format('MMMM Do, h:mm a')}
-                                                    </Text>
-                                                </View>
-                                            </View>
                                             <View style={{ flexDirection: 'row', flex: 1 }}>
                                                 <View style={{
-                                                    width: '40%'
+                                                    flex: 1
                                                 }}>
-                                                    <Text style={{ color: '#1A2036', fontSize: 14, paddingBottom: 10 }}>
-                                                        {PreferredLanguageText('score')}
-                                                    </Text>
                                                     <TextInput
                                                         value={score}
                                                         style={{
@@ -1803,7 +1792,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                             marginTop: 5,
                                                             marginBottom: 20
                                                         }}
-                                                        placeholder={'0-100'}
+                                                        placeholder={'Score (0-100)'}
                                                         onChangeText={val => setScore(val)}
                                                         placeholderTextColor={'#50566B'}
                                                     />
@@ -1811,7 +1800,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             </View>
                                             {
                                                 imported && !isQuiz ?
-                                                    <View style={{ width: '40%', alignSelf: 'flex-start' }}>
+                                                    <View style={{ flex: 1 }}>
                                                         <TextInput
                                                             editable={false}
                                                             value={title}
@@ -1822,6 +1811,14 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                         />
                                                     </View> : null
                                             }
+                                            <View style={{ width: '100%', marginBottom: 20 }}>
+                                                <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                                                    <Ionicons name='checkmark-outline' size={22} color={"#53BE68"} />
+                                                    <Text style={{ fontSize: 14, paddingLeft: 5 }}>
+                                                        Turned In at {moment(new Date(parseInt(submittedAt))).format('MMMM Do, h:mm a')}
+                                                    </Text>
+                                                </View>
+                                            </View>
                                             {
                                                 isQuiz && Object.keys(quizSolutions).length > 0 ?
                                                     renderQuizSubmissions() : null

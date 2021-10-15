@@ -2633,7 +2633,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                             onPress={() => clearAll()}
                           >
                             <Ionicons
-                              name="trash-outline"
+                              name="close-circle-outline"
                               color="#50566B"
                               size={15}
                               style={{ alignSelf: "center" }}
