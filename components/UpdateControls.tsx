@@ -3028,7 +3028,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
             {
                 props.showOriginal ? null : <View style={{ width: '100%', paddingBottom: 50, display: 'flex', flexDirection: 'column', }}>
-                    {!viewSubmission ? (submissionImported ? null : <View style={{ paddingTop: 12 }}>
+                    {!viewSubmission ? (submissionImported ? null : <View>
                         {props.cue.releaseSubmission || (!allowLateSubmission && new Date() > deadline) || (allowLateSubmission && new Date() > availableUntil) ? null : renderRichEditorModified()}
                         {renderFooter()}
                     </View>) : <View key={JSON.stringify(submissionImported) + JSON.stringify(viewSubmission) + JSON.stringify(props.showOriginal)}>
@@ -3048,7 +3048,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
             </div>
         }
 
-        return (<View style={{ width: '100%', paddingTop: 12 }}>
+        return (<View style={{ width: '100%' }}>
             <Editor
                 onInit={(evt, editor) => editorRef.current = editor}
                 initialValue={initialOriginal}

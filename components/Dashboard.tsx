@@ -1406,6 +1406,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 borderBottomWidth: 2,
                                 fontSize: 11,
                                 padding: 5,
+                                paddingLeft: 0,
                                 // paddingVertical: 8,
                                 marginTop: -8,
                                 marginRight: 2,
@@ -1414,7 +1415,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 // marginRight: 25,
                                 maxWidth: 200
                             }}
-                            placeholder={"🔍"}
+                            placeholder={"Search"}
                             onChangeText={(val) => setSearchTerm(val)}
                             placeholderTextColor={"#50566B"}
                         />
@@ -1427,7 +1428,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             <TouchableOpacity style={{ backgroundColor: 'none', marginLeft: 20 }} onPress={() => {
                                 setShowFilterPopup(true)
                             }}>
-                                <Text style={{ fontSize: 11, color: '#50566B', paddingTop: 8, textAlign: 'right', fontFamily: 'inter' }}>
+                                <Text style={{ fontSize: 11, color: '#50566B', paddingTop: 8, textAlign: 'right' }}>
                                     Filter <Ionicons name="chevron-down-outline" size={10} />
                                 </Text>
 
@@ -1459,23 +1460,23 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             </MenuTrigger>
                             <MenuOptions customStyles={{
                                 optionsContainer: {
-                                    padding: 10,
+                                    padding: 5,
                                     borderRadius: 0,
                                     shadowOpacity: 0,
-                                    borderWidth: 1,
+                                    borderWidth: 2,
                                     borderColor: '#E3E8EE',
                                     maxWidth: 150
                                 }
                             }}>
                                 <MenuOption
                                     value={'Channels'}>
-                                    <Text style={{ fontFamily: 'inter', fontSize: 12 }}>
+                                    <Text style={{ fontFamily: 'inter', fontSize: 12, color: props.option === 'Channels' ? '#5469D4' : '#1A2036' }}>
                                         <Ionicons name='file-tray-stacked-outline' size={12} />&nbsp;&nbsp;Workspaces
                                     </Text>
                                 </MenuOption>
                                 <MenuOption
                                     value={'Settings'}>
-                                    <Text style={{ fontFamily: 'inter', fontSize: 12 }}>
+                                    <Text style={{ fontFamily: 'inter', fontSize: 12, color: props.option === 'Settings' ? '#5469D4' : '#1A2036' }}>
                                         <Ionicons name='person-circle-outline' size={12} />&nbsp;&nbsp;Profile
                                     </Text>
                                 </MenuOption>

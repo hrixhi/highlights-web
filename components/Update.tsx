@@ -514,7 +514,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 width: '100%',
                 marginBottom: 10,
                 marginRight: 15,
-                borderWidth: 2,
+                borderWidth: 1,
                 flexDirection: 'row',
                 borderColor: value._id === props.cue._id ? '#1A2036' : '#E3E8EE',
             }}
@@ -523,7 +523,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 key={'textPage'}
                 style={{
                     maxWidth: 168,
-                    width: '95%',
+                    width: '96%',
                     height: '100%',
                     borderRadius: 0,
                     padding: 10,
@@ -582,7 +582,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 style={{
                     backgroundColor: col,
                     flex: 1,
-                    borderLeftWidth: 2,
+                    // borderLeftWidth: 2,
                     borderColor: value._id === props.cue._id ? '#1A2036' : '#E3E8EE',
                     opacity: 0.9,
                     // width: '4%',
@@ -612,7 +612,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 width: '100%',
                 marginBottom: 10,
                 marginRight: 15,
-                borderWidth: 2,
+                borderWidth: 1,
                 flexDirection: 'row',
                 borderColor: value._id === props.cue._id ? '#1A2036' : '#E3E8EE',
             }}
@@ -621,7 +621,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 key={'textPage'}
                 style={{
                     maxWidth: 168,
-                    width: '95%',
+                    width: '96%',
                     height: '100%',
                     borderRadius: 0,
                     padding: 10,
@@ -680,7 +680,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 style={{
                     backgroundColor: col,
                     flex: 1,
-                    borderLeftWidth: 2,
+                    // borderLeftWidth: 2,
                     borderColor: value._id === props.cue._id ? '#1A2036' : '#E3E8EE',
                     opacity: 0.9,
                     // width: '4%',
@@ -810,7 +810,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     width: '100%',
                                     marginBottom: 10,
                                     marginRight: 15,
-                                    borderWidth: 2,
+                                    borderWidth: 1,
                                     flexDirection: 'row',
                                     borderColor: cue._id === props.cue._id ? '#1A2036' : '#E3E8EE',
                                 }}
@@ -819,7 +819,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     key={'textPage'}
                                     style={{
                                         maxWidth: 168,
-                                        width: '95%',
+                                        width: '96%',
                                         height: '100%',
                                         borderRadius: 0,
                                         padding: 10,
@@ -871,7 +871,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     style={{
                                         backgroundColor: col,
                                         flex: 1,
-                                        borderLeftWidth: 2,
+                                        // borderLeftWidth: 2,
                                         borderColor: cue._id === props.cue._id ? '#1A2036' : '#E3E8EE',
                                         opacity: 0.9,
                                         // width: '4%',
@@ -1095,7 +1095,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 width: '100%',
                                 marginBottom: 10,
                                 marginRight: 15,
-                                borderWidth: 2,
+                                borderWidth: 1,
                                 flexDirection: 'row',
                                 borderColor: cue._id === props.cue._id ? '#1A2036' : '#E3E8EE',
                             }}
@@ -1104,7 +1104,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 key={'textPage'}
                                 style={{
                                     maxWidth: 168,
-                                    width: '95%',
+                                    width: '96%',
                                     height: '100%',
                                     borderRadius: 0,
                                     padding: 10,
@@ -1159,7 +1159,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 style={{
                                     backgroundColor: col,
                                     flex: 1,
-                                    borderLeftWidth: 2,
+                                    // borderLeftWidth: 2,
                                     borderColor: cue._id === props.cue._id ? '#1A2036' : '#E3E8EE',
                                     opacity: 0.9,
                                     // width: '4%',
@@ -1254,6 +1254,58 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     </TouchableOpacity>
                     <TouchableOpacity
                         onPress={async () => {
+                            const server = fetchAPI('')
+
+                            setDeletingFolder(true)
+
+                            server.mutate({
+                                mutation: deleteFolder,
+                                variables: {
+                                    folderId
+                                }
+                            }).then(async res => {
+
+                                // Update cue locally with the new Unread count so that the Unread count reflects in real time
+                                if (!res.data.folder.delete) {
+                                    Alert("Could not delete list. Try again.")
+                                    setDeletingFolder(false)
+                                    return;
+                                }
+
+                                setDeletingFolder(false);
+                                setFolderId("")
+
+                                props.refreshCues()
+
+                            }).catch((e) => {
+                                Alert("Could not create folder. Try again.")
+                                setDeletingFolder(false)
+                            })
+                        }}
+                        style={{
+                            // borderRadius: 15,
+                            // backgroundColor: "white",
+                            paddingLeft: 20
+                        }}
+                    >
+                        <Text
+                            style={{
+                                lineHeight: 35,
+                                // textAlign: "right",
+                                // paddingRight: 20,
+                                // textTransform: "uppercase",
+                                fontSize: 12,
+                                fontFamily: 'inter',
+                                color: '#50566B',
+                            }}
+                        >
+                            {deletingFolder
+                                ? '...'
+                                : 'Ungroup'}
+                        </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={async () => {
                             setEditFolder(false)
 
                             // Set cues to display to original
@@ -1320,7 +1372,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             style={{
                                 flex: 1,
                                 backgroundColor: "white",
-                                justifyContent: "flex-end",
+                                justifyContent: "flex-start",
                                 display: "flex",
                                 flexDirection: "row",
                                 // height: 50,
@@ -1332,6 +1384,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     setEditFolder(true)
                                 }}
                                 style={{
+                                    paddingLeft: 0
                                     // borderRadius: 15,
                                     // backgroundColor: "white",
                                 }}
@@ -1349,58 +1402,6 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 >
 
                                     Edit
-                                </Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                onPress={async () => {
-                                    const server = fetchAPI('')
-
-                                    setDeletingFolder(true)
-
-                                    server.mutate({
-                                        mutation: deleteFolder,
-                                        variables: {
-                                            folderId
-                                        }
-                                    }).then(async res => {
-
-                                        // Update cue locally with the new Unread count so that the Unread count reflects in real time
-                                        if (!res.data.folder.delete) {
-                                            Alert("Could not delete list. Try again.")
-                                            setDeletingFolder(false)
-                                            return;
-                                        }
-
-                                        setDeletingFolder(false);
-                                        setFolderId("")
-
-                                        props.refreshCues()
-
-                                    }).catch((e) => {
-                                        Alert("Could not create folder. Try again.")
-                                        setDeletingFolder(false)
-                                    })
-                                }}
-                                style={{
-                                    // borderRadius: 15,
-                                    // backgroundColor: "white",
-                                    paddingLeft: 20
-                                }}
-                            >
-                                <Text
-                                    style={{
-                                        lineHeight: 35,
-                                        // textAlign: "right",
-                                        // paddingRight: 20,
-                                        // textTransform: "uppercase",
-                                        fontSize: 12,
-                                        fontFamily: 'inter',
-                                        color: '#50566B',
-                                    }}
-                                >
-                                    {deletingFolder
-                                        ? '...'
-                                        : 'Ungroup'}
                                 </Text>
                             </TouchableOpacity>
                         </View> : null}
@@ -1437,7 +1438,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 width: '100%',
                                 marginBottom: 10,
                                 marginRight: 15,
-                                borderWidth: 2,
+                                borderWidth: 1,
                                 flexDirection: 'row',
                                 borderColor: cue._id === props.cue._id ? '#1A2036' : '#E3E8EE',
                             }}
@@ -1447,7 +1448,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 key={'textPage'}
                                 style={{
                                     maxWidth: 168,
-                                    width: '95%',
+                                    width: '96%',
                                     height: '100%',
                                     borderRadius: 0,
                                     padding: 10,
@@ -1482,7 +1483,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 style={{
                                     backgroundColor: col,
                                     flex: 1,
-                                    borderLeftWidth: 2,
+                                    // borderLeftWidth: 2,
                                     borderColor: cue._id === props.cue._id ? '#1A2036' : '#E3E8EE',
                                     opacity: 0.9,
                                     // width: '4%',
@@ -1737,43 +1738,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     )
             }
         </ScrollView>
-            : <View style={{ paddingTop: 30 }}>
+            : <View style={{ paddingTop: 20 }}>
                 <View style={{ width: '100%', flexDirection: 'row' }}>
-                    {
-                        showFolder ? null :
-                            <View style={{}}>
-                                <TouchableOpacity
-                                    style={{
-                                        justifyContent: 'center',
-                                        flexDirection: 'column',
-                                        marginRight: 20,
-                                        paddingTop: 2
-                                    }}
-                                    onPress={() => {
-                                        props.closeModal()
-                                    }}>
-                                    <Text>
-                                        <Ionicons name='arrow-back-outline' size={25} color={'#50566B'} />
-                                    </Text>
-                                </TouchableOpacity>
-                            </View>
-                    }
-                    {/* <View style={{}}>
-                        <TouchableOpacity
-                            style={{
-                                justifyContent: 'center',
-                                flexDirection: 'column',
-                                marginRight: 20
-                            }}
-                            onPress={() => {
-                                setShowFolder(!showFolder)
-                            }}>
-                            <Text>
-                                <Ionicons name={showFolder ? 'close-outline' : 'document-attach-outline'} size={25} color={'#5469D4'} />
-                            </Text>
-                        </TouchableOpacity> 
-                    </View>
-                    */}
                     <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end' }}>
                         <TouchableOpacity
                             style={{
@@ -1787,11 +1753,11 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 setShowComments(false)
                             }}>
                             <Text style={showOriginal ? styles.allGrayFill : styles.all}>
-                                <Ionicons name='newspaper-outline' size={15} />
+                                <Ionicons name='newspaper-outline' size={17} />
                             </Text>
-                            <Text style={showOriginal ? styles.allGrayFill : styles.all}>
+                            {/* <Text style={showOriginal ? styles.allGrayFill : styles.all}>
                                 Content
-                            </Text>
+                            </Text> */}
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={{
@@ -1806,11 +1772,11 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             }}>
 
                             <Text style={styles.all}>
-                                <Ionicons name='options-outline' size={15} />
+                                <Ionicons name='options-outline' size={17} />
                             </Text>
-                            <Text style={styles.all}>
+                            {/* <Text style={styles.all}>
                                 Settings
-                            </Text>
+                            </Text> */}
                         </TouchableOpacity>
                         {/* <TouchableOpacity
                             style={{
@@ -1845,11 +1811,11 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         setShowOptions(false)
                                     }}>
                                     <Text style={!showOriginal && !viewStatus && !showOptions && !showComments ? styles.allGrayFill : styles.all}>
-                                        <Ionicons name='document-attach-outline' size={15} />
+                                        <Ionicons name='document-attach-outline' size={17} />
                                     </Text>
-                                    <Text style={!showOriginal && !viewStatus && !showOptions && !showComments ? styles.allGrayFill : styles.all}>
+                                    {/* <Text style={!showOriginal && !viewStatus && !showOptions && !showComments ? styles.allGrayFill : styles.all}>
                                         Submission
-                                    </Text>
+                                    </Text> */}
                                 </TouchableOpacity>
                         }
                         {/* Add Status button here */}
@@ -1867,11 +1833,11 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         setShowOptions(false)
                                     }}>
                                     <Text style={viewStatus ? styles.allGrayFill : styles.all}>
-                                        <Ionicons name='stats-chart-outline' size={15} />
+                                        <Ionicons name='stats-chart-outline' size={17} />
                                     </Text>
-                                    <Text style={viewStatus ? styles.allGrayFill : styles.all}>
+                                    {/* <Text style={viewStatus ? styles.allGrayFill : styles.all}>
                                         Engagement
-                                    </Text>
+                                    </Text> */}
                                 </TouchableOpacity>
                         }
                     </View>
@@ -1985,7 +1951,7 @@ const styles: any = StyleSheet.create({
         fontSize: 10,
         color: '#50566B',
         height: 20,
-        paddingHorizontal: 5,
+        paddingHorizontal: 10,
         backgroundColor: '#fff',
         // textTransform: 'uppercase',
         lineHeight: 20,
@@ -1996,7 +1962,7 @@ const styles: any = StyleSheet.create({
         fontSize: 10,
         color: '#5469D4',
         height: 20,
-        paddingHorizontal: 5,
+        paddingHorizontal: 10,
         textAlign: 'center',
         backgroundColor: '#fff',
         // textTransform: 'uppercase',

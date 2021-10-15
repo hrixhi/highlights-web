@@ -1861,7 +1861,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               bottom: 0,
               width: 56, height: 56, borderRadius: 28, backgroundColor: '#5469D4',
               borderColor: '#E3E8EE',
-              borderWidth: 2
+              borderWidth: 0
             }}
           >
             <Text style={{ color: '#fff', width: '100%', textAlign: 'center' }}>

@@ -166,7 +166,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
             filteredSubscribers = subscribers
             break;
     }
-    const windowHeight = Dimensions.get('window').width < 1024 ? Dimensions.get('window').height  : Dimensions.get('window').height;
+    const windowHeight = Dimensions.get('window').width < 1024 ? Dimensions.get('window').height : Dimensions.get('window').height;
     const key = JSON.stringify(filteredSubscribers)
     let options = filteredSubscribers.map((sub: any) => {
         return {
@@ -1052,14 +1052,14 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
             {
                 attempt.url !== undefined ?
                     (attempt.type === "mp4" ||
-                    attempt.type === "oga" ||
-                    attempt.type === "mov" ||
-                    attempt.type === "wmv" ||
-                    attempt.type === "mp3" ||
-                    attempt.type === "mov" ||
-                    attempt.type === "mpeg" ||
-                    attempt.type === "mp2" ||
-                    attempt.type === "wav" ?
+                        attempt.type === "oga" ||
+                        attempt.type === "mov" ||
+                        attempt.type === "wmv" ||
+                        attempt.type === "mp3" ||
+                        attempt.type === "mov" ||
+                        attempt.type === "mpeg" ||
+                        attempt.type === "mp2" ||
+                        attempt.type === "wav" ?
                         <View style={{ width: '100%', marginTop: 25 }}>
                             {attempt.title !== "" ? <Text
                                 style={{
@@ -1308,53 +1308,6 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                     </View>
             }
             {
-                !showAddUsers && !showSubmission && props.cue && props.cue.submission ?
-                    <View style={{ backgroundColor: 'white', flexDirection: 'row', height: 40, width: '100%', justifyContent: 'center' }}>
-                        <View style={{
-                            backgroundColor: 'white',
-                            // marginTop: 20,
-                            width: '100%',
-                            maxWidth: 1000,
-                            flexDirection: 'row'
-                        }}>
-                            <Switch
-                                value={releaseSubmission}
-                                onValueChange={() => updateReleaseSubmission()}
-                                style={{ height: 20, marginRight: 20 }}
-                                trackColor={{
-                                    false: '#f7fafc',
-                                    true: '#5469D4'
-                                }}
-                                activeThumbColor='white'
-                            />
-                            <View style={{ backgroundColor: 'white', }}>
-                                <Text style={{
-                                    color: "#1A2036",
-                                    fontSize: 11,
-                                    lineHeight: 25,
-                                    textTransform: 'uppercase'
-                                }}>
-                                    Release Grades
-                                </Text>
-                            </View>
-                        </View>
-                        {isQuiz ? <Text
-                            style={{
-                                color: "#5469D4",
-                                fontSize: 11,
-                                lineHeight: 25,
-                                textAlign: "right",
-                                textTransform: "uppercase"
-                            }}
-                            onPress={() => {
-                                exportScores()
-                            }}>
-                            EXPORT
-                        </Text> : null}
-                    </View>
-                    : null
-            }
-            {
                 !showAddUsers ? (subscribers.length === 0 ?
                     <View style={{ backgroundColor: 'white', flex: 1 }}>
                         <Text style={{ width: '100%', color: '#50566B', fontSize: 20, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1, textAlign: 'center' }}>
@@ -1366,7 +1319,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                     <View style={{
                         width: '100%',
                         maxWidth: 1000,
-                        alignSelf: 'center',
+                        // alignSelf: 'center',
                         backgroundColor: 'white',
                         flex: 1
                     }}
@@ -1379,43 +1332,12 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     height: 70,
                                     backgroundColor: 'white',
                                     // display: 'flex',
-                                    justifyContent: 'flex-end',
-                                    flex: 1,
+                                    // justifyContent: 'flex-start',
+                                    // flex: 1,
                                     flexDirection: 'row',
                                     // maxWidth: 500,
-                                    marginBottom: 20
+                                    marginBottom: 0
                                 }}>
-                                    {/* <Menu
-                                        onSelect={(cat: any) => setFilterChoice(cat)}>
-                                        <MenuTrigger>
-                                            <Text style={{ fontSize: 14, color: '#1A2036' }}>
-                                                {filterChoice === '' ? 'All' : filterChoice}<Ionicons name='chevron-down-outline' size={15} />
-                                            </Text>
-                                        </MenuTrigger>
-                                        <MenuOptions customStyles={{
-                                            optionsContainer: {
-                                                padding: 10,
-                                                borderRadius: 15,
-                                                shadowOpacity: 0,
-                                                borderWidth: 1,
-                                                borderColor: '#E3E8EE',
-                                                overflow: 'scroll',
-                                                maxHeight: '100%'
-                                            }
-                                        }}>
-                                            {
-                                                categories.map((category: any) => {
-                                                    return <MenuOption
-                                                        value={category}>
-                                                        <Text>
-                                                            {category}
-                                                        </Text>
-                                                    </MenuOption>
-                                                })
-                                            }
-                                        </MenuOptions>
-                                    </Menu> */}
-
                                     <label style={{ width: 150 }}>
                                         <Select
                                             touchUi={true}
@@ -1439,8 +1361,95 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 }
                                             })}
                                         />
-
                                     </label>
+                                    {
+                                        !showAddUsers && props.cue && props.cue.submission ?
+                                            <View style={{ backgroundColor: 'white', flexDirection: 'row', height: 40, flex: 1, justifyContent: 'flex-end' }}>
+                                                <View style={{
+                                                    backgroundColor: 'white',
+                                                    flexDirection: 'row'
+                                                }}>
+                                                    {
+                                                        releaseSubmission ?
+                                                            <TouchableOpacity
+                                                                // value={releaseSubmission}
+                                                                onPress={() => updateReleaseSubmission()}
+                                                                style={{
+                                                                    borderRadius: 15,
+                                                                    backgroundColor: "white",
+                                                                }}
+                                                            >
+                                                                <Text
+                                                                    style={{
+                                                                        textAlign: "center",
+                                                                        lineHeight: 35,
+                                                                        color: "#5469D4",
+                                                                        fontSize: 12,
+                                                                        borderColor: "#5469D4",
+                                                                        borderWidth: 1,
+                                                                        borderRadius: 15,
+                                                                        paddingHorizontal: 20,
+                                                                        fontFamily: "inter",
+                                                                        overflow: "hidden",
+                                                                        height: 35,
+                                                                        textTransform: "uppercase",
+                                                                    }}
+                                                                >
+                                                                    Hide Grades
+                                                                </Text>
+                                                            </TouchableOpacity> :
+                                                            <TouchableOpacity
+                                                                // value={releaseSubmission}
+                                                                onPress={() => updateReleaseSubmission()}
+                                                                style={{
+                                                                    borderRadius: 15,
+                                                                    backgroundColor: "white",
+                                                                }}
+                                                            >
+                                                                <Text
+                                                                    style={{
+                                                                        textAlign: "center",
+                                                                        lineHeight: 35,
+                                                                        color: "white",
+                                                                        fontSize: 12,
+                                                                        backgroundColor: "#5469D4",
+                                                                        borderRadius: 15,
+                                                                        paddingHorizontal: 20,
+                                                                        fontFamily: "inter",
+                                                                        overflow: "hidden",
+                                                                        height: 35,
+                                                                        textTransform: "uppercase",
+                                                                    }}
+                                                                >
+                                                                    Release Grades
+                                                                </Text>
+                                                            </TouchableOpacity>
+                                                    }
+                                                </View>
+                                                {isQuiz ? <Text
+                                                    style={{
+                                                        textAlign: "center",
+                                                        lineHeight: 35,
+                                                        color: "#5469D4",
+                                                        fontSize: 12,
+                                                        borderColor: "#5469D4",
+                                                        borderWidth: 1,
+                                                        borderRadius: 15,
+                                                        paddingHorizontal: 20,
+                                                        fontFamily: "inter",
+                                                        overflow: "hidden",
+                                                        height: 35,
+                                                        textTransform: "uppercase",
+                                                        marginLeft: 20
+                                                    }}
+                                                    onPress={() => {
+                                                        exportScores()
+                                                    }}>
+                                                    EXPORT
+                                                </Text> : null}
+                                            </View>
+                                            : null
+                                    }
                                 </View>
                         }
                         {
@@ -1569,13 +1578,13 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                     contentContainerStyle={{
                                                         width: '100%',
                                                         borderRadius: 0,
-                                                        borderWidth: 1,
+                                                        borderWidth: 0,
                                                         borderColor: '#E3E8EE',
                                                         // maxHeight: props.cueId ? windowHeight - 00 : '100%',
                                                         // marginBottom: props.cueId ? 20 : 0,
                                                         maxWidth: 1000,
                                                         marginBottom: 50,
-                                                        alignSelf: 'center'
+                                                        // alignSelf: 'center'
                                                     }}
                                                 >
                                                     {
@@ -1643,19 +1652,21 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                     }
                                                                 }}
                                                                 style={{
-                                                                    backgroundColor: '#f7fafc',
+                                                                    backgroundColor: '#fff',
                                                                     flexDirection: 'row',
                                                                     borderColor: '#E3E8EE',
+                                                                    paddingVertical: 5,
                                                                     borderBottomWidth: index === filteredSubscribers.length - 1 ? 0 : 1,
                                                                     // minWidth: 600, // flex: 1,
                                                                     width: '100%',
                                                                 }}>
-                                                                <View style={{ backgroundColor: '#fff', padding: 5 }}>
+                                                                <View style={{ backgroundColor: '#fff', padding: 5, }}>
                                                                     <Image
                                                                         style={{
                                                                             height: 35,
                                                                             width: 35,
                                                                             marginTop: 5,
+                                                                            marginLeft: 5,
                                                                             marginBottom: 5,
                                                                             borderRadius: 75,
                                                                             // marginTop: 20,
@@ -1665,10 +1676,10 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                     />
                                                                 </View>
                                                                 <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
-                                                                    <Text style={{ fontSize: 13, padding: 5, fontFamily: 'inter' }} ellipsizeMode='tail'>
+                                                                    <Text style={{ fontSize: 15, padding: 5, fontFamily: 'inter', marginTop: 5 }} ellipsizeMode='tail'>
                                                                         {subscriber.displayName ? subscriber.displayName : ''}
                                                                     </Text>
-                                                                    <Text style={{ fontSize: 11, padding: 5 }} ellipsizeMode='tail'>
+                                                                    <Text style={{ fontSize: 12, padding: 5 }} ellipsizeMode='tail'>
                                                                         {subscriber.fullName === "delivered" || subscriber.fullName === "not-delivered" ? "delivered" : subscriber.fullName}
                                                                     </Text>
                                                                 </View>
@@ -1878,14 +1889,14 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                             {
                                                                 (
                                                                     type === "mp4" ||
-                                                                    type === "oga" ||
-                                                                    type === "mov" ||
-                                                                    type === "wmv" ||
-                                                                    type === "mp3" ||
-                                                                    type === "mov" ||
-                                                                    type === "mpeg" ||
-                                                                    type === "mp2" ||
-                                                                    type === "wav" ?
+                                                                        type === "oga" ||
+                                                                        type === "mov" ||
+                                                                        type === "wmv" ||
+                                                                        type === "mp3" ||
+                                                                        type === "mov" ||
+                                                                        type === "mpeg" ||
+                                                                        type === "mp2" ||
+                                                                        type === "wav" ?
                                                                         <ReactPlayer url={url} controls={true} />
                                                                         :
                                                                         (!isQuiz ? <View

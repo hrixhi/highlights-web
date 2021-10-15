@@ -136,7 +136,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 style={{
                     backgroundColor: colorChoices[props.cue.color],
                     flex: 1,
-                    borderLeftWidth: 2,
+                    // borderLeftWidth: 2,
                     borderColor: '#E3E8EE',
                     opacity: 0.9
                     // borderTopLeftRadius: 8,
@@ -159,7 +159,7 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
         overflow: 'hidden',
         maxWidth: 175,
         width: '100%',
-        borderWidth: 2,
+        borderWidth: 1,
         borderColor: '#E3E8EE',
         flexDirection: 'row'
     },
@@ -169,7 +169,7 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
         // borderTopRightRadius: 10,
         // borderBottomRightRadius: 10,
         // borderTop
-        width: '95%',
+        width: '96%',
         padding: 10,
         paddingHorizontal: 10,
         backgroundColor: '#f7fafc',
