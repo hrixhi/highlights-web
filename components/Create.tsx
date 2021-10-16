@@ -1105,7 +1105,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 />
               )}
               {
-                role === 'instructor' ? <Text
+                role === 'instructor' && !imported ? <Text
                   style={{
                     color: "#5469D4",
                     lineHeight: 35,
@@ -2617,6 +2617,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           marginTop: 12,
                           marginBottom: 15,
                           borderRadius: 0,
+                          height: 35
                         }}
                         // style={styles.input}
                         minRows={1}
@@ -2632,17 +2633,19 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                             }}
                             onPress={() => clearAll()}
                           >
-                            <Ionicons
+                            {/* <Ionicons
                               name="close-circle-outline"
                               color="#50566B"
                               size={15}
                               style={{ alignSelf: "center" }}
-                            />
+                            /> */}
                             <Text
                               style={{
-                                fontSize: 10,
-                                color: "#50566B",
-                                textAlign: "center",
+                                fontSize: 12,
+                                lineHeight: 35,
+                                fontFamily: 'inter',
+                                color: "#5469D4",
+                                // textAlign: "center",
                               }}
                             >
                               Clear
@@ -2759,7 +2762,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                     ) : (
                       <View key={url} style={{ flex: 1, maxHeight: 800 }}>
                         {/* <Webview key={url} url={url} /> */}
-                        <div className="webviewer" ref={RichText} style={{ height: "80vh", borderWidth: 1, borderColor: '#E3E8EE', borderRadius: 0 }}></div>
+                        <div className="webviewer" ref={RichText} style={{ height: Dimensions.get('window').width < 1024 ? "50vh" : "70vh", borderWidth: 1, borderColor: '#E3E8EE', borderRadius: 0 }}></div>
                       </View>
                     )
                   ) : null}

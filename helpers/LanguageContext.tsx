@@ -35,9 +35,9 @@ const EnglishBank: { [key: string]: string } = {
     myCues: 'My Cues', // Done
     category: "Category", // Done
     priority: "Priority", // Done
-    remindEvery: "Once every ", // Done
+    remindEvery: "Every ", // Done
     remindOn: "", // Done
-    remindTill: "Ends at ", // Done
+    remindTill: "", // Done
     save: "Save", // Done
     share: "Share", // Done
     channel: "Channel", // Done

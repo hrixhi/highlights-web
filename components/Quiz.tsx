@@ -249,6 +249,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 }}>
                 <Text style={{
                     fontSize: 14,
+                    fontFamily: 'inter',
                     color: '#1A2036'
                 }}>Timed</Text>
             </View>
@@ -392,6 +393,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 }}>
                 <Text style={{
                     fontSize: 14,
+                    fontFamily: '#inter',
                     color: '#1A2036'
                 }}>Random Order</Text>
             </View>

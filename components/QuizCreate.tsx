@@ -1188,8 +1188,9 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 justifyContent: 'center',
                 // paddingLeft: 12,
                 // paddingTop: 25,
-                borderBottomColor: '#C1C9D2',
-                paddingBottom: 25, borderBottomWidth: 1
+                // borderBottomColor: '#C1C9D2',
+                paddingBottom: 25, 
+                // borderBottomWidth: 1
             }}>
                 <TouchableOpacity
                     onPress={() => {

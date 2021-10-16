@@ -1128,7 +1128,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             }} /> {key}
                                         </Text>
                                     </TouchableOpacity>
-                                    <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', backgroundColor: '#fff', paddingTop: 10 }}>
+                                    <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', backgroundColor: '#fff', paddingTop: 5 }}>
                                         <View style={{
                                             flexDirection: 'row',
                                             paddingLeft: 7,
@@ -1314,6 +1314,8 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
         </ScrollView >
     </View >
 
+    console.log(props.showChat)
+
     return (
         <View style={{
             height: windowHeight,
@@ -1400,19 +1402,22 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             value={searchTerm}
                             style={{
                                 // width: "100%",
-                                color: '#5469D4',
+                                color: '#50566B',
+                                backgroundColor: '#fff',
                                 borderColor: "#E3E8EE",
-                                borderBottomWidth: 1,
+                                borderWidth: 1,
+                                borderRadius: 15,
                                 fontSize: 11,
-                                padding: 5,
-                                paddingLeft: 0,
+                                paddingBottom: 5,
+                                paddingTop: 4,
+                                paddingHorizontal: 16,
                                 // paddingVertical: 8,
                                 marginTop: -8,
                                 marginRight: 2,
-                                flex: 1, flexDirection: 'row',
+                                // flex: 1, flexDirection: 'row',
                                 // marginLeft: 20,
                                 // marginRight: 25,
-                                maxWidth: 200
+                                maxWidth: 250
                             }}
                             placeholder={"Search"}
                             onChangeText={(val) => setSearchTerm(val)}
@@ -1424,28 +1429,37 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 : null
                         }
                         {props.option === "To Do" || props.option === "Classroom" ?
-                            <TouchableOpacity style={{ backgroundColor: 'none', marginLeft: 20 }} onPress={() => {
+                            <TouchableOpacity style={{ backgroundColor: 'none', marginLeft: 15 }} onPress={() => {
                                 setShowFilterPopup(true)
                             }}>
-                                <Text style={{ fontSize: 11, color: '#50566B', paddingTop: 8, textAlign: 'right' }}>
-                                    Filter <Ionicons name="chevron-down-outline" size={10} />
+                                <Text style={{
+                                    fontSize: 11, color: '#50566B',
+                                    paddingTop: 1,
+                                    textAlign: 'right'
+                                }}>
+                                    <Ionicons name="filter-outline" size={20} />
                                 </Text>
 
                             </TouchableOpacity> : null}
                         <Menu
                             style={{
-                                marginLeft: 20,
+                                marginLeft: 15,
                                 right: 0,
                                 // marginTop: -5
-                                marginTop: 4
+                                marginTop: 3
                             }}
-                            onSelect={(op: any) => props.setOption(op)}>
+                            onSelect={(op: any) => {
+                                if (op === 'Settings') {
+                                    props.setShowHelp(true)
+                                }
+                                props.setOption(op)
+                            }}>
                             <MenuTrigger>
                                 <Text>
                                     <Ionicons
-                                        name={props.option === 'Settings' ? 'person-circle-outline' : (props.option === 'Channels' ? 'file-tray-stacked-outline' : "settings-outline")}
+                                        name={props.option === 'Settings' && !props.showHelp ? 'person-circle-outline' : (props.option === 'Channels' ? 'file-tray-stacked-outline' : "settings-outline")}
                                         size={17}
-                                        color={props.option === 'Settings' || props.option === 'Channels' ? '#5469D4' : '#50566B'} />
+                                        color={(props.option === 'Settings' && !props.showHelp) || props.option === 'Channels' ? '#5469D4' : '#50566B'} />
                                 </Text>
                                 {/* <Image
                                     style={{
@@ -1465,25 +1479,41 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     padding: 5,
                                     borderRadius: 0,
                                     shadowOpacity: 0,
-                                    borderWidth: 2,
+                                    borderWidth: 1,
                                     borderColor: '#E3E8EE',
                                     maxWidth: 150
                                 }
                             }}>
                                 <MenuOption
                                     value={'Channels'}>
-                                    <Text style={{ fontFamily: 'inter', fontSize: 12, color: props.option === 'Channels' ? '#5469D4' : '#1A2036' }}>
-                                        <Ionicons name='file-tray-stacked-outline' size={12} />&nbsp;&nbsp;Workspaces
+                                    <Text style={{ fontFamily: 'inter', fontSize: 14, color: props.option === 'Channels' ? '#5469D4' : '#50566B' }}>
+                                        <Ionicons name='file-tray-stacked-outline' size={14} />&nbsp;&nbsp;Workspaces
                                     </Text>
                                 </MenuOption>
                                 <MenuOption
                                     value={'Settings'}>
-                                    <Text style={{ fontFamily: 'inter', fontSize: 12, color: props.option === 'Settings' ? '#5469D4' : '#1A2036' }}>
-                                        <Ionicons name='person-circle-outline' size={12} />&nbsp;&nbsp;Profile
+                                    <Text style={{ fontFamily: 'inter', fontSize: 14, color: props.option === 'Settings' ? '#5469D4' : '#50566B' }}>
+                                        <Ionicons name='person-circle-outline' size={14} />&nbsp;&nbsp;Profile
                                     </Text>
                                 </MenuOption>
                             </MenuOptions>
                         </Menu>
+                        <TouchableOpacity style={{ backgroundColor: 'none', marginLeft: 15 }} onPress={() => {
+                            props.setShowHelp(true)
+                            props.setOption('Settings')
+                        }}>
+                            <Text style={{
+                                fontSize: 11, color: '#50566B',
+                                paddingTop: 1,
+                                textAlign: 'right'
+                            }}>
+                                <Ionicons
+                                    name="help-circle-outline"
+                                    size={20}
+                                    color={(props.option === 'Settings' && props.showHelp) ? '#5469D4' : '#50566B'}
+                                />
+                            </Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
             </View>
@@ -1667,8 +1697,19 @@ export default React.memo(Dashboard, (prev, next) => {
     console.log("Previous", prev);
     console.log("Next", next)
     return _.isEqual(
-        { ...prev.cues, ...prev.tab, ...prev.showDirectory },
-        { ...next.cues, ...next.tab, ...next.showDirectory }
+        {
+            ...prev.cues,
+            ...prev.tab,
+            ...prev.showDirectory,
+            ...prev.showHelp,
+
+        },
+        {
+            ...next.cues,
+            ...next.tab,
+            ...next.showDirectory,
+            ...next.showHelp,
+        }
     )
 });
 

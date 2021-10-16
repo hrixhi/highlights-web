@@ -354,14 +354,9 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
             return date.format("MM/DD/YYYY");
     }
 
-    const customCategoryInput = (<View style={{ width: '100%', backgroundColor: 'white', paddingTop: 20, paddingBottom: 10 }}>
-        <View style={{ width: '100%', paddingBottom: 10, backgroundColor: 'white' }}>
-            <Text style={{ fontSize: 10, color: '#43434f', textTransform: 'uppercase' }}>
-                {PreferredLanguageText('category')}
-            </Text>
-        </View>
-        <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white', alignItems: 'center', }}>
-            <View style={{ width: '80%', backgroundColor: 'white', marginRight: 10 }}>
+    const customCategoryInput = (<View style={{ backgroundColor: 'white', paddingTop: 20, paddingBottom: 10 }}>
+        <View style={{ width: '100%', flexDirection: 'row', backgroundColor: 'white', alignItems: 'center', }}>
+            <View style={{ backgroundColor: 'white', marginRight: 10 }}>
                 {
                     addCustomCategory ?
                         <View style={styles.colorBar}>
@@ -374,45 +369,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 }}
                                 placeholderTextColor={'#50566B'}
                             />
-                        </View> :
-                        // <Menu
-                        //     onSelect={(cat: any) => setCustomCategory(cat)}>
-                        //     <MenuTrigger>
-                        //         <Text style={{ fontSize: 14, color: '#50566B' }}>
-                        //             {customCategory === '' ? 'None' : customCategory}<Ionicons name='chevron-down-outline' size={15} />
-                        //         </Text>
-                        //     </MenuTrigger>
-                        //     <MenuOptions customStyles={{
-                        //         optionsContainer: {
-                        //             padding: 10,
-                        //             borderRadius: 15,
-                        //             shadowOpacity: 0,
-                        //             borderWidth: 1,
-                        //             borderColor: '#FBFBFC',
-                        //             overflow: 'scroll',
-                        //             maxHeight: '100%'
-                        //         }
-                        //     }}>
-                        //         <MenuOption
-                        //             value={''}>
-                        //             <Text>
-                        //                 None
-                        //             </Text>
-                        //         </MenuOption>
-                        //         {
-                        //             categories.map((category: any) => {
-                        //                 return <MenuOption
-                        //                     value={category}>
-                        //                     <Text>
-                        //                         {category}
-                        //                     </Text>
-                        //                 </MenuOption>
-                        //             })
-                        //         }
-                        //     </MenuOptions>
-                        // </Menu>
-
-                        <label style={{ width: 180 }}>
+                        </View> : <label style={{ width: 180 }}>
                             <Select
                                 themeVariant="light"
                                 touchUi={true}
@@ -435,7 +392,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
 
                 }
             </View>
-            <View style={{ width: '15%', backgroundColor: 'white' }}>
+            <View style={{ backgroundColor: 'white' }}>
                 <TouchableOpacity
                     onPress={() => {
                         if (addCustomCategory) {
@@ -608,7 +565,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                             <View style={{
                                                 width: '100%',
                                                 maxWidth: 1000,
-                                                paddingLeft: 20,
+                                                // paddingLeft: 20,
                                                 // height: Dimensions.get('window').height - 350,
                                             }}
                                             // key={threadChat.toString()}
@@ -624,40 +581,95 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                     }}
                                                     renderActions={() => (
                                                         <View style={{
+                                                            // flexDirection: 'row',
+                                                            marginRight: 20,
+                                                            maxWidth: 75
                                                             // marginTop: -10
                                                         }}>
+                                                            {props.type === 'Discussion' ? customCategoryInput : null}
+                                                            <View style={{ flexDirection: 'row', paddingTop: 2 }}>
+                                                                {!isOwner ? <View>
+                                                                    <TouchableOpacity>
+                                                                        <Text
+                                                                            style={{
+                                                                                color: "#5469D4",
+                                                                                lineHeight: 40, paddingRight: 20,
+                                                                                textAlign: "right",
+                                                                                fontSize: 12,
+                                                                                fontFamily: 'inter'
+                                                                            }}
+                                                                            onPress={() => setPrivatePost(!privatePost)}
+                                                                        >
+                                                                            <Ionicons name="eye-off-outline" size={20} color={privatePost ? '#5469D4' : '#50566B'} />
+                                                                        </Text>
+                                                                    </TouchableOpacity>
+                                                                </View> : null}
+                                                                <FileUpload
+                                                                    chat={true}
+                                                                    onUpload={(u: any, t: any) => {
+                                                                        const title = prompt('Enter title and click on OK to share.')
+                                                                        if (!title || title === "") return;
 
-                                                            {props.type === "Discussion" ? customCategoryInput : null}
+                                                                        let text: any = ''
+                                                                        let img: any = ''
+                                                                        let audio: any = ''
+                                                                        let video: any = ''
+                                                                        let file: any = ''
 
-                                                            {/* Add private option here only if not owner */}
-                                                            {!isOwner ? <View style={{ paddingTop: 15, flexDirection: 'row', alignItems: 'center', marginBottom: 20 }}>
-                                                                <input
-                                                                    style={{ paddingRight: 20 }}
-                                                                    type='checkbox'
-                                                                    checked={privatePost}
-                                                                    onChange={(e) => {
-                                                                        setPrivatePost(!privatePost)
+                                                                        if (t === 'png' || t === 'jpeg' || t === 'jpg' || t === 'gif') {
+                                                                            img = u
+                                                                        } else if (t === "mp3" || t === "wav" || t === "mp2") {
+                                                                            audio = u
+                                                                        } else if (t === "mp4" || t === "oga" || t === "mov" || t === "wmv") {
+                                                                            video = u
+                                                                        } else {
+                                                                            file = u
+                                                                            text = <TouchableOpacity
+                                                                                onPress={() => {
+                                                                                    if (Platform.OS === 'web' || Platform.OS === 'macos' || Platform.OS === 'windows') {
+                                                                                        window.open(u, '_blank')
+                                                                                    } else {
+                                                                                        Linking.openURL(u)
+                                                                                    }
+                                                                                }}
+                                                                                style={{
+                                                                                    backgroundColor: "white", borderRadius: 15, marginLeft: 15,
+                                                                                    marginTop: 6,
+                                                                                }}>
+                                                                                <Text style={{
+                                                                                    textAlign: "center",
+                                                                                    lineHeight: 35,
+                                                                                    color: '#5469D4',
+                                                                                    fontSize: 12,
+                                                                                    borderWidth: 1,
+                                                                                    borderColor: '#5469D4',
+                                                                                    paddingHorizontal: 20,
+                                                                                    fontFamily: "inter",
+                                                                                    height: 35,
+                                                                                    // paddingTop: 2
+                                                                                    // width: 125,
+                                                                                    borderRadius: 15,
+                                                                                    textTransform: "uppercase"
+                                                                                }}>
+                                                                                    {title}
+                                                                                </Text>
+                                                                            </TouchableOpacity>
+                                                                        }
+
+                                                                        const obj = { title, type: t, url: u }
+
+                                                                        onSend([{
+                                                                            title,
+                                                                            text,
+                                                                            image: img,
+                                                                            audio,
+                                                                            video,
+                                                                            file,
+                                                                            saveCue: JSON.stringify(obj)
+                                                                        }])
                                                                     }}
                                                                 />
-                                                                <Text style={{ fontSize: 10, textTransform: 'uppercase', marginLeft: 10 }}>
-                                                                    Private
-                                                                </Text>
-                                                            </View> : null}
-                                                            <FileUpload
-                                                                chat={true}
-                                                                onUpload={(u: any, t: any) => {
-                                                                    const title = prompt('Enter title and click on OK to share.')
-
-                                                                    if (title === "") {
-                                                                        return;
-                                                                    }
-
-                                                                    const obj = { url: u, type: t, title };
-                                                                    onSend([{
-                                                                        text: JSON.stringify(obj)
-                                                                    }])
-                                                                }}
-                                                            />
+                                                            </View>
                                                         </View>
                                                     )}
                                                 />
@@ -666,7 +678,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                 <View style={{
                                                     width: '100%',
                                                     maxWidth: 1000,
-                                                    paddingLeft: 20,
+                                                    // paddingLeft: 20,
                                                     // height: Dimensions.get('window').height - 350,
                                                 }}
                                                 // key={threadChat.toString()}
@@ -688,12 +700,64 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                                     chat={true}
                                                                     onUpload={(u: any, t: any) => {
                                                                         const title = prompt('Enter title and click on OK to share.')
-                                                                        if (title === "") {
-                                                                            return;
+                                                                        if (!title || title === "") return;
+
+                                                                        let text: any = ''
+                                                                        let img: any = ''
+                                                                        let audio: any = ''
+                                                                        let video: any = ''
+                                                                        let file: any = ''
+
+                                                                        if (t === 'png' || t === 'jpeg' || t === 'jpg' || t === 'gif') {
+                                                                            img = u
+                                                                        } else if (t === "mp3" || t === "wav" || t === "mp2") {
+                                                                            audio = u
+                                                                        } else if (t === "mp4" || t === "oga" || t === "mov" || t === "wmv") {
+                                                                            video = u
+                                                                        } else {
+                                                                            file = u
+                                                                            text = <TouchableOpacity
+                                                                                onPress={() => {
+                                                                                    if (Platform.OS === 'web' || Platform.OS === 'macos' || Platform.OS === 'windows') {
+                                                                                        window.open(u, '_blank')
+                                                                                    } else {
+                                                                                        Linking.openURL(u)
+                                                                                    }
+                                                                                }}
+                                                                                style={{
+                                                                                    backgroundColor: "white", borderRadius: 15, marginLeft: 15,
+                                                                                    marginTop: 6,
+                                                                                }}>
+                                                                                <Text style={{
+                                                                                    textAlign: "center",
+                                                                                    lineHeight: 35,
+                                                                                    color: '#5469D4',
+                                                                                    fontSize: 12,
+                                                                                    borderWidth: 1,
+                                                                                    borderColor: '#5469D4',
+                                                                                    paddingHorizontal: 20,
+                                                                                    fontFamily: "inter",
+                                                                                    height: 35,
+                                                                                    // paddingTop: 2
+                                                                                    // width: 125,
+                                                                                    borderRadius: 15,
+                                                                                    textTransform: "uppercase"
+                                                                                }}>
+                                                                                    {title}
+                                                                                </Text>
+                                                                            </TouchableOpacity>
                                                                         }
-                                                                        const obj = { url: u, type: t, title };
+
+                                                                        const obj = { title, type: t, url: u }
+
                                                                         onSend([{
-                                                                            text: JSON.stringify(obj)
+                                                                            title,
+                                                                            text,
+                                                                            image: img,
+                                                                            audio,
+                                                                            video,
+                                                                            file,
+                                                                            saveCue: JSON.stringify(obj)
                                                                         }])
                                                                     }}
                                                                 />
@@ -704,7 +768,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                     {
                                                         threads.length === 0 ?
                                                             <View style={{ backgroundColor: 'white', flex: 1 }}>
-                                                                <Text style={{ width: '100%', color: '#50566B', fontSize: 20, paddingTop: 100, paddingBottom: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                                                <Text style={{ width: '100%', color: '#50566B', fontSize: 20, paddingVertical: 50, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                                                                     {
                                                                         !props.cueId ? PreferredLanguageText('noPosts') : PreferredLanguageText('noComments')
                                                                     }
@@ -791,7 +855,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                                                         alignItems: 'center',
                                                                                         justifyContent: 'center'
                                                                                     }}>
-                                                                                        <Text style={{ color: 'white', fontSize: 10}}>
+                                                                                        <Text style={{ color: 'white', fontSize: 10 }}>
                                                                                             {thread.unreadThreads}
                                                                                         </Text>
 

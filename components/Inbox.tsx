@@ -870,7 +870,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                         loadChats()
                                                     }}
                                                     style={{
-                                                        paddingRight: 20,
+                                                        paddingRight: 15,
                                                         paddingTop: 5,
                                                         alignSelf: 'flex-start'
                                                     }}
@@ -943,28 +943,27 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                             <TouchableOpacity disabled={!isChatGroup} onPress={() => setViewGroup(true)}
                                                 style={{
                                                     flexDirection: 'row', alignItems: 'center', flex: 1,
-                                                    width: '100%', paddingVertical: 5, borderBottomWidth: 1,
+                                                    width: '100%', paddingVertical: 10, borderBottomWidth: 1,
                                                     borderBottomColor: '#f2f2fa', paddingHorizontal: 10
                                                 }} >
                                                 <Image
                                                     style={{
-                                                        height: 50,
-                                                        width: 50,
+                                                        height: 35,
+                                                        width: 35,
                                                         borderRadius: 75,
-
                                                         // marginTop: 20,
                                                         alignSelf: 'center'
                                                     }}
                                                     source={{ uri: chatImg }}
                                                 />
                                                 <Text style={{
-                                                    fontFamily: 'inter', fontSize: 16, paddingLeft: 20
+                                                    fontFamily: 'inter', fontSize: 16, paddingLeft: 20, flex: 1
                                                 }}>
                                                     {chatName}
                                                 </Text>
                                             </TouchableOpacity>
                                             : null}
-                                        <View style={{ flexDirection: 'row', flex: 1 }} />
+                                        {showNewGroup || showChat || !props.showDirectory ? null : <View style={{ flexDirection: 'row', flex: 1 }} />}
                                         {
                                             showNewGroup || showChat || !props.showDirectory ? null :
                                                 <TouchableOpacity
@@ -1219,8 +1218,10 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                         viewGroup ? null : showChat ?
                                             <View style={{
                                                 width: '100%',
-                                                height: Dimensions.get('window').height - 230,
+                                                // height: '100%',
+                                                height: Dimensions.get('window').width < 1024 ? windowHeight - 104 - 80 : windowHeight - 52 - 80,
                                                 // borderWidth: 1,
+                                                zIndex: 5000,
                                                 borderColor: '#E3E8EE'
                                             }}>
                                                 <GiftedChat
@@ -1259,20 +1260,33 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                         video = u
                                                                     } else {
                                                                         file = u
-                                                                        text = <TouchableOpacity style={{ backgroundColor: '#2484FF' }}>
-                                                                            <Text style={{
-                                                                                textDecorationLine: 'underline',
-                                                                                backgroundColor: '#2484FF',
-                                                                                color: '#fff'
+                                                                        text = <TouchableOpacity
+                                                                            onPress={() => {
+                                                                                if (Platform.OS === 'web' || Platform.OS === 'macos' || Platform.OS === 'windows') {
+                                                                                    window.open(u, '_blank')
+                                                                                } else {
+                                                                                    Linking.openURL(u)
+                                                                                }
                                                                             }}
-                                                                                onPress={() => {
-                                                                                    if (Platform.OS === 'web' || Platform.OS === 'macos' || Platform.OS === 'windows') {
-                                                                                        window.open(u, '_blank')
-                                                                                    } else {
-                                                                                        Linking.openURL(u)
-                                                                                    }
-                                                                                }}
-                                                                            >
+                                                                            style={{
+                                                                                backgroundColor: "white", borderRadius: 15, marginLeft: 15,
+                                                                                marginTop: 6,
+                                                                            }}>
+                                                                            <Text style={{
+                                                                                textAlign: "center",
+                                                                                lineHeight: 35,
+                                                                                color: '#5469D4',
+                                                                                fontSize: 12,
+                                                                                borderWidth: 1,
+                                                                                borderColor: '#5469D4',
+                                                                                paddingHorizontal: 20,
+                                                                                fontFamily: "inter",
+                                                                                height: 35,
+                                                                                // paddingTop: 2
+                                                                                // width: 125,
+                                                                                borderRadius: 15,
+                                                                                textTransform: "uppercase"
+                                                                            }}>
                                                                                 {title}
                                                                             </Text>
                                                                         </TouchableOpacity>
@@ -1328,20 +1342,8 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                                 justifyContent: 'center',
                                                                                 flexDirection: 'row'
                                                                             }}>
-                                                                            <Text style={{
-                                                                                textAlign: 'center',
-                                                                                lineHeight: 35,
-                                                                                color: '#1A2036',
-                                                                                fontSize: 12,
-                                                                                backgroundColor: '#f7fafc',
-                                                                                paddingHorizontal: 20,
-                                                                                fontFamily: 'inter',
-                                                                                height: 35,
-                                                                                // width: 100,
-                                                                                borderRadius: 15,
-                                                                                textTransform: 'uppercase'
-                                                                            }}>
-                                                                                REMOVE
+                                                                            <Text>
+                                                                                <Ionicons name={'close-circle-outline'} size={20} color={'#50566B'} />
                                                                             </Text>
                                                                         </TouchableOpacity> : <FileUpload
                                                                             onUpload={(u: any, t: any) => {

@@ -2152,57 +2152,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         return null;
     }
 
-    // RENDER METHODS
-    const renderRichToolbar = () => {
-        return (props.cue.channelId && props.cue.channelId !== '' && !isOwner && props.showOriginal) || (props.showOriginal && showImportOptions) || isQuiz ? (
-            <View style={{ height: 0, backgroundColor: "#fff" }} />
-        ) : ((props.cue.graded && submission && !isOwner) && !props.showOriginal) || (!props.showOriginal && showImportOptions) ? (
-            <View style={{ height: 0, backgroundColor: "#fff" }} />
-        ) : (
-            <RichToolbar
-                key={reloadEditorKey.toString() + props.showOriginal.toString()}
-                style={{
-                    flexWrap: "wrap",
-                    backgroundColor: "white",
-                    height: 28,
-                    overflow: "visible"
-                }}
-                iconSize={12}
-                editor={RichText}
-                disabled={false}
-                iconTint={"#1A2036"}
-                selectedIconTint={"#1A2036"}
-                disabledIconTint={"#1A2036"}
-                actions={
-                    (!props.showOriginal && submissionImported) || (imported && props.showOriginal)
-                        ? ['']
-                        : [
-                            actions.setBold,
-                            actions.setItalic,
-                            actions.setUnderline,
-                            actions.insertBulletsList,
-                            actions.insertOrderedList,
-                            actions.checkboxList,
-                            actions.insertLink,
-                            actions.insertImage,
-                            "insertCamera",
-                            actions.undo,
-                            actions.redo,
-                            "clear"
-                        ]
-                }
-                iconMap={{
-                    ["insertCamera"]: ({ tintColor }) => <Ionicons name="camera-outline" size={15} color={tintColor} />,
-                    ["clear"]: ({ tintColor }) => (
-                        <Ionicons name="close-circle-outline" size={13} color={tintColor} onPress={() => clearAll()} />
-                    )
-                }}
-                onPressAddImage={galleryCallback}
-                insertCamera={cameraCallback}
-            />
-        )
-    };
-
     const renderEquationEditor = () => {
         return showEquationEditor ? (
             <View
@@ -2384,7 +2333,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         props.changeViewStatus();
                                     }}>
                                     <Text style={props.viewStatus ? styles.allGrayFill : styles.all}>
-                                        <Ionicons name='stats-chart-outline' size={15} />
+                                        <Ionicons name='bar-chart-outline' size={15} />
                                     </Text>
                                     {/* <Text style={props.viewStatus ? styles.allGrayFill : styles.all}>
                                         Engagement
@@ -2401,7 +2350,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const renderQuizTimerOrUploadOptions = () => {
         return props.showOriginal && (imported || isQuiz) ? (
             <View style={{ flexDirection: "row", marginRight: 0, marginLeft: 0, flex: 1 }}>
-                <View style={{ flex: 1, flexDirection: 'row' }}>
+                <View style={{ flexDirection: 'row' }}>
                     {(isOwner || !props.cue.channelId) ? <TextareaAutosize
                         value={title}
                         // style={styles.input}
@@ -2475,7 +2424,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 ) : props.cue.graded ? null : (
                     <View
                         style={{
-                            marginLeft: 10,
+                            marginLeft: 15,
                             marginTop: 20,
                             // alignSelf: "flex-start",
                             // display: "flex",
@@ -2525,8 +2474,15 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         backgroundColor: "white", borderRadius: 15, // marginLeft: 15,
                                         marginTop: 5,
                                     }}>
-                                    <Text>
-                                        <Ionicons name={'close-circle-outline'} size={17} color={'#50566B'} />
+                                    <Text
+                                        style={{
+                                            fontSize: 12,
+                                            fontFamily: 'inter',
+                                            color: "#5469D4",
+                                            // textAlign: "center",
+                                        }}
+                                    >
+                                        Clear
                                     </Text>
                                 </TouchableOpacity> : null
                         }
@@ -2997,7 +2953,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     </View>
                 ) : (
                     <View key={url + props.showOriginal.toString()} style={{}}>
-                        <div className="webviewer" ref={RichText} style={{ height: "65vh" }} key={props.showOriginal + url + imported.toString()}></div>
+                        <div className="webviewer" ref={RichText} style={{ height: Dimensions.get('window').width < 1024 ? "50vh" : "70vh" }} key={props.showOriginal + url + imported.toString()}></div>
                         {/* {renderSaveCueButton()} */}
                     </View>
                 )
@@ -3020,7 +2976,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     </View>
                 ) : (
                     <View style={{}} key={JSON.stringify(submissionImported) + JSON.stringify(viewSubmission) + JSON.stringify(viewSubmissionTab)}>
-                        <div className="webviewer" ref={RichText} style={{ height: "65vh" }}></div>
+                        <div className="webviewer" ref={RichText} style={{ height: Dimensions.get('window').width < 1024 ? "50vh" : "70vh" }}></div>
                         {renderFooter()}
                     </View>
                 )
@@ -3239,7 +3195,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             >
                                 {attempt.title}
                             </Text> : null}
-                            <div className="webviewer" ref={submissionViewerRef} key={JSON.stringify(viewSubmission) + JSON.stringify(attempt) + JSON.stringify(props.showOriginal) + JSON.stringify(submissionAttempts)} style={{ height: "65vh" }}></div>
+                            <div className="webviewer" ref={submissionViewerRef} key={JSON.stringify(viewSubmission) + JSON.stringify(attempt) + JSON.stringify(props.showOriginal) + JSON.stringify(submissionAttempts)} style={{ height: Dimensions.get('window').width < 1024 ? "50vh" : "70vh" }}></div>
                         </View>)
                     :
                     <View style={{ width: '100%', marginTop: 25 }} key={JSON.stringify(attempt)}>
@@ -3247,7 +3203,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             <div className="mce-content-body htmlParser" style={{ width: '100%', color: 'black' }}>
                                 {parser(attempt.html)}
                             </div> :
-                            <div className="webviewer" ref={submissionViewerRef} style={{ height: "65vh" }} key={viewSubmissionTab}></div>
+                            <div className="webviewer" ref={submissionViewerRef} style={{ height: Dimensions.get('window').width < 1024 ? "50vh" : "70vh" }} key={viewSubmissionTab}></div>
                         }
                     </View>
 
@@ -4362,8 +4318,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 }}>
                                 <Ionicons
                                     name={"arrow-redo-outline"}
-                                    size={15}
-                                    color={shareWithChannelId === "" ? "#50566B" : "#1A2036"}
+                                    size={20}
+                                    color={shareWithChannelId === "" ? "#5469D4" : "#1A2036"}
                                 />
                             </Text>
                         </TouchableOpacity>
@@ -5202,7 +5158,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         {props.cue.submittedAt && props.cue.submittedAt !== "" ? (
                                             <View
                                                 style={{
-                                                    marginLeft: 25,
+                                                    marginLeft: 15,
                                                     marginTop: 20,
                                                     alignSelf: "flex-start",
                                                     // display: "flex",
@@ -5217,8 +5173,15 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                                 // marginLeft: 15,
                                                                 marginTop: 5,
                                                             }}>
-                                                            <Text>
-                                                                <Ionicons name={'close-circle-outline'} size={17} color={'#50566B'} />
+                                                            <Text
+                                                                style={{
+                                                                    fontSize: 12,
+                                                                    fontFamily: 'inter',
+                                                                    color: "#5469D4",
+                                                                    // textAlign: "center",
+                                                                }}
+                                                            >
+                                                                Clear
                                                             </Text>
                                                         </TouchableOpacity>
                                                 }
@@ -5229,8 +5192,15 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                 backgroundColor: "white", borderRadius: 15, marginLeft: 15,
                                                 marginTop: 5,
                                             }}>
-                                            <Text>
-                                                <Ionicons name={'close-circle-outline'} size={17} color={'#50566B'} />
+                                            <Text
+                                                style={{
+                                                    fontSize: 12,
+                                                    fontFamily: 'inter',
+                                                    color: "#5469D4",
+                                                    // textAlign: "center",
+                                                }}
+                                            >
+                                                Clear
                                             </Text>
                                         </TouchableOpacity>}
                                     </View>

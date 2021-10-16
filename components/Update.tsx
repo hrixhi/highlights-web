@@ -770,8 +770,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             borderRadius: 0,
                             marginTop: 0,
                             marginBottom: 15,
-                            height: 50,
-                            marginLeft: 20
+                            height: 35,
+                            marginLeft: 15
                         }}
                         // style={styles.input}
                         rows={1}
@@ -1056,8 +1056,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         borderRadius: 0,
                         marginTop: 0,
                         marginBottom: 15,
-                        height: 50,
-                        marginLeft: 2
+                        height: 35,
+                        marginLeft: 15
                     }}
                     // style={styles.input}
                     rows={1}
@@ -1359,11 +1359,12 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     <Text style={{
                         fontSize: 14,
                         lineHeight: 35,
-                        paddingLeft: 20,
+                        paddingLeft: 15,
+                        paddingRight: folder.title && folder.title !== '' ? 15 : 0,
                         color: '#1A2036',
                         // flex: 1,
                         flexDirection: 'row',
-                        fontFamily: 'inter', backgroundColor: '#fff', paddingVertical: 5
+                        fontFamily: 'inter', backgroundColor: '#fff', paddingTop: 3
                     }}>
                         {folder.title}
                     </Text>
@@ -1637,8 +1638,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 key={folder._id}
                                 value={folder._id}>
                                 <View style={{ display: 'flex', flexDirection: 'row', }}>
-                                    <Text style={{ marginLeft: 5 }}>
-                                        {folder.title}
+                                    <Text style={{ fontSize: 14, fontFamily: 'inter', color: '#50566B' }}>
+                                        {folder.title && folder.title !== '' ? folder.title : 'Untitled'}
                                     </Text>
                                 </View>
                             </MenuOption>)
@@ -1654,7 +1655,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
     const ContentView = <Animated.View style={{
         width: '100%',
-        height: windowHeight,
+        height: '100%',
+        maxHeight: windowHeight,
         opacity: modalAnimation,
         borderTopLeftRadius: 0,
         borderTopRightRadius: 0,
@@ -1672,7 +1674,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             contentContainerStyle={{
                 borderTopRightRadius: 0,
                 borderTopLeftRadius: 0,
-                minHeight: windowHeight
+                maxHeight: windowHeight - 52
             }}
         >
             <UpdateControls
@@ -1833,7 +1835,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         setShowOptions(false)
                                     }}>
                                     <Text style={viewStatus ? styles.allGrayFill : styles.all}>
-                                        <Ionicons name='stats-chart-outline' size={17} />
+                                        <Ionicons name='bar-chart-outline' size={17} />
                                     </Text>
                                     {/* <Text style={viewStatus ? styles.allGrayFill : styles.all}>
                                         Engagement

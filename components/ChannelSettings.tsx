@@ -67,7 +67,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
     const filterRoleOptions = [
         {
             value: 'All',
-            text: 'All'
+            text: 'All Users'
         },
         {
             value: 'student',
@@ -89,7 +89,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
     const filterGradeOptions = [
         {
             value: 'All',
-            text: 'All'
+            text: 'All Grades'
         },
         ...gradeOptions
     ]
@@ -104,7 +104,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
     const filterSectionOptions = [
         {
             value: 'All',
-            text: 'All'
+            text: 'All Sections'
         },
         ...sectionOptions
     ]
@@ -230,59 +230,10 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
     // Selected needs to hold all the values in an array 
 
     const renderSubscriberFilters = () => {
-        return (<View style={{ width: '100%', flexDirection: 'row', backgroundColor: 'white', marginTop: 25 }}>
+        return (<View style={{ width: '100%', flexDirection: 'column', backgroundColor: 'white', marginTop: 20 }}>
             <View style={{ backgroundColor: 'white', }}>
-                <View style={{ flexDirection: 'row', justifyContent: 'center', display: 'flex', backgroundColor: 'white', paddingLeft: 10 }}>
-                    {/* <Menu
-                        onSelect={(role: any) => {
-                            setActiveRole(role)
-                        }}>
-                        <MenuTrigger>
-                            <Text style={{ fontSize: 14, color: '#1A2036' }}>
-                                {activeRole}<Ionicons name='chevron-down-outline' size={15} />
-                            </Text>
-                        </MenuTrigger>
-                        <MenuOptions customStyles={{
-                            optionsContainer: {
-                                padding: 10,
-                                borderRadius: 15,
-                                shadowOpacity: 0,
-                                borderWidth: 1,
-                                borderColor: '#E3E8EE',
-                                overflow: 'scroll',
-                                maxHeight: '100%'
-                            }
-                        }}>
-                            <MenuOption
-                                value={'All'}>
-                                <View style={{ display: 'flex', flexDirection: 'row', }}>
-                                    <View style={{
-                                        width: 8,
-                                        height: 8,
-                                        borderRadius: 0,
-                                        marginTop: 1,
-                                        backgroundColor: "#fff"
-                                    }} />
-                                    <Text style={{ marginLeft: 5 }}>
-                                        All
-                                    </Text>
-                                </View>
-                            </MenuOption>
-                            {
-                                roles.map((role: any) => {
-                                    return <MenuOption
-                                        value={role}>
-                                        <View style={{ display: 'flex', flexDirection: 'row', }}>
-                                            <Text style={{ marginLeft: 5 }}>
-                                                {role}
-                                            </Text>
-                                        </View>
-                                    </MenuOption>
-                                })
-                            }
-                        </MenuOptions>
-                    </Menu> */}
-                    <label style={{ width: 120 }}>
+                <View style={{ backgroundColor: 'white', }}>
+                    <label style={{ width: 125 }}>
                         <Select
                             touchUi={true}
                             value={activeRole}
@@ -303,165 +254,59 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         />
                     </label>
                 </View>
-                <Text style={{ fontSize: 10, color: '#1A2036', paddingTop: 7, textAlign: 'center', backgroundColor: 'white' }}>
-                    Roles
-                </Text>
             </View>
 
-            <View style={{ backgroundColor: 'white', }}>
-                <View style={{ flexDirection: 'row', justifyContent: 'center', display: 'flex', backgroundColor: 'white', paddingLeft: 30 }}>
-                    {/* <Menu
-                        onSelect={(grade: any) => {
-                            setActiveGrade(grade)
-                        }}>
-                        <MenuTrigger>
-                            <Text style={{ fontSize: 14, color: '#1A2036' }}>
-                                {activeGrade}<Ionicons name='chevron-down-outline' size={15} />
-                            </Text>
-                        </MenuTrigger>
-                        <MenuOptions customStyles={{
-                            optionsContainer: {
-                                padding: 10,
-                                borderRadius: 15,
-                                shadowOpacity: 0,
-                                borderWidth: 1,
-                                borderColor: '#E3E8EE',
-                                overflow: 'scroll',
-                                maxHeight: '100%'
-                            }
-                        }}>
-                            <MenuOption
-                                value={'All'}>
-                                <View style={{ display: 'flex', flexDirection: 'row', }}>
-                                    <View style={{
-                                        width: 8,
-                                        height: 8,
-                                        borderRadius: 0,
-                                        marginTop: 1,
-                                        backgroundColor: "#fff"
-                                    }} />
-                                    <Text style={{ marginLeft: 5 }}>
-                                        All
-                                    </Text>
-                                </View>
-                            </MenuOption>
-                            {
-                                grades.map((role: any) => {
-                                    return <MenuOption
-                                        value={role}>
-                                        <View style={{ display: 'flex', flexDirection: 'row', }}>
-                                            <Text style={{ marginLeft: 5 }}>
-                                                {role}
-                                            </Text>
-                                        </View>
-                                    </MenuOption>
-                                })
-                            }
-                        </MenuOptions>
-                    </Menu> */}
-                    <label style={{ width: 120 }}>
-                        <Select
-                            touchUi={true}
-                            value={activeGrade}
-                            // rows={filterGradeOptions.length}
-                            themeVariant="light"
-                            onChange={(val: any) => {
-                                setActiveGrade(val.value)
-                            }}
-                            responsive={{
-                                small: {
-                                    display: 'bubble'
-                                },
-                                medium: {
-                                    touchUi: false
-                                }
-                            }}
-                            data={filterGradeOptions}
-                        />
-                    </label>
+            <View style={{ flexDirection: 'row', marginTop: 15 }}>
+                <View style={{ backgroundColor: 'white', paddingRight: 20 }}>
+                    <View style={{ backgroundColor: 'white', }}>
+                        <label style={{ width: 125 }}>
+                            <Select
+                                touchUi={true}
+                                value={activeGrade}
+                                // rows={filterGradeOptions.length}
+                                themeVariant="light"
+                                onChange={(val: any) => {
+                                    setActiveGrade(val.value)
+                                }}
+                                responsive={{
+                                    small: {
+                                        display: 'bubble'
+                                    },
+                                    medium: {
+                                        touchUi: false
+                                    }
+                                }}
+                                data={filterGradeOptions}
+                            />
+                        </label>
+                    </View>
                 </View>
-                <Text style={{ fontSize: 10, color: '#1A2036', paddingTop: 7, textAlign: 'center', backgroundColor: 'white', paddingLeft: 20 }}>
-                    Grades
-                </Text>
-            </View>
-
-            <View style={{ backgroundColor: 'white', }}>
-                <View style={{ flexDirection: 'row', justifyContent: 'center', display: 'flex', backgroundColor: 'white', paddingLeft: 30 }}>
-                    {/* <Menu
-                        onSelect={(grade: any) => {
-                            setActiveSection(grade)
-                        }}>
-                        <MenuTrigger>
-                            <Text style={{ fontSize: 14, color: '#1A2036' }}>
-                                {activeSection}<Ionicons name='chevron-down-outline' size={15} />
-                            </Text>
-                        </MenuTrigger>
-                        <MenuOptions customStyles={{
-                            optionsContainer: {
-                                padding: 10,
-                                borderRadius: 15,
-                                shadowOpacity: 0,
-                                borderWidth: 1,
-                                borderColor: '#E3E8EE',
-                                overflow: 'scroll',
-                                maxHeight: '100%'
-                            }
-                        }}>
-                            <MenuOption
-                                value={'All'}>
-                                <View style={{ display: 'flex', flexDirection: 'row', }}>
-                                    <View style={{
-                                        width: 8,
-                                        height: 8,
-                                        borderRadius: 0,
-                                        marginTop: 1,
-                                        backgroundColor: "#fff"
-                                    }} />
-                                    <Text style={{ marginLeft: 5 }}>
-                                        All
-                                    </Text>
-                                </View>
-                            </MenuOption>
-                            {
-                                sections.map((section: any) => {
-                                    return <MenuOption
-                                        value={section}>
-                                        <View style={{ display: 'flex', flexDirection: 'row', }}>
-                                            <Text style={{ marginLeft: 5 }}>
-                                                {section}
-                                            </Text>
-                                        </View>
-                                    </MenuOption>
-                                })
-                            }
-                        </MenuOptions>
-                    </Menu> */}
-
-                    <label style={{ width: 120 }}>
-                        <Select
-                            touchUi={true}
-                            value={activeSection}
-                            // rows={sectionOptions.length}
-                            themeVariant="light"
-                            onChange={(val: any) => {
-                                setActiveSection(val.value)
-                            }}
-                            responsive={{
-                                small: {
-                                    display: 'bubble'
-                                },
-                                medium: {
-                                    touchUi: false
-                                }
-                            }}
-                            data={filterSectionOptions}
-                        />
-                    </label>
+                <View style={{ backgroundColor: 'white', }}>
+                    <View style={{ backgroundColor: 'white',}}>
+                        <label style={{ width: 125 }}>
+                            <Select
+                                touchUi={true}
+                                value={activeSection}
+                                // rows={sectionOptions.length}
+                                themeVariant="light"
+                                onChange={(val: any) => {
+                                    setActiveSection(val.value)
+                                }}
+                                responsive={{
+                                    small: {
+                                        display: 'bubble'
+                                    },
+                                    medium: {
+                                        touchUi: false
+                                    }
+                                }}
+                                data={filterSectionOptions}
+                            />
+                        </label>
+                    </View>
                 </View>
-                <Text style={{ fontSize: 10, color: '#1A2036', paddingTop: 7, textAlign: 'center', paddingLeft: 20 }}>
-                    Sections
-                </Text>
             </View>
+
         </View>)
     }
 
@@ -844,7 +689,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         }}>
                         <Text style={{
                             width: '100%',
-                            fontSize: 14,
+                            fontSize: 14, fontFamily: 'inter',
                             color: '#50566B'
                         }}>
                             <Ionicons name='chevron-back-outline' size={15} color={'#1A2036'} style={{ marginRight: 10 }} />
@@ -876,7 +721,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                 >
                     <View style={{ backgroundColor: 'white' }}>
                         <Text style={{
-                            fontSize: 14,
+                            fontSize: 14, fontFamily: 'inter',
                             // fontFamily: 'inter',
                             color: '#1A2036'
                         }}>
@@ -895,7 +740,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                     </View>
                     <View style={{ backgroundColor: 'white' }}>
                         <Text style={{
-                            fontSize: 14,
+                            fontSize: 14, fontFamily: 'inter',
                             // fontFamily: 'inter',
                             color: '#1A2036'
                         }}>
@@ -912,7 +757,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                     </View>
                     <View style={{ backgroundColor: 'white' }}>
                         <Text style={{
-                            fontSize: 14,
+                            fontSize: 14, fontFamily: 'inter',
                             // fontFamily: 'inter',
                             color: '#1A2036'
                         }}>
@@ -928,46 +773,6 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             </View>
                         </View>
                     </View>
-                    {/* 
-                    <View
-                        style={{
-                            width: "100%",
-                            paddingTop: 15,
-                        }}>
-                        <View
-                            style={{
-                                width: "100%",
-                                paddingTop: 15,
-                                paddingBottom: 15,
-                                backgroundColor: "white"
-                            }}>
-                            <Text style={{
-                                fontSize: 14,
-                                fontFamily: 'inter',
-                                color: '#1A2036'
-                            }}>Temporary</Text>
-                        </View>
-                        <View
-                            style={{
-                                backgroundColor: "white",
-                                width: "100%",
-                                height: 40,
-                            }}>
-                            <Switch
-                                value={duplicateChannelTemporary}
-                                onValueChange={() => setDuplicateChannelTemporary(!duplicateChannelTemporary)}
-                                style={{ height: 20 }}
-                                trackColor={{
-                                    false: "#E3E8EE",
-                                    true: "#5469D4"
-                                }}
-                                activeThumbColor="white"
-                            />
-                        </View>
-                        <Text style={{ color: '#50566B', fontSize: 12 }}>
-                            Channels that are not temporary can only be deleted by the school administrator.
-                        </Text>
-                    </View> */}
                     {/* Switch to copy Subscribers */}
                     {
                         selected.length > 0 ?
@@ -982,7 +787,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 >
                                     <Text
                                         style={{
-                                            fontSize: 14,
+                                            fontSize: 14, fontFamily: 'inter',
                                             // fontFamily: 'inter',
                                             color: '#1A2036'
                                         }}
@@ -1030,7 +835,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 >
                                     <Text
                                         style={{
-                                            fontSize: 14,
+                                            fontSize: 14, fontFamily: 'inter',
                                             // fontFamily: 'inter',
                                             color: '#1A2036'
                                         }}
@@ -1110,7 +915,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
 
     return (
         <View style={styles.screen} >
-            <View style={{ width: '100%', backgroundColor: 'white', paddingTop: 30 }}>
+            <View style={{ backgroundColor: 'white', paddingTop: 20 }}>
                 <View
                     style={{
                         maxWidth: 400,
@@ -1120,7 +925,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                 >
                     <View style={{ backgroundColor: 'white' }}>
                         <Text style={{
-                            fontSize: 14,
+                            fontSize: 14, fontFamily: 'inter',
                             // fontFamily: 'inter',
                             color: '#1A2036'
                         }}>
@@ -1140,7 +945,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                     </View>
                     <View style={{ backgroundColor: 'white' }}>
                         <Text style={{
-                            fontSize: 14,
+                            fontSize: 14, fontFamily: 'inter',
                             // fontFamily: 'inter',
                             color: '#1A2036'
                         }}>
@@ -1159,7 +964,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
 
                     <View style={{ backgroundColor: 'white' }}>
                         <Text style={{
-                            fontSize: 14,
+                            fontSize: 14, fontFamily: 'inter',
                             // fontFamily: 'inter',
                             color: '#1A2036'
                         }}>
@@ -1177,7 +982,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                     </View>
 
                     <Text style={{
-                        fontSize: 14,
+                        fontSize: 14, fontFamily: 'inter',
                         paddingTop: 20,
                         // fontFamily: 'inter',
                         color: '#1A2036'
@@ -1259,7 +1064,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         </View>
                     </View>
                     <Text style={{
-                        fontSize: 14,
+                        fontSize: 14, fontFamily: 'inter',
                         //  fontFamily: 'inter',
                         color: '#1A2036', marginTop: 25, marginBottom: 20
                     }}>
@@ -1441,8 +1246,6 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 : null
                         }
                     </View>
-                    {/* <View style={{ height: 75 }} /> */}
-                    {/* <View style={{ height: 50, backgroundColor: '#fff' }} /> */}
                 </View>
             </View>
         </View>
@@ -1458,7 +1261,7 @@ const styles = StyleSheet.create({
         // paddingRight: 20,
         // paddingLeft: Dimensions.get('window').width < 1024 ? 20 : 0,
         width: '100%',
-        maxWidth: '100%',
+        // maxWidth: 350,
         // overflow: 'scroll',
         // flex: 1,
         backgroundColor: 'white',
@@ -1469,14 +1272,14 @@ const styles = StyleSheet.create({
         borderColor: '#50566B'
     },
     all: {
-        fontSize: 14,
+        fontSize: 14, fontFamily: 'inter',
         color: '#50566B',
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: 'white'
     },
     allOutline: {
-        fontSize: 14,
+        fontSize: 14, fontFamily: 'inter',
         color: '#50566B',
         height: 22,
         paddingHorizontal: 10,
@@ -1497,7 +1300,7 @@ const styles = StyleSheet.create({
         width: '100%',
         borderBottomColor: '#f7fafc',
         borderBottomWidth: 1,
-        fontSize: 14,
+        fontSize: 14, fontFamily: 'inter',
         paddingTop: 13,
         paddingBottom: 13,
         marginTop: 5,

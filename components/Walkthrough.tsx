@@ -310,12 +310,11 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     width: '100%',
                     height: '100%',
                     backgroundColor: 'white',
-                    paddingHorizontal: Dimensions.get("window").width < 1024 ? 20 : 0,
                     borderTopLeftRadius: 0,
                     borderTopRightRadius: 0
                 }}>
                 {
-                    props.showHelp || showSavePassword ?
+                    showSavePassword ?
                         <View style={{ flexDirection: 'row', width: '100%', height: 50, marginBottom: 10, marginTop: 20 }}>
                             <View style={{ flexDirection: 'row' }}>
                                 <TouchableOpacity
@@ -364,11 +363,11 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             }}>
                                 <ScrollView
                                     contentContainerStyle={{
-                                        marginTop: 25, backgroundColor: '#fff',
-                                        maxHeight: Dimensions.get('window').width < 1024 ? windowHeight - 104 - 110 : windowHeight - 52 - 110,
-                                        paddingBottom: 75,
+                                        backgroundColor: '#fff',
+                                        maxHeight: Dimensions.get('window').width < 1024 ? windowHeight - 104 : windowHeight - 52,
+                                        // paddingBottom: 75,
                                         width: '100%',
-                                        maxWidth: 1000, alignSelf: 'center'
+                                        maxWidth: 1000,
                                     }}
                                 >
                                     {
@@ -392,26 +391,27 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                     borderColor: '#E3E8EE',
                                                     borderBottomWidth: item.question === 'Planner' ? 0 : 1,
                                                     width: '100%',
-                                                    paddingBottom: 20,
-                                                    marginTop: 20,
-                                                    marginBottom: 20,
+                                                    paddingBottom: 10,
+                                                    marginTop: 10,
                                                     // paddingTop: item.question === 'Home' ? 40 : 0,
                                                 }}>
                                                 <View style={{ flexDirection: 'row' }}>
                                                     <Text style={{
-                                                        backgroundColor: '#fff',
+                                                        fontSize: 16,
+                                                        paddingBottom: 10,
+                                                        paddingTop: 10,
                                                         fontFamily: 'inter',
-                                                        flexDirection: 'row',
                                                         flex: 1,
-                                                        fontSize: 17,
-                                                        color: item.isOpen ? '#5469D4' : '#333333'
+                                                        lineHeight: 16,
+                                                        color: item.isOpen ? '#5469D4' : '#1A2036'
                                                     }}>
                                                         {item.question}
                                                     </Text>
                                                     <Text>
                                                         <Ionicons
                                                             name={item.isOpen ? 'chevron-up-outline' : 'chevron-down-outline'}
-                                                            size={15}
+                                                            color={item.isOpen ? '#50566B' : '#5469D4'}
+                                                            size={17}
                                                         />
                                                     </Text>
                                                 </View>

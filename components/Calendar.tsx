@@ -1741,7 +1741,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                             </View> : (
                                                                                 <ScrollView
                                                                                     contentContainerStyle={{
-                                                                                        maxHeight: width < 1024 ? windowHeight - 200 : '100%',
+                                                                                        maxHeight: width < 1024 ? windowHeight - 104 - 80 : windowHeight - 52 - 80,
                                                                                         alignItems: 'center',
                                                                                     }}
                                                                                 >
@@ -1790,7 +1790,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                         <View
                                                                                             style={{
                                                                                                 width: '100%',
-                                                                                                 maxWidth: 400,
+                                                                                                maxWidth: 400,
                                                                                                 paddingVertical: 15
                                                                                             }}>
                                                                                             <Text style={styles.text}>{PreferredLanguageText("start")}</Text>
@@ -2013,7 +2013,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                                         borderRadius: 15,
                                                                                                         textTransform: "uppercase"
                                                                                                     }}>
-                                                                                                    {isCreatingEvents ? "..." : "CREATE"}
+                                                                                                    {isCreatingEvents ? "..." : "ADD"}
                                                                                                 </Text>
                                                                                             </TouchableOpacity>
                                                                                         </View> : null}

@@ -215,7 +215,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     setActiveTabMap(temp)
                 }}>
                 <Text style={activeTab === 'scores' ? styles.allGrayFill : styles.all}>
-                    <Ionicons name='stats-chart-outline' size={17} />
+                    <Ionicons name='bar-chart-outline' size={17} />
                 </Text>
                 {/* <Text style={activeTab === 'scores' ? styles.allGrayFill : styles.all}>
                     Scores

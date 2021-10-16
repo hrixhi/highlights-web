@@ -1095,7 +1095,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                             >
                                 {attempt.title}
                             </Text> : null}
-                            <div className="webviewer" ref={submissionViewerRef} style={{ height: "80vh" }}></div>
+                            <div className="webviewer" ref={submissionViewerRef} style={{ height: Dimensions.get('window').width < 1024 ? "50vh" : "70vh" }}></div>
                         </View>)
                     :
                     <View style={{ width: '100%', marginTop: 25 }} key={viewSubmissionTab}>
@@ -1103,7 +1103,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                             <div className="mce-content-body htmlParser" style={{ width: '100%' }}>
                                 {parser(attempt.html)}
                             </div> :
-                            <div className="webviewer" ref={submissionViewerRef} style={{ height: "80vh" }}></div>
+                            <div className="webviewer" ref={submissionViewerRef} style={{ height: Dimensions.get('window').width < 1024 ? "50vh" : "70vh" }}></div>
                         }
                     </View>
             }
@@ -1310,7 +1310,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
             {
                 !showAddUsers ? (subscribers.length === 0 ?
                     <View style={{ backgroundColor: 'white', flex: 1 }}>
-                        <Text style={{ width: '100%', color: '#50566B', fontSize: 20, paddingTop: 100, paddingHorizontal: 5, fontFamily: 'inter', flex: 1, textAlign: 'center' }}>
+                        <Text style={{ width: '100%', color: '#50566B', fontSize: 20, paddingTop: 50, paddingHorizontal: 5, fontFamily: 'inter', flex: 1, textAlign: 'center' }}>
                             {
                                 props.cueId ? PreferredLanguageText('noStatuses') : PreferredLanguageText('noStudents')
                             }
@@ -1787,9 +1787,9 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                             borderBottomColor: '#E3E8EE',
                                                             borderBottomWidth: 1,
                                                             fontSize: 14,
-                                                            paddingTop: 13,
+                                                            // paddingTop: 13,
                                                             paddingBottom: 13,
-                                                            marginTop: 5,
+                                                            marginTop: 0,
                                                             marginBottom: 20
                                                         }}
                                                         placeholder={'Score (0-100)'}
@@ -1797,24 +1797,99 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                         placeholderTextColor={'#50566B'}
                                                     />
                                                 </View>
+                                                <View
+                                                    style={{
+                                                        backgroundColor: "white",
+                                                        flexDirection: "row",
+                                                    }}>
+                                                    <TouchableOpacity
+                                                        onPress={() => handleGradeSubmit()} style={{
+                                                            backgroundColor: "white",
+                                                            overflow: "hidden",
+                                                            height: 35,
+                                                            marginTop: 5
+                                                            // marginBottom: 20
+                                                        }}>
+                                                        <Text
+                                                            style={{
+                                                                textAlign: "center",
+                                                                lineHeight: 35,
+                                                                backgroundColor: '#5469D4',
+                                                                fontSize: 12,
+                                                                color: '#fff',
+                                                                // borderWidth: 1,
+                                                                // borderColor: '#5469D4',
+                                                                paddingHorizontal: 20,
+                                                                fontFamily: "inter",
+                                                                height: 35,
+                                                                // paddingTop: 2
+                                                                // width: 125,
+                                                                borderRadius: 15,
+                                                                textTransform: "uppercase"
+                                                            }}>
+                                                            SAVE
+                                                        </Text>
+                                                    </TouchableOpacity>
+
+                                                    <TouchableOpacity onPress={() => {
+                                                        if (showChat) {
+                                                            setShowChat(false)
+                                                            setIsLoadedUserInactive(false)
+                                                            setLoadedChatWithUser({})
+                                                            setUsers([])
+                                                            props.reload()
+                                                        } else {
+                                                            if (showSubmission) {
+                                                                props.reloadStatuses()
+                                                            }
+                                                            setShowSubmission(false)
+                                                            setStatus("")
+                                                            setScore("0")
+                                                            setUserId("")
+                                                        }
+                                                        setShowAddUsers(false)
+                                                        setShowNewGroup(false)
+                                                    }} style={{
+                                                        backgroundColor: "white", borderRadius: 15, marginLeft: 15,
+                                                        marginTop: 5,
+                                                    }}>
+                                                        <Text style={{
+                                                            textAlign: "center",
+                                                            lineHeight: 35,
+                                                            color: '#5469D4',
+                                                            fontSize: 12,
+                                                            borderWidth: 1,
+                                                            borderColor: '#5469D4',
+                                                            paddingHorizontal: 20,
+                                                            fontFamily: "inter",
+                                                            height: 35,
+                                                            // paddingTop: 2
+                                                            // width: 125,
+                                                            borderRadius: 15,
+                                                            textTransform: "uppercase"
+                                                        }}>
+                                                            CANCEL
+                                                        </Text>
+                                                    </TouchableOpacity>
+                                                </View>
                                             </View>
-                                            {
-                                                imported && !isQuiz ?
-                                                    <View style={{ flex: 1 }}>
-                                                        <TextInput
-                                                            editable={false}
-                                                            value={title}
-                                                            style={styles.input}
-                                                            placeholder={'Title'}
-                                                            onChangeText={val => setTitle(val)}
-                                                            placeholderTextColor={'#50566B'}
-                                                        />
-                                                    </View> : null
-                                            }
-                                            <View style={{ width: '100%', marginBottom: 20 }}>
-                                                <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                                            <View style={{ flexDirection: 'row' }}>
+                                                {
+                                                    imported && !isQuiz ?
+                                                        <View style={{ flex: 1 }}>
+                                                            <TextInput
+                                                                editable={false}
+                                                                value={title}
+                                                                style={styles.input}
+                                                                placeholder={'Title'}
+                                                                onChangeText={val => setTitle(val)}
+                                                                placeholderTextColor={'#50566B'}
+                                                            />
+                                                        </View> : null
+                                                }
+                                                <View style={{ flexDirection: 'row', paddingTop: 20 }}>
                                                     <Ionicons name='checkmark-outline' size={22} color={"#53BE68"} />
-                                                    <Text style={{ fontSize: 14, paddingLeft: 5 }}>
+                                                    <Text style={{ fontSize: 14, paddingLeft: 5, lineHeight: 35 }}>
                                                         Turned In at {moment(new Date(parseInt(submittedAt))).format('MMMM Do, h:mm a')}
                                                     </Text>
                                                 </View>
@@ -1907,7 +1982,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                                         url={url}
                                                                                         fullScreen={true}
                                                                                     /> */}
-                                                                                    <div className="webviewer" ref={RichText} style={{ height: "80vh", borderWidth: 1, borderColor: '#E3E8EE', borderRadius: 0 }}></div>
+                                                                                    <div className="webviewer" ref={RichText} style={{ height: Dimensions.get('window').width < 1024 ? "50vh" : "70vh", borderWidth: 1, borderColor: '#E3E8EE', borderRadius: 0 }}></div>
                                                                                 </View>
                                                                                 {/* <View style={{ position: 'absolute', zIndex: 1, flex: 1, width: 800, height: 20000, backgroundColor: 'rgb(0,0,0,0)' }}>
                                                                                     <Annotation
@@ -2089,22 +2164,25 @@ const styleObject = () => {
             color: 'white'
         },
         all: {
-            fontSize: 11,
-            color: '#50566B',
-            height: 22,
-            paddingHorizontal: 10,
-            backgroundColor: '#fff',
-            lineHeight: 22,
-            fontFamily: 'inter'
+            fontSize: 14,
+            color: '#1A2036',
+            height: 24,
+            paddingHorizontal: 15,
+            backgroundColor: '#f7fafc',
+            lineHeight: 24,
+            fontFamily: 'inter',
+            // textTransform: 'uppercase'
         },
         allGrayFill: {
-            fontSize: 11,
+            fontSize: 14,
             color: '#fff',
-            paddingHorizontal: 10,
+            paddingHorizontal: 15,
             borderRadius: 12,
-            backgroundColor: '#2f2f3c',
-            lineHeight: 22,
-            fontFamily: 'inter'
+            backgroundColor: '#1A2036',
+            lineHeight: 24,
+            height: 24,
+            fontFamily: 'inter',
+            // textTransform: 'uppercase'
         },
     })
 }

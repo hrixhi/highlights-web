@@ -15,13 +15,13 @@ const FileUpload: React.FC<any> = (props: any) => {
     const handleFile = useCallback(async () => {
         // e.preventDefault();
         const res: any = await DocumentPicker.getDocumentAsync()
-      
+
         if (res.type === 'cancel' || res.type !== "success") {
             return
         }
 
         const { file } = res;
-        
+
         setUploading(true)
         if (file.size > 26214400) {
             alert('File size must be less than 25 mb')
@@ -39,14 +39,14 @@ const FileUpload: React.FC<any> = (props: any) => {
             type = "avi"
         } else if (file.type === "video/quicktime") {
             type = "mov"
-        } 
+        }
 
         if (type === "wma" || type === "avi") {
             alert("This video format is not supported. Uplaod mp4 or ogg.")
             setUploading(false)
             return;
         }
-      
+
         if (type === 'mpga') {
             type = 'mp3'
         }
@@ -102,18 +102,34 @@ const FileUpload: React.FC<any> = (props: any) => {
     }, [])
 
     return <View>
-        <Text
-            style={{
-                color: "#5469D4",
-                lineHeight: 35,
-                textAlign: "right",
-                fontSize: 12,
-                fontFamily: 'inter'
-            }}
-            onPress={() => handleFile()}
-        >
-            {uploading ? 'Importing...' : PreferredLanguageText("import")}
-        </Text>
+        {
+            uploading ?
+                <Text
+                    style={{
+                        color: "#5469D4",
+                        lineHeight: 35,
+                        textAlign: "right",
+                        fontSize: 12,
+                        fontFamily: 'inter'
+                    }}
+                    onPress={() => handleFile()}
+                >
+                    ...
+                </Text> :
+                <Text
+                    style={{
+                        color: "#5469D4",
+                        lineHeight: props.chat ? 40 : 35,
+                        textAlign: "right",
+                        fontSize: 12,
+                        fontFamily: 'inter'
+                    }}
+                    onPress={() => handleFile()}
+                >
+                    {props.chat ? <Ionicons name="document-attach-outline" size={20} /> : PreferredLanguageText("import")}
+                </Text>
+        }
+
     </View>
 }
 
