@@ -615,56 +615,53 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
 
       // LOAD USER OR CREATE A NEW ONE IF NOT FOUND
       if (!u) {
-        const fullName = uniqueNamesGenerator({
-          dictionaries: [colors]
-        }) + Math.floor(Math.random() * (999 - 100 + 1) + 100).toString();
-        const displayName = fullName
-        const notificationId = 'NOT_SET';
-        server.mutate({
-          mutation: createUser,
-          variables: {
-            fullName,
-            displayName,
-            notificationId
-          }
-        })
-          .then(async res => {
-            const u = res.data.user.create
-            if (u.__typename) {
-              delete u.__typename
-            }
-            const sU = JSON.stringify(u)
-            await AsyncStorage.setItem('user', sU)
-          })
-          .catch(err => {
-            // no message needed here
-          })
+        // const fullName = uniqueNamesGenerator({
+        //   dictionaries: [colors]
+        // }) + Math.floor(Math.random() * (999 - 100 + 1) + 100).toString();
+        // const displayName = fullName
+        // const notificationId = 'NOT_SET';
+        // server.mutate({
+        //   mutation: createUser,
+        //   variables: {
+        //     fullName,
+        //     displayName,
+        //     notificationId
+        //   }
+        // })
+        //   .then(async res => {
+        //     const u = res.data.user.create
+        //     if (u.__typename) {
+        //       delete u.__typename
+        //     }
+        //     const sU = JSON.stringify(u)
+        //     await AsyncStorage.setItem('user', sU)
+        //   })
+        //   .catch(err => {
+        //     // no message needed here
+        //   })
         // OPEN LOGIN WINDOW
       }
       // LOAD RANDOM SHUFFLE FREQUENCY
       if (f) {
         setRandomShuffleFrequency(f)
-      } else {
-        setRandomShuffleFrequency(defaultRandomShuffleFrequency)
-        await AsyncStorage.setItem('randomShuffleFrequency', defaultRandomShuffleFrequency)
-      }
+      } 
       // LOAD SLEEP FROM
       if (sF) {
         setSleepFrom(new Date(sF))
       } else {
-        const SF = defaultSleepInfo().from
-        setSleepFrom(SF)
-        const SFString = SF.toString()
-        await AsyncStorage.setItem('sleepFrom', SFString)
+        // const SF = defaultSleepInfo().from
+        // setSleepFrom(SF)
+        // const SFString = SF.toString()
+        // await AsyncStorage.setItem('sleepFrom', SFString)
       }
       // LOAD SLEEP TO
       if (sT) {
         setSleepTo(new Date(sT))
       } else {
-        const ST = defaultSleepInfo().to
-        setSleepTo(ST)
-        const STString = ST.toString()
-        await AsyncStorage.setItem('sleepTo', STString)
+        // const ST = defaultSleepInfo().to
+        // setSleepTo(ST)
+        // const STString = ST.toString()
+        // await AsyncStorage.setItem('sleepTo', STString)
       }
       // LOAD SUBSCRIPTIONS
       if (sub) {
@@ -774,8 +771,9 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         password
       }
     }).then(async (r: any) => {
-      if (r.data.user.login.user && !r.data.user.login.error) {
+      if (r.data.user.login.user && r.data.user.login.token && !r.data.user.login.error) {
         const u = r.data.user.login.user
+        const token = r.data.user.login.token
         if (u.__typename) {
           delete u.__typename
         }
@@ -785,6 +783,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         OneSignal.setExternalUserId(userId);
 
         const sU = JSON.stringify(u)
+        await AsyncStorage.setItem('jwt_token', token);
         await AsyncStorage.setItem('user', sU)
         setShowLoginWindow(false)
         loadDataFromCloud()
