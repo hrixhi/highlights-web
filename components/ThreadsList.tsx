@@ -173,10 +173,10 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             } else if (type === "mp4" || type === "oga" || type === "mov" || type === "wmv") {
                                 video = url
                             } else {
-                                text = <TouchableOpacity style={{ backgroundColor: '#2484FF' }}>
+                                text = <TouchableOpacity style={{ backgroundColor: '#5469d4' }}>
                                     <Text style={{
                                         textDecorationLine: 'underline',
-                                        backgroundColor: '#2484FF',
+                                        backgroundColor: '#5469d4',
                                         color: '#fff'
                                     }}
                                         onPress={() => {

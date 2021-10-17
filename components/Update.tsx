@@ -6,7 +6,7 @@ import Swiper from 'react-native-web-swiper'
 import UpdateControls from './UpdateControls';
 import { ScrollView } from 'react-native-gesture-handler'
 import { fetchAPI } from '../graphql/FetchAPI';
-import { getCueThreads, getStatuses, getUnreadQACount, creatFolder, getFolder, getFolderCues, getChannelFolders, updateFolder, addToFolder, deleteFolder, removeFromFolder } from '../graphql/QueriesAndMutations';
+import { getCueThreads, getStatuses, getUnreadQACount, creatFolder, getFolder, getFolderCues, getChannelFolders, updateFolder, addToFolder, deleteFolder, removeFromFolder, getReleaseSubmissionStatus } from '../graphql/QueriesAndMutations';
 import ThreadsList from './ThreadsList';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SubscribersList from './SubscribersList';
@@ -82,6 +82,55 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             }
         }
     }, [props.cue])
+
+    // Every time a cue is opened we need to check if the releaseSubmission property was modified so that a student is not allowed to do submissions
+    useEffect(() => {
+        if (cueId && cueId !== "") {
+            checkReleaseSubmissionStatus(cueId)
+        }
+    }, [cueId])
+
+    const checkReleaseSubmissionStatus = (cueId: string) => {
+        const server = fetchAPI("")
+        server.query({
+            query: getReleaseSubmissionStatus,
+            variables: {
+                cueId
+            }
+        }).then(async res => {
+            if (res.data.cue.getReleaseSubmissionStatus) {
+                // Update cue and refresh
+
+                let subCues: any = {};
+                try {
+                    const value = await AsyncStorage.getItem("cues");
+                    if (value) {
+                        subCues = JSON.parse(value);
+                    }
+                } catch (e) { }
+                if (subCues[props.cueKey].length === 0) {
+                    return;
+                }
+
+                const currCue = subCues[props.cueKey][props.cueIndex]
+
+                const saveCue = {
+                    ...currCue,
+                    releaseSubmission: true
+                }
+
+                subCues[props.cueKey][props.cueIndex] = saveCue
+
+                const stringifiedCues = JSON.stringify(subCues);
+                await AsyncStorage.setItem("cues", stringifiedCues);
+
+                props.reloadCueListAfterUpdate();
+
+            }
+        }).catch((e) => {
+            // Do nothing
+        })
+    }
 
     useEffect(() => {
         if (props.target && props.target === "Q&A") {

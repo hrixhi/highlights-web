@@ -1341,3 +1341,10 @@ export const getGroup = gql`
     }
   }
 `
+export const getReleaseSubmissionStatus = gql`
+  query($cueId: String!) {
+    cue {
+      getReleaseSubmissionStatus(cueId: $cueId)
+    }
+  }
+`

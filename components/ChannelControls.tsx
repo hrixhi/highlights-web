@@ -57,7 +57,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
             }
 
         } else {
-            if (name && colorCode !== "") {
+            if (name !== "") {
                 setIsSubmitDisabled(false)
                 return;
             }
@@ -167,6 +167,11 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
 
     const handleSubmit = useCallback(async () => {
 
+        if (colorCode === '') {
+            Alert('Select color theme for channel.')
+            return;
+        }
+
         setIsSubmitting(true);
 
         const uString: any = await AsyncStorage.getItem('user')
@@ -218,7 +223,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                 Alert(somethingWrongAlert, checkConnectionAlert)
             })
 
-    }, [option, name, password, props.closeModal, passwordRequired, displayName, fullName, temporary])
+    }, [option, name, password, props.closeModal, passwordRequired, displayName, fullName, temporary, colorCode])
 
     const loadUser = useCallback(async () => {
         const u = await AsyncStorage.getItem('user')

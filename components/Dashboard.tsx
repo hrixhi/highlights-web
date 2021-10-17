@@ -1450,7 +1450,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             }}
                             onSelect={(op: any) => {
                                 if (op === 'Settings') {
-                                    props.setShowHelp(true)
+                                    props.setShowHelp(false)
                                 }
                                 props.setOption(op)
                             }}>
@@ -1492,7 +1492,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 </MenuOption>
                                 <MenuOption
                                     value={'Settings'}>
-                                    <Text style={{ fontFamily: 'inter', fontSize: 14, color: props.option === 'Settings' ? '#5469D4' : '#50566B' }}>
+                                    <Text style={{ fontFamily: 'inter', fontSize: 14, color: props.option === 'Settings' && !props.showHelp ? '#5469D4' : '#50566B' }}>
                                         <Ionicons name='person-circle-outline' size={14} />&nbsp;&nbsp;Profile
                                     </Text>
                                 </MenuOption>
