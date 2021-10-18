@@ -170,6 +170,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const [solutions, setSolutions] = useState<any[]>([]);
     const [quizId, setQuizId] = useState("");
     const [loading, setLoading] = useState(true);
+    const [fetchingQuiz, setFetchingQuiz] = useState(false);
     const [initiatedAt, setInitiatedAt] = useState<any>(null);
     const [isQuizTimed, setIsQuizTimed] = useState(false);
     const [duration, setDuration] = useState(0);
@@ -635,6 +636,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     if (!loading) {
                         return;
                     }
+                    setFetchingQuiz(true)
                     // if (isQuiz) {
                     //     return;
                     // }
@@ -650,6 +652,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         })
                         .then(res => {
                             if (res.data && res.data.quiz.getQuiz) {
+                                
                                 setQuizId(obj.quizId);
 
                                 const solutionsObject = cue ? JSON.parse(cue) : {};
@@ -716,6 +719,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 setIsQuiz(true);
                                 setInstructions(res.data.quiz.getQuiz.instructions ? res.data.quiz.getQuiz.instructions : '')
                                 setHeaders(res.data.quiz.getQuiz.headers ? JSON.parse(res.data.quiz.getQuiz.headers) : {})
+                                setFetchingQuiz(false)
                                 setLoading(false);
                             }
                         });
@@ -2148,7 +2152,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         submissionUrl, type, submissionType]);
 
 
-    if (loading || loadingAfterModifyingQuiz) {
+    if (loading || loadingAfterModifyingQuiz || fetchingQuiz) {
         return null;
     }
 
@@ -2849,7 +2853,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 minHeight: 475,
                 backgroundColor: "white"
             }}>
-            {!props.showOriginal ? null : isQuiz ? (
+            {!props.showOriginal || loading ? null : isQuiz ? (
                 isQuizTimed && !isOwner ? (
                     initiatedAt ? (
                         <View style={{ width: '100%', paddingBottom: 50 }}>
@@ -2958,7 +2962,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     </View>
                 )
             ) : (
-                renderRichEditorOriginalCue("ABC")
+                renderRichEditorOriginalCue()
             )}
             {!props.showOriginal && submissionImported && !viewSubmission ? (
                 submissionType === "mp4" ||
@@ -2996,7 +3000,14 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         );
     }
 
-    const renderRichEditorOriginalCue = (source: string) => {
+    console.log("Loading", loading)
+    console.log("Is Quiz", isQuiz)
+    console.log("Fetching Quiz", fetchingQuiz)
+
+
+    const renderRichEditorOriginalCue = () => {
+
+        if (fetchingQuiz || isQuiz) return null;
 
         if (!isOwner && props.cue.channelId && props.cue.channelId !== "") {
             return <div className="mce-content-body htmlParser" style={{ width: '100%', color: 'black' }}>
@@ -5051,7 +5062,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                 color: '#5469D4',
                                             }}
                                             onPress={() => setShowEquationEditor(!showEquationEditor)}>
-                                            {showEquationEditor ? PreferredLanguageText("hide") : PreferredLanguageText("formula")}
+                                            {PreferredLanguageText("formula")}
                                         </Text>
                                     ) : null}
                                 {!props.showOriginal &&
@@ -5112,8 +5123,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             </View>
                         </View>
                 }
-                {renderEquationEditor()}
-                {showFormulaGuide ? <FormulaGuide show={showFormulaGuide} onClose={() => setShowFormulaGuide(false)} /> : null}
+                {/* {renderEquationEditor()} */}
+                <FormulaGuide value={equation} onChange={setEquation} show={showEquationEditor} onClose={() => setShowEquationEditor(false)} onInsertEquation={insertEquation} />
                 <ScrollView
                     style={{
                         paddingBottom: 25,

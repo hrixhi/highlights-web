@@ -86,6 +86,12 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
     }, [editQuestionNumber])
 
     const insertEquation = useCallback(() => {
+
+        if (equation === "") {
+            Alert('Equation cannot be empty.')
+            return;
+        }
+
         let currentContent = RichText.current.getContent();
 
         const SVGEquation = TeXToSVG(equation, { width: 100 }); // returns svg in html format
@@ -179,7 +185,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 </View>
                 : null
             }
-            {
+            {/* {
                 (showEquationEditor ?
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                         <View style={{
@@ -218,8 +224,8 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             <Ionicons name="help-circle-outline" color="#1A2036" size={20} />
                         </TouchableOpacity>
                     </View> : null)
-            }
-
+            } */}
+            <FormulaGuide equation={equation} onChange={setEquation} show={showEquationEditor} onClose={() => setShowEquationEditor(false)} onInsertEquation={insertEquation}  />
             <Editor
                 onInit={(evt, editor) => RichText.current = editor}
                 initialValue={editQuestion && editQuestion.question ? editQuestion.question : ""}
@@ -559,6 +565,12 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
 
     const insertOptionEquation = (index: number) => {
+
+        if (optionEquations[index] === "") {
+            Alert('Equation cannot be empty.')
+            return;
+        }
+
         const ref: any = getRef(index.toString())
 
         if (!ref || !ref.current) return;
@@ -859,10 +871,8 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                         fontSize: 10,
                                                         marginRight: 10
                                                     }}
-                                                >
-                                                    {
-                                                        showEquationEditor ? "Close" : "Equation"
-                                                    }
+                                                >                                                    
+                                                    {PreferredLanguageText("formula")}
                                                 </Text>
                                             </TouchableOpacity>
                                         }
@@ -1009,9 +1019,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                 fontSize: 10
                                                             }}
                                                         >
-                                                            {
-                                                                showOptionFormulas[i] ? "Close" : "Equation"
-                                                            }
+                                                            {PreferredLanguageText("formula")}
                                                         </Text>
                                                     </TouchableOpacity>
                                             }
@@ -1055,47 +1063,21 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                     </Text>
                                                     :
                                                     <View style={{ flexDirection: 'column' }}>
-                                                        {!showOptionFormulas[i] ? null : <View style={{ flexDirection: 'row', marginTop: 10, marginBottom: 20 }}>
-                                                            <View style={{
-                                                                borderColor: '#C1C9D2',
-                                                                borderWidth: 1,
-                                                                borderRadius: 15,
-                                                                padding: 10,
-                                                                width: Dimensions.get('window').width < 1024 ? '100%' : '50%'
-                                                            }}>
-                                                                <EquationEditor
-                                                                    value={optionEquations[i]}
-                                                                    onChange={(eq) => {
-                                                                        const updateOptionEquations = [...optionEquations]
-                                                                        updateOptionEquations[i] = eq;
-                                                                        setOptionEquations(updateOptionEquations)
-                                                                    }}
-                                                                    autoCommands="bar overline sqrt sum prod int alpha beta gamma delta epsilon zeta eta theta iota kappa lambda mu nu xi omikron pi rho sigma tau upsilon phi chi psi omega Alpha Beta Gamma Aelta Epsilon Zeta Eta Theta Iota Kappa Lambda Mu Nu Xi Omikron Pi Rho Sigma Tau Upsilon Phi Chi Psi Omega"
-                                                                    autoOperatorNames="sin cos tan arccos arcsin arctan"
-                                                                />
-                                                            </View>
-                                                            <TouchableOpacity
-                                                                style={{
-                                                                    justifyContent: "center",
-                                                                    paddingHorizontal: 20,
-                                                                    maxWidth: "10%",
-                                                                }}
-                                                                onPress={() => insertOptionEquation(i)}
-                                                            >
-                                                                <Ionicons name="add-circle-outline" color="#1A2036" size={20} />
-                                                            </TouchableOpacity>
-                                                            {/*  */}
-                                                            <TouchableOpacity
-                                                                style={{
-                                                                    justifyContent: "center",
-                                                                    paddingLeft: 10,
-                                                                    maxWidth: "10%",
-                                                                }}
-                                                                onPress={() => setShowFormulaGuide(true)}
-                                                            >
-                                                                <Ionicons name="help-circle-outline" color="#1A2036" size={20} />
-                                                            </TouchableOpacity>
-                                                        </View>}
+                                                        <FormulaGuide 
+                                                            equation={optionEquations[i]} 
+                                                            onChange={(eq: any) => {
+                                                                const updateOptionEquations = [...optionEquations]
+                                                                updateOptionEquations[i] = eq;
+                                                                setOptionEquations(updateOptionEquations)
+                                                            }}
+                                                            show={showOptionFormulas[i]} 
+                                                            onClose={() => {
+                                                                const updateShowFormulas = [...showOptionFormulas]
+                                                                updateShowFormulas[i] = !updateShowFormulas[i]
+                                                                setShowOptionFormulas(updateShowFormulas)
+                                                            }}
+                                                            onInsertEquation={() => insertOptionEquation(i)}
+                                                        />
                                                         <Editor
                                                             onInit={(evt, editor) => {
                                                                 const currRef: any = setRef(i.toString());

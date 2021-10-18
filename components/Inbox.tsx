@@ -868,6 +868,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                         setChatName("")
                                                         setChatImg("")
                                                         loadChats()
+                                                        setIsChatGroup(false);
                                                     }}
                                                     style={{
                                                         paddingRight: 15,

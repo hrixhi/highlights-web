@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ScrollView } from 'react-native';
 import { View } from './Themed'
 import { Popup } from '@mobiscroll/react'
+import EquationEditor from 'equation-editor-react';
 
 
 const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
@@ -41,7 +42,19 @@ const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: 
         },
     ]
     return <Popup isOpen={props.show} 
-                buttons={['ok']} 
+                // buttons={['ok']} 
+                buttons={[
+                    { 
+                        text:'ADD',
+                        handler: function (event) {
+                            props.onInsertEquation()
+                        }
+                    }, {
+                    text: 'CANCEL',
+                    handler: function (event) {
+                        props.onClose()
+                    }
+                },]}
                 themeVariant="light" 
                 onClose={() => props.onClose()} 
                 responsive={{
@@ -63,6 +76,34 @@ const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: 
                             maxHeight: 500
                         }}
                     >
+                        {/* Formula Input */}
+                        <View
+                            style={{
+                            width: "100%",
+                            // flexDirection: width < 1024 ? "column" : "row",
+                            marginBottom: 20,
+                            backgroundColor: '#f2f2f7'
+                            }}
+                        >
+                            <View
+                                style={{
+                                    borderColor: "#E3E8EE",
+                                    borderWidth: 1,
+                                    borderRadius: 15,
+                                    padding: 10,
+                                    minWidth: 200,
+                                    // maxWidth: "50%",
+                                }}
+                            >
+                                <EquationEditor
+                                    value={props.equation}
+                                    onChange={props.onChange}
+                                    autoCommands="bar overline sqrt sum prod int alpha beta gamma delta epsilon zeta eta theta iota kappa lambda mu nu xi omikron pi rho sigma tau upsilon phi chi psi omega Alpha Beta Gamma Aelta Epsilon Zeta Eta Theta Iota Kappa Lambda Mu Nu Xi Omikron Pi Rho Sigma Tau Upsilon Phi Chi Psi Omega Delta"
+                                    autoOperatorNames="sin cos tan arccos arcsin arctan"
+                                />
+                            </View>
+                        </View>
+                        {/* Guide */}
                         <View style={{ width: '100%', flexDirection: 'row', backgroundColor: '#f2f2f7', borderBottomWidth: 1, borderBottomColor: '#E3E8EE' }}>
                                <View style={{ padding: 10, width: '50%',  backgroundColor: '#f2f2f7' }}>
                                    Symbol

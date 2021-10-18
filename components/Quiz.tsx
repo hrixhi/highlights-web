@@ -546,6 +546,12 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     }
 
     const insertEquation = useCallback(() => {
+        
+        if (equation === "") {
+            alert('Equation cannot be empty.')
+            return;
+        }
+
         let currentContent = RichText.current.getContent();
 
         const SVGEquation = TeXToSVG(equation); // returns svg in html format
@@ -582,6 +588,12 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     }, [equation, RichText, RichText.current, showEquationEditor, problems, editQuestionNumber]);
 
     const insertResponseEquation = useCallback((problemIndex: number) => {
+
+        if (responseEquations[problemIndex] === "") {
+            alert('Equation cannot be empty.')
+            return;
+        }
+        
         let currentContent = problemRefs[problemIndex].current.getContent();
 
         const SVGEquation = TeXToSVG(responseEquations[problemIndex]); // returns svg in html format
@@ -696,7 +708,8 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 </View>
                 : null
             }
-            {
+            <FormulaGuide equation={equation} onChange={setEquation} show={showEquationEditor} onClose={() => setShowEquationEditor(false)} onInsertEquation={insertEquation}  />
+            {/* {
                 (showEquationEditor ?
                     <View style={{ flexDirection: 'row', alignItems: 'center', maxWidth: 400 }}>
                         <View style={{
@@ -735,7 +748,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             <Ionicons name="help-circle-outline" color="#1A2036" size={20} />
                         </TouchableOpacity>
                     </View> : null)
-            }
+            } */}
             {/* <RichEditor
                 key={reloadEditorKey.toString()}
                 containerStyle={{
@@ -923,6 +936,12 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     }
 
     const insertOptionEquation = (index: number) => {
+
+        if (optionEquations[index] === "") {
+            alert('Equation cannot be empty.')
+            return;
+        }
+
         const ref: any = getRef(index.toString())
 
         if (!ref || !ref.current) return;
@@ -1320,9 +1339,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                                             marginRight: 10
                                                                         }}
                                                                     >
-                                                                        {
-                                                                            showEquationEditor ? "Close" : "Equation"
-                                                                        }
+                                                                        {PreferredLanguageText("formula")}
                                                                     </Text>
                                                                 </TouchableOpacity>
                                                             }
@@ -1477,47 +1494,64 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                     (props.isOwner && problem.questionType !== "trueFalse" && editQuestionNumber === (index + 1)
                                                         ?
                                                         <View style={{ flexDirection: 'column', maxWidth: 400 }}>
-                                                            {!showOptionFormulas[i] ? null : <View style={{ flexDirection: 'row', marginTop: 10, marginBottom: 20 }}>
-                                                                <View style={{
-                                                                    borderColor: '#E3E8EE',
-                                                                    borderWidth: 1,
-                                                                    borderRadius: 15,
-                                                                    padding: 10,
-                                                                    width: Dimensions.get('window').width < 1024 ? '100%' : '50%'
-                                                                }}>
-                                                                    <EquationEditor
-                                                                        value={optionEquations[i]}
-                                                                        onChange={(eq) => {
-                                                                            const updateOptionEquations = [...optionEquations]
-                                                                            updateOptionEquations[i] = eq;
-                                                                            setOptionEquations(updateOptionEquations)
-                                                                        }}
-                                                                        autoCommands="bar overline sqrt sum prod int alpha beta gamma delta epsilon zeta eta theta iota kappa lambda mu nu xi omikron pi rho sigma tau upsilon phi chi psi omega Alpha Beta Gamma Aelta Epsilon Zeta Eta Theta Iota Kappa Lambda Mu Nu Xi Omikron Pi Rho Sigma Tau Upsilon Phi Chi Psi Omega"
-                                                                        autoOperatorNames="sin cos tan arccos arcsin arctan"
-                                                                    />
-                                                                </View>
-                                                                <TouchableOpacity
-                                                                    style={{
-                                                                        justifyContent: "center",
-                                                                        paddingHorizontal: 20,
-                                                                        maxWidth: "10%",
-                                                                    }}
-                                                                    onPress={() => insertOptionEquation(i)}
-                                                                >
-                                                                    <Ionicons name="add-circle-outline" color="#1A2036" size={20} />
-                                                                </TouchableOpacity>
-                                                                {/*  */}
-                                                                <TouchableOpacity
-                                                                    style={{
-                                                                        justifyContent: "center",
-                                                                        paddingLeft: 10,
-                                                                        maxWidth: "10%",
-                                                                    }}
-                                                                    onPress={() => setShowFormulaGuide(true)}
-                                                                >
-                                                                    <Ionicons name="help-circle-outline" color="#1A2036" size={20} />
-                                                                </TouchableOpacity>
-                                                            </View>}
+                                                            {
+                                                            //     !showOptionFormulas[i] ? null : <View style={{ flexDirection: 'row', marginTop: 10, marginBottom: 20 }}>
+                                                            //     <View style={{
+                                                            //         borderColor: '#E3E8EE',
+                                                            //         borderWidth: 1,
+                                                            //         borderRadius: 15,
+                                                            //         padding: 10,
+                                                            //         width: Dimensions.get('window').width < 1024 ? '100%' : '50%'
+                                                            //     }}>
+                                                            //         <EquationEditor
+                                                            //             value={optionEquations[i]}
+                                                            //             onChange={(eq) => {
+                                                            //                 const updateOptionEquations = [...optionEquations]
+                                                            //                 updateOptionEquations[i] = eq;
+                                                            //                 setOptionEquations(updateOptionEquations)
+                                                            //             }}
+                                                            //             autoCommands="bar overline sqrt sum prod int alpha beta gamma delta epsilon zeta eta theta iota kappa lambda mu nu xi omikron pi rho sigma tau upsilon phi chi psi omega Alpha Beta Gamma Aelta Epsilon Zeta Eta Theta Iota Kappa Lambda Mu Nu Xi Omikron Pi Rho Sigma Tau Upsilon Phi Chi Psi Omega"
+                                                            //             autoOperatorNames="sin cos tan arccos arcsin arctan"
+                                                            //         />
+                                                            //     </View>
+                                                            //     <TouchableOpacity
+                                                            //         style={{
+                                                            //             justifyContent: "center",
+                                                            //             paddingHorizontal: 20,
+                                                            //             maxWidth: "10%",
+                                                            //         }}
+                                                            //         onPress={() => insertOptionEquation(i)}
+                                                            //     >
+                                                            //         <Ionicons name="add-circle-outline" color="#1A2036" size={20} />
+                                                            //     </TouchableOpacity>
+                                                            //     {/*  */}
+                                                            //     <TouchableOpacity
+                                                            //         style={{
+                                                            //             justifyContent: "center",
+                                                            //             paddingLeft: 10,
+                                                            //             maxWidth: "10%",
+                                                            //         }}
+                                                            //         onPress={() => setShowFormulaGuide(true)}
+                                                            //     >
+                                                            //         <Ionicons name="help-circle-outline" color="#1A2036" size={20} />
+                                                            //     </TouchableOpacity>
+                                                            // </View>
+                                                            <FormulaGuide 
+                                                                equation={optionEquations[i]} 
+                                                                onChange={(eq: any) => {
+                                                                    const updateOptionEquations = [...optionEquations]
+                                                                    updateOptionEquations[i] = eq;
+                                                                    setOptionEquations(updateOptionEquations)
+                                                                }}
+                                                                show={showOptionFormulas[i]} 
+                                                                onClose={() => {
+                                                                    const updateShowFormulas = [...showOptionFormulas]
+                                                                    updateShowFormulas[i] = !updateShowFormulas[i]
+                                                                    setShowOptionFormulas(updateShowFormulas)
+                                                                }}
+                                                                onInsertEquation={() => insertOptionEquation(i)}
+                                                            />
+                                                            }
                                                             {editQuestionNumber !== (index + 1) ? null : <View style={{ flexDirection: 'row', marginTop: 20, marginBottom: 10 }}>
                                                                 {
                                                                     problem.questionType === "trueFalse" ? null :
@@ -1537,9 +1571,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                                                     fontSize: 10
                                                                                 }}
                                                                             >
-                                                                                {
-                                                                                    showOptionFormulas[i] ? "Close" : "Equation"
-                                                                                }
+                                                                                {PreferredLanguageText("formula")}
                                                                             </Text>
                                                                         </TouchableOpacity>
                                                                 }
@@ -1643,50 +1675,66 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     </Text> :
                                         <View style={{ flexDirection: 'column', width: '100%' }}>
                                             {
-                                                showFormulas[problemIndex]
-                                                    ?
-                                                    <View style={{ flexDirection: 'row', alignItems: 'center', maxWidth: 400 }}>
-                                                        <View style={{
-                                                            borderColor: '#E3E8EE',
-                                                            borderWidth: 1,
-                                                            borderRadius: 15,
-                                                            padding: 10,
-                                                            width: '70%',
-                                                            marginVertical: 20
-                                                        }}>
-                                                            <EquationEditor
-                                                                value={equation}
-                                                                onChange={(x) => {
-                                                                    const updateResponseEquations = [...responseEquations];
-                                                                    updateResponseEquations[problemIndex] = x;
-                                                                    setResponseEquations(updateResponseEquations)
-                                                                }}
-                                                                autoCommands="bar overline sqrt sum prod int alpha beta gamma delta epsilon zeta eta theta iota kappa lambda mu nu xi omikron pi rho sigma tau upsilon phi chi psi omega Alpha Beta Gamma Aelta Epsilon Zeta Eta Theta Iota Kappa Lambda Mu Nu Xi Omikron Pi Rho Sigma Tau Upsilon Phi Chi Psi Omega"
-                                                                autoOperatorNames="sin cos tan arccos arcsin arctan"
-                                                            />
-                                                        </View>
-                                                        <TouchableOpacity
-                                                            style={{
-                                                                justifyContent: "center",
-                                                                paddingHorizontal: 20,
-                                                                maxWidth: "10%",
-                                                            }}
-                                                            onPress={() => insertResponseEquation(problemIndex)}
-                                                        >
-                                                            <Ionicons name="add-circle-outline" color="#1A2036" size={20} />
-                                                        </TouchableOpacity>
-                                                        <TouchableOpacity
-                                                            style={{
-                                                                justifyContent: "center",
-                                                                paddingLeft: 10,
-                                                                maxWidth: "10%",
-                                                            }}
-                                                            onPress={() => setShowFormulaGuide(true)}
-                                                        >
-                                                            <Ionicons name="help-circle-outline" color="#1A2036" size={20} />
-                                                        </TouchableOpacity>
-                                                    </View>
-                                                    : null
+                                                // showFormulas[problemIndex]
+                                                //     ?
+                                                //     <View style={{ flexDirection: 'row', alignItems: 'center', maxWidth: 400 }}>
+                                                //         <View style={{
+                                                //             borderColor: '#E3E8EE',
+                                                //             borderWidth: 1,
+                                                //             borderRadius: 15,
+                                                //             padding: 10,
+                                                //             width: '70%',
+                                                //             marginVertical: 20
+                                                //         }}>
+                                                //             <EquationEditor
+                                                //                 value={equation}
+                                                //                 onChange={(x) => {
+                                                //                     const updateResponseEquations = [...responseEquations];
+                                                //                     updateResponseEquations[problemIndex] = x;
+                                                //                     setResponseEquations(updateResponseEquations)
+                                                //                 }}
+                                                //                 autoCommands="bar overline sqrt sum prod int alpha beta gamma delta epsilon zeta eta theta iota kappa lambda mu nu xi omikron pi rho sigma tau upsilon phi chi psi omega Alpha Beta Gamma Aelta Epsilon Zeta Eta Theta Iota Kappa Lambda Mu Nu Xi Omikron Pi Rho Sigma Tau Upsilon Phi Chi Psi Omega"
+                                                //                 autoOperatorNames="sin cos tan arccos arcsin arctan"
+                                                //             />
+                                                //         </View>
+                                                //         <TouchableOpacity
+                                                //             style={{
+                                                //                 justifyContent: "center",
+                                                //                 paddingHorizontal: 20,
+                                                //                 maxWidth: "10%",
+                                                //             }}
+                                                //             onPress={() => insertResponseEquation(problemIndex)}
+                                                //         >
+                                                //             <Ionicons name="add-circle-outline" color="#1A2036" size={20} />
+                                                //         </TouchableOpacity>
+                                                //         <TouchableOpacity
+                                                //             style={{
+                                                //                 justifyContent: "center",
+                                                //                 paddingLeft: 10,
+                                                //                 maxWidth: "10%",
+                                                //             }}
+                                                //             onPress={() => setShowFormulaGuide(true)}
+                                                //         >
+                                                //             <Ionicons name="help-circle-outline" color="#1A2036" size={20} />
+                                                //         </TouchableOpacity>
+                                                //     </View>
+                                                //     : null
+                                                <FormulaGuide 
+                                                    equation={equation} 
+                                                    onChange={(x: any) => {
+                                                        const updateResponseEquations = [...responseEquations];
+                                                        updateResponseEquations[problemIndex] = x;
+                                                        setResponseEquations(updateResponseEquations)
+                                                    }}
+                                                    show={showFormulas[problemIndex]}
+                                                    onClose={() => {
+                                                        const updateShowFormulas = [...showFormulas]
+                                                        updateShowFormulas[problemIndex] = !updateShowFormulas[problemIndex]
+                                                        setShowFormulas(updateShowFormulas)
+                                                    }}
+                                                    onInsertEquation={() => insertResponseEquation(problemIndex)}
+                                                />
+
                                             }
                                             <Editor
                                                 onInit={(evt, editor) => {
@@ -1759,14 +1807,12 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 >
                                                     <Text
                                                         style={{
-                                                            color: '#50566B',
+                                                            color: '#5469D4',
                                                             fontFamily: 'Overpass',
-                                                            fontSize: 10
+                                                            fontSize: 10,
                                                         }}
                                                     >
-                                                        {
-                                                            showFormulas[problemIndex] ? "HIDE FORMULA" : "INSERT FORMULA"
-                                                        }
+                                                        {PreferredLanguageText("formula")}
                                                     </Text>
                                                 </TouchableOpacity>
                                             </View>

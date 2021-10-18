@@ -197,13 +197,13 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
         let row1 = [""];
 
         // Add Graded 
-        row1.push("Graded")
+        row1.push("Status")
 
         // Add total
         row1.push("Total score")
 
         problems.forEach((prob: any, index: number) => {
-            row1.push(`${index + 1}: ${prob.question} (${prob.points})`)
+            row1.push(`Question ${index + 1}: ${prob.points} points`)
             row1.push("Score + Remark")
         })
 
@@ -249,7 +249,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
             subscriberRow.push(displayName);
             subscriberRow.push(graded ? "Graded" : (submittedAt !== null ? "Submitted" : "Not Submitted"))
 
-            if (!graded || !submittedAt) {
+            if (!graded && !submittedAt) {
                 exportAoa.push(subscriberRow);
                 return;
             }
@@ -270,14 +270,15 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                 }
             })
 
+            console.log("Active attempt", activeAttempt)
+
             if (!activeAttempt) {
                 return;
             }
 
-            if (!activeAttempt) return;
-
             const { solutions = [], problemScores, problemComments } = activeAttempt;
 
+            console.log("Solutions", solutions)
 
             solutions.forEach((sol: any, i: number) => {
                 let response = ''
@@ -287,12 +288,15 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                     options.forEach((opt: any, index: number) => {
                         if (opt.isSelected) response += ((index + 1) + " ")
                     })
-                } else {
-                    response = sol["response"]
-                }
+                } 
 
-                subscriberRow.push(`${response}`);
-                subscriberRow.push(`${problemScores ? problemScores[i] : ""} - Remark: ${problemComments ? problemComments[i] : ''}`)
+                subscriberRow.push(response);
+
+                if (problemScores && problemScores[i] !== "") {
+                    subscriberRow.push(`${problemScores[i]} ${problemComments && problemComments[i] !== "" ? "- Remark:" + problemComments[i] : ''}`)
+                } else {
+                    subscriberRow.push("Score not assigned")
+                }
 
 
             })

@@ -746,7 +746,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             maxWidth: 175,
                                             backgroundColor: '#fff',
                                             alignSelf: 'center',
-                                            width: '98%'
+                                            width: 160
                                         }} key={index}>
                                             <SearchResultCard
                                                 title={t}
@@ -1598,15 +1598,22 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 </View> : searchResults
             }
             <Popup isOpen={showFilterPopup}
-                buttons={['ok', {
-                    text: 'Reset',
-                    handler: function (event) {
-                        setFilterStart(null)
-                        setFilterEnd(null)
-                        setFilterByChannel('All')
-                        setFilterEventsType('All')
-                        setShowFilterPopup(false)
-                    }
+                buttons={[
+                    { 
+                        text: 'OK', 
+                        handler: function (event) {
+                            setShowFilterPopup(false)
+                        }
+                    }, 
+                    {
+                        text: 'RESET',
+                        handler: function (event) {
+                            setFilterStart(null)
+                            setFilterEnd(null)
+                            setFilterByChannel('All')
+                            setFilterEventsType('All')
+                            setShowFilterPopup(false)
+                        }
                 },]}
                 themeVariant="light"
                 onClose={() => setShowFilterPopup(false)}

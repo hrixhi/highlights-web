@@ -191,7 +191,12 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
   }, []);
 
   const insertEquation = useCallback(() => {
-    // 
+
+    if (equation === "") {
+      Alert('Equation cannot be empty.')
+      return;
+    }
+    
     let currentContent = editorRef.current.getContent();
 
     const SVGEquation = TeXToSVG(equation, { width: 100 }); // returns svg in html format
@@ -1089,9 +1094,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   }}
                   onPress={() => setShowEquationEditor(!showEquationEditor)}
                 >
-                  {showEquationEditor
-                    ? PreferredLanguageText("hide")
-                    : PreferredLanguageText("formula")}
+                  {PreferredLanguageText("formula")}
                 </Text>
               ) : null}
               {isQuiz || imported ? null : (
@@ -1131,54 +1134,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
             </View>
           </View>
         }
-        {showEquationEditor && !showOptions ? (
-          <View
-            style={{
-              width: "100%",
-              flexDirection: width < 1024 ? "column" : "row",
-              paddingBottom: 20,
-            }}
-          >
-            <View
-              style={{
-                borderColor: "#E3E8EE",
-                borderWidth: 1,
-                borderRadius: 15,
-                padding: 10,
-                minWidth: 200,
-                maxWidth: "50%",
-              }}
-            >
-              <EquationEditor
-                value={equation}
-                onChange={setEquation}
-                autoCommands="bar overline sqrt sum prod int alpha beta gamma delta epsilon zeta eta theta iota kappa lambda mu nu xi omikron pi rho sigma tau upsilon phi chi psi omega Alpha Beta Gamma Aelta Epsilon Zeta Eta Theta Iota Kappa Lambda Mu Nu Xi Omikron Pi Rho Sigma Tau Upsilon Phi Chi Psi Omega Delta"
-                autoOperatorNames="sin cos tan arccos arcsin arctan"
-              />
-            </View>
-            <TouchableOpacity
-              style={{
-                justifyContent: "center",
-                paddingLeft: 20,
-                maxWidth: "10%",
-              }}
-              onPress={() => insertEquation()}
-            >
-              <Ionicons name="add-circle-outline" color="#1A2036" size={15} />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{
-                justifyContent: "center",
-                paddingLeft: 10,
-                maxWidth: "10%",
-              }}
-              onPress={() => setShowFormulaGuide(true)}
-            >
-              <Ionicons name="help-circle-outline" color="#1A2036" size={20} />
-            </TouchableOpacity>
-          </View>
-        ) : null}
-        {showFormulaGuide && !showOptions ? <FormulaGuide show={showFormulaGuide} onClose={() => setShowFormulaGuide(false)} /> : null}
+        {!showOptions ? <FormulaGuide value={equation} onChange={setEquation} show={showEquationEditor} onClose={() => setShowEquationEditor(false)} onInsertEquation={insertEquation} /> : null}
         <View
           style={{ paddingBottom: 100 }}
         >
