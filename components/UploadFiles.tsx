@@ -116,20 +116,38 @@ const FileUpload: React.FC<any> = (props: any) => {
                 >
                     ...
                 </Text> :
-                <Text
-                    style={{
-                        color: "#5469D4",
-                        lineHeight: props.chat ? 40 : 35,
-                        textAlign: "right",
-                        fontSize: 12,
-                        fontFamily: 'inter'
-                    }}
-                    onPress={() => handleFile()}
-                >
-                    {props.chat ? <Ionicons name="document-attach-outline" size={20} /> : PreferredLanguageText("import")}
-                </Text>
-        }
 
+                (
+                    props.quiz 
+                    ?
+                    <Text
+                        style={{
+                            color: "#5469D4",
+                            // lineHeight: props.chat ? 40 : 35,
+                            textAlign: "right",
+                            fontSize: 10,
+                            fontFamily: 'Overpass',
+                        }}
+                        onPress={() => handleFile()}
+                    >
+                        Media
+                    </Text>
+                    :
+                    <Text
+                        style={{
+                            color: "#5469D4",
+                            lineHeight: props.chat ? 40 : 35,
+                            textAlign: "right",
+                            fontSize: props.quiz ? 10 : 12,
+                            fontFamily: 'inter'
+                        }}
+                        onPress={() => handleFile()}
+                    >
+                        {props.chat ? <Ionicons name="document-attach-outline" size={20} /> : PreferredLanguageText("import")}
+                    </Text>
+                )
+                
+                }
     </View>
 }
 

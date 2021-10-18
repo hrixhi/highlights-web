@@ -174,7 +174,9 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 </View>
             )}
             {audioVideoQuestion ?
-                renderAudioVideoPlayer(url, type)
+                <View style={{ marginBottom: 20 }}>
+                    {renderAudioVideoPlayer(url, type)}
+                </View>
                 : null
             }
             {
@@ -854,7 +856,8 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                     style={{
                                                         color: '#5469D4',
                                                         fontFamily: 'Overpass',
-                                                        fontSize: 10
+                                                        fontSize: 10,
+                                                        marginRight: 10
                                                     }}
                                                 >
                                                     {
@@ -863,7 +866,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 </Text>
                                             </TouchableOpacity>
                                         }
-                                        {
+                                        {/* {
                                             <TouchableOpacity
                                                 style={{
                                                     backgroundColor: '#fff'
@@ -897,11 +900,43 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                     }
                                                 </Text>
                                             </TouchableOpacity>
+                                        } */}
+                                        {audioVideoQuestion ? 
+                                            <TouchableOpacity onPress={() => {
+                                                const updateProblems = lodash.cloneDeep(problems);
+                                                const question = updateProblems[index].question;
+                                                const parse = JSON.parse(question);
+                                                updateProblems[index].question = parse.content;
+                                                setProblems(updateProblems)
+                                                props.setProblems(updateProblems)
+                                            }}>
+                                                <Text style={{
+                                                    color: '#5469D4',
+                                                    fontFamily: 'Overpass',
+                                                    fontSize: 10,
+                                                }}> Clear</Text>
+                                            </TouchableOpacity>
+                                            :
+                                            <FileUpload 
+                                                quiz={true}
+                                                action={"audio/video"}
+                                                back={() => setShowImportOptions(false)}
+                                                onUpload={(u: any, t: any) => {
+                                                    const obj = { url: u, type: t, content: problems[index].question };
+                                                    const newProbs = [...problems];
+                                                    newProbs[index].question = JSON.stringify(obj);
+                                                    setProblems(newProbs)
+                                                    props.setProblems(newProbs)
+                                                    setShowImportOptions(false);
+                                                }}
+                                            />
                                         }
                                     </View> : null)}
                                     {
-                                        (editQuestionNumber === (index + 1) ? renderQuestionEditor(index) : (audioVideoQuestion ? <View>
-                                            {renderAudioVideoPlayer(url, type)}
+                                        (editQuestionNumber === (index + 1) ? renderQuestionEditor(index) : (audioVideoQuestion ? <View style={{ }}>
+                                            <View style={{ marginBottom: 20 }}>
+                                                {renderAudioVideoPlayer(url, type)}
+                                            </View>
                                             <Text style={{ marginVertical: 20, marginLeft: 20, fontSize: 15, lineHeight: 25 }}>
                                                 {parser(content)}
                                             </Text>
