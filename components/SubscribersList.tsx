@@ -1728,6 +1728,42 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 :
                                                 null
                                         }
+                                        {
+                                            <View style={{ width: 140, marginVertical: 20, marginLeft: 'auto' }}>
+                                                <TouchableOpacity onPress={() => {
+                                                    if (showSubmission) {
+                                                        props.reloadStatuses()
+                                                    }
+                                                    setShowSubmission(false)
+                                                    setStatus("")
+                                                    setScore("0")
+                                                    setUserId("")
+                                                    }
+                                                } 
+                                                style={{
+                                                    backgroundColor: "white", borderRadius: 15, marginLeft: 15,
+                                                    marginTop: 5,
+                                                }}>
+                                                <Text style={{
+                                                    textAlign: "center",
+                                                    lineHeight: 35,
+                                                    color: '#5469D4',
+                                                    fontSize: 12,
+                                                    borderWidth: 1,
+                                                    borderColor: '#5469D4',
+                                                    paddingHorizontal: 20,
+                                                    fontFamily: "inter",
+                                                    height: 35,
+                                                    // paddingTop: 2
+                                                    // width: 125,
+                                                    borderRadius: 15,
+                                                    textTransform: "uppercase"
+                                                }}>
+                                                    CANCEL
+                                                </Text>
+                                            </TouchableOpacity>
+                                            </View>
+                                        }
 
                                         <QuizGrading
                                             loading={loading}
