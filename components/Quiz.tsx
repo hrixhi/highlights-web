@@ -497,7 +497,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     paddingTop: 12,
                     paddingBottom: 12,
                     maxWidth: "100%",
-                    borderRadius: 0,
+                    borderRadius: 1,
                     borderBottom: '1px solid #C4C4C4',
                     // fontWeight: "600",
                     width: Dimensions.get('window').width < 1024 ? '100%' : '50%'
@@ -745,7 +745,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             }}
                             onPress={() => setShowFormulaGuide(true)}
                         >
-                            <Ionicons name="help-circle-outline" color="#1A2036" size={20} />
+                            <Ionicons name="help-circle-outline" color="#1A2036" size={19} />
                         </TouchableOpacity>
                     </View> : null)
             } */}
@@ -1271,7 +1271,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                         setShowFormulas(updateShowFormulas)
                                                         setOptionEquations(updateOptionEquations)
 
-                                                    }} style={{ marginBottom: 20, paddingTop: 8, paddingLeft: 30 }}> <Ionicons name='pencil-outline' size={17} color={'#5469D4'} /></TouchableOpacity>)
+                                                    }} style={{ marginBottom: 20, paddingTop: 8, paddingLeft: 30 }}> <Ionicons name='pencil-outline' size={19} color={'#5469D4'} /></TouchableOpacity>)
                                                     : (
                                                         null
                                                         // <TouchableOpacity style={{ marginBottom: 20, paddingTop: 8, paddingLeft: 30, paddingRight: 5 }}> <View style={{ width: 22 }} /></TouchableOpacity>
@@ -1522,7 +1522,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                             //         }}
                                                             //         onPress={() => insertOptionEquation(i)}
                                                             //     >
-                                                            //         <Ionicons name="add-circle-outline" color="#1A2036" size={20} />
+                                                            //         <Ionicons name="add-circle-outline" color="#1A2036" size={19} />
                                                             //     </TouchableOpacity>
                                                             //     {/*  */}
                                                             //     <TouchableOpacity
@@ -1533,7 +1533,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                             //         }}
                                                             //         onPress={() => setShowFormulaGuide(true)}
                                                             //     >
-                                                            //         <Ionicons name="help-circle-outline" color="#1A2036" size={20} />
+                                                            //         <Ionicons name="help-circle-outline" color="#1A2036" size={19} />
                                                             //     </TouchableOpacity>
                                                             // </View>
                                                             <FormulaGuide 
@@ -1705,7 +1705,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 //             }}
                                                 //             onPress={() => insertResponseEquation(problemIndex)}
                                                 //         >
-                                                //             <Ionicons name="add-circle-outline" color="#1A2036" size={20} />
+                                                //             <Ionicons name="add-circle-outline" color="#1A2036" size={19} />
                                                 //         </TouchableOpacity>
                                                 //         <TouchableOpacity
                                                 //             style={{
@@ -1715,7 +1715,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 //             }}
                                                 //             onPress={() => setShowFormulaGuide(true)}
                                                 //         >
-                                                //             <Ionicons name="help-circle-outline" color="#1A2036" size={20} />
+                                                //             <Ionicons name="help-circle-outline" color="#1A2036" size={19} />
                                                 //         </TouchableOpacity>
                                                 //     </View>
                                                 //     : null

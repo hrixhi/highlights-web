@@ -221,7 +221,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             }}
                             onPress={() => setShowFormulaGuide(true)}
                         >
-                            <Ionicons name="help-circle-outline" color="#1A2036" size={20} />
+                            <Ionicons name="help-circle-outline" color="#1A2036" size={19} />
                         </TouchableOpacity>
                     </View> : null)
             } */}
@@ -436,7 +436,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         <TextareaAutosize
                             style={{
                                 maxWidth: '100%', marginBottom: 10, marginTop: 10,
-                                borderRadius: 0,
+                                borderRadius: 1,
                                 paddingTop: 13, paddingBottom: 13, fontSize: 14, borderBottom: '1px solid #C1C9D2',
                             }}
                             value={headers[index]}
@@ -846,7 +846,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                         }
 
                                                     }}
-                                                    size={17}
+                                                    size={19}
                                                 />}
                                         </View>
                                     </View>

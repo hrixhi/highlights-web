@@ -198,7 +198,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     setActiveTabMap(temp)
                 }}>
                 <Text style={activeTab === 'overview' ? styles.allGrayFill : styles.all}>
-                    <Ionicons name='clipboard-outline' size={17} />
+                    <Ionicons name='clipboard-outline' size={19} />
                 </Text>
                 {/* <Text style={activeTab === 'overview' ? styles.allGrayFill : styles.all}>
                     Overview
@@ -215,7 +215,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     setActiveTabMap(temp)
                 }}>
                 <Text style={activeTab === 'scores' ? styles.allGrayFill : styles.all}>
-                    <Ionicons name='bar-chart-outline' size={17} />
+                    <Ionicons name='bar-chart-outline' size={19} />
                 </Text>
                 {/* <Text style={activeTab === 'scores' ? styles.allGrayFill : styles.all}>
                     Scores
@@ -246,7 +246,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     setActiveTabMap(temp)
                 }}>
                 <Text style={activeTab === 'attendance' ? styles.allGrayFill : styles.all}>
-                    <Ionicons name='calendar-outline' size={17} />
+                    <Ionicons name='calendar-outline' size={19} />
                 </Text>
                 {/* <Text style={activeTab === 'attendance' ? styles.allGrayFill : styles.all}>
                     Attendance
@@ -355,7 +355,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                         paddingTop: 5,
                                         paddingLeft: 7
                                     }}>
-                                        <Ionicons name={!collapseMap[ind] ? 'chevron-up-outline' : 'chevron-down-outline'} size={17} color={!collapseMap[ind] ? '#50566B' : '#5469D4'} />
+                                        <Ionicons name={!collapseMap[ind] ? 'chevron-up-outline' : 'chevron-down-outline'} size={19} color={!collapseMap[ind] ? '#50566B' : '#5469D4'} />
                                     </Text>
                                 </TouchableOpacity>
                             </View>
@@ -536,7 +536,7 @@ const styles = StyleSheet.create({
     },
     all: {
         fontSize: 10,
-        color: '#50566B',
+        color: '#1a2036',
         height: 20,
         paddingHorizontal: 10,
         backgroundColor: '#fff',

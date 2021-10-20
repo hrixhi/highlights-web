@@ -665,14 +665,12 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
                             return <View style={{ marginRight: 20, backgroundColor: '#fff' }}>
                                 <Text style={{
-                                    paddingBottom: 15,
-                                    // paddingTop: 10,
-                                    flex: 1,
-                                    backgroundColor: '#fff',
+                                    flex: 1, flexDirection: 'row',
                                     color: '#50566B',
-                                    fontSize: 14,
-                                    lineHeight: 25,
-                                    fontFamily: 'overpass'
+                                    // fontWeight: 'bold',
+                                    fontSize: 12, lineHeight: 25,
+                                    fontFamily: 'inter',
+                                    paddingBottom: 10
                                 }}>
                                     {option}
                                 </Text>
@@ -837,7 +835,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     setIndexMap(temp)
                 }}>
                 <Text style={activeTab === 'Content' ? styles.allGrayFill1 : styles.all1}>
-                    <Ionicons name='library-outline' size={17} />
+                    <Ionicons name='library-outline' size={19} />
                 </Text>
                 {/* <Text style={activeTab === 'Content' ? styles.allGrayFill1 : styles.all1}>
                     Library
@@ -850,7 +848,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 }}
                 onPress={() => handleEnterClassroom()}>
                 <Text style={activeTab === 'Meet' ? styles.allGrayFill1 : styles.all1}>
-                    <Ionicons name='videocam-outline' size={17} />
+                    <Ionicons name='videocam-outline' size={19} />
                 </Text>
                 {/* <Text style={activeTab === 'Meet' ? styles.allGrayFill1 : styles.all1}>
                     Meet
@@ -867,7 +865,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     setIndexMap(temp)
                 }}>
                 <Text style={activeTab === 'Discuss' ? styles.allGrayFill1 : styles.all1}>
-                    <Ionicons name='chatbubbles-outline' size={17} />
+                    <Ionicons name='chatbubbles-outline' size={19} />
                 </Text>
                 {/* <Text style={activeTab === 'Discuss' ? styles.allGrayFill1 : styles.all1}>
                     Discuss
@@ -886,7 +884,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             setIndexMap(temp)
                         }}>
                         <Text style={activeTab === 'Settings' ? styles.allGrayFill1 : styles.all1}>
-                            <Ionicons name='build-outline' size={17} />
+                            <Ionicons name='build-outline' size={19} />
                         </Text>
                         {/* <Text style={activeTab === 'Settings' ? styles.allGrayFill1 : styles.all1}>
                             Settings
@@ -1090,7 +1088,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     textAlign: 'center',
                                                     lineHeight: 30
                                                 }}>
-                                                    <Ionicons name={collapseMap[key] ? 'chevron-up-outline' : 'chevron-down-outline'} size={17} color={collapseMap[key] ? '#50566B' : '#5469D4'} />
+                                                    <Ionicons name={collapseMap[key] ? 'chevron-up-outline' : 'chevron-down-outline'} size={19} color={collapseMap[key] ? '#1a2036' : '#5469D4'} />
                                                 </Text>
                                             </TouchableOpacity>
                                         </View>
@@ -1111,7 +1109,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             ellipsizeMode='tail'
                                             style={{
                                                 fontSize: 16,
-                                                paddingBottom: 10,
+                                                paddingBottom: 15,
                                                 paddingTop: 10,
                                                 fontFamily: 'inter',
                                                 flex: 1,
@@ -1145,7 +1143,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     textAlign: 'center',
                                                     lineHeight: 30
                                                 }}>
-                                                    <Ionicons name={collapseMap[key] ? 'chevron-up-outline' : 'chevron-down-outline'} size={17} color={'#5469D4'} />
+                                                    <Ionicons name={collapseMap[key] ? 'chevron-up-outline' : 'chevron-down-outline'} size={19} color={collapseMap[key] ? '#1a2036' : '#5469D4'} />
                                                 </Text>
                                             </TouchableOpacity>
                                         </View>
@@ -1223,9 +1221,9 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                         <Text style={{
                                                                             flex: 1, flexDirection: 'row',
                                                                             color: '#50566B',
-                                                                            fontWeight: 'bold',
+                                                                            // fontWeight: 'bold',
                                                                             fontSize: 12, lineHeight: 25,
-                                                                            fontFamily: 'overpass'
+                                                                            fontFamily: 'inter'
                                                                         }} ellipsizeMode='tail'>
                                                                             {category === '' ? ' ' : category}
                                                                         </Text>
@@ -1438,7 +1436,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     paddingTop: 1,
                                     textAlign: 'right'
                                 }}>
-                                    <Ionicons name="filter-outline" size={20} />
+                                    <Ionicons name="filter-outline" size={19} />
                                 </Text>
 
                             </TouchableOpacity> : null}
@@ -1478,23 +1476,23 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             <MenuOptions customStyles={{
                                 optionsContainer: {
                                     padding: 5,
-                                    borderRadius: 0,
+                                    borderRadius: 1,
                                     shadowOpacity: 0,
                                     borderWidth: 1,
                                     borderColor: '#C4C4C4',
-                                    maxWidth: 150
+                                    maxWidth: 125
                                 }
                             }}>
                                 <MenuOption
                                     value={'Channels'}>
                                     <Text style={{ fontFamily: 'overpass', fontSize: 14, fontWeight: 'bold', color: props.option === 'Channels' ? '#5469D4' : '#1a2036' }}>
-                                        <Ionicons name='file-tray-stacked-outline' size={14} />&nbsp;&nbsp;Workspaces
+                                        &nbsp;WORKSPACES
                                     </Text>
                                 </MenuOption>
                                 <MenuOption
                                     value={'Settings'}>
                                     <Text style={{ fontFamily: 'overpass', fontSize: 14, fontWeight: 'bold', color: props.option === 'Settings' && !props.showHelp ? '#5469D4' : '#1a2036' }}>
-                                        <Ionicons name='person-circle-outline' size={14} />&nbsp;&nbsp;Profile
+                                        &nbsp;ACCOUNT
                                     </Text>
                                 </MenuOption>
                             </MenuOptions>
@@ -1510,7 +1508,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             }}>
                                 <Ionicons
                                     name="help-circle-outline"
-                                    size={20}
+                                    size={19}
                                     color={(props.option === 'Settings' && props.showHelp) ? '#5469D4' : '#f7fafc'}
                                 />
                             </Text>
@@ -1748,7 +1746,7 @@ const styleObject: any = () => StyleSheet.create({
     },
     all1: {
         fontSize: 10,
-        color: '#50566B',
+        color: '#1a2036',
         height: 20,
         paddingHorizontal: 10,
         backgroundColor: '#fff',

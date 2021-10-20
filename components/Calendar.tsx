@@ -139,7 +139,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
             colorCode = matchSubscription.colorCode
         }
 
-        return <span style={{ color: colorCode, backgroundColor: '#f7fafc', borderRadius: 0, padding: 20, overflow: 'hidden' }}>{event.title}</span>
+        return <span style={{ color: colorCode, backgroundColor: '#f7fafc', borderRadius: 1, padding: 20, overflow: 'hidden' }}>{event.title}</span>
 
     }
 
@@ -1554,7 +1554,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     !showAddEvent ?
                                         <View
                                             style={{
-                                                borderRadius: 0,
+                                                borderRadius: 1,
                                                 // height: 'auto',
                                                 // overflow: 'hidden',
                                                 // marginTop: 20,
@@ -1725,13 +1725,13 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                                 <View style={{ backgroundColor: '#fff', padding: 0, flexDirection: 'row', alignSelf: 'center' }} >
                                                                                                     <Text style={{ fontSize: 13, padding: 5, lineHeight: 13 }} ellipsizeMode='tail'>
                                                                                                         {act.status === 'unread' ?
-                                                                                                            <Ionicons name='alert-circle-outline' color='#f94144' size={17} /> : null}
+                                                                                                            <Ionicons name='alert-circle-outline' color='#f94144' size={19} /> : null}
                                                                                                     </Text>
                                                                                                     <Text style={{ fontSize: 12, padding: 5, lineHeight: 13 }} ellipsizeMode='tail'>
                                                                                                         {emailTimeDisplay(act.date)}
                                                                                                     </Text>
                                                                                                     <Text style={{ fontSize: 13, padding: 5, lineHeight: 13 }} ellipsizeMode='tail'>
-                                                                                                        <Ionicons name='chevron-forward-outline' size={17} color='#5469D4' />
+                                                                                                        <Ionicons name='chevron-forward-outline' size={19} color='#5469D4' />
                                                                                                     </Text>
                                                                                                 </View>
                                                                                             </TouchableOpacity>
@@ -2056,7 +2056,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     maxWidth: '100%',
                                     width: '100%',
                                     // borderWidth: 1,
-                                    borderRadius: 0,
+                                    borderRadius: 1,
                                     borderColor: '#C4C4C4',
                                     marginBottom: 25,
                                 }}
@@ -2131,7 +2131,7 @@ const styles: any = StyleSheet.create({
         color: "#FFF",
         height: 22,
         paddingHorizontal: 10,
-        borderRadius: 0,
+        borderRadius: 1,
         backgroundColor: "#1A2036"
     },
     picker: {

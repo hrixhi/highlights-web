@@ -238,7 +238,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                 contentContainerStyle={{
                     borderWidth: 1,
                     borderColor: '#C4C4C4',
-                    borderRadius: 0,
+                    borderRadius: 1,
                     width: '100%',
                     maxHeight: windowHeight - 200,
                     overflow: 'hidden'

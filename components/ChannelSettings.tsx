@@ -1268,7 +1268,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
     },
     outline: {
-        borderRadius: 0,
+        borderRadius: 1,
         borderWidth: 1,
         borderColor: '#50566B'
     },
@@ -1285,7 +1285,7 @@ const styles = StyleSheet.create({
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: 'white',
-        borderRadius: 0,
+        borderRadius: 1,
         borderWidth: 1,
         borderColor: '#50566B'
     },
@@ -1324,7 +1324,7 @@ const styles = StyleSheet.create({
         marginLeft: 7,
         paddingHorizontal: 4,
         backgroundColor: 'white',
-        borderRadius: 0,
+        borderRadius: 1,
         borderWidth: 1,
         borderColor: '#50566B'
     },

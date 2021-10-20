@@ -80,7 +80,7 @@ const OverviewCueCard: React.FunctionComponent<{ [label: string]: any }> = (prop
                         {/* <View style={{
                             width: 9,
                             height: 9,
-                            borderRadius: 0,
+                            borderRadius: 1,
                             // marginTop: 1,
                             backgroundColor: colorCode
                         }} /> */}
@@ -128,7 +128,7 @@ const OverviewCueCard: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     width: '97%',
                                     zIndex: 20
                                 }}>
-                                    <Ionicons name='bookmark' size={17} color={starred ? '#f94144' : '#fff'} />
+                                    <Ionicons name='bookmark' size={19} color={starred ? '#f94144' : '#fff'} />
                                 </Text>
                                 : null
                         }
@@ -163,7 +163,7 @@ const OverviewCueCard: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     <Text style={{
                                         width: 20,
                                         height: 20,
-                                        borderRadius: 0,
+                                        borderRadius: 1,
                                         overflow: 'hidden',
                                         backgroundColor: '#f94144',
                                         textAlign: 'center',
@@ -178,7 +178,7 @@ const OverviewCueCard: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         style={{
                                             width: 20,
                                             height: 20,
-                                            borderRadius: 0,
+                                            borderRadius: 1,
                                             overflow: 'hidden',
                                             backgroundColor: '#f7fafc',
                                             zIndex: 150
@@ -190,7 +190,7 @@ const OverviewCueCard: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     <Text style={{
                                         width: 20,
                                         height: 20,
-                                        borderRadius: 0,
+                                        borderRadius: 1,
                                         overflow: 'hidden',
                                         backgroundColor: '#5469D4',
                                         textAlign: 'center',

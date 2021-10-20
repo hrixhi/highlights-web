@@ -204,13 +204,13 @@ const styleObject: any = (colorScheme: any, mc: any) => StyleSheet.create({
         marginLeft: 4,
         marginBottom: 10,
         marginTop: -4,
-        borderRadius: 0,
+        borderRadius: 1,
         backgroundColor: '#f94144',
         textAlign: 'center',
         zIndex: 50
     },
     outline: {
-        borderRadius: 0,
+        borderRadius: 1,
         backgroundColor: colorScheme === 'light' ? '#1A2036' : 'white',
         color: colorScheme === 'light' ? 'white' : '#1A2036'
     },
@@ -231,7 +231,7 @@ const styleObject: any = (colorScheme: any, mc: any) => StyleSheet.create({
         color: colorScheme === 'light' ? '#1A2036' : 'white',
         height: 22,
         paddingHorizontal: 10,
-        borderRadius: 0,
+        borderRadius: 1,
         backgroundColor: colorScheme === 'light' ? '#1A2036' : 'white',
     },
     text: {

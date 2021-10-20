@@ -622,7 +622,7 @@ const styles = StyleSheet.create({
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: "white",
-        borderRadius: 0,
+        borderRadius: 1,
         borderWidth: 1,
         borderColor: "#50566B",
         lineHeight: 20

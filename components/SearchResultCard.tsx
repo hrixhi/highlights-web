@@ -31,7 +31,7 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
 
                         {props.channelName !== "" && props.option !== "Channels" ? <Text style={styleObject.date}>
                             {props.channelName}
-                        </Text> : null}
+                        </Text> : <Text style={styleObject.date}>{" "}</Text>}
                     </View>
                     <View style={{
                         backgroundColor: '#f7fafc',
@@ -45,14 +45,12 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                                 numberOfLines={1}
                                 style={{
                                     fontFamily: 'overpass',
-                                    fontWeight: 'bold',
+                                    // fontWeight: 'bold',
                                     fontSize: 12,
                                     lineHeight: 20,
-                                    // flex: 1,
-                                    marginTop: 7,
-                                    marginBottom: 7,
-                                    color: '#50566B',
-                                    flexDirection: 'row', flex: 1,
+                                    flex: 1,
+                                    marginTop: 5,
+                                    color: '#1a2036'
                                 }}>
                                 {props.title}
                             </Text>
@@ -67,10 +65,10 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                             {props.option === "Channels" && !props.subscribed ? <View style={{ paddingLeft: 10, backgroundColor: '#f7fafc' }}>
                                 <TouchableOpacity
                                     onPress={() => props.handleSub()}
-                                    style={{ marginTop: 10 }}
+                                    style={{ marginTop: 1 }}
                                 >
                                     <Text style={{ backgroundColor: '#f7fafc' }}>
-                                        <Ionicons name='enter-outline' size={17} color='#5469D4' />
+                                        <Ionicons name='enter-outline' size={19} color='#5469D4' />
                                     </Text>
                                 </TouchableOpacity>
                             </View> : null}
@@ -79,23 +77,18 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
 
                 </View>
             </TouchableOpacity>
-            {
-                props.colorCode !== "" ?
-                    <View
-                        style={{
-                            backgroundColor: props.colorCode,
-                            flex: 1,
-                            // borderLeftWidth: 2,
-                            borderColor: '#C4C4C4',
-                            opacity: 0.9
-                            // borderTopLeftRadius: 8,
-                            // borderBottomLeftRadius: 8,
-                        }}
-                    >
-                    </View>
-                    : <View style={{ flex: 1, backgroundColor: '#f7fafc' }} />
-            }
-
+            <View
+                style={{
+                    backgroundColor: props.colorCode !== '' ? props.colorCode : '#1a2036',
+                    flex: 1,
+                    // borderLeftWidth: 2,
+                    borderColor: '#C4C4C4',
+                    opacity: 0.9
+                    // borderTopLeftRadius: 8,
+                    // borderBottomLeftRadius: 8,
+                }}
+            >
+            </View>
         </View >
     );
 }
@@ -128,7 +121,7 @@ const styles: any = (colorScheme: any) => StyleSheet.create({
     flipCard: {
         height: '100%',
         width: '100%',
-        borderRadius: 0,
+        borderRadius: 1,
         padding: 13,
         color: '#f7fafc',
         backgroundColor: colorScheme === 'light' ? '#1A2036' : 'white'
@@ -166,28 +159,27 @@ const styles: any = (colorScheme: any) => StyleSheet.create({
     },
     date: {
         fontSize: 9,
-        color: colorScheme === 'light' ? '#f7fafc' : '#333333',
+        color: colorScheme === 'light' ? '#f7fafc' : '#50566b',
         // marginLeft: 10,
         lineHeight: 10
     },
     date2: {
-        fontSize: 10,
-        color: colorScheme === 'light' ? '#f7fafc' : '#333333',
-        marginLeft: 10,
+        fontSize: 9,
+        color: colorScheme === 'light' ? '#f7fafc' : '#50566b',
+        // marginLeft: 10,
         lineHeight: 10,
-        textAlign: 'right',
+        textAlign: 'left',
         flex: 1
     },
-    // title: {
-    //     fontFamily: 'inter',
-    //     fontSize: 14,
-    //     lineHeight: 20,
-    //     // flex: 1,
-    //     marginTop: 7,
-    //     color: '##1A2036',
-    //     flexDirection: 'row', flex: 1,
-    //     // height: '50%'
-    // },
+    title: {
+        fontFamily: 'overpass',
+        // fontWeight: 'bold',
+        fontSize: 12,
+        lineHeight: 20,
+        flex: 1,
+        marginTop: 5,
+        color: '#1a2036'
+    },
     titleFlip: {
         color: colorScheme === 'light' ? '#1A2036' : '#1A2036',
         backgroundColor: colorScheme === 'light' ? '#f7fafc' : '#f7fafc',

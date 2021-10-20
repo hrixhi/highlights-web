@@ -38,7 +38,7 @@ const SubscriberCard: React.FunctionComponent<{ [label: string]: any }> = (props
                                         <Text style={{
                                             width: 20,
                                             height: 20,
-                                            borderRadius: 0,
+                                            borderRadius: 1,
                                             backgroundColor: '#5469D4',
                                             textAlign: 'center',
                                             zIndex: 150,
@@ -51,7 +51,7 @@ const SubscriberCard: React.FunctionComponent<{ [label: string]: any }> = (props
                                 }
                                 {
                                     submittedAt !== "" && deadline !== "" && submittedAt >= deadline ?
-                                    <View style={{ borderRadius: 0, padding: 5, borderWidth: 1, borderColor: '#f94144' }}>
+                                    <View style={{ borderRadius: 1, padding: 5, borderWidth: 1, borderColor: '#f94144' }}>
                                         <Text style={{ color: '#f94144',  fontSize: 13 }}>
                                             LATE
                                         </Text>
@@ -87,14 +87,14 @@ const styles: any = (status: any) => StyleSheet.create({
         height: '100%',
         width: '100%',
         maxWidth: 500,
-        borderRadius: 0,
+        borderRadius: 1,
         overflow: 'hidden',
         backgroundColor: 'white'
     },
     card: {
         height: '100%',
         width: '100%',
-        borderRadius: 0,
+        borderRadius: 1,
         padding: 13,
         backgroundColor: '#f7fafc',
         borderWidth: 1,

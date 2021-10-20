@@ -115,7 +115,7 @@ const ThreadCard: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                         <Text style={{
                                             width: 20,
                                             height: 20,
-                                            borderRadius: 0,
+                                            borderRadius: 1,
                                             backgroundColor: '#5469D4',
                                             textAlign: 'center',
                                             zIndex: 150,
@@ -148,14 +148,14 @@ const styles: any = () => StyleSheet.create({
         height: '100%',
         width: '100%',
         maxWidth: 500,
-        borderRadius: 0,
+        borderRadius: 1,
         overflow: 'hidden',
         backgroundColor: 'white'
     },
     badge: {
         width: 20,
         height: 20,
-        borderRadius: 0,
+        borderRadius: 1,
         backgroundColor: '#f94144',
         textAlign: 'center',
         zIndex: 150,
@@ -164,7 +164,7 @@ const styles: any = () => StyleSheet.create({
     card: {
         height: '100%',
         width: '100%',
-        borderRadius: 0,
+        borderRadius: 1,
         padding: 13,
         backgroundColor: '#f7fafc',
         borderWidth: 1,
@@ -211,7 +211,7 @@ const styles: any = () => StyleSheet.create({
     color: {
         width: 10,
         height: 10,
-        borderRadius: 0,
+        borderRadius: 1,
         marginTop: 1
     }
 });

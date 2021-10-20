@@ -661,7 +661,7 @@ export function LanguageSelect() {
                     <Picker
                         selectedValue={language}
                         style={{
-                            height: 28, borderRadius: 0,
+                            height: 28, borderRadius: 1,
                             // border: "1px solid #50566B",
                             fontSize: 12,
                             padding: '0px 5px'

@@ -405,7 +405,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     }}
                     style={{ backgroundColor: 'white' }}>
                     <Text style={{ textAlign: 'right', lineHeight: 20, width: '100%' }}>
-                        <Ionicons name={addCustomCategory ? 'close' : 'add'} size={17} color={'#50566B'} />
+                        <Ionicons name={addCustomCategory ? 'close' : 'add'} size={19} color={'#50566B'} />
                     </Text>
                 </TouchableOpacity>
             </View>
@@ -600,7 +600,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                                             }}
                                                                             onPress={() => setPrivatePost(!privatePost)}
                                                                         >
-                                                                            <Ionicons name="eye-off-outline" size={20} color={privatePost ? '#5469D4' : '#50566B'} />
+                                                                            <Ionicons name="eye-off-outline" size={19} color={privatePost ? '#5469D4' : '#50566B'} />
                                                                         </Text>
                                                                     </TouchableOpacity>
                                                                 </View> : null}
@@ -784,7 +784,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                                     // borderLeftWidth: 0,
                                                                     // borderRightWidth: 1,
                                                                     borderColor: '#C4C4C4',
-                                                                    borderRadius: 0,
+                                                                    borderRadius: 1,
                                                                     width: '100%',
                                                                     maxHeight: Dimensions.get('window').width < 1024 ? 400 : 500,
                                                                 }}
@@ -842,7 +842,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                                                     {
                                                                                         thread.isPrivate ?
                                                                                             <Text style={{ fontSize: 13, padding: 5, color: '#5469D4', textAlign: 'center' }} ellipsizeMode='tail'>
-                                                                                                <Ionicons name='eye-off-outline' size={17} />
+                                                                                                <Ionicons name='eye-off-outline' size={19} />
                                                                                             </Text>
                                                                                             : null
                                                                                     }
@@ -864,7 +864,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                                                         {emailTimeDisplay(thread.time)}
                                                                                     </Text>
                                                                                     <Text style={{ fontSize: 13, padding: 5, color: '#5469D4', textAlign: 'center' }} ellipsizeMode='tail'>
-                                                                                        <Ionicons name='chevron-forward-outline' size={17} />
+                                                                                        <Ionicons name='chevron-forward-outline' size={19} />
                                                                                     </Text>
                                                                                 </View>
                                                                             </View>
@@ -931,7 +931,7 @@ const styleObject = () => {
             backgroundColor: 'white',
             paddingHorizontal: 10,
             height: 22,
-            borderRadius: 0,
+            borderRadius: 1,
             borderWidth: 1,
             borderColor: '#50566B',
             color: 'white'

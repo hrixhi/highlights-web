@@ -175,7 +175,7 @@ const styleObject = (channelId: any) => {
             width: 20,
             height: 20,
             marginTop: -2,
-            borderRadius: 0,
+            borderRadius: 1,
             backgroundColor: '#f94144',
             textAlign: 'center',
             zIndex: 50
@@ -187,7 +187,7 @@ const styleObject = (channelId: any) => {
             marginRight: 25,
             height: 20,
             marginTop: -2,
-            borderRadius: 0,
+            borderRadius: 1,
             backgroundColor: '#5469D4',
             textAlign: 'center',
             zIndex: 50

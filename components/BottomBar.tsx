@@ -235,13 +235,13 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
         marginLeft: 8,
         marginBottom: 10,
         marginTop: -8,
-        borderRadius: 0,
+        borderRadius: 1,
         backgroundColor: '#f94144',
         textAlign: 'center',
         zIndex: 50
     },
     outline: {
-        borderRadius: 0,
+        borderRadius: 1,
         backgroundColor: colorScheme === 'light' ? '#f7fafc' : 'white',
         color: colorScheme === 'light' ? '#1A2036' : '#1A2036'
     },
@@ -262,7 +262,7 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
         color: colorScheme === 'light' ? '#f7fafc' : 'white',
         height: 22,
         paddingHorizontal: 10,
-        borderRadius: 0,
+        borderRadius: 1,
         backgroundColor: colorScheme === 'light' ? '#f7fafc' : 'white',
     },
     channelText: {

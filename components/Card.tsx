@@ -73,7 +73,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     width: '97%',
                                     zIndex: 20
                                 }}>
-                                    <Ionicons name='bookmark' size={17} color={starred ? '#f94144' : '#f7fafc'} />
+                                    <Ionicons name='bookmark' size={19} color={starred ? '#f94144' : '#f7fafc'} />
                                 </Text>
                                 : null
                         } */}
@@ -177,7 +177,7 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
     flipCard: {
         height: '100%',
         width: '100%',
-        borderRadius: 0,
+        borderRadius: 1,
         padding: 13,
         color: '#f7fafc',
         backgroundColor: colorScheme === 'light' ? '#1A2036' : 'white'
@@ -214,13 +214,13 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
     },
     date: {
         fontSize: 9,
-        color: colorScheme === 'light' ? '#f7fafc' : '#333333',
+        color: colorScheme === 'light' ? '#f7fafc' : '#50566b',
         marginLeft: 10,
         lineHeight: 10
     },
     date2: {
         fontSize: 9,
-        color: colorScheme === 'light' ? '#f7fafc' : '#333333',
+        color: colorScheme === 'light' ? '#f7fafc' : '#50566b',
         // marginLeft: 10,
         lineHeight: 10,
         textAlign: 'left',
@@ -228,12 +228,12 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
     },
     title: {
         fontFamily: 'overpass',
-        fontWeight: 'bold',
+        // fontWeight: 'bold',
         fontSize: 12,
         lineHeight: 20,
         flex: 1,
         marginTop: 5,
-        color: '#50566B'
+        color: '#1a2036'
     },
     titleFlip: {
         color: colorScheme === 'light' ? '#f7fafc' : '#1A2036',

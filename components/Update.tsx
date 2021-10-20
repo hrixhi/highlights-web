@@ -576,7 +576,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     maxWidth: 168,
                     width: '96%',
                     height: '100%',
-                    borderRadius: 0,
+                    borderRadius: 1,
                     // padding: 10,
                     paddingHorizontal: 10,
                     backgroundColor: '#f7fafc',
@@ -588,7 +588,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 {/* <View style={{
                     flexDirection: 'column', justifyContent: 'center', marginRight: 10, backgroundColor: '#f7fafc',
                 }}>
-                    <Ionicons name={getContentIcon(value.channelId && value.channelId !== '' ? value.original : value.cue)} size={17} />
+                    <Ionicons name={getContentIcon(value.channelId && value.channelId !== '' ? value.original : value.cue)} size={19} />
                 </View> */}
 
                 <Text
@@ -679,7 +679,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     maxWidth: 168,
                     width: '96%',
                     height: '100%',
-                    borderRadius: 0,
+                    borderRadius: 1,
                     // padding: 10,
                     paddingHorizontal: 10,
                     backgroundColor: '#f7fafc',
@@ -818,7 +818,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             fontSize: 14,
                             paddingTop: 13,
                             paddingBottom: 13,
-                            borderRadius: 0,
+                            borderRadius: 1,
                             marginTop: 0,
                             marginBottom: 15,
                             height: 35,
@@ -872,7 +872,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         maxWidth: 168,
                                         width: '96%',
                                         height: '100%',
-                                        borderRadius: 0,
+                                        borderRadius: 1,
                                         padding: 10,
                                         paddingHorizontal: 10,
                                         backgroundColor: '#f7fafc',
@@ -881,7 +881,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     {/* <View style={{
                                         flexDirection: 'column', justifyContent: 'center', marginRight: 10, backgroundColor: '#f7fafc',
                                     }}>
-                                        <Ionicons name={getContentIcon(cue.channelId && cue.channelId !== '' ? cue.original : cue.cue)} size={17} />
+                                        <Ionicons name={getContentIcon(cue.channelId && cue.channelId !== '' ? cue.original : cue.cue)} size={19} />
                                     </View> */}
                                     <Text
                                         ellipsizeMode={'tail'}
@@ -1105,7 +1105,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         fontSize: 14,
                         paddingTop: 13,
                         paddingBottom: 13,
-                        borderRadius: 0,
+                        borderRadius: 1,
                         marginTop: 0,
                         marginBottom: 15,
                         height: 35,
@@ -1316,7 +1316,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     maxWidth: 168,
                                     width: '96%',
                                     height: '100%',
-                                    borderRadius: 0,
+                                    borderRadius: 1,
                                     padding: 10,
                                     paddingHorizontal: 10,
                                     backgroundColor: '#f7fafc',
@@ -1325,7 +1325,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 {/* <View style={{
                                     flexDirection: 'column', justifyContent: 'center', marginRight: 10, backgroundColor: '#f7fafc',
                                 }}>
-                                    <Ionicons name={getContentIcon(cue.channelId && cue.channelId !== '' ? cue.original : cue.cue)} size={17} />
+                                    <Ionicons name={getContentIcon(cue.channelId && cue.channelId !== '' ? cue.original : cue.cue)} size={19} />
                                 </View> */}
 
                                 <Text
@@ -1557,7 +1557,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     maxWidth: 168,
                                     width: '96%',
                                     height: '100%',
-                                    borderRadius: 0,
+                                    borderRadius: 1,
                                     padding: 10,
                                     paddingHorizontal: 10,
                                     backgroundColor: '#f7fafc',
@@ -1569,7 +1569,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     backgroundColor: '#f7fafc',
                                     justifyContent: 'center', marginRight: 10
                                 }}>
-                                    <Ionicons name={getContentIcon(cue.channelId && cue.channelId !== '' ? cue.original : cue.cue)} size={17} />
+                                    <Ionicons name={getContentIcon(cue.channelId && cue.channelId !== '' ? cue.original : cue.cue)} size={19} />
                                 </View> */}
 
                                 <Text
@@ -1915,7 +1915,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 setShowComments(false)
                             }}>
                             <Text style={showOriginal ? styles.allGrayFill : styles.all}>
-                                {/* <Ionicons name='newspaper-outline' size={17} /> */}
+                                {/* <Ionicons name='newspaper-outline' size={19} /> */}
                                 Content
                             </Text>
                             {/* <Text style={showOriginal ? styles.allGrayFill : styles.all}>
@@ -1935,7 +1935,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             }}>
 
                             <Text style={styles.all}>
-                                {/* <Ionicons name='options-outline' size={17} /> */}
+                                {/* <Ionicons name='options-outline' size={19} /> */}
                                 Details
                             </Text>
                             {/* <Text style={styles.all}>
@@ -1975,7 +1975,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         setShowOptions(false)
                                     }}>
                                     <Text style={!showOriginal && !viewStatus && !showOptions && !showComments ? styles.allGrayFill : styles.all}>
-                                        {/* <Ionicons name='document-attach-outline' size={17} /> */}
+                                        {/* <Ionicons name='document-attach-outline' size={19} /> */}
                                         Submission
                                     </Text>
                                     {/* <Text style={!showOriginal && !viewStatus && !showOptions && !showComments ? styles.allGrayFill : styles.all}>
@@ -1998,7 +1998,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         setShowOptions(false)
                                     }}>
                                     <Text style={viewStatus ? styles.allGrayFill : styles.all}>
-                                        {/* <Ionicons name='bar-chart-outline' size={17} /> */}
+                                        {/* <Ionicons name='bar-chart-outline' size={19} /> */}
                                         Responses
                                     </Text>
                                     {/* <Text style={viewStatus ? styles.allGrayFill : styles.all}>

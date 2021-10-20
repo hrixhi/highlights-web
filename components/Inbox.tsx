@@ -1344,7 +1344,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                                 flexDirection: 'row'
                                                                             }}>
                                                                             <Text>
-                                                                                <Ionicons name={'close-circle-outline'} size={20} color={'#50566B'} />
+                                                                                <Ionicons name={'close-circle-outline'} size={19} color={'#50566B'} />
                                                                             </Text>
                                                                         </TouchableOpacity> : <FileUpload
                                                                             onUpload={(u: any, t: any) => {
@@ -1446,7 +1446,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                 // borderWidth: 2,
                                                                 // borderRightWidth: 0,
                                                                 // borderLeftWidth: 0,
-                                                                borderRadius: 0,
+                                                                borderRadius: 1,
                                                                 borderColor: '#C4C4C4',
                                                                 overflow: 'hidden',
                                                                 // marginTop: 20
@@ -1454,7 +1454,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                 <ScrollView contentContainerStyle={{
                                                                     maxHeight: width < 1024 ? windowHeight - 104 - 110 : windowHeight - 52 - 110,
                                                                     width: '100%',
-                                                                    borderRadius: 0,
+                                                                    borderRadius: 1,
                                                                     marginTop: 10
                                                                     // flex: 1
                                                                 }}>
@@ -1506,7 +1506,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                                 </View>
                                                                                 <View style={{ backgroundColor: '#fff', padding: 0, flexDirection: 'row', alignSelf: 'center', alignItems: 'center' }} >
                                                                                     <Text style={{ fontSize: 13, padding: 5, lineHeight: 13 }} ellipsizeMode='tail'>
-                                                                                        <Ionicons name='chatbubble-ellipses-outline' size={17} color='#5469D4' />
+                                                                                        <Ionicons name='chatbubble-ellipses-outline' size={19} color='#5469D4' />
                                                                                     </Text>
                                                                                 </View>
                                                                             </TouchableOpacity>
@@ -1525,7 +1525,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                         // borderRightWidth: 0,
                                                                         // borderLeftWidth: 0,
                                                                         borderColor: '#C4C4C4',
-                                                                        borderRadius: 0,
+                                                                        borderRadius: 1,
                                                                         width: '100%',
                                                                         maxHeight: width < 1024 ? windowHeight - 104 : windowHeight - 52,
                                                                         // overflow: 'hidden'
@@ -1619,7 +1619,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                                             {emailTimeDisplay(chat.lastMessageTime)}
                                                                                         </Text>
                                                                                         <Text style={{ fontSize: 13, padding: 5, lineHeight: 13 }} ellipsizeMode='tail'>
-                                                                                            <Ionicons name='chevron-forward-outline' size={17} color='#5469D4' />
+                                                                                            <Ionicons name='chevron-forward-outline' size={19} color='#5469D4' />
                                                                                         </Text>
                                                                                     </View>
                                                                                 </TouchableOpacity>

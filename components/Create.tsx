@@ -2573,7 +2573,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           paddingBottom: 13,
                           marginTop: 12,
                           marginBottom: 15,
-                          borderRadius: 0,
+                          borderRadius: 1,
                           height: 35
                         }}
                         // style={styles.input}
@@ -2719,7 +2719,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                     ) : (
                       <View key={url} style={{ flex: 1, maxHeight: 800 }}>
                         {/* <Webview key={url} url={url} /> */}
-                        <div className="webviewer" ref={RichText} style={{ height: Dimensions.get('window').width < 1024 ? "50vh" : "70vh", borderWidth: 1, borderColor: '#C4C4C4', borderRadius: 0 }}></div>
+                        <div className="webviewer" ref={RichText} style={{ height: Dimensions.get('window').width < 1024 ? "50vh" : "70vh", borderWidth: 1, borderColor: '#C4C4C4', borderRadius: 1 }}></div>
                       </View>
                     )
                   ) : null}
@@ -2908,7 +2908,7 @@ const styles: any = StyleSheet.create({
     fontSize: 14,
     height: 45,
     color: "#1A2036",
-    borderRadius: 0,
+    borderRadius: 1,
     marginLeft: 10,
   },
   backgroundVideo: {
@@ -3020,7 +3020,7 @@ const styles: any = StyleSheet.create({
     color: "#FFF",
     height: 22,
     paddingHorizontal: 10,
-    borderRadius: 0,
+    borderRadius: 1,
     backgroundColor: "#1A2036",
     marginBottom: 20,
   },
@@ -3032,7 +3032,7 @@ const styles: any = StyleSheet.create({
     paddingHorizontal: 10,
     marginRight: 20,
     backgroundColor: "white",
-    borderRadius: 0,
+    borderRadius: 1,
     borderWidth: 1,
     borderColor: "#50566B",
   },
@@ -3052,7 +3052,7 @@ const styles: any = StyleSheet.create({
     backgroundColor: "#7FB1D3",
   },
   outline: {
-    borderRadius: 0,
+    borderRadius: 1,
     borderWidth: 1,
     borderColor: "#50566B",
   },

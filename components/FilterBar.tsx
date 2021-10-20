@@ -111,7 +111,7 @@ const FilterBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 <View style={{
                                                     width: 8,
                                                     height: 8,
-                                                    borderRadius: 0,
+                                                    borderRadius: 1,
                                                     marginTop: 1,
                                                     backgroundColor: "#fff"
                                                 }} />
@@ -126,7 +126,7 @@ const FilterBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 <View style={{
                                                     width: 8,
                                                     height: 8,
-                                                    borderRadius: 0,
+                                                    borderRadius: 1,
                                                     marginTop: 1,
                                                     backgroundColor: "#000"
                                                 }} />
@@ -143,7 +143,7 @@ const FilterBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         <View style={{
                                                             width: 8,
                                                             height: 8,
-                                                            borderRadius: 0,
+                                                            borderRadius: 1,
                                                             marginTop: 1,
                                                             backgroundColor: subscription.colorCode
                                                         }} />
@@ -320,13 +320,13 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
         marginLeft: 8,
         marginBottom: 10,
         marginTop: -8,
-        borderRadius: 0,
+        borderRadius: 1,
         backgroundColor: '#f94144',
         textAlign: 'center',
         zIndex: 50
     },
     outline: {
-        borderRadius: 0,
+        borderRadius: 1,
         backgroundColor: colorScheme === 'light' ? '#1A2036' : 'white',
         color: colorScheme === 'light' ? 'white' : '#1A2036'
     },
@@ -347,7 +347,7 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
         color: colorScheme === 'light' ? '#1A2036' : 'white',
         height: 22,
         paddingHorizontal: 10,
-        borderRadius: 0,
+        borderRadius: 1,
         backgroundColor: colorScheme === 'light' ? '#1A2036' : 'white',
     }
 });

@@ -103,7 +103,7 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 style={{ marginRight: 0, backgroundColor: '#f7fafc' }}
                                                 onPress={() => props.openChannelSettings()}>
                                                 <Text style={styles.channelText}>
-                                                    <Ionicons name='hammer-outline' size={17} color={'#1A2036'} />
+                                                    <Ionicons name='hammer-outline' size={19} color={'#1A2036'} />
                                                 </Text>
                                                 <Text style={{ fontSize: 10, color: '#1A2036', textAlign: 'center' }}>
                                                     Settings
@@ -161,7 +161,7 @@ const styleObject: any = (channelId: any) => StyleSheet.create({
         height: 22,
         paddingHorizontal: 10,
         lineHeight: 20,
-        borderRadius: 0,
+        borderRadius: 1,
         borderColor: '#50566B',
         borderWidth: 1
     },

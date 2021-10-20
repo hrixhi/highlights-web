@@ -403,7 +403,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 // borderWidth: channels.length === 0 ? 0 : 2,
                                 borderColor: '#C4C4C4',
                                 overflow: 'hidden',
-                                borderRadius: 0
+                                borderRadius: 1
                             }}
                         >
                             <ScrollView contentContainerStyle={{
@@ -472,7 +472,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                             onPress={() => handleSub(channel.name)}
                                                         >
                                                             <Text style={{ textAlign: 'center', fontSize: 13, color: '#5469D4' }} ellipsizeMode='tail'>
-                                                                <Ionicons name='enter-outline' size={17} />
+                                                                <Ionicons name='enter-outline' size={19} />
                                                             </Text>
                                                         </TouchableOpacity>
                                                     </View> : <View style={{ flex: 1, paddingLeft: 10, flexDirection: 'column', justifyContent: 'center' }}>
