@@ -1019,9 +1019,9 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             lineHeight: 35,
                             textAlign: "right",
                             // paddingRight: 20,
-                            // textTransform: "uppercase",
+                            textTransform: "uppercase",
                             fontSize: 12,
-                            fontFamily: 'inter',
+                            fontFamily: 'overpass',
                             color: '#5469D4',
                         }}
                     >
@@ -1047,10 +1047,10 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             lineHeight: 35,
                             textAlign: "right",
                             // paddingRight: 20,
-                            // textTransform: "uppercase",
+                            textTransform: "uppercase",
                             fontSize: 12,
-                            fontFamily: 'inter',
-                            color: '#50566B',
+                            fontFamily: 'overpass',
+                            color: '#5469D4',
                         }}
                     >
                         Cancel
