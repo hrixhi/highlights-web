@@ -689,7 +689,8 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         }}>
                         <Text style={{
                             width: '100%',
-                            fontSize: 14, fontFamily: 'inter',
+                            fontSize: 14, 
+                            fontWeight: 'bold',
                             color: '#50566B'
                         }}>
                             <Ionicons name='chevron-back-outline' size={15} color={'#1A2036'} style={{ marginRight: 10 }} />
@@ -722,7 +723,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                     <View style={{ backgroundColor: 'white' }}>
                         <Text style={{
                             fontSize: 14, fontFamily: 'inter',
-                            // fontFamily: 'inter',
+                            fontWeight: 'bold',
                             color: '#1A2036'
                         }}>
                             {PreferredLanguageText('name')}
@@ -741,7 +742,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                     <View style={{ backgroundColor: 'white' }}>
                         <Text style={{
                             fontSize: 14, fontFamily: 'inter',
-                            // fontFamily: 'inter',
+                            fontWeight: 'bold',
                             color: '#1A2036'
                         }}>
                             {PreferredLanguageText('enrolmentPassword')}
@@ -758,7 +759,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                     <View style={{ backgroundColor: 'white' }}>
                         <Text style={{
                             fontSize: 14, fontFamily: 'inter',
-                            // fontFamily: 'inter',
+                            fontWeight: 'bold',
                             color: '#1A2036'
                         }}>
                             Theme
@@ -788,7 +789,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     <Text
                                         style={{
                                             fontSize: 14, fontFamily: 'inter',
-                                            // fontFamily: 'inter',
+                                            fontWeight: 'bold',
                                             color: '#1A2036'
                                         }}
                                     >
@@ -810,7 +811,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             }}
                                             style={{ height: 20 }}
                                             trackColor={{
-                                                false: "#E3E8EE",
+                                                false: "#C4C4C4",
                                                 true: "#5469D4"
                                             }}
                                             activeThumbColor="white"
@@ -836,7 +837,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     <Text
                                         style={{
                                             fontSize: 14, fontFamily: 'inter',
-                                            // fontFamily: 'inter',
+                                            fontWeight: 'bold',
                                             color: '#1A2036'
                                         }}
                                     >
@@ -858,7 +859,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             }}
                                             style={{ height: 20 }}
                                             trackColor={{
-                                                false: "#E3E8EE",
+                                                false: "#C4C4C4",
                                                 true: "#5469D4"
                                             }}
                                             activeThumbColor="white"
@@ -926,7 +927,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                     <View style={{ backgroundColor: 'white' }}>
                         <Text style={{
                             fontSize: 14, fontFamily: 'inter',
-                            // fontFamily: 'inter',
+                            fontWeight: 'bold',
                             color: '#1A2036'
                         }}>
                             {PreferredLanguageText('name')}
@@ -946,7 +947,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                     <View style={{ backgroundColor: 'white' }}>
                         <Text style={{
                             fontSize: 14, fontFamily: 'inter',
-                            // fontFamily: 'inter',
+                            fontWeight: 'bold',
                             color: '#1A2036'
                         }}>
                             {PreferredLanguageText('enrolmentPassword')}
@@ -965,7 +966,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                     <View style={{ backgroundColor: 'white' }}>
                         <Text style={{
                             fontSize: 14, fontFamily: 'inter',
-                            // fontFamily: 'inter',
+                            fontWeight: 'bold',
                             color: '#1A2036'
                         }}>
                             Theme
@@ -984,7 +985,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                     <Text style={{
                         fontSize: 14, fontFamily: 'inter',
                         paddingTop: 20,
-                        // fontFamily: 'inter',
+                        fontWeight: 'bold',
                         color: '#1A2036'
                     }}>
                         Subscribers

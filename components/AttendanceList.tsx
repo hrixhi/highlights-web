@@ -476,7 +476,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                             nestedScrollEnabled={true}
                         >
                             <View>
-                                <View style={{ minHeight: 70, flexDirection: 'row', overflow: 'hidden', paddingBottom: 10, borderBottomWidth: 1, borderBottomColor: '#E3E8EE' }} key={"-"}>
+                                <View style={{ minHeight: 70, flexDirection: 'row', overflow: 'hidden', paddingBottom: 10, borderBottomWidth: 1, borderBottomColor: '#C4C4C4' }} key={"-"}>
                                     <View style={styles.col} key={'0,0'} />
                                     <View style={styles.col} key={'0,0'} >
                                         <Text style={{ fontSize: 13, color: '#1A2036', fontFamily: 'inter' }}>

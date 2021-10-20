@@ -329,7 +329,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                     }}
                                 >
                                     <Text style={{ lineHeight: 35, width: '100%', textAlign: 'center' }}>
-                                        <Ionicons name='arrow-back-outline' size={25} color={'#50566B'} />
+                                        <Ionicons name='arrow-back-outline' size={30} color={'#50566B'} />
                                     </Text>
                                 </TouchableOpacity>
                             </View>
@@ -347,7 +347,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             // paddingRight: Dimensions.get('window').width < 1024 ? 0 : 25,
                             // marginRight: Dimensions.get('window').width < 1024 ? 0 : 20,
                             // borderRightWidth: Dimensions.get('window').width < 1024 ? 0 : 1,
-                            borderColor: '#E3E8EE'
+                            borderColor: '#C4C4C4'
                         }}>
                             <Profile
                                 closeModal={() => props.closeModal()}
@@ -388,7 +388,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                 }}
                                                 style={{
                                                     backgroundColor: '#fff',
-                                                    borderColor: '#E3E8EE',
+                                                    borderColor: '#C4C4C4',
                                                     borderBottomWidth: item.question === 'Planner' ? 0 : 1,
                                                     width: '100%',
                                                     paddingBottom: 10,

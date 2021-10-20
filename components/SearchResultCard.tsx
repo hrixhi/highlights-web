@@ -85,7 +85,7 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                             backgroundColor: props.colorCode,
                             flex: 1,
                             // borderLeftWidth: 2,
-                            borderColor: '#E3E8EE',
+                            borderColor: '#C4C4C4',
                             opacity: 0.9
                             // borderTopLeftRadius: 8,
                             // borderBottomLeftRadius: 8,
@@ -109,8 +109,8 @@ const styles: any = (colorScheme: any) => StyleSheet.create({
         overflow: 'hidden',
         maxWidth: 175,
         width: '100%',
-        borderWidth: 1,
-        borderColor: '#E3E8EE',
+        // borderWidth: 1,
+        borderColor: '#C4C4C4',
         flexDirection: 'row'
     },
     card: {

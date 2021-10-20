@@ -733,7 +733,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 textAlign: 'center',
                                                 marginBottom: (Dimensions.get('window').width < 1024 || editQuestionNumber !== (index + 1)) ? 0 : 30,
                                                 fontWeight: editQuestionNumber === (index + 1) ? 'normal' : '700',
-                                                borderBottomColor: '#e3e8ee',
+                                                borderBottomColor: '#C4C4C4',
                                                 borderBottomWidth: editQuestionNumber === (index + 1) ? 1 : 0,
                                             }}
                                             placeholder={PreferredLanguageText('enterPoints')}

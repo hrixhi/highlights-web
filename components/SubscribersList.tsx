@@ -288,7 +288,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                     options.forEach((opt: any, index: number) => {
                         if (opt.isSelected) response += ((index + 1) + " ")
                     })
-                } 
+                }
 
                 subscriberRow.push(response);
 
@@ -1205,7 +1205,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     width: '100%',
                                     lineHeight: 23,
                                 }}>
-                                    <Ionicons name='arrow-back-outline' size={25} color={'#50566B'} />
+                                    <Ionicons name='arrow-back-outline' size={30} color={'#50566B'} />
                                 </Text>
                             </TouchableOpacity> */}
                             {
@@ -1414,10 +1414,12 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                     style={{
                                                                         textAlign: "center",
                                                                         lineHeight: 35,
-                                                                        color: "white",
+                                                                        color: "#5469D4",
                                                                         fontSize: 12,
-                                                                        backgroundColor: "#5469D4",
+                                                                        borderColor: "#5469D4",
                                                                         borderRadius: 15,
+                                                                        backgroundColor: '#fff',
+                                                                        borderWidth: 1,
                                                                         paddingHorizontal: 20,
                                                                         fontFamily: "inter",
                                                                         overflow: "hidden",
@@ -1583,7 +1585,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                         width: '100%',
                                                         borderRadius: 0,
                                                         borderWidth: 0,
-                                                        borderColor: '#E3E8EE',
+                                                        borderColor: '#C4C4C4',
                                                         // maxHeight: props.cueId ? windowHeight - 00 : '100%',
                                                         // marginBottom: props.cueId ? 20 : 0,
                                                         maxWidth: 1000,
@@ -1658,7 +1660,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                 style={{
                                                                     backgroundColor: '#fff',
                                                                     flexDirection: 'row',
-                                                                    borderColor: '#E3E8EE',
+                                                                    borderColor: '#C4C4C4',
                                                                     paddingVertical: 5,
                                                                     borderBottomWidth: index === filteredSubscribers.length - 1 ? 0 : 1,
                                                                     // minWidth: 600, // flex: 1,
@@ -1738,30 +1740,30 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                     setStatus("")
                                                     setScore("0")
                                                     setUserId("")
-                                                    }
-                                                } 
-                                                style={{
-                                                    backgroundColor: "white", borderRadius: 15, marginLeft: 15,
-                                                    marginTop: 5,
-                                                }}>
-                                                <Text style={{
-                                                    textAlign: "center",
-                                                    lineHeight: 35,
-                                                    color: '#5469D4',
-                                                    fontSize: 12,
-                                                    borderWidth: 1,
-                                                    borderColor: '#5469D4',
-                                                    paddingHorizontal: 20,
-                                                    fontFamily: "inter",
-                                                    height: 35,
-                                                    // paddingTop: 2
-                                                    // width: 125,
-                                                    borderRadius: 15,
-                                                    textTransform: "uppercase"
-                                                }}>
-                                                    CANCEL
-                                                </Text>
-                                            </TouchableOpacity>
+                                                }
+                                                }
+                                                    style={{
+                                                        backgroundColor: "white", borderRadius: 15, marginLeft: 15,
+                                                        marginTop: 5,
+                                                    }}>
+                                                    <Text style={{
+                                                        textAlign: "center",
+                                                        lineHeight: 35,
+                                                        color: '#5469D4',
+                                                        fontSize: 12,
+                                                        borderWidth: 1,
+                                                        borderColor: '#5469D4',
+                                                        paddingHorizontal: 20,
+                                                        fontFamily: "inter",
+                                                        height: 35,
+                                                        // paddingTop: 2
+                                                        // width: 125,
+                                                        borderRadius: 15,
+                                                        textTransform: "uppercase"
+                                                    }}>
+                                                        CANCEL
+                                                    </Text>
+                                                </TouchableOpacity>
                                             </View>
                                         }
 
@@ -1824,7 +1826,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                         value={score}
                                                         style={{
                                                             width: 120,
-                                                            borderBottomColor: '#E3E8EE',
+                                                            borderBottomColor: '#C4C4C4',
                                                             borderBottomWidth: 1,
                                                             fontSize: 14,
                                                             // paddingTop: 13,
@@ -2022,7 +2024,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                                         url={url}
                                                                                         fullScreen={true}
                                                                                     /> */}
-                                                                                    <div className="webviewer" ref={RichText} style={{ height: Dimensions.get('window').width < 1024 ? "50vh" : "70vh", borderWidth: 1, borderColor: '#E3E8EE', borderRadius: 0 }}></div>
+                                                                                    <div className="webviewer" ref={RichText} style={{ height: Dimensions.get('window').width < 1024 ? "50vh" : "70vh", borderWidth: 1, borderColor: '#C4C4C4', borderRadius: 0 }}></div>
                                                                                 </View>
                                                                                 {/* <View style={{ position: 'absolute', zIndex: 1, flex: 1, width: 800, height: 20000, backgroundColor: 'rgb(0,0,0,0)' }}>
                                                                                     <Annotation

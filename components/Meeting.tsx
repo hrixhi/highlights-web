@@ -237,7 +237,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
             <ScrollView
                 contentContainerStyle={{
                     borderWidth: 1,
-                    borderColor: '#E3E8EE',
+                    borderColor: '#C4C4C4',
                     borderRadius: 0,
                     width: '100%',
                     maxHeight: windowHeight - 200,
@@ -257,7 +257,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                             style={{
                                 backgroundColor: '#f7fafc',
                                 flexDirection: 'row',
-                                borderColor: '#E3E8EE',
+                                borderColor: '#C4C4C4',
                                 borderBottomWidth: index === pastMeetings.length - 1 ? 0 : 1,
                                 // minWidth: 600, // flex: 1,
                                 width: '100%',

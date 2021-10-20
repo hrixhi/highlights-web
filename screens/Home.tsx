@@ -644,7 +644,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
       // LOAD RANDOM SHUFFLE FREQUENCY
       if (f) {
         setRandomShuffleFrequency(f)
-      } 
+      }
       // LOAD SLEEP FROM
       if (sF) {
         setSleepFrom(new Date(sF))
@@ -1721,7 +1721,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             <View style={{
               height: 61,
               borderBottomWidth: 1,
-              borderColor: '#E3E8EE'
+              borderColor: '#C4C4C4'
             }}>
               <VerticalBar
                 menuCollapsed={menuCollapsed}
@@ -1858,8 +1858,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               right: 0,
               justifyContent: 'center',
               bottom: 0,
-              width: 56, height: 56, borderRadius: 28, backgroundColor: '#5469D4',
-              borderColor: '#E3E8EE',
+              width: 58, height: 58, borderRadius: 29, backgroundColor: '#5469D4',
+              borderColor: '#C4C4C4',
               borderWidth: 0
             }}
           >
@@ -1886,9 +1886,9 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           <View style={{
             position: 'absolute',
             zIndex: showLoginWindow ? 40 : 1000,
-            backgroundColor: '#f7fafc',
-            borderColor: '#E3E8EE',
-            borderTopWidth: 2,
+            backgroundColor: '#1A2036',
+            // borderColor: '#C4C4C4',
+            // borderTopWidth: 2,
             alignSelf: 'flex-end',
             width: '100%',
             paddingTop: 14,
@@ -1905,7 +1905,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 }
                 return <TouchableOpacity
                   style={{
-                    backgroundColor: '#f7fafc'
+                    backgroundColor: '#1A2036'
                   }}
                   onPress={() => {
                     // if (op === 'To Do') {
@@ -1940,25 +1940,26 @@ const styles = (channelId: string) => StyleSheet.create({
     height: "100%",
   },
   all: {
-    fontSize: 14,
-    color: '#1A2036',
-    height: 24,
-    paddingHorizontal: 15,
-    backgroundColor: '#f7fafc',
-    lineHeight: 24,
-    fontFamily: 'inter',
-    // textTransform: 'uppercase'
+    fontSize: 12,
+    color: '#fff',
+    fontWeight: 'bold',
+    height: 25,
+    paddingHorizontal: 12,
+    backgroundColor: '#1A2036',
+    lineHeight: 25,
+    fontFamily: 'overpass',
+    textTransform: 'uppercase'
   },
   allGrayFill: {
-    fontSize: 14,
+    fontSize: 12,
     color: '#fff',
-    paddingHorizontal: 15,
+    paddingHorizontal: 12,
     borderRadius: 12,
-    backgroundColor: '#1A2036',
-    lineHeight: 24,
-    height: 24,
+    backgroundColor: '#5469d4',
+    lineHeight: 25,
+    height: 25,
     fontFamily: 'inter',
-    // textTransform: 'uppercase'
+    textTransform: 'uppercase'
   },
   activityContainer: {
     borderTopWidth: 0,

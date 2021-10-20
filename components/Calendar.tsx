@@ -320,7 +320,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     borderRadius: 15,
                                     shadowOpacity: 0,
                                     borderWidth: 1,
-                                    borderColor: '#E3E8EE',
+                                    borderColor: '#C4C4C4',
                                     overflow: 'scroll',
                                     maxHeight: '100%'
                                 }
@@ -800,7 +800,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 <View style={{ width: "100%", paddingTop: width < 1024 ? 40 : 40, paddingBottom: 15, backgroundColor: "white" }}>
                     <Text style={{
                         fontSize: 14,
-                        fontFamily: 'inter',
+                        // fontFamily: 'inter',
                         color: '#1A2036'
                     }}>Repeat</Text>
                 </View>
@@ -816,7 +816,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         onValueChange={() => setRecurring(!recurring)}
                         style={{ height: 20 }}
                         trackColor={{
-                            false: "#E3E8EE",
+                            false: "#C4C4C4",
                             true: "#5469D4"
                         }}
                         activeThumbColor="white"
@@ -829,7 +829,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     <Text
                         style={{
                             fontSize: 14,
-                            fontFamily: 'inter',
+                            // fontFamily: 'inter',
                             color: '#1A2036'
                         }}>
                         Interval
@@ -874,7 +874,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 <View style={{ width: "100%", paddingTop: width < 1024 ? 20 : 40, paddingBottom: 15, backgroundColor: "white" }}>
                     <Text style={{
                         fontSize: 14,
-                        fontFamily: 'inter',
+                        // fontFamily: 'inter',
                         color: '#1A2036'
                     }}>End</Text>
                 </View>
@@ -967,7 +967,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     <View style={{ width: "100%", paddingTop: width < 1024 ? 40 : 30, paddingBottom: 15, backgroundColor: "white" }}>
                         <Text style={{
                             fontSize: 14,
-                            fontFamily: 'inter',
+                            // fontFamily: 'inter',
                             color: '#1A2036'
                         }}>Lecture</Text>
                     </View>
@@ -983,7 +983,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             }}
                             style={{ height: 20 }}
                             trackColor={{
-                                false: "#E3E8EE",
+                                false: "#C4C4C4",
                                 true: "#5469D4"
                             }}
                             disabled={editEvent}
@@ -1008,7 +1008,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             }}
                             style={{ height: 20 }}
                             trackColor={{
-                                false: "#E3E8EE",
+                                false: "#C4C4C4",
                                 true: "#50566B"
                             }}
                             activeThumbColor="white"
@@ -1033,7 +1033,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     <Text
                         style={{
                             fontSize: 14,
-                            fontFamily: 'inter',
+                            // fontFamily: 'inter',
                             color: '#1A2036'
                         }}>
                         Shared with {editChannelName}
@@ -1332,7 +1332,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             }}
                         >
                             <Text style={{ lineHeight: 27, width: '100%', textAlign: 'center' }}>
-                                <Ionicons name='arrow-back-outline' size={25} color={'#50566B'} />
+                                <Ionicons name='arrow-back-outline' size={30} color={'#50566B'} />
                             </Text>
                         </TouchableOpacity>
                 )
@@ -1501,7 +1501,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 <View style={{
                     width: Dimensions.get('window').width < 1024 ? '100%' : '100%',
                     // paddingRight: Dimensions.get('window').width < 1024 ? 0 : 30,
-                    borderColor: '#E3E8EE'
+                    borderColor: '#C4C4C4'
                 }}>
                     <View
                         style={{
@@ -1559,11 +1559,11 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 // overflow: 'hidden',
                                                 // marginTop: 20,
                                                 marginBottom: Dimensions.get('window').width < 1024 ? 0 : 0,
-                                                borderBottomWidth: tab === 'Add' || tab === 'Activity' ? 0 : 1,
-                                                borderWidth: tab !== 'Add' && tab !== 'Activity' ? 1 : 0,
+                                                // borderBottomWidth: tab === 'Add' || tab === 'Activity' ? 0 : 1,
+                                                // borderWidth: tab !== 'Add' && tab !== 'Activity' ? 1 : 0,
                                                 // borderRightWidth: tab === 'Activity' ? 0 : 1,
                                                 // borderLeftWidth: tab === 'Activity' ? 0 : 1,
-                                                borderColor: '#E3E8EE',
+                                                borderColor: '#C4C4C4',
                                                 overflow: 'hidden',
                                                 // maxHeight: 550,
                                                 // height: '100%',
@@ -1693,7 +1693,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                                 style={{
                                                                                                     backgroundColor: '#fff',
                                                                                                     flexDirection: 'row',
-                                                                                                    borderColor: '#E3E8EE',
+                                                                                                    borderColor: '#C4C4C4',
                                                                                                     // borderRightWidth: 1,
                                                                                                     borderBottomWidth: index === activity.length - 1 ? 0 : 1,
                                                                                                     // minWidth: 600, // flex: 1,
@@ -1753,7 +1753,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                             <Text
                                                                                                 style={{
                                                                                                     fontSize: 14,
-                                                                                                    fontFamily: 'inter',
+                                                                                                    // fontFamily: 'inter',
                                                                                                     color: '#1A2036'
                                                                                                 }}>
                                                                                                 Event
@@ -1772,7 +1772,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                             <Text
                                                                                                 style={{
                                                                                                     fontSize: 14,
-                                                                                                    fontFamily: 'inter',
+                                                                                                    // fontFamily: 'inter',
                                                                                                     color: '#1A2036'
                                                                                                 }}>
                                                                                                 Description
@@ -1885,7 +1885,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                     </View>
                                                                                     <View
                                                                                         style={{
-                                                                                            borderColor: "#E3E8EE",
+                                                                                            borderColor: "#C4C4C4",
                                                                                             // borderBottomWidth: 1,
                                                                                             paddingTop: 20,
                                                                                             width: '100%', maxWidth: 400
@@ -1897,7 +1897,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                                     <Text
                                                                                                         style={{
                                                                                                             fontSize: 14,
-                                                                                                            fontFamily: 'inter',
+                                                                                                            // fontFamily: 'inter',
                                                                                                             color: '#1A2036'
                                                                                                         }}>
                                                                                                         Channel
@@ -1919,7 +1919,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                                                 borderRadius: 15,
                                                                                                                 shadowOpacity: 0,
                                                                                                                 borderWidth: 1,
-                                                                                                                borderColor: '#E3E8EE'
+                                                                                                                borderColor: '#C4C4C4'
                                                                                                             }
                                                                                                         }}>
                                                                                                             <MenuOption
@@ -2057,7 +2057,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     width: '100%',
                                     // borderWidth: 1,
                                     borderRadius: 0,
-                                    borderColor: '#E3E8EE',
+                                    borderColor: '#C4C4C4',
                                     marginBottom: 25,
                                 }}
                                 height="450"
@@ -2087,7 +2087,7 @@ const styles: any = StyleSheet.create({
     },
     text: {
         fontSize: 14,
-        fontFamily: 'inter',
+        // fontFamily: 'inter',
         color: '#1A2036',
         marginBottom: 10
     },

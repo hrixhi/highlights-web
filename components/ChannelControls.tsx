@@ -386,7 +386,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     }}
                                 >
                                     <Text style={{ lineHeight: 35, width: '100%', textAlign: 'center' }}>
-                                        <Ionicons name='arrow-back-outline' size={25} color={'#50566B'} />
+                                        <Ionicons name='arrow-back-outline' size={30} color={'#50566B'} />
                                     </Text>
                                 </TouchableOpacity>
                             </View>
@@ -401,7 +401,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         <View
                             style={{
                                 // borderWidth: channels.length === 0 ? 0 : 2,
-                                borderColor: '#E3E8EE',
+                                borderColor: '#C4C4C4',
                                 overflow: 'hidden',
                                 borderRadius: 0
                             }}
@@ -437,7 +437,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             style={{
                                                 backgroundColor: '#fff',
                                                 flexDirection: 'row',
-                                                borderColor: '#E3E8EE',
+                                                borderColor: '#C4C4C4',
                                                 borderBottomWidth: ind === channels.length - 1 ? 0 : 1,
                                                 width: '100%',
                                                 paddingVertical: 5
@@ -503,7 +503,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         <View style={{ backgroundColor: 'white' }}>
                             <Text style={{
                                 fontSize: 14,
-                                // fontFamily: 'inter',
+                                fontWeight: 'bold',
                                 color: '#1A2036'
                             }}>
                                 {PreferredLanguageText('name')}
@@ -527,7 +527,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 <View style={{ backgroundColor: 'white' }}>
                                     <Text style={{
                                         fontSize: 14,
-                                        // fontFamily: 'inter',
+                                        fontWeight: 'bold',
                                         color: '#1A2036'
                                     }}>
                                         {PreferredLanguageText('enrolmentPassword')}
@@ -565,7 +565,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         }}>
                                         <Text style={{
                                             fontSize: 14,
-                                            // fontFamily: 'inter',
+                                            fontWeight: 'bold',
                                             color: '#1A2036'
                                         }}>Temporary</Text>
                                     </View>
@@ -581,7 +581,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             onValueChange={() => setTemporary(!temporary)}
                                             style={{ height: 20 }}
                                             trackColor={{
-                                                false: "#E3E8EE",
+                                                false: "#C4C4C4",
                                                 true: "#5469D4"
                                             }}
                                             activeThumbColor="white"
@@ -609,7 +609,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         }}>
                                         <Text style={{
                                             fontSize: 14,
-                                            // fontFamily: 'inter',
+                                            fontWeight: 'bold',
                                             color: '#1A2036'
                                         }}>Theme</Text>
                                     </View>

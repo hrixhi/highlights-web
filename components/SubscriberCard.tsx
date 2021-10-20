@@ -98,7 +98,7 @@ const styles: any = (status: any) => StyleSheet.create({
         padding: 13,
         backgroundColor: '#f7fafc',
         borderWidth: 1,
-        borderColor: '#E3E8EE'
+        borderColor: '#C4C4C4'
     },
     text: {
         display: 'flex',

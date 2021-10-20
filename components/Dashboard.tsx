@@ -670,9 +670,9 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     flex: 1,
                                     backgroundColor: '#fff',
                                     color: '#50566B',
-                                    fontSize: 12,
+                                    fontSize: 14,
                                     lineHeight: 25,
-                                    fontFamily: 'inter'
+                                    fontFamily: 'overpass'
                                 }}>
                                     {option}
                                 </Text>
@@ -1029,7 +1029,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         style={{
                             marginTop: 10,
                             // paddingBottom: 10,
-                            borderColor: '#E3E8EE',
+                            borderColor: '#C4C4C4',
                             borderBottomWidth: ind === Object.keys(cueMap).length - 1 ? 0 : 1,
                         }}
                         key={ind}
@@ -1223,8 +1223,8 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                         <Text style={{
                                                                             flex: 1, flexDirection: 'row',
                                                                             color: '#50566B',
-                                                                            fontSize: 12, lineHeight: 25,
-                                                                            fontFamily: 'inter'
+                                                                            fontSize: 14, lineHeight: 25,
+                                                                            fontFamily: 'overpass'
                                                                         }} ellipsizeMode='tail'>
                                                                             {category === '' ? ' ' : category}
                                                                         </Text>
@@ -1322,8 +1322,8 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
             // flexDirection: width < 1024 ? 'column-reverse' : 'column'
         }}>
             <View style={{
-                backgroundColor: '#f7fafc',
-                borderColor: '#E3E8EE',
+                backgroundColor: '#1A2036',
+                // borderColor: '#C4C4C4',
                 borderBottomWidth: 2,
                 overflow: 'hidden',
                 paddingHorizontal: Dimensions.get('window').width < 1024 ? 20 : 0,
@@ -1332,13 +1332,13 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 // paddingBottom: 0,
                 width: '100%',
                 height: 52,
-                paddingBottom: 2
+                paddingVertical: 2
             }}>
                 <View style={{
                     flexDirection: 'row',
                     width: '100%',
                     maxWidth: 1000, alignSelf: 'center',
-                    backgroundColor: '#f7fafc',
+                    backgroundColor: '#1A2036',
                     paddingVertical: 10,
                     flex: 1,
                     height: 48
@@ -1348,7 +1348,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             null :
                             <View style={{
                                 flexDirection: 'row',
-                                backgroundColor: '#f7fafc',
+                                backgroundColor: '#1A2036',
                                 flex: 1,
                                 height: 50,
                                 paddingTop: 0
@@ -1363,7 +1363,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             }}
                             resizeMode={'contain'}
                         /> */}
-                                <View style={{ flexDirection: 'row', paddingRight: 30, flex: 1, backgroundColor: '#f7fafc', paddingTop: 1 }}>
+                                <View style={{ flexDirection: 'row', paddingRight: 30, flex: 1, backgroundColor: '#1A2036', paddingTop: 1 }}>
                                     {
                                         props.options.map((op: any) => {
                                             if (op === 'Settings' || op === 'Channels') {
@@ -1371,7 +1371,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             }
                                             return <TouchableOpacity
                                                 style={{
-                                                    backgroundColor: '#f7fafc'
+                                                    backgroundColor: '#1A2036'
                                                 }}
                                                 onPress={() => {
                                                     if (op === 'To Do') {
@@ -1395,19 +1395,19 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     <View style={{
                         flexDirection: 'row',
                         // justifyContent: Dimensions.get('window').width < 1024 ? 'flex-start' : 'flex-end',
-                        backgroundColor: '#f7fafc',
+                        backgroundColor: '#1A2036',
                         width: Dimensions.get('window').width < 1024 ? '100%' : 'auto',
                     }}>
                         <TextInput
                             value={searchTerm}
                             style={{
                                 // width: "100%",
-                                color: '#50566B',
-                                backgroundColor: '#fff',
-                                borderColor: "#E3E8EE",
-                                borderWidth: 1,
+                                color: '#fff',
+                                backgroundColor: '#50566b',
+                                borderColor: "#C4C4C4",
+                                // borderWidth: 1,
                                 borderRadius: 15,
-                                fontSize: 11,
+                                fontSize: 12,
                                 paddingBottom: 5,
                                 paddingTop: 4,
                                 paddingHorizontal: 16,
@@ -1421,11 +1421,11 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             }}
                             placeholder={"Search"}
                             onChangeText={(val) => setSearchTerm(val)}
-                            placeholderTextColor={"#50566B"}
+                            placeholderTextColor={"#fff"}
                         />
                         {
                             Dimensions.get('window').width < 1024 ?
-                                <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#f7fafc' }} />
+                                <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#1A2036' }} />
                                 : null
                         }
                         {props.option === "To Do" || props.option === "Classroom" ?
@@ -1433,7 +1433,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 setShowFilterPopup(true)
                             }}>
                                 <Text style={{
-                                    fontSize: 11, color: '#50566B',
+                                    fontSize: 11, color: '#f7fafc',
                                     paddingTop: 1,
                                     textAlign: 'right'
                                 }}>
@@ -1459,7 +1459,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     <Ionicons
                                         name={props.option === 'Settings' && !props.showHelp ? 'person-circle-outline' : (props.option === 'Channels' ? 'file-tray-stacked-outline' : "settings-outline")}
                                         size={17}
-                                        color={(props.option === 'Settings' && !props.showHelp) || props.option === 'Channels' ? '#5469D4' : '#50566B'} />
+                                        color={(props.option === 'Settings' && !props.showHelp) || props.option === 'Channels' ? '#5469D4' : '#f7fafc'} />
                                 </Text>
                                 {/* <Image
                                     style={{
@@ -1469,7 +1469,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         marginTop: 7,
                                         borderRadius: 75,
                                         borderWidth: 1,
-                                        borderColor: '#E3E8EE'
+                                        borderColor: '#C4C4C4'
                                     }}
                                     source={{ uri: avatar ? avatar : 'https://cues-files.s3.amazonaws.com/images/default.png' }}
                                 /> */}
@@ -1480,19 +1480,19 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     borderRadius: 0,
                                     shadowOpacity: 0,
                                     borderWidth: 1,
-                                    borderColor: '#E3E8EE',
+                                    borderColor: '#C4C4C4',
                                     maxWidth: 150
                                 }
                             }}>
                                 <MenuOption
                                     value={'Channels'}>
-                                    <Text style={{ fontFamily: 'inter', fontSize: 14, color: props.option === 'Channels' ? '#5469D4' : '#50566B' }}>
+                                    <Text style={{ fontFamily: 'inter', fontSize: 14, color: props.option === 'Channels' ? '#5469D4' : '#50566b' }}>
                                         <Ionicons name='file-tray-stacked-outline' size={14} />&nbsp;&nbsp;Workspaces
                                     </Text>
                                 </MenuOption>
                                 <MenuOption
                                     value={'Settings'}>
-                                    <Text style={{ fontFamily: 'inter', fontSize: 14, color: props.option === 'Settings' && !props.showHelp ? '#5469D4' : '#50566B' }}>
+                                    <Text style={{ fontFamily: 'inter', fontSize: 14, color: props.option === 'Settings' && !props.showHelp ? '#5469D4' : '#50566b' }}>
                                         <Ionicons name='person-circle-outline' size={14} />&nbsp;&nbsp;Profile
                                     </Text>
                                 </MenuOption>
@@ -1510,7 +1510,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 <Ionicons
                                     name="help-circle-outline"
                                     size={20}
-                                    color={(props.option === 'Settings' && props.showHelp) ? '#5469D4' : '#50566B'}
+                                    color={(props.option === 'Settings' && props.showHelp) ? '#5469D4' : '#f7fafc'}
                                 />
                             </Text>
                         </TouchableOpacity>
@@ -1599,12 +1599,12 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
             }
             <Popup isOpen={showFilterPopup}
                 buttons={[
-                    { 
-                        text: 'OK', 
+                    {
+                        text: 'OK',
                         handler: function (event) {
                             setShowFilterPopup(false)
                         }
-                    }, 
+                    },
                     {
                         text: 'RESET',
                         handler: function (event) {
@@ -1614,7 +1614,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             setFilterEventsType('All')
                             setShowFilterPopup(false)
                         }
-                },]}
+                    },]}
                 themeVariant="light"
                 onClose={() => setShowFilterPopup(false)}
                 responsive={{
@@ -1725,24 +1725,25 @@ export default React.memo(Dashboard, (prev, next) => {
 const styleObject: any = () => StyleSheet.create({
     all: {
         fontSize: 14,
-        color: '#1A2036',
+        color: '#fff',
         height: 24,
         paddingHorizontal: 15,
-        backgroundColor: '#f7fafc',
+        backgroundColor: '#1A2036',
         lineHeight: 24,
-        fontFamily: 'inter',
-        // textTransform: 'uppercase'
+        fontFamily: 'overpass',
+        fontWeight: 'bold',
+        textTransform: 'uppercase'
     },
     allGrayFill: {
         fontSize: 14,
         color: '#fff',
         paddingHorizontal: 15,
         borderRadius: 12,
-        backgroundColor: '#1A2036',
+        backgroundColor: '#5469d4',
         lineHeight: 24,
         height: 24,
         fontFamily: 'inter',
-        // textTransform: 'uppercase'
+        textTransform: 'uppercase'
     },
     all1: {
         fontSize: 10,

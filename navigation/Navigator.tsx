@@ -21,7 +21,7 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
         {/* Main app is in here */}
         <Stack.Screen
           name="Root"
-          options={{ title: 'My Notebook' }}
+          options={{ title: 'Cues' }}
           component={() => <View style={{
             height: '100%',
             width: '100%',

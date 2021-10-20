@@ -532,7 +532,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             }}
                         >
                             <Text style={{ lineHeight: 35, width: '100%', textAlign: 'center', paddingTop: 10 }}>
-                                <Ionicons name='arrow-back-outline' size={25} color={'#50566B'} />
+                                <Ionicons name='arrow-back-outline' size={30} color={'#50566B'} />
                             </Text>
                         </TouchableOpacity>
                 }
@@ -783,7 +783,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                                     // borderRightWidth: 0,
                                                                     // borderLeftWidth: 0,
                                                                     // borderRightWidth: 1,
-                                                                    borderColor: '#E3E8EE',
+                                                                    borderColor: '#C4C4C4',
                                                                     borderRadius: 0,
                                                                     width: '100%',
                                                                     maxHeight: Dimensions.get('window').width < 1024 ? 400 : 500,
@@ -807,7 +807,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                                             style={{
                                                                                 // backgroundColor: '#f7fafc',
                                                                                 flexDirection: 'row',
-                                                                                borderColor: '#E3E8EE',
+                                                                                borderColor: '#C4C4C4',
                                                                                 paddingVertical: 5,
                                                                                 // borderRightWidth: 1,
                                                                                 borderBottomWidth: ind === filteredThreads.length - 1 ? 0 : 1,

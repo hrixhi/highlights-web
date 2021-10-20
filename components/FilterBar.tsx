@@ -100,7 +100,7 @@ const FilterBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             borderRadius: 15,
                                             shadowOpacity: 0,
                                             borderWidth: 1,
-                                            borderColor: '#E3E8EE',
+                                            borderColor: '#C4C4C4',
                                             overflow: 'scroll',
                                             maxHeight: '100%'
                                         }
@@ -177,7 +177,7 @@ const FilterBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             borderRadius: 15,
                                             shadowOpacity: 0,
                                             borderWidth: 1,
-                                            borderColor: '#E3E8EE',
+                                            borderColor: '#C4C4C4',
                                             overflow: 'scroll',
                                             maxHeight: '100%',
                                             backgroundColor: '#fff'
@@ -199,7 +199,7 @@ const FilterBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                         borderRadius: 15,
                                                         shadowOpacity: 0,
                                                         borderWidth: 1,
-                                                        borderColor: '#E3E8EE',
+                                                        borderColor: '#C4C4C4',
                                                         overflow: 'scroll',
                                                         maxHeight: '100%'
                                                     }

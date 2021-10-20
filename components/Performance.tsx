@@ -304,7 +304,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     props.subscriptions.map((sub: any, ind: any) => {
                         return <View style={{
                             backgroundColor: '#fff',
-                            borderColor: '#E3E8EE',
+                            borderColor: '#C4C4C4',
                             borderBottomWidth: ind === props.subscriptions.length - 1 ? 0 : 1,
                             marginTop: 10,
                             // paddingBottom: 5,

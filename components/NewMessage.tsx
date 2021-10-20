@@ -356,7 +356,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                 borderRadius: 15,
                                                                 shadowOpacity: 0,
                                                                 borderWidth: 1,
-                                                                borderColor: '#E3E8EE',
+                                                                borderColor: '#C4C4C4',
                                                                 overflow: 'scroll',
                                                                 maxHeight: '100%'
                                                             }

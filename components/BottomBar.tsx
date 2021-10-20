@@ -103,7 +103,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         style={styles.center}
                     >
                         <Text style={styles.channelText}>
-                            <Ionicons name='arrow-back-outline' size={25} color={'#1A2036'} style={{ marginTop: -5 }} />
+                            <Ionicons name='arrow-back-outline' size={30} color={'#1A2036'} style={{ marginTop: -5 }} />
                         </Text>
                     </TouchableOpacity>
                 </View>

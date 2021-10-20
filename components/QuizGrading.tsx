@@ -222,7 +222,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             justifyContent: 'flex-start'
         }}>
             {
-                props.isOwner ? <View style={{ display: 'flex', flexDirection: Dimensions.get('window').width < 1024 ? 'column' : 'row', justifyContent: 'space-between', marginBottom: 20, borderBottomWidth: 1, borderBottomColor: "#E3E8EE", width: '100%' }}>
+                props.isOwner ? <View style={{ display: 'flex', flexDirection: Dimensions.get('window').width < 1024 ? 'column' : 'row', justifyContent: 'space-between', marginBottom: 20, borderBottomWidth: 1, borderBottomColor: "#C4C4C4", width: '100%' }}>
                     <View style={{ display: 'flex', flexDirection: 'row', marginBottom: Dimensions.get('window').width < 1024 ? 20 : 0  }}>
                         <Text style={{ marginRight: 10, fontWeight: '700', fontSize: 14 }}>
                             {props.problems.length} {props.problems.length === 1 ? "Question" : "Questions"}
@@ -338,7 +338,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 (
                                                     problem.question && problem.question.includes("formula:") ? (
                                                         <View style={{
-                                                            borderColor: '#E3E8EE',
+                                                            borderColor: '#C4C4C4',
                                                             borderWidth: 1,
                                                             borderRadius: 15,
                                                             padding: 10,
@@ -483,7 +483,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                             (
                                                 option.option && option.option.includes("formula:") ?
                                                     <View style={{
-                                                        borderColor: '#E3E8EE',
+                                                        borderColor: '#C4C4C4',
                                                         borderWidth: 1,
                                                         borderRadius: 15,
                                                         padding: 10,
@@ -519,7 +519,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         {
                             problem.questionType === "freeResponse" ?
                                 <View style={{ width: '100%', paddingHorizontal: 40 }}>
-                                    <Text style={{ color: solutions[index].response !== "" ? 'black' : '#f94144', paddingTop: 20, paddingBottom: 40, lineHeight: 25, borderBottomColor: '#E3E8EE', borderBottomWidth: 1 }}>
+                                    <Text style={{ color: solutions[index].response !== "" ? 'black' : '#f94144', paddingTop: 20, paddingBottom: 40, lineHeight: 25, borderBottomColor: '#C4C4C4', borderBottomWidth: 1 }}>
                                         {solutions[index].response && solutions[index].response !== "" ? parser(solutions[index].response) : "No response"}
                                     </Text>
                                 </View>
@@ -541,7 +541,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     paddingBottom: 12,
                                     width: '100%',
                                     maxWidth: "100%",
-                                    borderBottom: '1px solid #E3E8EE',
+                                    borderBottom: '1px solid #C4C4C4',
                                 }}
                                 onChange={(e: any) => {
                                     const updateProblemComments = [...problemComments];
@@ -558,7 +558,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     </View>
                 })
             }
-            {!props.isOwner && !comment ? null : <View style={{ width: '100%', paddingVertical: 50, paddingHorizontal: 40, borderTopWidth: 1, borderColor: '#E3E8EE' }}>
+            {!props.isOwner && !comment ? null : <View style={{ width: '100%', paddingVertical: 50, paddingHorizontal: 40, borderTopWidth: 1, borderColor: '#C4C4C4' }}>
                 <Text style={{ width: '100%', textAlign: 'left' }}>
                     Feedback
                 </Text>
@@ -573,7 +573,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                             paddingBottom: 12,
                             width: '100%',
                             maxWidth: "100%",
-                            borderBottom: '1px solid #E3E8EE',
+                            borderBottom: '1px solid #C4C4C4',
                         }}
                         value={comment}
                         onChange={(e: any) => setComment(e.target.value)}

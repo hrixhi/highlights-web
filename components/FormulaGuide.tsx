@@ -87,7 +87,7 @@ const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: 
                         >
                             <View
                                 style={{
-                                    borderColor: "#E3E8EE",
+                                    borderColor: "#C4C4C4",
                                     borderWidth: 1,
                                     borderRadius: 15,
                                     padding: 10,
@@ -104,7 +104,7 @@ const FormulaGuide: React.FunctionComponent<{ [label: string]: any }> = (props: 
                             </View>
                         </View>
                         {/* Guide */}
-                        <View style={{ width: '100%', flexDirection: 'row', backgroundColor: '#f2f2f7', borderBottomWidth: 1, borderBottomColor: '#E3E8EE' }}>
+                        <View style={{ width: '100%', flexDirection: 'row', backgroundColor: '#f2f2f7', borderBottomWidth: 1, borderBottomColor: '#C4C4C4' }}>
                                <View style={{ padding: 10, width: '50%',  backgroundColor: '#f2f2f7' }}>
                                    Symbol
                                </View>

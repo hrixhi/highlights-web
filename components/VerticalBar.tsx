@@ -47,7 +47,7 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
             <View style={{
                 display: 'flex',
                 width: '100%',
-                borderColor: '#E3E8EE',
+                borderColor: '#C4C4C4',
                 // borderRightWidth: Dimensions.get('window').width < 1024 ? 0 : 1,
                 // paddingHorizontal: Dimensions.get('window').width < 1024 ? 15 : 0,
                 paddingTop: 5,
@@ -68,7 +68,7 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         style={{ backgroundColor: '#f7fafc', width: '100%', paddingBottom: 20 }}
                     >
                         <Text style={{ lineHeight: 33, width: '100%', textAlign: 'center' }}>
-                            <Ionicons name='arrow-back-outline' size={25} color={'#50566B'} style={{ marginTop: -2 }} />
+                            <Ionicons name='arrow-back-outline' size={30} color={'#50566B'} style={{ marginTop: -2 }} />
                         </Text>
                     </TouchableOpacity>
                 </View>

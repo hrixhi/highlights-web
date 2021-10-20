@@ -877,7 +877,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                     }}
                                                 >
                                                     <Text style={{ lineHeight: 35, width: '100%', textAlign: 'center', paddingTop: 5 }}>
-                                                        <Ionicons name='arrow-back-outline' size={25} color={'#50566B'} />
+                                                        <Ionicons name='arrow-back-outline' size={30} color={'#50566B'} />
                                                     </Text>
                                                 </TouchableOpacity>
                                                 : null
@@ -945,7 +945,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                 style={{
                                                     flexDirection: 'row', alignItems: 'center', flex: 1,
                                                     width: '100%', paddingVertical: 10, borderBottomWidth: 1,
-                                                    borderBottomColor: '#f2f2fa', paddingHorizontal: 10
+                                                    borderBottomColor: '#c4c4c4', paddingHorizontal: 10
                                                 }} >
                                                 <Image
                                                     style={{
@@ -1154,7 +1154,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                     flexDirection: 'row', alignItems: 'center', flex: 1,
                                                                     width: '100%', paddingVertical: 7,
                                                                     borderBottomWidth: ind === Object.keys(groupUsers).length - 1 ? 0 : 1,
-                                                                    borderBottomColor: '#f2f2fa',
+                                                                    borderBottomColor: '#c4c4c4',
                                                                     paddingHorizontal: 10
                                                                 }} >
                                                                     <Image
@@ -1223,7 +1223,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                 height: Dimensions.get('window').width < 1024 ? windowHeight - 104 - 80 : windowHeight - 52 - 80,
                                                 // borderWidth: 1,
                                                 zIndex: 5000,
-                                                borderColor: '#E3E8EE'
+                                                borderColor: '#C4C4C4'
                                             }}>
                                                 <GiftedChat
                                                     // showUserAvatar={isChatGroup}
@@ -1447,7 +1447,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                 // borderRightWidth: 0,
                                                                 // borderLeftWidth: 0,
                                                                 borderRadius: 0,
-                                                                borderColor: '#E3E8EE',
+                                                                borderColor: '#C4C4C4',
                                                                 overflow: 'hidden',
                                                                 // marginTop: 20
                                                             }}>
@@ -1476,7 +1476,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                                 style={{
                                                                                     backgroundColor: '#fff',
                                                                                     flexDirection: 'row',
-                                                                                    borderColor: '#E3E8EE',
+                                                                                    borderColor: '#C4C4C4',
                                                                                     paddingVertical: 5,
                                                                                     borderBottomWidth: ind === sectionFiltered.length - 1 ? 0 : 1,
                                                                                     width: '100%'
@@ -1524,7 +1524,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                         // borderWidth: 2,
                                                                         // borderRightWidth: 0,
                                                                         // borderLeftWidth: 0,
-                                                                        borderColor: '#E3E8EE',
+                                                                        borderColor: '#C4C4C4',
                                                                         borderRadius: 0,
                                                                         width: '100%',
                                                                         maxHeight: width < 1024 ? windowHeight - 104 : windowHeight - 52,
@@ -1570,7 +1570,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                                     style={{
                                                                                         backgroundColor: '#fff',
                                                                                         flexDirection: 'row',
-                                                                                        borderColor: '#E3E8EE',
+                                                                                        borderColor: '#C4C4C4',
                                                                                         paddingVertical: 5,
                                                                                         borderBottomWidth: index === chats.length - 1 ? 0 : 1,
                                                                                         // minWidth: 600, // flex: 1,

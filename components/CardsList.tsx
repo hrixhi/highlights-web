@@ -62,7 +62,7 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     return (
         <Animated.View style={{
-            borderColor: '#E3E8EE',
+            borderColor: '#C4C4C4',
             backgroundColor: '#f7fafc',
             // borderBottomWidth: 2,
             // borderTopWidth: 1,
