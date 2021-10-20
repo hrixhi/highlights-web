@@ -1801,7 +1801,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     height: (menuCollapsed ? (dimensions.window.height) : 0),
                     backgroundColor: 'white',
                     paddingHorizontal: dimensions.window.width < 1024 ? 20 : 0,
-                    width: dimensions.window.width,
+                    width: '100%',
                     // marginRight: 0,
                     alignSelf: 'center',
                     borderTopLeftRadius: 0,

@@ -1486,13 +1486,13 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             }}>
                                 <MenuOption
                                     value={'Channels'}>
-                                    <Text style={{ fontFamily: 'inter', fontSize: 14, color: props.option === 'Channels' ? '#5469D4' : '#50566b' }}>
+                                    <Text style={{ fontFamily: 'overpass', fontSize: 14, fontWeight: 'bold', color: props.option === 'Channels' ? '#5469D4' : '#1a2036' }}>
                                         <Ionicons name='file-tray-stacked-outline' size={14} />&nbsp;&nbsp;Workspaces
                                     </Text>
                                 </MenuOption>
                                 <MenuOption
                                     value={'Settings'}>
-                                    <Text style={{ fontFamily: 'inter', fontSize: 14, color: props.option === 'Settings' && !props.showHelp ? '#5469D4' : '#50566b' }}>
+                                    <Text style={{ fontFamily: 'overpass', fontSize: 14, fontWeight: 'bold', color: props.option === 'Settings' && !props.showHelp ? '#5469D4' : '#1a2036' }}>
                                         <Ionicons name='person-circle-outline' size={14} />&nbsp;&nbsp;Profile
                                     </Text>
                                 </MenuOption>
