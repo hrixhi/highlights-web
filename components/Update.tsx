@@ -595,11 +595,12 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     ellipsizeMode={'tail'}
                     numberOfLines={1}
                     style={{
-                        fontFamily: 'inter',
-                        fontSize: 14,
-                        lineHeight: 20,
+                        fontFamily: 'overpass',
+                        fontWeight: 'bold',
+                        fontSize: 12,
+                        lineHeight: 25,
                         flex: 1, flexDirection: 'row',
-                        marginTop: 4,
+                        // marginTop: 3,
                         color: value._id === props.cue._id ? '#5469df' : '#50566b'
                     }}>
                     {title}
@@ -691,11 +692,12 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     ellipsizeMode={'tail'}
                     numberOfLines={1}
                     style={{
-                        fontFamily: 'inter',
-                        fontSize: 14,
-                        lineHeight: 20,
+                        fontFamily: 'overpass',
+                        fontWeight: 'bold',
+                        fontSize: 12,
+                        lineHeight: 25,
                         flex: 1, flexDirection: 'row',
-                        marginTop: 4,
+                        // marginTop: 5,
                         color: value._id === props.cue._id ? '#5469df' : '#50566b'
                     }}>
                     {title}
@@ -885,11 +887,12 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         ellipsizeMode={'tail'}
                                         numberOfLines={1}
                                         style={{
-                                            fontFamily: 'inter',
-                                            fontSize: 14,
-                                            lineHeight: 20,
-                                            flex: 1,
-                                            marginTop: 4,
+                                            fontFamily: 'overpass',
+                                            fontWeight: 'bold',
+                                            fontSize: 12,
+                                            lineHeight: 25,
+                                            flex: 1, flexDirection: 'row',
+                                            // marginTop: 5,
                                             color: cue._id === props.cue._id ? '#5469df' : '#50566b'
                                         }}>
                                         {title}
@@ -1329,11 +1332,12 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     ellipsizeMode={'tail'}
                                     numberOfLines={1}
                                     style={{
-                                        fontFamily: 'inter',
-                                        fontSize: 14,
-                                        lineHeight: 20,
-                                        flex: 1,
-                                        marginTop: 4,
+                                        fontFamily: 'overpass',
+                                        fontWeight: 'bold',
+                                        fontSize: 12,
+                                        lineHeight: 25,
+                                        flex: 1, flexDirection: 'row',
+                                        // marginTop: 5,
                                         color: cue._id === props.cue._id ? '#5469df' : '#50566b'
                                     }}>
                                     {title}
@@ -1572,11 +1576,12 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     ellipsizeMode={'tail'}
                                     numberOfLines={1}
                                     style={{
-                                        fontFamily: 'inter',
-                                        fontSize: 14,
-                                        lineHeight: 20,
-                                        flex: 1,
-                                        // marginTop: 4,
+                                        fontFamily: 'overpass',
+                                        fontWeight: 'bold',
+                                        fontSize: 12,
+                                        lineHeight: 25,
+                                        flex: 1, flexDirection: 'row',
+                                        // marginTop: 5,
                                         color: cue._id === props.cue._id ? '#5469df' : '#50566b'
                                     }}>
                                     {title}

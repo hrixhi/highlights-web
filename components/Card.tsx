@@ -227,7 +227,8 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
         flex: 1
     },
     title: {
-        fontFamily: 'inter',
+        fontFamily: 'overpass',
+        fontWeight: 'bold',
         fontSize: 12,
         lineHeight: 20,
         flex: 1,

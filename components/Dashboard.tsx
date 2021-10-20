@@ -1223,7 +1223,8 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                         <Text style={{
                                                                             flex: 1, flexDirection: 'row',
                                                                             color: '#50566B',
-                                                                            fontSize: 14, lineHeight: 25,
+                                                                            fontWeight: 'bold',
+                                                                            fontSize: 12, lineHeight: 25,
                                                                             fontFamily: 'overpass'
                                                                         }} ellipsizeMode='tail'>
                                                                             {category === '' ? ' ' : category}

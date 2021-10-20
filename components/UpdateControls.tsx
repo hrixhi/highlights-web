@@ -5305,7 +5305,10 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     renderMainCueContent())}
                             </View>}
                     <View style={{
-                        width: '100%', maxWidth: 1000, alignSelf: 'center'
+                        width: '100%',
+                        maxWidth: 1000,
+                        alignSelf: 'center',
+                        paddingLeft: Dimensions.get('window').width < 1024 ? 12 : 15
                     }}>
                         <Collapse isOpened={props.showOptions}>
                             <View style={{ flex: 1, display: "flex", flexDirection: "column" }}>

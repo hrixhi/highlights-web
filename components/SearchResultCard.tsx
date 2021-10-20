@@ -44,7 +44,8 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                                 ellipsizeMode={'tail'}
                                 numberOfLines={1}
                                 style={{
-                                    fontFamily: 'inter',
+                                    fontFamily: 'overpass',
+                                    fontWeight: 'bold',
                                     fontSize: 12,
                                     lineHeight: 20,
                                     // flex: 1,
