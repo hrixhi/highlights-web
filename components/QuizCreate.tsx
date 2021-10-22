@@ -211,7 +211,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             }}
                             onPress={() => insertEquation()}
                         >
-                            <Ionicons name="add-circle-outline" color="#1A2036" size={15} />
+                            <Ionicons name="add-circle-outline" color="#16181C" size={15} />
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={{
@@ -221,7 +221,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             }}
                             onPress={() => setShowFormulaGuide(true)}
                         >
-                            <Ionicons name="help-circle-outline" color="#1A2036" size={19} />
+                            <Ionicons name="help-circle-outline" color="#16181C" size={19} />
                         </TouchableOpacity>
                     </View> : null)
             } */}
@@ -453,7 +453,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     <View style={{ paddingTop: 35, paddingLeft: 20 }}>
                         <Text
                             style={{
-                                color: '#5469D4',
+                                color: '#3289D0',
                                 fontFamily: 'Overpass',
                                 fontSize: 10
                             }}
@@ -481,10 +481,10 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 >
                     <Text
                         style={{
-                            color: '#5469D4',
+                            color: '#3289D0',
                             borderWidth: 1,
                             borderRadius: 15,
-                            borderColor: '#5469D4',
+                            borderColor: '#3289D0',
                             backgroundColor: '#fff',
                             fontSize: 12,
                             textAlign: "center",
@@ -615,7 +615,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
             borderTopLeftRadius: 0,
             maxWidth: 1000,
             borderTopRightRadius: 0,
-            borderTopColor: '#f7fafc',
+            borderTopColor: '#E7EBEE',
             borderTopWidth: 1,
             marginTop: 35,
             paddingTop: 25,
@@ -654,7 +654,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         {renderHeaderOption(index)}
                         <View style={{ flexDirection: 'column', width: '100%', paddingBottom: 15 }}>
                             <View style={{ paddingTop: 15, flexDirection: 'row', flex: 1 }}>
-                                <Text style={{ color: '#1A2036', fontSize: 22, paddingBottom: 25, width: 40, paddingTop: 15, fontFamily: 'inter' }}>
+                                <Text style={{ color: '#16181C', fontSize: 22, paddingBottom: 25, width: 40, paddingTop: 15, fontFamily: 'inter' }}>
                                     {index + 1}.
                                 </Text>
                                 <View style={{
@@ -733,7 +733,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 textAlign: 'center',
                                                 marginBottom: (Dimensions.get('window').width < 1024 || editQuestionNumber !== (index + 1)) ? 0 : 30,
                                                 fontWeight: editQuestionNumber === (index + 1) ? 'normal' : '700',
-                                                borderBottomColor: '#C4C4C4',
+                                                borderBottomColor: '#E7EBEE',
                                                 borderBottomWidth: editQuestionNumber === (index + 1) ? 1 : 0,
                                             }}
                                             placeholder={PreferredLanguageText('enterPoints')}
@@ -782,7 +782,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 <View style={{ flexDirection: 'row', paddingLeft: Dimensions.get('window').width < 1024 ? 20 : 0 }}>
                                                     <Ionicons
                                                         name='save-outline'
-                                                        color={"#5469D4"}
+                                                        color={"#3289D0"}
                                                         style={{
                                                             marginRight: 30
                                                         }}
@@ -797,7 +797,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
                                                     <Ionicons
                                                         name='trash-outline'
-                                                        color={"#50566B"}
+                                                        color={"#343A40"}
                                                         onPress={() => {
                                                             Alert(`Delete Question ${editQuestionNumber} ?`, "", [
                                                                 {
@@ -822,7 +822,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                     />
                                                 </View> : <Ionicons
                                                     name='pencil-outline'
-                                                    color={'#5469D4'}
+                                                    color={'#3289D0'}
                                                     onPress={() => {
                                                         if (isCurrentQuestionValid(editQuestionNumber - 1)) {
                                                             setEditQuestionNumber(index + 1)
@@ -866,7 +866,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                             >
                                                 <Text
                                                     style={{
-                                                        color: '#5469D4',
+                                                        color: '#3289D0',
                                                         fontFamily: 'Overpass',
                                                         fontSize: 10,
                                                         marginRight: 10
@@ -899,7 +899,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                             >
                                                 <Text
                                                     style={{
-                                                        color: '#5469D4',
+                                                        color: '#3289D0',
                                                         fontFamily: 'Overpass',
                                                         fontSize: 10,
                                                         marginLeft: 20
@@ -921,7 +921,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 props.setProblems(updateProblems)
                                             }}>
                                                 <Text style={{
-                                                    color: '#5469D4',
+                                                    color: '#3289D0',
                                                     fontFamily: 'Overpass',
                                                     fontSize: 10,
                                                 }}> Clear</Text>
@@ -1014,7 +1014,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                         <Text
                                                             style={{
                                                                 paddingTop: showOptionFormulas[i] ? 10 : 0,
-                                                                color: '#5469D4',
+                                                                color: '#3289D0',
                                                                 fontFamily: 'Overpass',
                                                                 fontSize: 10
                                                             }}
@@ -1045,7 +1045,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                     <Text
                                                         style={{
                                                             paddingTop: showOptionFormulas[i] ? 10 : 0,
-                                                            color: '#5469D4',
+                                                            color: '#3289D0',
                                                             fontFamily: 'Overpass',
                                                             fontSize: 10
                                                         }}
@@ -1179,10 +1179,10 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         >
                             <Text
                                 style={{
-                                    color: '#5469D4',
+                                    color: '#3289D0',
                                     borderWidth: 1,
                                     borderRadius: 15,
-                                    borderColor: '#5469D4',
+                                    borderColor: '#3289D0',
                                     backgroundColor: '#fff',
                                     fontSize: 12,
                                     textAlign: "center",
@@ -1232,7 +1232,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             lineHeight: 35,
                             color: "white",
                             fontSize: 12,
-                            backgroundColor: "#5469D4",
+                            backgroundColor: "#3289D0",
                             borderRadius: 15,
                             paddingHorizontal: 20,
                             fontFamily: "inter",
@@ -1254,7 +1254,7 @@ export default QuizCreate;
 const styles = StyleSheet.create({
     input: {
         width: '50%',
-        borderBottomColor: '#f7fafc',
+        borderBottomColor: '#E7EBEE',
         borderBottomWidth: 1,
         fontSize: 14,
         paddingTop: 12,

@@ -30,14 +30,14 @@ const ScoreCard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         {/* <Text style={{
                             fontSize: 11,
                             fontWeight: 'bold',
-                            color: '#1A2036',
+                            color: '#16181C',
                             marginRight: 5,
                             flex: 1,
                             textAlign: 'right'
                         }}>
                            
                         </Text> */}
-                    </View> <View style={{ backgroundColor: '#f7fafc', width: '100%', flexDirection: 'row', display: 'flex' }}>
+                    </View> <View style={{ backgroundColor: '#E7EBEE', width: '100%', flexDirection: 'row', display: 'flex' }}>
                         <Text ellipsizeMode={'tail'}
                             numberOfLines={1}
                             style={styleObject.title}>
@@ -67,7 +67,7 @@ const ScoreCard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         <Text ellipsizeMode={'tail'}
                             numberOfLines={1}
                             style={styleObject.titleArrow}>
-                            <Ionicons name="chevron-forward-outline" color="#50566B" size={15} style={{ marginTop: 4 }} />
+                            <Ionicons name="chevron-forward-outline" color="#343A40" size={15} style={{ marginTop: 4 }} />
                         </Text>
                     </View>
                     <Text ellipsizeMode={'tail'}
@@ -90,7 +90,7 @@ const styles: any = () => StyleSheet.create({
         maxWidth: 500,
         borderRadius: 1,
         overflow: 'hidden',
-        backgroundColor: '#f7fafc'
+        backgroundColor: '#E7EBEE'
     },
     badge: {
         width: 20,
@@ -106,31 +106,31 @@ const styles: any = () => StyleSheet.create({
         width: '100%',
         borderRadius: 1,
         padding: 13,
-        backgroundColor: '#f7fafc',
+        backgroundColor: '#E7EBEE',
     },
     text: {
         display: 'flex',
         flexDirection: 'column',
         flex: 1,
-        backgroundColor: '#f7fafc'
+        backgroundColor: '#E7EBEE'
     },
     dateContainer: {
         fontSize: 10,
         height: '22%',
-        backgroundColor: '#f7fafc',
+        backgroundColor: '#E7EBEE',
         display: 'flex',
         flexDirection: 'row'
     },
     date: {
         fontSize: 10,
-        color: '#50566B',
+        color: '#343A40',
         marginLeft: 5
     },
     title: {
         fontFamily: 'inter',
         fontSize: 13,
         paddingTop: 5,
-        color: '#1A2036',
+        color: '#16181C',
         flex: 1
     },
     titleArrow: {
@@ -138,12 +138,12 @@ const styles: any = () => StyleSheet.create({
         fontSize: 13,
         lineHeight: 20,
         paddingTop: 5,
-        color: '#1A2036',
+        color: '#16181C',
         marginLeft: 10
     },
     description: {
         fontSize: 13,
-        color: '#50566B',
+        color: '#343A40',
         // height: '30%',
     },
     color: {

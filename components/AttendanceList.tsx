@@ -316,7 +316,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
         }}
             key={JSON.stringify(pastMeetings)}
         >
-            {/* <Text style={{ textAlign: 'left', fontSize: 13, color: '#1A2036', fontFamily: 'inter', paddingBottom: 20 }}>
+            {/* <Text style={{ textAlign: 'left', fontSize: 13, color: '#16181C', fontFamily: 'inter', paddingBottom: 20 }}>
                         Attendance By Lectures
             </Text> */}
             <ScrollView
@@ -385,9 +385,9 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                         <Text style={{
                             textAlign: 'center',
                             lineHeight: 35,
-                            color: '#5469D4',
+                            color: '#3289D0',
                             fontSize: 12,
-                            borderColor: '#5469D4',
+                            borderColor: '#3289D0',
                             borderWidth: 1,
                             paddingHorizontal: 20,
                             fontFamily: 'inter',
@@ -445,10 +445,10 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                             borderTopLeftRadius: 0,
                             paddingVertical: 100
                         }}>
-                            <ActivityIndicator color={'#50566B'} />
+                            <ActivityIndicator color={'#343A40'} />
                         </View>
                         : <View style={{ backgroundColor: 'white' }}>
-                            <Text style={{ width: '100%', color: '#50566B', fontSize: 20, paddingVertical: 100, paddingHorizontal: 5, fontFamily: 'inter', }}>
+                            <Text style={{ width: '100%', color: '#343A40', fontSize: 20, paddingVertical: 100, paddingHorizontal: 5, fontFamily: 'inter', }}>
                                 {
                                     pastMeetings.length === 0 ? "No past meetings" : "No Students"
                                     // PreferredLanguageText('noGraded') : PreferredLanguageText('noStudents')
@@ -476,10 +476,10 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                             nestedScrollEnabled={true}
                         >
                             <View>
-                                <View style={{ minHeight: 70, flexDirection: 'row', overflow: 'hidden', paddingBottom: 10, borderBottomWidth: 1, borderBottomColor: '#C4C4C4' }} key={"-"}>
+                                <View style={{ minHeight: 70, flexDirection: 'row', overflow: 'hidden', paddingBottom: 10, borderBottomWidth: 1, borderBottomColor: '#E7EBEE' }} key={"-"}>
                                     <View style={styles.col} key={'0,0'} />
                                     <View style={styles.col} key={'0,0'} >
-                                        <Text style={{ fontSize: 13, color: '#1A2036', fontFamily: 'inter' }}>
+                                        <Text style={{ fontSize: 13, color: '#16181C', fontFamily: 'inter' }}>
                                             Total
                                         </Text>
                                     </View>
@@ -487,13 +487,13 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                         pastMeetings.map((meeting: any, col: number) => {
                                             const { title, start, end } = meeting
                                             return <View style={styles.col} key={col.toString()}>
-                                                <Text style={{ textAlign: 'center', fontSize: 13, color: '#1A2036', fontFamily: 'inter' }}>
+                                                <Text style={{ textAlign: 'center', fontSize: 13, color: '#16181C', fontFamily: 'inter' }}>
                                                     {title}
                                                 </Text>
-                                                <Text style={{ textAlign: 'center', fontSize: 12, color: '#1A2036', marginBottom: 5 }}>
+                                                <Text style={{ textAlign: 'center', fontSize: 12, color: '#16181C', marginBottom: 5 }}>
                                                     {moment(new Date(start)).format('MMMM Do')}
                                                 </Text>
-                                                <Text style={{ textAlign: 'center', fontSize: 12, color: '#1A2036', marginBottom: 5 }}>
+                                                <Text style={{ textAlign: 'center', fontSize: 12, color: '#16181C', marginBottom: 5 }}>
                                                     {moment(new Date(start)).format('h:mm')} - {moment(new Date(end)).format('h:mm')}
                                                 </Text>
                                             </View>
@@ -517,12 +517,12 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
 
                                             return <View style={styles.row} key={row}>
                                                 <View style={styles.col} >
-                                                    <Text style={{ textAlign: 'left', fontSize: 13, color: '#1A2036', fontFamily: 'inter' }}>
+                                                    <Text style={{ textAlign: 'left', fontSize: 13, color: '#16181C', fontFamily: 'inter' }}>
                                                         {channelAttendance.fullName}
                                                     </Text>
                                                 </View>
                                                 <View style={styles.col} >
-                                                    <Text style={{ textAlign: 'left', fontSize: 13, color: '#1A2036', fontFamily: 'inter' }}>
+                                                    <Text style={{ textAlign: 'left', fontSize: 13, color: '#16181C', fontFamily: 'inter' }}>
                                                         {studentCount} / {pastMeetings.length}
                                                     </Text>
                                                 </View>
@@ -535,12 +535,12 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                                             <TouchableOpacity disabled={!isOwner} onPress={() => onChangeAttendance(meeting.dateId, channelAttendance.userId, attendanceObject ? false : true)} style={{ marginBottom: 5, width: '100%', flexDirection: 'row', justifyContent: 'center' }}>
                                                                 {
                                                                     attendanceObject ?
-                                                                        <Ionicons name='checkmark-outline' size={15} color={'#5469D4'} />
+                                                                        <Ionicons name='checkmark-outline' size={15} color={'#3289D0'} />
                                                                         :
                                                                         isOwner ? <Ionicons name='checkmark-outline' size={15} color={'#e0e0e0'} /> : '-'
                                                                 }
                                                             </TouchableOpacity>
-                                                            {attendanceObject ? <Text style={{ textAlign: 'center', fontSize: 12, color: '#1A2036', width: '100%', }}>
+                                                            {attendanceObject ? <Text style={{ textAlign: 'center', fontSize: 12, color: '#16181C', width: '100%', }}>
                                                                 {attendanceObject.joinedAt ? moment(new Date(attendanceObject.joinedAt)).format('h:mm a') : ""}
                                                             </Text> : null}
                                                         </View>
@@ -561,7 +561,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                 
                                 <View style={styles.row} >
                                    <View style={styles.col} >
-                                        <Text style={{ textAlign: 'center', fontSize: 12, color: '#1A2036' }}>
+                                        <Text style={{ textAlign: 'center', fontSize: 12, color: '#16181C' }}>
                                             Total
                                         </Text>                    
                                     </View>
@@ -573,7 +573,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                             return (
                                             <View style={styles.row} >
                                                 <View style={styles.col} >
-                                                    <Text style={{ textAlign: 'center', fontSize: 12, color: '#1A2036' }}>
+                                                    <Text style={{ textAlign: 'center', fontSize: 12, color: '#16181C' }}>
                                                         {studentCount} / {pastMeetings.length}
                                                     </Text>                    
                                                 </View>
@@ -594,16 +594,16 @@ const styles = StyleSheet.create({
     col: { width: 120, justifyContent: 'center', display: 'flex', flexDirection: 'column', padding: 7, },
     text: {
         fontSize: 12,
-        color: "#50566B",
+        color: "#343A40",
         textAlign: "left",
         paddingHorizontal: 10
     },
     all: {
         fontSize: 14,
-        color: '#1A2036',
+        color: '#16181C',
         height: 22,
         paddingHorizontal: 20,
-        backgroundColor: '#f7fafc',
+        backgroundColor: '#E7EBEE',
         lineHeight: 22,
         fontFamily: 'inter'
     },
@@ -612,19 +612,19 @@ const styles = StyleSheet.create({
         color: '#fff',
         paddingHorizontal: 20,
         borderRadius: 12,
-        backgroundColor: '#1A2036',
+        backgroundColor: '#16181C',
         lineHeight: 22,
         fontFamily: 'inter'
     },
     allGrayOutline: {
         fontSize: 12,
-        color: "#50566B",
+        color: "#343A40",
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: "white",
         borderRadius: 1,
         borderWidth: 1,
-        borderColor: "#50566B",
+        borderColor: "#343A40",
         lineHeight: 20
     },
 })

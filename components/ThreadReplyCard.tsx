@@ -12,7 +12,7 @@ const ThreadReplyCard: React.FunctionComponent<{ [label: string]: any }> = (prop
     const [url, setUrl] = useState('')
     const [title, setTitle] = useState('')
     const [type, setType] = useState('')
-    const [color, setColor] = useState('#50566B');
+    const [color, setColor] = useState('#343A40');
 
     useEffect(() => {
         if (props.thread.message[0] === '{' && props.thread.message[props.thread.message.length - 1] === '}') {
@@ -34,9 +34,9 @@ const ThreadReplyCard: React.FunctionComponent<{ [label: string]: any }> = (prop
         if (u) {
             const unparsedUser = JSON.parse(u)
             if (props.channelCreatedBy.toString().trim() === props.thread.userId.toString().trim()) {
-                setColor('#5469D4')
+                setColor('#3289D0')
             } else if (unparsedUser._id.toString().trim() === props.thread.userId.toString().trim()) {
-                setColor('#50566B')
+                setColor('#343A40')
             }
         }
     }, [props.thread, props.channelCreatedBy])
@@ -69,27 +69,27 @@ const ThreadReplyCard: React.FunctionComponent<{ [label: string]: any }> = (prop
                         {props.thread.anonymous ? 'Anonymous' : props.thread.fullName}
                     </Text>
                 </View>
-                <View style={{ flexDirection: 'row', backgroundColor: '#f7fafc' }}>
-                    <View style={{ flex: 1, backgroundColor: '#f7fafc' }}>
+                <View style={{ flexDirection: 'row', backgroundColor: '#E7EBEE' }}>
+                    <View style={{ flex: 1, backgroundColor: '#E7EBEE' }}>
                         {
                             imported ?
                                 <a download={true} href={url} style={{ textDecoration: 'none' }}>
-                                    <View style={{ backgroundColor: '#f7fafc', flex: 1 }}>
-                                        <Text style={{ width: '100%', color: '#50566B', fontSize: 14, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
-                                            <Ionicons name='document-outline' size={15} color='#50566B' /> {title}.{type}
+                                    <View style={{ backgroundColor: '#E7EBEE', flex: 1 }}>
+                                        <Text style={{ width: '100%', color: '#343A40', fontSize: 14, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                            <Ionicons name='document-outline' size={15} color='#343A40' /> {title}.{type}
                                         </Text>
                                     </View>
                                 </a>
-                                : <div dangerouslySetInnerHTML={{ __html: props.thread.message }} style={{ fontFamily: 'overpass', color: '#1A2036', fontSize: 14 }} />
+                                : <div dangerouslySetInnerHTML={{ __html: props.thread.message }} style={{ fontFamily: 'overpass', color: '#16181C', fontSize: 14 }} />
                         }
                     </View>
                     {
                         props.isOwner ?
-                            <TouchableOpacity style={{ backgroundColor: '#f7fafc' }}
+                            <TouchableOpacity style={{ backgroundColor: '#E7EBEE' }}
                                 onPress={() => props.deleteThread()}
                             >
-                                <Text style={{ width: '100%', color: '#50566B', fontSize: 14, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
-                                    <Ionicons name='trash-outline' size={15} color={props.index === 0 ? '#f94144' : '#50566B'} />
+                                <Text style={{ width: '100%', color: '#343A40', fontSize: 14, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                    <Ionicons name='trash-outline' size={15} color={props.index === 0 ? '#f94144' : '#343A40'} />
                                 </Text>
                             </TouchableOpacity> : null
                     }
@@ -110,26 +110,26 @@ const styles: any = () => StyleSheet.create({
         borderRadius: 15,
         padding: 13,
         paddingBottom: 20,
-        backgroundColor: '#f7fafc'
+        backgroundColor: '#E7EBEE'
     },
     text: {
         display: 'flex',
         flexDirection: 'column',
         flex: 1,
         fontWeight: 'bold',
-        backgroundColor: '#f7fafc',
+        backgroundColor: '#E7EBEE',
     },
     dateContainer: {
         fontSize: 10,
-        color: '#50566B',
-        backgroundColor: '#f7fafc',
+        color: '#343A40',
+        backgroundColor: '#E7EBEE',
         display: 'flex',
         flexDirection: 'row',
         paddingBottom: 10
     },
     date: {
         fontSize: 10,
-        color: '#50566B',
+        color: '#343A40',
         marginLeft: 5
     }
 });

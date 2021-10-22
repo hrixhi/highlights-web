@@ -125,7 +125,7 @@ $mbsc-calendar-event-dark: null !default;
 
 @function get-contrast-color($color) {
   @if (lightness($color) > 67%) {
-    @return #1A2036;
+    @return #16181C;
   }
 
   @else {
@@ -134,12 +134,12 @@ $mbsc-calendar-event-dark: null !default;
 }
 
 
-$mbsc-ios-accent: #5469D4 !default;
-$mbsc-ios-background: #f7fafc !default;
-$mbsc-ios-text: #1A2036 !default;
+$mbsc-ios-accent: #3289D0 !default;
+$mbsc-ios-background: #E7EBEE !default;
+$mbsc-ios-text: #16181C !default;
 
 $mbsc-ios-dark-accent: #ff9f0a !default;
-$mbsc-ios-dark-background: #1A2036 !default;
+$mbsc-ios-dark-background: #16181C !default;
 $mbsc-ios-dark-text: #ffffff !default;
 
 /* Base colors */
@@ -327,13 +327,13 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, ('button-color': $mbsc-i
   $button-text-param: map-get($params, 'button-text');
 
   $white: #fff;
-  $black: #1A2036;
+  $black: #16181C;
   $button-background: '';
   $background-contrast: '';
 
   @if(lightness($background) > 50%) {
     $button-background: lighten($background, 10%);
-    $background-contrast: #1A2036;
+    $background-contrast: #16181C;
   }
 
   @else {
@@ -894,7 +894,7 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, ('page-background': $mbs
   @if (lightness($background) > 50%) {
     $button-background: darken($background, 10%);
     $selectbox: #fff;
-    $selectbox-contrast: #1A2036;
+    $selectbox-contrast: #16181C;
     $shadow: darken($background, 24%);
   }
 
@@ -1055,7 +1055,7 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, ('page-background': $mbs
   // Light background 
   @if (lightness($background) > 50%) {
     $background-alt: lighten($background, 3%);
-    $background-contrast: #1A2036;
+    $background-contrast: #16181C;
     $background-header: $background;
     $border-color: darken($background, 17%);
     $schedule-time-color: lighten($mbsc-ios-text, 54.90);
@@ -1313,7 +1313,7 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, ('page-background': $mbs
 
   @if (lightness($background) > 50%) {
     $highlight: lighten(desaturate($accent, 14%), 39%);
-    $highlight-contrast: #1A2036;
+    $highlight-contrast: #16181C;
   }
 
   @else {
@@ -1455,7 +1455,7 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, ('page-background': $mbs
 
   @if (lightness($background) > 50%) {
     $background-alt: lighten($background, 3%);
-    $background-contrast: #1A2036;
+    $background-contrast: #16181C;
     $border-color: darken($background, 17%);
     $header-background: adjust-hue(darken(saturate($background, 19%), 2%), 240deg);
     $header-text: adjust-hue(lighten(saturate($text, 2%), 44%), 240deg);
@@ -1708,7 +1708,7 @@ $mbsc-ios-dark-colors: map-merge($mbsc-ios-dark-colors, ('page-background': $mbs
     $item-3d: darken($background, 33%);
     $overlay: $background-alt;
     $scroller-background: $background-alt;
-    $scroller-selected-line: #1A2036;
+    $scroller-selected-line: #16181C;
   }
 
   @else {
@@ -3363,7 +3363,7 @@ $mbsc-mobiscroll-background: #ffffff !default;
 $mbsc-mobiscroll-text: #454545 !default;
 
 $mbsc-mobiscroll-dark-accent: #2b93e6 !default;
-$mbsc-mobiscroll-dark-background: #1A2036 !default;
+$mbsc-mobiscroll-dark-background: #16181C !default;
 $mbsc-mobiscroll-dark-text: #ffffff !default;
 
 /* Base colors */
@@ -3824,7 +3824,7 @@ $mbsc-material-background: #fff !default;
 $mbsc-material-text: #303030 !default;
 
 $mbsc-material-dark-accent: #87b0f3 !default;
-$mbsc-material-dark-background: #1A2036 !default;
+$mbsc-material-dark-background: #16181C !default;
 $mbsc-material-dark-text: #fff !default;
 
 /* Base colors */
@@ -9511,7 +9511,7 @@ $mbsc-windows-dark-colors: map-merge($mbsc-windows-dark-colors, ('button-color':
     $track-disabled: darken($background, 9%);
     $handle-disabled: darken($background, 20%);
     $handle: lighten($background, 5%);
-    $bg-contrast: #1A2036;
+    $bg-contrast: #16181C;
   }
 
   @else {
@@ -13745,7 +13745,7 @@ $mbsc-windows-dark-colors: map-merge($mbsc-windows-dark-colors, ( // Colors map
   // Light background
   @if (lightness($background) > 50%) {
     $button-background: darken($background, 10%);
-    $border: #1A2036;
+    $border: #16181C;
   }
 
   // Dark background
@@ -14044,7 +14044,7 @@ $mbsc-windows-dark-colors: map-merge($mbsc-windows-dark-colors, ( // Colors map
     $border-color: darken($background, 20%);
     $disabled-text-color: darken($background, 30%);
     $disabled-button-color: darken($background, 20%);;
-    $hover: #1A2036;
+    $hover: #16181C;
   }
 
   // Dark background
@@ -14703,7 +14703,7 @@ $mbsc-windows-dark-colors: map-merge($mbsc-windows-dark-colors, ( // Colors map
   // Light background
   @if (lightness($background) > 50%) {
     $border: darken($background, 19%);
-    $cell-hover: #1A2036;
+    $cell-hover: #16181C;
     $picker-background: $background;
     $hover: darken($background, 10%);
   }

@@ -201,7 +201,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 width: '100%',
                                 lineHeight: 23
                             }}>
-                                <Ionicons name='arrow-back-outline' size={23} color={'#50566B'} />
+                                <Ionicons name='arrow-back-outline' size={23} color={'#343A40'} />
                             </Text>
                         </TouchableOpacity>
                     </View>
@@ -223,7 +223,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             style={{ alignSelf: 'flex-end', flex: 1 }}
                         >
                             <Text style={{
-                                color: '#50566B',
+                                color: '#343A40',
                                 fontSize: 11,
                                 lineHeight: 35,
                                 textAlign: 'right',
@@ -260,12 +260,12 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 style={styles.input}
                                 placeholder={'Title'}
                                 onChangeText={val => setTitle(val)}
-                                placeholderTextColor={'#50566B'}
+                                placeholderTextColor={'#343A40'}
                             />
                         </View>
                         <View>
-                            <Text style={{ width: '100%', color: '#50566B', fontSize: 20, paddingVertical: 50, marginLeft: '10%', paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
-                                <Ionicons name='document-outline' size={50} color='#50566B' />
+                            <Text style={{ width: '100%', color: '#343A40', fontSize: 20, paddingVertical: 50, marginLeft: '10%', paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                <Ionicons name='document-outline' size={50} color='#343A40' />
                             </Text>
                         </View>
                     </View>
@@ -279,7 +279,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         <RichEditor
                             disabled={false}
                             containerStyle={{
-                                backgroundColor: '#f7fafc',
+                                backgroundColor: '#E7EBEE',
                                 borderRadius: 15,
                                 padding: 3,
                                 paddingTop: 5,
@@ -289,14 +289,14 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             ref={RichText}
                             style={{
                                 width: '100%',
-                                backgroundColor: '#f7fafc',
+                                backgroundColor: '#E7EBEE',
                                 borderRadius: 15,
                                 minHeight: 100
                             }}
                             editorStyle={{
-                                backgroundColor: '#f7fafc',
-                                placeholderColor: '#50566B',
-                                color: '#1A2036',
+                                backgroundColor: '#E7EBEE',
+                                placeholderColor: '#343A40',
+                                color: '#16181C',
                                 contentCSSText: 'font-size: 13px;'
                             }}
                             initialContentHTML={props.message}
@@ -324,7 +324,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             !cueId && !parentId ?
                                 <View style={{ width: '33.33%', backgroundColor: 'white' }}>
                                     <View style={{ width: '100%', paddingTop: 40, paddingBottom: 10, backgroundColor: 'white' }}>
-                                        <Text style={{ fontSize: 11, color: '#1A2036', textTransform: 'uppercase' }}>
+                                        <Text style={{ fontSize: 11, color: '#16181C', textTransform: 'uppercase' }}>
                                             {PreferredLanguageText('category')}
                                         </Text>
                                     </View>
@@ -340,13 +340,13 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                             onChangeText={val => {
                                                                 setCustomCategory(val)
                                                             }}
-                                                            placeholderTextColor={'#50566B'}
+                                                            placeholderTextColor={'#343A40'}
                                                         />
                                                     </View> :
                                                     <Menu
                                                         onSelect={(cat: any) => setCustomCategory(cat)}>
                                                         <MenuTrigger>
-                                                            <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#50566B' }}>
+                                                            <Text style={{ fontFamily: 'inter', fontSize: 14, color: '#343A40' }}>
                                                                 {customCategory === '' ? 'None' : customCategory}<Ionicons name='chevron-down-outline' size={15} />
                                                             </Text>
                                                         </MenuTrigger>
@@ -356,7 +356,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                 borderRadius: 15,
                                                                 shadowOpacity: 0,
                                                                 borderWidth: 1,
-                                                                borderColor: '#C4C4C4',
+                                                                borderColor: '#E7EBEE',
                                                                 overflow: 'scroll',
                                                                 maxHeight: '100%'
                                                             }
@@ -393,7 +393,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                 }}
                                                 style={{ backgroundColor: 'white' }}>
                                                 <Text style={{ textAlign: 'right', lineHeight: 20, width: '100%' }}>
-                                                    <Ionicons name={addCustomCategory ? 'close' : 'add'} size={15} color={'#50566B'} />
+                                                    <Ionicons name={addCustomCategory ? 'close' : 'add'} size={15} color={'#343A40'} />
                                                 </Text>
                                             </TouchableOpacity>
                                         </View>
@@ -404,7 +404,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         <View style={{ flexDirection: 'row' }}>
                             {/* <View style={{ width: '33.33%', backgroundColor: 'white' }}>
                                 <View style={{ width: '100%', paddingTop: 40, paddingBottom: 10, backgroundColor: 'white' }}>
-                                    <Text style={{ fontSize: 11, color: '#50566B', textTransform: 'uppercase' }}>
+                                    <Text style={{ fontSize: 11, color: '#343A40', textTransform: 'uppercase' }}>
                                         {PreferredLanguageText('anonymous')}
                                     </Text>
                                 </View>
@@ -412,8 +412,8 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     value={anonymous}
                                     onValueChange={() => setAnonymous(!anonymous)}
                                     trackColor={{
-                                        false: '#f7fafc',
-                                        true: '#50566B'
+                                        false: '#E7EBEE',
+                                        true: '#343A40'
                                     }}
                                     activeThumbColor='white'
                                     style={{ height: 20 }}
@@ -425,7 +425,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                         parentId ? null :
                                             <View style={{ width: '33.33%', backgroundColor: 'white' }}>
                                                 <View style={{ width: '100%', paddingTop: 40, paddingBottom: 10, backgroundColor: 'white' }}>
-                                                    <Text style={{ fontSize: 11, color: '#1A2036', textTransform: 'uppercase' }}>
+                                                    <Text style={{ fontSize: 11, color: '#16181C', textTransform: 'uppercase' }}>
                                                         {PreferredLanguageText('private')}
                                                     </Text>
                                                 </View>
@@ -433,8 +433,8 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                     value={isPrivate}
                                                     onValueChange={() => setIsPrivate(!isPrivate)}
                                                     trackColor={{
-                                                        false: '#f7fafc',
-                                                        true: '#50566B'
+                                                        false: '#E7EBEE',
+                                                        true: '#343A40'
                                                     }}
                                                     activeThumbColor='white'
                                                     style={{ height: 20 }}
@@ -475,7 +475,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             lineHeight: 35,
                             color: 'white',
                             fontSize: 12,
-                            backgroundColor: '#5469D4',
+                            backgroundColor: '#3289D0',
                             borderRadius: 15,
                             paddingHorizontal: 20,
                             overflow: 'hidden',
@@ -542,12 +542,12 @@ const styles: any = StyleSheet.create({
     },
     text: {
         fontSize: 12,
-        color: '#50566B',
+        color: '#343A40',
         textAlign: 'left'
     },
     input: {
         width: '100%',
-        borderBottomColor: '#f7fafc',
+        borderBottomColor: '#E7EBEE',
         borderBottomWidth: 1,
         fontSize: 12,
         paddingTop: 12,
@@ -557,24 +557,24 @@ const styles: any = StyleSheet.create({
     },
     all: {
         fontSize: 12,
-        color: '#50566B',
+        color: '#343A40',
         height: 20,
         paddingHorizontal: 10,
         backgroundColor: 'white'
     },
     allOutline: {
         fontSize: 12,
-        color: '#50566B',
+        color: '#343A40',
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: 'white',
         borderRadius: 1,
         borderWidth: 1,
-        borderColor: '#50566B'
+        borderColor: '#343A40'
     },
     outline: {
         borderRadius: 1,
         borderWidth: 1,
-        borderColor: '#50566B'
+        borderColor: '#343A40'
     }
 })

@@ -307,7 +307,7 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             borderTopLeftRadius: 0,
                             paddingVertical: 100
                         }}>
-                            <ActivityIndicator color={'#50566B'} />
+                            <ActivityIndicator color={'#343A40'} />
                         </View>
                         :
                         <GradesList

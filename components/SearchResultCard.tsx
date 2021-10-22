@@ -34,12 +34,12 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                         </Text> : <Text style={styleObject.date}>{" "}</Text>}
                     </View>
                     <View style={{
-                        backgroundColor: '#f7fafc',
+                        backgroundColor: '#E7EBEE',
                         width: '100%', flex: 1,
                         height: '100%',
                         flexDirection: 'row'
                     }}>
-                        <View style={{ flex: 1, backgroundColor: '#f7fafc', flexDirection: 'row' }}>
+                        <View style={{ flex: 1, backgroundColor: '#E7EBEE', flexDirection: 'row' }}>
                             <Text
                                 ellipsizeMode={'tail'}
                                 numberOfLines={1}
@@ -50,7 +50,7 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                                     lineHeight: 20,
                                     flex: 1,
                                     marginTop: 5,
-                                    color: '#1a2036'
+                                    color: '#16181C'
                                 }}>
                                 {props.title}
                             </Text>
@@ -62,13 +62,13 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                                 </Text>
 
                                 : null} */}
-                            {props.option === "Channels" && !props.subscribed ? <View style={{ paddingLeft: 10, backgroundColor: '#f7fafc' }}>
+                            {props.option === "Channels" && !props.subscribed ? <View style={{ paddingLeft: 10, backgroundColor: '#E7EBEE' }}>
                                 <TouchableOpacity
                                     onPress={() => props.handleSub()}
                                     style={{ marginTop: 1 }}
                                 >
-                                    <Text style={{ backgroundColor: '#f7fafc' }}>
-                                        <Ionicons name='enter-outline' size={19} color='#5469D4' />
+                                    <Text style={{ backgroundColor: '#E7EBEE' }}>
+                                        <Ionicons name='enter-outline' size={19} color='#3289D0' />
                                     </Text>
                                 </TouchableOpacity>
                             </View> : null}
@@ -79,10 +79,10 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
             </TouchableOpacity>
             <View
                 style={{
-                    backgroundColor: props.colorCode !== '' ? props.colorCode : '#1a2036',
+                    backgroundColor: props.colorCode !== '' ? props.colorCode : '#16181C',
                     flex: 1,
                     // borderLeftWidth: 2,
-                    borderColor: '#C4C4C4',
+                    borderColor: '#E7EBEE',
                     opacity: 0.9
                     // borderTopLeftRadius: 8,
                     // borderBottomLeftRadius: 8,
@@ -104,7 +104,7 @@ const styles: any = (colorScheme: any) => StyleSheet.create({
         maxWidth: 175,
         width: '100%',
         // borderWidth: 1,
-        borderColor: '#C4C4C4',
+        borderColor: '#E7EBEE',
         flexDirection: 'row'
     },
     card: {
@@ -116,36 +116,36 @@ const styles: any = (colorScheme: any) => StyleSheet.create({
         width: '96%',
         padding: 10,
         paddingHorizontal: 10,
-        backgroundColor: '#f7fafc',
+        backgroundColor: '#E7EBEE',
     },
     flipCard: {
         height: '100%',
         width: '100%',
         borderRadius: 1,
         padding: 13,
-        color: '#f7fafc',
-        backgroundColor: colorScheme === 'light' ? '#1A2036' : 'white'
+        color: '#E7EBEE',
+        backgroundColor: colorScheme === 'light' ? '#16181C' : 'white'
     },
     descriptionFlip: {
-        color: '#f7fafc',
+        color: '#E7EBEE',
         fontSize: 13,
         // height: '25%',
     },
     text: {
         // height: '100%',
-        backgroundColor: '#f7fafc'
+        backgroundColor: '#E7EBEE'
     },
     flipText: {
         height: '100%',
-        color: '#f7fafc',
-        backgroundColor: colorScheme === 'light' ? '#1A2036' : '#f7fafc'
+        color: '#E7EBEE',
+        backgroundColor: colorScheme === 'light' ? '#16181C' : '#E7EBEE'
     },
     dateContainer: {
         fontSize: 10,
         marginBottom: 5,
-        color: '#f7fafc',
+        color: '#E7EBEE',
         // height: '25%',
-        backgroundColor: '#f7fafc',
+        backgroundColor: '#E7EBEE',
         display: 'flex',
         flexDirection: 'row'
     },
@@ -154,18 +154,18 @@ const styles: any = (colorScheme: any) => StyleSheet.create({
         height: '25%',
         display: 'flex',
         flexDirection: 'row',
-        color: '#f7fafc',
-        backgroundColor: colorScheme === 'light' ? '#1A2036' : '#f7fafc'
+        color: '#E7EBEE',
+        backgroundColor: colorScheme === 'light' ? '#16181C' : '#E7EBEE'
     },
     date: {
         fontSize: 9,
-        color: colorScheme === 'light' ? '#f7fafc' : '#50566b',
+        color: colorScheme === 'light' ? '#E7EBEE' : '#343A40',
         // marginLeft: 10,
         lineHeight: 10
     },
     date2: {
         fontSize: 9,
-        color: colorScheme === 'light' ? '#f7fafc' : '#50566b',
+        color: colorScheme === 'light' ? '#E7EBEE' : '#343A40',
         // marginLeft: 10,
         lineHeight: 10,
         textAlign: 'left',
@@ -178,11 +178,11 @@ const styles: any = (colorScheme: any) => StyleSheet.create({
         lineHeight: 20,
         flex: 1,
         marginTop: 5,
-        color: '#1a2036'
+        color: '#16181C'
     },
     titleFlip: {
-        color: colorScheme === 'light' ? '#1A2036' : '#1A2036',
-        backgroundColor: colorScheme === 'light' ? '#f7fafc' : '#f7fafc',
+        color: colorScheme === 'light' ? '#16181C' : '#16181C',
+        backgroundColor: colorScheme === 'light' ? '#E7EBEE' : '#E7EBEE',
         fontFamily: 'inter',
         fontSize: 13,
         // ,

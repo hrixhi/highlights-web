@@ -124,7 +124,7 @@ const Subscribers: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             flexDirection: 'column',
                             backgroundColor: 'white'
                         }}>
-                            <ActivityIndicator color={'#50566B'} />
+                            <ActivityIndicator color={'#343A40'} />
                         </View>
                         :
                         <SubscribersList

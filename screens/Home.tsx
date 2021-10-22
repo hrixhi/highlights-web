@@ -1452,12 +1452,12 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 resizeMode={'contain'}
               />
             </View>
-            {/* <Text style={{ fontSize: 20, color: '#1A2036', fontFamily: 'inter', paddingBottom: 15, maxWidth: 500, textAlign: 'center' }}>
+            {/* <Text style={{ fontSize: 20, color: '#16181C', fontFamily: 'inter', paddingBottom: 15, maxWidth: 500, textAlign: 'center' }}>
               {
                 showForgotPassword ? '' : PreferredLanguageText('login')
               }
             </Text> */}
-            <Text style={{ fontSize: 15, color: '#50566B', fontFamily: 'overpass', paddingBottom: 30, textAlign: 'center' }}>
+            <Text style={{ fontSize: 15, color: '#343A40', fontFamily: 'overpass', paddingBottom: 30, textAlign: 'center' }}>
               {
                 showForgotPassword ? PreferredLanguageText('temporaryPassword') : PreferredLanguageText('continueLeftOff')
               }
@@ -1469,20 +1469,20 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               justifyContent: 'center',
               alignSelf: 'center'
             }}>
-              <Text style={{ color: '#1A2036', fontSize: 14, paddingBottom: 5, paddingTop: 10 }}>
+              <Text style={{ color: '#16181C', fontSize: 14, paddingBottom: 5, paddingTop: 10 }}>
                 {PreferredLanguageText('email')}
               </Text>
               <TextInput
                 value={email}
                 placeholder={''}
                 onChangeText={(val: any) => setEmail(val)}
-                placeholderTextColor={'#50566B'}
+                placeholderTextColor={'#343A40'}
                 errorText={emailValidError}
               />
               {
                 showForgotPassword ? null :
                   <View>
-                    <Text style={{ color: '#1A2036', fontSize: 14, paddingBottom: 5 }}>
+                    <Text style={{ color: '#16181C', fontSize: 14, paddingBottom: 5 }}>
                       {PreferredLanguageText('password')}
                     </Text>
                     <TextInput
@@ -1490,7 +1490,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                       value={password}
                       placeholder={''}
                       onChangeText={(val: any) => setPassword(val)}
-                      placeholderTextColor={'#50566B'}
+                      placeholderTextColor={'#343A40'}
                     />
                   </View>
               }
@@ -1524,7 +1524,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     lineHeight: 35,
                     color: 'white',
                     fontSize: 12,
-                    backgroundColor: '#5469D4',
+                    backgroundColor: '#3289D0',
                     paddingHorizontal: 20,
                     fontFamily: 'inter',
                     height: 35,
@@ -1548,11 +1548,11 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     width: '100%', justifyContent: 'center', flexDirection: 'row'
                   }}>
                   <Text style={{
-                    color: '#5469D4',
+                    color: '#3289D0',
                     width: 175,
                     borderWidth: 1,
                     borderRadius: 15,
-                    borderColor: '#5469D4',
+                    borderColor: '#3289D0',
                     backgroundColor: '#fff',
                     fontSize: 12,
                     textAlign: 'center',
@@ -1608,7 +1608,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             {
               reLoading ?
                 <View style={[styles(channelId).activityContainer, styles(channelId).horizontal]}>
-                  <ActivityIndicator color={'#50566B'} />
+                  <ActivityIndicator color={'#343A40'} />
                 </View> :
                 <Dashboard
                   setTab={(val: any) => setTab(val)}
@@ -1721,7 +1721,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             <View style={{
               height: 61,
               borderBottomWidth: 1,
-              borderColor: '#C4C4C4'
+              borderColor: '#E7EBEE'
             }}>
               <VerticalBar
                 menuCollapsed={menuCollapsed}
@@ -1769,14 +1769,14 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 height: (menuCollapsed ? dimensions.window.height - 60 : 0),
                 // paddingHorizontal: dimensions.window.width < 1024 ? 0 : 30,
                 paddingTop: 10,
-                // backgroundColor: '#f7fafc',
+                // backgroundColor: '#E7EBEE',
                 backgroundColor: '#fff',
                 position: dimensions.window.width < 1024 ? 'absolute' : 'relative'
               }}
             >
               {
                 dimensions.window.width < 1024 ? null : <View style={{ flexDirection: 'column', flex: 1, width: '100%', justifyContent: 'center', backgroundColor: '#fff' }}>
-                  <Text style={{ fontSize: 20, color: '##1A2036', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#fff' }}>
+                  <Text style={{ fontSize: 20, color: '##16181C', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#fff' }}>
                     Select cue to view.
                   </Text>
                 </View>
@@ -1806,7 +1806,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     alignSelf: 'center',
                     borderTopLeftRadius: 0,
                     borderTopRightRadius: 0,
-                    maxWidth: modalType === 'Create' || modalType === 'Update' ? 1000 : dimensions.window.width,
+                    maxWidth: dimensions.window.width,
                     overflow: 'hidden'
                   }}>
                     {modalContent}
@@ -1858,8 +1858,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               right: 0,
               justifyContent: 'center',
               bottom: 0,
-              width: 58, height: 58, borderRadius: 29, backgroundColor: '#5469D4',
-              borderColor: '#C4C4C4',
+              width: 58, height: 58, borderRadius: 29, backgroundColor: '#3289D0',
+              borderColor: '#E7EBEE',
               borderWidth: 0
             }}
           >
@@ -1886,8 +1886,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           <View style={{
             position: 'absolute',
             zIndex: showLoginWindow ? 40 : 1000,
-            backgroundColor: '#1A2036',
-            // borderColor: '#C4C4C4',
+            backgroundColor: '#16181C',
+            // borderColor: '#E7EBEE',
             // borderTopWidth: 2,
             alignSelf: 'flex-end',
             width: '100%',
@@ -1905,7 +1905,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 }
                 return <TouchableOpacity
                   style={{
-                    backgroundColor: '#1A2036'
+                    backgroundColor: '#16181C'
                   }}
                   onPress={() => {
                     // if (op === 'To Do') {
@@ -1945,7 +1945,7 @@ const styles = (channelId: string) => StyleSheet.create({
     fontWeight: 'bold',
     height: 25,
     paddingHorizontal: 12,
-    backgroundColor: '#1A2036',
+    backgroundColor: '#16181C',
     lineHeight: 25,
     fontFamily: 'overpass',
     textTransform: 'uppercase'
@@ -1955,7 +1955,7 @@ const styles = (channelId: string) => StyleSheet.create({
     color: '#fff',
     paddingHorizontal: 12,
     borderRadius: 12,
-    backgroundColor: '#5469d4',
+    backgroundColor: '#3289D0',
     lineHeight: 25,
     height: 25,
     fontFamily: 'inter',
@@ -1972,7 +1972,7 @@ const styles = (channelId: string) => StyleSheet.create({
     width: '100%',
     // maxWidth: 1000,
     justifyContent: "center",
-    backgroundColor: '#f7fafc'
+    backgroundColor: '#E7EBEE'
   },
   horizontal: {
     flexDirection: "row",
@@ -1980,7 +1980,7 @@ const styles = (channelId: string) => StyleSheet.create({
   },
   input: {
     width: '100%',
-    borderBottomColor: '#f7fafc',
+    borderBottomColor: '#E7EBEE',
     borderBottomWidth: 1,
     fontSize: 14,
     paddingTop: 13,

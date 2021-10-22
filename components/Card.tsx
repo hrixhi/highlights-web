@@ -14,7 +14,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     const starred = props.cue.starred;
     const { title } = htmlStringParser(props.cue.channelId && props.cue.channelId !== '' ? props.cue.original : props.cue.cue)
     const [showScore, setShowScore] = useState(false);
-    const [colorCode, setColorCode] = useState('#1A2036');
+    const [colorCode, setColorCode] = useState('#16181C');
     const [isOwner, setIsOwner] = useState(false)
 
     useEffect(() => {
@@ -73,7 +73,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     width: '97%',
                                     zIndex: 20
                                 }}>
-                                    <Ionicons name='bookmark' size={19} color={starred ? '#f94144' : '#f7fafc'} />
+                                    <Ionicons name='bookmark' size={19} color={starred ? '#f94144' : '#fff'} />
                                 </Text>
                                 : null
                         } */}
@@ -87,7 +87,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         {
                             props.cue.graded && showScore && !isOwner ? <Text style={{
                                 fontSize: 9,
-                                color: '#5469D4',
+                                color: '#3289D0',
                                 marginLeft: 10, textAlign: 'right'
                             }}>
                                 {props.cue.score}%
@@ -95,7 +95,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         }
                     </View>
                     <View style={{
-                        backgroundColor: '#f7fafc',
+                        backgroundColor: '#fff',
                         width: '100%', flexDirection: 'row', flex: 1, height: '75%'
                     }}>
                         <Text
@@ -119,7 +119,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     height: 20,
                                     borderRadius: 12,
                                     overflow: 'hidden',
-                                    backgroundColor: '#5469D4',
+                                    backgroundColor: '#3289D0',
                                     textAlign: 'center',
                                     zIndex: 150,
                                     marginLeft: 5,
@@ -132,18 +132,6 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     </View>
                 </View>
             </TouchableOpacity>
-            <View
-                style={{
-                    backgroundColor: colorChoices[props.cue.color],
-                    flex: 1,
-                    // borderLeftWidth: 2,
-                    borderColor: '#C4C4C4',
-                    opacity: 0.9
-                    // borderTopLeftRadius: 8,
-                    // borderBottomLeftRadius: 8,
-                }}
-            >
-            </View>
         </View>
     );
 }
@@ -155,13 +143,20 @@ export default React.memo(Card, (prev, next) => {
 const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.create({
     swiper: {
         height: '100%',
-        // borderRadius: 10,
+        backgroundColor: '#fff',
+        borderRadius: 1,
         overflow: 'hidden',
         maxWidth: 175,
         width: '100%',
-        // borderWidth: 1,
-        borderColor: '#C4C4C4',
-        flexDirection: 'row'
+        borderWidth: 1,
+        borderColor: '#E7EBEE',
+        flexDirection: 'row',
+        shadowOffset: {
+                width: -3,
+                height: 0,
+        },
+        shadowOpacity: 0.8,
+        shadowColor: col
     },
     card: {
         maxWidth: 210,
@@ -169,38 +164,38 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
         // borderTopRightRadius: 10,
         // borderBottomRightRadius: 10,
         // borderTop
-        width: '96%',
+        width: '100%',
         padding: 10,
         paddingHorizontal: 10,
-        backgroundColor: '#f7fafc',
+        backgroundColor: '#fff',
     },
     flipCard: {
         height: '100%',
         width: '100%',
         borderRadius: 1,
         padding: 13,
-        color: '#f7fafc',
-        backgroundColor: colorScheme === 'light' ? '#1A2036' : 'white'
+        color: '#fff',
+        backgroundColor: colorScheme === 'light' ? '#16181C' : 'white'
     },
     descriptionFlip: {
-        color: '#f7fafc',
+        color: '#fff',
         fontSize: 13,
         // height: '25%',
     },
     text: {
         height: '100%',
-        backgroundColor: '#f7fafc'
+        backgroundColor: '#fff'
     },
     flipText: {
         height: '100%',
-        color: '#f7fafc',
-        backgroundColor: colorScheme === 'light' ? '#1A2036' : 'white'
+        color: '#fff',
+        backgroundColor: colorScheme === 'light' ? '#16181C' : 'white'
     },
     dateContainer: {
         fontSize: 10,
-        color: '#f7fafc',
+        color: '#fff',
         height: '25%',
-        backgroundColor: '#f7fafc',
+        backgroundColor: '#fff',
         display: 'flex',
         flexDirection: 'row'
     },
@@ -209,35 +204,36 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
         height: '25%',
         display: 'flex',
         flexDirection: 'row',
-        color: '#f7fafc',
-        backgroundColor: colorScheme === 'light' ? '#1A2036' : 'white'
+        color: '#fff',
+        backgroundColor: colorScheme === 'light' ? '#16181C' : 'white'
     },
     date: {
         fontSize: 9,
-        color: colorScheme === 'light' ? '#f7fafc' : '#50566b',
+        color: colorScheme === 'light' ? '#fff' : '#343A40',
         marginLeft: 10,
-        lineHeight: 10
+        lineHeight: 10,
     },
     date2: {
         fontSize: 9,
-        color: colorScheme === 'light' ? '#f7fafc' : '#50566b',
+        color: colorScheme === 'light' ? '#fff' : '#343A40',
         // marginLeft: 10,
         lineHeight: 10,
         textAlign: 'left',
+        paddingTop: 2,
         flex: 1
     },
     title: {
-        fontFamily: 'overpass',
+        fontFamily: 'inter',
         // fontWeight: 'bold',
         fontSize: 12,
         lineHeight: 20,
         flex: 1,
         marginTop: 5,
-        color: '#1a2036'
+        color: '#16181C'
     },
     titleFlip: {
-        color: colorScheme === 'light' ? '#f7fafc' : '#1A2036',
-        backgroundColor: colorScheme === 'light' ? '#1A2036' : '#f7fafc',
+        color: colorScheme === 'light' ? '#fff' : '#16181C',
+        backgroundColor: colorScheme === 'light' ? '#16181C' : '#fff',
         fontFamily: 'inter',
         fontSize: 13,
         // ,
@@ -247,7 +243,7 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
     },
     description: {
         fontSize: 13,
-        color: colorScheme === 'light' ? '#f7fafc' : '#333333',
+        color: colorScheme === 'light' ? '#fff' : '#333333',
         // height: '30%'
     }
 });

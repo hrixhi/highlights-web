@@ -10,7 +10,7 @@
 
 .mobiscrollCustomInput {
     border: 0px;
-    /* border-bottom: 1px solid #C4C4C4; */
+    /* border-bottom: 1px solid #E7EBEE; */
     width: 100px;
     padding-top: 13px;
     padding-bottom: 8px;
@@ -21,7 +21,7 @@
 
 .mobiscrollCreateInput {
     border: 0px;
-    /* border-bottom: 1px solid #C4C4C4; */
+    /* border-bottom: 1px solid #E7EBEE; */
     font-weight: bold;
     font-family: "inter";
     cursor: pointer;
@@ -29,7 +29,7 @@
 
 .mobiscrollCategoryInput {
     border: 0px;
-    /* border-bottom: 1px solid #C4C4C4; */
+    /* border-bottom: 1px solid #E7EBEE; */
     width: 150px;
     font-weight: bold;
     font-family: "inter";
@@ -38,7 +38,7 @@
 
 .mobiscrollFrequencyInput {
     border: 0px;
-    /* border-bottom: 1px solid #C4C4C4; */
+    /* border-bottom: 1px solid #E7EBEE; */
     width: 90px;
     font-weight: bold;
     font-family: "inter";
@@ -67,7 +67,7 @@
     /* width: 180px; */
     border: 0px;
     border-radius: 0px;
-    border-bottom: 1px solid #C4C4C4;
+    border-bottom: 1px solid #E7EBEE;
     font-size: 14px;
 }
 
@@ -75,7 +75,7 @@
     /* width: 180px; */
     border: 0px;
     border-radius: 0px;
-    border-bottom: 1px solid #C4C4C4;
+    border-bottom: 1px solid #E7EBEE;
     font-size: 14px;
 }
 
@@ -86,11 +86,11 @@
 }
 
 .mce-content-body[data-mce-placeholder]:not(.mce-visualblocks)::before {
-    color: #50566B !important; 
+    color: #343A40 !important; 
 }
 
 .tox-tinymce {
-    border: 1px solid #C4C4C4 !important;
+    border: 1px solid #E7EBEE !important;
 }
 
 /* .dropdown {

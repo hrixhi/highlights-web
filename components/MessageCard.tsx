@@ -45,7 +45,7 @@ const MessageCard: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     <Text style={{
                         fontSize: 11,
                         fontWeight: 'bold',
-                        color: props.user.displayName === props.message.displayName ? '#333333' : '#50566B',
+                        color: props.user.displayName === props.message.displayName ? '#333333' : '#343A40',
                         marginRight: 5,
                         flex: 1,
                         textAlign: 'right'
@@ -56,13 +56,13 @@ const MessageCard: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 {
                     imported ?
                         <a download={true} href={url} style={{ textDecoration: 'none' }}>
-                            <View style={{ backgroundColor: '#f7fafc', flex: 1 }}>
-                                <Text style={{ width: '100%', color: '#50566B', fontSize: 14, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
-                                    <Ionicons name='document-outline' size={15} color='#50566B' /> {title}.{type}
+                            <View style={{ backgroundColor: '#E7EBEE', flex: 1 }}>
+                                <Text style={{ width: '100%', color: '#343A40', fontSize: 14, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                    <Ionicons name='document-outline' size={15} color='#343A40' /> {title}.{type}
                                 </Text>
                             </View>
                         </a>
-                        : <div dangerouslySetInnerHTML={{ __html: props.message.message }} style={{ fontFamily: 'overpass', color: '#1A2036', fontSize: 14 }} />
+                        : <div dangerouslySetInnerHTML={{ __html: props.message.message }} style={{ fontFamily: 'overpass', color: '#16181C', fontSize: 14 }} />
 
                 }
             </View>
@@ -81,26 +81,26 @@ const styles: any = () => StyleSheet.create({
         borderRadius: 15,
         padding: 13,
         paddingBottom: 20,
-        backgroundColor: '#f7fafc'
+        backgroundColor: '#E7EBEE'
     },
     text: {
         display: 'flex',
         flexDirection: 'column',
         flex: 1,
         fontWeight: 'bold',
-        backgroundColor: '#f7fafc',
+        backgroundColor: '#E7EBEE',
     },
     dateContainer: {
         fontSize: 10,
-        color: '#50566B',
-        backgroundColor: '#f7fafc',
+        color: '#343A40',
+        backgroundColor: '#E7EBEE',
         display: 'flex',
         flexDirection: 'row',
         paddingBottom: 10
     },
     date: {
         fontSize: 10,
-        color: '#50566B',
+        color: '#343A40',
         marginLeft: 5
     }
 });

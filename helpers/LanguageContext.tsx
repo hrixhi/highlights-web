@@ -14,7 +14,7 @@ const languageOptions = [
 ]
 
 const EnglishBank: { [key: string]: string } = {
-    login: "Sign in →", // Done
+    login: "Sign in", // Done
     continueLeftOff: "Continue where you left off.", // Done
     email: "Email", // Done
     password: "Password", // Done
@@ -642,7 +642,7 @@ export function LanguageSelect() {
 
     const [showLanguageDropdown, setShowLanguageDropdown] = useState(false);
     const colorScheme = useColorScheme();
-    const color = colorScheme === 'light' ? '#1A2036' : '#fff'
+    const color = colorScheme === 'light' ? '#16181C' : '#fff'
 
     return <LanguageContext.Consumer>
         {context => {
@@ -662,7 +662,7 @@ export function LanguageSelect() {
                         selectedValue={language}
                         style={{
                             height: 28, borderRadius: 1,
-                            // border: "1px solid #50566B",
+                            // border: "1px solid #343A40",
                             fontSize: 12,
                             padding: '0px 5px'
                         }}

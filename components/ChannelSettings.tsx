@@ -669,7 +669,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                 flexDirection: "column",
                 backgroundColor: "white"
             }}>
-            <ActivityIndicator color={"#50566B"} />
+            <ActivityIndicator color={"#343A40"} />
         </View>
     }
 
@@ -691,9 +691,9 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             width: '100%',
                             fontSize: 14, 
                             fontWeight: 'bold',
-                            color: '#50566B'
+                            color: '#343A40'
                         }}>
-                            <Ionicons name='chevron-back-outline' size={15} color={'#1A2036'} style={{ marginRight: 10 }} />
+                            <Ionicons name='chevron-back-outline' size={15} color={'#16181C'} style={{ marginRight: 10 }} />
                         </Text>
                     </TouchableOpacity>
                 </View>
@@ -724,7 +724,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         <Text style={{
                             fontSize: 14, fontFamily: 'inter',
                             fontWeight: 'bold',
-                            color: '#1A2036'
+                            color: '#16181C'
                         }}>
                             {PreferredLanguageText('name')}
                         </Text>
@@ -734,7 +734,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             onChangeText={val => {
                                 setDuplicateChannelName(val)
                             }}
-                            placeholderTextColor={'#50566B'}
+                            placeholderTextColor={'#343A40'}
                             required={true}
                             footerMessage={'case sensitive'}
                         />
@@ -743,7 +743,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         <Text style={{
                             fontSize: 14, fontFamily: 'inter',
                             fontWeight: 'bold',
-                            color: '#1A2036'
+                            color: '#16181C'
                         }}>
                             {PreferredLanguageText('enrolmentPassword')}
                         </Text>
@@ -751,7 +751,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             value={duplicateChannelPassword}
                             placeholder={`(${PreferredLanguageText('optional')})`}
                             onChangeText={val => setDuplicateChannelPassword(val)}
-                            placeholderTextColor={'#50566B'}
+                            placeholderTextColor={'#343A40'}
                             secureTextEntry={true}
                             required={false}
                         />
@@ -760,7 +760,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         <Text style={{
                             fontSize: 14, fontFamily: 'inter',
                             fontWeight: 'bold',
-                            color: '#1A2036'
+                            color: '#16181C'
                         }}>
                             Theme
                         </Text>
@@ -790,7 +790,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         style={{
                                             fontSize: 14, fontFamily: 'inter',
                                             fontWeight: 'bold',
-                                            color: '#1A2036'
+                                            color: '#16181C'
                                         }}
                                     >
                                         Duplicate Subscribers
@@ -811,8 +811,8 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             }}
                                             style={{ height: 20 }}
                                             trackColor={{
-                                                false: "#C4C4C4",
-                                                true: "#5469D4"
+                                                false: "#E7EBEE",
+                                                true: "#3289D0"
                                             }}
                                             activeThumbColor="white"
                                         />
@@ -838,7 +838,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         style={{
                                             fontSize: 14, fontFamily: 'inter',
                                             fontWeight: 'bold',
-                                            color: '#1A2036'
+                                            color: '#16181C'
                                         }}
                                     >
                                         Duplicate Moderators
@@ -859,8 +859,8 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             }}
                                             style={{ height: 20 }}
                                             trackColor={{
-                                                false: "#C4C4C4",
-                                                true: "#5469D4"
+                                                false: "#E7EBEE",
+                                                true: "#3289D0"
                                             }}
                                             activeThumbColor="white"
                                         />
@@ -886,7 +886,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 lineHeight: 35,
                                 color: 'white',
                                 fontSize: 12,
-                                backgroundColor: '#5469D4',
+                                backgroundColor: '#3289D0',
                                 paddingHorizontal: 20,
                                 fontFamily: 'inter',
                                 height: 35,
@@ -928,7 +928,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         <Text style={{
                             fontSize: 14, fontFamily: 'inter',
                             fontWeight: 'bold',
-                            color: '#1A2036'
+                            color: '#16181C'
                         }}>
                             {PreferredLanguageText('name')}
                         </Text>
@@ -939,7 +939,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             onChangeText={val => {
                                 setName(val)
                             }}
-                            placeholderTextColor={'#50566B'}
+                            placeholderTextColor={'#343A40'}
                             required={true}
                             footerMessage={'case sensitive'}
                         />
@@ -948,7 +948,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         <Text style={{
                             fontSize: 14, fontFamily: 'inter',
                             fontWeight: 'bold',
-                            color: '#1A2036'
+                            color: '#16181C'
                         }}>
                             {PreferredLanguageText('enrolmentPassword')}
                         </Text>
@@ -957,7 +957,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             autoCompleteType='off'
                             placeholder={`(${PreferredLanguageText('optional')})`}
                             onChangeText={val => setPassword(val)}
-                            placeholderTextColor={'#50566B'}
+                            placeholderTextColor={'#343A40'}
                             secureTextEntry={true}
                             required={false}
                         />
@@ -967,7 +967,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         <Text style={{
                             fontSize: 14, fontFamily: 'inter',
                             fontWeight: 'bold',
-                            color: '#1A2036'
+                            color: '#16181C'
                         }}>
                             Theme
                         </Text>
@@ -986,7 +986,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         fontSize: 14, fontFamily: 'inter',
                         paddingTop: 20,
                         fontWeight: 'bold',
-                        color: '#1A2036'
+                        color: '#16181C'
                     }}>
                         Subscribers
                     </Text>
@@ -1067,7 +1067,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                     <Text style={{
                         fontSize: 14, fontFamily: 'inter',
                         //  fontFamily: 'inter',
-                        color: '#1A2036', marginTop: 25, marginBottom: 20
+                        color: '#16181C', marginTop: 25, marginBottom: 20
                     }}>
                         Moderators
                     </Text>
@@ -1161,7 +1161,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 lineHeight: 35,
                                 color: 'white',
                                 fontSize: 12,
-                                backgroundColor: '#5469D4',
+                                backgroundColor: '#3289D0',
                                 paddingHorizontal: 20,
                                 fontFamily: 'inter',
                                 height: 35,
@@ -1186,10 +1186,10 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             <Text style={{
                                 textAlign: 'center',
                                 lineHeight: 35,
-                                color: '#5469D4',
+                                color: '#3289D0',
                                 borderWidth: 1,
                                 borderRadius: 15,
-                                borderColor: '#5469D4',
+                                borderColor: '#3289D0',
                                 backgroundColor: '#fff',
                                 fontSize: 12,
                                 paddingHorizontal: 20,
@@ -1232,9 +1232,9 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     <Text style={{
                                         textAlign: 'center',
                                         lineHeight: 35,
-                                        color: '#1A2036',
+                                        color: '#16181C',
                                         fontSize: 12,
-                                        backgroundColor: '#f7fafc',
+                                        backgroundColor: '#E7EBEE',
                                         paddingHorizontal: 20,
                                         fontFamily: 'inter',
                                         height: 35,
@@ -1270,24 +1270,24 @@ const styles = StyleSheet.create({
     outline: {
         borderRadius: 1,
         borderWidth: 1,
-        borderColor: '#50566B'
+        borderColor: '#343A40'
     },
     all: {
         fontSize: 14, fontFamily: 'inter',
-        color: '#50566B',
+        color: '#343A40',
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: 'white'
     },
     allOutline: {
         fontSize: 14, fontFamily: 'inter',
-        color: '#50566B',
+        color: '#343A40',
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: 'white',
         borderRadius: 1,
         borderWidth: 1,
-        borderColor: '#50566B'
+        borderColor: '#343A40'
     },
     colorBar: {
         width: '100%',
@@ -1299,7 +1299,7 @@ const styles = StyleSheet.create({
     },
     input: {
         width: '100%',
-        borderBottomColor: '#f7fafc',
+        borderBottomColor: '#E7EBEE',
         borderBottomWidth: 1,
         fontSize: 14, fontFamily: 'inter',
         paddingTop: 13,
@@ -1326,7 +1326,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         borderRadius: 1,
         borderWidth: 1,
-        borderColor: '#50566B'
+        borderColor: '#343A40'
     },
 });
 

@@ -21,7 +21,7 @@ const SubscriberCard: React.FunctionComponent<{ [label: string]: any }> = (props
                 onPress={() => props.onPress()}
                 key={'textPage'}
                 style={styleObject.card}>
-                <View style={{ backgroundColor: '#f7fafc', width: '100%', flexDirection: 'row', display: 'flex', height: '44%', minHeight: 25 }}>
+                <View style={{ backgroundColor: '#E7EBEE', width: '100%', flexDirection: 'row', display: 'flex', height: '44%', minHeight: 25 }}>
                     <Text ellipsizeMode={'tail'}
                         numberOfLines={1}
                         style={styleObject.title}>
@@ -29,7 +29,7 @@ const SubscriberCard: React.FunctionComponent<{ [label: string]: any }> = (props
                     </Text>
                     {
                         fullName === 'submitted' || fullName === 'graded' || props.chat ?
-                            <View style={{ flexDirection: 'row', backgroundColor: '#f7fafc' }}>
+                            <View style={{ flexDirection: 'row', backgroundColor: '#E7EBEE' }}>
                                 {
                                     props.subscriber.unreadMessages !== undefined
                                         && props.subscriber !== null
@@ -39,7 +39,7 @@ const SubscriberCard: React.FunctionComponent<{ [label: string]: any }> = (props
                                             width: 20,
                                             height: 20,
                                             borderRadius: 1,
-                                            backgroundColor: '#5469D4',
+                                            backgroundColor: '#3289D0',
                                             textAlign: 'center',
                                             zIndex: 150,
                                             marginLeft: 10,
@@ -60,7 +60,7 @@ const SubscriberCard: React.FunctionComponent<{ [label: string]: any }> = (props
                                     null
                                 }
                                 {
-                                    props.hideChevron ? null : <Ionicons name="chevron-forward-outline" color="#50566B" size={15} style={{ marginTop: 3, marginLeft: 10 }} />
+                                    props.hideChevron ? null : <Ionicons name="chevron-forward-outline" color="#343A40" size={15} style={{ marginTop: 3, marginLeft: 10 }} />
                                 }
                             </View>
                             : null
@@ -96,21 +96,21 @@ const styles: any = (status: any) => StyleSheet.create({
         width: '100%',
         borderRadius: 1,
         padding: 13,
-        backgroundColor: '#f7fafc',
+        backgroundColor: '#E7EBEE',
         borderWidth: 1,
-        borderColor: '#C4C4C4'
+        borderColor: '#E7EBEE'
     },
     text: {
         display: 'flex',
         flexDirection: 'column',
         flex: 1,
-        backgroundColor: '#f7fafc',
+        backgroundColor: '#E7EBEE',
     },
     titleArrow: {
         fontFamily: 'inter',
         fontSize: 13,
         paddingTop: 5,
-        color: '#1A2036',
+        color: '#16181C',
         marginLeft: 10
     },
     title: {
@@ -118,10 +118,10 @@ const styles: any = (status: any) => StyleSheet.create({
         fontSize: 13,
         width: '100%',
         paddingTop: 5,
-        color: '#1A2036'
+        color: '#16181C'
     },
     description: {
         fontSize: 13,
-        color: '#50566B',
+        color: '#343A40',
     }
 });

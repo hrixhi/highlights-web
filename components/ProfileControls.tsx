@@ -350,7 +350,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
       <View style={styles.screen} key={1}>
         <View style={{ width: "100%", backgroundColor: "white" }}>
           <View style={styles.colorBar}>
-            <Text style={{ fontSize: 20, color: "#50566B" }}>
+            <Text style={{ fontSize: 20, color: "#343A40" }}>
               {PreferredLanguageText('internetRequiried')}
             </Text>
           </View>
@@ -383,7 +383,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                 <Text style={{
                   fontSize: 14,
                   fontWeight: 'bold',
-                  color: '#1A2036'
+                  color: '#16181C'
                 }}>
                   {PreferredLanguageText('currentPassword')}
                 </Text>
@@ -392,12 +392,12 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                   value={currentPassword}
                   placeholder={""}
                   onChangeText={val => setCurrentPassword(val)}
-                  placeholderTextColor={"#50566B"}
+                  placeholderTextColor={"#343A40"}
                 />
                 <Text style={{
                   fontSize: 14,
                   fontWeight: 'bold',
-                  color: '#1A2036'
+                  color: '#16181C'
                 }}>
                   {PreferredLanguageText('newPassword')}
                 </Text>
@@ -406,7 +406,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                   value={newPassword}
                   placeholder={""}
                   onChangeText={val => setNewPassword(val)}
-                  placeholderTextColor={"#50566B"}
+                  placeholderTextColor={"#343A40"}
                   errorText={newPasswordValidError}
                   footerMessage={
                     PreferredLanguageText('atleast8char')
@@ -415,7 +415,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                 <Text style={{
                   fontSize: 14,
                   fontWeight: 'bold',
-                  color: '#1A2036'
+                  color: '#16181C'
                 }}>
                   {PreferredLanguageText('confirmNewPassword')}
                 </Text>
@@ -424,7 +424,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                   value={confirmNewPassword}
                   placeholder={""}
                   onChangeText={val => setConfirmNewPassword(val)}
-                  placeholderTextColor={"#50566B"}
+                  placeholderTextColor={"#343A40"}
                   errorText={confirmNewPasswordError}
                 />
               </View>
@@ -461,7 +461,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                         flexDirection: 'row'
                       }}>
                       <Text>
-                        <Ionicons name={'close-circle-outline'} size={19} color={'#50566B'} />
+                        <Ionicons name={'close-circle-outline'} size={19} color={'#343A40'} />
                       </Text>
                     </TouchableOpacity> : <FileUpload
                       onUpload={(u: any, t: any) => {
@@ -474,7 +474,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                   marginTop: 20,
                   fontSize: 14,
                   fontWeight: 'bold',
-                  color: '#1A2036'
+                  color: '#16181C'
                 }}>
                   {PreferredLanguageText('email')}
                 </Text>
@@ -483,14 +483,14 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                   value={email}
                   placeholder={""}
                   onChangeText={val => setEmail(val)}
-                  placeholderTextColor={"#50566B"}
+                  placeholderTextColor={"#343A40"}
                   required={true}
                   errorText={emailValidError}
                 />
                 <Text style={{
                   fontSize: 14,
                   fontWeight: 'bold',
-                  color: '#1A2036'
+                  color: '#16181C'
                 }}>
                   {PreferredLanguageText('fullName')}
                 </Text>
@@ -498,13 +498,13 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                   value={fullName}
                   placeholder={""}
                   onChangeText={val => setFullName(val)}
-                  placeholderTextColor={"#50566B"}
+                  placeholderTextColor={"#343A40"}
                   required={true}
                 />
                 {/* <Text style={{
                   fontSize: 14,
                   fontFamily: 'inter',
-                  color: '#1A2036'
+                  color: '#16181C'
                 }}>
                   {PreferredLanguageText('displayName')}
                 </Text>
@@ -512,7 +512,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                   value={displayName}
                   placeholder={""}
                   onChangeText={val => setDisplayName(val)}
-                  placeholderTextColor={"#50566B"}
+                  placeholderTextColor={"#343A40"}
                   required={true}
                 /> */}
                 {loggedIn ? null : (
@@ -521,7 +521,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                       style={{
                         fontSize: 14,
                         fontWeight: 'bold',
-                        color: '#1A2036'
+                        color: '#16181C'
                       }}
                     >
                       {PreferredLanguageText('password')}
@@ -530,7 +530,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                       value={password}
                       placeholder={""}
                       onChangeText={val => setPassword(val)}
-                      placeholderTextColor={"#50566B"}
+                      placeholderTextColor={"#343A40"}
                       secureTextEntry={true}
                       required={true}
                       footerMessage={
@@ -542,7 +542,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                       style={{
                         fontSize: 14,
                         fontWeight: 'bold',
-                        color: '#1A2036'
+                        color: '#16181C'
                       }}
                     >
                       {PreferredLanguageText('confirmPassword')}
@@ -551,7 +551,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                       value={confirmPassword}
                       placeholder={""}
                       onChangeText={val => setConfirmPassword(val)}
-                      placeholderTextColor={"#50566B"}
+                      placeholderTextColor={"#343A40"}
                       secureTextEntry={true}
                       required={true}
                       errorText={confirmPasswordError}
@@ -588,7 +588,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                     lineHeight: 35,
                     color: "white",
                     fontSize: 12,
-                    backgroundColor: "#5469D4",
+                    backgroundColor: "#3289D0",
                     paddingHorizontal: 20,
                     fontFamily: "inter",
                     height: 35,
@@ -617,10 +617,10 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                     style={{
                       textAlign: "center",
                       lineHeight: 35,
-                      color: '#5469D4',
+                      color: '#3289D0',
                       borderWidth: 1,
                       borderRadius: 15,
-                      borderColor: '#5469D4',
+                      borderColor: '#3289D0',
                       backgroundColor: '#fff',
                       fontSize: 12,
                       paddingHorizontal: 20,
@@ -656,10 +656,10 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                   >
                     <Text
                       style={{
-                        color: '#5469D4',
+                        color: '#3289D0',
                         borderWidth: 1,
                         borderRadius: 15,
-                        borderColor: '#5469D4',
+                        borderColor: '#3289D0',
                         backgroundColor: '#fff',
                         fontSize: 12,
                         textAlign: "center",
@@ -695,10 +695,10 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                       paddingHorizontal: 20,
                       fontFamily: "inter",
                       height: 35,
-                      color: '#5469D4',
+                      color: '#3289D0',
                       borderWidth: 1,
                       borderRadius: 15,
-                      borderColor: '#5469D4',
+                      borderColor: '#3289D0',
                       backgroundColor: '#fff',
                       fontSize: 12,
                       width: 175,
@@ -735,24 +735,24 @@ const styles = StyleSheet.create({
   outline: {
     borderRadius: 1,
     borderWidth: 1,
-    borderColor: "#50566B"
+    borderColor: "#343A40"
   },
   all: {
     fontSize: 14,
-    color: "#50566B",
+    color: "#343A40",
     height: 22,
     paddingHorizontal: 10,
     backgroundColor: "white"
   },
   allOutline: {
     fontSize: 14,
-    color: "#50566B",
+    color: "#343A40",
     height: 22,
     paddingHorizontal: 10,
     backgroundColor: "white",
     borderRadius: 1,
     borderWidth: 1,
-    borderColor: "#50566B"
+    borderColor: "#343A40"
   },
   colorBar: {
     width: "100%",
