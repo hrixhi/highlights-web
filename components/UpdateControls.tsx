@@ -1358,7 +1358,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
         setUpdatingCueDetails(false)
 
-    }, [submission, deadline, initiateAt, gradeWeight, customCategory, endPlayAt, color, frequency, notify, allowedAttempts, unlimitedAttempts, allowLateSubmission, availableUntil])
+    }, [submission, deadline, initiateAt, gradeWeight, customCategory, endPlayAt, color, frequency, notify, allowedAttempts, unlimitedAttempts, allowLateSubmission, availableUntil, isOwner])
 
     // Handle Delete Cue
     const handleDelete = useCallback(async () => {
@@ -1963,13 +1963,15 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 {
                     text: "Yes",
                     onPress: () => {
-                        handleUpdateContent()
+                        if (props.channelOwner) {
+                            handleUpdateContent()
+                        }
                         handleUpdateDetails()
                     }
                 }
             ])
         }
-    }, [props.save, handleUpdateContent, handleUpdateDetails])
+    }, [props.save, handleUpdateContent, handleUpdateDetails, props.channelOwner])
 
     useEffect(() => {
         if (props.del) {

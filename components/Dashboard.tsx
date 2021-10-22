@@ -5,18 +5,12 @@ import { Ionicons } from '@expo/vector-icons';
 import _ from 'lodash'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { fetchAPI } from '../graphql/FetchAPI';
-import { creatFolder, getActivity, getOrganisation, getSearch, updateFolder, checkChannelStatus, subscribe, markAttendance, meetingRequest } from '../graphql/QueriesAndMutations';
-import logo from './default-images/cues-logo-black-exclamation-hidden.jpg'
-import Profile from './Profile';
+import { creatFolder, updateFolder, checkChannelStatus, subscribe, markAttendance, meetingRequest } from '../graphql/QueriesAndMutations';
 import Walkthrough from './Walkthrough';
 import Channels from './Channels';
-import ActivityCard from './ActivityCard';
-import OverviewCueCard from './OverviewCueCard';
-import Swiper from 'react-native-web-swiper'
 import { PreferredLanguageText } from '../helpers/LanguageContext';
 import CalendarX from './Calendar';
 import { TextInput } from "./CustomTextInput";
-import { DateRangePicker } from 'rsuite';
 import alert from './Alert';
 import {
     Menu,
@@ -39,25 +33,16 @@ import '@mobiscroll/react/dist/css/mobiscroll.react.min.css';
 import axios from 'axios';
 
 
-
 const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
-
-
 
     const styles = styleObject()
     const [userId, setUserId] = useState('')
     const [avatar, setAvatar] = useState('')
 
-    const mobiRef: any = useRef(null);
-
-    const deskMobiRef: any = useRef(null);
-
     const scrollViewRef: any = useRef(null);
 
     const [searchTerm, setSearchTerm] = useState('')
-    const priorities = [4, 3, 2, 1, 0]
     const [collapseMap, setCollapseMap] = useState<any>({})
-    const [channelCategories, setChannelCategories] = useState<any>({})
     const [results, setResults] = useState<any>({
         'Channels': [],
         'Classroom': [],
@@ -1276,13 +1261,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                     }}>
                                                                         <View style={{
                                                                             backgroundColor: '#E7EBEE',
-                                                                            // paddingLeft: 23, 
-                                                                            // paddingLeft: 23, 
-                                                                            // paddingLeft: 23, 
-                                                                            // paddingLeft: 23, 
-                                                                            // paddingLeft: 23, 
-                                                                            // paddingLeft: 23, 
-                                                                            // paddingLeft: 23, 
                                                                             marginBottom: 10
                                                                         }}>
                                                                             <Text style={{
@@ -1297,9 +1275,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                             </Text>
                                                                         </View>
                                                                         <View
-                                                                            // showsVerticalScrollIndicator={false}
-                                                                            // horizontal={true}
-                                                                            // style={{ height: '100%' }}
                                                                             style={{
                                                                                 // borderWidth: 1,
                                                                                 maxWidth: 150,
