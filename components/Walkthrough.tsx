@@ -367,7 +367,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                         maxHeight: Dimensions.get('window').width < 1024 ? windowHeight - 104 : windowHeight - 52,
                                         // paddingBottom: 75,
                                         width: '100%',
-                                        maxWidth: 1000,
+                                        maxWidth: 900,
                                     }}
                                 >
                                     {
@@ -459,7 +459,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         height: '100%',
         width: '100%',
-        maxWidth: 1000,
+        maxWidth: 900,
         paddingHorizontal: Dimensions.get("window").width < 1024 ? 0 : 50,
         // alignSelf: 'center',
         borderTopRightRadius: 0,

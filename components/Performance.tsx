@@ -310,7 +310,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             // paddingBottom: 5,
                             width: '100%'
                         }}>
-                            <View style={{ flexDirection: 'row', paddingBottom: collapseMap[ind] ? 0 : 0, maxWidth: 1000, alignSelf: 'center', width: '100%' }}>
+                            <View style={{ flexDirection: 'row', paddingBottom: collapseMap[ind] ? 0 : 0, maxWidth: 900, alignSelf: 'center', width: '100%' }}>
                                 <TouchableOpacity
                                     style={{
                                         flex: 1,
@@ -360,7 +360,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                 </TouchableOpacity>
                             </View>
                             {
-                                !collapseMap[ind] ? <View style={{ width: '100%', maxWidth: 1000, alignSelf: 'center' }}>
+                                !collapseMap[ind] ? <View style={{ width: '100%', maxWidth: 900, alignSelf: 'center' }}>
                                     {/* Render Tabs to switch between Grades, Stats and Attendance */}
                                     {activeTabMap[ind] === "scores" || activeTabMap[ind] === "statistics" ? <Grades
                                         closeModal={() => { }}
@@ -376,7 +376,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                             activeTabMap[ind] === "attendance" ? <AttendanceList
                                                 channelId={sub.channelId}
                                                 channelCreatedBy={sub.channelCreatedBy}
-                                            /> : <View style={{ maxWidth: 1000, alignSelf: 'center', width: '100%' }}>
+                                            /> : <View style={{ maxWidth: 900, alignSelf: 'center', width: '100%' }}>
                                                 <View style={{ flexDirection: 'row', flex: 1, paddingTop: 20 }}>
                                                     <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
                                                         <Text style={{

@@ -1491,7 +1491,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 borderTopRightRadius: 0,
                 borderTopLeftRadius: 0,
                 overflow: tab === 'Add' ? 'hidden' : 'scroll',
-                maxWidth: 1000,
+                maxWidth: 900,
                 alignSelf: 'center'
             }}>
             <View style={{

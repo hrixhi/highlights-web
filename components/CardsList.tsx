@@ -76,7 +76,7 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
             <ScrollView
                 horizontal={true}
                 nestedScrollEnabled={true}
-                contentContainerStyle={{ width: '100%', backgroundColor: '#E7EBEE', paddingTop: 20, maxWidth: 1000 }}
+                contentContainerStyle={{ width: '100%', backgroundColor: '#E7EBEE', paddingTop: 20, maxWidth: 900 }}
             >
                 {
                     Object.keys(categoryMap).map((category: any, i: any) => {

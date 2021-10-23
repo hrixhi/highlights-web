@@ -734,7 +734,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             <ScrollView
                 style={{
                     width: "100%",
-                    maxWidth: 1000,
+                    maxWidth: 900,
                     backgroundColor: '#E7EBEE',
                     borderTopLeftRadius: 0,
                     borderTopRightRadius: 0,
@@ -763,7 +763,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             <ScrollView
                 style={{
                     width: "100%",
-                    maxWidth: 1000,
+                    maxWidth: 900,
                     backgroundColor: '#E7EBEE',
                     borderTopLeftRadius: 0,
                     borderTopRightRadius: 0,
@@ -909,7 +909,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             <ScrollView
                 style={{
                     width: "100%",
-                    maxWidth: 1000,
+                    maxWidth: 900,
                     backgroundColor: '#E7EBEE',
                     borderTopLeftRadius: 0,
                     borderTopRightRadius: 0,
@@ -1001,7 +1001,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 {channelCues.length !== 0 ? <ScrollView
                     style={{
                         width: "100%",
-                        maxWidth: 1000,
+                        maxWidth: 900,
                         backgroundColor: '#E7EBEE',
                         borderTopLeftRadius: 0,
                         borderTopRightRadius: 0,
@@ -1128,7 +1128,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     <ScrollView
                         style={{
                             width: "100%",
-                            maxWidth: 1000,
+                            maxWidth: 900,
                             backgroundColor: '#E7EBEE',
                             borderTopLeftRadius: 0,
                             borderTopRightRadius: 0,
@@ -1265,7 +1265,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
     const ContentView = <Animated.View style={{
         width: '100%',
-        maxWidth: 1000,
+        maxWidth: 900,
         height: '100%',
         maxHeight: windowHeight,
         opacity: modalAnimation,
@@ -1325,7 +1325,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             ref={scroll2}
                             contentContainerStyle={{
                                 width: '100%',
-                                maxWidth: 1000,
+                                maxWidth: 900,
                                 alignSelf: 'center',
                                 height: '100%'
                             }}
@@ -1826,7 +1826,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 height: 52, backgroundColor: '#16181C',
                 paddingHorizontal: Dimensions.get('window').width < 1024 ? 20 : 0,
             }}>
-                <View style={{ flexDirection: 'row', flex: 1, maxWidth: 1000, backgroundColor: '#16181C', }}>
+                <View style={{ flexDirection: 'row', flex: 1, maxWidth: 900, backgroundColor: '#16181C', }}>
 
                     {/* BACK BUTTON */}
                     <TouchableOpacity

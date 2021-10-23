@@ -1176,7 +1176,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
             {
                 showSubmission || showChat || showAddUsers || showNewGroup ?
                     <View style={{ backgroundColor: 'white', paddingBottom: 15, width: '100%', flexDirection: 'row', justifyContent: 'center' }}>
-                        <View style={{ flexDirection: 'row', width: '100%', maxWidth: 1000 }}>
+                        <View style={{ flexDirection: 'row', width: '100%', maxWidth: 900 }}>
                             {/* <TouchableOpacity
                                 key={Math.random()}
                                 style={{
@@ -1322,7 +1322,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                     </View> :
                     <View style={{
                         width: '100%',
-                        maxWidth: 1000,
+                        maxWidth: 900,
                         // alignSelf: 'center',
                         backgroundColor: 'white',
                         flex: 1
@@ -1588,7 +1588,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                         borderColor: '#E7EBEE',
                                                         // maxHeight: props.cueId ? windowHeight - 00 : '100%',
                                                         // marginBottom: props.cueId ? 20 : 0,
-                                                        maxWidth: 1000,
+                                                        maxWidth: 900,
                                                         marginBottom: 50,
                                                         // alignSelf: 'center'
                                                     }}

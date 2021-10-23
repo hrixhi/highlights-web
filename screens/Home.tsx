@@ -1969,7 +1969,7 @@ const styles = (channelId: string) => StyleSheet.create({
     height: '100%',
     // height: Dimensions.get('window').height - 60,
     width: '100%',
-    // maxWidth: 1000,
+    // maxWidth: 900,
     justifyContent: "center",
     backgroundColor: '#E7EBEE'
   },

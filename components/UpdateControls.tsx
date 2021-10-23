@@ -5298,7 +5298,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             </View>}
                     <View style={{
                         width: '100%',
-                        maxWidth: 1000,
+                        maxWidth: 900,
                         alignSelf: 'center',
                         paddingLeft: Dimensions.get('window').width < 1024 ? 12 : 15
                     }}>

@@ -845,7 +845,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                         overflow: 'scroll'
                     }} key={1}>
                         <View style={{ width: '100%', backgroundColor: 'white' }}>
-                            <View style={{ width: '100%', maxWidth: 1000, alignSelf: 'center' }}>
+                            <View style={{ width: '100%', maxWidth: 900, alignSelf: 'center' }}>
                                 <View style={{
                                     backgroundColor: '#fff', width: '100%',
                                     marginBottom: width < 1024 ? 20 : 0

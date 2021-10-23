@@ -53,7 +53,7 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 paddingTop: 5,
                 backgroundColor: '#E7EBEE',
                 flexDirection: 'row',
-                maxWidth: 1000,
+                maxWidth: 900,
             }}>
                 <View style={styles.icons}>
                     <TouchableOpacity

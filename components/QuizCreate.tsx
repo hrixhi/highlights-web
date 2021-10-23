@@ -613,7 +613,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
         <View style={{
             width: '100%', height: '100%', backgroundColor: 'white',
             borderTopLeftRadius: 0,
-            maxWidth: 1000,
+            maxWidth: 900,
             borderTopRightRadius: 0,
             borderTopColor: '#E7EBEE',
             borderTopWidth: 1,
@@ -662,7 +662,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     alignItems: 'center',
                                     flex: 1,
                                     // width: '100%',
-                                    maxWidth: 1000,
+                                    maxWidth: 900,
                                     marginTop: Dimensions.get('window').width < 1024 ? 0 : 0
                                 }}>
                                     <View style={{ flexDirection: 'row' }}>

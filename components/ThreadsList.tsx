@@ -440,7 +440,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
         }}>
             <View style={{
                 width: '100%',
-                maxWidth: 1000
+                maxWidth: 900
             }}>
                 {
                     !showPost && !showThreadCues ?
@@ -449,7 +449,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             flexDirection: 'row',
                             paddingBottom: !props.cueId ? 0 : 0,
                             width: '100%',
-                            maxWidth: 1000
+                            maxWidth: 900
                         }}>
                             {
                                 props.cueId === null && !showPost && categoryChoices.length > 1 ?
@@ -564,7 +564,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                         showPost ?
                                             <View style={{
                                                 width: '100%',
-                                                maxWidth: 1000,
+                                                maxWidth: 900,
                                                 // paddingLeft: 20,
                                                 // height: Dimensions.get('window').height - 350,
                                             }}
@@ -677,7 +677,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                             : (showThreadCues ?
                                                 <View style={{
                                                     width: '100%',
-                                                    maxWidth: 1000,
+                                                    maxWidth: 900,
                                                     // paddingLeft: 20,
                                                     // height: Dimensions.get('window').height - 350,
                                                 }}
@@ -764,7 +764,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                             </View>
                                                         )}
                                                     />
-                                                </View> : <View style={{ width: '100%', maxWidth: 1000, marginTop: 20 }}>
+                                                </View> : <View style={{ width: '100%', maxWidth: 900, marginTop: 20 }}>
                                                     {
                                                         threads.length === 0 ?
                                                             <View style={{ backgroundColor: 'white', flex: 1 }}>

@@ -369,7 +369,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
 
     return (
         <View style={styles.screen} key={1}>
-            <View style={{ width: '100%', maxWidth: 1000, paddingBottom: 25 }}>
+            <View style={{ width: '100%', maxWidth: 900, paddingBottom: 25 }}>
                 {
                     props.showCreate ?
                         <View style={{ flexDirection: 'row', width: '100%', height: 50, marginBottom: 10 }}>

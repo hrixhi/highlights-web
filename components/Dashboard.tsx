@@ -595,7 +595,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
         }}>
         <View style={{
             width: '100%',
-            maxWidth: 1000,
+            maxWidth: 900,
             paddingHorizontal: Dimensions.get('window').width < 1024 ? 20 : 0
         }}>
             <Text style={{
@@ -1042,7 +1042,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     paddingTop: 10,
                                     paddingHorizontal: width < 1024 && props.option === 'Classroom' ? 20 : 0,
                                     borderTopWidth: ind === 0 || collapseMap[key] || collapseMap[Object.keys(cueMap)[ind - 1]] ? 0 : 1,
-                                    paddingBottom: 0, maxWidth: 1000, alignSelf: 'center', width: '100%',
+                                    paddingBottom: 0, maxWidth: 900, alignSelf: 'center', width: '100%',
                                 }}>
                                     <TouchableOpacity
                                         style={{
@@ -1110,7 +1110,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     backgroundColor: collapseMap[key] ? '#E7EBEE' : '#fff',
                                     flexDirection: 'row', paddingBottom: 0,
                                     paddingHorizontal: width < 1024 && props.option === 'Classroom' ? 20 : 0,
-                                    maxWidth: 1000, alignSelf: 'center', width: '100%'
+                                    maxWidth: 900, alignSelf: 'center', width: '100%'
                                 }}>
                                     <TouchableOpacity
                                         style={{
@@ -1187,7 +1187,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         }} key={collapseMap.toString()}>
                             <View style={{
                                 width: '100%',
-                                maxWidth: 1000,
+                                maxWidth: 900,
                                 backgroundColor: '#E7EBEE',
                                 paddingHorizontal: width < 1024 ? 20 : 0
                             }}>
@@ -1204,7 +1204,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                 // meet
                                                                 (
                                                                     <View
-                                                                        style={{ width: '100%', maxWidth: 1000, alignSelf: 'center' }}
+                                                                        style={{ width: '100%', maxWidth: 900, alignSelf: 'center' }}
                                                                     >
                                                                         <Meeting
                                                                             channelId={key.split('-SPLIT-')[1]}
@@ -1382,7 +1382,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 <View style={{
                     flexDirection: 'row',
                     width: '100%',
-                    maxWidth: 1000, alignSelf: 'center',
+                    maxWidth: 900, alignSelf: 'center',
                     backgroundColor: '#16181C',
                     paddingVertical: 10,
                     flex: 1,

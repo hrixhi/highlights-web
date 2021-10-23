@@ -1147,7 +1147,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                   display: "flex",
                   flexDirection: "column",
                   marginHorizontal: 10,
-                  maxWidth: 1000, alignSelf: 'center',
+                  maxWidth: 900, alignSelf: 'center',
                   // marginLeft: width < 1024 ? 0 : 200
                 }}
               >
