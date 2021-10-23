@@ -1234,6 +1234,10 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
         setChannelId('')
       }
     }
+
+    if (modalType === 'Create') {
+      setModalType('')
+    }
     // setOption('To Do')
     loadData(true)
   }, [sheetRef, fadeAnimation, modalType, filterChoice])
@@ -1246,15 +1250,15 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
       closeModal()
     }}
   /> :
-    (modalType === 'Create' ? <Create
-      key={JSON.stringify(customCategories)}
-      customCategories={customCategories}
-      closeModal={() => {
-        closeModal()
-        setPageNumber(0)
-      }}
-    />
-      :
+    // (modalType === 'Create' ? <Create
+    //   key={JSON.stringify(customCategories)}
+    //   customCategories={customCategories}
+    //   closeModal={() => {
+    //     closeModal()
+    //     setPageNumber(0)
+    //   }}
+    // />
+    //   :
       (modalType === 'Update' ? <Update
         key={cueId.toString()}
         customCategories={customCategories}
@@ -1346,7 +1350,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
           )
         )
       )
-    )
+    // )
 
   const cuesArray: any[] = []
   let filteredCues: any[] = []
@@ -1701,6 +1705,20 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                   setLoadDiscussionForChannelId={setLoadDiscussionForChannelId}
                   openChannelId={openChannelId}
                   setOpenChannelId={setOpenChannelId}
+                  // Props for Dashboard
+                  // key={JSON.stringify(customCategories)}
+                  modalType={modalType}
+                  customCategories={customCategories}
+                  closeCreateModal={() => {
+                    // closeModal()
+                    setModalType('')
+                    setPageNumber(0)
+                  }}
+                  closeOnCreate={() => {
+                    setModalType('')
+                    setPageNumber(0)
+                    loadData(true)
+                  }}
                 />
             }
           </View>
@@ -1829,15 +1847,16 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 setModalType('')
                 setCreatedBy('')
                 setChannelFilterChoice('All')
-                if (modalType === 'Create' || modalType === 'Update') {
+                if (modalType === 'Update') {
                   fadeAnimation.setValue(0)
                   if (modalType === 'Update' && filterChoice === 'All-Channels') {
                     setChannelId('')
                   }
+                  loadData(true)
                 }
-                loadData(true)
+                
                 openModal('Create')
-                setShowHome(false)
+                // setShowHome(false)
                 setMenuCollapsed(true)
               } else if (option === 'To Do') {
                 setTab('Add')

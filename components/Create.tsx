@@ -741,7 +741,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
         await AsyncStorage.setItem("cues", stringifiedCues);
         storeDraft("cueDraft", "");
         // setIsSubmitting(false)
-        props.closeModal();
+        props.closeOnCreate();
       } else {
         // CHANNEL CUE
         const uString = await AsyncStorage.getItem("user");

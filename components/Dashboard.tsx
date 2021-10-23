@@ -8,6 +8,7 @@ import { fetchAPI } from '../graphql/FetchAPI';
 import { creatFolder, updateFolder, checkChannelStatus, subscribe, markAttendance, meetingRequest } from '../graphql/QueriesAndMutations';
 import Walkthrough from './Walkthrough';
 import Channels from './Channels';
+import Create from './Create';
 import { PreferredLanguageText } from '../helpers/LanguageContext';
 import CalendarX from './Calendar';
 import { TextInput } from "./CustomTextInput";
@@ -1359,8 +1360,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
         </ScrollView >
     </View >
 
-    console.log(props.showChat)
-
     return (
         <View style={{
             height: windowHeight,
@@ -1581,7 +1580,15 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 </View>
             </View>
             {
-                searchTerm === '' ? <View style={{
+                searchTerm === '' ?
+                props.modalType === "Create" && props.option === 'Classroom' ? <Create 
+                    key={JSON.stringify(props.customCategories)}
+                    customCategories={props.customCategories}
+                    closeModal={() => props.closeCreateModal()}
+                    closeOnCreate={() => props.closeOnCreate()}
+                />
+                :
+                <View style={{
                     // paddingBottom: Dimensions.get('window').width < 1024 ? 15 : 30,
                     paddingHorizontal: width < 1024 && props.option !== 'Classroom' ? 20 : 0,
                     maxWidth: props.option === 'Classroom' ? '100%' : 1000,
@@ -1772,6 +1779,7 @@ export default React.memo(Dashboard, (prev, next) => {
             ...prev.tab,
             ...prev.showDirectory,
             ...prev.showHelp,
+            ...prev.modalType,
 
         },
         {
@@ -1779,6 +1787,7 @@ export default React.memo(Dashboard, (prev, next) => {
             ...next.tab,
             ...next.showDirectory,
             ...next.showHelp,
+            ...next.modalType,
         }
     )
 });
