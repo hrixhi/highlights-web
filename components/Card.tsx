@@ -146,7 +146,7 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
         backgroundColor: '#fff',
         borderRadius: 1,
         borderTopRightRadius: 10,
-        borderBottomRightRadius: 10,
+        // borderBottomRightRadius: 1,
         overflow: 'hidden',
         maxWidth: 175,
         width: '100%',
