@@ -32,6 +32,8 @@ import { Datepicker, Select, Popup } from '@mobiscroll/react5'
 import '@mobiscroll/react/dist/css/mobiscroll.react.min.css';
 import axios from 'axios';
 
+import logo from '../components/default-images/cues-logo-white-exclamation-hidden.jpg'
+
 
 const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
@@ -85,7 +87,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     const [loadDiscussionForChannelId, setLoadDiscussionForChannelId] = useState();
     const [openChannelId, setOpenChannelId] = useState('');
-
 
     const openThreadFromSearch = useCallback((channelId: String) => {
 
@@ -1397,16 +1398,16 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 height: 50,
                                 paddingTop: 0
                             }}>
-                                {/* <Image
-                            source={logo}
-                            style={{
-                                width: 50,
-                                marginTop: Dimensions.get('window').width < 1024 ? 6 : 3,
-                                height: 22,
-                                marginRight: 0
-                            }}
-                            resizeMode={'contain'}
-                        /> */}
+                                <Image
+                                    source={logo}
+                                    style={{
+                                        width: 50,
+                                        marginTop: 2,
+                                        height: 21,
+                                        marginRight: 13
+                                    }}
+                                    resizeMode={'contain'}
+                                />
                                 <View style={{ flexDirection: 'row', paddingRight: 30, flex: 1, backgroundColor: '#16181C', paddingTop: 1 }}>
                                     {
                                         props.options.map((op: any) => {
@@ -1442,6 +1443,18 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         backgroundColor: '#16181C',
                         width: Dimensions.get('window').width < 1024 ? '100%' : 'auto',
                     }}>
+                        {
+                            Dimensions.get('window').width < 1024 ? <Image
+                                source={logo}
+                                style={{
+                                    width: 50,
+                                    marginTop: 5,
+                                    height: 18,
+                                    marginRight: 13
+                                }}
+                                resizeMode={'contain'}
+                            /> : null
+                        }
                         <TextInput
                             value={searchTerm}
                             style={{
@@ -1461,7 +1474,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 // flex: 1, flexDirection: 'row',
                                 // marginLeft: 20,
                                 // marginRight: 25,
-                                maxWidth: 250
+                                maxWidth: 225
                             }}
                             placeholder={"Search"}
                             onChangeText={(val) => setSearchTerm(val)}
