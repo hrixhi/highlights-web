@@ -1037,7 +1037,15 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
             {
               showOptions ? null :
                 <TouchableOpacity
-                  onPress={() => setShowOptions(true)}
+                  onPress={async () => {
+                    // Update editor initial value
+                    const h = await AsyncStorage.getItem("cueDraft");
+                    if (h !== null) {
+                      setCueDraft(h);
+                    }
+
+                    setShowOptions(true)
+                  }}
                   disabled={isSubmitting}
                   style={{
                     borderRadius: 15,
@@ -1408,7 +1416,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                     touchUi={true}
                                     value={initiateAt}
                                     themeVariant="light"
-                                    inputComponent="input"
+                                    // inputComponent="input"
                                     inputProps={{
                                       placeholder: 'Please Select...'
                                     }}
@@ -1480,7 +1488,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                     theme="ios"
                                     value={deadline}
                                     themeVariant="light"
-                                    inputComponent="input"
+                                    // inputComponent="input"
                                     inputProps={{
                                       placeholder: 'Please Select...'
                                     }}
@@ -1680,7 +1688,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                   theme="ios"
                                   value={availableUntil}
                                   themeVariant="light"
-                                  inputComponent="input"
+                                  // inputComponent="input"
                                   inputProps={{
                                     placeholder: 'Please Select...'
                                   }}
@@ -1848,7 +1856,14 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                             <View style={styles.colorBar}>
                               <TextInput
                                 value={customCategory}
-                                style={styles.allGrayOutline}
+                                style={{
+                                  borderRadius: 0,
+                                  borderColor: '#E7EBEE',
+                                  borderBottomWidth: 1,
+                                  fontSize: 14,
+                                  height: '2.75em',
+                                  padding: '1em'
+                                }}
                                 placeholder={"Enter Category"}
                                 onChangeText={(val) => {
                                   setCustomCategory(val);
@@ -1902,8 +1917,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                               }}
                             >
                               <Ionicons
-                                name={addCustomCategory ? "close" : "add"}
-                                size={15}
+                                name={addCustomCategory ? "close" : "create-outline"}
+                                size={18}
                                 color={"#16181C"}
                               />
                             </Text>
@@ -2208,7 +2223,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                 theme="ios"
                                 value={endPlayAt}
                                 themeVariant="light"
-                                inputComponent="input"
+                                // inputComponent="input"
                                 inputProps={{
                                   placeholder: 'Please Select...'
                                 }}
@@ -2318,7 +2333,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                               theme="ios"
                               value={endPlayAt}
                               themeVariant="light"
-                              inputComponent="input"
+                              // inputComponent="input"
                               inputProps={{
                                 placeholder: 'Please Select...'
                               }}

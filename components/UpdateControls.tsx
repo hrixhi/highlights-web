@@ -143,7 +143,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     const [key, setKey] = useState(Math.random());
     const [showImportOptions, setShowImportOptions] = useState(false);
     const [channels, setChannels] = useState<any[]>([]);
-    const [shareWithChannelId, setShareWithChannelId] = useState("");
+    const [shareWithChannelId, setShareWithChannelId] = useState("None");
     const [selected, setSelected] = useState<any[]>([]);
     const [subscribers, setSubscribers] = useState<any[]>([]);
     const [expandMenu] = useState(false);
@@ -3492,7 +3492,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     {submission ? (
                         <View
                             style={{
-                                flexDirection: 'row'
+                                flexDirection: 'row',
+                                alignItems: 'center'
                             }}>
                             <Text
                                 style={{
@@ -3500,7 +3501,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     color: "#343A40",
                                     textAlign: "right",
                                     paddingRight: 10,
-                                    paddingTop: isOwner ? 5 : 0
                                 }}>
                                 Available
                             </Text>
@@ -3523,7 +3523,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     theme="ios"
                                     value={initiateAt}
                                     themeVariant="light"
-                                    inputComponent="input"
+                                    // inputComponent="input"
                                     inputProps={{
                                         placeholder: 'Please Select...'
                                     }}
@@ -3566,6 +3566,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         <View
                             style={{
                                 flexDirection: 'row',
+                                alignItems: 'center',
                                 marginTop: 10
                             }}>
                             <Text
@@ -3574,7 +3575,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     color: "#343A40",
                                     textAlign: "right",
                                     paddingRight: 10,
-                                    paddingTop: isOwner ? 5 : 0
                                 }}>
                                 Deadline
                             </Text>
@@ -3599,7 +3599,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     theme="ios"
                                     value={deadline}
                                     themeVariant="light"
-                                    inputComponent="input"
+                                    // inputComponent="input"
                                     inputProps={{
                                         placeholder: 'Please Select...'
                                     }}
@@ -3808,7 +3808,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     theme="ios"
                                     value={availableUntil}
                                     themeVariant="light"
-                                    inputComponent="input"
+                                    // inputComponent="input"
                                     inputProps={{
                                         placeholder: 'Please Select...'
                                     }}
@@ -4047,7 +4047,14 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     <View style={styles.colorBar}>
                                         <TextInput
                                             value={customCategory}
-                                            style={styles.allGrayOutline}
+                                            style={{
+                                                borderRadius: 0,
+                                                borderColor: '#E7EBEE',
+                                                borderBottomWidth: 1,
+                                                fontSize: 14,
+                                                height: '2.75em',
+                                                padding: '1em'
+                                              }}
                                             placeholder={"Enter Category"}
                                             onChangeText={val => {
                                                 setCustomCategory(val);
@@ -4123,7 +4130,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     </label>
                                 )}
                             </View>
-                            <View style={{ backgroundColor: "white", paddingRight: 20, paddingLeft: 20 }}>
+                            <View style={{ backgroundColor: "white", paddingLeft: 20 }}>
                                 <TouchableOpacity
                                     onPress={() => {
                                         if (addCustomCategory) {
@@ -4141,7 +4148,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             lineHeight: 20,
                                             width: "100%"
                                         }}>
-                                        <Ionicons name={addCustomCategory ? "close" : "add"} size={15} color={"#16181C"} />
+                                        <Ionicons name={addCustomCategory ? "close" : "create-outline"} size={18} color={"#16181C"} />
                                     </Text>
                                 </TouchableOpacity>
                             </View>
@@ -4212,6 +4219,11 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
     };
 
     const renderForwardOptions = () => {
+
+        const filterChannelsWithoutCurrent = channels.filter((channel: any) => channel._id !== props.channelId)
+
+        const channelOptions = [ { _id: 'None', name: 'None' } , ...filterChannelsWithoutCurrent]
+
         return channels.length === 0 || !isOwner ? null : (
             <View
                 style={{
@@ -4240,138 +4252,57 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         // display: "flex",
                         // paddingTop: 40,
                         flexDirection: "row",
-                        backgroundColor: "white"
+                        backgroundColor: "white",
+                        alignItems: 'center'
                     }}>
-                    <View style={{ backgroundColor: "white", marginRight: 15 }}>
-                        <Menu
-                            onSelect={(own: any) => {
-                                setSelectedChannelOwner(own)
-                                setShareWithChannelId('')
-                                setShareWithChannelName('')
-                            }}>
-                            <MenuTrigger>
-                                <Text style={{ fontSize: 14, color: '#16181C' }}>
-                                    {
-                                        selectedChannelOwner === undefined ? 'All channels' :
-                                            (selectedChannelOwner !== null ? (selectedChannelOwner.name)
-                                                : 'Your channels')
-                                    }< Ionicons name='chevron-down-outline' size={15} />
-                                </Text>
-                            </MenuTrigger>
-                            <MenuOptions customStyles={{
-                                optionsContainer: {
-                                    padding: 10,
-                                    borderRadius: 15,
-                                    shadowOpacity: 0,
-                                    borderWidth: 1,
-                                    borderColor: '#E7EBEE',
-                                    overflow: 'scroll',
-                                    maxHeight: '100%',
-                                }
-                            }}>
-                                {
-                                    role === 'instructor' ? <MenuOption
-                                        value={undefined}
-                                    >
-                                        <Text>
-                                            All channels
-                                        </Text>
-                                    </MenuOption> : null
-                                }
-                                <MenuOption
-                                    value={null}
-                                >
-                                    <Text>
-                                        Your channels
-                                    </Text>
-                                </MenuOption>
-                                {
-                                    channelOwners.map((own: any) => {
-                                        return <MenuOption
-                                            value={own}>
-                                            <Text>
-                                                {own.name}
-                                            </Text>
-                                        </MenuOption>
-                                    })
-                                }
-                            </MenuOptions>
-                        </Menu>
-                    </View>
-                    <View style={{ backgroundColor: "white", marginRight: 15 }}>
-                        <Menu
-                            onSelect={(channel: any) => {
-                                if (channel === '') {
-                                    setShareWithChannelId('')
-                                    setShareWithChannelName('')
-                                } else {
-                                    setShareWithChannelId(channel._id)
-                                    setShareWithChannelName(channel.name)
-                                }
-                                if (selectedChannelOwner === undefined) {
-                                    if (userId !== undefined && channel.createdBy !== undefined && userId.toString().trim() !== channel.createdBy.toString().trim()) {
-                                        setSelectedChannelOwner({
-                                            id: channel.createdBy,
-                                            name: channel.createdByUsername
-                                        })
-                                    } else {
-                                        setSelectedChannelOwner(null)
+                        <label style={{ width: 180 }}>
+                            <MobiscrollSelect
+                                theme="ios"
+                                themeVariant="light"
+                                touchUi={true}
+                                value={shareWithChannelId}
+                                onChange={(val: any) => {
+                                    setShareWithChannelId(val.value);
+                                }}
+                                responsive={{
+                                    small: {
+                                        display: 'bubble'
+                                    },
+                                    medium: {
+                                        touchUi: false,
                                     }
-                                }
-                            }}>
-                            <MenuTrigger>
-                                <Text style={{
-                                    fontSize: 14,
-                                    color: '#16181C'
-                                }}>
-                                    {shareWithChannelName === '' ? 'Select channel' : shareWithChannelName}<Ionicons name='chevron-down-outline' size={15} />
-                                </Text>
-                            </MenuTrigger>
-                            <MenuOptions customStyles={{
-                                optionsContainer: {
-                                    padding: 10,
-                                    borderRadius: 15,
-                                    shadowOpacity: 0,
-                                    borderWidth: 1,
-                                    borderColor: '#E7EBEE',
-                                    overflow: 'scroll',
-                                    maxHeight: '100%',
-                                }
-                            }}>
-                                <MenuOption
-                                    value={''}>
-                                    <Text>
-                                        Select Channel
-                                    </Text>
-                                </MenuOption>
-                                {
-                                    selectedChannelOwner !== null ?
-                                        otherChannels.map((channel: any) => {
-                                            if (selectedChannelOwner === undefined || channel.createdBy === selectedChannelOwner.id) {
-                                                return <MenuOption
-                                                    value={channel}>
-                                                    <Text>
-                                                        {channel.name}
-                                                    </Text>
-                                                </MenuOption>
-                                            }
-                                        })
-                                        : channels.map((channel: any) => {
-                                            return <MenuOption
-                                                value={channel}>
-                                                <Text>
-                                                    {channel.name}
-                                                </Text>
-                                            </MenuOption>
-                                        })
-                                }
-                            </MenuOptions>
-                        </Menu>
-                    </View>
-                    <View style={{ backgroundColor: "white" }}>
+                                }}
+                                data={channelOptions.map((channel: any) => {
+                                    return {
+                                        value: channel._id,
+                                        text: channel.name
+                                    }
+                                })}
+                            />
+                        </label>
+
+
+
+                    <View style={{ backgroundColor: "white", paddingLeft: 20 }}>
                         <TouchableOpacity
-                            disabled={shareWithChannelId === ""}
-                            onPress={() => shareCue()}
+                            disabled={shareWithChannelId === "None"}
+                            onPress={() => {
+                                Alert("Forward cue?", "", [
+                                    {
+                                        text: "Cancel",
+                                        style: "cancel",
+                                        onPress: () => {
+                                            return;
+                                        }
+                                    },
+                                    {
+                                        text: "Yes",
+                                        onPress: () => {
+                                            shareCue()
+                                        }
+                                    }]
+                                )
+                            }}
                             style={{ backgroundColor: "white" }}>
                             <Text
                                 style={{
@@ -4382,7 +4313,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 <Ionicons
                                     name={"arrow-redo-outline"}
                                     size={19}
-                                    color={shareWithChannelId === "" ? "#3289D0" : "#16181C"}
+                                    color={shareWithChannelId === "None" ? "#a0a0a0" : "#16181C"}
                                 />
                             </Text>
                         </TouchableOpacity>
@@ -4480,6 +4411,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     style={{
                                         display: "flex",
                                         flexDirection: "row",
+                                        alignItems: 'center',
                                         backgroundColor: "white"
                                     }}>
                                     <Text style={{
@@ -4487,7 +4419,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         color: "#343A40",
                                         textAlign: "right",
                                         paddingRight: 10,
-                                        paddingTop: 5
                                     }}>{PreferredLanguageText("remindEvery")}</Text>
                                     <label style={{ width: 140 }}>
                                         <MobiscrollSelect
@@ -4602,7 +4533,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             theme="ios"
                                             value={endPlayAt}
                                             themeVariant="light"
-                                            inputComponent="input"
+                                            // inputComponent="input"
                                             inputProps={{
                                                 placeholder: 'Please Select...'
                                             }}
@@ -4701,7 +4632,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         theme="ios"
                                         value={endPlayAt}
                                         themeVariant="light"
-                                        inputComponent="input"
+                                        // inputComponent="input"
                                         inputProps={{
                                             placeholder: 'Please Select...'
                                         }}

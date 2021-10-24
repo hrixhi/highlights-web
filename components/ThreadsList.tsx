@@ -362,7 +362,14 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         <View style={styles.colorBar}>
                             <TextInput
                                 value={customCategory}
-                                style={styles.allOutline}
+                                style={{
+                                    borderRadius: 0,
+                                    borderColor: '#E7EBEE',
+                                    borderBottomWidth: 1,
+                                    fontSize: 14,
+                                    height: '2.75em',
+                                    padding: '1em'
+                                }}
                                 placeholder={'Enter Category'}
                                 onChangeText={val => {
                                     setCustomCategory(val)
@@ -405,7 +412,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     }}
                     style={{ backgroundColor: 'white' }}>
                     <Text style={{ textAlign: 'right', lineHeight: 20, width: '100%' }}>
-                        <Ionicons name={addCustomCategory ? 'close' : 'add'} size={19} color={'#343A40'} />
+                        <Ionicons name={addCustomCategory ? 'close' : 'create-outline'} size={18} color={'#343A40'} />
                     </Text>
                 </TouchableOpacity>
             </View>
