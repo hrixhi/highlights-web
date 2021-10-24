@@ -904,7 +904,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         theme="ios"
                         value={repeatTill}
                         themeVariant="light"
-                        inputComponent="input"
+                        // inputComponent="input"
                         inputProps={{
                             placeholder: 'Repeat till...'
                         }}
@@ -1812,7 +1812,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                                 theme="ios"
                                                                                                 value={start}
                                                                                                 themeVariant="light"
-                                                                                                inputComponent="input"
+                                                                                                // inputComponent="input"
                                                                                                 inputProps={{
                                                                                                     placeholder: 'Select start...'
                                                                                                 }}
@@ -1859,7 +1859,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                                 theme="ios"
                                                                                                 value={end}
                                                                                                 themeVariant="light"
-                                                                                                inputComponent="input"
+                                                                                                // inputComponent="input"
                                                                                                 inputProps={{
                                                                                                     placeholder: 'Select end...'
                                                                                                 }}

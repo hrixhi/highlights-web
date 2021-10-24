@@ -624,17 +624,15 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
                     }}
                     style={{
-                        justifyContent: 'center',
-                        marginTop: 2,
-                        width: 20, height: 20, borderRadius: 10, backgroundColor: '#f94144'
+                        // justifyContent: 'center',
+                        // marginTop: 2,
+                        // width: 20, height: 20, borderRadius: 10,
                     }}
                 >
                     <Text style={{
-                        color: '#fff',
-                        // width: '100%',
-                        textAlign: 'center'
+                        color: '#f94144',
                     }}>
-                        <Ionicons name='remove-circle-outline' size={22} />
+                        <Ionicons name='remove-circle-outline' size={16} />
                     </Text>
                 </TouchableOpacity> : null}
             </View>
@@ -713,13 +711,13 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
                     }}
                     style={{
-                        justifyContent: 'center',
-                        marginTop: 2,
-                        width: 20, height: 20, borderRadius: 10, backgroundColor: '#f94144'
+                        // justifyContent: 'center',
+                        // marginTop: 2,
+                        // width: 20, height: 20, borderRadius: 10, backgroundColor: '#f94144'
                     }}
                 >
-                    <Text style={{ color: '#fff' }}>
-                        <Ionicons name='remove-circle-outline' size={22} />
+                    <Text style={{ color: '#f94144' }}>
+                        <Ionicons name='remove-circle-outline' size={16} />
                     </Text>
                 </TouchableOpacity>
             </View>
@@ -1048,7 +1046,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     flexDirection: 'row',
                                     margin: 0
                                 }}>
-                                <View style={{ display: 'flex', flexDirection: 'column', width: '80%' }}>
+                                <View style={{ display: 'flex', flexDirection: 'column', width: '90%' }}>
                                     <View style={styles.dateContainer}>
                                         <Text style={styles.date2}>
                                             {
@@ -1085,19 +1083,19 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         setChannelCues(cCues)
                                     }}
                                     style={{
-                                        justifyContent: 'center',
-                                        width: 20, height: 20, borderRadius: 10, backgroundColor: '#3289d0'
+                                        // justifyContent: 'center',
+                                        // width: 20, height: 20, borderRadius: 10, backgroundColor: '#3289D0'
                                     }}
                                 >
-                                    <Text style={{ color: '#fff', width: '100%', textAlign: 'center' }}>
-                                        <Ionicons name='add-outline' size={22} />
+                                    <Text style={{ color: '#3289D0', width: '100%', textAlign: 'center' }}>
+                                        <Ionicons name='add-outline' size={16} />
                                     </Text>
                                 </TouchableOpacity>
                             </View>
                         </View>)
                     })}
-                </ScrollView> : <View>
-                    <Text style={{ fontSize: 14, color: '#343A40', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#3289d0', paddingVertical: 20 }}>
+                </ScrollView> : <View style={{ backgroundColor: '#E7EBEE' }}>
+                    <Text style={{ fontSize: 14, color: '#343A40', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#E7EBEE', paddingVertical: 20 }}>
                         No Content to select.
                     </Text>
                 </View>}
@@ -1105,13 +1103,13 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
             {/* Section 2 */}
 
-            <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', backgroundColor: '#E7EBEE', paddingVertical: 10 }}>
+            {channelCues.length !== 0 ? <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', backgroundColor: '#E7EBEE', paddingVertical: 10 }}>
                 <SortableList
                     axis={'x'}
                     lockAxis={'x'}
                     items={selectedCues} onSortEnd={onSortEnd} useDragHandle
                 />
-            </View>
+            </View> : null}
         </View>
     }
 
@@ -1176,7 +1174,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         margin: 0
                                     }}>
 
-                                    <View style={{ display: 'flex', flexDirection: 'column', width: '80%' }}>
+                                    <View style={{ display: 'flex', flexDirection: 'column', width: '90%' }}>
                                         <View style={styles.dateContainer}>
                                             <Text style={styles.date2}>
                                                 {
@@ -1214,13 +1212,13 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             setChannelCues(cCues)
                                         }}
                                         style={{
-                                            justifyContent: 'center',
-                                            alignSelf: 'flex-end',
-                                            width: 20, height: 20, borderRadius: 10, backgroundColor: '#3289d0'
+                                            // justifyContent: 'center',
+                                            // alignSelf: 'flex-end',
+                                            // width: 20, height: 20, borderRadius: 10, backgroundColor: '#3289D0'
                                         }}
                                     >
-                                        <Text style={{ color: '#fff', width: '100%', textAlign: 'center' }}>
-                                            <Ionicons name='add-outline' size={22} />
+                                        <Text style={{ color: '#3289D0', width: '100%', textAlign: 'center' }}>
+                                            <Ionicons name='add-outline' size={16} />
                                         </Text>
                                     </TouchableOpacity>
                                 </View>
@@ -1241,8 +1239,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         })}
                     </ScrollView>
                     :
-                    <View>
-                        <Text style={{ fontSize: 14, color: '#343A40', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#3289d0', paddingVertical: 20 }}>
+                    <View style={{ backgroundColor: '#E7EBEE' }}>
+                        <Text style={{ fontSize: 14, color: '#343A40', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#E7EBEE', paddingVertical: 20 }}>
                             No Content to select.
                         </Text>
                     </View>
@@ -1404,8 +1402,8 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
 
 
     /**
-     * @description Renders all the Folder buttons (edit, add, delete, cancel, etc.) for the header
-     */
+            * @description Renders all the Folder buttons (edit, add, delete, cancel, etc.) for the header
+            */
     const renderFolderButtons = () => {
 
         return <React.Fragment>
