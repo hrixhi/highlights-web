@@ -2424,7 +2424,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     /> :
                         <Text
                             style={{
-                                fontSize: 14,
+                                fontSize: 18,
                                 paddingRight: 15,
                                 paddingTop: 12,
                                 paddingBottom: 12,
@@ -2432,7 +2432,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 marginBottom: 5,
                                 maxWidth: "100%",
                                 fontWeight: "600",
-                                width: '100%'
+                                width: '100%',
+                                fontFamily: 'Inter'
                             }}
                         >
                             {title}
@@ -2613,14 +2614,14 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 </View> */}
                 {quizAttempted
                     ?
-                    <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: 15 }}>
+                    <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: 20 }}>
                         <Ionicons name='checkmark-outline' size={22} color={"#53BE68"} />
                         <Text style={{ fontSize: 14, paddingLeft: 5 }}>
                             Submitted at {moment(new Date(latestSubmission.submittedAt)).format('MMMM Do, h:mm a')}
                         </Text>
                     </View>
                     :
-                    <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: 15 }}>
+                    <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: 20 }}>
                         <Ionicons name='alert-circle-outline' size={22} color={"#D91D56"} />
                         <Text style={{ fontSize: 14, paddingLeft: 5 }}>
                             Not Attempted
@@ -2749,14 +2750,14 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 </View> */}
                 {props.cue.submittedAt && props.cue.submittedAt !== ""
                     ?
-                    <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                    <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: 20 }}>
                         <Ionicons name='checkmark-outline' size={22} color={"#53BE68"} />
                         <Text style={{ fontSize: 14, paddingLeft: 5 }}>
                             Turned In at {moment(new Date(props.cue.submittedAt)).format('MMMM Do, h:mm a')}
                         </Text>
                     </View>
                     :
-                    <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                    <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: 20 }}>
                         <Ionicons name='alert-circle-outline' size={22} color={"#D91D56"} />
                         <Text style={{ fontSize: 14, paddingLeft: 5 }}>
                             Not Turned In
@@ -2844,7 +2845,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     fontSize: 14,
                     fontFamily: 'inter',
                     color: '#2f2f3c',
-                    paddingTop: 40,
+                    paddingTop: 20,
                     paddingBottom: 15,
                 }}>
                     {PreferredLanguageText('score')}
@@ -2870,27 +2871,27 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
         let minutes = Math.floor((duration - hours * 3600) / 60);
 
         return (<View style={{ display: 'flex', flexDirection: 'row', marginTop: 20, marginBottom: 10 }}>
-            <Text style={{ marginRight: 30 }}>
+            <Text style={{ marginRight: 30, fontFamily: 'Inter', fontSize: 14 }}>
                 {problems.length} {problems.length === 1 ? "Question" : "Questions"}
             </Text>
             {/* <Text style={{ marginRight: 10 }}>
                 |
             </Text> */}
-            <Text style={{ marginRight: 30 }}>
+            <Text style={{ marginRight: 30, fontFamily: 'Inter', fontSize: 14 }}>
                 {totalQuizPoints} Points
             </Text>
             {/* <Text style={{ marginRight: 10 }}>
                 |
             </Text> */}
             {duration === 0 ?
-                <Text style={{ marginRight: 30 }}>No Time Limit</Text> :
-                <Text style={{ marginRight: 30 }}>
+                <Text style={{ marginRight: 30, fontFamily: 'Inter', fontSize: 14 }}>No Time Limit</Text> :
+                <Text style={{ marginRight: 30, fontFamily: 'Inter', fontSize: 14 }}>
                     {hours} H {minutes} min
                 </Text>}
             {/* {!isOwner ? <Text style={{ marginRight: 10, fontSize: 14 }}>
                 |
             </Text> : null} */}
-            {!isOwner ? <Text style={{ marginRight: 30 }}>
+            {!isOwner ? <Text style={{ marginRight: 30, fontFamily: 'Inter', fontSize: 14 }}>
                 {allowedAttempts && allowedAttempts !== null ? 'Remaining Attempts: ' + (remainingAttempts >= 0 ? remainingAttempts : '0') : "Unlimited Attempts"}
             </Text> : null}
         </View>)
@@ -3457,7 +3458,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     <Text style={{
                         fontSize: 14,
                         fontWeight: 'bold',
-                        color: '#16181C'
+                        color: '#16181C',
+                        fontFamily: 'Inter'
                     }}>{PreferredLanguageText("submissionRequired")}</Text>
                 </View>
                 <View>
@@ -3485,7 +3487,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             </View>)
                         ) : (
                             <View style={{ flex: 1, backgroundColor: "#fff" }}>
-                                <Text style={{ fontSize: 11, color: '#16181C', textTransform: 'uppercase' }}>{!submission ? PreferredLanguageText("no") : null}</Text>
+                                <Text style={{ fontSize: 14, color: '#16181C', textTransform: 'uppercase', fontFamily: 'Inter' }}>{!submission ? PreferredLanguageText("no") : null}</Text>
                             </View>
                         )}
                     </View>
@@ -3497,12 +3499,13 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             }}>
                             <Text
                                 style={{
-                                    fontSize: 12,
+                                    fontSize: 14,
                                     color: "#343A40",
                                     textAlign: "right",
                                     paddingRight: 10,
+                                    fontFamily: 'Inter'
                                 }}>
-                                Available
+                                Available on
                             </Text>
                             {isOwner ? (
                                 // <DatePicker
@@ -3553,9 +3556,10 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             ) : (
                                 <Text
                                     style={{
-                                        fontSize: 12,
+                                        fontSize: 14,
                                         color: "#343A40",
-                                        textAlign: "left"
+                                        textAlign: "left",
+                                        fontFamily: 'Inter'
                                     }}>
                                     {moment(new Date(initiateAt)).format('MMMM Do, h:mm a')}
                                 </Text>
@@ -3567,16 +3571,18 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             style={{
                                 flexDirection: 'row',
                                 alignItems: 'center',
-                                marginTop: 10
+                                marginTop: 10,
+                                marginLeft: 'auto'
                             }}>
                             <Text
                                 style={{
-                                    fontSize: 12,
+                                    fontSize: 14,
                                     color: "#343A40",
                                     textAlign: "right",
                                     paddingRight: 10,
+                                    fontFamily: 'Inter'
                                 }}>
-                                Deadline
+                                Due
                             </Text>
                             {isOwner ? (
                                 // <DatePicker
@@ -3631,9 +3637,10 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             ) : (
                                 <Text
                                     style={{
-                                        fontSize: 12,
+                                        fontSize: 14,
                                         color: "#343A40",
-                                        textAlign: "left"
+                                        textAlign: "left",
+                                        fontFamily: 'Inter'
                                     }}>
                                     {moment(new Date(deadline)).format('MMMM Do, h:mm a')}
                                 </Text>
@@ -3657,7 +3664,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     <Text style={{
                         fontSize: 14,
                         fontWeight: 'bold',
-                        color: '#16181C'
+                        color: '#16181C',
+                        fontFamily: 'Inter'
                     }}>Grade Weight</Text>
                 </View>
                 <View style={{}}>
@@ -3692,11 +3700,12 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             }}>
                             <Text
                                 style={{
-                                    fontSize: 12,
+                                    fontSize: 14,
                                     color: "#343A40",
                                     textAlign: "left",
                                     paddingRight: 10,
-                                    marginTop: 20
+                                    marginTop: isOwner ? 20 : 0,
+                                    fontFamily: 'Inter'
                                 }}>
                                 {!isOwner ? gradeWeight : null} {PreferredLanguageText("percentageOverall")}
                             </Text>
@@ -3720,10 +3729,11 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         </View>
                     ) :
                         (!isOwner ? <Text style={{
-                            fontSize: 12,
+                            fontSize: 14,
                             color: "#343A40",
                             textAlign: "left",
                             paddingRight: 10,
+                            fontFamily: 'Inter'
                         }}>
                             0%
                         </Text> : null)}
@@ -3745,7 +3755,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     <Text style={{
                         fontSize: 14,
                         fontWeight: 'bold',
-                        color: '#16181C'
+                        color: '#16181C',
+                        fontFamily: 'Inter'
                     }}>Late Submission</Text>
                 </View>
                 <View style={{}}>
@@ -3780,10 +3791,11 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             }}>
                             <Text
                                 style={{
-                                    fontSize: 12,
+                                    fontSize: 14,
                                     color: "#343A40",
                                     textAlign: "left",
                                     paddingRight: 10,
+                                    fontFamily: 'Inter'
                                 }}>
                                 {!isOwner ? (allowLateSubmission ? "Available until  " + moment(new Date(availableUntil)).format('MMMM Do, h:mm a') : "No") : "Available Until"}
                             </Text>
@@ -3843,10 +3855,11 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     ) :
                         (!isOwner ? <Text
                             style={{
-                                fontSize: 12,
+                                fontSize: 14,
                                 color: "#343A40",
                                 textAlign: "left",
                                 paddingRight: 10,
+                                fontFamily: 'Inter'
                             }}>
                             No
                         </Text> : null)}
@@ -3870,7 +3883,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             style={{
                                 fontSize: 14,
                                 fontWeight: 'bold',
-                                color: '#16181C'
+                                color: '#16181C',
+                                fontFamily: 'Inter'
                             }}
                         >
                             Allowed Attempts
@@ -3886,10 +3900,11 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         }}
                     >
                         <Text style={{
-                            fontSize: 12,
+                            fontSize: 14,
                             color: "#343A40",
                             textAlign: "right",
                             paddingRight: 10,
+                            fontFamily: 'Inter'
                         }}>
                             {unlimitedAttempts ? "Unlimited" : allowedAttempts}
                         </Text>
@@ -3908,7 +3923,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             style={{
                                 fontSize: 14,
                                 fontWeight: 'bold',
-                                color: '#16181C'
+                                color: '#16181C',
+                                fontFamily: 'Inter'
                             }}
                         >
                             Multiple Attempts
@@ -4006,7 +4022,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     <Text style={{
                         fontSize: 14,
                         fontWeight: 'bold',
-                        color: '#16181C'
+                        color: '#16181C',
+                        fontFamily: 'Inter'
                     }}>{PreferredLanguageText("category")}</Text>
                 </View>
                 <View style={{}}>
@@ -4180,6 +4197,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         fontSize: 14,
                         color: '#16181C',
                         fontWeight: 'bold',
+                        fontFamily: 'Inter'
                     }}>{PreferredLanguageText("priority")}</Text>
                 </View>
                 <View
@@ -4243,7 +4261,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     <Text style={{
                         fontSize: 14,
                         fontWeight: 'bold',
-                        color: '#16181C'
+                        color: '#16181C',
+                        fontFamily: 'Inter',
                     }}>Forward</Text>
                 </View>
                 <View
@@ -4342,7 +4361,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         <Text style={{
                             fontSize: 14,
                             fontWeight: 'bold',
-                            color: '#16181C'
+                            color: '#16181C',
+                            fontFamily: 'Inter'
                         }}>Remind</Text>
                     </View>
                     <View
@@ -4415,10 +4435,11 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         backgroundColor: "white"
                                     }}>
                                     <Text style={{
-                                        fontSize: 12,
+                                        fontSize: 14,
                                         color: "#343A40",
                                         textAlign: "right",
                                         paddingRight: 10,
+                                        fontFamily: 'Inter'
                                     }}>{PreferredLanguageText("remindEvery")}</Text>
                                     <label style={{ width: 140 }}>
                                         <MobiscrollSelect
@@ -4504,6 +4525,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             textAlign: "right",
                                             paddingRight: 10,
                                             marginTop: 5,
+                                            fontFamily: 'Inter'
                                             // paddingTop: 5,
                                             // lineHeight: 35,
                                             // height: 35
@@ -4581,7 +4603,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             <Text style={{
                                 fontSize: 14,
                                 fontWeight: 'bold',
-                                color: '#16181C'
+                                color: '#16181C',
+                                fontFamily: 'Inter'
                             }}>Indefinitely</Text>
                         </View>
                         <View>
@@ -4609,7 +4632,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         width: "100%",
                                         display: "flex",
                                         flexDirection: "row",
-                                        backgroundColor: "white"
+                                        backgroundColor: "white",
                                     }}>
                                     <Text style={styles.text}>{PreferredLanguageText("remindTill")}</Text>
                                     {/* <DatePicker
@@ -5375,10 +5398,11 @@ const styles: any = StyleSheet.create({
         borderRadius: 3
     },
     text: {
-        fontSize: 12,
+        fontSize: 14,
         color: "#343A40",
         textAlign: "left",
-        paddingHorizontal: 10
+        paddingHorizontal: 10,
+        fontFamily: 'Inter'
     },
     all: {
         fontSize: Dimensions.get('window').width < 1024 ? 12 : 14,
