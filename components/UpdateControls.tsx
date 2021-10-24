@@ -4896,7 +4896,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             marginBottom: 5
                         }}>
                         {/* {renderCueTabs()} */}
-                        {!isOwner && props.cue.graded && props.cue.score !== undefined && props.cue.score !== null && !isQuiz && props.cue.releaseSubmission ? (
+                        {!isOwner && props.cue.graded && props.cue.score !== undefined && props.cue.score !== null && !isQuiz && props.cue.releaseSubmission && (props.showOriginal || props.showOptions) ? (
                             <Text
                                 style={{
                                     fontSize: 12,
