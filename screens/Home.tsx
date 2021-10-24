@@ -1528,7 +1528,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     lineHeight: 35,
                     color: 'white',
                     fontSize: 12,
-                    backgroundColor: '#3289D0',
+                    backgroundColor: '#3289d0',
                     paddingHorizontal: 20,
                     fontFamily: 'inter',
                     height: 35,
@@ -1552,11 +1552,11 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     width: '100%', justifyContent: 'center', flexDirection: 'row'
                   }}>
                   <Text style={{
-                    color: '#3289D0',
+                    color: '#3289d0',
                     width: 175,
                     borderWidth: 1,
                     borderRadius: 15,
-                    borderColor: '#3289D0',
+                    borderColor: '#3289d0',
                     backgroundColor: '#fff',
                     fontSize: 12,
                     textAlign: 'center',
@@ -1876,7 +1876,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               right: 0,
               justifyContent: 'center',
               bottom: 0,
-              width: 58, height: 58, borderRadius: 29, backgroundColor: '#3289D0',
+              width: 58, height: 58, borderRadius: 29, backgroundColor: '#3289d0',
               borderColor: '#E7EBEE',
               borderWidth: 0
             }}
@@ -1973,7 +1973,7 @@ const styles = (channelId: string) => StyleSheet.create({
     color: '#fff',
     paddingHorizontal: 12,
     borderRadius: 12,
-    backgroundColor: '#3289D0',
+    backgroundColor: '#3289d0',
     lineHeight: 25,
     height: 25,
     fontFamily: 'inter',

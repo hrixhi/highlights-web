@@ -403,14 +403,14 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                         fontFamily: 'inter',
                                                         flex: 1,
                                                         lineHeight: 16,
-                                                        color: item.isOpen ? '#3289D0' : '#16181C'
+                                                        color: item.isOpen ? '#3289d0' : '#16181C'
                                                     }}>
                                                         {item.question}
                                                     </Text>
                                                     <Text>
                                                         <Ionicons
                                                             name={item.isOpen ? 'chevron-up-outline' : 'chevron-down-outline'}
-                                                            color={item.isOpen ? '#343A40' : '#3289D0'}
+                                                            color={item.isOpen ? '#343A40' : '#3289d0'}
                                                             size={19}
                                                         />
                                                     </Text>
@@ -447,7 +447,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             </View>}
                 </View>
             </View>
-            <MessengerCustomerChat pageId="109965671259610" appId="746023139417168" themeColor="#3289D0" />
+            <MessengerCustomerChat pageId="109965671259610" appId="746023139417168" themeColor="#3289d0" />
         </View >
     );
 }

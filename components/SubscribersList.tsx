@@ -1234,7 +1234,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             lineHeight: 35,
                                             color: '#fff',
                                             fontSize: 12,
-                                            backgroundColor: '#3289D0',
+                                            backgroundColor: '#3289d0',
                                             paddingHorizontal: 20,
                                             fontFamily: 'inter',
                                             height: 35,
@@ -1282,7 +1282,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         textAlign: 'right',
                                         lineHeight: 23,
                                         marginRight: 20,
-                                        color: '#3289D0',
+                                        color: '#3289d0',
                                         fontSize: 11,
                                     }}>
                                         NEW GROUP
@@ -1387,9 +1387,9 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                     style={{
                                                                         textAlign: "center",
                                                                         lineHeight: 35,
-                                                                        color: "#3289D0",
+                                                                        color: "#3289d0",
                                                                         fontSize: 12,
-                                                                        borderColor: "#3289D0",
+                                                                        borderColor: "#3289d0",
                                                                         borderWidth: 1,
                                                                         borderRadius: 15,
                                                                         paddingHorizontal: 20,
@@ -1414,9 +1414,9 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                     style={{
                                                                         textAlign: "center",
                                                                         lineHeight: 35,
-                                                                        color: "#3289D0",
+                                                                        color: "#3289d0",
                                                                         fontSize: 12,
-                                                                        borderColor: "#3289D0",
+                                                                        borderColor: "#3289d0",
                                                                         borderRadius: 15,
                                                                         backgroundColor: '#fff',
                                                                         borderWidth: 1,
@@ -1436,9 +1436,9 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                     style={{
                                                         textAlign: "center",
                                                         lineHeight: 35,
-                                                        color: "#3289D0",
+                                                        color: "#3289d0",
                                                         fontSize: 12,
-                                                        borderColor: "#3289D0",
+                                                        borderColor: "#3289d0",
                                                         borderWidth: 1,
                                                         borderRadius: 15,
                                                         paddingHorizontal: 20,
@@ -1691,7 +1691,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                 </View>
                                                                 <View style={{ justifyContent: 'center', flexDirection: 'column' }}>
                                                                     <View style={{ flexDirection: 'row', backgroundColor: '#fff', paddingLeft: 10 }}>
-                                                                        <Text style={{ fontSize: 11, padding: 5, color: '#3289D0', textAlign: 'center' }} ellipsizeMode='tail'>
+                                                                        <Text style={{ fontSize: 11, padding: 5, color: '#3289d0', textAlign: 'center' }} ellipsizeMode='tail'>
                                                                             {
                                                                                 subscriber.submittedAt && subscriber.submittedAt !== "" && subscriber.deadline && subscriber.deadline !== "" && subscriber.submittedAt >= subscriber.deadline ?
                                                                                     <Text style={{ color: '#f94144', fontSize: 12 }}>
@@ -1749,10 +1749,10 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                     <Text style={{
                                                         textAlign: "center",
                                                         lineHeight: 35,
-                                                        color: '#3289D0',
+                                                        color: '#3289d0',
                                                         fontSize: 12,
                                                         borderWidth: 1,
-                                                        borderColor: '#3289D0',
+                                                        borderColor: '#3289d0',
                                                         paddingHorizontal: 20,
                                                         fontFamily: "inter",
                                                         height: 35,
@@ -1856,11 +1856,11 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                             style={{
                                                                 textAlign: "center",
                                                                 lineHeight: 35,
-                                                                backgroundColor: '#3289D0',
+                                                                backgroundColor: '#3289d0',
                                                                 fontSize: 12,
                                                                 color: '#fff',
                                                                 // borderWidth: 1,
-                                                                // borderColor: '#3289D0',
+                                                                // borderColor: '#3289d0',
                                                                 paddingHorizontal: 20,
                                                                 fontFamily: "inter",
                                                                 height: 35,
@@ -1898,10 +1898,10 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                         <Text style={{
                                                             textAlign: "center",
                                                             lineHeight: 35,
-                                                            color: '#3289D0',
+                                                            color: '#3289d0',
                                                             fontSize: 12,
                                                             borderWidth: 1,
-                                                            borderColor: '#3289D0',
+                                                            borderColor: '#3289d0',
                                                             paddingHorizontal: 20,
                                                             fontFamily: "inter",
                                                             height: 35,

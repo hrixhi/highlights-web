@@ -201,9 +201,9 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         <Text style={{
                             textAlign: 'center',
                             lineHeight: 35,
-                            color: '#3289D0',
+                            color: '#3289d0',
                             fontSize: 12,
-                            borderColor: '#3289D0',
+                            borderColor: '#3289d0',
                             paddingHorizontal: 20,
                             fontFamily: 'inter',
                             height: 35,
@@ -603,7 +603,7 @@ const styles = StyleSheet.create({
     col: { width: 120, justifyContent: 'center', display: 'flex', flexDirection: 'column', padding: 7, },
     all: {
         fontSize: 14,
-        color: '#3289D0',
+        color: '#3289d0',
         height: 22,
         paddingHorizontal: 20,
         backgroundColor: '#fff',

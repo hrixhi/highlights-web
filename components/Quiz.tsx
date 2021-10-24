@@ -278,7 +278,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     style={{ height: 20 }}
                     trackColor={{
                         false: "#E7EBEE",
-                        true: "#3289D0",
+                        true: "#3289d0",
                     }}
                     activeThumbColor="white"
                 />
@@ -415,7 +415,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     style={{ height: 20 }}
                     trackColor={{
                         false: "#E7EBEE",
-                        true: "#3289D0",
+                        true: "#3289d0",
                     }}
                     activeThumbColor="white"
                 />
@@ -1271,7 +1271,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                         setShowFormulas(updateShowFormulas)
                                                         setOptionEquations(updateOptionEquations)
 
-                                                    }} style={{ marginBottom: 20, paddingTop: 8, paddingLeft: 30 }}> <Ionicons name='pencil-outline' size={19} color={'#3289D0'} /></TouchableOpacity>)
+                                                    }} style={{ marginBottom: 20, paddingTop: 8, paddingLeft: 30 }}> <Ionicons name='pencil-outline' size={19} color={'#3289d0'} /></TouchableOpacity>)
                                                     : (
                                                         null
                                                         // <TouchableOpacity style={{ marginBottom: 20, paddingTop: 8, paddingLeft: 30, paddingRight: 5 }}> <View style={{ width: 22 }} /></TouchableOpacity>
@@ -1333,7 +1333,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                                 >
                                                                     <Text
                                                                         style={{
-                                                                            color: '#3289D0',
+                                                                            color: '#3289d0',
                                                                             fontFamily: 'Overpass',
                                                                             fontSize: 10,
                                                                             marginRight: 10
@@ -1354,7 +1354,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                                 >
                                                                     <Text
                                                                         style={{
-                                                                            color: '#3289D0',
+                                                                            color: '#3289d0',
                                                                             fontFamily: 'Overpass',
                                                                             fontSize: 10,
                                                                             marginLeft: 20
@@ -1381,7 +1381,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                                     //     setShowImportOptions(false);
                                                                 }}>
                                                                     <Text style={{
-                                                                        color: '#3289D0',
+                                                                        color: '#3289d0',
                                                                         fontFamily: 'Overpass',
                                                                         fontSize: 10,
                                                                     }}> Clear</Text>
@@ -1566,7 +1566,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                                             <Text
                                                                                 style={{
                                                                                     paddingTop: showOptionFormulas[i] ? 10 : 0,
-                                                                                    color: '#3289D0',
+                                                                                    color: '#3289d0',
                                                                                     fontFamily: 'Overpass',
                                                                                     fontSize: 10
                                                                                 }}
@@ -1807,7 +1807,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                                 >
                                                     <Text
                                                         style={{
-                                                            color: '#3289D0',
+                                                            color: '#3289d0',
                                                             fontFamily: 'Overpass',
                                                             fontSize: 10,
                                                         }}
@@ -1979,7 +1979,7 @@ const Quiz: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     lineHeight: 35,
                                     color: "white",
                                     fontSize: 12,
-                                    backgroundColor: "#3289D0",
+                                    backgroundColor: "#3289d0",
                                     borderRadius: 15,
                                     paddingHorizontal: 20,
                                     fontFamily: "inter",

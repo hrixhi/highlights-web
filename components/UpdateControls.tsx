@@ -2279,7 +2279,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             props.setShowFolder(!props.showFolder)
                         }}>
                         <Text>
-                            <Ionicons name={props.showFolder ? 'backspace-outline' : 'folder-open-outline'} size={19} color={props.showFolder ? '#343A40' : '#3289D0'} />
+                            <Ionicons name={props.showFolder ? 'backspace-outline' : 'folder-open-outline'} size={19} color={props.showFolder ? '#343A40' : '#3289d0'} />
                         </Text>
                     </TouchableOpacity>
                 </View> : null} */}
@@ -2467,7 +2467,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     isPlaying={true}
                                     duration={duration}
                                     initialRemainingTime={initDuration}
-                                    colors="#3289D0"
+                                    colors="#3289d0"
                                 />
                             </View>
                         ) : null
@@ -2533,7 +2533,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                             textTransform: "uppercase",
                                             fontSize: 12,
                                             fontFamily: 'overpass',
-                                            color: '#3289D0',
+                                            color: '#3289d0',
                                         }}
                                     >
                                         Erase
@@ -2793,7 +2793,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         lineHeight: 35,
                                         color: '#fff',
                                         fontSize: 12,
-                                        backgroundColor: '#3289D0',
+                                        backgroundColor: '#3289d0',
                                         paddingHorizontal: 20,
                                         fontFamily: 'inter',
                                         height: 35,
@@ -2822,7 +2822,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         lineHeight: 35,
                                         color: '#fff',
                                         fontSize: 12,
-                                        backgroundColor: '#3289D0',
+                                        backgroundColor: '#3289d0',
                                         paddingHorizontal: 20,
                                         fontFamily: 'inter',
                                         height: 35,
@@ -3163,7 +3163,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             color: '#fff',
                             fontSize: 12,
                             // borderWidth: 1,
-                            backgroundColor: '#3289D0',
+                            backgroundColor: '#3289d0',
                             paddingHorizontal: 20,
                             fontFamily: "inter",
                             height: 35,
@@ -3173,7 +3173,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             textTransform: "uppercase"
                         }}>
                         {updatingCueContent ? 'SAVING...' : 'SAVE'}
-                        {/* <Ionicons name={updatingCueContent ? 'ellipsis-horizontal-outline' : 'cloud-upload-outline'} size={19} color={'#3289D0'} /> */}
+                        {/* <Ionicons name={updatingCueContent ? 'ellipsis-horizontal-outline' : 'cloud-upload-outline'} size={19} color={'#3289d0'} /> */}
                     </Text>
                 </TouchableOpacity>
             </View > : null
@@ -3360,7 +3360,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         style={{ height: 20 }}
                                         trackColor={{
                                             false: "#F8F9FA",
-                                            true: "#3289D0",
+                                            true: "#3289d0",
                                         }}
                                         activeThumbColor="white"
                                     />
@@ -3478,7 +3478,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     style={{ height: 20 }}
                                     trackColor={{
                                         false: "#E7EBEE",
-                                        true: "#3289D0"
+                                        true: "#3289d0"
                                     }}
                                     activeThumbColor="white"
                                 />
@@ -4382,7 +4382,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 <Ionicons
                                     name={"arrow-redo-outline"}
                                     size={19}
-                                    color={shareWithChannelId === "" ? "#3289D0" : "#16181C"}
+                                    color={shareWithChannelId === "" ? "#3289d0" : "#16181C"}
                                 />
                             </Text>
                         </TouchableOpacity>
@@ -4436,7 +4436,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             style={{ height: 20 }}
                             trackColor={{
                                 false: "#E7EBEE",
-                                true: "#3289D0"
+                                true: "#3289d0"
                             }}
                             activeThumbColor="white"
                         />
@@ -4776,7 +4776,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     lineHeight: 35,
                                     color: "white",
                                     fontSize: 12,
-                                    backgroundColor: "#3289D0",
+                                    backgroundColor: "#3289d0",
                                     borderRadius: 15,
                                     paddingHorizontal: 20,
                                     fontFamily: "inter",
@@ -4834,11 +4834,11 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         style={{
                             textAlign: "center",
                             lineHeight: 35,
-                            backgroundColor: '#3289D0',
+                            backgroundColor: '#3289d0',
                             fontSize: 12,
                             color: '#fff',
                             // borderWidth: 1,
-                            // borderColor: '#3289D0',
+                            // borderColor: '#3289d0',
                             paddingHorizontal: 20,
                             fontFamily: "inter",
                             height: 35,
@@ -4848,7 +4848,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             textTransform: "uppercase"
                         }}>
                         {updatingCueContent ? '...' : 'SAVE'}
-                        {/* <Ionicons name={updatingCueContent ? 'ellipsis-horizontal-outline' : 'cloud-upload-outline'} size={19} color={'#3289D0'} /> */}
+                        {/* <Ionicons name={updatingCueContent ? 'ellipsis-horizontal-outline' : 'cloud-upload-outline'} size={19} color={'#3289d0'} /> */}
                     </Text>
                 </TouchableOpacity>
 
@@ -4860,10 +4860,10 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         <Text style={{
                             textAlign: "center",
                             lineHeight: 35,
-                            color: '#3289D0',
+                            color: '#3289d0',
                             fontSize: 12,
                             borderWidth: 1,
-                            borderColor: '#3289D0',
+                            borderColor: '#3289d0',
                             paddingHorizontal: 20,
                             fontFamily: "inter",
                             height: 35,
@@ -4951,7 +4951,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     paddingHorizontal: 10,
                                     marginLeft: 10,
                                     borderRadius: 15,
-                                    backgroundColor: "#3289D0",
+                                    backgroundColor: "#3289d0",
                                     lineHeight: 20,
                                     paddingTop: 1
                                 }}>
@@ -5101,7 +5101,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                 textTransform: "uppercase",
                                                 fontSize: 12,
                                                 fontFamily: 'overpass',
-                                                color: '#3289D0',
+                                                color: '#3289d0',
                                             }}
                                             onPress={() => setShowEquationEditor(!showEquationEditor)}>
                                             {PreferredLanguageText("formula")}
@@ -5234,7 +5234,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                                     textTransform: "uppercase",
                                                                     fontSize: 12,
                                                                     fontFamily: 'overpass',
-                                                                    color: '#3289D0',
+                                                                    color: '#3289d0',
                                                                 }}
                                                             >
                                                                 Erase
@@ -5256,7 +5256,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                                     textTransform: "uppercase",
                                                     fontSize: 12,
                                                     fontFamily: 'overpass',
-                                                    color: '#3289D0',
+                                                    color: '#3289d0',
                                                 }}
                                             >
                                                 Erase
@@ -5465,7 +5465,7 @@ const styles: any = StyleSheet.create({
         color: '#fff',
         paddingHorizontal: Dimensions.get('window').width < 1024 ? 12 : 15,
         borderRadius: 12,
-        backgroundColor: '#3289D0',
+        backgroundColor: '#3289d0',
         lineHeight: 25,
         height: 25,
         fontFamily: 'inter',

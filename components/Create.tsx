@@ -1042,10 +1042,10 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                       style={{
                         textAlign: "center",
                         lineHeight: 35,
-                        color: "#3289D0",
+                        color: "#3289d0",
                         borderWidth: 1,
                         fontSize: 12,
-                        borderColor: "#3289D0",
+                        borderColor: "#3289d0",
                         borderRadius: 15,
                         paddingHorizontal: 20,
                         fontFamily: "inter",
@@ -1085,7 +1085,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                       textTransform: "uppercase",
                       fontSize: 12,
                       fontFamily: 'overpass',
-                      color: '#3289D0',
+                      color: '#3289d0',
                     }}
                     onPress={() => setShowEquationEditor(!showEquationEditor)}
                   >
@@ -1105,7 +1105,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 {
                   role === 'instructor' && !imported ? <Text
                     style={{
-                      color: "#3289D0",
+                      color: "#3289d0",
                       lineHeight: 35,
                       textAlign: "right",
                       // paddingRight: 10,
@@ -1283,7 +1283,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                 style={{ height: 20 }}
                                 trackColor={{
                                   false: "#F8F9FA",
-                                  true: "#3289D0",
+                                  true: "#3289d0",
                                 }}
                                 activeThumbColor="white"
                               />
@@ -1365,7 +1365,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                 style={{ height: 20 }}
                                 trackColor={{
                                   false: "#E7EBEE",
-                                  true: "#3289D0",
+                                  true: "#3289d0",
                                 }}
                                 activeThumbColor="white"
                               />
@@ -2023,7 +2023,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           style={{ height: 20 }}
                           trackColor={{
                             false: "#E7EBEE",
-                            true: "#3289D0",
+                            true: "#3289d0",
                           }}
                           activeThumbColor="white"
                         />
@@ -2595,7 +2595,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                   fontSize: 12,
                                   lineHeight: 35,
                                   fontFamily: 'inter',
-                                  color: "#3289D0",
+                                  color: "#3289d0",
                                   // textAlign: "center",
                                 }}
                               >
@@ -2849,7 +2849,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                             lineHeight: 35,
                             color: "white",
                             fontSize: 12,
-                            backgroundColor: "#3289D0",
+                            backgroundColor: "#3289d0",
                             borderRadius: 15,
                             paddingHorizontal: 20,
                             fontFamily: "inter",
@@ -2869,7 +2869,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                             lineHeight: 35,
                             color: "white",
                             fontSize: 12,
-                            backgroundColor: "#3289D0",
+                            backgroundColor: "#3289d0",
                             borderRadius: 15,
                             paddingHorizontal: 20,
                             fontFamily: "inter",

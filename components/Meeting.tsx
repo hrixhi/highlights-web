@@ -431,9 +431,9 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                             <Text style={{
                                 textAlign: 'center',
                                 lineHeight: 35,
-                                color: '#3289D0',
+                                color: '#3289d0',
                                 fontSize: 12,
-                                borderColor: '#3289D0',
+                                borderColor: '#3289d0',
                                 paddingHorizontal: 20,
                                 borderWidth: 1,
                                 fontFamily: 'inter',

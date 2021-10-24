@@ -812,7 +812,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             style={{ height: 20 }}
                                             trackColor={{
                                                 false: "#E7EBEE",
-                                                true: "#3289D0"
+                                                true: "#3289d0"
                                             }}
                                             activeThumbColor="white"
                                         />
@@ -860,7 +860,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             style={{ height: 20 }}
                                             trackColor={{
                                                 false: "#E7EBEE",
-                                                true: "#3289D0"
+                                                true: "#3289d0"
                                             }}
                                             activeThumbColor="white"
                                         />
@@ -886,7 +886,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 lineHeight: 35,
                                 color: 'white',
                                 fontSize: 12,
-                                backgroundColor: '#3289D0',
+                                backgroundColor: '#3289d0',
                                 paddingHorizontal: 20,
                                 fontFamily: 'inter',
                                 height: 35,
@@ -1161,7 +1161,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 lineHeight: 35,
                                 color: 'white',
                                 fontSize: 12,
-                                backgroundColor: '#3289D0',
+                                backgroundColor: '#3289d0',
                                 paddingHorizontal: 20,
                                 fontFamily: 'inter',
                                 height: 35,
@@ -1186,10 +1186,10 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             <Text style={{
                                 textAlign: 'center',
                                 lineHeight: 35,
-                                color: '#3289D0',
+                                color: '#3289d0',
                                 borderWidth: 1,
                                 borderRadius: 15,
-                                borderColor: '#3289D0',
+                                borderColor: '#3289d0',
                                 backgroundColor: '#fff',
                                 fontSize: 12,
                                 paddingHorizontal: 20,

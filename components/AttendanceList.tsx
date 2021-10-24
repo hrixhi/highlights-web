@@ -385,9 +385,9 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                         <Text style={{
                             textAlign: 'center',
                             lineHeight: 35,
-                            color: '#3289D0',
+                            color: '#3289d0',
                             fontSize: 12,
-                            borderColor: '#3289D0',
+                            borderColor: '#3289d0',
                             borderWidth: 1,
                             paddingHorizontal: 20,
                             fontFamily: 'inter',
@@ -535,7 +535,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                                             <TouchableOpacity disabled={!isOwner} onPress={() => onChangeAttendance(meeting.dateId, channelAttendance.userId, attendanceObject ? false : true)} style={{ marginBottom: 5, width: '100%', flexDirection: 'row', justifyContent: 'center' }}>
                                                                 {
                                                                     attendanceObject ?
-                                                                        <Ionicons name='checkmark-outline' size={15} color={'#3289D0'} />
+                                                                        <Ionicons name='checkmark-outline' size={15} color={'#3289d0'} />
                                                                         :
                                                                         isOwner ? <Ionicons name='checkmark-outline' size={15} color={'#e0e0e0'} /> : '-'
                                                                 }

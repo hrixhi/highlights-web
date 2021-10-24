@@ -475,7 +475,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             lineHeight: 35,
                             color: 'white',
                             fontSize: 12,
-                            backgroundColor: '#3289D0',
+                            backgroundColor: '#3289d0',
                             borderRadius: 15,
                             paddingHorizontal: 20,
                             overflow: 'hidden',

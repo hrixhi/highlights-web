@@ -169,7 +169,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         onPress={() => props.hideMenu()}>
                         <Text style={styles.channelText}>
                             <Ionicons
-                                name='chevron-up-outline' size={25} color={'#3289D0'} />
+                                name='chevron-up-outline' size={25} color={'#3289d0'} />
                         </Text>
                         {/* <Text style={{ fontSize: 10, color: '#16181C', textAlign: 'center' }}>
                             Hide

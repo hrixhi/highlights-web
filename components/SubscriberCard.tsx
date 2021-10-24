@@ -39,7 +39,7 @@ const SubscriberCard: React.FunctionComponent<{ [label: string]: any }> = (props
                                             width: 20,
                                             height: 20,
                                             borderRadius: 1,
-                                            backgroundColor: '#3289D0',
+                                            backgroundColor: '#3289d0',
                                             textAlign: 'center',
                                             zIndex: 150,
                                             marginLeft: 10,

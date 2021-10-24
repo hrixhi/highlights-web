@@ -87,7 +87,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         {
                             props.cue.graded && showScore && !isOwner ? <Text style={{
                                 fontSize: 9,
-                                color: '#3289D0',
+                                color: '#3289d0',
                                 marginLeft: 10, textAlign: 'right'
                             }}>
                                 {props.cue.score}%
@@ -119,7 +119,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     height: 20,
                                     borderRadius: 12,
                                     overflow: 'hidden',
-                                    backgroundColor: '#3289D0',
+                                    backgroundColor: '#3289d0',
                                     textAlign: 'center',
                                     zIndex: 150,
                                     marginLeft: 5,

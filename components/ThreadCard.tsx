@@ -40,7 +40,7 @@ const ThreadCard: React.FunctionComponent<{ [label: string]: any }> = (props: an
         if (u) {
             const unparsedUser = JSON.parse(u)
             if (props.channelCreatedBy.toString().trim() === props.thread.userId.toString().trim()) {
-                setColor('#3289D0')
+                setColor('#3289d0')
             } else if (unparsedUser._id.toString().trim() === props.thread.userId.toString().trim()) {
                 setColor('#343A40')
             }
@@ -116,7 +116,7 @@ const ThreadCard: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                             width: 20,
                                             height: 20,
                                             borderRadius: 1,
-                                            backgroundColor: '#3289D0',
+                                            backgroundColor: '#3289d0',
                                             textAlign: 'center',
                                             zIndex: 150,
                                             marginLeft: 10,

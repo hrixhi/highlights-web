@@ -471,7 +471,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                         <TouchableOpacity
                                                             onPress={() => handleSub(channel.name)}
                                                         >
-                                                            <Text style={{ textAlign: 'center', fontSize: 13, color: '#3289D0' }} ellipsizeMode='tail'>
+                                                            <Text style={{ textAlign: 'center', fontSize: 13, color: '#3289d0' }} ellipsizeMode='tail'>
                                                                 <Ionicons name='enter-outline' size={19} />
                                                             </Text>
                                                         </TouchableOpacity>
@@ -479,7 +479,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                         <Text style={{
                                                             textAlign: 'center', fontSize: 13,
                                                             fontFamily: 'inter',
-                                                            color: (channel.channelCreator === userId || channel.owners.includes(userId)) ? '#3289D0' : '#343A40'
+                                                            color: (channel.channelCreator === userId || channel.owners.includes(userId)) ? '#3289d0' : '#343A40'
                                                         }}>
                                                             {role}
                                                         </Text>
@@ -582,7 +582,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             style={{ height: 20 }}
                                             trackColor={{
                                                 false: "#E7EBEE",
-                                                true: "#3289D0"
+                                                true: "#3289d0"
                                             }}
                                             activeThumbColor="white"
                                         />
@@ -651,7 +651,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             lineHeight: 35,
                                             color: 'white',
                                             fontSize: 12,
-                                            backgroundColor: '#3289D0',
+                                            backgroundColor: '#3289d0',
                                             paddingHorizontal: 20,
                                             fontFamily: 'inter',
                                             height: 35,

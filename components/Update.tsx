@@ -605,7 +605,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         lineHeight: 25,
                         flex: 1, flexDirection: 'row',
                         // marginTop: 3,
-                        color: value._id === props.cue._id ? '#3289D0' : '#343A40'
+                        color: value._id === props.cue._id ? '#3289d0' : '#343A40'
                     }}>
                     {title}
                 </Text>
@@ -696,7 +696,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         lineHeight: 25,
                         flex: 1, flexDirection: 'row',
                         // marginTop: 5,
-                        color: value._id === props.cue._id ? '#3289D0' : '#343A40'
+                        color: value._id === props.cue._id ? '#3289d0' : '#343A40'
                     }}>
                     {title}
                 </Text>
@@ -976,7 +976,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     lineHeight: 25,
                                     flex: 1, flexDirection: 'row',
                                     // marginTop: 5,
-                                    color: cue._id === props.cue._id ? '#3289D0' : '#343A40'
+                                    color: cue._id === props.cue._id ? '#3289d0' : '#343A40'
                                 }}>
                                 {title}
                             </Text>
@@ -1067,7 +1067,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             lineHeight: 25,
                                             flex: 1, flexDirection: 'row',
                                             // marginTop: 5,
-                                            color: cue._id === props.cue._id ? '#3289D0' : '#343A40'
+                                            color: cue._id === props.cue._id ? '#3289d0' : '#343A40'
                                         }}>
                                         {title}
                                     </Text>
@@ -1086,7 +1086,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                     }}
                                     style={{
                                         justifyContent: 'center',
-                                        width: 20, height: 20, borderRadius: 10, backgroundColor: '#3289D0'
+                                        width: 20, height: 20, borderRadius: 10, backgroundColor: '#3289d0'
                                     }}
                                 >
                                     <Text style={{ color: '#fff', width: '100%', textAlign: 'center' }}>
@@ -1097,7 +1097,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         </View>)
                     })}
                 </ScrollView> : <View>
-                    <Text style={{ fontSize: 14, color: '#343A40', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#3289D0', paddingVertical: 20 }}>
+                    <Text style={{ fontSize: 14, color: '#343A40', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#3289d0', paddingVertical: 20 }}>
                         No Content to select.
                     </Text>
                 </View>}
@@ -1195,7 +1195,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 lineHeight: 25,
                                                 flex: 1, flexDirection: 'row',
                                                 // marginTop: 5,
-                                                color: cue._id === props.cue._id ? '#3289D0' : '#343A40'
+                                                color: cue._id === props.cue._id ? '#3289d0' : '#343A40'
                                             }}>
                                             {title}
                                         </Text>
@@ -1216,7 +1216,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         style={{
                                             justifyContent: 'center',
                                             alignSelf: 'flex-end',
-                                            width: 20, height: 20, borderRadius: 10, backgroundColor: '#3289D0'
+                                            width: 20, height: 20, borderRadius: 10, backgroundColor: '#3289d0'
                                         }}
                                     >
                                         <Text style={{ color: '#fff', width: '100%', textAlign: 'center' }}>
@@ -1229,7 +1229,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         backgroundColor: col,
                                         flex: 1,
                                         // borderLeftWidth: 2,
-                                        borderColor: cue._id === props.cue._id ? '#3289D0' : '#fff',
+                                        borderColor: cue._id === props.cue._id ? '#3289d0' : '#fff',
                                         opacity: 0.9,
                                         // width: '4%',
                                         height: '100%'
@@ -1242,7 +1242,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     </ScrollView>
                     :
                     <View>
-                        <Text style={{ fontSize: 14, color: '#343A40', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#3289D0', paddingVertical: 20 }}>
+                        <Text style={{ fontSize: 14, color: '#343A40', textAlign: 'center', fontFamily: 'inter', backgroundColor: '#3289d0', paddingVertical: 20 }}>
                             No Content to select.
                         </Text>
                     </View>
@@ -2081,7 +2081,7 @@ const styles: any = StyleSheet.create({
         color: '#fff',
         paddingHorizontal: Dimensions.get('window').width < 1024 ? 12 : 15,
         borderRadius: 12,
-        backgroundColor: '#3289D0',
+        backgroundColor: '#3289d0',
         lineHeight: 25,
         height: 25,
         fontFamily: 'inter',

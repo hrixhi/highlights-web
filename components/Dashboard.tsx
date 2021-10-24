@@ -606,7 +606,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 fontFamily: 'inter',
                 // flex: 1,
                 lineHeight: 23,
-                color: '#3289D0'
+                color: '#3289d0'
             }}>
                 <Ionicons name='search-outline' size={22} color="#343A40" />
             </Text>
@@ -1101,7 +1101,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     backgroundColor: collapseMap[key] ? '#E7EBEE' : '#fff',
 
                                                 }}>
-                                                    <Ionicons name={collapseMap[key] ? 'chevron-up-outline' : 'chevron-down-outline'} size={19} color={collapseMap[key] ? '#343A40' : '#3289D0'} />
+                                                    <Ionicons name={collapseMap[key] ? 'chevron-up-outline' : 'chevron-down-outline'} size={19} color={collapseMap[key] ? '#343A40' : '#3289d0'} />
                                                 </Text>
                                             </TouchableOpacity>
                                         </View>
@@ -1172,7 +1172,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     backgroundColor: collapseMap[key] ? '#E7EBEE' : '#fff',
 
                                                 }}>
-                                                    <Ionicons name={collapseMap[key] ? 'chevron-up-outline' : 'chevron-down-outline'} size={19} color={collapseMap[key] ? '#343A40' : '#3289D0'} />
+                                                    <Ionicons name={collapseMap[key] ? 'chevron-up-outline' : 'chevron-down-outline'} size={19} color={collapseMap[key] ? '#343A40' : '#3289d0'} />
                                                 </Text>
                                             </TouchableOpacity>
                                         </View>
@@ -1515,7 +1515,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     <Ionicons
                                         name={props.option === 'Settings' && !props.showHelp ? 'person-circle-outline' : (props.option === 'Channels' ? 'file-tray-stacked-outline' : "settings-outline")}
                                         size={17}
-                                        color={(props.option === 'Settings' && !props.showHelp) || props.option === 'Channels' ? '#3289D0' : '#E7EBEE'} />
+                                        color={(props.option === 'Settings' && !props.showHelp) || props.option === 'Channels' ? '#3289d0' : '#E7EBEE'} />
                                 </Text>
                                 {/* <Image
                                     style={{
@@ -1572,7 +1572,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 <Ionicons
                                     name="help-circle-outline"
                                     size={19}
-                                    color={(props.option === 'Settings' && props.showHelp) ? '#3289D0' : '#E7EBEE'}
+                                    color={(props.option === 'Settings' && props.showHelp) ? '#3289d0' : '#E7EBEE'}
                                 />
                             </Text>
                         </TouchableOpacity>
@@ -1811,7 +1811,7 @@ const styleObject: any = () => StyleSheet.create({
         color: '#fff',
         paddingHorizontal: 15,
         borderRadius: 12,
-        backgroundColor: '#3289D0',
+        backgroundColor: '#3289d0',
         lineHeight: 24,
         height: 24,
         fontFamily: 'inter',
@@ -1830,11 +1830,11 @@ const styleObject: any = () => StyleSheet.create({
     },
     allGrayFill1: {
         fontSize: 10,
-        color: '#3289D0',
+        color: '#3289d0',
         height: 20,
         // borderRadius: 15,
         paddingHorizontal: 10,
-        // backgroundColor: '#3289D0',
+        // backgroundColor: '#3289d0',
         // textTransform: 'uppercase',
         lineHeight: 20,
         fontFamily: 'inter',

@@ -99,7 +99,7 @@ const OverviewCueCard: React.FunctionComponent<{ [label: string]: any }> = (prop
                         </Text> */}
                         {/* {
                             props.cue.submission ? <Text style={styleObject.date}>
-                                <Ionicons name='share-outline' size={9} color={props.cue.submittedAt && props.cue.submittedAt !== '' ? ('#3289D0') : (colorScheme === 'light' ? '#fff' : '#333333')} style={{ marginRight: 10 }} />
+                                <Ionicons name='share-outline' size={9} color={props.cue.submittedAt && props.cue.submittedAt !== '' ? ('#3289d0') : (colorScheme === 'light' ? '#fff' : '#333333')} style={{ marginRight: 10 }} />
                             </Text> : null
                         }
                         {
@@ -111,7 +111,7 @@ const OverviewCueCard: React.FunctionComponent<{ [label: string]: any }> = (prop
                         {
                             props.cue.graded && showScore && !isOwner ? <Text style={{
                                 fontSize: 10,
-                                color: '#3289D0',
+                                color: '#3289d0',
                                 marginLeft: 10
                             }}>
                                 {props.cue.score}%
@@ -192,7 +192,7 @@ const OverviewCueCard: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         height: 20,
                                         borderRadius: 1,
                                         overflow: 'hidden',
-                                        backgroundColor: '#3289D0',
+                                        backgroundColor: '#3289d0',
                                         textAlign: 'center',
                                         zIndex: 150,
                                         marginLeft: 10,
