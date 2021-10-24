@@ -1259,98 +1259,98 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
     //   }}
     // />
     //   :
-      (modalType === 'Update' ? <Update
-        key={cueId.toString()}
-        customCategories={customCategories}
-        cue={cues[updateModalKey][updateModalIndex]}
-        cueIndex={updateModalIndex}
-        cueKey={updateModalKey}
-        closeModal={() => closeModal()}
-        cueId={cueId}
-        createdBy={createdBy}
-        channelId={channelId}
-        filterChoice={filterChoice}
-        channelCreatedBy={channelCreatedBy}
-        channelCues={cues[channelId]}
-        reloadCueListAfterUpdate={() => reloadCueListAfterUpdate()}
-        reopenUpdateWindow={reopenUpdateWindow}
-        target={target}
-        openCue={(cueId: string) => openCueFromCalendar(channelId, cueId, channelCreatedBy)}
-        refreshCues={loadNewChannelCues}
+    (modalType === 'Update' ? <Update
+      key={cueId.toString()}
+      customCategories={customCategories}
+      cue={cues[updateModalKey][updateModalIndex]}
+      cueIndex={updateModalIndex}
+      cueKey={updateModalKey}
+      closeModal={() => closeModal()}
+      cueId={cueId}
+      createdBy={createdBy}
+      channelId={channelId}
+      filterChoice={filterChoice}
+      channelCreatedBy={channelCreatedBy}
+      channelCues={cues[channelId]}
+      reloadCueListAfterUpdate={() => reloadCueListAfterUpdate()}
+      reopenUpdateWindow={reopenUpdateWindow}
+      target={target}
+      openCue={(cueId: string) => openCueFromCalendar(channelId, cueId, channelCreatedBy)}
+      refreshCues={loadNewChannelCues}
+    />
+      :
+      (modalType === 'Walkthrough' ? <Walkthrough
       />
-        :
-        (modalType === 'Walkthrough' ? <Walkthrough
-        />
-          : (
-            modalType === 'Channels' ? <Channels
-              closeModal={() => {
-                setShowHome(true)
-                closeModal()
-              }}
-              refreshSubscriptions={refreshSubscriptions}
-            /> : (
-              modalType === 'Discussion' ? <Discussion
-                closeModal={() => closeModal()}
-                channelId={channelId}
-                filterChoice={filterChoice}
-                channelCreatedBy={channelCreatedBy}
-              // refreshUnreadDiscussionCount={() => refreshUnreadDiscussionCount()}
-              />
-                : (
-                  modalType === 'Subscribers' ? <Subscribers
-                    closeModal={() => closeModal()}
-                    channelId={channelId}
-                    channelCreatedBy={channelCreatedBy}
-                    filterChoice={filterChoice}
-                    refreshUnreadMessagesCount={() => refreshUnreadMessagesCount()}
-                  /> :
-                    (
-                      modalType === 'Profile' ? <Profile
-                        closeModal={() => closeModal()}
-                        saveDataInCloud={async () => await saveDataInCloud()}
-                        reOpenProfile={() => {
-                          setModalType('')
-                          openModal('Profile')
-                        }}
-                        reloadData={() => {
-                          loadData()
-                          openModal('Walkthrough')
-                        }}
-                      /> :
-                        (
-                          modalType === 'Grades' ? <Grades
-                            closeModal={() => closeModal()}
-                            channelId={channelId}
-                            channelCreatedBy={channelCreatedBy}
-                            filterChoice={filterChoice}
-                            openCueFromGrades={(cueId: string) => openCueFromCalendar(channelId, cueId, channelCreatedBy)}
-                          />
-                            : (
-                              modalType === 'Calendar' ? <Calendar
-                                cues={cues}
-                                subscriptions={subscriptions}
-                                openCueFromCalendar={openCueFromCalendar} />
-                                : (
-                                  modalType === 'Meeting' ? <Meeting
-                                    channelId={channelId}
-                                    channelName={filterChoice}
-                                    channelCreatedBy={channelCreatedBy}
-                                    refreshMeetingStatus={refreshMeetingStatus}
-                                    closeModal={() => closeModal()}
-                                    filterChoice={filterChoice}
-                                  // refreshUnreadDiscussionCount={() => refreshUnreadDiscussionCount()}
-                                  />
-                                    : null
-                                )
-                            )
-                        )
-                    )
-                )
-            )
+        : (
+          modalType === 'Channels' ? <Channels
+            closeModal={() => {
+              setShowHome(true)
+              closeModal()
+            }}
+            refreshSubscriptions={refreshSubscriptions}
+          /> : (
+            modalType === 'Discussion' ? <Discussion
+              closeModal={() => closeModal()}
+              channelId={channelId}
+              filterChoice={filterChoice}
+              channelCreatedBy={channelCreatedBy}
+            // refreshUnreadDiscussionCount={() => refreshUnreadDiscussionCount()}
+            />
+              : (
+                modalType === 'Subscribers' ? <Subscribers
+                  closeModal={() => closeModal()}
+                  channelId={channelId}
+                  channelCreatedBy={channelCreatedBy}
+                  filterChoice={filterChoice}
+                  refreshUnreadMessagesCount={() => refreshUnreadMessagesCount()}
+                /> :
+                  (
+                    modalType === 'Profile' ? <Profile
+                      closeModal={() => closeModal()}
+                      saveDataInCloud={async () => await saveDataInCloud()}
+                      reOpenProfile={() => {
+                        setModalType('')
+                        openModal('Profile')
+                      }}
+                      reloadData={() => {
+                        loadData()
+                        openModal('Walkthrough')
+                      }}
+                    /> :
+                      (
+                        modalType === 'Grades' ? <Grades
+                          closeModal={() => closeModal()}
+                          channelId={channelId}
+                          channelCreatedBy={channelCreatedBy}
+                          filterChoice={filterChoice}
+                          openCueFromGrades={(cueId: string) => openCueFromCalendar(channelId, cueId, channelCreatedBy)}
+                        />
+                          : (
+                            modalType === 'Calendar' ? <Calendar
+                              cues={cues}
+                              subscriptions={subscriptions}
+                              openCueFromCalendar={openCueFromCalendar} />
+                              : (
+                                modalType === 'Meeting' ? <Meeting
+                                  channelId={channelId}
+                                  channelName={filterChoice}
+                                  channelCreatedBy={channelCreatedBy}
+                                  refreshMeetingStatus={refreshMeetingStatus}
+                                  closeModal={() => closeModal()}
+                                  filterChoice={filterChoice}
+                                // refreshUnreadDiscussionCount={() => refreshUnreadDiscussionCount()}
+                                />
+                                  : null
+                              )
+                          )
+                      )
+                  )
+              )
           )
         )
       )
-    // )
+    )
+  // )
 
   const cuesArray: any[] = []
   let filteredCues: any[] = []
@@ -1834,7 +1834,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
       </View>
       {
         showHome && !reLoading && (
-          (option === 'Classroom')
+          (option === 'Classroom' && modalType !== 'Create')
           || (option === 'To Do' && tab !== 'Add')
           || (option === 'Inbox' && !showDirectory)
           || (option === 'Channels' && !showCreate)
@@ -1854,7 +1854,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                   }
                   loadData(true)
                 }
-                
+
                 openModal('Create')
                 // setShowHome(false)
                 setMenuCollapsed(true)
