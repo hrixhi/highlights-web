@@ -433,7 +433,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
 
     return (
         <View style={{
-            backgroundColor: 'white',
+            backgroundColor: '#e7eeeb',
             width: '100%',
             // height: props.cueId ? windowHeight - 200 : windowHeight - 50,
             // paddingRight: 20,
@@ -539,7 +539,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             }}
                         >
                             <Text style={{ lineHeight: 35, width: '100%', textAlign: 'center', paddingTop: 10 }}>
-                                <Ionicons name='arrow-back-outline' size={30} color={'#343A40'} />
+                                <Ionicons name='chevron-back-outline' size={30} color={'#343A40'} />
                             </Text>
                         </TouchableOpacity>
                 }
@@ -607,7 +607,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                                             }}
                                                                             onPress={() => setPrivatePost(!privatePost)}
                                                                         >
-                                                                            <Ionicons name="eye-off-outline" size={19} color={privatePost ? '#3289d0' : '#343A40'} />
+                                                                            <Ionicons name="eye-off-outline" size={18} color={privatePost ? '#3289d0' : '#343A40'} />
                                                                         </Text>
                                                                     </TouchableOpacity>
                                                                 </View> : null}
@@ -840,7 +840,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                                                 <Text style={{ fontSize: 15, padding: 5, fontFamily: 'inter', marginTop: 5 }} ellipsizeMode='tail'>
                                                                                     {thread.anonymous ? 'Anonymous' : thread.fullName}
                                                                                 </Text>
-                                                                                <Text style={{ fontSize: 12, padding: 5 }} ellipsizeMode='tail'>
+                                                                                <Text style={{ fontSize: 12, padding: 5, fontWeight: 'bold' }} ellipsizeMode='tail'>
                                                                                     {title}
                                                                                 </Text>
                                                                             </View>
@@ -849,7 +849,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                                                     {
                                                                                         thread.isPrivate ?
                                                                                             <Text style={{ fontSize: 13, padding: 5, color: '#3289d0', textAlign: 'center' }} ellipsizeMode='tail'>
-                                                                                                <Ionicons name='eye-off-outline' size={19} />
+                                                                                                <Ionicons name='eye-off-outline' size={18} />
                                                                                             </Text>
                                                                                             : null
                                                                                     }
@@ -871,7 +871,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                                                         {emailTimeDisplay(thread.time)}
                                                                                     </Text>
                                                                                     <Text style={{ fontSize: 13, padding: 5, color: '#3289d0', textAlign: 'center' }} ellipsizeMode='tail'>
-                                                                                        <Ionicons name='chevron-forward-outline' size={19} />
+                                                                                        <Ionicons name='chevron-forward-outline' size={18} />
                                                                                     </Text>
                                                                                 </View>
                                                                             </View>

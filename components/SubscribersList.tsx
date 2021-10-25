@@ -1205,7 +1205,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     width: '100%',
                                     lineHeight: 23,
                                 }}>
-                                    <Ionicons name='arrow-back-outline' size={30} color={'#343A40'} />
+                                    <Ionicons name='chevron-back-outline' size={30} color={'#343A40'} />
                                 </Text>
                             </TouchableOpacity> */}
                             {
@@ -1685,7 +1685,7 @@ const SubscribersList: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                                     <Text style={{ fontSize: 15, padding: 5, fontFamily: 'inter', marginTop: 5 }} ellipsizeMode='tail'>
                                                                         {subscriber.displayName ? subscriber.displayName : ''}
                                                                     </Text>
-                                                                    <Text style={{ fontSize: 12, padding: 5 }} ellipsizeMode='tail'>
+                                                                    <Text style={{ fontSize: 12, padding: 5, fontWeight: 'bold' }} ellipsizeMode='tail'>
                                                                         {subscriber.fullName === "delivered" || subscriber.fullName === "not-delivered" ? "delivered" : subscriber.fullName}
                                                                     </Text>
                                                                 </View>

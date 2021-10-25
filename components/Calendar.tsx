@@ -1332,7 +1332,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             }}
                         >
                             <Text style={{ lineHeight: 27, width: '100%', textAlign: 'center' }}>
-                                <Ionicons name='arrow-back-outline' size={30} color={'#343A40'} />
+                                <Ionicons name='chevron-back-outline' size={30} color={'#343A40'} />
                             </Text>
                         </TouchableOpacity>
                 )
@@ -1558,6 +1558,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 // height: 'auto',
                                                 // overflow: 'hidden',
                                                 // marginTop: 20,
+                                                borderTopRightRadius: tab !== 'Add' && tab !== 'Activity' ? 10 : 1,
+                                                borderTopLeftRadius: tab !== 'Add' && tab !== 'Activity' ? 10 : 1,
                                                 marginBottom: Dimensions.get('window').width < 1024 ? 0 : 0,
                                                 // borderBottomWidth: tab === 'Add' || tab === 'Activity' ? 0 : 1,
                                                 borderWidth: tab !== 'Add' && tab !== 'Activity' ? 1 : 0,
@@ -1725,13 +1727,13 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                                 <View style={{ backgroundColor: '#fff', padding: 0, flexDirection: 'row', alignSelf: 'center' }} >
                                                                                                     <Text style={{ fontSize: 13, padding: 5, lineHeight: 13 }} ellipsizeMode='tail'>
                                                                                                         {act.status === 'unread' ?
-                                                                                                            <Ionicons name='alert-circle-outline' color='#f94144' size={19} /> : null}
+                                                                                                            <Ionicons name='alert-circle-outline' color='#f94144' size={18} /> : null}
                                                                                                     </Text>
                                                                                                     <Text style={{ fontSize: 12, padding: 5, lineHeight: 13 }} ellipsizeMode='tail'>
                                                                                                         {emailTimeDisplay(act.date)}
                                                                                                     </Text>
                                                                                                     <Text style={{ fontSize: 13, padding: 5, lineHeight: 13 }} ellipsizeMode='tail'>
-                                                                                                        <Ionicons name='chevron-forward-outline' size={19} color='#3289d0' />
+                                                                                                        <Ionicons name='chevron-forward-outline' size={18} color='#3289d0' />
                                                                                                     </Text>
                                                                                                 </View>
                                                                                             </TouchableOpacity>
@@ -1756,7 +1758,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                                     // fontFamily: 'inter',
                                                                                                     color: '#16181C'
                                                                                                 }}>
-                                                                                                Event
+                                                                                                Name
                                                                                             </Text>
                                                                                             <TextInput
                                                                                                 value={title}
@@ -1900,7 +1902,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                                             // fontFamily: 'inter',
                                                                                                             color: '#16181C'
                                                                                                         }}>
-                                                                                                        Channel
+                                                                                                        Workspace
                                                                                                     </Text>
                                                                                                 </View>
                                                                                                 <View style={{ flexDirection: 'row', display: 'flex', backgroundColor: '#fff' }}>

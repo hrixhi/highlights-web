@@ -329,7 +329,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                     }}
                                 >
                                     <Text style={{ lineHeight: 35, width: '100%', textAlign: 'center' }}>
-                                        <Ionicons name='arrow-back-outline' size={30} color={'#343A40'} />
+                                        <Ionicons name='chevron-back-outline' size={30} color={'#343A40'} />
                                     </Text>
                                 </TouchableOpacity>
                             </View>
@@ -411,7 +411,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                         <Ionicons
                                                             name={item.isOpen ? 'chevron-up-outline' : 'chevron-down-outline'}
                                                             color={item.isOpen ? '#343A40' : '#3289d0'}
-                                                            size={19}
+                                                            size={18}
                                                         />
                                                     </Text>
                                                 </View>

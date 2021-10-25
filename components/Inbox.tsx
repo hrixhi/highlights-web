@@ -210,7 +210,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                             } else if (type === "mp4" || type === "oga" || type === "mov" || type === "wmv") {
                                 video = url
                             } else {
-                                text = <TouchableOpacity style={{  }}>
+                                text = <TouchableOpacity style={{}}>
                                     <Text style={{
                                         textDecorationLine: 'underline',
                                         // backgroundColor: '#3289d0',
@@ -877,7 +877,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                     }}
                                                 >
                                                     <Text style={{ lineHeight: 35, width: '100%', textAlign: 'center', paddingTop: 5 }}>
-                                                        <Ionicons name='arrow-back-outline' size={30} color={'#343A40'} />
+                                                        <Ionicons name='chevron-back-outline' size={30} color={'#343A40'} />
                                                     </Text>
                                                 </TouchableOpacity>
                                                 : null
@@ -1160,7 +1160,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                     <Image
                                                                         style={{
                                                                             height: 35,
-                                                                            width: 30,
+                                                                            width: 35,
                                                                             borderRadius: 75,
 
                                                                             // marginTop: 20,
@@ -1344,7 +1344,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                                 flexDirection: 'row'
                                                                             }}>
                                                                             <Text>
-                                                                                <Ionicons name={'close-circle-outline'} size={19} color={'#343A40'} />
+                                                                                <Ionicons name={'close-circle-outline'} size={18} color={'#343A40'} />
                                                                             </Text>
                                                                         </TouchableOpacity> : <FileUpload
                                                                             onUpload={(u: any, t: any) => {
@@ -1500,13 +1500,13 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                                     <Text style={{ fontSize: 15, padding: 5, fontFamily: 'inter', marginTop: 5 }} ellipsizeMode='tail'>
                                                                                         {user.fullName}
                                                                                     </Text>
-                                                                                    <Text style={{ fontSize: 12, padding: 5 }} ellipsizeMode='tail'>
+                                                                                    <Text style={{ fontSize: 12, padding: 5, fontWeight: 'bold' }} ellipsizeMode='tail'>
                                                                                         {user.email}
                                                                                     </Text>
                                                                                 </View>
                                                                                 <View style={{ backgroundColor: '#fff', padding: 0, flexDirection: 'row', alignSelf: 'center', alignItems: 'center' }} >
                                                                                     <Text style={{ fontSize: 13, padding: 5, lineHeight: 13 }} ellipsizeMode='tail'>
-                                                                                        <Ionicons name='chatbubble-ellipses-outline' size={19} color='#3289d0' />
+                                                                                        <Ionicons name='chatbubble-ellipses-outline' size={18} color='#3289d0' />
                                                                                     </Text>
                                                                                 </View>
                                                                             </TouchableOpacity>
@@ -1595,7 +1595,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                                         <Text style={{ fontSize: 15, padding: 5, fontFamily: 'inter', marginTop: 5 }} ellipsizeMode='tail'>
                                                                                             {fName}
                                                                                         </Text>
-                                                                                        <Text style={{ fontSize: 12, padding: 5 }} ellipsizeMode='tail'>
+                                                                                        <Text style={{ fontSize: 12, padding: 5, fontWeight: 'bold' }} ellipsizeMode='tail'>
                                                                                             {title}
                                                                                         </Text>
                                                                                     </View>
@@ -1619,7 +1619,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                                             {emailTimeDisplay(chat.lastMessageTime)}
                                                                                         </Text>
                                                                                         <Text style={{ fontSize: 13, padding: 5, lineHeight: 13 }} ellipsizeMode='tail'>
-                                                                                            <Ionicons name='chevron-forward-outline' size={19} color='#3289d0' />
+                                                                                            <Ionicons name='chevron-forward-outline' size={18} color='#3289d0' />
                                                                                         </Text>
                                                                                     </View>
                                                                                 </TouchableOpacity>

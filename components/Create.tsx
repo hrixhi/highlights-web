@@ -79,7 +79,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
   const [channelOptions, setChannelOptions] = useState<any[]>([]);
   const [showOptions, setShowOptions] = useState(false)
   const [channelId, setChannelId] = useState<any>("");
-  const [selectedChannel, setSelectedChannel] = useState<any>("My Workspace")
+  const [selectedChannel, setSelectedChannel] = useState<any>("Home")
   const [endPlayAt, setEndPlayAt] = useState(
     new Date(current.getTime() + 1000 * 60 * 60)
   );
@@ -568,8 +568,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
           if (res.data.channel.findByUserId) {
             setChannels(res.data.channel.findByUserId);
             const options = [{
-              value: 'My Workspace',
-              text: 'My Workspace'
+              value: 'Home',
+              text: 'Home'
             }];
 
             res.data.channel.findByUserId.map((channel: any) => {
@@ -1024,7 +1024,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                 }
               }}>
               <Text>
-                <Ionicons name='arrow-back-outline' size={30} color={'#343A40'} />
+                <Ionicons name='chevron-back-outline' size={30} color={'#343A40'} />
               </Text>
             </TouchableOpacity>
             <View style={{ flexDirection: 'row', justifyContent: 'flex-end', flex: 1, paddingTop: 20 }}>
@@ -1182,7 +1182,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                               fontWeight: 'bold'
                             }}
                           >
-                            For
+                            Workspace
                           </Text>
                         </View>
                         <View
@@ -1209,8 +1209,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
 
                                   const channel = val.value;
 
-                                  if (channel === "My Workspace") {
-                                    setSelectedChannel("My Workspace")
+                                  if (channel === "Home") {
+                                    setSelectedChannel("Home")
                                     setChannelId("");
                                     setCustomCategories(localCustomCategories);
                                     setCustomCategory("None");

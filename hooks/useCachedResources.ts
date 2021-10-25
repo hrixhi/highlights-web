@@ -15,8 +15,8 @@ export default function useCachedResources() {
         // Load fonts
         await Font.loadAsync({
           ...Ionicons.font,
-          'inter': require('../assets/fonts/atlas-grotesk-bold.ttf'),
-          'overpass': require('../assets/fonts/atlas-grotesk-regular.ttf')
+          'inter': require('../assets/fonts/Gilroy-Bold.woff'),
+          'overpass': require('../assets/fonts/Gilroy-Regular.woff')
         });
       } catch (e) {
         // We might want to provide this error information to an error reporting service

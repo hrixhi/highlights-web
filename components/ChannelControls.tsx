@@ -386,7 +386,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     }}
                                 >
                                     <Text style={{ lineHeight: 35, width: '100%', textAlign: 'center' }}>
-                                        <Ionicons name='arrow-back-outline' size={30} color={'#343A40'} />
+                                        <Ionicons name='chevron-back-outline' size={30} color={'#343A40'} />
                                     </Text>
                                 </TouchableOpacity>
                             </View>
@@ -461,7 +461,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 <Text style={{ fontSize: 15, padding: 5, fontFamily: 'inter', marginTop: 5 }} ellipsizeMode='tail'>
                                                     {channel.name}
                                                 </Text>
-                                                <Text style={{ fontSize: 11, padding: 5 }} ellipsizeMode='tail'>
+                                                <Text style={{ fontSize: 11, padding: 5, fontWeight: 'bold' }} ellipsizeMode='tail'>
                                                     {channel.createdByUsername}
                                                 </Text>
                                             </View>
@@ -472,7 +472,7 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                             onPress={() => handleSub(channel.name)}
                                                         >
                                                             <Text style={{ textAlign: 'center', fontSize: 13, color: '#3289d0' }} ellipsizeMode='tail'>
-                                                                <Ionicons name='enter-outline' size={19} />
+                                                                <Ionicons name='enter-outline' size={18} />
                                                             </Text>
                                                         </TouchableOpacity>
                                                     </View> : <View style={{ flex: 1, paddingLeft: 10, flexDirection: 'column', justifyContent: 'center' }}>

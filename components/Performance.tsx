@@ -198,11 +198,11 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     setActiveTabMap(temp)
                 }}>
                 <Text style={activeTab === 'overview' ? styles.allGrayFill : styles.all}>
-                    <Ionicons name='clipboard-outline' size={19} />
+                    <Ionicons name='clipboard-outline' size={18} />
                 </Text>
-                {/* <Text style={activeTab === 'overview' ? styles.allGrayFill : styles.all}>
+                <Text style={activeTab === 'overview' ? styles.allGrayFill : styles.all}>
                     Overview
-                </Text> */}
+                </Text>
             </TouchableOpacity>}
             <TouchableOpacity
                 style={{
@@ -215,11 +215,11 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     setActiveTabMap(temp)
                 }}>
                 <Text style={activeTab === 'scores' ? styles.allGrayFill : styles.all}>
-                    <Ionicons name='bar-chart-outline' size={19} />
+                    <Ionicons name='bar-chart-outline' size={18} />
                 </Text>
-                {/* <Text style={activeTab === 'scores' ? styles.allGrayFill : styles.all}>
+                <Text style={activeTab === 'scores' ? styles.allGrayFill : styles.all}>
                     Scores
-                </Text> */}
+                </Text>
             </TouchableOpacity>
             {/* <TouchableOpacity
                 style={{
@@ -246,11 +246,11 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     setActiveTabMap(temp)
                 }}>
                 <Text style={activeTab === 'attendance' ? styles.allGrayFill : styles.all}>
-                    <Ionicons name='calendar-outline' size={19} />
+                    <Ionicons name='calendar-outline' size={18} />
                 </Text>
-                {/* <Text style={activeTab === 'attendance' ? styles.allGrayFill : styles.all}>
-                    Attendance
-                </Text> */}
+                <Text style={activeTab === 'attendance' ? styles.allGrayFill : styles.all}>
+                    Participation
+                </Text>
             </TouchableOpacity>
         </View>)
     }
@@ -355,7 +355,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                         paddingTop: 5,
                                         paddingLeft: 7
                                     }}>
-                                        <Ionicons name={!collapseMap[ind] ? 'chevron-up-outline' : 'chevron-down-outline'} size={19} color={!collapseMap[ind] ? '#343A40' : '#3289d0'} />
+                                        <Ionicons name={!collapseMap[ind] ? 'chevron-up-outline' : 'chevron-down-outline'} size={18} color={!collapseMap[ind] ? '#343A40' : '#3289d0'} />
                                     </Text>
                                 </TouchableOpacity>
                             </View>
@@ -385,7 +385,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                             fontSize: 17, lineHeight: 25,
                                                             fontFamily: 'inter'
                                                         }} ellipsizeMode='tail'>
-                                                            Attendance
+                                                            Meetings
                                                         </Text>
                                                     </View>
                                                     <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
@@ -538,8 +538,9 @@ const styles = StyleSheet.create({
         fontSize: 10,
         color: '#16181C',
         height: 20,
-        paddingHorizontal: 10,
+        paddingHorizontal: 7,
         backgroundColor: '#fff',
+        fontWeight: 'bold',
         // textTransform: 'uppercase',
         lineHeight: 20,
         textAlign: 'center'
@@ -549,7 +550,8 @@ const styles = StyleSheet.create({
         fontSize: 10,
         color: '#3289d0',
         height: 20,
-        paddingHorizontal: 10,
+        fontWeight: 'bold',
+        paddingHorizontal: 7,
         backgroundColor: '#fff',
         // textTransform: 'uppercase',
         lineHeight: 20,

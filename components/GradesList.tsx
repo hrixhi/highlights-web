@@ -184,7 +184,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 }}>
                 <Text style={showStatistics ? styles.allGrayFill : styles.all}>Statistics</Text>
             </TouchableOpacity> */}
-            <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-start', width: '100%' }}>
+            <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end', width: '100%' }}>
                 {(scores.length === 0 || cues.length === 0 || !props.isOwner) ? null :
                     <TouchableOpacity
                         onPress={() => {
@@ -403,7 +403,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     }}
                         key={JSON.stringify(props.scores)}
                     >
-                        <View style={{ flexDirection: 'row', marginBottom: 10, }}>
+                        {/* <View style={{ flexDirection: 'row', marginBottom: 10, }}>
                             <View style={{ display: 'flex', flexDirection: 'row' }}>
                                 <View
                                     style={{
@@ -431,7 +431,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                     Late Submission
                                 </Text>
                             </View>
-                        </View>
+                        </View> */}
                         <ScrollView
                             showsHorizontalScrollIndicator={false}
                             horizontal={true}
@@ -443,14 +443,14 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             nestedScrollEnabled={true}
                         >
                             <View style={{ minHeight: 70, flexDirection: 'row', overflow: 'hidden', paddingBottom: 10, borderBottomWidth: 1, borderBottomColor: '#E7EBEE' }} key={"-"}>
-                                <View style={styles.col} key={'0,0'}>
+                                {/* <View style={styles.col} key={'0,0'}>
                                     {props.isOwner ? <CustomTextInput
                                         value={studentSearch}
                                         onChangeText={(val: string) => setStudentSearch(val)}
-                                        placeholder={"Search"}
+                                        placeholder={"Filter"}
                                         placeholderTextColor={'#343A40'}
                                     /> : null}
-                                </View>
+                                </View> */}
                                 {
                                     cues.map((cue: any, col: number) => {
                                         const { title } = htmlStringParser(cue.cue)

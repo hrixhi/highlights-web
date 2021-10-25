@@ -221,7 +221,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             }}
                             onPress={() => setShowFormulaGuide(true)}
                         >
-                            <Ionicons name="help-circle-outline" color="#16181C" size={19} />
+                            <Ionicons name="help-circle-outline" color="#16181C" size={18} />
                         </TouchableOpacity>
                     </View> : null)
             } */}
@@ -846,7 +846,7 @@ const QuizCreate: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                         }
 
                                                     }}
-                                                    size={19}
+                                                    size={18}
                                                 />}
                                         </View>
                                     </View>

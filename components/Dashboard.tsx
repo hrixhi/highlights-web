@@ -296,9 +296,9 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
         const temp: any = {}
         const tempCat: any = {}
         const mycues: any[] = []
-        temp['My Workspace'] = []
+        temp['Home'] = []
         const tempCollapse: any = {}
-        tempCollapse['My Workspace'] = false
+        tempCollapse['Home'] = false
         const tempSelected: any = {}
 
         const tempFolders: any = {}
@@ -400,13 +400,13 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
             }
         })
 
-        temp['My Workspace'] = mycues
+        temp['Home'] = mycues
         if (!cat['']) {
             delete cat['']
         }
-        tempCat['My Workspace'] = Object.keys(cat)
-        tempSelected['My Workspace'] = ''
-        tempIndexes['My Workspace'] = 0
+        tempCat['Home'] = Object.keys(cat)
+        tempSelected['Home'] = ''
+        tempIndexes['Home'] = 0
 
         setCueMap(temp)
         setCollapseMap(tempCollapse)
@@ -824,11 +824,11 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     setIndexMap(temp)
                 }}>
                 <Text style={activeTab === 'Content' ? styles.allGrayFill1 : styles.all1}>
-                    <Ionicons name='library-outline' size={19} />
+                    <Ionicons name='library-outline' size={18} style={{ marginBottom: 5 }} />
                 </Text>
-                {/* <Text style={activeTab === 'Content' ? styles.allGrayFill1 : styles.all1}>
+                <Text style={activeTab === 'Content' ? styles.allGrayFill1 : styles.all1}>
                     Library
-                </Text> */}
+                </Text>
             </TouchableOpacity>
             <TouchableOpacity
                 style={{
@@ -838,11 +838,11 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 }}
                 onPress={() => handleEnterClassroom()}>
                 <Text style={activeTab === 'Meet' ? styles.allGrayFill1 : styles.all1}>
-                    <Ionicons name='videocam-outline' size={19} />
+                    <Ionicons name='videocam-outline' size={18} />
                 </Text>
-                {/* <Text style={activeTab === 'Meet' ? styles.allGrayFill1 : styles.all1}>
+                <Text style={activeTab === 'Meet' ? styles.allGrayFill1 : styles.all1}>
                     Meet
-                </Text> */}
+                </Text>
             </TouchableOpacity>
             <TouchableOpacity
                 style={{
@@ -856,11 +856,11 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                     setIndexMap(temp)
                 }}>
                 <Text style={activeTab === 'Discuss' ? styles.allGrayFill1 : styles.all1}>
-                    <Ionicons name='chatbubbles-outline' size={19} />
+                    <Ionicons name='chatbubbles-outline' size={18} />
                 </Text>
-                {/* <Text style={activeTab === 'Discuss' ? styles.allGrayFill1 : styles.all1}>
+                <Text style={activeTab === 'Discuss' ? styles.allGrayFill1 : styles.all1}>
                     Discuss
-                </Text> */}
+                </Text>
             </TouchableOpacity>
             {
                 key.split('-SPLIT-')[2] === userId ?
@@ -876,11 +876,11 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             setIndexMap(temp)
                         }}>
                         <Text style={activeTab === 'Settings' ? styles.allGrayFill1 : styles.all1}>
-                            <Ionicons name='build-outline' size={19} />
+                            <Ionicons name='build-outline' size={18} />
                         </Text>
-                        {/* <Text style={activeTab === 'Settings' ? styles.allGrayFill1 : styles.all1}>
+                        <Text style={activeTab === 'Settings' ? styles.allGrayFill1 : styles.all1}>
                             Settings
-                        </Text> */}
+                        </Text>
                     </TouchableOpacity>
                     : null
             }
@@ -894,7 +894,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
         })
         setCueIds(temp)
         setFolderId(cue.folderId)
-        setEditFolderChannelId(swiperCue.channelId ? swiperCue.channelId : 'My Workspace')
+        setEditFolderChannelId(swiperCue.channelId ? swiperCue.channelId : 'Home')
     }, [folderIdsMap])
 
     const width = Dimensions.get("window").width;
@@ -1101,7 +1101,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     backgroundColor: collapseMap[key] ? '#E7EBEE' : '#fff',
 
                                                 }}>
-                                                    <Ionicons name={collapseMap[key] ? 'chevron-up-outline' : 'chevron-down-outline'} size={19} color={collapseMap[key] ? '#343A40' : '#3289d0'} />
+                                                    <Ionicons name={collapseMap[key] ? 'chevron-up-outline' : 'chevron-down-outline'} size={18} color={collapseMap[key] ? '#343A40' : '#3289d0'} />
                                                 </Text>
                                             </TouchableOpacity>
                                         </View>
@@ -1172,7 +1172,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                     backgroundColor: collapseMap[key] ? '#E7EBEE' : '#fff',
 
                                                 }}>
-                                                    <Ionicons name={collapseMap[key] ? 'chevron-up-outline' : 'chevron-down-outline'} size={19} color={collapseMap[key] ? '#343A40' : '#3289d0'} />
+                                                    <Ionicons name={collapseMap[key] ? 'chevron-up-outline' : 'chevron-down-outline'} size={18} color={collapseMap[key] ? '#343A40' : '#3289d0'} />
                                                 </Text>
                                             </TouchableOpacity>
                                         </View>
@@ -1292,7 +1292,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                 }
                                                                                 return <View style={{
                                                                                     // height: 150,
-                                                                                    marginBottom: 20,
+                                                                                    marginBottom: 15,
                                                                                     // marginBottom: i === priorities.length - 1 ? 0 : 20,
                                                                                     // maxWidth: 150,
                                                                                     backgroundColor: '#E7EBEE',
@@ -1306,8 +1306,8 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                         cueIds={cueIds}
                                                                                         onLongPress={() => {
                                                                                             setCueIds([])
-                                                                                            setEditFolderChannelId(cue.channelId ? cue.channelId : 'My Workspace')
-                                                                                            // alert(cue.channelId ? cue.channelId : 'My Workspace')
+                                                                                            setEditFolderChannelId(cue.channelId ? cue.channelId : 'Home')
+                                                                                            // alert(cue.channelId ? cue.channelId : 'Home')
                                                                                         }}
                                                                                         add={() => {
                                                                                             const temp = JSON.parse(JSON.stringify(cueIds))
@@ -1401,8 +1401,8 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     source={logo}
                                     style={{
                                         width: 50,
-                                        marginTop: 2,
-                                        height: 21,
+                                        marginTop: 1,
+                                        height: 22,
                                         marginRight: 13
                                     }}
                                     resizeMode={'contain'}
@@ -1493,7 +1493,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     paddingTop: 1,
                                     textAlign: 'right'
                                 }}>
-                                    <Ionicons name="filter-outline" size={19} />
+                                    <Ionicons name="filter-outline" size={18} />
                                 </Text>
 
                             </TouchableOpacity> : null}
@@ -1571,7 +1571,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             }}>
                                 <Ionicons
                                     name="help-circle-outline"
-                                    size={19}
+                                    size={18}
                                     color={(props.option === 'Settings' && props.showHelp) ? '#3289d0' : '#E7EBEE'}
                                 />
                             </Text>
@@ -1581,91 +1581,91 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
             </View>
             {
                 searchTerm === '' ?
-                props.modalType === "Create" && props.option === 'Classroom' ? <Create 
-                    key={JSON.stringify(props.customCategories)}
-                    customCategories={props.customCategories}
-                    closeModal={() => props.closeCreateModal()}
-                    closeOnCreate={() => props.closeOnCreate()}
-                />
-                :
-                <View style={{
-                    // paddingBottom: Dimensions.get('window').width < 1024 ? 15 : 30,
-                    paddingHorizontal: width < 1024 && props.option !== 'Classroom' ? 20 : 0,
-                    maxWidth: props.option === 'Classroom' ? '100%' : 1000,
-                    alignSelf: 'center',
-                    width: '100%',
-                    height: width < 1024 ? windowHeight - 104 : windowHeight - 52,
-                    // overflow: 'scroll'
-                }}>
-                    {
-                        props.option === 'Settings' ?
-                            <Walkthrough
-                                closeModal={() => { }}
-                                saveDataInCloud={() => props.saveDataInCloud()}
-                                reOpenProfile={() => props.reOpenProfile()}
-                                reloadData={() => props.reloadData()}
-                                setShowHelp={(val: any) => props.setShowHelp(val)}
-                                showHelp={props.showHelp}
-                            /> : null
-                    }
-                    {
-                        props.option === 'Channels' ?
-                            <Channels
-                                setShowCreate={(val: any) => props.setShowCreate(val)}
-                                showCreate={props.showCreate}
-                                closeModal={() => { }}
-                                subscriptions={props.subscriptions}
-                                refreshSubscriptions={props.refreshSubscriptions}
-                            /> : null
-                    }
-                    {
-                        props.option === 'Classroom' ?
-                            overview : null
-                    }
-                    {
-                        props.option === 'To Do' ?
-                            <CalendarX
-                                tab={props.tab}
-                                setTab={(val: any) => props.setTab(val)}
-                                filterStart={filterStart}
-                                filterEnd={filterEnd}
-                                cues={props.calendarCues}
-                                subscriptions={props.subscriptions}
-                                openCueFromCalendar={props.openCueFromCalendar}
-                                openDiscussion={props.openDiscussionFromActivity}
-                                openChannel={props.openChannelFromActivity}
-                                openQA={props.openQAFromActivity}
-                                filterByChannel={filterByChannel}
-                                activityChannelId={activityChannelId}
-                                filterEventsType={filterEventsType}
-                            /> : null
-                    }
-                    {
-                        props.option === 'Performance' ?
-                            <Performance
-                                onPress={(name: any, id: any, createdBy: any) => {
-                                    props.setChannelFilterChoice('All')
-                                    props.handleFilterChange(name)
-                                    props.setChannelId(id)
-                                    props.setChannelCreatedBy(createdBy)
-                                    props.openGrades()
-                                    props.hideHome()
-                                }}
-                                filterStart={filterStart}
-                                filterEnd={filterEnd}
-                                subscriptions={props.subscriptions}
-                                openCueFromGrades={props.openCueFromCalendar}
-                            /> : null
-                    }
-                    {
-                        props.option === 'Inbox' ?
-                            <Inbox
-                                showDirectory={props.showDirectory}
-                                setShowDirectory={(val: any) => props.setShowDirectory(val)}
-                                subscriptions={props.subscriptions}
-                            /> : null
-                    }
-                </View> : searchResults
+                    props.modalType === "Create" && props.option === 'Classroom' ? <Create
+                        key={JSON.stringify(props.customCategories)}
+                        customCategories={props.customCategories}
+                        closeModal={() => props.closeCreateModal()}
+                        closeOnCreate={() => props.closeOnCreate()}
+                    />
+                        :
+                        <View style={{
+                            // paddingBottom: Dimensions.get('window').width < 1024 ? 15 : 30,
+                            paddingHorizontal: width < 1024 && props.option !== 'Classroom' ? 20 : 0,
+                            maxWidth: props.option === 'Classroom' ? '100%' : 1000,
+                            alignSelf: 'center',
+                            width: '100%',
+                            height: width < 1024 ? windowHeight - 104 : windowHeight - 52,
+                            // overflow: 'scroll'
+                        }}>
+                            {
+                                props.option === 'Settings' ?
+                                    <Walkthrough
+                                        closeModal={() => { }}
+                                        saveDataInCloud={() => props.saveDataInCloud()}
+                                        reOpenProfile={() => props.reOpenProfile()}
+                                        reloadData={() => props.reloadData()}
+                                        setShowHelp={(val: any) => props.setShowHelp(val)}
+                                        showHelp={props.showHelp}
+                                    /> : null
+                            }
+                            {
+                                props.option === 'Channels' ?
+                                    <Channels
+                                        setShowCreate={(val: any) => props.setShowCreate(val)}
+                                        showCreate={props.showCreate}
+                                        closeModal={() => { }}
+                                        subscriptions={props.subscriptions}
+                                        refreshSubscriptions={props.refreshSubscriptions}
+                                    /> : null
+                            }
+                            {
+                                props.option === 'Classroom' ?
+                                    overview : null
+                            }
+                            {
+                                props.option === 'To Do' ?
+                                    <CalendarX
+                                        tab={props.tab}
+                                        setTab={(val: any) => props.setTab(val)}
+                                        filterStart={filterStart}
+                                        filterEnd={filterEnd}
+                                        cues={props.calendarCues}
+                                        subscriptions={props.subscriptions}
+                                        openCueFromCalendar={props.openCueFromCalendar}
+                                        openDiscussion={props.openDiscussionFromActivity}
+                                        openChannel={props.openChannelFromActivity}
+                                        openQA={props.openQAFromActivity}
+                                        filterByChannel={filterByChannel}
+                                        activityChannelId={activityChannelId}
+                                        filterEventsType={filterEventsType}
+                                    /> : null
+                            }
+                            {
+                                props.option === 'Performance' ?
+                                    <Performance
+                                        onPress={(name: any, id: any, createdBy: any) => {
+                                            props.setChannelFilterChoice('All')
+                                            props.handleFilterChange(name)
+                                            props.setChannelId(id)
+                                            props.setChannelCreatedBy(createdBy)
+                                            props.openGrades()
+                                            props.hideHome()
+                                        }}
+                                        filterStart={filterStart}
+                                        filterEnd={filterEnd}
+                                        subscriptions={props.subscriptions}
+                                        openCueFromGrades={props.openCueFromCalendar}
+                                    /> : null
+                            }
+                            {
+                                props.option === 'Inbox' ?
+                                    <Inbox
+                                        showDirectory={props.showDirectory}
+                                        setShowDirectory={(val: any) => props.setShowDirectory(val)}
+                                        subscriptions={props.subscriptions}
+                                    /> : null
+                            }
+                        </View> : searchResults
             }
             <Popup isOpen={showFilterPopup}
                 buttons={[
@@ -1821,11 +1821,12 @@ const styleObject: any = () => StyleSheet.create({
         fontSize: 10,
         color: '#343A40',
         height: 20,
-        paddingHorizontal: 10,
+        fontWeight: 'bold',
+        paddingHorizontal: 7,
         backgroundColor: '#E7EBEE',
         // textTransform: 'uppercase',
         lineHeight: 20,
-        fontFamily: 'inter',
+        // fontFamily: 'inter',
         textAlign: 'center'
     },
     allGrayFill1: {
@@ -1833,11 +1834,12 @@ const styleObject: any = () => StyleSheet.create({
         color: '#3289d0',
         height: 20,
         // borderRadius: 15,
-        paddingHorizontal: 10,
+        fontWeight: 'bold',
+        paddingHorizontal: 7,
         // backgroundColor: '#3289d0',
         // textTransform: 'uppercase',
         lineHeight: 20,
-        fontFamily: 'inter',
+        // fontFamily: 'inter',
         textAlign: 'center'
     },
     col: {

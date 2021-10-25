@@ -103,7 +103,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         style={styles.center}
                     >
                         <Text style={styles.channelText}>
-                            <Ionicons name='arrow-back-outline' size={30} color={'#16181C'} style={{ marginTop: -5 }} />
+                            <Ionicons name='chevron-back-outline' size={30} color={'#16181C'} style={{ marginTop: -5 }} />
                         </Text>
                     </TouchableOpacity>
                 </View>
@@ -139,7 +139,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 style={styles.center}
                                 onPress={() => props.openChannelSettings()}>
                                 <Text style={styles.channelText}>
-                                    <Ionicons name='hammer-outline' size={19} color={'#16181C'} />
+                                    <Ionicons name='hammer-outline' size={18} color={'#16181C'} />
                                 </Text>
                                 <Text style={{ fontSize: 11, color: '#16181C', textAlign: 'center' }}>
                                     Settings
@@ -155,7 +155,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 onPress={() => props.openMeeting()}>
                                 <Text style={styles.channelText}>
                                     <Ionicons
-                                        name='chatbubbles-outline' size={19} color={'#16181C'} />
+                                        name='chatbubbles-outline' size={18} color={'#16181C'} />
                                 </Text>
                                 <Text style={{ fontSize: 11, color: '#16181C', textAlign: 'center' }}>
                                     Classroom

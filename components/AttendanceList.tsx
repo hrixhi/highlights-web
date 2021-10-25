@@ -366,7 +366,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
             <Text style={{ width: '100%', textAlign: 'center' }}>
                 {/* <Ionicons name='chevron-down' size={15} color={'#e0e0e0'} /> */}
             </Text>
-            <View style={{ backgroundColor: 'white', flexDirection: 'row', paddingBottom: 20, width: '100%', justifyContent: 'flex-start' }}>
+            <View style={{ backgroundColor: 'white', flexDirection: 'row', paddingBottom: 20, width: '100%', justifyContent: 'flex-end' }}>
                 {(pastMeetings.length === 0 || channelAttendances.length === 0 || !isOwner) ? null :
                     <TouchableOpacity
                         style={{

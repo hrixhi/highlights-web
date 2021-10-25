@@ -461,7 +461,7 @@ const ProfileControls: React.FunctionComponent<{ [label: string]: any }> = (
                         flexDirection: 'row'
                       }}>
                       <Text>
-                        <Ionicons name={'close-circle-outline'} size={19} color={'#343A40'} />
+                        <Ionicons name={'close-circle-outline'} size={18} color={'#343A40'} />
                       </Text>
                     </TouchableOpacity> : <FileUpload
                       onUpload={(u: any, t: any) => {

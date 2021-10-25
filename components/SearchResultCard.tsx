@@ -68,7 +68,7 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                                     style={{ marginTop: 1 }}
                                 >
                                     <Text style={{ backgroundColor: '#E7EBEE' }}>
-                                        <Ionicons name='enter-outline' size={19} color='#3289d0' />
+                                        <Ionicons name='enter-outline' size={18} color='#3289d0' />
                                     </Text>
                                 </TouchableOpacity>
                             </View> : null}

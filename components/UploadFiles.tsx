@@ -144,7 +144,7 @@ const FileUpload: React.FC<any> = (props: any) => {
                             }}
                             onPress={() => handleFile()}
                         >
-                            {props.chat ? <Ionicons name="document-attach-outline" size={19} /> : PreferredLanguageText("import")}
+                            {props.chat ? <Ionicons name="document-attach-outline" size={18} /> : PreferredLanguageText("import")}
                         </Text>
                 )
 

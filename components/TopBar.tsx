@@ -87,7 +87,7 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                         onPress={() => props.openMeeting()}>
                                         <Text style={styles.channelText}>
                                             <Ionicons
-                                                name='chatbubbles-outline' size={19} color={'#16181C'} />
+                                                name='chatbubbles-outline' size={18} color={'#16181C'} />
                                             {/* {
                                                 props.meetingOn ?
                                                     <View style={styles.badge} /> : null
@@ -103,7 +103,7 @@ const TopBar: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                 style={{ marginRight: 0, backgroundColor: '#E7EBEE' }}
                                                 onPress={() => props.openChannelSettings()}>
                                                 <Text style={styles.channelText}>
-                                                    <Ionicons name='hammer-outline' size={19} color={'#16181C'} />
+                                                    <Ionicons name='hammer-outline' size={18} color={'#16181C'} />
                                                 </Text>
                                                 <Text style={{ fontSize: 10, color: '#16181C', textAlign: 'center' }}>
                                                     Settings

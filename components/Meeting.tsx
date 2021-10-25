@@ -367,7 +367,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                             lineHeight: 21,
                                             textAlign: 'center'
                                         }}>
-                                            <Ionicons name='copy-outline' size={19} color={'#16181C'} />
+                                            <Ionicons name='copy-outline' size={18} color={'#16181C'} />
                                         </Text>
                                         <Text style={{ fontSize: 10, color: '#16181C', textAlign: 'center', width: '100%', }}>
                                             Host Link
@@ -400,7 +400,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                             lineHeight: 21,
                                             textAlign: 'center'
                                         }}>
-                                            <Ionicons name='copy-outline' size={19} color={'#16181C'} />
+                                            <Ionicons name='copy-outline' size={18} color={'#16181C'} />
                                         </Text>
                                         <Text style={{ fontSize: 10, color: '#16181C', textAlign: 'center', width: '100%', }}>
                                             Guest Link

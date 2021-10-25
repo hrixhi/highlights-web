@@ -201,7 +201,7 @@ const NewMessage: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 width: '100%',
                                 lineHeight: 23
                             }}>
-                                <Ionicons name='arrow-back-outline' size={23} color={'#343A40'} />
+                                <Ionicons name='chevron-back-outline' size={23} color={'#343A40'} />
                             </Text>
                         </TouchableOpacity>
                     </View>

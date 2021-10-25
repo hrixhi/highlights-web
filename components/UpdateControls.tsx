@@ -2240,7 +2240,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     }}
                     onPress={() => setShowFormulaGuide(true)}
                 >
-                    <Ionicons name="help-circle-outline" color="#16181C" size={19} />
+                    <Ionicons name="help-circle-outline" color="#16181C" size={18} />
                 </TouchableOpacity>
             </View>
         ) : null;
@@ -2263,7 +2263,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     props.closeModal()
                                 }}>
                                 <Text>
-                                    <Ionicons name='arrow-back-outline' size={30} color={'#343A40'} />
+                                    <Ionicons name='chevron-back-outline' size={30} color={'#343A40'} />
                                 </Text>
                             </TouchableOpacity>
                         </View>
@@ -2279,7 +2279,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             props.setShowFolder(!props.showFolder)
                         }}>
                         <Text>
-                            <Ionicons name={props.showFolder ? 'backspace-outline' : 'folder-open-outline'} size={19} color={props.showFolder ? '#343A40' : '#3289d0'} />
+                            <Ionicons name={props.showFolder ? 'backspace-outline' : 'folder-open-outline'} size={18} color={props.showFolder ? '#343A40' : '#3289d0'} />
                         </Text>
                     </TouchableOpacity>
                 </View> : null} */}
@@ -2298,7 +2298,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     props.setShowComments(false)
                                 }}>
                                 <Text style={!props.showOptions && props.showOriginal && !props.showComments ? styles.allGrayFill : styles.all}>
-                                    {/* <Ionicons name='newspaper-outline' size={19} /> */}
+                                    {/* <Ionicons name='newspaper-outline' size={18} /> */}
                                     Content
                                 </Text>
                                 {/* <Text style={!props.showOptions && props.showOriginal && !props.showComments ? styles.allGrayFill : styles.all}>
@@ -2316,7 +2316,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     props.setShowComments(false)
                                 }}>
                                 <Text style={props.showOptions ? styles.allGrayFill : styles.all}>
-                                    {/* <Ionicons name='options-outline' size={19} /> */}
+                                    {/* <Ionicons name='options-outline' size={18} /> */}
                                     Details
                                 </Text>
                                 {/* <Text style={props.showOptions ? styles.allGrayFill : styles.all}>
@@ -2358,7 +2358,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
                                     }}>
                                     <Text style={!props.showOriginal && !props.viewStatus && !props.showComments && !props.showOptions ? styles.allGrayFill : styles.all}>
-                                        {/* <Ionicons name='document-attach-outline' size={19} /> */}
+                                        {/* <Ionicons name='document-attach-outline' size={18} /> */}
                                         SUBMISSION
                                     </Text>
                                     {/* <Text style={!props.showOriginal && !props.viewStatus && !props.showComments && !props.showOptions ? styles.allGrayFill : styles.all}>
@@ -3173,7 +3173,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             textTransform: "uppercase"
                         }}>
                         {updatingCueContent ? 'SAVING...' : 'SAVE'}
-                        {/* <Ionicons name={updatingCueContent ? 'ellipsis-horizontal-outline' : 'cloud-upload-outline'} size={19} color={'#3289d0'} /> */}
+                        {/* <Ionicons name={updatingCueContent ? 'ellipsis-horizontal-outline' : 'cloud-upload-outline'} size={18} color={'#3289d0'} /> */}
                     </Text>
                 </TouchableOpacity>
             </View > : null
@@ -4312,7 +4312,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 }}>
                                 <Ionicons
                                     name={"arrow-redo-outline"}
-                                    size={19}
+                                    size={18}
                                     color={shareWithChannelId === "None" ? "#a0a0a0" : "#16181C"}
                                 />
                             </Text>
@@ -4779,7 +4779,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             textTransform: "uppercase"
                         }}>
                         {updatingCueContent ? '...' : 'SAVE'}
-                        {/* <Ionicons name={updatingCueContent ? 'ellipsis-horizontal-outline' : 'cloud-upload-outline'} size={19} color={'#3289d0'} /> */}
+                        {/* <Ionicons name={updatingCueContent ? 'ellipsis-horizontal-outline' : 'cloud-upload-outline'} size={18} color={'#3289d0'} /> */}
                     </Text>
                 </TouchableOpacity>
 
@@ -4932,7 +4932,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     //                 props.closeModal()
                     //             }}>
                     //             <Text>
-                    //                 <Ionicons name='arrow-back-outline' size={30} color={'#343A40'} />
+                    //                 <Ionicons name='chevron-back-outline' size={30} color={'#343A40'} />
                     //             </Text>
                     //         </TouchableOpacity>
                     //     </View> */}
@@ -5068,7 +5068,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                         (props.showOriginal && !props.cue.channelId && imported) || // Local Cues
                                         (!props.showOriginal && isOwner && (props.cue.channelId && props.cue.channelId !== '')) || // no submission as owner
                                         (!props.showOriginal && submissionImported && !isOwner) ||  // submitted as non owner
-                                        (!props.showOriginal && !submission && (props.cue.channelId && props.cue.channelId !== '')) ||  // My Workspace
+                                        (!props.showOriginal && !submission && (props.cue.channelId && props.cue.channelId !== '')) ||  // Home
                                         isQuiz
                                         || (!props.showOriginal && (props.cue.releaseSubmission || (!allowLateSubmission && new Date() > deadline) || (allowLateSubmission && new Date() > availableUntil)))
                                         ? null :

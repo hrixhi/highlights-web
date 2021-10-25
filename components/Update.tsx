@@ -826,7 +826,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 setShowComments(false)
             }}>
             <Text style={showOriginal ? styles.allGrayFill : styles.all}>
-                {/* <Ionicons name='newspaper-outline' size={19} /> */}
+                {/* <Ionicons name='newspaper-outline' size={18} /> */}
                 Content
             </Text>
             {/* <Text style={showOriginal ? styles.allGrayFill : styles.all}>
@@ -845,7 +845,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
             }}>
 
             <Text style={showOptions ? styles.allGrayFill : styles.all}>
-                {/* <Ionicons name='options-outline' size={19} /> */}
+                {/* <Ionicons name='options-outline' size={18} /> */}
                 DETAILS
             </Text>
             {/* <Text style={styles.all}>
@@ -865,7 +865,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         setShowOptions(false)
                     }}>
                     <Text style={!showOriginal && !viewStatus && !showOptions && !showComments ? styles.allGrayFill : styles.all}>
-                        {/* <Ionicons name='document-attach-outline' size={19} /> */}
+                        {/* <Ionicons name='document-attach-outline' size={18} /> */}
                         Submission
                     </Text>
                     {/* <Text style={!showOriginal && !viewStatus && !showOptions && !showComments ? styles.allGrayFill : styles.all}>
@@ -887,7 +887,7 @@ const Update: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                         setShowOptions(false)
                     }}>
                     <Text style={viewStatus ? styles.allGrayFill : styles.all}>
-                        {/* <Ionicons name='bar-chart-outline' size={19} /> */}
+                        {/* <Ionicons name='bar-chart-outline' size={18} /> */}
                         Responses
                     </Text>
                     {/* <Text style={viewStatus ? styles.allGrayFill : styles.all}>
