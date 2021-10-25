@@ -3337,6 +3337,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         fontSize: 14,
                         fontWeight: 'bold',
                         color: '#16181C',
+                        fontFamily: 'Inter'
                         // textTransform: 'uppercase'
                     }}>
                         {props.cue.channelId && props.cue.channelId !== "" ? "Shared With All" : "Saved In"}
@@ -3683,7 +3684,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 style={{ height: 20 }}
                                 trackColor={{
                                     false: "#E7EBEE",
-                                    true: "#343A40"
+                                    true: "#3289d0",
                                 }}
                                 activeThumbColor="white"
                             />
@@ -3696,19 +3697,9 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 display: "flex",
                                 flexDirection: "row",
                                 backgroundColor: "white",
-                                justifyContent: 'flex-end'
+                                justifyContent: 'flex-end',
+                                alignItems: 'center'
                             }}>
-                            <Text
-                                style={{
-                                    fontSize: 14,
-                                    color: "#343A40",
-                                    textAlign: "left",
-                                    paddingRight: 10,
-                                    marginTop: isOwner ? 20 : 0,
-                                    fontFamily: 'Inter'
-                                }}>
-                                {!isOwner ? gradeWeight : null} {PreferredLanguageText("percentageOverall")}
-                            </Text>
                             {isOwner ? (
                                 <TextInput
                                     value={gradeWeight}
@@ -3726,6 +3717,17 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     placeholderTextColor={"#343A40"}
                                 />
                             ) : null}
+                            <Text
+                                style={{
+                                    fontSize: 14,
+                                    color: "#343A40",
+                                    textAlign: "left",
+                                    paddingRight: 10,
+                                    // marginTop: isOwner ? 20 : 0,
+                                    fontFamily: 'Inter'
+                                }}>
+                                {!isOwner ? gradeWeight : null} {PreferredLanguageText("percentageOverall")}
+                            </Text>
                         </View>
                     ) :
                         (!isOwner ? <Text style={{
@@ -3774,7 +3776,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 style={{ height: 20 }}
                                 trackColor={{
                                     false: "#E7EBEE",
-                                    true: "#343A40"
+                                    true: "#3289d0",
                                 }}
                                 activeThumbColor="white"
                             />
@@ -3951,8 +3953,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 }}
                                 style={{ height: 20 }}
                                 trackColor={{
-                                    false: "#F8F9FA",
-                                    true: "#343A40",
+                                    false: "#E7EBEE",
+                                    true: "#3289d0",
                                 }}
                                 activeThumbColor="white"
                             />
@@ -4202,12 +4204,11 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 </View>
                 <View
                     style={{
-                        // width: "100%",
-                        // display: "flex",
-                        // flexDirection: "row",
-                        backgroundColor: "white"
-                    }}>
-                    <View style={{ backgroundColor: "white" }}>
+                        flexDirection: "row",
+                        backgroundColor: "white",
+                    }}
+                >
+                    <View style={{ width: "100%", backgroundColor: "white" }}>
                         <ScrollView
                             style={{ ...styles.colorBar, height: 20 }}
                             horizontal={true}
@@ -4421,7 +4422,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     style={{ height: 20 }}
                                     trackColor={{
                                         false: "#E7EBEE",
-                                        true: "#343A40"
+                                        true: "#3289d0",
                                     }}
                                     activeThumbColor="white"
                                 />
@@ -4621,7 +4622,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                     style={{ height: 20 }}
                                     trackColor={{
                                         false: "#E7EBEE",
-                                        true: "#343A40"
+                                        true: "#3289d0",
                                     }}
                                     activeThumbColor="white"
                                 />
@@ -5321,10 +5322,10 @@ const styles: any = StyleSheet.create({
         flexDirection: "column",
         marginLeft: 7,
         paddingHorizontal: 4,
-        backgroundColor: "white"
+        backgroundColor: "white",
     },
     colorContainerOutline: {
-        lineHeight: 22,
+        lineHeight: 20,
         justifyContent: "center",
         display: "flex",
         flexDirection: "column",

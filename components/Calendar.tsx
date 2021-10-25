@@ -796,20 +796,17 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     const renderRecurringOptions = () => (
         <View style={{}}>
-            <View style={{ width: '100%', maxWidth: 400, display: "flex" }}>
-                <View style={{ width: "100%", paddingTop: width < 1024 ? 40 : 40, paddingBottom: 15, backgroundColor: "white" }}>
-                    <Text style={{
-                        fontSize: 14,
-                        // fontFamily: 'inter',
-                        color: '#16181C'
-                    }}>Repeat</Text>
+            <View style={{ width: '100%', maxWidth: 400, display: "flex", paddingTop: 40, paddingBottom: 5 }}>
+                <View style={{ width: "100%", backgroundColor: "white" }}>
+                    <Text style={styles.text}>Repeat</Text>
                 </View>
                 <View
                     style={{
                         backgroundColor: "white",
                         height: 40,
                         marginRight: 10,
-                        paddingLeft: 5
+                        paddingLeft: 5,
+                        marginTop: 10
                     }}>
                     <Switch
                         value={recurring}
@@ -824,14 +821,10 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 </View>
             </View>
 
-            {recurring ? <View style={{ width: '100%', maxWidth: 400, display: "flex" }}>
-                <View style={{ width: "100%", paddingTop: width < 1024 ? 20 : 40, paddingBottom: 15, backgroundColor: "white" }}>
+            {recurring ? <View style={{ width: '100%', maxWidth: 400, display: "flex", paddingVertical: 15, }}>
+                <View style={{ width: "100%", backgroundColor: "white" }}>
                     <Text
-                        style={{
-                            fontSize: 14,
-                            // fontFamily: 'inter',
-                            color: '#16181C'
-                        }}>
+                        style={styles.text}>
                         Interval
                     </Text>
                 </View>
@@ -842,7 +835,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         marginLeft: 0
                     }}>
 
-                    <label style={{ width: 180 }}>
+                    <label style={{ width: '100%', maxWidth: 400 }}>
                         <Select
                             themeVariant="light"
                             touchUi={true}
@@ -871,19 +864,8 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
             </View> : null}
 
             {recurring ? <View style={{ width: '100%', maxWidth: 400, display: "flex" }}>
-                <View style={{ width: "100%", paddingTop: width < 1024 ? 20 : 40, paddingBottom: 15, backgroundColor: "white" }}>
-                    <Text style={{
-                        fontSize: 14,
-                        // fontFamily: 'inter',
-                        color: '#16181C'
-                    }}>End</Text>
-                </View>
-                <View
-                    style={{
-                        width: "100%",
-                        flexDirection: "row",
-                        marginLeft: 0
-                    }}>
+                <View style={{ width: "100%", backgroundColor: "white", paddingVertical: 15 }}>
+                    <Text style={styles.text}>End</Text>
                     {/* <DatePicker
                         format="YYYY-MM-DD HH:mm"
                         preventOverflow={true}
@@ -934,6 +916,14 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 </View>
                 {/* <View
                     style={{
+                        width: "100%",
+                        flexDirection: "row",
+                        marginLeft: 0
+                    }}>
+                    
+                </View> */}
+                {/* <View
+                    style={{
                         backgroundColor: "white",
                         height: 40,
                         marginRight: 10
@@ -964,7 +954,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         flexDirection: "column",
                         width: width < 1024 ? "100%" : "33.33%"
                     }}>
-                    <View style={{ width: "100%", paddingTop: width < 1024 ? 40 : 30, paddingBottom: 15, backgroundColor: "white" }}>
+                    <View style={{ width: "100%", paddingTop: width < 1024 ? 40 : 25, paddingBottom: 15, backgroundColor: "white" }}>
                         <Text style={{
                             fontSize: 14,
                             // fontFamily: 'inter',
@@ -1893,14 +1883,14 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                         {channels.length > 0 && !editEvent ? (
                                                                                             <View>
                                                                                                 <View
-                                                                                                    style={{ width: "100%", paddingBottom: 20, backgroundColor: "white" }}>
+                                                                                                    style={{ width: "100%", paddingBottom: 10, backgroundColor: "white" }}>
                                                                                                     <Text
                                                                                                         style={{
                                                                                                             fontSize: 14,
                                                                                                             // fontFamily: 'inter',
                                                                                                             color: '#16181C'
                                                                                                         }}>
-                                                                                                        Channel
+                                                                                                        For
                                                                                                     </Text>
                                                                                                 </View>
                                                                                                 <View style={{ flexDirection: 'row', display: 'flex', backgroundColor: '#fff' }}>
@@ -1976,7 +1966,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                         {renderEditChannelName()}
                                                                                         {!editEvent && renderRecurringOptions()}
                                                                                         {renderMeetingOptions()}
-                                                                                        {channelId !== "" && <Text style={{ fontSize: 11, color: '#16181C', textTransform: 'uppercase', paddingTop: 10 }}>
+                                                                                        {channelId !== "" && <Text style={{ fontSize: 11, color: '#16181C', textTransform: 'uppercase', lineHeight: 20 }}>
                                                                                             Attendances will only be captured for scheduled lectures.
                                                                                         </Text>}
                                                                                         {tab === 'Add' && !editEvent ? <View

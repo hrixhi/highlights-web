@@ -1179,7 +1179,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                             style={{
                               fontSize: 14,
                               color: '#16181C',
-                              fontWeight: 'bold'
+                              fontWeight: 'bold',
+                              fontFamily: 'Inter'
                             }}
                           >
                             For
@@ -1265,9 +1266,9 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                             <Text
                               style={{
                                 fontSize: 14,
-                                // fontWeight: 'bold',
                                 color: '#16181C',
-                                fontWeight: 'bold'
+                                fontWeight: 'bold',
+                                fontFamily: 'Inter'
                               }}
                             >
                               Share With All
@@ -1290,7 +1291,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                 }}
                                 style={{ height: 20 }}
                                 trackColor={{
-                                  false: "#F8F9FA",
+                                  false: "#E7EBEE",
                                   true: "#3289d0",
                                 }}
                                 activeThumbColor="white"
@@ -1348,7 +1349,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                               style={{
                                 fontSize: 14,
                                 color: '#16181C',
-                                fontWeight: 'bold'
+                                fontWeight: 'bold',
+                                fontFamily: 'Inter'
                               }}
                             >
                               {PreferredLanguageText("submissionRequired")}
@@ -1556,7 +1558,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                   style={{ height: 20 }}
                                   trackColor={{
                                     false: "#E7EBEE",
-                                    true: "#343A40",
+                                    true: "#3289d0",
                                   }}
                                   activeThumbColor="white"
                                 />
@@ -1571,18 +1573,9 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                     flexDirection: 'row',
                                     justifyContent: 'flex-end',
                                     backgroundColor: "white",
-                                    // alignItems: 'center'
+                                    alignItems: 'center'
                                   }}
                                 >
-                                  <Text style={{
-                                    fontSize: 12,
-                                    color: "#343A40",
-                                    textAlign: "left",
-                                    paddingHorizontal: 10,
-                                    paddingTop: 20
-                                  }}>
-                                    {PreferredLanguageText("percentageOverall")}
-                                  </Text>
                                   <TextInput
                                     value={gradeWeight}
                                     style={{
@@ -1598,6 +1591,15 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                     onChangeText={(val) => setGradeWeight(val)}
                                     placeholderTextColor={"#343A40"}
                                   />
+                                  <Text style={{
+                                    fontSize: 14,
+                                    color: "#343A40",
+                                    textAlign: "left",
+                                    paddingHorizontal: 10,
+                                    fontFamily: 'Inter'
+                                  }}>
+                                    {PreferredLanguageText("percentageOverall")}
+                                  </Text>
                                 </View>
                               ) : null}
                             </View>
@@ -1641,7 +1643,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                   style={{ height: 20 }}
                                   trackColor={{
                                     false: "#E7EBEE",
-                                    true: "#343A40",
+                                    true: "#3289d0",
                                   }}
                                   activeThumbColor="white"
                                 />
@@ -1760,8 +1762,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                                 }}
                                 style={{ height: 20 }}
                                 trackColor={{
-                                  false: "#F8F9FA",
-                                  true: "#343A40",
+                                  false: "#E7EBEE",
+                                  true: "#3289d0",
                                 }}
                                 activeThumbColor="white"
                               />
@@ -1830,7 +1832,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                             style={{
                               fontSize: 14,
                               fontWeight: 'bold',
-                              color: '#16181C'
+                              color: '#16181C',
+                              fontFamily: 'Inter'
                             }}
                           >
                             {PreferredLanguageText("category")}
@@ -1940,7 +1943,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           style={{
                             fontSize: 14,
                             color: '#16181C',
-                            fontWeight: 'bold'
+                            fontWeight: 'bold',
+                            fontFamily: 'Inter'
                           }}
                         >
                           {PreferredLanguageText("priority")}
@@ -1948,8 +1952,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                       </View>
                       <View
                         style={{
-                          // width: "100%",
-                          // display: "flex",
                           flexDirection: "row",
                           backgroundColor: "white",
                         }}
@@ -2008,7 +2010,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           style={{
                             fontSize: 14,
                             color: '#16181C',
-                            fontWeight: 'bold'
+                            fontWeight: 'bold',
+                            fontFamily: 'Inter'
                           }}
                         >
                           Remind
@@ -2057,7 +2060,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                             style={{
                               fontSize: 14,
                               color: '#16181C',
-                              fontWeight: 'bold'
+                              fontWeight: 'bold',
+                              fontFamily: 'Inter'
                             }}
                           >
                             Repeat
@@ -2079,7 +2083,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                               style={{ height: 20 }}
                               trackColor={{
                                 false: "#E7EBEE",
-                                true: "#343A40",
+                                true: "#3289d0",
                               }}
                               activeThumbColor="white"
                             />
@@ -2094,11 +2098,11 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                               }}
                             >
                               <Text style={{
-                                fontSize: 12,
+                                fontSize: 14,
                                 color: "#343A40",
                                 textAlign: "right",
                                 paddingRight: 10,
-                                paddingBottom: 10
+                                fontFamily: 'Inter'
                               }}>
                                 {PreferredLanguageText("remindEvery")}
                               </Text>
@@ -2266,7 +2270,8 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                             style={{
                               fontSize: 14,
                               fontWeight: 'bold',
-                              color: '#16181C'
+                              color: '#16181C',
+                              fontFamily: 'Inter'
                             }}
                           >
                             Indefinitely
@@ -2290,7 +2295,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                               style={{ height: 20 }}
                               trackColor={{
                                 false: "#E7EBEE",
-                                true: "#343A40",
+                                true: "#3289d0",
                               }}
                               activeThumbColor="white"
                             />
@@ -2407,7 +2412,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                             style={{ height: 20 }}
                             trackColor={{
                               false: "#E7EBEE",
-                              true: "#343A40",
+                              true: "#3289d0",
                             }}
                             activeThumbColor="white"
                           />
@@ -2541,7 +2546,7 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                             style={{ height: 20 }}
                             trackColor={{
                               false: "#E7EBEE",
-                              true: "#343A40",
+                              true: "#3289d0",
                             }}
                             activeThumbColor="white"
                           />
@@ -3005,10 +3010,11 @@ const styles: any = StyleSheet.create({
     borderRadius: 3,
   },
   text: {
-    fontSize: 12,
+    fontSize: 14,
     color: "#343A40",
     textAlign: "left",
     paddingHorizontal: 10,
+    fontFamily: 'Inter'
   },
   all: {
     fontSize: 12,
