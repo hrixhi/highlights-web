@@ -1490,7 +1490,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             }}>
                                 <Text style={{
                                     fontSize: 11, color: '#E7EBEE',
-                                    paddingTop: 1,
+                                    marginTop: 1,
                                     textAlign: 'right'
                                 }}>
                                     <Ionicons name="filter-outline" size={18} />
@@ -1514,7 +1514,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 <Text>
                                     <Ionicons
                                         name={props.option === 'Settings' && !props.showHelp ? 'person-circle-outline' : (props.option === 'Channels' ? 'file-tray-stacked-outline' : "settings-outline")}
-                                        size={17}
+                                        size={16}
                                         color={(props.option === 'Settings' && !props.showHelp) || props.option === 'Channels' ? '#3289d0' : '#E7EBEE'} />
                                 </Text>
                                 {/* <Image
@@ -1566,7 +1566,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         }}>
                             <Text style={{
                                 fontSize: 11, color: '#343A40',
-                                paddingTop: 1,
+                                marginTop: 1,
                                 textAlign: 'right'
                             }}>
                                 <Ionicons
