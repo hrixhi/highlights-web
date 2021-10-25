@@ -1935,7 +1935,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                   }}>
                   <Text style={op === option ? styles('').allGrayFill : styles('').all}>
                     {op === 'Classroom' ? 'Workspace' : (
-                      op === 'Performance' ? 'Progress' : (op === 'To Do' ? 'Agenda' : op)
+                      op === 'Performance' ? 'Performance' : (op === 'To Do' ? 'Agenda' : op)
                     )}
                   </Text>
                 </TouchableOpacity>

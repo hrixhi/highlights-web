@@ -1427,7 +1427,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 }}>
                                                 <Text style={op === props.option ? styles.allGrayFill : styles.all}>
                                                     {op === 'Classroom' ? 'Workspace' : (
-                                                        op === 'Performance' ? 'Progress' : (op === 'To Do' ? 'Agenda' : op)
+                                                        op === 'Performance' ? 'Performance' : (op === 'To Do' ? 'Agenda' : op)
                                                     )}
                                                 </Text>
                                             </TouchableOpacity>
