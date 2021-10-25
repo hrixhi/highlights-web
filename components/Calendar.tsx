@@ -1345,7 +1345,9 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         data={tabOptions.map((t: any) => {
                             return {
                                 value: t,
-                                text: t === 'Agenda' ? 'To-Do' : t
+                                text: t === 'Agenda' ? 'To-do' : (
+                                    t === 'Calendar' ? 'Planner' : t
+                                )
                             }
                         })}
                     />
