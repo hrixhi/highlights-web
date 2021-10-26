@@ -669,7 +669,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                 flexDirection: "column",
                 backgroundColor: "white"
             }}>
-            <ActivityIndicator color={"#343A40"} />
+            <ActivityIndicator color={"#393939"} />
         </View>
     }
 
@@ -691,7 +691,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             width: '100%',
                             fontSize: 14, 
                             fontWeight: 'bold',
-                            color: '#343A40'
+                            color: '#393939'
                         }}>
                             <Ionicons name='chevron-back-outline' size={15} color={'#16181C'} style={{ marginRight: 10 }} />
                         </Text>
@@ -734,7 +734,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             onChangeText={val => {
                                 setDuplicateChannelName(val)
                             }}
-                            placeholderTextColor={'#343A40'}
+                            placeholderTextColor={'#393939'}
                             required={true}
                             footerMessage={'case sensitive'}
                         />
@@ -751,7 +751,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             value={duplicateChannelPassword}
                             placeholder={`(${PreferredLanguageText('optional')})`}
                             onChangeText={val => setDuplicateChannelPassword(val)}
-                            placeholderTextColor={'#343A40'}
+                            placeholderTextColor={'#393939'}
                             secureTextEntry={true}
                             required={false}
                         />
@@ -811,8 +811,8 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             }}
                                             style={{ height: 20 }}
                                             trackColor={{
-                                                false: "#E7EBEE",
-                                                true: "#3289d0"
+                                                false: "#efefef",
+                                                true: "#006AFF"
                                             }}
                                             activeThumbColor="white"
                                         />
@@ -859,8 +859,8 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             }}
                                             style={{ height: 20 }}
                                             trackColor={{
-                                                false: "#E7EBEE",
-                                                true: "#3289d0"
+                                                false: "#efefef",
+                                                true: "#006AFF"
                                             }}
                                             activeThumbColor="white"
                                         />
@@ -886,7 +886,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 lineHeight: 35,
                                 color: 'white',
                                 fontSize: 12,
-                                backgroundColor: '#3289d0',
+                                backgroundColor: '#006AFF',
                                 paddingHorizontal: 20,
                                 fontFamily: 'inter',
                                 height: 35,
@@ -939,7 +939,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             onChangeText={val => {
                                 setName(val)
                             }}
-                            placeholderTextColor={'#343A40'}
+                            placeholderTextColor={'#393939'}
                             required={true}
                             footerMessage={'case sensitive'}
                         />
@@ -957,7 +957,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             autoCompleteType='off'
                             placeholder={`(${PreferredLanguageText('optional')})`}
                             onChangeText={val => setPassword(val)}
-                            placeholderTextColor={'#343A40'}
+                            placeholderTextColor={'#393939'}
                             secureTextEntry={true}
                             required={false}
                         />
@@ -1161,7 +1161,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 lineHeight: 35,
                                 color: 'white',
                                 fontSize: 12,
-                                backgroundColor: '#3289d0',
+                                backgroundColor: '#006AFF',
                                 paddingHorizontal: 20,
                                 fontFamily: 'inter',
                                 height: 35,
@@ -1186,10 +1186,10 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                             <Text style={{
                                 textAlign: 'center',
                                 lineHeight: 35,
-                                color: '#3289d0',
+                                color: '#006AFF',
                                 borderWidth: 1,
                                 borderRadius: 15,
-                                borderColor: '#3289d0',
+                                borderColor: '#006AFF',
                                 backgroundColor: '#fff',
                                 fontSize: 12,
                                 paddingHorizontal: 20,
@@ -1234,7 +1234,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         lineHeight: 35,
                                         color: '#16181C',
                                         fontSize: 12,
-                                        backgroundColor: '#E7EBEE',
+                                        backgroundColor: '#efefef',
                                         paddingHorizontal: 20,
                                         fontFamily: 'inter',
                                         height: 35,
@@ -1270,24 +1270,24 @@ const styles = StyleSheet.create({
     outline: {
         borderRadius: 1,
         borderWidth: 1,
-        borderColor: '#343A40'
+        borderColor: '#393939'
     },
     all: {
         fontSize: 14, fontFamily: 'inter',
-        color: '#343A40',
+        color: '#393939',
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: 'white'
     },
     allOutline: {
         fontSize: 14, fontFamily: 'inter',
-        color: '#343A40',
+        color: '#393939',
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: 'white',
         borderRadius: 1,
         borderWidth: 1,
-        borderColor: '#343A40'
+        borderColor: '#393939'
     },
     colorBar: {
         width: '100%',
@@ -1299,7 +1299,7 @@ const styles = StyleSheet.create({
     },
     input: {
         width: '100%',
-        borderBottomColor: '#E7EBEE',
+        borderBottomColor: '#efefef',
         borderBottomWidth: 1,
         fontSize: 14, fontFamily: 'inter',
         paddingTop: 13,
@@ -1326,7 +1326,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         borderRadius: 1,
         borderWidth: 1,
-        borderColor: '#343A40'
+        borderColor: '#393939'
     },
 });
 

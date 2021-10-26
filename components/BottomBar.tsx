@@ -89,7 +89,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     return (
         <View style={styles.bottombar}>
-            <View style={{ display: 'flex', flexDirection: 'row', backgroundColor: '#E7EBEE' }}>
+            <View style={{ display: 'flex', flexDirection: 'row', backgroundColor: '#efefef' }}>
                 <View style={styles.icons}>
                     <TouchableOpacity
                         onPress={() => {
@@ -110,7 +110,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                 {
                     selectedChannel ? <TouchableOpacity
                         onPress={() => props.showMenu()}
-                        style={{ backgroundColor: '#E7EBEE', flexDirection: 'row', flex: 1 }}>
+                        style={{ backgroundColor: '#efefef', flexDirection: 'row', flex: 1 }}>
                         <View style={styles.icons}>
                             <Text style={{
                                 fontSize: 22,
@@ -130,7 +130,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             </Text>
                         </View>
                     </TouchableOpacity> :
-                        <View style={{ backgroundColor: '#E7EBEE', flexDirection: 'row', flex: 1 }} />
+                        <View style={{ backgroundColor: '#efefef', flexDirection: 'row', flex: 1 }} />
                 }
                 {/* {
                     isOwner ?
@@ -169,7 +169,7 @@ const BottomBar: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         onPress={() => props.hideMenu()}>
                         <Text style={styles.channelText}>
                             <Ionicons
-                                name='chevron-up-outline' size={25} color={'#3289d0'} />
+                                name='chevron-up-outline' size={25} color={'#006AFF'} />
                         </Text>
                         {/* <Text style={{ fontSize: 10, color: '#16181C', textAlign: 'center' }}>
                             Hide
@@ -190,7 +190,7 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
         display: 'flex',
         paddingBottom: 10,
         // paddingHorizontal: Dimensions.get('window').width < 1024 ? 20 : 20,
-        backgroundColor: '#E7EBEE'
+        backgroundColor: '#efefef'
     },
     icons: {
         display: 'flex',
@@ -198,7 +198,7 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
         flexDirection: 'column',
         paddingRight: 25,
         overflow: 'hidden',
-        backgroundColor: '#E7EBEE'
+        backgroundColor: '#efefef'
     },
     icons2: {
         display: 'flex',
@@ -206,7 +206,7 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
         flexDirection: 'row',
         paddingRight: 0,
         overflow: 'hidden',
-        backgroundColor: '#E7EBEE'
+        backgroundColor: '#efefef'
     },
     defaultFont: {
         fontFamily: 'system font'
@@ -215,13 +215,13 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
         width: '100%',
         display: 'flex',
         textAlign: 'center',
-        backgroundColor: '#E7EBEE'
+        backgroundColor: '#efefef'
     },
     colorBar: {
         width: '100%',
         height: '47%',
         paddingTop: 20,
-        backgroundColor: '#E7EBEE'
+        backgroundColor: '#efefef'
     },
     iconContainer: {
         width: '20%',
@@ -242,28 +242,28 @@ const styleObject: any = (colorScheme: any) => StyleSheet.create({
     },
     outline: {
         borderRadius: 1,
-        backgroundColor: colorScheme === 'light' ? '#E7EBEE' : 'white',
+        backgroundColor: colorScheme === 'light' ? '#efefef' : 'white',
         color: colorScheme === 'light' ? '#16181C' : '#16181C'
     },
     cusCategory: {
         fontSize: 14,
-        color: '#343A40',
+        color: '#393939',
         height: 22,
         paddingHorizontal: 10
     },
     sub: {
         fontSize: 14,
-        color: colorScheme === 'light' ? '#E7EBEE' : 'white',
+        color: colorScheme === 'light' ? '#efefef' : 'white',
         height: 22,
         paddingHorizontal: 10
     },
     subOutline: {
         fontSize: 14,
-        color: colorScheme === 'light' ? '#E7EBEE' : 'white',
+        color: colorScheme === 'light' ? '#efefef' : 'white',
         height: 22,
         paddingHorizontal: 10,
         borderRadius: 1,
-        backgroundColor: colorScheme === 'light' ? '#E7EBEE' : 'white',
+        backgroundColor: colorScheme === 'light' ? '#efefef' : 'white',
     },
     channelText: {
         textAlign: 'center',

@@ -281,7 +281,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
             alignSelf: 'center',
             marginTop: 100,
         }}>
-            <ActivityIndicator color={'#343A40'} />
+            <ActivityIndicator color={'#393939'} />
         </View>
     }
 
@@ -304,7 +304,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     props.subscriptions.map((sub: any, ind: any) => {
                         return <View style={{
                             backgroundColor: '#fff',
-                            borderColor: '#E7EBEE',
+                            borderColor: '#efefef',
                             borderBottomWidth: ind === props.subscriptions.length - 1 ? 0 : 1,
                             marginTop: 10,
                             // paddingBottom: 5,
@@ -355,7 +355,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                         paddingTop: 5,
                                         paddingLeft: 7
                                     }}>
-                                        <Ionicons name={!collapseMap[ind] ? 'chevron-up-outline' : 'chevron-down-outline'} size={18} color={!collapseMap[ind] ? '#343A40' : '#3289d0'} />
+                                        <Ionicons name={!collapseMap[ind] ? 'chevron-up-outline' : 'chevron-down-outline'} size={18} color={!collapseMap[ind] ? '#393939' : '#006AFF'} />
                                     </Text>
                                 </TouchableOpacity>
                             </View>
@@ -381,7 +381,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                     <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
                                                         <Text style={{
                                                             flex: 1, flexDirection: 'row',
-                                                            color: '#343A40',
+                                                            color: '#393939',
                                                             fontSize: 17, lineHeight: 25,
                                                             fontFamily: 'inter'
                                                         }} ellipsizeMode='tail'>
@@ -398,7 +398,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                     <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
                                                         <Text style={{
                                                             flex: 1, flexDirection: 'row',
-                                                            color: '#343A40',
+                                                            color: '#393939',
                                                             fontSize: 17, lineHeight: 25,
                                                             fontFamily: 'inter'
                                                         }} ellipsizeMode='tail'>
@@ -415,7 +415,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                     <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
                                                         <Text style={{
                                                             flex: 1, flexDirection: 'row',
-                                                            color: '#343A40',
+                                                            color: '#393939',
                                                             fontSize: 17, lineHeight: 25,
                                                             fontFamily: 'inter'
                                                         }} ellipsizeMode='tail'>
@@ -432,7 +432,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                     <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 25 }}>
                                                         <Text style={{
                                                             flex: 1, flexDirection: 'row',
-                                                            color: '#343A40',
+                                                            color: '#393939',
                                                             fontSize: 14, lineHeight: 25,
                                                             fontFamily: 'inter'
                                                         }} ellipsizeMode='tail'>
@@ -449,7 +449,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                     <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 25 }}>
                                                         <Text style={{
                                                             flex: 1, flexDirection: 'row',
-                                                            color: '#343A40',
+                                                            color: '#393939',
                                                             fontSize: 14, lineHeight: 25,
                                                             fontFamily: 'inter'
                                                         }} ellipsizeMode='tail'>
@@ -466,7 +466,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                     <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 25 }}>
                                                         <Text style={{
                                                             flex: 1, flexDirection: 'row',
-                                                            color: '#343A40',
+                                                            color: '#393939',
                                                             fontSize: 14, lineHeight: 25,
                                                             fontFamily: 'inter'
                                                         }} ellipsizeMode='tail'>
@@ -483,7 +483,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                     <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
                                                         <Text style={{
                                                             flex: 1, flexDirection: 'row',
-                                                            color: '#343A40',
+                                                            color: '#393939',
                                                             fontSize: 17, lineHeight: 25,
                                                             fontFamily: 'inter'
                                                         }} ellipsizeMode='tail'>
@@ -500,7 +500,7 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                     <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
                                                         <Text style={{
                                                             flex: 1, flexDirection: 'row',
-                                                            color: '#343A40',
+                                                            color: '#393939',
                                                             fontSize: 17, lineHeight: 25,
                                                             fontFamily: 'inter'
                                                         }} ellipsizeMode='tail'>
@@ -548,7 +548,7 @@ const styles = StyleSheet.create({
     },
     allGrayFill: {
         fontSize: 10,
-        color: '#3289d0',
+        color: '#006AFF',
         height: 20,
         // fontWeight: 'bold',
         paddingHorizontal: 7,

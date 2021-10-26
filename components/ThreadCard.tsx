@@ -9,7 +9,7 @@ import { Ionicons } from '@expo/vector-icons';
 const ThreadCard: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
 
     const [loading, setLoading] = useState(true)
-    const [color, setColor] = useState('#343A40');
+    const [color, setColor] = useState('#393939');
     const [subtitle, setSubtitle] = useState('')
 
     const [imported, setImported] = useState(false)
@@ -40,9 +40,9 @@ const ThreadCard: React.FunctionComponent<{ [label: string]: any }> = (props: an
         if (u) {
             const unparsedUser = JSON.parse(u)
             if (props.channelCreatedBy.toString().trim() === props.thread.userId.toString().trim()) {
-                setColor('#3289d0')
+                setColor('#006AFF')
             } else if (unparsedUser._id.toString().trim() === props.thread.userId.toString().trim()) {
-                setColor('#343A40')
+                setColor('#393939')
             }
         }
         setLoading(false)
@@ -78,7 +78,7 @@ const ThreadCard: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         {
                             props.thread.isPrivate ?
                                 <Text style={styleObject.date}>
-                                    <Ionicons name='eye-off-outline' color={'#343A40'} />
+                                    <Ionicons name='eye-off-outline' color={'#393939'} />
                                 </Text> : null
                         }
                         <Text style={{
@@ -94,17 +94,17 @@ const ThreadCard: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     </View>
                     {
                         imported ?
-                            <View style={{ backgroundColor: '#E7EBEE', flex: 1, flexDirection: 'row', paddingTop: 6 }}>
-                                <Text style={{ width: '100%', color: '#343A40', fontSize: 14, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
-                                    <Ionicons name='document-outline' size={15} color='#343A40' /> {title}.{type}
+                            <View style={{ backgroundColor: '#efefef', flex: 1, flexDirection: 'row', paddingTop: 6 }}>
+                                <Text style={{ width: '100%', color: '#393939', fontSize: 14, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                    <Ionicons name='document-outline' size={15} color='#393939' /> {title}.{type}
                                 </Text>
                                 <Text ellipsizeMode={'tail'}
                                     numberOfLines={1}
                                     style={styleObject.titleArrow}>
-                                    <Ionicons name="chevron-forward-outline" color="#343A40" size={15} style={{ marginTop: 4 }} />
+                                    <Ionicons name="chevron-forward-outline" color="#393939" size={15} style={{ marginTop: 4 }} />
                                 </Text>
                             </View>
-                            : <View style={{ backgroundColor: '#E7EBEE', width: '100%', flexDirection: 'row', display: 'flex' }}>
+                            : <View style={{ backgroundColor: '#efefef', width: '100%', flexDirection: 'row', display: 'flex' }}>
                                 <Text ellipsizeMode={'tail'}
                                     numberOfLines={1}
                                     style={styleObject.title}>
@@ -116,7 +116,7 @@ const ThreadCard: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                             width: 20,
                                             height: 20,
                                             borderRadius: 1,
-                                            backgroundColor: '#3289d0',
+                                            backgroundColor: '#006AFF',
                                             textAlign: 'center',
                                             zIndex: 150,
                                             marginLeft: 10,
@@ -129,7 +129,7 @@ const ThreadCard: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                 <Text ellipsizeMode={'tail'}
                                     numberOfLines={1}
                                     style={styleObject.titleArrow}>
-                                    <Ionicons name="chevron-forward-outline" color="#343A40" size={15} style={{ marginTop: 4 }} />
+                                    <Ionicons name="chevron-forward-outline" color="#393939" size={15} style={{ marginTop: 4 }} />
                                 </Text>
                             </View>
                     }
@@ -166,7 +166,7 @@ const styles: any = () => StyleSheet.create({
         width: '100%',
         borderRadius: 1,
         padding: 13,
-        backgroundColor: '#E7EBEE',
+        backgroundColor: '#efefef',
         borderWidth: 1,
         borderColor: '#d0d0d2'
     },
@@ -174,18 +174,18 @@ const styles: any = () => StyleSheet.create({
         display: 'flex',
         flexDirection: 'column',
         flex: 1,
-        backgroundColor: '#E7EBEE'
+        backgroundColor: '#efefef'
     },
     dateContainer: {
         fontSize: 10,
         height: '22%',
-        backgroundColor: '#E7EBEE',
+        backgroundColor: '#efefef',
         display: 'flex',
         flexDirection: 'row'
     },
     date: {
         fontSize: 10,
-        color: '#343A40',
+        color: '#393939',
         marginLeft: 5
     },
     title: {
@@ -205,7 +205,7 @@ const styles: any = () => StyleSheet.create({
     },
     description: {
         fontSize: 13,
-        color: '#343A40',
+        color: '#393939',
         // height: '30%',
     },
     color: {

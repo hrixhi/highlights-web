@@ -47,11 +47,11 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
             <View style={{
                 display: 'flex',
                 width: '100%',
-                borderColor: '#E7EBEE',
+                borderColor: '#efefef',
                 // borderRightWidth: Dimensions.get('window').width < 1024 ? 0 : 1,
                 // paddingHorizontal: Dimensions.get('window').width < 1024 ? 15 : 0,
                 paddingTop: 5,
-                backgroundColor: '#E7EBEE',
+                backgroundColor: '#efefef',
                 flexDirection: 'row',
                 maxWidth: 900,
             }}>
@@ -65,10 +65,10 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             props.setChannelCreatedBy('')
                             props.closeModal()
                         }}
-                        style={{ backgroundColor: '#E7EBEE', width: '100%', paddingBottom: 20 }}
+                        style={{ backgroundColor: '#efefef', width: '100%', paddingBottom: 20 }}
                     >
                         <Text style={{ lineHeight: 33, width: '100%', textAlign: 'center' }}>
-                            <Ionicons name='chevron-back-outline' size={30} color={'#343A40'} style={{ marginTop: -2 }} />
+                            <Ionicons name='chevron-back-outline' size={30} color={'#393939'} style={{ marginTop: -2 }} />
                         </Text>
                     </TouchableOpacity>
                 </View>
@@ -94,13 +94,13 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 } */}
                 <TouchableOpacity onPress={() => {
                     props.hideMenu()
-                }} style={{ backgroundColor: '#E7EBEE', flexDirection: 'row', flex: 1 }} />
+                }} style={{ backgroundColor: '#efefef', flexDirection: 'row', flex: 1 }} />
                 <View style={styles.icons}>
                     {/* {
                         isOwner && props.channelId !== '' && (props.menuCollapsed === true) ?
                             <TouchableOpacity
                                 style={{
-                                    backgroundColor: '#E7EBEE',
+                                    backgroundColor: '#efefef',
                                     width: Dimensions.get('window').width < 1024 ? 'auto' : '100%',
                                     paddingBottom: 20
                                 }}
@@ -118,7 +118,7 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     {/* {
                         props.channelId !== '' && (props.menuCollapsed === true) ?
                             <TouchableOpacity
-                                style={{ backgroundColor: '#E7EBEE', width: Dimensions.get('window').width < 1024 ? 'auto' : '100%', paddingBottom: 20 }}
+                                style={{ backgroundColor: '#efefef', width: Dimensions.get('window').width < 1024 ? 'auto' : '100%', paddingBottom: 20 }}
                                 onPress={() => props.openMeeting()}>
                                 <Text style={styles.channelText}>
                                     <Ionicons
@@ -134,11 +134,11 @@ const VerticalBar: React.FunctionComponent<{ [label: string]: any }> = (props: a
                 {/* <View style={styles.icons2}>
                     {
                         props.channelId !== '' && (props.menuCollapsed === true) ?
-                            <TouchableOpacity style={{ backgroundColor: '#E7EBEE', width: '100%', paddingBottom: 20 }}
+                            <TouchableOpacity style={{ backgroundColor: '#efefef', width: '100%', paddingBottom: 20 }}
                                 onPress={() => props.hideMenu()}>
                                 <Text style={{ lineHeight: 35, width: '100%', textAlign: 'center' }}>
                                     <Ionicons
-                                        name='chevron-down-outline' size={25} color={'#3289d0'} />
+                                        name='chevron-down-outline' size={25} color={'#006AFF'} />
                                 </Text>
                             </TouchableOpacity> : null
                     }
@@ -158,7 +158,7 @@ const styleObject: any = (colorScheme: any, mc: any) => StyleSheet.create({
         paddingTop: 10,
         flexDirection: 'row',
         justifyContent: 'center',
-        backgroundColor: '#E7EBEE',
+        backgroundColor: '#efefef',
     },
     icons: {
         display: 'flex',
@@ -166,7 +166,7 @@ const styleObject: any = (colorScheme: any, mc: any) => StyleSheet.create({
         flexDirection: 'row',
         paddingRight: 25,
         overflow: 'hidden',
-        backgroundColor: '#E7EBEE'
+        backgroundColor: '#efefef'
     },
     icons2: {
         display: 'flex',
@@ -174,7 +174,7 @@ const styleObject: any = (colorScheme: any, mc: any) => StyleSheet.create({
         flexDirection: 'row',
         paddingRight: 0,
         overflow: 'hidden',
-        backgroundColor: '#E7EBEE'
+        backgroundColor: '#efefef'
     },
     defaultFont: {
         fontFamily: 'system font'
@@ -216,7 +216,7 @@ const styleObject: any = (colorScheme: any, mc: any) => StyleSheet.create({
     },
     cusCategory: {
         fontSize: 14,
-        color: '#343A40',
+        color: '#393939',
         height: 22,
         paddingHorizontal: 10
     },

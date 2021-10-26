@@ -11,8 +11,8 @@
   z-index: 99999 !important;
   background: #fff;
   /* box-shadow: 0 1px 3px rgba(0,0,0,.1);
-  border: 1px solid #E7EBEE; */
-  color: #343A40 !important;
+  border: 1px solid #efefef; */
+  color: #393939 !important;
   font-family: 'overpass';
 }
 .rdtOpen .rdtPicker {
@@ -49,7 +49,7 @@
 }
 .rdtPicker td.rdtOld,
 .rdtPicker td.rdtNew {
-  color: #343A40;
+  color: #393939;
 }
 .rdtPicker td.rdtToday {
   position: relative;
@@ -58,7 +58,7 @@
   content: '';
   display: inline-block;
   border-left: 7px solid transparent;
-  border-bottom: 7px solid #3289d0;
+  border-bottom: 7px solid #006AFF;
   border-radius: 5px;
   border-top-color: rgba(0, 0, 0, 0.2);
   position: absolute;
@@ -67,7 +67,7 @@
 }
 .rdtPicker td.rdtActive,
 .rdtPicker td.rdtActive:hover {
-  background-color: #3289d0;
+  background-color: #006AFF;
   border-radius: 10px;
   color: #fff;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
@@ -78,21 +78,21 @@
 .rdtPicker td.rdtDisabled,
 .rdtPicker td.rdtDisabled:hover {
   background: none;
-  color: #343A40;
+  color: #393939;
   cursor: not-allowed;
 }
 
 .rdtPicker td span.rdtOld {
-  color: #343A40;
+  color: #393939;
 }
 .rdtPicker td span.rdtDisabled,
 .rdtPicker td span.rdtDisabled:hover {
   background: none;
-  color: #343A40;
+  color: #393939;
   cursor: not-allowed;
 }
 .rdtPicker th {
-  border-bottom: 1px solid #E7EBEE;
+  border-bottom: 1px solid #efefef;
 }
 .rdtPicker .dow {
   width: 14.2857%;
@@ -122,7 +122,7 @@
 .rdtPicker th.rdtDisabled,
 .rdtPicker th.rdtDisabled:hover {
   background: none;
-  color: #343A40;
+  color: #393939;
   cursor: not-allowed;
 }
 .rdtPicker thead tr:first-of-type th {
@@ -133,7 +133,7 @@
 }
 
 .rdtPicker tfoot {
-  border-top: 1px solid #E7EBEE;
+  border-top: 1px solid #efefef;
 }
 
 .rdtPicker button {

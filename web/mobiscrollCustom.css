@@ -10,7 +10,7 @@
 
 .mobiscrollCustomInput {
     border: 0px;
-    /* border-bottom: 1px solid #E7EBEE; */
+    /* border-bottom: 1px solid #efefef; */
     width: 100px;
     padding-top: 13px;
     padding-bottom: 8px;
@@ -21,7 +21,7 @@
 
 .mobiscrollCreateInput {
     border: 0px;
-    /* border-bottom: 1px solid #E7EBEE; */
+    /* border-bottom: 1px solid #efefef; */
     font-weight: bold;
     font-family: "inter";
     cursor: pointer;
@@ -29,7 +29,7 @@
 
 .mobiscrollCategoryInput {
     border: 0px;
-    /* border-bottom: 1px solid #E7EBEE; */
+    /* border-bottom: 1px solid #efefef; */
     width: 150px;
     font-weight: bold;
     font-family: "inter";
@@ -38,7 +38,7 @@
 
 .mobiscrollFrequencyInput {
     border: 0px;
-    /* border-bottom: 1px solid #E7EBEE; */
+    /* border-bottom: 1px solid #efefef; */
     width: 90px;
     font-weight: bold;
     font-family: "inter";
@@ -67,7 +67,7 @@
     /* width: 180px; */
     border: 0px;
     border-radius: 0px;
-    border-bottom: 1px solid #E7EBEE;
+    border-bottom: 1px solid #efefef;
     font-size: 14px;
 }
 
@@ -75,7 +75,7 @@
     /* width: 180px; */
     border: 0px;
     border-radius: 0px;
-    border-bottom: 1px solid #E7EBEE;
+    border-bottom: 1px solid #efefef;
     font-size: 14px;
 }
 
@@ -86,11 +86,11 @@
 }
 
 .mce-content-body[data-mce-placeholder]:not(.mce-visualblocks)::before {
-    color: #343A40 !important; 
+    color: #393939 !important; 
 }
 
 .tox-tinymce {
-    border: 1px solid #E7EBEE !important;
+    border: 1px solid #efefef !important;
 }
 
 /* .dropdown {

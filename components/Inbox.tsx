@@ -213,7 +213,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                 text = <TouchableOpacity style={{}}>
                                     <Text style={{
                                         textDecorationLine: 'underline',
-                                        // backgroundColor: '#3289d0',
+                                        // backgroundColor: '#006AFF',
                                         color: '#fff'
                                     }}
                                         onPress={() => {
@@ -478,10 +478,10 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                             } else if (type === "mp4" || type === "oga" || type === "mov" || type === "wmv") {
                                 video = url
                             } else {
-                                text = <TouchableOpacity style={{ backgroundColor: '#3289d0' }}>
+                                text = <TouchableOpacity style={{ backgroundColor: '#006AFF' }}>
                                     <Text style={{
                                         textDecorationLine: 'underline',
-                                        backgroundColor: '#3289d0',
+                                        backgroundColor: '#006AFF',
                                         color: '#fff'
                                     }}
                                         onPress={() => {
@@ -608,10 +608,10 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                             } else if (type === "mp4" || type === "oga" || type === "mov" || type === "wmv") {
                                 video = url
                             } else {
-                                text = <TouchableOpacity style={{ backgroundColor: '#3289d0' }}>
+                                text = <TouchableOpacity style={{ backgroundColor: '#006AFF' }}>
                                     <Text style={{
                                         textDecorationLine: 'underline',
-                                        backgroundColor: '#3289d0',
+                                        backgroundColor: '#006AFF',
                                         color: '#fff'
                                     }}
                                         onPress={() => {
@@ -743,7 +743,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                 {...props}
                 wrapperStyle={{
                     right: {
-                        backgroundColor: '#3289d0'
+                        backgroundColor: '#006AFF'
                     }
                 }}
             />
@@ -831,7 +831,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                         backgroundColor: 'white',
                         marginTop: 50
                     }}>
-                        <ActivityIndicator color={'#343A40'} />
+                        <ActivityIndicator color={'#393939'} />
                     </View>
                     :
                     <View style={{
@@ -877,7 +877,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                     }}
                                                 >
                                                     <Text style={{ lineHeight: 35, width: '100%', textAlign: 'center', paddingTop: 5 }}>
-                                                        <Ionicons name='chevron-back-outline' size={30} color={'#343A40'} />
+                                                        <Ionicons name='chevron-back-outline' size={30} color={'#393939'} />
                                                     </Text>
                                                 </TouchableOpacity>
                                                 : null
@@ -895,7 +895,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                             //             lineHeight: 35,
                                             //             // color: '#16181C',
                                             //             fontSize: 10,
-                                            //             // backgroundColor: '#E7EBEE',
+                                            //             // backgroundColor: '#efefef',
                                             //             // paddingHorizontal: 20,
                                             //             // marginRight: 15,
                                             //             // fontFamily: 'inter',
@@ -905,7 +905,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                             //             textTransform: 'uppercase'
                                             //         }}
                                             //     >
-                                            //         <Ionicons name='reload-outline' size={22} color={'#3289d0'} />
+                                            //         <Ionicons name='reload-outline' size={22} color={'#006AFF'} />
                                             //     </Text>
                                             // </TouchableOpacity>
                                         }
@@ -945,7 +945,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                 style={{
                                                     flexDirection: 'row', alignItems: 'center', flex: 1,
                                                     width: '100%', paddingVertical: 10, borderBottomWidth: 1,
-                                                    borderBottomColor: '#E7EBEE', paddingHorizontal: 10
+                                                    borderBottomColor: '#efefef', paddingHorizontal: 10
                                                 }} >
                                                 <Image
                                                     style={{
@@ -982,10 +982,10 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                         style={{
                                                             textAlign: "center",
                                                             lineHeight: 35,
-                                                            color: '#3289d0',
+                                                            color: '#006AFF',
                                                             fontSize: 12,
                                                             borderWidth: 1,
-                                                            borderColor: '#3289d0',
+                                                            borderColor: '#006AFF',
                                                             paddingHorizontal: 20,
                                                             fontFamily: "inter",
                                                             height: 35,
@@ -1015,10 +1015,10 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                         style={{
                                                             textAlign: "center",
                                                             lineHeight: 35,
-                                                            color: '#3289d0',
+                                                            color: '#006AFF',
                                                             fontSize: 12,
                                                             borderWidth: 1,
-                                                            borderColor: '#3289d0',
+                                                            borderColor: '#006AFF',
                                                             paddingHorizontal: 20,
                                                             fontFamily: "inter",
                                                             height: 35,
@@ -1068,7 +1068,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                                 lineHeight: 35,
                                                                                 color: '#16181C',
                                                                                 fontSize: 12,
-                                                                                backgroundColor: '#E7EBEE',
+                                                                                backgroundColor: '#efefef',
                                                                                 paddingHorizontal: 20,
                                                                                 fontFamily: 'inter',
                                                                                 height: 35,
@@ -1100,7 +1100,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                     onChangeText={val => {
                                                                         setEditGroupName(val)
                                                                     }}
-                                                                    placeholderTextColor={'#343A40'}
+                                                                    placeholderTextColor={'#393939'}
                                                                     required={true}
                                                                 />
                                                             </View>
@@ -1154,7 +1154,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                     flexDirection: 'row', alignItems: 'center', flex: 1,
                                                                     width: '100%', paddingVertical: 7,
                                                                     borderBottomWidth: ind === Object.keys(groupUsers).length - 1 ? 0 : 1,
-                                                                    borderBottomColor: '#E7EBEE',
+                                                                    borderBottomColor: '#efefef',
                                                                     paddingHorizontal: 10
                                                                 }} >
                                                                     <Image
@@ -1201,7 +1201,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                         lineHeight: 35,
                                                         color: '#fff',
                                                         fontSize: 12,
-                                                        backgroundColor: '#3289d0',
+                                                        backgroundColor: '#006AFF',
                                                         paddingHorizontal: 20,
                                                         fontFamily: 'inter',
                                                         height: 35,
@@ -1223,7 +1223,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                 height: Dimensions.get('window').width < 1024 ? windowHeight - 104 - 80 : windowHeight - 52 - 80,
                                                 // borderWidth: 1,
                                                 zIndex: 5000,
-                                                borderColor: '#E7EBEE'
+                                                borderColor: '#efefef'
                                             }}>
                                                 <GiftedChat
                                                     // showUserAvatar={isChatGroup}
@@ -1276,10 +1276,10 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                             <Text style={{
                                                                                 textAlign: "center",
                                                                                 lineHeight: 35,
-                                                                                color: '#3289d0',
+                                                                                color: '#006AFF',
                                                                                 fontSize: 12,
                                                                                 borderWidth: 1,
-                                                                                borderColor: '#3289d0',
+                                                                                borderColor: '#006AFF',
                                                                                 paddingHorizontal: 20,
                                                                                 fontFamily: "inter",
                                                                                 height: 35,
@@ -1344,7 +1344,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                                 flexDirection: 'row'
                                                                             }}>
                                                                             <Text>
-                                                                                <Ionicons name={'close-circle-outline'} size={18} color={'#343A40'} />
+                                                                                <Ionicons name={'close-circle-outline'} size={18} color={'#393939'} />
                                                                             </Text>
                                                                         </TouchableOpacity> : <FileUpload
                                                                             onUpload={(u: any, t: any) => {
@@ -1369,7 +1369,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                         onChangeText={val => {
                                                                             setNewGroupName(val)
                                                                         }}
-                                                                        placeholderTextColor={'#343A40'}
+                                                                        placeholderTextColor={'#393939'}
                                                                         required={true}
                                                                     />
                                                                 </View>
@@ -1426,7 +1426,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                 lineHeight: 35,
                                                                 color: '#fff',
                                                                 fontSize: 12,
-                                                                backgroundColor: '#3289d0',
+                                                                backgroundColor: '#006AFF',
                                                                 paddingHorizontal: 20,
                                                                 fontFamily: 'inter',
                                                                 height: 35,
@@ -1447,7 +1447,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                 // borderRightWidth: 0,
                                                                 // borderLeftWidth: 0,
                                                                 borderRadius: 1,
-                                                                borderColor: '#E7EBEE',
+                                                                borderColor: '#efefef',
                                                                 overflow: 'hidden',
                                                                 // marginTop: 20
                                                             }}>
@@ -1476,7 +1476,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                                 style={{
                                                                                     backgroundColor: '#fff',
                                                                                     flexDirection: 'row',
-                                                                                    borderColor: '#E7EBEE',
+                                                                                    borderColor: '#efefef',
                                                                                     paddingVertical: 5,
                                                                                     borderBottomWidth: ind === sectionFiltered.length - 1 ? 0 : 1,
                                                                                     width: '100%'
@@ -1506,7 +1506,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                                 </View>
                                                                                 <View style={{ backgroundColor: '#fff', padding: 0, flexDirection: 'row', alignSelf: 'center', alignItems: 'center' }} >
                                                                                     <Text style={{ fontSize: 13, padding: 5, lineHeight: 13 }} ellipsizeMode='tail'>
-                                                                                        <Ionicons name='chatbubble-ellipses-outline' size={18} color='#3289d0' />
+                                                                                        <Ionicons name='chatbubble-ellipses-outline' size={18} color='#006AFF' />
                                                                                     </Text>
                                                                                 </View>
                                                                             </TouchableOpacity>
@@ -1524,7 +1524,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                         // borderWidth: 2,
                                                                         // borderRightWidth: 0,
                                                                         // borderLeftWidth: 0,
-                                                                        borderColor: '#E7EBEE',
+                                                                        borderColor: '#efefef',
                                                                         borderRadius: 1,
                                                                         width: '100%',
                                                                         maxHeight: width < 1024 ? windowHeight - 104 : windowHeight - 52,
@@ -1570,7 +1570,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                                     style={{
                                                                                         backgroundColor: '#fff',
                                                                                         flexDirection: 'row',
-                                                                                        borderColor: '#E7EBEE',
+                                                                                        borderColor: '#efefef',
                                                                                         paddingVertical: 5,
                                                                                         borderBottomWidth: index === chats.length - 1 ? 0 : 1,
                                                                                         // minWidth: 600, // flex: 1,
@@ -1606,7 +1606,7 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                                             height: 16,
                                                                                             borderRadius: 8,
                                                                                             marginRight: 5,
-                                                                                            backgroundColor: "#3289d0",
+                                                                                            backgroundColor: "#006AFF",
                                                                                             alignItems: 'center',
                                                                                             justifyContent: 'center'
                                                                                         }}>
@@ -1615,11 +1615,11 @@ const Inbox: React.FunctionComponent<{ [label: string]: any }> = (props: any) =>
                                                                                             </Text>
                                                                                         </View> : null}
 
-                                                                                        <Text style={{ fontSize: 12, padding: 5, lineHeight: 13, color: chat.unreadMessages > 0 ? "#3289d0" : '#16181C' }} ellipsizeMode='tail'>
+                                                                                        <Text style={{ fontSize: 12, padding: 5, lineHeight: 13, color: chat.unreadMessages > 0 ? "#006AFF" : '#16181C' }} ellipsizeMode='tail'>
                                                                                             {emailTimeDisplay(chat.lastMessageTime)}
                                                                                         </Text>
                                                                                         <Text style={{ fontSize: 13, padding: 5, lineHeight: 13 }} ellipsizeMode='tail'>
-                                                                                            <Ionicons name='chevron-forward-outline' size={18} color='#3289d0' />
+                                                                                            <Ionicons name='chevron-forward-outline' size={18} color='#006AFF' />
                                                                                         </Text>
                                                                                     </View>
                                                                                 </TouchableOpacity>

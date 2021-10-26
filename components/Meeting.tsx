@@ -229,7 +229,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
     const renderPastMeetings = () => {
         return (pastMeetings.length === 0 ?
             <View style={{ backgroundColor: 'white', flex: 1 }}>
-                <Text style={{ width: '100%', color: '#343A40', fontSize: 20, paddingTop: 50, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                <Text style={{ width: '100%', color: '#393939', fontSize: 20, paddingTop: 50, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                     {PreferredLanguageText('noPastMeetings')}
                 </Text>
             </View>
@@ -237,7 +237,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
             <ScrollView
                 contentContainerStyle={{
                     borderWidth: 1,
-                    borderColor: '#E7EBEE',
+                    borderColor: '#efefef',
                     borderRadius: 1,
                     width: '100%',
                     maxHeight: windowHeight - 200,
@@ -255,9 +255,9 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                 }
                             }}
                             style={{
-                                backgroundColor: '#E7EBEE',
+                                backgroundColor: '#efefef',
                                 flexDirection: 'row',
-                                borderColor: '#E7EBEE',
+                                borderColor: '#efefef',
                                 borderBottomWidth: index === pastMeetings.length - 1 ? 0 : 1,
                                 // minWidth: 600, // flex: 1,
                                 width: '100%',
@@ -311,7 +311,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                             ]);
                                         }}
                                     >
-                                        <Text style={{ width: '100%', color: '#343A40', fontSize: 14, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                        <Text style={{ width: '100%', color: '#393939', fontSize: 14, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                                             <Ionicons name='trash-outline' size={15} color="#f94144" />
                                         </Text>
                                     </TouchableOpacity>
@@ -431,9 +431,9 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                             <Text style={{
                                 textAlign: 'center',
                                 lineHeight: 35,
-                                color: '#3289d0',
+                                color: '#006AFF',
                                 fontSize: 12,
-                                borderColor: '#3289d0',
+                                borderColor: '#006AFF',
                                 paddingHorizontal: 20,
                                 borderWidth: 1,
                                 fontFamily: 'inter',
@@ -456,7 +456,7 @@ const Meeting: React.FunctionComponent<{ [label: string]: any }> = (props: any) 
                                     {
                                         attendances.length === 0 ?
                                             <View style={{ backgroundColor: 'white', flex: 1 }}>
-                                                <Text style={{ width: '100%', color: '#343A40', fontSize: 20, paddingVertical: 50, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
+                                                <Text style={{ width: '100%', color: '#393939', fontSize: 20, paddingVertical: 50, paddingHorizontal: 5, fontFamily: 'inter', flex: 1 }}>
                                                     {PreferredLanguageText('noAttendances')}
                                                 </Text>
                                             </View>
@@ -502,7 +502,7 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 12,
-        color: "#343A40",
+        color: "#393939",
         textAlign: "left",
         paddingHorizontal: 10,
         paddingTop: 5
@@ -527,7 +527,7 @@ const styles = StyleSheet.create({
         maxWidth: '100%',
         borderRadius: 15,
         padding: 13,
-        backgroundColor: '#E7EBEE',
+        backgroundColor: '#efefef',
         flexDirection: 'row',
         justifyContent: 'space-between'
     },
@@ -535,7 +535,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'column',
         flex: 1,
-        backgroundColor: '#E7EBEE',
+        backgroundColor: '#efefef',
     },
     title: {
         fontFamily: 'inter',
@@ -546,11 +546,11 @@ const styles = StyleSheet.create({
     },
     description: {
         fontSize: 13,
-        color: '#343A40',
+        color: '#393939',
     },
     all: {
         fontSize: 11,
-        color: '#343A40',
+        color: '#393939',
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: '#fff',

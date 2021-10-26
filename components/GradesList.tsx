@@ -201,9 +201,9 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         <Text style={{
                             textAlign: 'center',
                             lineHeight: 35,
-                            color: '#3289d0',
+                            color: '#006AFF',
                             fontSize: 12,
-                            borderColor: '#3289d0',
+                            borderColor: '#006AFF',
                             paddingHorizontal: 20,
                             fontFamily: 'inter',
                             height: 35,
@@ -387,7 +387,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
             {
                 props.scores.length === 0 || cues.length === 0 ?
                     <View style={{ backgroundColor: 'white' }}>
-                        <Text style={{ width: '100%', color: '#343A40', fontSize: 20, paddingVertical: 100, paddingHorizontal: 5, fontFamily: 'inter' }}>
+                        <Text style={{ width: '100%', color: '#393939', fontSize: 20, paddingVertical: 100, paddingHorizontal: 5, fontFamily: 'inter' }}>
                             {
                                 cues.length === 0 ? PreferredLanguageText('noGraded') : PreferredLanguageText('noStudents')
                             }
@@ -442,13 +442,13 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             }}
                             nestedScrollEnabled={true}
                         >
-                            <View style={{ minHeight: 70, flexDirection: 'row', overflow: 'hidden', paddingBottom: 10, borderBottomWidth: 1, borderBottomColor: '#E7EBEE' }} key={"-"}>
+                            <View style={{ minHeight: 70, flexDirection: 'row', overflow: 'hidden', paddingBottom: 10, borderBottomWidth: 1, borderBottomColor: '#efefef' }} key={"-"}>
                                 {/* <View style={styles.col} key={'0,0'}>
                                     {props.isOwner ? <CustomTextInput
                                         value={studentSearch}
                                         onChangeText={(val: string) => setStudentSearch(val)}
                                         placeholder={"Filter"}
-                                        placeholderTextColor={'#343A40'}
+                                        placeholderTextColor={'#393939'}
                                     /> : null}
                                 </View> */}
                                 {
@@ -531,8 +531,8 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                                                         onChangeText={val => {
                                                                             setActiveScore(val)
                                                                         }}
-                                                                        style={{ width: '50%', marginRight: 5, padding: 8, borderBottomColor: "#E7EBEE", borderBottomWidth: 1, fontSize: 12 }}
-                                                                        placeholderTextColor={'#343A40'}
+                                                                        style={{ width: '50%', marginRight: 5, padding: 8, borderBottomColor: "#efefef", borderBottomWidth: 1, fontSize: 12 }}
+                                                                        placeholderTextColor={'#393939'}
                                                                     />
                                                                     <TouchableOpacity onPress={() => {
                                                                         modifyGrade()
@@ -603,7 +603,7 @@ const styles = StyleSheet.create({
     col: { width: 120, justifyContent: 'center', display: 'flex', flexDirection: 'column', padding: 7, },
     all: {
         fontSize: 14,
-        color: '#3289d0',
+        color: '#006AFF',
         height: 22,
         paddingHorizontal: 20,
         backgroundColor: '#fff',
@@ -621,13 +621,13 @@ const styles = StyleSheet.create({
     },
     allGrayOutline: {
         fontSize: 12,
-        color: "#343A40",
+        color: "#393939",
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: "white",
         borderRadius: 1,
         borderWidth: 1,
-        borderColor: "#343A40",
+        borderColor: "#393939",
         lineHeight: 20
     }
 })

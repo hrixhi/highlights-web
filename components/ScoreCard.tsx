@@ -37,7 +37,7 @@ const ScoreCard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         }}>
                            
                         </Text> */}
-                    </View> <View style={{ backgroundColor: '#E7EBEE', width: '100%', flexDirection: 'row', display: 'flex' }}>
+                    </View> <View style={{ backgroundColor: '#efefef', width: '100%', flexDirection: 'row', display: 'flex' }}>
                         <Text ellipsizeMode={'tail'}
                             numberOfLines={1}
                             style={styleObject.title}>
@@ -67,7 +67,7 @@ const ScoreCard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         <Text ellipsizeMode={'tail'}
                             numberOfLines={1}
                             style={styleObject.titleArrow}>
-                            <Ionicons name="chevron-forward-outline" color="#343A40" size={15} style={{ marginTop: 4 }} />
+                            <Ionicons name="chevron-forward-outline" color="#393939" size={15} style={{ marginTop: 4 }} />
                         </Text>
                     </View>
                     <Text ellipsizeMode={'tail'}
@@ -90,7 +90,7 @@ const styles: any = () => StyleSheet.create({
         maxWidth: 500,
         borderRadius: 1,
         overflow: 'hidden',
-        backgroundColor: '#E7EBEE'
+        backgroundColor: '#efefef'
     },
     badge: {
         width: 20,
@@ -106,24 +106,24 @@ const styles: any = () => StyleSheet.create({
         width: '100%',
         borderRadius: 1,
         padding: 13,
-        backgroundColor: '#E7EBEE',
+        backgroundColor: '#efefef',
     },
     text: {
         display: 'flex',
         flexDirection: 'column',
         flex: 1,
-        backgroundColor: '#E7EBEE'
+        backgroundColor: '#efefef'
     },
     dateContainer: {
         fontSize: 10,
         height: '22%',
-        backgroundColor: '#E7EBEE',
+        backgroundColor: '#efefef',
         display: 'flex',
         flexDirection: 'row'
     },
     date: {
         fontSize: 10,
-        color: '#343A40',
+        color: '#393939',
         marginLeft: 5
     },
     title: {
@@ -143,7 +143,7 @@ const styles: any = () => StyleSheet.create({
     },
     description: {
         fontSize: 13,
-        color: '#343A40',
+        color: '#393939',
         // height: '30%',
     },
     color: {

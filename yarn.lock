@@ -2203,9 +2203,9 @@
   resolved "https://npm.mobiscroll.com/@mobiscroll%2freact/-/react-5.9.1.tgz#a501b80af4e51e7c0b8df0471274e4a760093fb5"
   integrity "sha1-pQG4CvTlHnwLjfBHEnTkp2AJP7U= sha512-gzd2DC6SHt+lFouL5oBA1cM1By1YBuSkcMXDDQjh6WmwbRybsa4sD6DFH/aWBgGV2MxdJIhSLkQ7vjM8Sf4tfg=="
 
-"@mobiscroll/react@file:./src/lib/mobiscroll-package/mobiscroll-react-v5.11.0.tgz":
-  version "5.11.0"
-  resolved "file:./src/lib/mobiscroll-package/mobiscroll-react-v5.11.0.tgz#5be023e53b9ab25a89a5110066f4052cb42177ba"
+"@mobiscroll/react@file:./src/lib/mobiscroll-package/mobiscroll-react-v5.11.1.tgz":
+  version "5.11.1"
+  resolved "file:./src/lib/mobiscroll-package/mobiscroll-react-v5.11.1.tgz#3ec11f3f39bbc096a6e8f580a1582cb70118322d"
 
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
