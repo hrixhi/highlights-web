@@ -246,10 +246,10 @@ const Performance: React.FunctionComponent<{ [label: string]: any }> = (props: a
                     setActiveTabMap(temp)
                 }}>
                 <Text style={activeTab === 'attendance' ? styles.allGrayFill : styles.all}>
-                    <Ionicons name='calendar-outline' size={18} />
+                    <Ionicons name='chatbubble-ellipses-outline' size={18} />
                 </Text>
                 <Text style={activeTab === 'attendance' ? styles.allGrayFill : styles.all}>
-                    Participation
+                    Engagement
                 </Text>
             </TouchableOpacity>
         </View>)
