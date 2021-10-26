@@ -1270,9 +1270,9 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                             <Text style={{
                                                                                 flex: 1, flexDirection: 'row',
                                                                                 color: '#343A40',
-                                                                                // fontWeight: 'bold',
-                                                                                fontSize: 12, lineHeight: 25,
-                                                                                fontFamily: 'inter',
+                                                                                fontWeight: 'bold',
+                                                                                fontSize: width < 1024 ? 12 : 14, lineHeight: 25,
+                                                                                // fontFamily: 'inter',
                                                                                 backgroundColor: '#E7EBEE',
                                                                             }} ellipsizeMode='tail'>
                                                                                 {category === '' ? ' ' : category}
