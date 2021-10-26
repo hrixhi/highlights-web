@@ -1523,7 +1523,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             overflow: "hidden",
                             height: 35,
                             marginTop: 20,
-                            alignSelf: 'flex-end'
+                            alignSelf: 'center'
                         }}>
                         <Text
                             style={{
