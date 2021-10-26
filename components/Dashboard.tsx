@@ -814,78 +814,82 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
             justifyContent: 'center'
             //paddingVertical: 20 
         }}>
-            <TouchableOpacity
-                style={{
-                    justifyContent: "center",
-                    flexDirection: "column",
-                    backgroundColor: '#efefef'
-                }}
-                onPress={() => {
-                    const temp = JSON.parse(JSON.stringify(indexMap))
-                    temp[key] = 0
-                    setIndexMap(temp)
-                }}>
-                <Text style={activeTab === 'Content' ? styles.allGrayFill1 : styles.all1}>
-                    <Ionicons name='library-outline' size={18} style={{ marginBottom: 5 }} />
-                </Text>
-                <Text style={activeTab === 'Content' ? styles.allGrayFill1 : styles.all1}>
-                    Library
-                </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-                style={{
-                    justifyContent: "center",
-                    flexDirection: "column",
-                    backgroundColor: '#efefef'
-                }}
-                onPress={() => handleEnterClassroom()}>
-                <Text style={activeTab === 'Meet' ? styles.allGrayFill1 : styles.all1}>
-                    <Ionicons name='videocam-outline' size={18} />
-                </Text>
-                <Text style={activeTab === 'Meet' ? styles.allGrayFill1 : styles.all1}>
-                    Meet
-                </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-                style={{
-                    justifyContent: "center",
-                    flexDirection: "column",
-                    backgroundColor: '#efefef'
-                }}
-                onPress={() => {
-                    const temp = JSON.parse(JSON.stringify(indexMap))
-                    temp[key] = 2
-                    setIndexMap(temp)
-                }}>
-                <Text style={activeTab === 'Discuss' ? styles.allGrayFill1 : styles.all1}>
-                    <Ionicons name='chatbubbles-outline' size={18} />
-                </Text>
-                <Text style={activeTab === 'Discuss' ? styles.allGrayFill1 : styles.all1}>
-                    Discuss
-                </Text>
-            </TouchableOpacity>
-            {
-                key.split('-SPLIT-')[2] === userId ?
-                    <TouchableOpacity
-                        style={{
-                            justifyContent: "center",
-                            flexDirection: "column",
-                            backgroundColor: '#efefef'
-                        }}
-                        onPress={() => {
-                            const temp = JSON.parse(JSON.stringify(indexMap))
-                            temp[key] = 3
-                            setIndexMap(temp)
-                        }}>
-                        <Text style={activeTab === 'Settings' ? styles.allGrayFill1 : styles.all1}>
-                            <Ionicons name='build-outline' size={18} />
-                        </Text>
-                        <Text style={activeTab === 'Settings' ? styles.allGrayFill1 : styles.all1}>
-                            Settings
-                        </Text>
-                    </TouchableOpacity>
-                    : null
-            }
+            <View style={{
+                flexDirection: 'row', justifyContent: 'center', maxWidth: 900, flex: 1, backgroundColor: '#efefef'
+            }}>
+                <TouchableOpacity
+                    style={{
+                        justifyContent: "center",
+                        flexDirection: "column",
+                        backgroundColor: '#efefef'
+                    }}
+                    onPress={() => {
+                        const temp = JSON.parse(JSON.stringify(indexMap))
+                        temp[key] = 0
+                        setIndexMap(temp)
+                    }}>
+                    <Text style={activeTab === 'Content' ? styles.allGrayFill1 : styles.all1}>
+                        <Ionicons name='library-outline' size={18} style={{ marginBottom: 5 }} />
+                    </Text>
+                    <Text style={activeTab === 'Content' ? styles.allGrayFill1 : styles.all1}>
+                        Library
+                    </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={{
+                        justifyContent: "center",
+                        flexDirection: "column",
+                        backgroundColor: '#efefef'
+                    }}
+                    onPress={() => handleEnterClassroom()}>
+                    <Text style={activeTab === 'Meet' ? styles.allGrayFill1 : styles.all1}>
+                        <Ionicons name='videocam-outline' size={18} />
+                    </Text>
+                    <Text style={activeTab === 'Meet' ? styles.allGrayFill1 : styles.all1}>
+                        Meet
+                    </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={{
+                        justifyContent: "center",
+                        flexDirection: "column",
+                        backgroundColor: '#efefef'
+                    }}
+                    onPress={() => {
+                        const temp = JSON.parse(JSON.stringify(indexMap))
+                        temp[key] = 2
+                        setIndexMap(temp)
+                    }}>
+                    <Text style={activeTab === 'Discuss' ? styles.allGrayFill1 : styles.all1}>
+                        <Ionicons name='chatbubbles-outline' size={18} />
+                    </Text>
+                    <Text style={activeTab === 'Discuss' ? styles.allGrayFill1 : styles.all1}>
+                        Discuss
+                    </Text>
+                </TouchableOpacity>
+                {
+                    key.split('-SPLIT-')[2] === userId ?
+                        <TouchableOpacity
+                            style={{
+                                justifyContent: "center",
+                                flexDirection: "column",
+                                backgroundColor: '#efefef'
+                            }}
+                            onPress={() => {
+                                const temp = JSON.parse(JSON.stringify(indexMap))
+                                temp[key] = 3
+                                setIndexMap(temp)
+                            }}>
+                            <Text style={activeTab === 'Settings' ? styles.allGrayFill1 : styles.all1}>
+                                <Ionicons name='build-outline' size={18} />
+                            </Text>
+                            <Text style={activeTab === 'Settings' ? styles.allGrayFill1 : styles.all1}>
+                                Settings
+                            </Text>
+                        </TouchableOpacity>
+                        : null
+                }
+            </View>
         </View>)
     }
 
@@ -1265,7 +1269,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                     }}>
                                                                         <View style={{
                                                                             backgroundColor: '#efefef',
-                                                                            marginBottom: 10
+                                                                            // marginBottom: 10
                                                                         }}>
                                                                             <Text style={{
                                                                                 flex: 1, flexDirection: 'row',
