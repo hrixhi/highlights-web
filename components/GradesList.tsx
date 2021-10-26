@@ -161,7 +161,7 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
     }
 
     const renderGradeStatsTabs = () => {
-        return (<View style={{ flexDirection: "row" }}>
+        return (<View style={{ flexDirection: "row", backgroundColor: '#efefef' }}>
             {/* <TouchableOpacity
                 style={{
                     justifyContent: "center",
@@ -184,14 +184,14 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 }}>
                 <Text style={showStatistics ? styles.allGrayFill : styles.all}>Statistics</Text>
             </TouchableOpacity> */}
-            <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end', width: '100%' }}>
+            <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end', width: '100%', backgroundColor: '#efefef', marginBottom: 20 }}>
                 {(scores.length === 0 || cues.length === 0 || !props.isOwner) ? null :
                     <TouchableOpacity
                         onPress={() => {
                             exportGrades()
                         }}
                         style={{
-                            backgroundColor: 'white',
+                            backgroundColor: '#efefef',
                             overflow: 'hidden',
                             height: 35,
                             // marginTop: 15,
@@ -374,19 +374,16 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
 
     return (
         <View style={{
-            backgroundColor: 'white',
+            backgroundColor: '#efefef',
             width: '100%',
             height: '100%',
             // paddingRight: 20,
             // paddingLeft: Dimensions.get('window').width < 1024 ? 20 : 0,
-            paddingTop: 0,
-            borderTopRightRadius: 0,
-            borderTopLeftRadius: 0
         }}>
             {renderGradeStatsTabs()}
             {
                 props.scores.length === 0 || cues.length === 0 ?
-                    <View style={{ backgroundColor: 'white' }}>
+                    <View style={{ backgroundColor: '#efefef' }}>
                         <Text style={{ width: '100%', color: '#393939', fontSize: 20, paddingVertical: 100, paddingHorizontal: 5, fontFamily: 'inter' }}>
                             {
                                 cues.length === 0 ? PreferredLanguageText('noGraded') : PreferredLanguageText('noStudents')
@@ -398,8 +395,13 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                         width: '100%',
                         backgroundColor: 'white',
                         // flex: 1,
-                        paddingTop: 30,
-                        maxHeight: 500
+                        paddingTop: 10,
+                        maxHeight: 500,
+                        paddingHorizontal: 10,
+                        borderBottomRightRadius: 10,
+                        borderTopRightRadius: 10,
+                        borderLeftColor: props.channelColor,
+                        borderLeftWidth: 3,
                     }}
                         key={JSON.stringify(props.scores)}
                     >
@@ -443,14 +445,14 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             nestedScrollEnabled={true}
                         >
                             <View style={{ minHeight: 70, flexDirection: 'row', overflow: 'hidden', paddingBottom: 10, borderBottomWidth: 1, borderBottomColor: '#efefef' }} key={"-"}>
-                                {/* <View style={styles.col} key={'0,0'}>
+                                <View style={styles.col} key={'0,0'}>
                                     {props.isOwner ? <CustomTextInput
                                         value={studentSearch}
                                         onChangeText={(val: string) => setStudentSearch(val)}
-                                        placeholder={"Filter"}
+                                        placeholder={"Search"}
                                         placeholderTextColor={'#393939'}
                                     /> : null}
-                                </View> */}
+                                </View>
                                 {
                                     cues.map((cue: any, col: number) => {
                                         const { title } = htmlStringParser(cue.cue)
@@ -484,6 +486,15 @@ const GradesList: React.FunctionComponent<{ [label: string]: any }> = (props: an
                                         </View>
                                 }
                             </View>
+
+                            {/* Search results empty */}
+                            {
+                                scores.length === 0 ? <View>
+                                    <Text style={{ width: '100%', color: '#393939', fontSize: 20, paddingVertical: 50, paddingHorizontal: 5, fontFamily: 'inter' }}>
+                                        No Students.
+                                    </Text>
+                                </View> : null
+                            }
 
                             <ScrollView
                                 showsVerticalScrollIndicator={false}
@@ -600,7 +611,7 @@ export default React.memo(GradesList, (prev, next) => {
 
 const styles = StyleSheet.create({
     row: { minHeight: 70, flexDirection: 'row', overflow: 'hidden', borderBottomColor: '#e0e0e0', borderBottomWidth: 1 },
-    col: { width: 120, justifyContent: 'center', display: 'flex', flexDirection: 'column', padding: 7, },
+    col: { width: Dimensions.get('window').width < 768 ? 90 : 120, justifyContent: 'center', display: 'flex', flexDirection: 'column', padding: 7, },
     all: {
         fontSize: 14,
         color: '#006AFF',

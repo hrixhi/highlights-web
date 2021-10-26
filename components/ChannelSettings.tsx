@@ -233,7 +233,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
         return (<View style={{ width: '100%', flexDirection: 'column', backgroundColor: 'white', marginTop: 20 }}>
             <View style={{ backgroundColor: 'white', }}>
                 <View style={{ backgroundColor: 'white', }}>
-                    <label style={{ width: 150 }}>
+                    <label style={{ width: Dimensions.get('window').width < 768 ? 120 : 150 }}>
                         <Select
                             touchUi={true}
                             value={activeRole}
@@ -259,7 +259,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
             <View style={{ flexDirection: 'row', marginTop: 15 }}>
                 <View style={{ backgroundColor: 'white', paddingRight: 20 }}>
                     <View style={{ backgroundColor: 'white', }}>
-                        <label style={{ width: 150 }}>
+                        <label style={{ width: Dimensions.get('window').width < 768 ? 120 : 150 }}>
                             <Select
                                 touchUi={true}
                                 value={activeGrade}
@@ -283,7 +283,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                 </View>
                 <View style={{ backgroundColor: 'white', }}>
                     <View style={{ backgroundColor: 'white',}}>
-                        <label style={{ width: 150 }}>
+                        <label style={{ width: Dimensions.get('window').width < 768 ? 120 : 150 }}>
                             <Select
                                 touchUi={true}
                                 value={activeSection}
@@ -667,7 +667,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                 justifyContent: "center",
                 display: "flex",
                 flexDirection: "column",
-                backgroundColor: "#e7ebee",
+                backgroundColor: "#efefef",
                 paddingVertical: 100
             }}>
             <ActivityIndicator color={"#393939"} />
@@ -925,10 +925,10 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
             borderLeftWidth: 3,
             borderColor: props.channelColor,
             borderTopRightRadius: 10,
-            borderBottomRightRadius: 10
+            borderBottomRightRadius: 10,
         }}>
             <View style={styles.screen} >
-                <View style={{ backgroundColor: 'white', paddingTop: 20 }}>
+                <View style={{ backgroundColor: 'white', paddingTop: 20, paddingHorizontal: 10, }}>
                     <View
                         style={{
                             maxWidth: 400,
@@ -1036,8 +1036,8 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     }}
                                 /> */}
 
-                                <div style={{ width: '100%', maxWidth: 320 }} >
-                                    <label style={{ width: '100%', maxWidth: 320 }}>
+                                <div style={{ width: '100%', maxWidth: Dimensions.get('window').width < 768 ? 280 : 320 }} >
+                                    <label style={{ width: '100%', maxWidth: Dimensions.get('window').width < 768 ? 280 : 320 }}>
                                         <Select
                                             themeVariant="light"
                                             selectMultiple={true}
@@ -1169,7 +1169,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     lineHeight: 35,
                                     color: 'white',
                                     fontSize: 12,
-                                    backgroundColor: '#3289d0',
+                                    backgroundColor: '#006AFF',
                                     paddingHorizontal: 20,
                                     fontFamily: 'inter',
                                     height: 35,
@@ -1194,10 +1194,10 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 <Text style={{
                                     textAlign: 'center',
                                     lineHeight: 35,
-                                    color: '#3289d0',
+                                    color: '#006AFF',
                                     borderWidth: 1,
                                     borderRadius: 15,
-                                    borderColor: '#3289d0',
+                                    borderColor: '#006AFF',
                                     backgroundColor: '#fff',
                                     fontSize: 12,
                                     paddingHorizontal: 20,
@@ -1242,7 +1242,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                             lineHeight: 35,
                                             color: '#16181C',
                                             fontSize: 12,
-                                            backgroundColor: '#E7EBEE',
+                                            backgroundColor: '#efefef',
                                             paddingHorizontal: 20,
                                             fontFamily: 'inter',
                                             height: 35,

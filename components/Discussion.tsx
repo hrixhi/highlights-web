@@ -113,7 +113,7 @@ const Discussion: React.FunctionComponent<{ [label: string]: any }> = (props: an
     return (
         <View style={{
             width: '100%',
-            backgroundColor: '#e7ebee',
+            backgroundColor: '#efefef',
             marginBottom: 20
         }}
         >
@@ -121,7 +121,7 @@ const Discussion: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 opacity: modalAnimation,
                 width: '100%',
                 height: '100%',
-                backgroundColor: '#e7ebee',
+                backgroundColor: '#efefef',
                 borderTopRightRadius: 0,
                 borderTopLeftRadius: 0
             }}>
@@ -133,7 +133,7 @@ const Discussion: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             justifyContent: 'center',
                             flex: 1,
                             flexDirection: 'column',
-                            backgroundColor: '#e7ebee'
+                            backgroundColor: '#efefef'
                         }}>
                             <ActivityIndicator color={'#393939'} />
                         </View>

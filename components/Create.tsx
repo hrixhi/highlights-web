@@ -1179,7 +1179,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                             style={{
                               fontSize: 14,
                               color: '#16181C',
-                              fontWeight: 'bold',
                               fontFamily: 'Inter'
                             }}
                           >
@@ -1267,7 +1266,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                               style={{
                                 fontSize: 14,
                                 color: '#16181C',
-                                fontWeight: 'bold',
                                 fontFamily: 'Inter'
                               }}
                             >
@@ -1349,7 +1347,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                               style={{
                                 fontSize: 14,
                                 color: '#16181C',
-                                fontWeight: 'bold',
                                 fontFamily: 'Inter'
                               }}
                             >
@@ -1831,7 +1828,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           <Text
                             style={{
                               fontSize: 14,
-                              fontWeight: 'bold',
                               color: '#16181C',
                               fontFamily: 'Inter'
                             }}
@@ -1929,13 +1925,15 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                         width: "100%",
                         borderRightWidth: 0,
                         borderColor: "#efefef",
-                        flexDirection: width < 1024 ? 'column' : 'row', paddingTop: 40
+                        flexDirection: width < 1024 ? 'column' : 'row', 
+                        paddingTop: 40,
+                        alignItems: width < 1024 ? 'flex-start' : 'center',
+                        paddingBottom: 15,
                       }}
                     >
                       <View
                         style={{
                           flex: 1, flexDirection: 'row',
-                          paddingBottom: 15,
                           backgroundColor: "white",
                         }}
                       >
@@ -1943,7 +1941,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           style={{
                             fontSize: 14,
                             color: '#16181C',
-                            fontWeight: 'bold',
                             fontFamily: 'Inter'
                           }}
                         >
@@ -2010,7 +2007,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           style={{
                             fontSize: 14,
                             color: '#16181C',
-                            fontWeight: 'bold',
                             fontFamily: 'Inter'
                           }}
                         >
@@ -2060,7 +2056,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                             style={{
                               fontSize: 14,
                               color: '#16181C',
-                              fontWeight: 'bold',
                               fontFamily: 'Inter'
                             }}
                           >
@@ -2269,7 +2264,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                           <Text
                             style={{
                               fontSize: 14,
-                              fontWeight: 'bold',
                               color: '#16181C',
                               fontFamily: 'Inter'
                             }}
@@ -2380,7 +2374,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                         <Text
                           style={{
                             fontSize: 14,
-                            fontWeight: 'bold',
                             color: '#16181C'
                           }}
                         >
@@ -2523,7 +2516,6 @@ const Create: React.FunctionComponent<{ [label: string]: any }> = (
                         <Text
                           style={{
                             fontSize: 14,
-                            fontWeight: 'bold',
                             color: '#16181C'
                           }}
                         >

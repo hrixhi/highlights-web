@@ -356,7 +356,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
 
     return (
         <View style={{
-            backgroundColor: 'white',
+            backgroundColor: '#efefef',
             width: '100%',
             // height: '100%',
             // paddingHorizontal: 20,
@@ -366,43 +366,14 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
             <Text style={{ width: '100%', textAlign: 'center' }}>
                 {/* <Ionicons name='chevron-down' size={15} color={'#e0e0e0'} /> */}
             </Text>
-            <View style={{ backgroundColor: 'white', flexDirection: 'row', paddingBottom: 20, width: '100%', justifyContent: 'flex-end' }}>
-                {(pastMeetings.length === 0 || channelAttendances.length === 0 || !isOwner) ? null :
-                    <TouchableOpacity
-                        style={{
-                            backgroundColor: 'white',
-                            overflow: 'hidden',
-                            height: 35,
-                            marginTop: 10,
-                            // marginTop: 15,
-                            justifyContent: 'center',
-                            flexDirection: 'row'
-                        }}
-                        onPress={() => {
-                            exportAttendance()
-                        }}
-                    >
-                        <Text style={{
-                            textAlign: 'center',
-                            lineHeight: 35,
-                            color: '#006AFF',
-                            fontSize: 12,
-                            borderColor: '#006AFF',
-                            borderWidth: 1,
-                            paddingHorizontal: 20,
-                            fontFamily: 'inter',
-                            height: 35,
-                            // width: 100,
-                            borderRadius: 15,
-                            textTransform: 'uppercase'
+            <View style={{ backgroundColor: '#efefef', flexDirection: 'row', paddingBottom: 20, width: '100%', justifyContent: 'flex-end' }}>
+            {pastMeetings.length === 0 || channelAttendances.length === 0 ? null : <View style={{ backgroundColor: '#efefef' }} >
+                    <View style={{ display: 'flex', 
+                        width: "100%", 
+                        flexDirection: "row", 
+                        backgroundColor: '#efefef',
+                        alignItems: 'center'
                         }}>
-                            DOWNLOAD
-                        </Text>
-                    </TouchableOpacity>
-                }
-                <View style={{ flex: 1, flexDirection: 'row' }} />
-                {pastMeetings.length === 0 || channelAttendances.length === 0 ? null : <View>
-                    <View style={{ display: 'flex', width: "100%", flexDirection: "row" }}>
                         <Datepicker
                             themeVariant="light"
                             controls={['calendar']}
@@ -429,6 +400,39 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                     </View>
                 </View>
                 }
+                <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#efefef' }} />
+                {(pastMeetings.length === 0 || channelAttendances.length === 0 || !isOwner) ? null :
+                    <TouchableOpacity
+                        style={{
+                            backgroundColor: '#efefef',
+                            overflow: 'hidden',
+                            height: 35,
+                            // marginTop: 15,
+                            justifyContent: 'center',
+                            flexDirection: 'row'
+                        }}
+                        onPress={() => {
+                            exportAttendance()
+                        }}
+                    >
+                        <Text style={{
+                            textAlign: 'center',
+                            lineHeight: 35,
+                            color: '#006AFF',
+                            fontSize: 12,
+                            borderColor: '#006AFF',
+                            borderWidth: 1,
+                            paddingHorizontal: 20,
+                            fontFamily: 'inter',
+                            height: 35,
+                            // width: 100,
+                            borderRadius: 15,
+                            textTransform: 'uppercase'
+                        }}>
+                            DOWNLOAD
+                        </Text>
+                    </TouchableOpacity>
+                }
             </View>
 
             {
@@ -440,17 +444,17 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                             justifyContent: 'center',
                             display: 'flex',
                             flexDirection: 'column',
-                            backgroundColor: 'white',
+                            backgroundColor: '#efefef',
                             borderTopRightRadius: 0,
                             borderTopLeftRadius: 0,
-                            paddingVertical: 100
+                            paddingVertical: 100,
                         }}>
                             <ActivityIndicator color={'#393939'} />
                         </View>
-                        : <View style={{ backgroundColor: 'white' }}>
+                        : <View style={{ backgroundColor: '#efefef' }}>
                             <Text style={{ width: '100%', color: '#393939', fontSize: 20, paddingVertical: 100, paddingHorizontal: 5, fontFamily: 'inter', }}>
                                 {
-                                    pastMeetings.length === 0 ? "No past meetings" : "No Students"
+                                    pastMeetings.length === 0 ? "No past meetings." : "No Students."
                                     // PreferredLanguageText('noGraded') : PreferredLanguageText('noStudents')
                                 }
                             </Text>
@@ -461,7 +465,13 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                         backgroundColor: 'white',
                         flex: 1,
                         maxHeight: 500,
-                        flexDirection: 'row'
+                        flexDirection: 'row',
+                        paddingHorizontal: 10,
+                        borderBottomRightRadius: 10,
+                        borderTopRightRadius: 10,
+                        paddingTop: 10,
+                        borderLeftColor: props.channelColor,
+                        borderLeftWidth: 3, 
                     }}
                         key={JSON.stringify(channelAttendances)}
                     >
@@ -591,7 +601,7 @@ export default AttendanceList
 
 const styles = StyleSheet.create({
     row: { minHeight: 70, flexDirection: 'row', overflow: 'hidden', borderBottomColor: '#e0e0e0', borderBottomWidth: 1 },
-    col: { width: 120, justifyContent: 'center', display: 'flex', flexDirection: 'column', padding: 7, },
+    col: { width: Dimensions.get('window').width < 768 ? 90 : 120, justifyContent: 'center', display: 'flex', flexDirection: 'column', padding: 7, },
     text: {
         fontSize: 12,
         color: "#393939",
