@@ -3326,7 +3326,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
 
     const renderShareWithOptions = () => {
         return props.cue.channelId !== "" && isOwner ? (
-            <View style={{ width: "100%", flexDirection: width < 1024 ? 'column' : 'row', paddingTop: 40 }}>
+            <View style={{ width: "100%", flexDirection: width < 1024 ? 'column' : 'row' }}>
                 <View
                     style={{
                         paddingBottom: 15,
@@ -3335,7 +3335,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     }}>
                     <Text style={{
                         fontSize: 14,
-                        fontWeight: 'bold',
                         color: '#16181C',
                         fontFamily: 'Inter'
                         // textTransform: 'uppercase'
@@ -3458,7 +3457,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     }}>
                     <Text style={{
                         fontSize: 14,
-                        fontWeight: 'bold',
                         color: '#16181C',
                         fontFamily: 'Inter'
                     }}>{PreferredLanguageText("submissionRequired")}</Text>
@@ -3573,7 +3571,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 flexDirection: 'row',
                                 alignItems: 'center',
                                 marginTop: 10,
-                                marginLeft: 'auto'
+                                marginLeft: width < 1024 ? 0 : 'auto'
                             }}>
                             <Text
                                 style={{
@@ -3664,7 +3662,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     }}>
                     <Text style={{
                         fontSize: 14,
-                        fontWeight: 'bold',
                         color: '#16181C',
                         fontFamily: 'Inter'
                     }}>Grade Weight</Text>
@@ -3697,7 +3694,7 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                                 display: "flex",
                                 flexDirection: "row",
                                 backgroundColor: "white",
-                                justifyContent: 'flex-end',
+                                justifyContent: width < 1024 ? 'flex-start' : 'flex-end',
                                 alignItems: 'center'
                             }}>
                             {isOwner ? (
@@ -3756,7 +3753,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     }}>
                     <Text style={{
                         fontSize: 14,
-                        fontWeight: 'bold',
                         color: '#16181C',
                         fontFamily: 'Inter'
                     }}>Late Submission</Text>
@@ -3884,7 +3880,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         <Text
                             style={{
                                 fontSize: 14,
-                                fontWeight: 'bold',
                                 color: '#16181C',
                                 fontFamily: 'Inter'
                             }}
@@ -3924,7 +3919,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         <Text
                             style={{
                                 fontSize: 14,
-                                fontWeight: 'bold',
                                 color: '#16181C',
                                 fontFamily: 'Inter'
                             }}
@@ -4012,18 +4006,18 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     width: "100%",
                     borderRightWidth: 0,
                     flexDirection: width < 1024 ? 'column' : 'row',
+                    alignItems: width < 1024 ? 'flex-start' : 'center',
                     paddingTop: 40,
+                    paddingBottom: 15,
                     borderColor: "#efefef",
                 }}>
                 <View
                     style={{
                         flexDirection: 'row', flex: 1,
-                        paddingBottom: 15,
                         backgroundColor: "white"
                     }}>
                     <Text style={{
                         fontSize: 14,
-                        fontWeight: 'bold',
                         color: '#16181C',
                         fontFamily: 'Inter'
                     }}>{PreferredLanguageText("category")}</Text>
@@ -4185,20 +4179,20 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                     width: "100%",
                     borderRightWidth: 0,
                     flexDirection: width < 1024 ? 'column' : 'row',
+                    alignItems: width < 1024 ? 'flex-start' : 'center',
                     paddingTop: 40,
-                    borderColor: "#efefef"
+                    borderColor: "#efefef",
+                    paddingBottom: 15
                 }}>
                 <View
                     style={{
                         flexDirection: 'row',
                         flex: 1,
-                        paddingBottom: 15,
                         backgroundColor: "white"
                     }}>
                     <Text style={{
                         fontSize: 14,
                         color: '#16181C',
-                        fontWeight: 'bold',
                         fontFamily: 'Inter'
                     }}>{PreferredLanguageText("priority")}</Text>
                 </View>
@@ -4248,20 +4242,20 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                 style={{
                     width: "100%",
                     flexDirection: width < 1024 ? 'column' : 'row',
+                    alignItems: width < 1024 ? 'flex-start' : 'center',
                     borderRightWidth: 0,
                     borderColor: "#efefef",
                     paddingTop: 40,
+                    paddingBottom: 15
                 }}>
                 <View
                     style={{
                         flexDirection: 'row', flex: 1,
                         // paddingTop: 40,
-                        paddingBottom: 15,
                         backgroundColor: "white"
                     }}>
                     <Text style={{
                         fontSize: 14,
-                        fontWeight: 'bold',
                         color: '#16181C',
                         fontFamily: 'Inter',
                     }}>Forward</Text>
@@ -4361,7 +4355,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                         }}>
                         <Text style={{
                             fontSize: 14,
-                            fontWeight: 'bold',
                             color: '#16181C',
                             fontFamily: 'Inter'
                         }}>Remind</Text>
@@ -4405,8 +4398,8 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             }}>
                             <Text style={{
                                 fontSize: 14,
-                                fontWeight: 'bold',
-                                color: '#16181C'
+                                color: '#16181C',
+                                fontFamily: 'Inter'
                             }}>Repeat</Text>
                         </View>
                         <View style={{}}>
@@ -4603,7 +4596,6 @@ const UpdateControls: React.FunctionComponent<{ [label: string]: any }> = (props
                             }}>
                             <Text style={{
                                 fontSize: 14,
-                                fontWeight: 'bold',
                                 color: '#16181C',
                                 fontFamily: 'Inter'
                             }}>Indefinitely</Text>

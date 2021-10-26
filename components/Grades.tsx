@@ -60,7 +60,7 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 const u = await AsyncStorage.getItem('user')
                                 if (u) {
                                     const user = JSON.parse(u)
-                                    if (user._id.toString().trim() === props.channelCreatedBy.toString().trim()) {
+                                    if (user._id.toString().trim() === props.channelCreatedBy.toString().trim() || res2.data.channel.getGrades.length === 0) {
                                         // all scores
                                         setScores(res2.data.channel.getGrades)
                                     } else {
@@ -69,8 +69,6 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                             return u.userId.toString().trim() === user._id.toString().trim()
                                         })
 
-                                        // if it is a quiz and not release submission then set Graded to false
-                                       
                                             const { scores } = score;
 
                                             const updateScores = scores.map((x: any) => {
@@ -93,7 +91,7 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                                     return x
                                                 }
                                             })
-
+                                            
                                             score.scores = updateScores;
 
                                         const singleScoreArray = [{ ...score }]
@@ -110,6 +108,7 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                                 }).start();
                             }
                         }).catch(err => {
+                            console.log("Error", err);
                             Alert(couldNotLoadSubscribersAlert, checkConnectionAlert);
                             setLoading(false)
                             modalAnimation.setValue(0)
@@ -130,7 +129,7 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     }
                 })
                 .catch((err) => {
-                    console.log(err);
+                    console.log("Error", err);
                     Alert(couldNotLoadSubscribersAlert, checkConnectionAlert);
                     setLoading(false)
                     modalAnimation.setValue(0)
@@ -253,6 +252,7 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                     }
                     loadSubmissionStatistics()
                 }).catch(err => {
+                    console.log("Error", err);
                     Alert(couldNotLoadSubscribersAlert, checkConnectionAlert);
                     setLoading(false)
                     modalAnimation.setValue(0)
@@ -275,7 +275,7 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
         <ScrollView style={{
             width: '100%',
             // maxHeight: 600,
-            backgroundColor: 'white',
+            backgroundColor: '#efefef',
             borderTopRightRadius: 0,
             borderTopLeftRadius: 0
         }}
@@ -290,7 +290,7 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                 opacity: modalAnimation,
                 width: '100%',
                 // maxHeight: 600,
-                backgroundColor: 'white',
+                backgroundColor: '#efefef',
                 borderTopRightRadius: 0,
                 borderTopLeftRadius: 0
             }}>
@@ -302,7 +302,7 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             justifyContent: 'center',
                             display: 'flex',
                             flexDirection: 'column',
-                            backgroundColor: 'white',
+                            backgroundColor: '#efefef',
                             borderTopRightRadius: 0,
                             borderTopLeftRadius: 0,
                             paddingVertical: 100
@@ -329,6 +329,7 @@ const Grades: React.FunctionComponent<{ [label: string]: any }> = (props: any) =
                             modifyGrade={modifyGrade}
                             openCueFromGrades={props.openCueFromGrades}
                             activeTab={props.activeTab}
+                            channelColor={props.channelColor}
                         />
                 }
             </Animated.View>

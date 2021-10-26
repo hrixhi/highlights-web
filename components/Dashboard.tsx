@@ -52,6 +52,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
         'Messages': [],
         'Threads': []
     })
+    const [resultCount, setResultCount] = useState(0);
     const [loadingSearchResults, setLoadingSearchResults] = useState(false);
 
     const [filterStart, setFilterStart] = useState<any>(null)
@@ -444,12 +445,16 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
             ).then((res: any) => {
                 console.log(res.data)
                 console.log(res.channels)
+                const totalCount = res.data.personalCues.length + res.data.channelCues.length + res.data.channels.length + res.data.threads.length + res.data.messages.length;
+
                 const tempResults = {
                     'Classroom': [...res.data.personalCues, ...res.data.channelCues],
                     'Channels': res.data.channels,
                     'Threads': res.data.threads,
                     'Messages': res.data.messages
                 }
+
+                setResultCount(totalCount)
                 setResults(tempResults)
                 setLoadingSearchResults(false);
             })
@@ -593,23 +598,25 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
             width: '100%',
             overflow: 'hidden',
             justifyContent: 'center',
+            backgroundColor: '#efefef' 
         }}>
         <View style={{
             width: '100%',
             maxWidth: 900,
-            paddingHorizontal: Dimensions.get('window').width < 1024 ? 20 : 0
+            paddingHorizontal: Dimensions.get('window').width < 1024 ? 20 : 0,
+            backgroundColor: '#efefef' 
         }}>
-            <Text style={{
+            {!loadingSearchResults && resultCount !== 0 ? <Text style={{
                 fontSize: 20,
-                paddingBottom: 10,
-                paddingTop: 15,
+                paddingVertical: 30,
                 fontFamily: 'inter',
                 // flex: 1,
                 lineHeight: 23,
-                color: '#006AFF'
+                color: '#006AFF',
+                backgroundColor: '#efefef' 
             }}>
-                <Ionicons name='search-outline' size={22} color="#393939" />
-            </Text>
+                {resultCount} Results
+            </Text> : null}
             <ScrollView
                 showsVerticalScrollIndicator={false}
                 horizontal={true}
@@ -620,14 +627,8 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
             >
                 {
                     (!loadingSearchResults && results && results[searchOptions[0]].length === 0 && results[searchOptions[1]].length === 0 && results[searchOptions[2]].length === 0 && results[searchOptions[3]].length === 0) ? <Text style={{
-                        fontSize: 14,
-                        paddingBottom: 20,
-                        paddingTop: 10,
-                        fontFamily: 'inter',
-                        flex: 1,
-                        lineHeight: 23,
-                        backgroundColor: '#fff'
-                    }}>None</Text> : null
+                        width: '100%', color: '#393939', fontSize: 20, paddingVertical: 50, fontFamily: 'inter', flex: 1, backgroundColor: '#efefef'
+                    }}>No results.</Text> : null
                 }
                 {
                     loadingSearchResults ? <View
@@ -637,12 +638,12 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             justifyContent: "center",
                             display: "flex",
                             flexDirection: "column",
-                            backgroundColor: "white"
+                            backgroundColor: '#efefef' 
                         }}>
                         <ActivityIndicator color={"#393939"} />
                     </View> : null
                 }
-                <View style={{ flexDirection: 'row' }}>
+                <View style={{ flexDirection: 'row', backgroundColor: '#efefef' }}>
                     {
                         searchOptions.map((option: any) => {
 
@@ -650,12 +651,12 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 return null
                             }
 
-                            return <View style={{ marginRight: 20, backgroundColor: '#fff' }}>
+                            return <View style={{ marginRight: 20, backgroundColor: '#efefef' }}>
                                 <Text style={{
-                                    flex: 1, flexDirection: 'row',
+                                    flexDirection: 'row',
                                     color: '#393939',
                                     // fontWeight: 'bold',
-                                    fontSize: 12, lineHeight: 25,
+                                    fontSize: 14, lineHeight: 25,
                                     fontFamily: 'inter',
                                     paddingBottom: 10
                                 }}>
@@ -726,13 +727,16 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         }
 
                                         return <View style={{
-                                            height: 70,
-                                            marginBottom: 15,
-                                            maxWidth: 175,
-                                            backgroundColor: '#fff',
-                                            alignSelf: 'center',
-                                            width: 160
-                                        }} key={index}>
+                                                // height: 150,
+                                                marginBottom: 15,
+                                                // marginBottom: i === priorities.length - 1 ? 0 : 20,
+                                                // maxWidth: 150,
+                                                backgroundColor: '#efefef',
+                                                width: '100%',
+                                                maxWidth: 150,
+                                            }}
+                                            key={index}
+                                        >
                                             <SearchResultCard
                                                 title={t}
                                                 subtitle={s}
@@ -1059,13 +1063,19 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         }}
                                         onPress={() => {
                                             const tempCollapse = JSON.parse(JSON.stringify(collapseMap))
+
+                                            Object.keys(tempCollapse).forEach((item: any, index: any) => { 
+                                                if (item === key) return;
+                                                tempCollapse[item] = false
+                                            })
+
                                             tempCollapse[key] = !collapseMap[key]
                                             setCollapseMap(tempCollapse)
                                         }}
                                     >
                                         <Text style={{
                                             fontSize: 16,
-                                            paddingBottom: 15,
+                                            paddingBottom: 20,
                                             paddingTop: 10,
                                             fontFamily: 'inter',
                                             flex: 1,
@@ -1094,7 +1104,14 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         }}>
                                             <TouchableOpacity
                                                 onPress={() => {
+
                                                     const tempCollapse = JSON.parse(JSON.stringify(collapseMap))
+
+                                                    Object.keys(tempCollapse).forEach((item: any, index: any) => { 
+                                                        if (item === key) return;
+                                                        tempCollapse[item] = false
+                                                    })
+
                                                     tempCollapse[key] = !collapseMap[key]
                                                     setCollapseMap(tempCollapse)
                                                 }}
@@ -1112,7 +1129,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         </View>
                                     </View>
                                 </View> : <View style={{
-                                    paddingTop: 10,
                                     backgroundColor: collapseMap[key] ? '#efefef' : '#fff',
                                     flexDirection: 'row', paddingBottom: 0,
                                     paddingHorizontal: width < 1024 && props.option === 'Classroom' ? 20 : 0,
@@ -1127,6 +1143,12 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         }}
                                         onPress={() => {
                                             const tempCollapse = JSON.parse(JSON.stringify(collapseMap))
+                                            
+                                            Object.keys(tempCollapse).forEach((item: any, index: any) => { 
+                                                if (item === key) return;
+                                                tempCollapse[item] = false
+                                            })
+                                            
                                             tempCollapse[key] = !collapseMap[key]
                                             setCollapseMap(tempCollapse)
                                         }}
@@ -1137,7 +1159,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 fontSize: 16,
                                                 paddingBottom: 15,
                                                 backgroundColor: collapseMap[key] ? '#efefef' : '#fff',
-                                                paddingTop: 10,
+                                                paddingTop: 20,
                                                 fontFamily: 'inter',
                                                 flex: 1,
                                                 lineHeight: 16,
@@ -1167,6 +1189,12 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                 onPress={() => {
                                                     const tempCollapse = JSON.parse(JSON.stringify(collapseMap))
                                                     tempCollapse[key] = !collapseMap[key]
+
+                                                    Object.keys(tempCollapse).forEach((item: any, index: any) => { 
+                                                        if (item === key) return;
+                                                        tempCollapse[item] = false
+                                                    })
+
                                                     setCollapseMap(tempCollapse)
                                                 }}
                                                 style={{ backgroundColor: collapseMap[key] ? '#efefef' : '#fff' }}
@@ -1231,6 +1259,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                             filterChoice={key.split('-SPLIT-')[0]}
                                                                             channelCreatedBy={key.split('-SPLIT-')[2]}
                                                                             refreshUnreadDiscussionCount={() => props.refreshUnreadDiscussionCount()}
+                                                                            channelColor={key.split('-SPLIT-')[3]}
                                                                         /> :
                                                                         // settings 
                                                                         // settings 
@@ -1239,14 +1268,25 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                         // settings 
                                                                         // settings 
                                                                         // settings 
-                                                                        <ChannelSettings
-                                                                            channelId={key.split('-SPLIT-')[1]}
-                                                                            refreshSubscriptions={props.refreshSubscriptions}
-                                                                            closeModal={() => {
-                                                                                // setShowHome(false)
-                                                                                // closeModal()
+                                                                        <View
+                                                                            style={{ 
+                                                                                width: '100%', 
+                                                                                maxWidth: 400, 
+                                                                                alignSelf: 'center',
+                                                                                borderTopRightRadius: 10,
+                                                                                borderBottomRightRadius: 10
                                                                             }}
-                                                                        />
+                                                                        >
+                                                                            <ChannelSettings
+                                                                                channelId={key.split('-SPLIT-')[1]}
+                                                                                refreshSubscriptions={props.refreshSubscriptions}
+                                                                                closeModal={() => {
+                                                                                    // setShowHome(false)
+                                                                                    // closeModal()
+                                                                                }}
+                                                                                channelColor={key.split('-SPLIT-')[3]}
+                                                                            />
+                                                                        </View>
                                                                 )
                                                         ) :
                                                         cueMap[key].length === 0 ?
@@ -1263,7 +1303,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                 {categoryMap[key].map((category: any, i: any) => {
                                                                     return <View style={{
                                                                         width: '100%',
-                                                                        maxWidth: 150,
+                                                                        maxWidth: 130,
                                                                         backgroundColor: '#efefef',
                                                                         marginRight: 15
                                                                     }}>
@@ -1285,7 +1325,8 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                         <View
                                                                             style={{
                                                                                 // borderWidth: 1,
-                                                                                maxWidth: 150,
+                                                                                maxWidth: 130,
+                                                                                paddingLeft: 5,
                                                                                 backgroundColor: '#efefef',
                                                                                 width: '100%'
                                                                                 // height: 190
@@ -1303,7 +1344,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                     // maxWidth: 150,
                                                                                     backgroundColor: '#efefef',
                                                                                     width: '100%',
-                                                                                    maxWidth: 150,
+                                                                                    maxWidth: 130,
                                                                                 }}
                                                                                     key={index}
                                                                                 >
@@ -1597,8 +1638,8 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                         :
                         <View style={{
                             // paddingBottom: Dimensions.get('window').width < 1024 ? 15 : 30,
-                            paddingHorizontal: width < 1024 && props.option !== 'Classroom' ? 20 : 0,
-                            maxWidth: props.option === 'Classroom' ? '100%' : 1000,
+                            paddingHorizontal: width < 1024 && props.option !== 'Classroom' && props.option !== 'Performance' ? 5 : 0,
+                            maxWidth: props.option === 'Classroom' || props.option === 'Performance' || props.option === "To Do" ? '100%' : 1000,
                             alignSelf: 'center',
                             width: '100%',
                             backgroundColor: props.option === 'To Do' ? '#efefef' : '#fff',

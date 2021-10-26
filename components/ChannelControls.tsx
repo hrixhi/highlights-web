@@ -503,7 +503,6 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                         <View style={{ backgroundColor: 'white' }}>
                             <Text style={{
                                 fontSize: 14,
-                                fontWeight: 'bold',
                                 color: '#16181C'
                             }}>
                                 {PreferredLanguageText('name')}
@@ -527,7 +526,6 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 <View style={{ backgroundColor: 'white' }}>
                                     <Text style={{
                                         fontSize: 14,
-                                        fontWeight: 'bold',
                                         color: '#16181C'
                                     }}>
                                         {PreferredLanguageText('enrolmentPassword')}
@@ -565,7 +563,6 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         }}>
                                         <Text style={{
                                             fontSize: 14,
-                                            fontWeight: 'bold',
                                             color: '#16181C'
                                         }}>Temporary</Text>
                                     </View>
@@ -609,7 +606,6 @@ const ChannelControls: React.FunctionComponent<{ [label: string]: any }> = (prop
                                         }}>
                                         <Text style={{
                                             fontSize: 14,
-                                            fontWeight: 'bold',
                                             color: '#16181C'
                                         }}>Theme</Text>
                                     </View>

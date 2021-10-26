@@ -113,7 +113,7 @@ const Discussion: React.FunctionComponent<{ [label: string]: any }> = (props: an
     return (
         <View style={{
             width: '100%',
-            backgroundColor: 'white',
+            backgroundColor: '#efefef',
             marginBottom: 20
         }}
         >
@@ -121,7 +121,7 @@ const Discussion: React.FunctionComponent<{ [label: string]: any }> = (props: an
                 opacity: modalAnimation,
                 width: '100%',
                 height: '100%',
-                backgroundColor: 'white',
+                backgroundColor: '#efefef',
                 borderTopRightRadius: 0,
                 borderTopLeftRadius: 0
             }}>
@@ -129,11 +129,11 @@ const Discussion: React.FunctionComponent<{ [label: string]: any }> = (props: an
                     loading
                         ? <View style={{
                             width: '100%',
-                            flex: 1,
+                            paddingVertical: 100,
                             justifyContent: 'center',
-                            display: 'flex',
+                            flex: 1,
                             flexDirection: 'column',
-                            backgroundColor: 'white'
+                            backgroundColor: '#efefef'
                         }}>
                             <ActivityIndicator color={'#393939'} />
                         </View>
@@ -155,6 +155,7 @@ const Discussion: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             reload={() => loadThreads()}
                             refreshUnreadDiscussionCount={() => refreshUnreadDiscussionCount()}
                             type={"Discussion"}
+                            channelColor={props.channelColor}
                         />
                 }
             </Animated.View>

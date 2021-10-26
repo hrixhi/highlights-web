@@ -220,7 +220,7 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
         // marginLeft: 10,
         lineHeight: 10,
         textAlign: 'left',
-        paddingTop: 2,
+        paddingVertical: 2,
         flex: 1
     },
     title: {

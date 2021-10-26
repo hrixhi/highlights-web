@@ -6,12 +6,13 @@ import _ from 'lodash'
 import { htmlStringParser } from '../helpers/HTMLParser';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+
 const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (props: any) => {
     const colorScheme = 'dark'
-    const styleObject = styles(colorScheme)
+    const styleObject = styles(colorScheme, props.colorCode)
     return (
         <View
-            style={props.style ? props.style : styleObject.swiper}
+            style={styleObject.swiper}
         >
             <TouchableOpacity
                 key={'textPage'}
@@ -34,18 +35,16 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                         </Text> : <Text style={styleObject.date}>{" "}</Text>}
                     </View>
                     <View style={{
-                        backgroundColor: '#efefef',
                         width: '100%', flex: 1,
                         height: '100%',
                         flexDirection: 'row'
                     }}>
-                        <View style={{ flex: 1, backgroundColor: '#efefef', flexDirection: 'row' }}>
+                        <View style={{ flex: 1, flexDirection: 'row' }}>
                             <Text
                                 ellipsizeMode={'tail'}
                                 numberOfLines={1}
                                 style={{
-                                    fontFamily: 'overpass',
-                                    // fontWeight: 'bold',
+                                    fontFamily: 'inter',
                                     fontSize: 12,
                                     lineHeight: 20,
                                     flex: 1,
@@ -62,12 +61,12 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                                 </Text>
 
                                 : null} */}
-                            {props.option === "Channels" && !props.subscribed ? <View style={{ paddingLeft: 10, backgroundColor: '#efefef' }}>
+                            {props.option === "Channels" && !props.subscribed ? <View style={{ paddingLeft: 10, }}>
                                 <TouchableOpacity
                                     onPress={() => props.handleSub()}
                                     style={{ marginTop: 1 }}
                                 >
-                                    <Text style={{ backgroundColor: '#efefef' }}>
+                                    <Text style={{ }}>
                                         <Ionicons name='enter-outline' size={18} color='#006AFF' />
                                     </Text>
                                 </TouchableOpacity>
@@ -77,7 +76,7 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
 
                 </View>
             </TouchableOpacity>
-            <View
+            {/* <View
                 style={{
                     backgroundColor: props.colorCode !== '' ? props.colorCode : '#16181C',
                     flex: 1,
@@ -88,35 +87,45 @@ const SearchResultCard: React.FunctionComponent<{ [label: string]: any }> = (pro
                     // borderBottomLeftRadius: 8,
                 }}
             >
-            </View>
+            </View> */}
         </View >
     );
 }
 
 export default SearchResultCard
 
-const styles: any = (colorScheme: any) => StyleSheet.create({
+const styles: any = (colorScheme: any, col: any) => StyleSheet.create({
     swiper: {
         height: '100%',
-        maxHeight: 75,
-        // borderRadius: 10,
+        backgroundColor: '#fff',
+        borderRadius: 1,
+        // borderTopRightRadius: 8,
+        // borderBottomRightRadius: 8,
+        // borderBottomRightRadius: 1,
         overflow: 'hidden',
         maxWidth: 175,
         width: '100%',
-        // borderWidth: 1,
+        borderWidth: 1,
         borderColor: '#efefef',
-        flexDirection: 'row'
+        flexDirection: 'row',
+        // shadowOffset: {
+        //         width: -3,
+        //         height: 0,
+        // },
+        // shadowOpacity: 0.8,
+        // shadowColor: 'red',
+        borderLeftColor: col,
+        borderLeftWidth: 3
     },
     card: {
-        maxWidth: 210,
+        // maxWidth: 210,
         height: '100%',
-        // borderTopRightRadius: 10,
-        // borderBottomRightRadius: 10,
-        // borderTop
-        width: '96%',
+        // borderTop,
+        width: 130,
+        minWidth: 130,
         padding: 10,
         paddingHorizontal: 10,
-        backgroundColor: '#efefef',
+        backgroundColor: '#fff',
     },
     flipCard: {
         height: '100%',
@@ -133,7 +142,7 @@ const styles: any = (colorScheme: any) => StyleSheet.create({
     },
     text: {
         // height: '100%',
-        backgroundColor: '#efefef'
+        backgroundColor: 'white'
     },
     flipText: {
         height: '100%',
@@ -145,7 +154,7 @@ const styles: any = (colorScheme: any) => StyleSheet.create({
         marginBottom: 5,
         color: '#efefef',
         // height: '25%',
-        backgroundColor: '#efefef',
+        backgroundColor: 'white',
         display: 'flex',
         flexDirection: 'row'
     },
@@ -182,7 +191,7 @@ const styles: any = (colorScheme: any) => StyleSheet.create({
     },
     titleFlip: {
         color: colorScheme === 'light' ? '#16181C' : '#16181C',
-        backgroundColor: colorScheme === 'light' ? '#efefef' : '#efefef',
+        backgroundColor: 'white',
         fontFamily: 'inter',
         fontSize: 13,
         // ,
