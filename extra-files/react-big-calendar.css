@@ -188,7 +188,7 @@ button.rbc-input::-moz-focus-inner {
   box-shadow: none;
   margin: 0;
   padding: 2px 5px;
-  /* background-color: #343A40; */
+  /* background-color: #393939; */
   border-radius: 5px;
   color: #fff;
   cursor: pointer;
@@ -416,7 +416,7 @@ button.rbc-input::-moz-focus-inner {
     font-size: 14px;
     min-height: 1em; }
   /* .rbc-day-slot .rbc-time-slot {
-    border-top: 1px solid #E7EBEE; } */
+    border-top: 1px solid #efefef; } */
 
 .rbc-time-view-resources .rbc-time-gutter,
 .rbc-time-view-resources .rbc-time-header-gutter {

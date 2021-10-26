@@ -385,9 +385,9 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                         <Text style={{
                             textAlign: 'center',
                             lineHeight: 35,
-                            color: '#3289d0',
+                            color: '#006AFF',
                             fontSize: 12,
-                            borderColor: '#3289d0',
+                            borderColor: '#006AFF',
                             borderWidth: 1,
                             paddingHorizontal: 20,
                             fontFamily: 'inter',
@@ -445,10 +445,10 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                             borderTopLeftRadius: 0,
                             paddingVertical: 100
                         }}>
-                            <ActivityIndicator color={'#343A40'} />
+                            <ActivityIndicator color={'#393939'} />
                         </View>
                         : <View style={{ backgroundColor: 'white' }}>
-                            <Text style={{ width: '100%', color: '#343A40', fontSize: 20, paddingVertical: 100, paddingHorizontal: 5, fontFamily: 'inter', }}>
+                            <Text style={{ width: '100%', color: '#393939', fontSize: 20, paddingVertical: 100, paddingHorizontal: 5, fontFamily: 'inter', }}>
                                 {
                                     pastMeetings.length === 0 ? "No past meetings" : "No Students"
                                     // PreferredLanguageText('noGraded') : PreferredLanguageText('noStudents')
@@ -476,7 +476,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                             nestedScrollEnabled={true}
                         >
                             <View>
-                                <View style={{ minHeight: 70, flexDirection: 'row', overflow: 'hidden', paddingBottom: 10, borderBottomWidth: 1, borderBottomColor: '#E7EBEE' }} key={"-"}>
+                                <View style={{ minHeight: 70, flexDirection: 'row', overflow: 'hidden', paddingBottom: 10, borderBottomWidth: 1, borderBottomColor: '#efefef' }} key={"-"}>
                                     <View style={styles.col} key={'0,0'} />
                                     <View style={styles.col} key={'0,0'} >
                                         <Text style={{ fontSize: 13, color: '#16181C', fontFamily: 'inter' }}>
@@ -535,7 +535,7 @@ const AttendanceList: React.FunctionComponent<{ [label: string]: any }> = (props
                                                             <TouchableOpacity disabled={!isOwner} onPress={() => onChangeAttendance(meeting.dateId, channelAttendance.userId, attendanceObject ? false : true)} style={{ marginBottom: 5, width: '100%', flexDirection: 'row', justifyContent: 'center' }}>
                                                                 {
                                                                     attendanceObject ?
-                                                                        <Ionicons name='checkmark-outline' size={15} color={'#3289d0'} />
+                                                                        <Ionicons name='checkmark-outline' size={15} color={'#006AFF'} />
                                                                         :
                                                                         isOwner ? <Ionicons name='checkmark-outline' size={15} color={'#e0e0e0'} /> : '-'
                                                                 }
@@ -594,7 +594,7 @@ const styles = StyleSheet.create({
     col: { width: 120, justifyContent: 'center', display: 'flex', flexDirection: 'column', padding: 7, },
     text: {
         fontSize: 12,
-        color: "#343A40",
+        color: "#393939",
         textAlign: "left",
         paddingHorizontal: 10
     },
@@ -603,7 +603,7 @@ const styles = StyleSheet.create({
         color: '#16181C',
         height: 22,
         paddingHorizontal: 20,
-        backgroundColor: '#E7EBEE',
+        backgroundColor: '#efefef',
         lineHeight: 22,
         fontFamily: 'inter'
     },
@@ -618,13 +618,13 @@ const styles = StyleSheet.create({
     },
     allGrayOutline: {
         fontSize: 12,
-        color: "#343A40",
+        color: "#393939",
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: "white",
         borderRadius: 1,
         borderWidth: 1,
-        borderColor: "#343A40",
+        borderColor: "#393939",
         lineHeight: 20
     },
 })

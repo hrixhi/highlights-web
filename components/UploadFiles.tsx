@@ -106,7 +106,7 @@ const FileUpload: React.FC<any> = (props: any) => {
             uploading ?
                 <Text
                     style={{
-                        color: "#3289d0",
+                        color: "#006AFF",
                         lineHeight: 35,
                         textAlign: "right",
                         fontSize: 14,
@@ -122,7 +122,7 @@ const FileUpload: React.FC<any> = (props: any) => {
                         ?
                         <Text
                             style={{
-                                color: "#3289d0",
+                                color: "#006AFF",
                                 // lineHeight: props.chat ? 40 : 35,
                                 textAlign: "right",
                                 fontSize: 12,
@@ -135,7 +135,7 @@ const FileUpload: React.FC<any> = (props: any) => {
                         :
                         <Text
                             style={{
-                                color: "#3289d0",
+                                color: "#006AFF",
                                 lineHeight: props.chat ? 40 : 35,
                                 textAlign: "right",
                                 fontSize: props.quiz ? 12 : 12,

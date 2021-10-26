@@ -87,7 +87,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                         {
                             props.cue.graded && showScore && !isOwner ? <Text style={{
                                 fontSize: 9,
-                                color: '#3289d0',
+                                color: '#006AFF',
                                 marginLeft: 10, textAlign: 'right'
                             }}>
                                 {props.cue.score}%
@@ -119,7 +119,7 @@ const Card: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                                     height: 20,
                                     borderRadius: 12,
                                     overflow: 'hidden',
-                                    backgroundColor: '#3289d0',
+                                    backgroundColor: '#006AFF',
                                     textAlign: 'center',
                                     zIndex: 150,
                                     marginLeft: 5,
@@ -152,7 +152,7 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
         maxWidth: 175,
         width: '100%',
         borderWidth: 1,
-        borderColor: '#E7EBEE',
+        borderColor: '#efefef',
         flexDirection: 'row',
         shadowOffset: {
                 width: -3,
@@ -210,13 +210,13 @@ const styles: any = (colorScheme: any, channelId: any, col: any) => StyleSheet.c
     },
     date: {
         fontSize: 9,
-        color: colorScheme === 'light' ? '#fff' : '#343A40',
+        color: colorScheme === 'light' ? '#fff' : '#393939',
         marginLeft: 10,
         lineHeight: 10,
     },
     date2: {
         fontSize: 9,
-        color: colorScheme === 'light' ? '#fff' : '#343A40',
+        color: colorScheme === 'light' ? '#fff' : '#393939',
         // marginLeft: 10,
         lineHeight: 10,
         textAlign: 'left',

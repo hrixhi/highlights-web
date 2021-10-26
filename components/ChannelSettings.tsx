@@ -670,7 +670,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                 backgroundColor: "#e7ebee",
                 paddingVertical: 100
             }}>
-            <ActivityIndicator color={"#343A40"} />
+            <ActivityIndicator color={"#393939"} />
         </View>
     }
 
@@ -700,7 +700,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                 width: '100%',
                                 fontSize: 14, 
                                 fontWeight: 'bold',
-                                color: '#343A40'
+                                color: '#393939'
                             }}>
                                 <Ionicons name='chevron-back-outline' size={22} color={'#16181C'} style={{ marginRight: 10 }} />
                             </Text>
@@ -816,8 +816,8 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 }}
                                                 style={{ height: 20 }}
                                                 trackColor={{
-                                                    false: "#E7EBEE",
-                                                    true: "#3289d0"
+                                                    false: "#efefef",
+                                                    true: "#006AFF"
                                                 }}
                                                 activeThumbColor="white"
                                             />
@@ -863,8 +863,8 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                                 }}
                                                 style={{ height: 20 }}
                                                 trackColor={{
-                                                    false: "#E7EBEE",
-                                                    true: "#3289d0"
+                                                     false: "#efefef",
+                                                     true: "#006AFF"
                                                 }}
                                                 activeThumbColor="white"
                                             />
@@ -875,32 +875,33 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                         }
 
 
-                        <View style={{ flexDirection: 'column', alignItems: 'center', marginTop: 50, paddingBottom: 50 }}>
-                            <TouchableOpacity
-                                onPress={() => handleDuplicate()}
-                                style={{
-                                    backgroundColor: 'white',
-                                    borderRadius: 15,
-                                    overflow: 'hidden',
-                                    height: 35,
-                                }}
-                            >
-                                <Text style={{
-                                    textAlign: 'center',
-                                    lineHeight: 35,
-                                    color: 'white',
-                                    fontSize: 12,
-                                    backgroundColor: '#3289d0',
-                                    paddingHorizontal: 20,
-                                    fontFamily: 'inter',
-                                    height: 35,
-                                    textTransform: 'uppercase',
-                                    width: 150
-                                }}>
-                                    SAVE
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
+
+                    <View style={{ flexDirection: 'column', alignItems: 'center', marginTop: 50, paddingBottom: 50 }}>
+                        <TouchableOpacity
+                            onPress={() => handleDuplicate()}
+                            style={{
+                                backgroundColor: 'white',
+                                borderRadius: 15,
+                                overflow: 'hidden',
+                                height: 35,
+                            }}
+                        >
+                            <Text style={{
+                                textAlign: 'center',
+                                lineHeight: 35,
+                                color: 'white',
+                                fontSize: 12,
+                                backgroundColor: '#006AFF',
+                                paddingHorizontal: 20,
+                                fontFamily: 'inter',
+                                height: 35,
+                                textTransform: 'uppercase',
+                                width: 150
+                            }}>
+                                SAVE
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
 
                     </ScrollView>
                 </View>
@@ -1254,6 +1255,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                                     : null
                             }
                         </View>
+
                     </View>
                 </View>
             </View>
@@ -1275,24 +1277,24 @@ const styles = StyleSheet.create({
     outline: {
         borderRadius: 1,
         borderWidth: 1,
-        borderColor: '#343A40'
+        borderColor: '#393939'
     },
     all: {
         fontSize: 14, fontFamily: 'inter',
-        color: '#343A40',
+        color: '#393939',
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: 'white'
     },
     allOutline: {
         fontSize: 14, fontFamily: 'inter',
-        color: '#343A40',
+        color: '#393939',
         height: 22,
         paddingHorizontal: 10,
         backgroundColor: 'white',
         borderRadius: 1,
         borderWidth: 1,
-        borderColor: '#343A40'
+        borderColor: '#393939'
     },
     colorBar: {
         width: '100%',
@@ -1304,7 +1306,7 @@ const styles = StyleSheet.create({
     },
     input: {
         width: '100%',
-        borderBottomColor: '#E7EBEE',
+        borderBottomColor: '#efefef',
         borderBottomWidth: 1,
         fontSize: 14, fontFamily: 'inter',
         paddingTop: 13,
@@ -1331,7 +1333,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         borderRadius: 1,
         borderWidth: 1,
-        borderColor: '#343A40'
+        borderColor: '#393939'
     },
 });
 

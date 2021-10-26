@@ -329,7 +329,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                     }}
                                 >
                                     <Text style={{ lineHeight: 35, width: '100%', textAlign: 'center' }}>
-                                        <Ionicons name='chevron-back-outline' size={30} color={'#343A40'} />
+                                        <Ionicons name='chevron-back-outline' size={30} color={'#393939'} />
                                     </Text>
                                 </TouchableOpacity>
                             </View>
@@ -347,7 +347,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             // paddingRight: Dimensions.get('window').width < 1024 ? 0 : 25,
                             // marginRight: Dimensions.get('window').width < 1024 ? 0 : 20,
                             // borderRightWidth: Dimensions.get('window').width < 1024 ? 0 : 1,
-                            borderColor: '#E7EBEE'
+                            borderColor: '#efefef'
                         }}>
                             <Profile
                                 closeModal={() => props.closeModal()}
@@ -388,7 +388,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                 }}
                                                 style={{
                                                     backgroundColor: '#fff',
-                                                    borderColor: '#E7EBEE',
+                                                    borderColor: '#efefef',
                                                     borderBottomWidth: item.question === 'Planner' ? 0 : 1,
                                                     width: '100%',
                                                     paddingBottom: 10,
@@ -403,14 +403,14 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                         fontFamily: 'inter',
                                                         flex: 1,
                                                         lineHeight: 16,
-                                                        color: item.isOpen ? '#3289d0' : '#16181C'
+                                                        color: item.isOpen ? '#006AFF' : '#16181C'
                                                     }}>
                                                         {item.question}
                                                     </Text>
                                                     <Text>
                                                         <Ionicons
                                                             name={item.isOpen ? 'chevron-up-outline' : 'chevron-down-outline'}
-                                                            color={item.isOpen ? '#343A40' : '#3289d0'}
+                                                            color={item.isOpen ? '#393939' : '#006AFF'}
                                                             size={18}
                                                         />
                                                     </Text>
@@ -447,7 +447,7 @@ const Walkthrough: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             </View>}
                 </View>
             </View>
-            <MessengerCustomerChat pageId="109965671259610" appId="746023139417168" themeColor="#3289d0" />
+            <MessengerCustomerChat pageId="109965671259610" appId="746023139417168" themeColor="#006AFF" />
         </View >
     );
 }

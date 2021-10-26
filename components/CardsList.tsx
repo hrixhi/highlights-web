@@ -62,8 +62,8 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
     return (
         <Animated.View style={{
-            borderColor: '#E7EBEE',
-            backgroundColor: '#E7EBEE',
+            borderColor: '#efefef',
+            backgroundColor: '#efefef',
             // borderBottomWidth: 2,
             // borderTopWidth: 1,
             height: ((dimensions.window.height) - 60),
@@ -76,21 +76,21 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
             <ScrollView
                 horizontal={true}
                 nestedScrollEnabled={true}
-                contentContainerStyle={{ width: '100%', backgroundColor: '#E7EBEE', paddingTop: 20, maxWidth: 900 }}
+                contentContainerStyle={{ width: '100%', backgroundColor: '#efefef', paddingTop: 20, maxWidth: 900 }}
             >
                 {
                     Object.keys(categoryMap).map((category: any, i: any) => {
                         return <ScrollView style={{
                             width: '100%',
                             maxWidth: 190,
-                            backgroundColor: '#E7EBEE',
+                            backgroundColor: '#efefef',
                             // marginRight: 25,
                             minWidth: 190
                         }}>
-                            <View style={{ backgroundColor: '#E7EBEE', paddingLeft: 23, marginBottom: 20 }}>
+                            <View style={{ backgroundColor: '#efefef', paddingLeft: 23, marginBottom: 20 }}>
                                 <Text style={{
                                     flex: 1, flexDirection: 'row',
-                                    color: '#343A40',
+                                    color: '#393939',
                                     fontSize: 14, lineHeight: 25,
                                     fontFamily: 'inter'
                                 }} ellipsizeMode='tail'>
@@ -100,7 +100,7 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             <View
                                 style={{
                                     // borderWidth: 1,
-                                    backgroundColor: '#E7EBEE',
+                                    backgroundColor: '#efefef',
                                     // height: 190,
                                     width: '100%'
                                 }}
@@ -115,7 +115,7 @@ const CardsList: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                         marginBottom: 20,
                                         // marginBottom: i === priorities.length - 1 ? 0 : 20,
                                         // maxWidth: 150,
-                                        backgroundColor: '#E7EBEE',
+                                        backgroundColor: '#efefef',
                                         width: 175, // marginRight: 25
                                     }}
                                         key={index}
@@ -188,7 +188,7 @@ const styleObject = (channelId: any) => {
             height: 20,
             marginTop: -2,
             borderRadius: 1,
-            backgroundColor: '#3289d0',
+            backgroundColor: '#006AFF',
             textAlign: 'center',
             zIndex: 50
         },

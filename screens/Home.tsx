@@ -1461,7 +1461,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 showForgotPassword ? '' : PreferredLanguageText('login')
               }
             </Text> */}
-            <Text style={{ fontSize: 15, color: '#343A40', fontFamily: 'overpass', paddingBottom: 30, textAlign: 'center' }}>
+            <Text style={{ fontSize: 15, color: '#393939', fontFamily: 'overpass', paddingBottom: 30, textAlign: 'center' }}>
               {
                 showForgotPassword ? PreferredLanguageText('temporaryPassword') : PreferredLanguageText('continueLeftOff')
               }
@@ -1480,7 +1480,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 value={email}
                 placeholder={''}
                 onChangeText={(val: any) => setEmail(val)}
-                placeholderTextColor={'#343A40'}
+                placeholderTextColor={'#393939'}
                 errorText={emailValidError}
               />
               {
@@ -1494,7 +1494,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                       value={password}
                       placeholder={''}
                       onChangeText={(val: any) => setPassword(val)}
-                      placeholderTextColor={'#343A40'}
+                      placeholderTextColor={'#393939'}
                     />
                   </View>
               }
@@ -1528,7 +1528,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     lineHeight: 35,
                     color: 'white',
                     fontSize: 12,
-                    backgroundColor: '#3289d0',
+                    backgroundColor: '#006AFF',
                     paddingHorizontal: 20,
                     fontFamily: 'inter',
                     height: 35,
@@ -1552,11 +1552,11 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                     width: '100%', justifyContent: 'center', flexDirection: 'row'
                   }}>
                   <Text style={{
-                    color: '#3289d0',
+                    color: '#006AFF',
                     width: 175,
                     borderWidth: 1,
                     borderRadius: 15,
-                    borderColor: '#3289d0',
+                    borderColor: '#006AFF',
                     backgroundColor: '#fff',
                     fontSize: 12,
                     textAlign: 'center',
@@ -1612,7 +1612,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             {
               reLoading ?
                 <View style={[styles(channelId).activityContainer, styles(channelId).horizontal]}>
-                  <ActivityIndicator color={'#343A40'} />
+                  <ActivityIndicator color={'#393939'} />
                 </View> :
                 <Dashboard
                   setTab={(val: any) => setTab(val)}
@@ -1739,7 +1739,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             <View style={{
               height: 61,
               borderBottomWidth: 1,
-              borderColor: '#E7EBEE'
+              borderColor: '#efefef'
             }}>
               <VerticalBar
                 menuCollapsed={menuCollapsed}
@@ -1787,7 +1787,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
                 height: (menuCollapsed ? dimensions.window.height - 60 : 0),
                 // paddingHorizontal: dimensions.window.width < 1024 ? 0 : 30,
                 paddingTop: 10,
-                // backgroundColor: '#E7EBEE',
+                // backgroundColor: '#efefef',
                 backgroundColor: '#fff',
                 position: dimensions.window.width < 1024 ? 'absolute' : 'relative'
               }}
@@ -1876,8 +1876,8 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               right: 0,
               justifyContent: 'center',
               bottom: 0,
-              width: 55, height: 55, borderRadius: 29, backgroundColor: '#3289d0',
-              borderColor: '#E7EBEE',
+              width: 55, height: 55, borderRadius: 29, backgroundColor: '#006AFF',
+              borderColor: '#efefef',
               borderWidth: 0
             }}
           >
@@ -1905,7 +1905,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
             position: 'absolute',
             zIndex: showLoginWindow ? 40 : 1000,
             backgroundColor: '#16181C',
-            // borderColor: '#E7EBEE',
+            // borderColor: '#efefef',
             // borderTopWidth: 2,
             alignSelf: 'flex-end',
             width: '100%',
@@ -1973,7 +1973,7 @@ const styles = (channelId: string) => StyleSheet.create({
     color: '#fff',
     paddingHorizontal: 12,
     borderRadius: 12,
-    backgroundColor: '#3289d0',
+    backgroundColor: '#006AFF',
     lineHeight: 25,
     height: 25,
     fontFamily: 'inter',
@@ -1990,7 +1990,7 @@ const styles = (channelId: string) => StyleSheet.create({
     width: '100%',
     // maxWidth: 900,
     justifyContent: "center",
-    backgroundColor: '#E7EBEE'
+    backgroundColor: '#efefef'
   },
   horizontal: {
     flexDirection: "row",
@@ -1998,7 +1998,7 @@ const styles = (channelId: string) => StyleSheet.create({
   },
   input: {
     width: '100%',
-    borderBottomColor: '#E7EBEE',
+    borderBottomColor: '#efefef',
     borderBottomWidth: 1,
     fontSize: 14,
     paddingTop: 13,
