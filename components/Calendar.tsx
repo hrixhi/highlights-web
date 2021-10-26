@@ -1773,7 +1773,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
                                                                                                 }}
                                                                                                 style={{
-                                                                                                    backgroundColor: '#e7ebee',
+                                                                                                    backgroundColor: '#fff',
                                                                                                     flexDirection: 'row',
                                                                                                     borderColor: '#c4c4c4',
                                                                                                     // borderRightWidth: 1,
@@ -1783,7 +1783,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                                     paddingVertical: 5
                                                                                                 }}>
                                                                                                 <View style={{
-                                                                                                    backgroundColor: '#e7ebee',
+                                                                                                    backgroundColor: '#fff',
                                                                                                     padding: 20,
                                                                                                     flexDirection: 'row',
                                                                                                     // width: 125
@@ -1796,7 +1796,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                                         backgroundColor: act.colorCode
                                                                                                     }} />
                                                                                                 </View>
-                                                                                                <View style={{ flex: 1, backgroundColor: '#e7ebee', paddingLeft: 10 }}>
+                                                                                                <View style={{ flex: 1, backgroundColor: '#fff', paddingLeft: 10 }}>
                                                                                                     <Text style={{ fontSize: 15, padding: 5, fontFamily: 'inter', marginTop: 5 }} ellipsizeMode='tail'>
                                                                                                         {act.channelName}
                                                                                                     </Text>
@@ -1804,7 +1804,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                                         {act.title} - {act.subtitle}
                                                                                                     </Text>
                                                                                                 </View>
-                                                                                                <View style={{ backgroundColor: '#e7ebee', padding: 0, flexDirection: 'row', alignSelf: 'center' }} >
+                                                                                                <View style={{ backgroundColor: '#fff', padding: 0, flexDirection: 'row', alignSelf: 'center', paddingRight: 10 }} >
                                                                                                     <Text style={{ fontSize: 13, padding: 5, lineHeight: 13 }} ellipsizeMode='tail'>
                                                                                                         {act.status === 'unread' ?
                                                                                                             <Ionicons name='alert-circle-outline' color='#f94144' size={18} /> : null}

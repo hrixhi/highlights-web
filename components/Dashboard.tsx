@@ -1235,6 +1235,9 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                         // settings 
                                                                         // settings 
                                                                         // settings 
+                                                                        <View
+                                                                            style={{ width: '100%', maxWidth: 400, alignSelf: 'center' }}
+                                                                        >
                                                                         <ChannelSettings
                                                                             channelId={key.split('-SPLIT-')[1]}
                                                                             refreshSubscriptions={props.refreshSubscriptions}
@@ -1243,6 +1246,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                 // closeModal()
                                                                             }}
                                                                         />
+                                                                        </View>
                                                                 )
                                                         ) :
                                                         cueMap[key].length === 0 ?

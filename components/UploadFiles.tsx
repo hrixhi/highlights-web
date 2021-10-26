@@ -140,7 +140,8 @@ const FileUpload: React.FC<any> = (props: any) => {
                                 textAlign: "right",
                                 fontSize: props.quiz ? 12 : 12,
                                 fontFamily: 'overpass',
-                                textTransform: 'uppercase'
+                                textTransform: 'uppercase',
+                                paddingLeft: 10
                             }}
                             onPress={() => handleFile()}
                         >

@@ -233,7 +233,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
         return (<View style={{ width: '100%', flexDirection: 'column', backgroundColor: 'white', marginTop: 20 }}>
             <View style={{ backgroundColor: 'white', }}>
                 <View style={{ backgroundColor: 'white', }}>
-                    <label style={{ width: 125 }}>
+                    <label style={{ width: 150 }}>
                         <Select
                             touchUi={true}
                             value={activeRole}
@@ -259,7 +259,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
             <View style={{ flexDirection: 'row', marginTop: 15 }}>
                 <View style={{ backgroundColor: 'white', paddingRight: 20 }}>
                     <View style={{ backgroundColor: 'white', }}>
-                        <label style={{ width: 125 }}>
+                        <label style={{ width: 150 }}>
                             <Select
                                 touchUi={true}
                                 value={activeGrade}
@@ -283,7 +283,7 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                 </View>
                 <View style={{ backgroundColor: 'white', }}>
                     <View style={{ backgroundColor: 'white',}}>
-                        <label style={{ width: 125 }}>
+                        <label style={{ width: 150 }}>
                             <Select
                                 touchUi={true}
                                 value={activeSection}
@@ -667,7 +667,8 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
                 justifyContent: "center",
                 display: "flex",
                 flexDirection: "column",
-                backgroundColor: "white"
+                backgroundColor: "#e7ebee",
+                paddingVertical: 100
             }}>
             <ActivityIndicator color={"#343A40"} />
         </View>
