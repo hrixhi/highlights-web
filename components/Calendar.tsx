@@ -1773,6 +1773,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
 
                                                                                                 }}
                                                                                                 style={{
+
                                                                                                     backgroundColor: '#efefef',
                                                                                                     flexDirection: 'row',
                                                                                                     borderColor: '#c4c4c4',
@@ -1804,7 +1805,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                                                         {act.title} - {act.subtitle}
                                                                                                     </Text>
                                                                                                 </View>
-                                                                                                <View style={{ backgroundColor: '#efefef', padding: 0, flexDirection: 'row', alignSelf: 'center' }} >
+                                                                                                <View style={{ backgroundColor: '#efefef', padding: 0, flexDirection: 'row', alignSelf: 'center', paddingRight: 10 }} >
                                                                                                     <Text style={{ fontSize: 13, padding: 5, lineHeight: 13 }} ellipsizeMode='tail'>
                                                                                                         {act.status === 'unread' ?
                                                                                                             <Ionicons name='alert-circle-outline' color='#f94144' size={18} /> : null}
