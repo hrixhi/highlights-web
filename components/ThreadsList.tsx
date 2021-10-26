@@ -355,66 +355,71 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
     }
 
     const customCategoryInput = (<View style={{ backgroundColor: 'white', paddingTop: 20, paddingBottom: 10 }}>
-        <View style={{ width: '100%', flexDirection: 'row', backgroundColor: 'white', alignItems: 'center', }}>
-            <View style={{ backgroundColor: 'white', marginRight: 10 }}>
-                {
-                    addCustomCategory ?
-                        <View style={styles.colorBar}>
-                            <TextInput
-                                value={customCategory}
-                                style={{
-                                    borderRadius: 0,
-                                    borderColor: '#E7EBEE',
-                                    borderBottomWidth: 1,
-                                    fontSize: 14,
-                                    height: '2.75em',
-                                    padding: '1em'
-                                }}
-                                placeholder={'Enter Category'}
-                                onChangeText={val => {
-                                    setCustomCategory(val)
-                                }}
-                                placeholderTextColor={'#343A40'}
-                            />
-                        </View> : <label style={{ width: 180, }}>
-                            <Select
-                                themeVariant="light"
-                                touchUi={true}
-                                onChange={(val: any) => {
-                                    setCustomCategory(val.value)
-                                }}
-                                responsive={{
-                                    small: {
-                                        display: 'bubble',
-                                    },
-                                    medium: {
-                                        touchUi: false,
-                                    }
-                                }}
-                                value={customCategory}
-                                rows={categories.length + 1}
-                                data={categoriesOptions}
-                            />
-                        </label>
+        <View style={{ flexDirection: 'column' }}>
+            <Text style={{ fontSize: 10, paddingLeft: 15 }}>
+                CATEGORY
+            </Text>
+            <View style={{ width: '100%', flexDirection: 'row', backgroundColor: 'white', alignItems: 'center', }}>
+                <View style={{ backgroundColor: 'white', marginRight: 10 }}>
+                    {
+                        addCustomCategory ?
+                            <View style={styles.colorBar}>
+                                <TextInput
+                                    value={customCategory}
+                                    style={{
+                                        borderRadius: 0,
+                                        borderColor: '#E7EBEE',
+                                        borderBottomWidth: 1,
+                                        fontSize: 14,
+                                        height: '2.75em',
+                                        padding: '1em'
+                                    }}
+                                    placeholder={'Enter Category'}
+                                    onChangeText={val => {
+                                        setCustomCategory(val)
+                                    }}
+                                    placeholderTextColor={'#343A40'}
+                                />
+                            </View> : <label style={{ width: 180, }}>
+                                <Select
+                                    themeVariant="light"
+                                    touchUi={true}
+                                    onChange={(val: any) => {
+                                        setCustomCategory(val.value)
+                                    }}
+                                    responsive={{
+                                        small: {
+                                            display: 'bubble',
+                                        },
+                                        medium: {
+                                            touchUi: false,
+                                        }
+                                    }}
+                                    value={customCategory}
+                                    rows={categories.length + 1}
+                                    data={categoriesOptions}
+                                />
+                            </label>
 
-                }
-            </View>
-            <View style={{ backgroundColor: '#e7ebee' }}>
-                <TouchableOpacity
-                    onPress={() => {
-                        if (addCustomCategory) {
-                            setCustomCategory("None");
-                            setAddCustomCategory(false)
-                        } else {
-                            setCustomCategory("");
-                            setAddCustomCategory(true)
-                        }
-                    }}
-                    style={{ backgroundColor: 'white' }}>
-                    <Text style={{ textAlign: 'right', lineHeight: 20, width: '100%' }}>
-                        <Ionicons name={addCustomCategory ? 'close' : 'create-outline'} size={18} color={'#343A40'} />
-                    </Text>
-                </TouchableOpacity>
+                    }
+                </View>
+                <View style={{ backgroundColor: '#e7ebee' }}>
+                    <TouchableOpacity
+                        onPress={() => {
+                            if (addCustomCategory) {
+                                setCustomCategory("None");
+                                setAddCustomCategory(false)
+                            } else {
+                                setCustomCategory("");
+                                setAddCustomCategory(true)
+                            }
+                        }}
+                        style={{ backgroundColor: 'white' }}>
+                        <Text style={{ textAlign: 'right', lineHeight: 20, width: '100%' }}>
+                            <Ionicons name={addCustomCategory ? 'close' : 'create-outline'} size={18} color={'#343A40'} />
+                        </Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         </View>
     </View>)
@@ -443,12 +448,14 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
             paddingTop: props.cueId ? 0 : 0,
             // borderWidth: 1,
             justifyContent: 'center',
-            flexDirection: 'row'
+            flexDirection: 'row',
         }}>
             <View style={{
                 width: '100%',
                 maxWidth: 900,
                 backgroundColor: '#e7ebee',
+                borderBottomRightRadius: 10,
+                borderTopRightRadius: 10
             }}>
                 {
                     !showPost && !showThreadCues ?
@@ -457,7 +464,9 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                             flexDirection: 'row',
                             paddingBottom: 20,
                             width: '100%',
-                            maxWidth: 900
+                            maxWidth: 900,
+                            borderBottomRightRadius: 10,
+                            borderTopRightRadius: 10
                         }}>
                             {
                                 props.cueId === null && !showPost && categoryChoices.length > 1 ?
@@ -530,7 +539,10 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                         </View> : 
                         <View style={{
                             width: '100%',
-                            backgroundColor: '#fff'
+                            backgroundColor: '#fff',
+                            borderLeftWidth: 3,
+                            borderLeftColor: props.channelColor,
+                            borderTopRightRadius: 10
                         }}>
                             <TouchableOpacity
                                 onPress={() => {
@@ -571,7 +583,11 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                     // borderWidth: 1,
                                     backgroundColor: 'white',
                                     flex: 1,
-                                    flexDirection: 'row'
+                                    flexDirection: 'row',
+                                    borderLeftWidth: 3, 
+                                    borderLeftColor: props.channelColor,
+                                    borderTopRightRadius: 10, 
+                                    borderBottomRightRadius: 10,
                                 }}
                                     key={JSON.stringify(filteredThreads) + JSON.stringify(showPost)}
                                 >
@@ -580,9 +596,8 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                             <View style={{
                                                 width: '100%',
                                                 maxWidth: 900,
-                                                // paddingLeft: 20,
-                                                padding: 10
-                                                // height: Dimensions.get('window').height - 350,
+                                                padding: 10,
+                                                borderBottomRightRadius: 10,
                                             }}
                                             // key={threadChat.toString()}
                                             >
@@ -694,6 +709,9 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                 <View style={{
                                                     width: '100%',
                                                     maxWidth: 900,
+                                                    borderTopRightRadius: 10, 
+                                                    borderBottomRightRadius: 10,
+                                                    padding: 10,
                                                     // paddingLeft: 20,
                                                     // height: Dimensions.get('window').height - 350,
                                                 }}
@@ -780,7 +798,7 @@ const ThreadsList: React.FunctionComponent<{ [label: string]: any }> = (props: a
                                                             </View>
                                                         )}
                                                     />
-                                                </View> : <View style={{ width: '100%', maxWidth: 900, }}>
+                                                </View> : <View style={{ width: '100%', maxWidth: 900, paddingHorizontal: Dimensions.get('window').width < 1024 ? 0 : 10, borderTopRightRadius: 10, borderBottomRightRadius: 10, }}>
                                                     {
                                                         threads.length === 0 ?
                                                             <View style={{ backgroundColor: 'white', flex: 1 }}>

@@ -676,230 +676,234 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
 
 
     if (showDuplicateChannel) {
-        return (<View style={styles.screen} >
-            <View style={{ width: '100%', backgroundColor: 'white', paddingTop: 10 }}>
-                <View style={{ backgroundColor: 'white', flexDirection: 'row', paddingBottom: 25 }}>
-                    <TouchableOpacity
-                        key={Math.random()}
-                        style={{
-                            flex: 1,
-                            backgroundColor: 'white'
-                        }}
-                        onPress={() => {
-                            setShowDuplicateChannel(false)
-                        }}>
-                        <Text style={{
-                            width: '100%',
-                            fontSize: 14, 
-                            fontWeight: 'bold',
-                            color: '#343A40'
-                        }}>
-                            <Ionicons name='chevron-back-outline' size={15} color={'#16181C'} style={{ marginRight: 10 }} />
-                        </Text>
-                    </TouchableOpacity>
-                </View>
-                <Text
-                    style={{
-                        fontSize: 20,
-                        paddingBottom: 20,
-                        fontFamily: 'inter',
-                        // textTransform: "uppercase",
-                        // paddingLeft: 10,
-                        flex: 1,
-                        lineHeight: 25
-                    }}>
-                    Duplicate
-                </Text>
-                <ScrollView
-                    onScroll={() => {
-                        Keyboard.dismiss()
-                    }}
-                    contentContainerStyle={{
-                        maxHeight: Dimensions.get('window').height - 95,
-                        // height: 'auto',
-                        minHeight: 100,
-                        paddingRight: 50
-                    }}
-                >
-                    <View style={{ backgroundColor: 'white' }}>
-                        <Text style={{
-                            fontSize: 14, fontFamily: 'inter',
-                            fontWeight: 'bold',
-                            color: '#16181C'
-                        }}>
-                            {PreferredLanguageText('name')}
-                        </Text>
-                        <TextInput
-                            value={duplicateChannelName}
-                            placeholder={''}
-                            onChangeText={val => {
-                                setDuplicateChannelName(val)
-                            }}
-                            placeholderTextColor={'#343A40'}
-                            required={true}
-                            footerMessage={'case sensitive'}
-                        />
-                    </View>
-                    <View style={{ backgroundColor: 'white' }}>
-                        <Text style={{
-                            fontSize: 14, fontFamily: 'inter',
-                            fontWeight: 'bold',
-                            color: '#16181C'
-                        }}>
-                            {PreferredLanguageText('enrolmentPassword')}
-                        </Text>
-                        <TextInput
-                            value={duplicateChannelPassword}
-                            placeholder={`(${PreferredLanguageText('optional')})`}
-                            onChangeText={val => setDuplicateChannelPassword(val)}
-                            placeholderTextColor={'#343A40'}
-                            secureTextEntry={true}
-                            required={false}
-                        />
-                    </View>
-                    <View style={{ backgroundColor: 'white' }}>
-                        <Text style={{
-                            fontSize: 14, fontFamily: 'inter',
-                            fontWeight: 'bold',
-                            color: '#16181C'
-                        }}>
-                            Theme
-                        </Text>
-                        <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white', marginTop: 20 }}>
-                            <View style={{ width: '100%', backgroundColor: 'white' }}>
-                                <CirclePicker
-                                    colors={colorChoices}
-                                    color={duplicateChannelColor}
-                                    onChangeComplete={(color: any) => setDuplicateChannelColor(color.hex)}
-                                />
-                            </View>
-                        </View>
-                    </View>
-                    {/* Switch to copy Subscribers */}
-                    {
-                        selected.length > 0 ?
-                            <View>
-                                <View
-                                    style={{
-                                        width: "100%",
-                                        paddingTop: 30,
-                                        paddingBottom: 15,
-                                        backgroundColor: "white",
-                                    }}
-                                >
-                                    <Text
-                                        style={{
-                                            fontSize: 14, fontFamily: 'inter',
-                                            fontWeight: 'bold',
-                                            color: '#16181C'
-                                        }}
-                                    >
-                                        Duplicate Subscribers
-                                    </Text>
-                                </View>
-                                <View style={{ flexDirection: "row" }}>
-                                    <View
-                                        style={{
-                                            backgroundColor: "white",
-                                            height: 40,
-                                            marginRight: 10,
-                                        }}
-                                    >
-                                        <Switch
-                                            value={duplicateChannelSubscribers}
-                                            onValueChange={() => {
-                                                setDuplicateChannelSubscribers(!duplicateChannelSubscribers);
-                                            }}
-                                            style={{ height: 20 }}
-                                            trackColor={{
-                                                false: "#E7EBEE",
-                                                true: "#3289d0"
-                                            }}
-                                            activeThumbColor="white"
-                                        />
-                                    </View>
-                                </View>
-                            </View>
-                            : null
-                    }
-
-                    {/* Switch to copy Moderators */}
-                    {
-                        owners.length > 0 ?
-                            <View>
-                                <View
-                                    style={{
-                                        width: "100%",
-                                        paddingTop: 15,
-                                        paddingBottom: 15,
-                                        backgroundColor: "white",
-                                    }}
-                                >
-                                    <Text
-                                        style={{
-                                            fontSize: 14, fontFamily: 'inter',
-                                            fontWeight: 'bold',
-                                            color: '#16181C'
-                                        }}
-                                    >
-                                        Duplicate Moderators
-                                    </Text>
-                                </View>
-                                <View style={{ flexDirection: "row" }}>
-                                    <View
-                                        style={{
-                                            backgroundColor: "white",
-                                            height: 40,
-                                            marginRight: 10,
-                                        }}
-                                    >
-                                        <Switch
-                                            value={duplicateChannelModerators}
-                                            onValueChange={() => {
-                                                setDuplicateChannelModerators(!duplicateChannelModerators);
-                                            }}
-                                            style={{ height: 20 }}
-                                            trackColor={{
-                                                false: "#E7EBEE",
-                                                true: "#3289d0"
-                                            }}
-                                            activeThumbColor="white"
-                                        />
-                                    </View>
-                                </View>
-                            </View>
-                            : null
-                    }
-
-
-                    <View style={{ flexDirection: 'column', alignItems: 'center', marginTop: 50, paddingBottom: 50 }}>
+        return (<View style={{
+            borderLeftWidth: 3,
+            borderColor: props.channelColor,
+            borderTopRightRadius: 10,
+            borderBottomRightRadius: 10
+        }}>
+            <View style={styles.screen} >
+                <View style={{ maxWidth: 400,
+                            alignSelf: 'center',
+                            minHeight: 100, }}>
+                    <View style={{ backgroundColor: 'white', flexDirection: 'row', paddingBottom: 25 }}>
                         <TouchableOpacity
-                            onPress={() => handleDuplicate()}
+                            key={Math.random()}
                             style={{
-                                backgroundColor: 'white',
-                                borderRadius: 15,
-                                overflow: 'hidden',
-                                height: 35,
+                                flex: 1,
+                                backgroundColor: 'white'
                             }}
-                        >
-                            <Text style={{
-                                textAlign: 'center',
-                                lineHeight: 35,
-                                color: 'white',
-                                fontSize: 12,
-                                backgroundColor: '#3289d0',
-                                paddingHorizontal: 20,
-                                fontFamily: 'inter',
-                                height: 35,
-                                textTransform: 'uppercase',
-                                width: 150
+                            onPress={() => {
+                                setShowDuplicateChannel(false)
                             }}>
-                                SAVE
+                            <Text style={{
+                                width: '100%',
+                                fontSize: 14, 
+                                fontWeight: 'bold',
+                                color: '#343A40'
+                            }}>
+                                <Ionicons name='chevron-back-outline' size={22} color={'#16181C'} style={{ marginRight: 10 }} />
                             </Text>
                         </TouchableOpacity>
                     </View>
+                    <Text
+                        style={{
+                            fontSize: 20,
+                            paddingBottom: 20,
+                            fontFamily: 'inter',
+                            // textTransform: "uppercase",
+                            // paddingLeft: 10,
+                            flex: 1,
+                            lineHeight: 25
+                        }}>
+                        Duplicate
+                    </Text>
+                    <ScrollView
+                        onScroll={() => {
+                            Keyboard.dismiss()
+                        }}
+                        contentContainerStyle={{
+                            maxHeight: Dimensions.get('window').height - 95,
+                            // height: 'auto',
+                            minHeight: 100,
+                            paddingRight: 50
+                        }}
+                    >
+                        <View style={{ backgroundColor: 'white' }}>
+                            <Text style={{
+                                fontSize: 14, fontFamily: 'inter',
+                                color: '#16181C'
+                            }}>
+                                {PreferredLanguageText('name')}
+                            </Text>
+                            <TextInput
+                                value={duplicateChannelName}
+                                placeholder={''}
+                                onChangeText={val => {
+                                    setDuplicateChannelName(val)
+                                }}
+                                placeholderTextColor={'#343A40'}
+                                required={true}
+                                footerMessage={'case sensitive'}
+                            />
+                        </View>
+                        <View style={{ backgroundColor: 'white' }}>
+                            <Text style={{
+                                fontSize: 14, fontFamily: 'inter',
+                                color: '#16181C'
+                            }}>
+                                {PreferredLanguageText('enrolmentPassword')}
+                            </Text>
+                            <TextInput
+                                value={duplicateChannelPassword}
+                                placeholder={`(${PreferredLanguageText('optional')})`}
+                                onChangeText={val => setDuplicateChannelPassword(val)}
+                                placeholderTextColor={'#343A40'}
+                                secureTextEntry={true}
+                                required={false}
+                            />
+                        </View>
+                        <View style={{ backgroundColor: 'white' }}>
+                            <Text style={{
+                                fontSize: 14, fontFamily: 'inter',
+                                color: '#16181C'
+                            }}>
+                                Theme
+                            </Text>
+                            <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white', marginTop: 20 }}>
+                                <View style={{ width: '100%', backgroundColor: 'white' }}>
+                                    <CirclePicker
+                                        colors={colorChoices}
+                                        color={duplicateChannelColor}
+                                        onChangeComplete={(color: any) => setDuplicateChannelColor(color.hex)}
+                                    />
+                                </View>
+                            </View>
+                        </View>
+                        {/* Switch to copy Subscribers */}
+                        {
+                            selected.length > 0 ?
+                                <View>
+                                    <View
+                                        style={{
+                                            width: "100%",
+                                            paddingTop: 30,
+                                            paddingBottom: 15,
+                                            backgroundColor: "white",
+                                        }}
+                                    >
+                                        <Text
+                                            style={{
+                                                fontSize: 14, fontFamily: 'inter',
+                                                color: '#16181C'
+                                            }}
+                                        >
+                                            Duplicate Subscribers
+                                        </Text>
+                                    </View>
+                                    <View style={{ flexDirection: "row" }}>
+                                        <View
+                                            style={{
+                                                backgroundColor: "white",
+                                                height: 40,
+                                                marginRight: 10,
+                                            }}
+                                        >
+                                            <Switch
+                                                value={duplicateChannelSubscribers}
+                                                onValueChange={() => {
+                                                    setDuplicateChannelSubscribers(!duplicateChannelSubscribers);
+                                                }}
+                                                style={{ height: 20 }}
+                                                trackColor={{
+                                                    false: "#E7EBEE",
+                                                    true: "#3289d0"
+                                                }}
+                                                activeThumbColor="white"
+                                            />
+                                        </View>
+                                    </View>
+                                </View>
+                                : null
+                        }
 
-                </ScrollView>
+                        {/* Switch to copy Moderators */}
+                        {
+                            owners.length > 0 ?
+                                <View>
+                                    <View
+                                        style={{
+                                            width: "100%",
+                                            paddingTop: 15,
+                                            paddingBottom: 15,
+                                            backgroundColor: "white",
+                                        }}
+                                    >
+                                        <Text
+                                            style={{
+                                                fontSize: 14, fontFamily: 'inter',
+                                                color: '#16181C'
+                                            }}
+                                        >
+                                            Duplicate Moderators
+                                        </Text>
+                                    </View>
+                                    <View style={{ flexDirection: "row" }}>
+                                        <View
+                                            style={{
+                                                backgroundColor: "white",
+                                                height: 40,
+                                                marginRight: 10,
+                                            }}
+                                        >
+                                            <Switch
+                                                value={duplicateChannelModerators}
+                                                onValueChange={() => {
+                                                    setDuplicateChannelModerators(!duplicateChannelModerators);
+                                                }}
+                                                style={{ height: 20 }}
+                                                trackColor={{
+                                                    false: "#E7EBEE",
+                                                    true: "#3289d0"
+                                                }}
+                                                activeThumbColor="white"
+                                            />
+                                        </View>
+                                    </View>
+                                </View>
+                                : null
+                        }
+
+
+                        <View style={{ flexDirection: 'column', alignItems: 'center', marginTop: 50, paddingBottom: 50 }}>
+                            <TouchableOpacity
+                                onPress={() => handleDuplicate()}
+                                style={{
+                                    backgroundColor: 'white',
+                                    borderRadius: 15,
+                                    overflow: 'hidden',
+                                    height: 35,
+                                }}
+                            >
+                                <Text style={{
+                                    textAlign: 'center',
+                                    lineHeight: 35,
+                                    color: 'white',
+                                    fontSize: 12,
+                                    backgroundColor: '#3289d0',
+                                    paddingHorizontal: 20,
+                                    fontFamily: 'inter',
+                                    height: 35,
+                                    textTransform: 'uppercase',
+                                    width: 150
+                                }}>
+                                    SAVE
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+
+                    </ScrollView>
+                </View>
             </View>
         </View>)
 
@@ -916,337 +920,340 @@ const ChannelSettings: React.FunctionComponent<{ [label: string]: any }> = (prop
     })
 
     return (
-        <View style={styles.screen} >
-            <View style={{ backgroundColor: 'white', paddingTop: 20 }}>
-                <View
-                    style={{
-                        maxWidth: 400,
-                        alignSelf: 'center',
-                        minHeight: 100,
-                    }}
-                >
-                    <View style={{ backgroundColor: 'white' }}>
-                        <Text style={{
-                            fontSize: 14, fontFamily: 'inter',
-                            fontWeight: 'bold',
-                            color: '#16181C'
-                        }}>
-                            {PreferredLanguageText('name')}
-                        </Text>
-                        <TextInput
-                            value={name}
-                            autoCompleteType='off'
-                            placeholder={''}
-                            onChangeText={val => {
-                                setName(val)
-                            }}
-                            placeholderTextColor={'#343A40'}
-                            required={true}
-                            footerMessage={'case sensitive'}
-                        />
-                    </View>
-                    <View style={{ backgroundColor: 'white' }}>
-                        <Text style={{
-                            fontSize: 14, fontFamily: 'inter',
-                            fontWeight: 'bold',
-                            color: '#16181C'
-                        }}>
-                            {PreferredLanguageText('enrolmentPassword')}
-                        </Text>
-                        <TextInput
-                            value={password}
-                            autoCompleteType='off'
-                            placeholder={`(${PreferredLanguageText('optional')})`}
-                            onChangeText={val => setPassword(val)}
-                            placeholderTextColor={'#343A40'}
-                            secureTextEntry={true}
-                            required={false}
-                        />
-                    </View>
-
-                    <View style={{ backgroundColor: 'white' }}>
-                        <Text style={{
-                            fontSize: 14, fontFamily: 'inter',
-                            fontWeight: 'bold',
-                            color: '#16181C'
-                        }}>
-                            Theme
-                        </Text>
-                        <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white', marginTop: 20 }}>
-                            <View style={{ width: '100%', backgroundColor: 'white' }}>
-                                <CirclePicker
-                                    colors={colorChoices}
-                                    color={colorCode}
-                                    onChangeComplete={(color: any) => setColorCode(color.hex)}
-                                />
-                            </View>
-                        </View>
-                    </View>
-
-                    <Text style={{
-                        fontSize: 14, fontFamily: 'inter',
-                        paddingTop: 20,
-                        fontWeight: 'bold',
-                        color: '#16181C'
-                    }}>
-                        Subscribers
-                    </Text>
-
-                    {renderSubscriberFilters()}
-                    <View style={{
-                        flexDirection: 'column', marginTop: 25,
-                        // overflow: 'scroll'
-                    }}>
-                        <View style={{ height: 'auto', maxWidth: 400, width: '100%' }}>
-                            {/* <Multiselect
-                                placeholder='Select...'
-                                displayValue='name'
-                                // key={userDropdownOptions.toString()}
-                                style={{
-                                    multiselectContainer: { // To change css for option container 
-                                        minHeight: 200
-                                    }
+        <View style={{
+            borderLeftWidth: 3,
+            borderColor: props.channelColor,
+            borderTopRightRadius: 10,
+            borderBottomRightRadius: 10
+        }}>
+            <View style={styles.screen} >
+                <View style={{ backgroundColor: 'white', paddingTop: 20 }}>
+                    <View
+                        style={{
+                            maxWidth: 400,
+                            alignSelf: 'center',
+                            minHeight: 100,
+                        }}
+                    >
+                        <View style={{ backgroundColor: 'white' }}>
+                            <Text style={{
+                                fontSize: 14, fontFamily: 'inter',
+                                color: '#16181C'
+                            }}>
+                                {PreferredLanguageText('name')}
+                            </Text>
+                            <TextInput
+                                value={name}
+                                autoCompleteType='off'
+                                placeholder={''}
+                                onChangeText={val => {
+                                    setName(val)
                                 }}
-                                options={options} // Options to display in the dropdown
-                                selectedValues={selected} // Preselected value to persist in dropdown
-                                onSelect={(e, f) => {
-                                    setSelected(e);
-                                    return true
-                                }} // Function will trigger on select event
-                                onRemove={(e, f) => {
-                                    // If remove as subscriber and user is part of moderators, then remove from moderators
-
-                                    const currModerators = [...owners];
-
-                                    const filterOutRemovedSubscriber = currModerators.filter((user: any) => {
-                                        return user.id !== f.id
-                                    })
-
-                                    setOwners(filterOutRemovedSubscriber)
-
-                                    setSelected(e);
-                                    return true
-                                }}
-                            /> */}
-
-                            <div style={{ width: '100%', maxWidth: 400 }} >
-                                <label style={{ width: '100%', maxWidth: 400 }}>
-                                    <Select
-                                        themeVariant="light"
-                                        selectMultiple={true}
-                                        group={true}
-                                        groupLabel="&nbsp;"
-                                        inputClass="mobiscrollCustomMultiInput"
-                                        placeholder="Select..."
-                                        touchUi={true}
-                                        // minWidth={[60, 320]}
-                                        value={selectedValues}
-                                        data={options}
-                                        onChange={(val: any) => {
-                                            setSelectedValues(val.value)
-                                            // Filter out any moderator if not part of the selected values
-
-                                            let filterRemovedModerators = selectedModerators.filter((mod: any) => val.value.includes(mod))
-
-                                            setSelectedModerators(filterRemovedModerators)
-                                        }}
-                                        responsive={{
-                                            small: {
-                                                display: 'bubble'
-                                            },
-                                            medium: {
-                                                touchUi: false,
-                                            }
-                                        }}
-                                        minWidth={[60, 320]}
-                                    // minWidth={[60, 320]}
-                                    />
-                                </label>
-                            </div>
-                        </View>
-                    </View>
-                    <Text style={{
-                        fontSize: 14, fontFamily: 'inter',
-                        //  fontFamily: 'inter',
-                        color: '#16181C', marginTop: 25, marginBottom: 20
-                    }}>
-                        Moderators
-                    </Text>
-                    {/* <View style={{ flexDirection: 'column', marginTop: 25, overflow: 'scroll' }}>
-                        <View style={{ width: '90%', height: 'auto' }}>
-                            <Multiselect
-                                placeholder='Select...'
-                                displayValue='name'
-                                // key={userDropdownOptions.toString()}
-                                // style={{ width: '100%', color: '#202025', 
-                                //     optionContainer: { // To change css for option container 
-                                //         zIndex: 9999
-                                //     }
-                                // }}
-                                style={{
-                                    multiselectContainer: { // To change css for option container 
-                                        minHeight: 100
-                                    }
-                                }}
-                                options={selected} // Options to display in the dropdown
-                                selectedValues={owners} // Preselected value to persist in dropdown
-                                onSelect={(e, f) => {
-                                    setOwners(e);
-                                    return true
-                                }} // Function will trigger on select event
-                                onRemove={(e, f) => {
-                                    setOwners(e);
-                                    return true
-                                }}
+                                placeholderTextColor={'#343A40'}
+                                required={true}
+                                footerMessage={'case sensitive'}
                             />
                         </View>
-                    </View> */}
-
-                    <label style={{ width: '100%', maxWidth: 400 }}>
-                        <Select
-                            themeVariant="light"
-                            select="multiple"
-                            selectMultiple={true}
-                            // group={true}
-                            // groupLabel="&nbsp;"
-                            // minWidth={[60, 320]}
-                            placeholder="Select..."
-                            inputClass="mobiscrollCustomMultiInput"
-                            value={selectedModerators}
-                            data={moderatorOptions}
-                            onChange={(val: any) => {
-                                setSelectedModerators(val.value)
-                            }}
-                            touchUi={true}
-                            responsive={{
-                                small: {
-                                    display: 'bubble'
-                                },
-                                medium: {
-                                    touchUi: false,
-                                }
-                            }}
-                        // minWidth={[60, 320]}
-                        />
-                    </label>
-
-                    <View style={{ flexDirection: 'column', alignItems: 'center', marginTop: 50, paddingBottom: 50 }}>
-                        <TouchableOpacity
-                            onPress={() => {
-                                Alert("Update channel?", "", [
-                                    {
-                                        text: "Cancel",
-                                        style: "cancel",
-                                        onPress: () => {
-                                            return;
-                                        }
-                                    },
-                                    {
-                                        text: "Yes",
-                                        onPress: () => {
-                                            handleSubmit()
-                                        }
-                                    }
-                                ])
-                            }}
-                            style={{
-                                backgroundColor: 'white',
-                                borderRadius: 15,
-                                overflow: 'hidden',
-                                height: 35,
-                            }}
-                            disabled={isUpdatingChannel}
-                        >
+                        <View style={{ backgroundColor: 'white' }}>
                             <Text style={{
-                                textAlign: 'center',
-                                lineHeight: 35,
-                                color: 'white',
-                                fontSize: 12,
-                                backgroundColor: '#3289d0',
-                                paddingHorizontal: 20,
-                                fontFamily: 'inter',
-                                height: 35,
-                                textTransform: 'uppercase',
-                                width: 150
+                                fontSize: 14, fontFamily: 'inter',
+                                color: '#16181C'
                             }}>
-                                {isUpdatingChannel ? "UPDATING" : "UPDATE"}
+                                {PreferredLanguageText('enrolmentPassword')}
                             </Text>
-                        </TouchableOpacity>
+                            <TextInput
+                                value={password}
+                                autoCompleteType='off'
+                                placeholder={`(${PreferredLanguageText('optional')})`}
+                                onChangeText={val => setPassword(val)}
+                                placeholderTextColor={'#343A40'}
+                                secureTextEntry={true}
+                                required={false}
+                            />
+                        </View>
 
-
-                        <TouchableOpacity
-                            onPress={() => setShowDuplicateChannel(true)}
-                            style={{
-                                backgroundColor: 'white',
-                                borderRadius: 15,
-                                overflow: 'hidden',
-                                height: 35,
-                                marginTop: 15
-                            }}
-                        >
+                        <View style={{ backgroundColor: 'white' }}>
                             <Text style={{
-                                textAlign: 'center',
-                                lineHeight: 35,
-                                color: '#3289d0',
-                                borderWidth: 1,
-                                borderRadius: 15,
-                                borderColor: '#3289d0',
-                                backgroundColor: '#fff',
-                                fontSize: 12,
-                                paddingHorizontal: 20,
-                                fontFamily: 'inter',
-                                height: 35,
-                                textTransform: 'uppercase',
-                                width: 150
+                                fontSize: 14, fontFamily: 'inter',
+                                color: '#16181C'
                             }}>
-                                DUPLICATE
+                                Theme
                             </Text>
-                        </TouchableOpacity>
-                        {
-                            temporary ?
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        Alert("Delete channel?", "", [
-                                            {
-                                                text: "Cancel",
-                                                style: "cancel",
-                                                onPress: () => {
-                                                    return;
-                                                }
-                                            },
-                                            {
-                                                text: "Yes",
-                                                onPress: () => {
-                                                    handleDelete()
-                                                }
-                                            }
-                                        ])
-                                    }}
+                            <View style={{ width: '100%', display: 'flex', flexDirection: 'row', backgroundColor: 'white', marginTop: 20 }}>
+                                <View style={{ width: '100%', backgroundColor: 'white' }}>
+                                    <CirclePicker
+                                        colors={colorChoices}
+                                        color={colorCode}
+                                        onChangeComplete={(color: any) => setColorCode(color.hex)}
+                                    />
+                                </View>
+                            </View>
+                        </View>
+
+                        <Text style={{
+                            fontSize: 14, fontFamily: 'inter',
+                            paddingTop: 20,
+                            color: '#16181C'
+                        }}>
+                            Subscribers
+                        </Text>
+
+                        {renderSubscriberFilters()}
+                        <View style={{
+                            flexDirection: 'column', marginTop: 25,
+                            // overflow: 'scroll'
+                        }}>
+                            <View style={{ height: 'auto', maxWidth: 400, width: '100%' }}>
+                                {/* <Multiselect
+                                    placeholder='Select...'
+                                    displayValue='name'
+                                    // key={userDropdownOptions.toString()}
                                     style={{
-                                        backgroundColor: 'white',
-                                        borderRadius: 15,
-                                        overflow: 'hidden',
-                                        height: 35,
-                                        marginTop: 15,
+                                        multiselectContainer: { // To change css for option container 
+                                            minHeight: 200
+                                        }
                                     }}
-                                >
-                                    <Text style={{
-                                        textAlign: 'center',
-                                        lineHeight: 35,
-                                        color: '#16181C',
-                                        fontSize: 12,
-                                        backgroundColor: '#E7EBEE',
-                                        paddingHorizontal: 20,
-                                        fontFamily: 'inter',
-                                        height: 35,
-                                        textTransform: 'uppercase',
-                                        width: 150
-                                    }}>
-                                        DELETE
-                                    </Text>
-                                </TouchableOpacity>
-                                : null
-                        }
+                                    options={options} // Options to display in the dropdown
+                                    selectedValues={selected} // Preselected value to persist in dropdown
+                                    onSelect={(e, f) => {
+                                        setSelected(e);
+                                        return true
+                                    }} // Function will trigger on select event
+                                    onRemove={(e, f) => {
+                                        // If remove as subscriber and user is part of moderators, then remove from moderators
+
+                                        const currModerators = [...owners];
+
+                                        const filterOutRemovedSubscriber = currModerators.filter((user: any) => {
+                                            return user.id !== f.id
+                                        })
+
+                                        setOwners(filterOutRemovedSubscriber)
+
+                                        setSelected(e);
+                                        return true
+                                    }}
+                                /> */}
+
+                                <div style={{ width: '100%', maxWidth: 320 }} >
+                                    <label style={{ width: '100%', maxWidth: 320 }}>
+                                        <Select
+                                            themeVariant="light"
+                                            selectMultiple={true}
+                                            group={true}
+                                            groupLabel="&nbsp;"
+                                            inputClass="mobiscrollCustomMultiInput"
+                                            placeholder="Select..."
+                                            touchUi={true}
+                                            // minWidth={[60, 320]}
+                                            value={selectedValues}
+                                            data={options}
+                                            onChange={(val: any) => {
+                                                setSelectedValues(val.value)
+                                                // Filter out any moderator if not part of the selected values
+
+                                                let filterRemovedModerators = selectedModerators.filter((mod: any) => val.value.includes(mod))
+
+                                                setSelectedModerators(filterRemovedModerators)
+                                            }}
+                                            responsive={{
+                                                small: {
+                                                    display: 'bubble'
+                                                },
+                                                medium: {
+                                                    touchUi: false,
+                                                }
+                                            }}
+                                            minWidth={[60, 320]}
+                                        // minWidth={[60, 320]}
+                                        />
+                                    </label>
+                                </div>
+                            </View>
+                        </View>
+                        <Text style={{
+                            fontSize: 14, fontFamily: 'inter',
+                            //  fontFamily: 'inter',
+                            color: '#16181C', marginTop: 25, marginBottom: 20
+                        }}>
+                            Moderators
+                        </Text>
+                        {/* <View style={{ flexDirection: 'column', marginTop: 25, overflow: 'scroll' }}>
+                            <View style={{ width: '90%', height: 'auto' }}>
+                                <Multiselect
+                                    placeholder='Select...'
+                                    displayValue='name'
+                                    // key={userDropdownOptions.toString()}
+                                    // style={{ width: '100%', color: '#202025', 
+                                    //     optionContainer: { // To change css for option container 
+                                    //         zIndex: 9999
+                                    //     }
+                                    // }}
+                                    style={{
+                                        multiselectContainer: { // To change css for option container 
+                                            minHeight: 100
+                                        }
+                                    }}
+                                    options={selected} // Options to display in the dropdown
+                                    selectedValues={owners} // Preselected value to persist in dropdown
+                                    onSelect={(e, f) => {
+                                        setOwners(e);
+                                        return true
+                                    }} // Function will trigger on select event
+                                    onRemove={(e, f) => {
+                                        setOwners(e);
+                                        return true
+                                    }}
+                                />
+                            </View>
+                        </View> */}
+
+                        <label style={{ width: '100%', maxWidth: 400 }}>
+                            <Select
+                                themeVariant="light"
+                                select="multiple"
+                                selectMultiple={true}
+                                // group={true}
+                                // groupLabel="&nbsp;"
+                                // minWidth={[60, 320]}
+                                placeholder="Select..."
+                                inputClass="mobiscrollCustomMultiInput"
+                                value={selectedModerators}
+                                data={moderatorOptions}
+                                onChange={(val: any) => {
+                                    setSelectedModerators(val.value)
+                                }}
+                                touchUi={true}
+                                responsive={{
+                                    small: {
+                                        display: 'bubble'
+                                    },
+                                    medium: {
+                                        touchUi: false,
+                                    }
+                                }}
+                            // minWidth={[60, 320]}
+                            />
+                        </label>
+
+                        <View style={{ flexDirection: 'column', alignItems: 'center', marginTop: 50, paddingBottom: 50 }}>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    Alert("Update channel?", "", [
+                                        {
+                                            text: "Cancel",
+                                            style: "cancel",
+                                            onPress: () => {
+                                                return;
+                                            }
+                                        },
+                                        {
+                                            text: "Yes",
+                                            onPress: () => {
+                                                handleSubmit()
+                                            }
+                                        }
+                                    ])
+                                }}
+                                style={{
+                                    backgroundColor: 'white',
+                                    borderRadius: 15,
+                                    overflow: 'hidden',
+                                    height: 35,
+                                }}
+                                disabled={isUpdatingChannel}
+                            >
+                                <Text style={{
+                                    textAlign: 'center',
+                                    lineHeight: 35,
+                                    color: 'white',
+                                    fontSize: 12,
+                                    backgroundColor: '#3289d0',
+                                    paddingHorizontal: 20,
+                                    fontFamily: 'inter',
+                                    height: 35,
+                                    textTransform: 'uppercase',
+                                    width: 150
+                                }}>
+                                    {isUpdatingChannel ? "UPDATING" : "UPDATE"}
+                                </Text>
+                            </TouchableOpacity>
+
+
+                            <TouchableOpacity
+                                onPress={() => setShowDuplicateChannel(true)}
+                                style={{
+                                    backgroundColor: 'white',
+                                    borderRadius: 15,
+                                    overflow: 'hidden',
+                                    height: 35,
+                                    marginTop: 15
+                                }}
+                            >
+                                <Text style={{
+                                    textAlign: 'center',
+                                    lineHeight: 35,
+                                    color: '#3289d0',
+                                    borderWidth: 1,
+                                    borderRadius: 15,
+                                    borderColor: '#3289d0',
+                                    backgroundColor: '#fff',
+                                    fontSize: 12,
+                                    paddingHorizontal: 20,
+                                    fontFamily: 'inter',
+                                    height: 35,
+                                    textTransform: 'uppercase',
+                                    width: 150
+                                }}>
+                                    DUPLICATE
+                                </Text>
+                            </TouchableOpacity>
+                            {
+                                temporary ?
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            Alert("Delete channel?", "", [
+                                                {
+                                                    text: "Cancel",
+                                                    style: "cancel",
+                                                    onPress: () => {
+                                                        return;
+                                                    }
+                                                },
+                                                {
+                                                    text: "Yes",
+                                                    onPress: () => {
+                                                        handleDelete()
+                                                    }
+                                                }
+                                            ])
+                                        }}
+                                        style={{
+                                            backgroundColor: 'white',
+                                            borderRadius: 15,
+                                            overflow: 'hidden',
+                                            height: 35,
+                                            marginTop: 15,
+                                        }}
+                                    >
+                                        <Text style={{
+                                            textAlign: 'center',
+                                            lineHeight: 35,
+                                            color: '#16181C',
+                                            fontSize: 12,
+                                            backgroundColor: '#E7EBEE',
+                                            paddingHorizontal: 20,
+                                            fontFamily: 'inter',
+                                            height: 35,
+                                            textTransform: 'uppercase',
+                                            width: 150
+                                        }}>
+                                            DELETE
+                                        </Text>
+                                    </TouchableOpacity>
+                                    : null
+                            }
+                        </View>
                     </View>
                 </View>
             </View>
@@ -1260,13 +1267,10 @@ const styles = StyleSheet.create({
     screen: {
         paddingTop: 10,
         paddingBottom: 20,
-        // paddingRight: 20,
-        // paddingLeft: Dimensions.get('window').width < 1024 ? 20 : 0,
         width: '100%',
-        // maxWidth: 350,
-        // overflow: 'scroll',
-        // flex: 1,
         backgroundColor: 'white',
+        borderTopRightRadius: 10,
+        borderBottomRightRadius: 10
     },
     outline: {
         borderRadius: 1,

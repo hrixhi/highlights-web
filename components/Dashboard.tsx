@@ -1227,6 +1227,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                             filterChoice={key.split('-SPLIT-')[0]}
                                                                             channelCreatedBy={key.split('-SPLIT-')[2]}
                                                                             refreshUnreadDiscussionCount={() => props.refreshUnreadDiscussionCount()}
+                                                                            channelColor={key.split('-SPLIT-')[3]}
                                                                         /> :
                                                                         // settings 
                                                                         // settings 
@@ -1236,16 +1237,23 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                                                         // settings 
                                                                         // settings 
                                                                         <View
-                                                                            style={{ width: '100%', maxWidth: 400, alignSelf: 'center' }}
-                                                                        >
-                                                                        <ChannelSettings
-                                                                            channelId={key.split('-SPLIT-')[1]}
-                                                                            refreshSubscriptions={props.refreshSubscriptions}
-                                                                            closeModal={() => {
-                                                                                // setShowHome(false)
-                                                                                // closeModal()
+                                                                            style={{ 
+                                                                                width: '100%', 
+                                                                                maxWidth: 400, 
+                                                                                alignSelf: 'center',
+                                                                                borderTopRightRadius: 10,
+                                                                                borderBottomRightRadius: 10
                                                                             }}
-                                                                        />
+                                                                        >
+                                                                            <ChannelSettings
+                                                                                channelId={key.split('-SPLIT-')[1]}
+                                                                                refreshSubscriptions={props.refreshSubscriptions}
+                                                                                closeModal={() => {
+                                                                                    // setShowHome(false)
+                                                                                    // closeModal()
+                                                                                }}
+                                                                                channelColor={key.split('-SPLIT-')[3]}
+                                                                            />
                                                                         </View>
                                                                 )
                                                         ) :

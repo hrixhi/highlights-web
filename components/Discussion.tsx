@@ -155,6 +155,7 @@ const Discussion: React.FunctionComponent<{ [label: string]: any }> = (props: an
                             reload={() => loadThreads()}
                             refreshUnreadDiscussionCount={() => refreshUnreadDiscussionCount()}
                             type={"Discussion"}
+                            channelColor={props.channelColor}
                         />
                 }
             </Animated.View>
