@@ -809,7 +809,9 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
         return (<View style={{
             flexDirection: "row", marginBottom: 30,
             paddingTop: 10,
-            backgroundColor: '#E7EBEE'
+            backgroundColor: '#E7EBEE',
+            flex: 1,
+            justifyContent: 'center'
             //paddingVertical: 20 
         }}>
             <TouchableOpacity
@@ -1077,7 +1079,6 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                             }} /> {key.split('-SPLIT-')[0]}
                                         </Text>
                                     </TouchableOpacity>
-                                    {collapseMap[key] ? renderTabs(key) : null}
                                     <View style={{
                                         backgroundColor: collapseMap[key] ? '#E7EBEE' : '#fff',
                                         paddingTop: 5, paddingLeft: 15
@@ -1179,6 +1180,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                     </View>
                                 </View>
                         }
+                        {collapseMap[key] && ind !== 0 ? renderTabs(key) : null}
                         <View style={{
                             flexDirection: 'row',
                             justifyContent: 'center',
@@ -1363,6 +1365,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
     return (
         <View style={{
             height: windowHeight,
+            backgroundColor: props.option === 'To Do' ? '#e7ebee' : '#fff',
             // flexDirection: width < 1024 ? 'column-reverse' : 'column'
         }}>
             <View style={{
@@ -1543,7 +1546,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 <MenuOption
                                     value={'Channels'}>
                                     <Text style={{
-                                        fontFamily: 'overpass', fontSize: 14, fontWeight: 'bold',
+                                        fontFamily: 'inter', fontSize: 14, fontWeight: 'bold',
                                         color: '#16181C'
                                     }}>
                                         &nbsp;WORKSPACES
@@ -1552,7 +1555,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                                 <MenuOption
                                     value={'Settings'}>
                                     <Text style={{
-                                        fontFamily: 'overpass', fontSize: 14, fontWeight: 'bold',
+                                        fontFamily: 'inter', fontSize: 14, fontWeight: 'bold',
                                         color: '#16181C'
                                     }}>
                                         &nbsp;ACCOUNT
@@ -1594,6 +1597,7 @@ const Dashboard: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             maxWidth: props.option === 'Classroom' ? '100%' : 1000,
                             alignSelf: 'center',
                             width: '100%',
+                            backgroundColor: props.option === 'To Do' ? '#e7ebee' : '#fff',
                             height: width < 1024 ? windowHeight - 104 : windowHeight - 52,
                             // overflow: 'scroll'
                         }}>
@@ -1821,12 +1825,12 @@ const styleObject: any = () => StyleSheet.create({
         fontSize: 10,
         color: '#343A40',
         height: 20,
-        fontWeight: 'bold',
+        // fontWeight: 'bold',
         paddingHorizontal: 7,
         backgroundColor: '#E7EBEE',
         // textTransform: 'uppercase',
         lineHeight: 20,
-        // fontFamily: 'inter',
+        fontFamily: 'inter',
         textAlign: 'center'
     },
     allGrayFill1: {
@@ -1834,12 +1838,12 @@ const styleObject: any = () => StyleSheet.create({
         color: '#3289d0',
         height: 20,
         // borderRadius: 15,
-        fontWeight: 'bold',
+        // fontWeight: 'bold',
         paddingHorizontal: 7,
         // backgroundColor: '#3289d0',
         // textTransform: 'uppercase',
         lineHeight: 20,
-        // fontFamily: 'inter',
+        fontFamily: 'inter',
         textAlign: 'center'
     },
     col: {

@@ -540,22 +540,22 @@ const styles = StyleSheet.create({
         height: 20,
         paddingHorizontal: 7,
         backgroundColor: '#fff',
-        fontWeight: 'bold',
+        // fontWeight: 'bold',
         // textTransform: 'uppercase',
         lineHeight: 20,
-        textAlign: 'center'
-        // fontFamily: 'inter'
+        textAlign: 'center',
+        fontFamily: 'inter'
     },
     allGrayFill: {
         fontSize: 10,
         color: '#3289d0',
         height: 20,
-        fontWeight: 'bold',
+        // fontWeight: 'bold',
         paddingHorizontal: 7,
         backgroundColor: '#fff',
         // textTransform: 'uppercase',
         lineHeight: 20,
-        textAlign: 'center'
-        // fontFamily: 'inter'
+        textAlign: 'center',
+        fontFamily: 'inter'
     },
 });
