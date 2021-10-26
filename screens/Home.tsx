@@ -1876,7 +1876,7 @@ const Home: React.FunctionComponent<{ [label: string]: any }> = (props: any) => 
               right: 0,
               justifyContent: 'center',
               bottom: 0,
-              width: 58, height: 58, borderRadius: 29, backgroundColor: '#3289d0',
+              width: 55, height: 55, borderRadius: 29, backgroundColor: '#3289d0',
               borderColor: '#E7EBEE',
               borderWidth: 0
             }}
