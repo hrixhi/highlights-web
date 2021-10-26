@@ -1407,7 +1407,7 @@ const CalendarX: React.FunctionComponent<{ [label: string]: any }> = (props: any
                             <Ionicons name='notifications-outline' size={18} />
                         </Text>
                         <Text style={tab === 'Activity' ? styles.allGrayFill1 : styles.all1}>
-                            Activity
+                            Alerts
                         </Text>
                     </TouchableOpacity>
                 </View> : null
